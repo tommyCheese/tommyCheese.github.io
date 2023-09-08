@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>example on 🧀Tommy Cheese</title>
+    <link>http://localhost:1313/tags/example/</link>
+    <description>Recent content in example on 🧀Tommy Cheese</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 03 Apr 2021 22:53:58 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/example/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Emoji Support</title>
+      <link>http://localhost:1313/blogs/myss/</link>
+      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
+      
+      <guid>http://localhost:1313/blogs/myss/</guid>
+      <description>hello 你好哇 hello 确实是的</description>
+    </item>
+    
+    <item>
+      <title>Emoji Support</title>
+      <link>http://localhost:1313/en/blogs/myss/</link>
+      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
+      
+      <guid>http://localhost:1313/en/blogs/myss/</guid>
+      <description>hahaha</description>
+    </item>
+    
+  </channel>
+</rss>
