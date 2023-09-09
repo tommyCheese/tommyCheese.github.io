@@ -16,23 +16,5 @@
       <description></description>
     </item>
     
-    <item>
-      <title>3</title>
-      <link>http://localhost:1313/tags/3/</link>
-      <pubDate>Sat, 09 Sep 2023 22:57:08 +0800</pubDate>
-      
-      <guid>http://localhost:1313/tags/3/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>4</title>
-      <link>http://localhost:1313/tags/4/</link>
-      <pubDate>Sat, 09 Sep 2023 22:54:37 +0800</pubDate>
-      
-      <guid>http://localhost:1313/tags/4/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>
