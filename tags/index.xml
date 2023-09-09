@@ -6,7 +6,52 @@
     <description>Recent content in Tags on 🧀Tommy Cheese</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 03 Apr 2021 22:53:58 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Dec 2022 19:53:33 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>example</title>
+      <link>http://localhost:1313/tags/example/</link>
+      <pubDate>Fri, 09 Dec 2022 19:53:33 +0530</pubDate>
+      
+      <guid>http://localhost:1313/tags/example/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Markdown syntax</title>
+      <link>http://localhost:1313/tags/markdown-syntax/</link>
+      <pubDate>Fri, 09 Dec 2022 19:53:33 +0530</pubDate>
+      
+      <guid>http://localhost:1313/tags/markdown-syntax/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mathjax</title>
+      <link>http://localhost:1313/tags/mathjax/</link>
+      <pubDate>Fri, 09 Dec 2022 19:53:33 +0530</pubDate>
+      
+      <guid>http://localhost:1313/tags/mathjax/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sample</title>
+      <link>http://localhost:1313/tags/sample/</link>
+      <pubDate>Sat, 03 Apr 2021 23:29:21 +0530</pubDate>
+      
+      <guid>http://localhost:1313/tags/sample/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sample2</title>
+      <link>http://localhost:1313/tags/sample2/</link>
+      <pubDate>Sat, 03 Apr 2021 23:29:21 +0530</pubDate>
+      
+      <guid>http://localhost:1313/tags/sample2/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Emoji support</title>
       <link>http://localhost:1313/tags/emoji-support/</link>
@@ -17,20 +62,20 @@
     </item>
     
     <item>
-      <title>example</title>
-      <link>http://localhost:1313/tags/example/</link>
-      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
+      <title>Placeholder text</title>
+      <link>http://localhost:1313/tags/placeholder-text/</link>
+      <pubDate>Sat, 03 Apr 2021 22:41:10 +0530</pubDate>
       
-      <guid>http://localhost:1313/tags/example/</guid>
+      <guid>http://localhost:1313/tags/placeholder-text/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Sample</title>
-      <link>http://localhost:1313/tags/sample/</link>
-      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
+      <title>Rich content</title>
+      <link>http://localhost:1313/tags/rich-content/</link>
+      <pubDate>Sat, 03 Apr 2021 19:53:33 +0530</pubDate>
       
-      <guid>http://localhost:1313/tags/sample/</guid>
+      <guid>http://localhost:1313/tags/rich-content/</guid>
       <description></description>
     </item>
     
