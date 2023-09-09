@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>sample2 on 🧀Tommy Cheese</title>
+    <title>sample2 on Tommy Cheese</title>
     <link>http://localhost:1313/tags/sample2/</link>
-    <description>Recent content in sample2 on 🧀Tommy Cheese</description>
+    <description>Recent content in sample2 on Tommy Cheese</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 03 Apr 2021 23:29:21 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/sample2/index.xml" rel="self" type="application/rss+xml" />
