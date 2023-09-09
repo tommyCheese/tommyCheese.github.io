@@ -13,16 +13,7 @@
       <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
       
       <guid>http://localhost:1313/blogs/myss/</guid>
-      <description>hello 你好哇 hello 确实是的</description>
-    </item>
-    
-    <item>
-      <title>Emoji Support</title>
-      <link>http://localhost:1313/en/blogs/myss/</link>
-      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
-      
-      <guid>http://localhost:1313/en/blogs/myss/</guid>
-      <description>hahaha</description>
+      <description>hello 你好哇 hello 确实是的 🎉😂😂 因为$f(x)$不是0。 $$ f(x)=25^2 $$ Bug修复：使用go编译器先把json翻译过来！直接转换，然后再传数据； 参考这个主题实</description>
     </item>
     
   </channel>

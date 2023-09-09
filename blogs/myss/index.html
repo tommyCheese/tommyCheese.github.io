@@ -29,7 +29,7 @@
 
 
 <meta property="og:title" content="Emoji Support" />
-<meta property="og:description" content="hello 你好哇 hello 确实是的" />
+<meta property="og:description" content="hello 你好哇 hello 确实是的 🎉😂😂 因为$f(x)$不是0。 $$ f(x)=25^2 $$ Bug修复：使用go编译器先把json翻译过来！直接转换，然后再传数据； 参考这个主题实" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/blogs/myss/" /><meta property="article:section" content="blogs" />
 <meta property="article:published_time" content="2021-04-03T22:53:58+05:30" />
@@ -37,7 +37,7 @@
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Emoji Support"/>
-<meta name="twitter:description" content="hello 你好哇 hello 确实是的"/>
+<meta name="twitter:description" content="hello 你好哇 hello 确实是的 🎉😂😂 因为$f(x)$不是0。 $$ f(x)=25^2 $$ Bug修复：使用go编译器先把json翻译过来！直接转换，然后再传数据； 参考这个主题实"/>
 
 
 <link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
@@ -106,11 +106,46 @@
 
 
 <script defer src="/fontawesome-5/all-5.15.4.js"></script>
-<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.min.js"></script>
+<script crossorigin src="/js/react.dev.js"></script>
+<script crossorigin src="/js/react-dom.dev.js"></script>
+<script src="/js/babel.js"></script>
+<script src="/js/antd.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.compact.min.css">
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
 
 <script type="text/babel">
   const TipHover = () => {
@@ -309,7 +344,7 @@ Emoji Support | 🧀Tommy Cheese
               
               <span id="readingTime">
                 分钟
-              </span>(本文字数: 9)
+              </span>(本文字数: 83)
               
             </div>
           </div>
@@ -323,6 +358,16 @@ Emoji Support | 🧀Tommy Cheese
 <p>你好哇</p>
 <h2 id="hello">hello</h2>
 <h3 id="确实是的">确实是的</h3>
+<p>🎉😂😂</p>
+<p>因为$f(x)$不是0。
+$$
+f(x)=25^2
+$$</p>
+<ul>
+<li>Bug修复：使用go编译器先把json翻译过来！直接转换，然后再传数据；</li>
+<li>参考<a href="https://demo.stack.jimmycai.com/tags/example-tag/">这个主题</a>实现标签浏览功能；</li>
+<li>谷歌分析；</li>
+</ul>
 
           </article>
         </div>
@@ -443,7 +488,7 @@ Emoji Support | 🧀Tommy Cheese
                         <h5 class="card-title bg-transparent" title="Emoji Support">Emoji Support</h5>
                     </a>
                     <div class="card-text secondary-font">
-                        <p>hello 你好哇 hello 确实是的</p>
+                        <p>hello 你好哇 hello 确实是的 🎉😂😂 因为$f(x)$不是0。 $$ f(x)=25^2 $$ Bug修复：使用go编译器先把json翻译过来！直接转换，然后再传数据； 参考这个主题实</p>
                     </div>
                 </div>
                 <div class="mt-auto card-footer">

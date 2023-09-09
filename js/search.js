@@ -7,7 +7,12 @@ async function searchOnChange(evt) {
 
   if (searchQuery !== "") {
     if (!window.searchJson) {
-      window.searchJson = await fetch("/index.json").then((res) => res.json());
+      // window.searchJson = await fetch("/index.json").then((res) => res.json());
+      try {
+        window.searchJson = await fetch("/index.json").then((res) =>console.log(res.json()));
+      } catch (error) {
+        console.log("bad case");
+      }
     }
 
     let searchResults = searchJson.filter((item) => {
