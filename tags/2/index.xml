@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2 on Tommy Cheese</title>
+    <link>http://localhost:1313/tags/2/</link>
+    <description>Recent content in 2 on Tommy Cheese</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 09 Sep 2023 22:59:22 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>富文本</title>
+      <link>http://localhost:1313/blogs/%E5%AF%8C%E6%96%87%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Sep 2023 22:59:22 +0800</pubDate>
+      
+      <guid>http://localhost:1313/blogs/%E5%AF%8C%E6%96%87%E6%9C%AC/</guid>
+      <description>Hugo ships with several Built-in Shortcodes for rich content, along with a Privacy Config and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds. Gist Simple Shortcode {{&amp;lt; gist spf13 7896402 &amp;#34;img.html&amp;#34; &amp;gt;}} Twitter Simple Shortcode {{&amp;lt; tweet GoHugoIO 1315233626070503424 &amp;gt;}} Vimeo Simple Shortcode {{&amp;lt; vimeo 146022717 &amp;gt;}} Youtube Simple Shortcode {{&amp;lt; youtube w7Ft2ymGmfc &amp;gt;}} Theme Custom Shortcodes These shortcodes are not Hugo</description>
+    </item>
+    
+  </channel>
+</rss>

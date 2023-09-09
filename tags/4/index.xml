@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>4 on Tommy Cheese</title>
+    <link>http://localhost:1313/tags/4/</link>
+    <description>Recent content in 4 on Tommy Cheese</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 09 Sep 2023 22:54:37 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>1</title>
+      <link>http://localhost:1313/blogs/rich-content/</link>
+      <pubDate>Sat, 09 Sep 2023 22:54:37 +0800</pubDate>
+      
+      <guid>http://localhost:1313/blogs/rich-content/</guid>
+      <description>title: 标题 description: 这是描述 image: image.png date: 2023-09-09T22:46:39+08:00 draft: false author: Tommy Cheese toc: true tags: 深度学习 快乐 Hugo ships with several Built-in Shortcodes for rich content, along with a Privacy Config and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds. Gist Simple Shortcode {{&amp;lt; gist spf13 7896402 &amp;#34;img.html&amp;#34; &amp;gt;}} Twitter Simple Shortcode {{&amp;lt;</description>
+    </item>
+    
+  </channel>
+</rss>
