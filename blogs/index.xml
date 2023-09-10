@@ -16,5 +16,14 @@
       <description>这是测试文件，没有内容</description>
     </item>
     
+    <item>
+      <title>测试阿萨德</title>
+      <link>http://localhost:1313/blogs/%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6-%E5%89%AF%E6%9C%AC/</link>
+      <pubDate>Sun, 10 Sep 2023 13:51:50 +0800</pubDate>
+      
+      <guid>http://localhost:1313/blogs/%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6-%E5%89%AF%E6%9C%AC/</guid>
+      <description>这是测试文件，没有内容</description>
+    </item>
+    
   </channel>
 </rss>
