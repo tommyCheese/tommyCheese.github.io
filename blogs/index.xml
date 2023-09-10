@@ -6,7 +6,16 @@
     <description>Recent content in Blogs on Tommy Cheese</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Sep 2023 13:26:37 +0800</lastBuildDate><atom:link href="http://localhost:1313/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Sep 2023 13:40:10 +0800</lastBuildDate><atom:link href="http://localhost:1313/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>测试文件</title>
+      <link>http://localhost:1313/blogs/%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Sun, 10 Sep 2023 13:40:10 +0800</pubDate>
+      
+      <guid>http://localhost:1313/blogs/%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6/</guid>
+      <description>这是测试文件，没有内容</description>
+    </item>
+    
     <item>
       <title>1</title>
       <link>http://localhost:1313/blogs/%E5%AF%8C%E6%96%87%E6%9C%AC/</link>
