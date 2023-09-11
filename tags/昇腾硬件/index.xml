@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>昇腾硬件 on Tommy Cheese</title>
-    <link>http://localhost:1313/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/</link>
+    <link>https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/</link>
     <description>Recent content in 昇腾硬件 on Tommy Cheese</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Sep 2023 21:01:56 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Sep 2023 21:01:56 +0800</lastBuildDate><atom:link href="https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>如何把Pytorch模型参数加载到MindSpore模型？</title>
-      <link>http://localhost:1313/blogs/pytorch%E8%BD%ACmindspore/</link>
+      <link>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</link>
       <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
       
-      <guid>http://localhost:1313/blogs/pytorch%E8%BD%ACmindspore/</guid>
+      <guid>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</guid>
       <description>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</description>
     </item>
     
