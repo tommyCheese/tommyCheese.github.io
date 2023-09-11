@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href=/%f0%9f%a7%80.png type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      media="print" onload="this.media='all'" />
+<noscript>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="如何把Pytorch模型参数加载到MindSpore模型？" />
+<meta property="og:description" content="如何把Pytorch模型参数加载到MindSpore模型？本文描述了一种思路。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/blogs/pytorch%E8%BD%ACmindspore/" /><meta property="article:section" content="blogs" />
+<meta property="article:published_time" content="2023-09-11T21:01:56+08:00" />
+<meta property="article:modified_time" content="2023-09-11T21:01:56+08:00" /><meta property="og:site_name" content="Hugo Profile" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="如何把Pytorch模型参数加载到MindSpore模型？"/>
+<meta name="twitter:description" content="如何把Pytorch模型参数加载到MindSpore模型？本文描述了一种思路。"/>
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+
+
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+         
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        width: .5em;
+        height: .5em;
+        background-color: var(--background-color);
+    }
+    
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px var(--background-color);
+        border-radius: 1rem;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background-color: var(--secondary-color);
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RPQTR1FJGV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RPQTR1FJGV');
+</script>
+<meta name="description" content="如何把Pytorch模型参数加载到MindSpore模型？本文描述了一种思路。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-5/all-5.15.4.js"></script>
+<script crossorigin src="/js/react.dev.js"></script>
+<script crossorigin src="/js/react-dom.dev.js"></script>
+<script src="/js/babel.js"></script>
+<script src="/js/antd.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.18.2/antd.compact.min.css">
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+<script type="text/babel">
+  const TipHover = () => {
+    return (
+      <div>
+        <antd.Popover content={window.location.href} title="复制下方链接分享到微信 | Copy link">
+          <li className="list-inline-item text-center" id="wechat_share">
+            <a target="_blank">
+              <i className="fab fa-weixin"></i>
+            </a>
+          </li>
+        </antd.Popover>
+        <li className="list-inline-item text-center">
+          <a target="_blank"
+            href="https://twitter.com/share?text=%e5%a6%82%e4%bd%95%e6%8a%8aPytorch%e6%a8%a1%e5%9e%8b%e5%8f%82%e6%95%b0%e5%8a%a0%e8%bd%bd%e5%88%b0MindSpore%e6%a8%a1%e5%9e%8b%ef%bc%9f&url=http%3a%2f%2flocalhost%3a1313%2fblogs%2fpytorch%25E8%25BD%25ACmindspore%2f">
+            <i className="fab fa-twitter"></i>
+          </a>
+        </li>
+        <li className="list-inline-item text-center">
+          <a target="_blank"
+            href="https://api.whatsapp.com/send?text=%e5%a6%82%e4%bd%95%e6%8a%8aPytorch%e6%a8%a1%e5%9e%8b%e5%8f%82%e6%95%b0%e5%8a%a0%e8%bd%bd%e5%88%b0MindSpore%e6%a8%a1%e5%9e%8b%ef%bc%9f: http%3a%2f%2flocalhost%3a1313%2fblogs%2fpytorch%25E8%25BD%25ACmindspore%2f">
+            <i className="fab fa-whatsapp"></i>
+          </a>
+        </li>
+        <li className="list-inline-item text-center">
+          <a target="_blank"
+            href='mailto:?subject=%e5%a6%82%e4%bd%95%e6%8a%8aPytorch%e6%a8%a1%e5%9e%8b%e5%8f%82%e6%95%b0%e5%8a%a0%e8%bd%bd%e5%88%b0MindSpore%e6%a8%a1%e5%9e%8b%ef%bc%9f&amp;body=%e9%82%80%e8%af%b7%e4%bd%a0%e6%9f%a5%e7%9c%8b%e6%ad%a4%e9%a1%b5%e9%9d%a2%7cCheck%20out%20this%20site http%3a%2f%2flocalhost%3a1313%2fblogs%2fpytorch%25E8%25BD%25ACmindspore%2f'>
+            <i className="fa fa-envelope"></i>
+          </a>
+        </li>
+      </div>
+    )
+  };
+
+  ReactDOM.render(<TipHover />,
+    document.getElementById('wechat_share'),
+  )
+</script>
+
+
+  <title>
+如何把Pytorch模型参数加载到MindSpore模型？ | Tommy Cheese
+
+  </title>
+</head>
+
+<body class="light">
+  
+  
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+<header>
+    <nav class="pt-3 navbar navbar-expand-lg animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+            
+            <a class="navbar-brand primary-font text-wrap" href="/">
+                
+                
+                Tommy Cheese
+                
+            </a>
+
+            
+            <div>
+                <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block"
+                    placeholder='Ctrl &#43; k' aria-label="Search"
+                    oninput="searchOnChange(event)">
+            </div>
+            
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24"
+                    data-view-component="true">
+                    <path fill-rule="evenodd"
+                        d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+                    </path>
+                </svg>
+            </button>
+
+            
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+                    
+                    <li class="nav-item navbar-text d-block d-md-none">
+                        <div class="nav-link">
+                            <input id="search" autocomplete="off" class="form-control mr-sm-2"
+                                placeholder='Ctrl &#43; k'
+                                aria-label="Search" oninput="searchOnChange(event)">
+                        </div>
+                    </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#about" aria-label="about">
+                            关于|About🥰
+                        </a>
+                    </li>
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#contact" aria-label="contact">
+                            联系我|Contact me😊
+                        </a>
+                    </li>
+                    
+
+                    
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/blogs" title="Blog posts">
+                            
+                            博客|Blog📝
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/gallery" title="Blog posts">
+                            
+                            Explore🌏
+                        </a>
+                    </li>
+                    
+                    
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="https://tommycheese.github.io/tags/" aria-label="contact">
+                            标签|Tags🏷️
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="#feedback" aria-label="contact" onclick="alert('為了創建更專一的語言環境，我正專注構建對應的英文平臺並將適時發佈，靜候佳音')">
+                            繁體中文
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="#feedback" aria-label="contact" onclick="alert('为了创建更专一的语言环境，我正专注构建对应的英文平台并将适时发布，请静候佳音。\nIn order to create a more specialized language environment, I\'m focusing on building corresponding English platforms and will release them in a timely manner. Please waiting for good news!')">
+                            English
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-text">
+                        
+                        <div class="text-center">
+                            <button id="theme-toggle">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+                    
+                    <nav class="LangNav">
+
+    
+
+ </nav>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header><div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4">如何把Pytorch模型参数加载到MindSpore模型？</h1>
+            <div class="text-center">
+              Tommy Cheese
+              <small>|</small>
+              2023.9.11 Mon. 21:01:56
+              
+              <span id="readingTime">
+                分钟
+              </span>(本文字数: 1611)
+              
+            </div>
+          </div>
+          
+          <div class="featured-image">
+            <img class="img-fluid" src="/blog_img/pytorch_mindspore.png" alt="如何把Pytorch模型参数加载到MindSpore模型？">
+          </div>
+          
+          <article class="page-content  p-2">
+            <h2 id="实用干货如何把pytorch模型参数加载到mindspore模型">实用干货：如何把Pytorch模型参数加载到MindSpore模型？</h2>
+<blockquote>
+<p>本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行时的问题，同时给出了一种可行的解决方案完成Pytorch-&gt;MindSpore的转换。</p>
+</blockquote>
+<h3 id="问题简述">问题简述</h3>
+<p>在日常的模型开发、训练过程中我们经常会遇到这样的现象：在现有的开源项目或者论文复现中，多数模型使用Pytorch设计、开发和训练推理，当我们需要使用MindSpore框架进行模型开发时，会遇到以下两个问题：</p>
+<ul>
+<li>模型使用Pytorch编码；</li>
+<li>Pytorch模型训练后保存的参数无法被MindSpore模型直接加载。</li>
+</ul>
+<p>对于第一个问题，我们可以根据昇思官方提供的文档：<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB">与Pytorch典型区别</a>和<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8">PyTorch与MindSpore API映射表</a>来完成模型的迁移；</p>
+<p>对于模型参数的转换，在最新的MindSpore版本中MindConverter不再支持，因此可以考虑针对模型参数，我们进行<strong>手动的转换</strong>，将Pytorch模型参数转换为MindSpore能识别的格式后，再进行加载。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>模型的编码转换不再赘述。</p>
+<p>参数转换主要思路如下：</p>
+<ul>
+<li>使用Pytorch加载Pytorch模型，并取得模型参数prams_torch；</li>
+<li>使用MindSpore加载MindSpore模型，并取得模型参数prams_ms；</li>
+<li>将Pytorch模型的参数名和MindSpore模型参数名一一对应（有的话）；</li>
+<li>建立torch_2_ms键名映射表，使用键名映射表将Pytorch模型参数值加载到MindSpore参数名对应的位置上；</li>
+<li>使用MindSpore加载参数。</li>
+</ul>
+<h3 id="案例分析">案例分析</h3>
+<p>不同模型的模块不相同，参数类型也不尽相同，此处我们以一个网络举例，说明转换的基本思路，不同的模型其转换思路是类似的。</p>
+<p><a href="https://arxiv.org/abs/1905.11946">EfficientNet</a>是谷歌于2019年发表的文章，详细网络架构可查看文章描述，此处我们以<strong>EfficientNet+FC</strong>全连接层的模型为例，探讨如何进行网络模型参数的转换。</p>
+<h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch">使用Pytorch加载Pytorch模型，并取得模型参数prams_torch</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_pytorch.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_pytorch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pytorch_model <span style="color:#f92672">=</span> EN_pytorch<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">&#39;model&#39;</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;num_classes&#39;</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>pytorch_model<span style="color:#f92672">.</span>cuda()
+</span></span><span style="display:flex;"><span>pytorch_weights_dict <span style="color:#f92672">=</span> pytorch_model<span style="color:#f92672">.</span>state_dict()
+</span></span><span style="display:flex;"><span>param_torch <span style="color:#f92672">=</span> pytorch_weights_dict<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>param_torch_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(param_torch)
+</span></span><span style="display:flex;"><span>param_torch_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">&#39;param_torch.csv&#39;</span>)
+</span></span></code></pre></div><p>步骤结束后，我们就将pytorch的模型参数存到了param_torch.csv下，观察数据：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.weight</td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.bias</td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.running_mean</td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.running_var</td>
+</tr>
+<tr>
+<td>5</td>
+<td>_bn0.num_batches_tracked</td>
+</tr>
+<tr>
+<td>6</td>
+<td>_blocks.0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>7</td>
+<td>_blocks.0._bn1.weight</td>
+</tr>
+<tr>
+<td>8</td>
+<td>_blocks.0._bn1.bias</td>
+</tr>
+<tr>
+<td>9</td>
+<td>_blocks.0._bn1.running_mean</td>
+</tr>
+<tr>
+<td>10</td>
+<td>_blocks.0._bn1.running_var</td>
+</tr>
+</tbody>
+</table>
+<h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms">使用MindSpore加载MindSpore模型，并取得模型参数prams_ms</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> mindspore <span style="color:#66d9ef">as</span> ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_mindspore.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mindspore_model <span style="color:#f92672">=</span> EN_ms<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">&#39;model&#39;</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;num_classes&#39;</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>prams_ms <span style="color:#f92672">=</span> mindspore_model<span style="color:#f92672">.</span>parameters_dict()<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>prams_ms_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(prams_ms)
+</span></span><span style="display:flex;"><span>prams_ms_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">&#39;prams_ms.csv&#39;</span>)
+</span></span></code></pre></div><p>步骤结束后，我们就将MindSpore的模型参数存到了prams_ms.csv下，观察数据：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0._depthwise_conv.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>0._bn1.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>0._bn1.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>0._bn1.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0._bn1.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>0._se_reduce.weight</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应">将Pytorch模型的参数名和MindSpore模型参数名一一对应</h4>
+<p>自此我们就得到了MindSpore和Pytorch各自的参数键名表（附在附件区域），随后观察二者参数命名上的差异，可以发现固定的规律，以下述几个方面为例：</p>
+<ul>
+<li>Batch Normalization：
+<ul>
+<li>权重：weight|bias——gamma|beta；</li>
+<li>移动加权和方差：running_mean|running_var——moving_mean|moving_variance；</li>
+</ul>
+</li>
+<li>自定义blocks：pytorch带前置的_blocks.；</li>
+<li>其他</li>
+</ul>
+<h4 id="键名映射表">键名映射表</h4>
+<p>这样就可以根据规律写出一个Python脚本来完成键名的转化，并生成键名映射表：</p>
+<table>
+<thead>
+<tr>
+<th>Pytorch</th>
+<th>mindspore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_conv_stem.weight</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>_bn0.weight</td>
+<td>_bn0.gamma</td>
+</tr>
+<tr>
+<td>_bn0.bias</td>
+<td>_bn0.beta</td>
+</tr>
+<tr>
+<td>_bn0.running_mean</td>
+<td>_bn0.moving_mean</td>
+</tr>
+<tr>
+<td>_bn0.running_var</td>
+<td>_bn0.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._depthwise_conv.weight</td>
+<td>0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.weight</td>
+<td>0._bn1.gamma</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.bias</td>
+<td>0._bn1.beta</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_mean</td>
+<td>0._bn1.moving_mean</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_var</td>
+<td>0._bn1.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._se_reduce.weight</td>
+<td>0._se_reduce.weight</td>
+</tr>
+</tbody>
+</table>
+<p>随后在Pytorch的权重字典中，按照对应文件的Pytorch_key取出权重值，随后使用mindspore.Parameter进行封装，添加到mindspore.key对应的权值中去：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> ms_param_lst<span style="color:#f92672">.</span>values:
+</span></span><span style="display:flex;"><span>    ms_key <span style="color:#f92672">=</span> i
+</span></span><span style="display:flex;"><span>    pt_key <span style="color:#f92672">=</span> param_mapping[ms_key]
+</span></span><span style="display:flex;"><span>    pt_val <span style="color:#f92672">=</span> pt_values_dict[pt_key]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> isinstance(pt_val, np<span style="color:#f92672">.</span>ndarray):
+</span></span><span style="display:flex;"><span>        pt_val <span style="color:#f92672">=</span> pt_val<span style="color:#f92672">.</span>cpu()<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span>    ms_val <span style="color:#f92672">=</span> Parameter(pt_val, ms_key)
+</span></span><span style="display:flex;"><span>    print(ms_val)
+</span></span><span style="display:flex;"><span>    ms_values_dict[ms_key] <span style="color:#f92672">=</span> ms_val
+</span></span></code></pre></div><h4 id="使用mindspore加载参数">使用MindSpore加载参数</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>load_param_into_net(mindspore_model, ms_values_dict)
+</span></span></code></pre></div><p>此时，参数应该就可以被MindSpore接受了。</p>
+<h3 id="whats-more">What&rsquo;s more</h3>
+<ul>
+<li>在参数值的存储过程中，要注意Pytorch和MindSpore参数精度的差异；</li>
+</ul>
+<p>（完）</p>
+
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div class="sticky-sidebar">
+          
+          <aside class="toc">
+            <h5>
+              目录 | Table Of Contents
+            </h5>
+            <div class="toc-content">
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#实用干货如何把pytorch模型参数加载到mindspore模型">实用干货：如何把Pytorch模型参数加载到MindSpore模型？</a>
+      <ul>
+        <li><a href="#问题简述">问题简述</a></li>
+        <li><a href="#解决方案">解决方案</a></li>
+        <li><a href="#案例分析">案例分析</a></li>
+        <li><a href="#whats-more">What&rsquo;s more</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+            </div>
+          </aside>
+          
+
+          
+          <aside class="tags">
+            <h5>标签 | Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+              
+              <li class="list-inline-item"><a href="http://localhost:1313/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD" target="_blank">人工智能</a></li>
+              
+              <li class="list-inline-item"><a href="http://localhost:1313/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6" target="_blank">昇腾硬件</a></li>
+              
+            </ul>
+          </aside>
+          
+
+          
+          <aside class="social">
+            <h5>分享 | Share</h5>
+            <div class="social-content">
+              <ul class="list-inline" id="wechat_share">
+              </ul>
+            </div>
+          </aside>
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll">
+    <i class="fas fa-angle-up"></i>
+  </button>
+  <div id="disqus_thread" style="width: 50%; margin-left: 25%;"></div>
+  <script>
+      
+
+      
+      
+      
+      
+      (function () { 
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tommy-cheese-2.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+      Disqus.</a></noscript>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+    aria-valuemax="100"></div>
+</div>
+<Script src="/js/scrollProgressBar.js"></script>
+
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function () { scrollFunction() };
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+    
+ 
+ 
+<div class="container py-3" id="recent-posts">
+    
+    
+    <div class="h3 text-center text-secondary py-3">
+        最近发布|Recent Posts
+    </div>
+    <div class="row justify-content-center">
+        
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                
+                <div class="card-header">
+                    <a href="/blogs/pytorch%E8%BD%ACmindspore/">
+                        <img src="/blog_img/pytorch_mindspore.png" class="card-img-top" alt="如何把Pytorch模型参数加载到MindSpore模型？">
+                    </a>
+                </div>
+                
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="如何把Pytorch模型参数加载到MindSpore模型？">如何把Pytorch模型参数加载 …</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">2023.9.11</span>
+                    <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div id="disqus_thread" style="width: 50%; margin-left: 25%;"></div>
+    <script>
+        
+
+        
+        
+        
+        
+        (function () { 
+          var d = document, s = d.createElement('script');
+          s.src = 'https://tommy-cheese-2.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+        Disqus.</a></noscript><div class="text-center pt-2">
+    
+
+    
+
+    
+
+    
+
+    
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <div class="pb-2">
+                <a href="http://localhost:1313/" title="Tommy Cheese">
+                    
+                </a>
+            </div>
+            &copy; 2023  版权所有|All rights reserved
+            <div class="text-secondary">
+                Made with
+                <span class="text-danger">
+                    &#10084;
+                </span>
+                , 
+                <a href="https://themes.gohugo.io/" target="_blank"
+                    title="hugo">
+                    DISQUS and Hugo
+                </a>
+                <br>
+                Powered by github.io
+                <br>
+            </div>
+        </div>
+    </div>
+</div></footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>
