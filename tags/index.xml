@@ -5,6 +5,25 @@
     <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Tommy Cheese</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 11 Sep 2023 21:01:56 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>人工智能</title>
+      <link>http://localhost:1313/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
+      <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
+      
+      <guid>http://localhost:1313/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>昇腾硬件</title>
+      <link>http://localhost:1313/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/</link>
+      <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
+      
+      <guid>http://localhost:1313/tags/%E6%98%87%E8%85%BE%E7%A1%AC%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
