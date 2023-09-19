@@ -394,9 +394,11 @@ Tommy Cheese | 页面不见了|Page not found
     document.getElementById("theme-toggle").addEventListener("click", () => {
         if (document.body.className.includes("dark")) {
             document.body.classList.remove('dark');
+            document.getElementById("changewithdaynight").setAttribute("src", "/town.jpg")
             localStorage.setItem("pref-theme", 'light');
         } else {
             document.body.classList.add('dark');
+            document.getElementById("changewithdaynight").setAttribute("src", "/village.jpg")
             localStorage.setItem("pref-theme", 'dark');
         }
     })
