@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>人工智能 on Tommy Cheese</title>
+    <link>https://tommycheese.github.io/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
+    <description>Recent content in 人工智能 on Tommy Cheese</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 11 Sep 2023 21:01:56 +0800</lastBuildDate><atom:link href="https://tommycheese.github.io/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何把Pytorch模型参数加载到MindSpore模型？</title>
+      <link>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</link>
+      <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
+      
+      <guid>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</guid>
+      <description>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</description>
+    </item>
+    
+  </channel>
+</rss>
