@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogs on Tommy Cheese</title>
+    <link>https://tommycheese.github.io/blogs/</link>
+    <description>Recent content in Blogs on Tommy Cheese</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Oct 2023 15:46:11 +0800</lastBuildDate><atom:link href="https://tommycheese.github.io/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>梯度之上：Hessian矩阵</title>
+      <link>https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/</link>
+      <pubDate>Thu, 26 Oct 2023 15:46:11 +0800</pubDate>
+      
+      <guid>https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/</guid>
+      <description>梯度之上：Hessian 矩阵 本文讨论研究梯度下降法的一个有力的数学工具：海森矩阵。在讨论海森矩阵之前，需要首先了解梯度和雅克比矩阵的基本概念</description>
+    </item>
+    
+    <item>
+      <title>如何把Pytorch模型参数加载到MindSpore模型？</title>
+      <link>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</link>
+      <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
+      
+      <guid>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</guid>
+      <description>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</description>
+    </item>
+    
+  </channel>
+</rss>
