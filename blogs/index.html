@@ -28,14 +28,20 @@
 
 
 
-<meta property="og:title" content="Blogs" />
-<meta property="og:description" content="Text about my cool site" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://tommycheese.github.io/blogs/" /><meta property="og:site_name" content="Hugo Profile" />
+  
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Blogs"/>
-<meta name="twitter:description" content="Text about my cool site"/>
+
+<meta property="og:url" content="https://tommycheese.github.io/blogs/">
+  <meta property="og:site_name" content="Tommy Cheese">
+  <meta property="og:title" content="Blogs">
+  <meta property="og:description" content="A blog site for tommycheese.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="website">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Blogs">
+  <meta name="twitter:description" content="A blog site for tommycheese.">
 
 
 <link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
@@ -43,9 +49,6 @@
 
 
 <link rel="stylesheet" href="/css/theme.css" media="all">
-
-
-
 
 <style>
     :root {
@@ -76,19 +79,18 @@
     }
 
     body::-webkit-scrollbar {
-        width: .5em;
-        height: .5em;
+        height: 0px;
+        width: 8px;
         background-color: var(--background-color);
     }
-    
+
     ::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 6px var(--background-color);
         border-radius: 1rem;
     }
-    
+
     ::-webkit-scrollbar-thumb {
         border-radius: 1rem;
-        background-color: var(--secondary-color);
+        background: #b0b0b0;
         outline: 1px solid var(--background-color);
     }
 
@@ -100,16 +102,13 @@
 </style>
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RPQTR1FJGV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-RPQTR1FJGV');
-</script>
 <meta name="description" content="Blogs of Tommy Cheese">
 <link rel="stylesheet" href="/css/list.css" media="all">
+
+
+  
+  
 
   <title>
 Blogs | Tommy Cheese
@@ -138,33 +137,59 @@ Blogs | Tommy Cheese
             break;
     }
 </script>
-<header>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
     <nav class="pt-3 navbar navbar-expand-lg animate">
         <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
             
             <a class="navbar-brand primary-font text-wrap" href="/">
                 
-                
+                <img src="/%f0%9f%a7%80.png" width="30" height="30"
+                    class="d-inline-block align-top">
                 Tommy Cheese
                 
             </a>
 
             
-            <div>
-                <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block"
-                    placeholder='Ctrl &#43; k' aria-label="Search"
-                    oninput="searchOnChange(event)">
-            </div>
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block" placeholder='Ctrl &#43; k to Search...'
+                        aria-label="Search" oninput="searchOnChange(event)">
+                </div>
             
 
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24"
-                    data-view-component="true">
-                    <path fill-rule="evenodd"
-                        d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
-                    </path>
+                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
                 </svg>
             </button>
 
@@ -172,13 +197,11 @@ Blogs | Tommy Cheese
             <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
                 <ul class="navbar-nav ms-auto text-center">
                     
-                    <li class="nav-item navbar-text d-block d-md-none">
-                        <div class="nav-link">
-                            <input id="search" autocomplete="off" class="form-control mr-sm-2"
-                                placeholder='Ctrl &#43; k'
-                                aria-label="Search" oninput="searchOnChange(event)">
-                        </div>
-                    </li>
+                        <li class="nav-item navbar-text d-block d-md-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder='Ctrl &#43; k to Search...' aria-label="Search" oninput="searchOnChange(event)">
+                            </div>
+                        </li>
                     
 
                     
@@ -190,6 +213,13 @@ Blogs | Tommy Cheese
                     
 
                     
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#experience"
+                            aria-label="experience">
+                            Experience|⛵
+                        </a>
+                    </li>
+                    
 
                     
 
@@ -199,13 +229,18 @@ Blogs | Tommy Cheese
 
                     
                     <li class="nav-item navbar-text">
-                        <a class="nav-link" href="/#contact" aria-label="contact">
-                            联系我|Contact me😊
+                        <a class="nav-link" href="/#contact"
+                            aria-label="contact">
+                            联系我|Get in touch😊
                         </a>
                     </li>
                     
 
                     
+                        <li class="nav-item navbar-text d-none d-lg-block d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+                    
+
                     
                     
                     
@@ -213,10 +248,19 @@ Blogs | Tommy Cheese
                     <li class="nav-item navbar-text">
                         <a class="nav-link" href="/blogs" title="Blog posts">
                             
-                            博客|Blog📝
+                            博客|Blogs📝
                         </a>
                     </li>
                     
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/tags" title="Blog tags">
+                            
+                            标签|Tags🏷
+                        </a>
+                    </li>
                     
                     
                     
@@ -229,37 +273,16 @@ Blogs | Tommy Cheese
                     </li>
                     
                     
-                    
 
                     
-                    <li class="nav-item navbar-text">
-                        <a class="nav-link" href="https://tommycheese.github.io/tags/" aria-label="contact">
-                            标签|Tags🏷️
-                        </a>
-                    </li>
-                    <li class="nav-item navbar-text">
-                        <a class="nav-link" href="#feedback" aria-label="contact" onclick="alert('為了創建更專一的語言環境，我正專注構建對應的繁體中文平臺並將適時發佈，靜候佳音')">
-                            繁體中文
-                        </a>
-                    </li>
-                    <li class="nav-item navbar-text">
-                        <a class="nav-link" href="#feedback" aria-label="contact" onclick="alert('为了创建更专一的语言环境，我正专注构建对应的英文平台并将适时发布，请静候佳音。\nIn order to create a more specialized language environment, I\'m focusing on building corresponding English platforms and will release them in a timely manner. Please waiting for good news!')">
-                            English
-                        </a>
-                    </li>
                     <li class="nav-item navbar-text">
                         
                         <div class="text-center">
                             <button id="theme-toggle">
-                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
-                                
-                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="5"></circle>
                                     <line x1="12" y1="1" x2="12" y2="3"></line>
                                     <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -273,20 +296,17 @@ Blogs | Tommy Cheese
                             </button>
                         </div>
                     </li>
-
                     
-                    <nav class="LangNav">
 
-    
-
- </nav>
                 </ul>
+
             </div>
         </div>
     </nav>
-</header><div id="content">
+</header>
+<div id="content">
 <div class="container pt-5" id="list-page">
-    <h2 class="text-center pb-2">博客|Blogs</h2>
+    <h2 class="text-center pb-2">Blogs</h2>
     <div class="row">
         
         <div class="col-lg-4 col-md-6 my-3">
@@ -294,22 +314,25 @@ Blogs | Tommy Cheese
                 <div class="card h-100">
                     
                     <div class="card-header">
-                        <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/">
-                            <img src="/blog_img/image-20230124153027749.png" class="card-img-top" alt="梯度之上：Hessian矩阵">
+                        <a href="/blogs/math/">
+                            <img src="/images/mathjax.png" class="card-img-top" alt="Render Math With Mathjax">
                         </a>
                     </div>
                     
                     <div class="card-body bg-transparent p-4 shadow-sm">
-                        <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/" class="primary-font card-title">
-                            <h5 class="card-title bg-transparent" title="梯度之上：Hessian矩阵">梯度之上：Hessian矩阵</h5>
+                        <a href="/blogs/math/" class="primary-font card-title">
+                            <h5 class="card-title bg-transparent" title="Render Math With Mathjax">Render Math With Mathjax</h5>
                         </a>
                         <div class="card-text secondary-font">
-                            <p>梯度之上：Hessian 矩阵 本文讨论研究梯度下降法的一个有力的数学工具：海森矩阵。在讨论海森矩阵之前，需要首先了解梯度和雅克比矩阵的基本概念</p>
+                            <p>Mathjax Math equations can be rendered using Mathjax syntax with AMS symbol support.
+Optionally enable this on a per-page basis by adding mathjax: true to your frontmatter.
+Then, use $$ ... $$ on a line by itself to render a block equation:
+$$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow …</p>
                         </div>
                     </div>
                     <div class="mt-auto post-footer bg-transparent py-3">
-                        <span class="float-start bg-transparent">2023.10.26</span>
-                        <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                        <span class="float-start bg-transparent">Dec 9, 2022</span>
+                        <a href="/blogs/math/" class="float-end btn btn-outline-info btn-sm">Read</a>
                     </div>
                 </div>
             </div>
@@ -320,22 +343,50 @@ Blogs | Tommy Cheese
                 <div class="card h-100">
                     
                     <div class="card-header">
-                        <a href="/blogs/pytorch%E8%BD%ACmindspore/">
-                            <img src="/blog_img/pytorch_mindspore.png" class="card-img-top" alt="如何把Pytorch模型参数加载到MindSpore模型？">
+                        <a href="/blogs/markdown-syntax/">
+                            <img src="/images/post.jpg" class="card-img-top" alt="Markdown Syntax">
                         </a>
                     </div>
                     
                     <div class="card-body bg-transparent p-4 shadow-sm">
-                        <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="primary-font card-title">
-                            <h5 class="card-title bg-transparent" title="如何把Pytorch模型参数加载到MindSpore模型？">如何把Pytorch模型参数加载 …</h5>
+                        <a href="/blogs/markdown-syntax/" class="primary-font card-title">
+                            <h5 class="card-title bg-transparent" title="Markdown Syntax">Markdown Syntax</h5>
                         </a>
                         <div class="card-text secondary-font">
-                            <p>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</p>
+                            <p>Paragraph Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus …</p>
                         </div>
                     </div>
                     <div class="mt-auto post-footer bg-transparent py-3">
-                        <span class="float-start bg-transparent">2023.9.11</span>
-                        <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                        <span class="float-start bg-transparent">Apr 3, 2021</span>
+                        <a href="/blogs/markdown-syntax/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 my-3">
+            <div class="card-columns">
+                <div class="card h-100">
+                    
+                    <div class="card-header">
+                        <a href="/blogs/emoji-support/">
+                            <img src="/images/post.jpg" class="card-img-top" alt="Emoji Support">
+                        </a>
+                    </div>
+                    
+                    <div class="card-body bg-transparent p-4 shadow-sm">
+                        <a href="/blogs/emoji-support/" class="primary-font card-title">
+                            <h5 class="card-title bg-transparent" title="Emoji Support">Emoji Support</h5>
+                        </a>
+                        <div class="card-text secondary-font">
+                            <p>Emoji can be enabled in a Hugo project in a number of ways. :zap:
+Emoji Support The emojify function can be called directly in templates or Inline Shortcodes.
+To enable emoji globally, set enableEmoji to true in your site’s configuration and then you can type emoji shorthand codes directly in …</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto post-footer bg-transparent py-3">
+                        <span class="float-start bg-transparent">Apr 3, 2021</span>
+                        <a href="/blogs/emoji-support/" class="float-end btn btn-outline-info btn-sm">Read</a>
                     </div>
                 </div>
             </div>
@@ -344,6 +395,26 @@ Blogs | Tommy Cheese
         <div class="row justify-content-center">
             <div class="col-auto m-3">
                 
+    <ul class="pagination pagination-default">
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="First" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&laquo;&laquo;</span></a>
+      </li>
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="Previous" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&laquo;</span></a>
+      </li>
+      <li class="page-item active">
+        <a aria-current="page" aria-label="Page 1" class="page-link" role="button">1</a>
+      </li>
+      <li class="page-item">
+        <a href="/blogs/page/2/" aria-label="Page 2" class="page-link" role="button">2</a>
+      </li>
+      <li class="page-item">
+        <a href="/blogs/page/2/" aria-label="Next" class="page-link" role="button"><span aria-hidden="true">&raquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/blogs/page/2/" aria-label="Last" class="page-link" role="button"><span aria-hidden="true">&raquo;&raquo;</span></a>
+      </li>
+    </ul>
             </div>
         </div>
     </div>
@@ -357,7 +428,7 @@ Blogs | Tommy Cheese
     
     
     <div class="h3 text-center text-secondary py-3">
-        最近发布|Recent Posts
+        最新发布|Recent Post
     </div>
     <div class="row justify-content-center">
         
@@ -365,22 +436,25 @@ Blogs | Tommy Cheese
             <div class="card h-100">
                 
                 <div class="card-header">
-                    <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/">
-                        <img src="/blog_img/image-20230124153027749.png" class="card-img-top" alt="梯度之上：Hessian矩阵">
+                    <a href="/blogs/math/">
+                        <img src="/images/mathjax.png" class="card-img-top" alt="Render Math With Mathjax">
                     </a>
                 </div>
                 
                 <div class="card-body bg-transparent p-3 shadow-sm">
-                    <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/" class="primary-font card-title">
-                        <h5 class="card-title bg-transparent" title="梯度之上：Hessian矩阵">梯度之上：Hessian矩阵</h5>
+                    <a href="/blogs/math/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Render Math With Mathjax">Render Math With Mathjax</h5>
                     </a>
                     <div class="card-text secondary-font">
-                        <p>梯度之上：Hessian 矩阵 本文讨论研究梯度下降法的一个有力的数学工具：海森矩阵。在讨论海森矩阵之前，需要首先了解梯度和雅克比矩阵的基本概念</p>
+                        <p>Mathjax Math equations can be rendered using Mathjax syntax with AMS symbol support.
+Optionally enable this on a per-page basis by adding mathjax: true to your frontmatter.
+Then, use $$ ... $$ on a line by itself to render a block equation:
+$$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow …</p>
                     </div>
                 </div>
                 <div class="mt-auto card-footer">
-                    <span class="float-start">2023.10.26</span>
-                    <a href="/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                    <span class="float-start">Dec 9, 2022</span>
+                    <a href="/blogs/math/" class="float-end btn btn-outline-info btn-sm">Read</a>
                 </div>
             </div>
         </div>
@@ -389,22 +463,48 @@ Blogs | Tommy Cheese
             <div class="card h-100">
                 
                 <div class="card-header">
-                    <a href="/blogs/pytorch%E8%BD%ACmindspore/">
-                        <img src="/blog_img/pytorch_mindspore.png" class="card-img-top" alt="如何把Pytorch模型参数加载到MindSpore模型？">
+                    <a href="/blogs/markdown-syntax/">
+                        <img src="/images/post.jpg" class="card-img-top" alt="Markdown Syntax">
                     </a>
                 </div>
                 
                 <div class="card-body bg-transparent p-3 shadow-sm">
-                    <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="primary-font card-title">
-                        <h5 class="card-title bg-transparent" title="如何把Pytorch模型参数加载到MindSpore模型？">如何把Pytorch模型参数加载 …</h5>
+                    <a href="/blogs/markdown-syntax/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Markdown Syntax">Markdown Syntax</h5>
                     </a>
                     <div class="card-text secondary-font">
-                        <p>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</p>
+                        <p>Paragraph Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus …</p>
                     </div>
                 </div>
                 <div class="mt-auto card-footer">
-                    <span class="float-start">2023.9.11</span>
-                    <a href="/blogs/pytorch%E8%BD%ACmindspore/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                    <span class="float-start">Apr 3, 2021</span>
+                    <a href="/blogs/markdown-syntax/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                
+                <div class="card-header">
+                    <a href="/blogs/emoji-support/">
+                        <img src="/images/post.jpg" class="card-img-top" alt="Emoji Support">
+                    </a>
+                </div>
+                
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/emoji-support/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Emoji Support">Emoji Support</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>Emoji can be enabled in a Hugo project in a number of ways. :zap:
+Emoji Support The emojify function can be called directly in templates or Inline Shortcodes.
+To enable emoji globally, set enableEmoji to true in your site’s configuration and then you can type emoji shorthand codes directly in …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Apr 3, 2021</span>
+                    <a href="/blogs/emoji-support/" class="float-end btn btn-outline-info btn-sm">Read</a>
                 </div>
             </div>
         </div>
@@ -412,23 +512,7 @@ Blogs | Tommy Cheese
     </div>
 </div>
 
-<div id="disqus_thread" style="width: 50%; margin-left: 25%;"></div>
-    <script>
-        
-
-        
-        
-        
-        
-        (function () { 
-          var d = document, s = d.createElement('script');
-          s.src = 'https://tommy-cheese-2.disqus.com/embed.js';
-          s.setAttribute('data-timestamp', +new Date());
-          (d.head || d.body).appendChild(s);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
-        Disqus.</a></noscript><div class="text-center pt-2">
+<div class="text-center pt-2">
     
 
     
@@ -441,29 +525,26 @@ Blogs | Tommy Cheese
 </div><div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-4 text-center">
-            <div class="pb-2">
-                <a href="https://tommycheese.github.io/" title="Tommy Cheese">
-                    
-                </a>
-            </div>
-            &copy; 2023  版权所有|All rights reserved
+            
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/" title="Tommy Cheese">
+                        <img alt="Footer logo" src="/%f0%9f%a7%80.png"
+                            height="40px" width="40px">
+                    </a>
+                </div>
+            
+            &copy; 2024  All rights reserved
             <div class="text-secondary">
                 Made with
                 <span class="text-danger">
                     &#10084;
                 </span>
-                , 
-                <a href="https://themes.gohugo.io/" target="_blank"
-                    title="hugo">
-                    DISQUS and Hugo
-                </a>
-                <br>
-                Powered by github.io
-                <br>
+                and hugo<br>Powered by github.io
             </div>
         </div>
     </div>
-</div></footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -478,11 +559,9 @@ Blogs | Tommy Cheese
     document.getElementById("theme-toggle").addEventListener("click", () => {
         if (document.body.className.includes("dark")) {
             document.body.classList.remove('dark');
-            document.getElementById("changewithdaynight").setAttribute("src", "/town.jpg")
             localStorage.setItem("pref-theme", 'light');
         } else {
             document.body.classList.add('dark');
-            document.getElementById("changewithdaynight").setAttribute("src", "/village.jpg")
             localStorage.setItem("pref-theme", 'dark');
         }
     })
@@ -499,6 +578,24 @@ Blogs | Tommy Cheese
 
 
 
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
 
 
 

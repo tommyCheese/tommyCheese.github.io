@@ -4,26 +4,37 @@
     <title>Blogs on Tommy Cheese</title>
     <link>https://tommycheese.github.io/blogs/</link>
     <description>Recent content in Blogs on Tommy Cheese</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Oct 2023 15:46:11 +0800</lastBuildDate><atom:link href="https://tommycheese.github.io/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 09 Dec 2022 19:53:33 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/blogs/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>梯度之上：Hessian矩阵</title>
-      <link>https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/</link>
-      <pubDate>Thu, 26 Oct 2023 15:46:11 +0800</pubDate>
-      
-      <guid>https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/</guid>
-      <description>梯度之上：Hessian 矩阵 本文讨论研究梯度下降法的一个有力的数学工具：海森矩阵。在讨论海森矩阵之前，需要首先了解梯度和雅克比矩阵的基本概念</description>
+      <title>Render Math With Mathjax</title>
+      <link>https://tommycheese.github.io/blogs/math/</link>
+      <pubDate>Fri, 09 Dec 2022 19:53:33 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/math/</guid>
+      <description>Mathjax Math equations can be rendered using Mathjax syntax with AMS symbol support.&#xA;Optionally enable this on a per-page basis by adding mathjax: true to your frontmatter.&#xA;Then, use $$ ... $$ on a line by itself to render a block equation:&#xA;$$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow P_{2}} [A(x) = 1] | &amp;lt; \text{negligible} $$&#xA;The raw version is:&#xA;$$ | Pr_{x \leftarrow P_{1}} [A(x) = 1] - Pr_{x \leftarrow P_{2}} [A(x) = 1] | &amp;lt; \text{negligible} $$ Write in-line equations with \\( .</description>
     </item>
-    
     <item>
-      <title>如何把Pytorch模型参数加载到MindSpore模型？</title>
-      <link>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</link>
-      <pubDate>Mon, 11 Sep 2023 21:01:56 +0800</pubDate>
-      
-      <guid>https://tommycheese.github.io/blogs/pytorch%E8%BD%ACmindspore/</guid>
-      <description>实用干货：如何把Pytorch模型参数加载到MindSpore模型？ 本文描述了Pytorch模型及参数与MindSpore模型、参数转换执行</description>
+      <title>Markdown Syntax</title>
+      <link>https://tommycheese.github.io/blogs/markdown-syntax/</link>
+      <pubDate>Sat, 03 Apr 2021 23:29:21 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/markdown-syntax/</guid>
+      <description>Paragraph Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga.</description>
     </item>
-    
+    <item>
+      <title>Emoji Support</title>
+      <link>https://tommycheese.github.io/blogs/emoji-support/</link>
+      <pubDate>Sat, 03 Apr 2021 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/emoji-support/</guid>
+      <description>Emoji can be enabled in a Hugo project in a number of ways. :zap:&#xA;Emoji Support The emojify function can be called directly in templates or Inline Shortcodes.&#xA;To enable emoji globally, set enableEmoji to true in your site’s configuration and then you can type emoji shorthand codes directly in content files; e.g.&#xA;The Emoji cheat sheet is a useful reference for emoji shorthand codes.&#xA;N.B. The above steps enable Unicode Standard emoji characters and sequences in Hugo, however the rendering of these glyphs depends on the browser and the platform.</description>
+    </item>
+    <item>
+      <title>Placeholder Text</title>
+      <link>https://tommycheese.github.io/blogs/placeholder-text/</link>
+      <pubDate>Sat, 03 Apr 2021 22:41:10 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/placeholder-text/</guid>
+      <description>Lorem est tota propiore conpellat pectoribus de pectora summo.&#xA;Redit teque digerit hominumque toris verebor lumina non cervice subde tollit usus habet Arctonque, furores quas nec ferunt. Quoque montibus nunc caluere tempus inhospita parcite confusaque translucet patri vestro qui optatis lumine cognoscere flos nubis! Fronde ipsamque patulos Dryopen deorum.&#xA;Exierant elisi ambit vivere dedere Duce pollice Eris modo Spargitque ferrea quos palude Rursus nulli murmur; hastile inridet ut ab gravi sententia!</description>
+    </item>
   </channel>
 </rss>

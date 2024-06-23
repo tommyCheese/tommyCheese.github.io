@@ -55,7 +55,6 @@ header .navbar.animate {
     animation: fade-up 0.5s ease-in;
 }
 
-
 /* ToolTip */
 
 .tooltip {
@@ -72,7 +71,7 @@ header .navbar.animate {
 /* hero */
 
 #hero {
-    min-height: 35vh;
+    min-height: 100vh;
     line-height: 2rem;
     max-width: 100%;
 }
