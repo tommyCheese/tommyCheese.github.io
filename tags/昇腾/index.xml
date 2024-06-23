@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>昇腾 on Tommy Cheese</title>
+    <link>https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE/</link>
+    <description>Recent content in 昇腾 on Tommy Cheese</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>实用干货：如何把Pytorch模型参数加载到MindSpore模型？</title>
+      <link>https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</guid>
+      <description>问题简述 在日常的模型开发、训练过程中我们经常会遇到这样的现象：在现有的开源项目或者论文复现中，多数模型使用Pytorch设计、开发和训练推理，当我们需要使用MindSpore框架进行模型开发时，会遇到以下两个问题：&#xA;模型使用Pytorch编码； Pytorch模型训练后保存的参数无法被MindSpore模型直接加载。 对于第一个问题，我们可以根据昇思官方提供的文档：与Pytorch典型区别和PyTorch与MindSpore API映射表来完成模型的迁移；&#xA;对于模型参数的转换，在最新的MindSpore版本中MindConverter不再支持，因此可以考虑针对模型参数，我们进行手动的转换，将Pytorch模型参数转换为MindSpore能识别的格式后，再进行加载。&#xA;解决方案 模型的编码转换不再赘述。&#xA;参数转换主要思路如下：&#xA;使用Pytorch加载Pytorch模型，并取得模型参数prams_torch； 使用MindSpore加载MindSpore模型，并取得模型参数prams_ms； 将Pytorch模型的参数名和MindSpore模型参数名一一对应（有的话）； 建立torch_2_ms键名映射表，使用键名映射表将Pytorch模型参数值加载到MindSpore参数名对应的位置上； 使用MindSpore加载参数。 案例分析 不同模型的模块不相同，参数类型也不尽相同，此处我们以一个网络举例，说明转换的基本思路，不同的模型其转换思路是类似的。&#xA;EfficientNet是谷歌于2019年发表的文章，详细网络架构可查看文章描述，此处我们以EfficientNet+FC全连接层的模型为例，探讨如何进行网络模型参数的转换。&#xA;使用Pytorch加载Pytorch模型，并取得模型参数prams_torch import torch from test.efficientnet_pytorch.model import EfficientNet as EN_pytorch import pandas as pd pytorch_model = EN_pytorch.from_name(cfg[&amp;#39;model&amp;#39;], override_params={&amp;#39;num_classes&amp;#39;: 3}) pytorch_model.cuda() pytorch_weights_dict = pytorch_model.state_dict() param_torch = pytorch_weights_dict.keys() param_torch_lst = pd.DataFrame(param_torch) param_torch_lst.to_csv(&amp;#39;param_torch.csv&amp;#39;) 步骤结束后，我们就将pytorch的模型参数存到了param_torch.csv下，观察数据：&#xA;keys 0 _conv_stem.weight 1 _bn0.weight 2 _bn0.bias 3 _bn0.running_mean 4 _bn0.running_var 5 _bn0.num_batches_tracked 6 _blocks.0._depthwise_conv.weight 7 _blocks.0._bn1.weight 8 _blocks.0._bn1.bias 9 _blocks.0._bn1.running_mean 10 _blocks.</description>
+    </item>
+  </channel>
+</rss>

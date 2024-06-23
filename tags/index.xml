@@ -6,48 +6,20 @@
     <description>Recent content in Tags on Tommy Cheese</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Dec 2022 19:53:33 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
     <atom:link href="https://tommycheese.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Example</title>
-      <link>https://tommycheese.github.io/tags/example/</link>
+      <title>昇腾</title>
+      <link>https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/example/</guid>
+      <guid>https://tommycheese.github.io/tags/%E6%98%87%E8%85%BE/</guid>
       <description></description>
     </item>
     <item>
-      <title>Markdown Syntax</title>
-      <link>https://tommycheese.github.io/tags/markdown-syntax/</link>
+      <title>深度学习</title>
+      <link>https://tommycheese.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/markdown-syntax/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mathjax</title>
-      <link>https://tommycheese.github.io/tags/mathjax/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/mathjax/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sample</title>
-      <link>https://tommycheese.github.io/tags/sample/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/sample/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Emoji Support</title>
-      <link>https://tommycheese.github.io/tags/emoji-support/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/emoji-support/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Placeholder Text</title>
-      <link>https://tommycheese.github.io/tags/placeholder-text/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://tommycheese.github.io/tags/placeholder-text/</guid>
+      <guid>https://tommycheese.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
   </channel>
