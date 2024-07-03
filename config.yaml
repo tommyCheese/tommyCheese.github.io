@@ -1,0 +1,417 @@
+baseURL: "https://tommycheese.github.io/"
+languageCode: "en-us"
+title: "Tommy Cheese"
+theme: hugo-profile
+
+outputs:
+  home:
+    - "HTML"
+    - "RSS"
+    - "JSON"
+  page:
+    - "HTML"
+    - "RSS"
+
+Paginate: 3
+enableRobotsTXT: true
+disqusShortname: tommycheese
+# googleAnalytics: G-MEASUREMENT_ID
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+Menus:
+  main:
+    - identifier: blog
+      name: 博客|Blogs📝
+      title: Blog posts
+      url: /blogs
+      weight: 1
+    - identifier: tag
+      name: 标签|Tags🏷
+      title: Blog tags
+      url: /tags
+      weight: 1
+    - identifier: gallery
+      name: Explore🌏
+      title: Blog posts
+      url: /gallery
+      weight: 2
+    # Dropdown menu
+    # - identifier: dropdown
+    #   title: Language
+    #   name: Language
+    #   weight: 3
+    # - identifier: dropdown1
+    #   title: English
+    #   name: English
+    #   parent: dropdown
+    #   weight: 1
+    #   hello: ki
+    # - identifier: dropdown2
+    #   title: TC
+    #   name: 繁体中文
+    #   parent: dropdown
+    #   weight: 2
+    #   hello: ki
+
+params:
+  title: "Tomme Cheese blogs"
+  description: A blog site for tommycheese.
+  # staticPath: ""  # The path to serve the static files from
+  favicon: "/🧀.png"
+
+  # Whether to serve bootstrap css and js files from CDN or not. Can be set to true, "css" or "js" to choose between
+  # serving both, only the css, or only the js files through the CDN. Any other value will make so that CDN is not used.
+  # Note the lack of "" in true, it should be of boolean type.
+  useBootstrapCDN: false
+
+  # If you want to load dynamically responsive images from Cloudinary
+  # This requires your images to be uploaded + hosted on Cloudinary
+  # Uncomment and change YOUR_CLOUD_NAME to the Cloud Name in your Cloudinary console
+  # cloudinary_cloud_name: "YOUR_CLOUD_NAME"
+
+  # Whether to add mathjax support on all pages. Alternatively, you can opt-in per page by adding `mathjax: true` in the frontmatter.
+  mathjax: true
+
+  # Whether the fade animations on the home page will be enabled
+  animate: true
+
+  theme:
+    # disableThemeToggle: true
+    # defaultTheme: "light" # dark
+
+  font:
+    fontSize: 1rem # default: 1rem
+    fontWeight: 400 # default: 400
+    lineHeight: 1.5 # default: 1.5
+    textAlign: left # default: left
+
+  # color preference
+  # When using hex codes for colors, quotations must be used along with the # sign
+  # color:
+  #   textColor: "#343a40"
+  #   secondaryTextColor: "#6c757d"
+  #   backgroundColor: "#eaedf0"
+  #   secondaryBackgroundColor: "#64ffda1a"
+  #   primaryColor: "#007bff"
+  #   secondaryColor: "#f8f9fa"
+
+  #   darkmode:
+  #     textColor: "#e4e6eb"
+  #     secondaryTextColor: "#b0b3b8"
+  #     backgroundColor: "#18191a"
+  #     secondaryBackgroundColor: "#212529"
+  #     primaryColor: "#ffffff"
+  #     secondaryColor: "#212529"
+
+  # If you want to customize the menu, you can change it here
+  navbar:
+    align: ms-auto # Left: ms-auto | center: mx-auto | right: me-auto | Default: ms-auto
+    # brandLogo: "/logo.png" # Logo for the brand | default is the favicon variable
+    # showBrandLogo: false # Show brand logo in nav bar | default is true
+    brandName: "Tommy Cheese" # Brand name for the brand | default is the title variable
+    disableSearch: false
+    # searchPlaceholder: "Search"
+    stickyNavBar:
+      enable : true
+      showOnScrollUp : true
+    enableSeparator: true
+    menus:
+      disableAbout: false
+      disableExperience: false
+      disableEducation: true
+      disableProjects: true
+      disableAchievements: true
+      disableContact: false
+
+  # Hero
+  hero:
+    enable: true
+    intro: "这里是|Hi, my name is"
+    title: "Tommy Cheese"
+    subtitle: "保持进步|Keep moving"
+    content: "实事求是|Seed and soil"
+    image: /images/town.jpg
+    bottomImage:
+      enable: true
+    # roundImage: true # Make hero image circular | default false
+    button:
+      enable: true
+      name: "简历|Resume"
+      url: "#"
+      download: true
+      newPage: false
+    # socialLinks:
+    #   fontAwesomeIcons:
+    #     - icon: fab fa-weixin
+    #       url: https://example.com
+
+  # About
+  about:
+    enable: true
+    title: "关于|About🥰"
+    image: "/images/grass.jpg"
+    content: |-
+      拥有计算机科学和数据科学背景，我对数据科学开发、软件工程学、文学和心理学有着浓厚的兴趣。正在攻读硕士学位。
+
+      Living in China & growing with a background in computer science and deep learning. I have a strong interest in data science development, software engineering, literature, and psychology. I am currently pursuing a master’s degree.
+    skills:
+      enable: true
+      title: "以下是我目前关注的课题|The following are the topics I am currently focusing on:"
+      items:
+        - "人工智能|AI"
+        - "软件工程学|SE"
+        - "Go语言|Golang"
+        - "java语言|Java"
+        - "数码产品|digital product"
+        - "木雕|wood carving"
+
+  # Experience
+  experience:
+    enable: true
+    title: "Experience|⛵"
+    items:
+      - job: "软件开发实习生|Software Developer-intern"
+        company: "腾讯 tencent"
+        companyUrl: "https://www.tencent.com/"
+        date: "2024·4 - present"
+        featuredLink:
+          enable: true
+          name: "了解腾讯|more about Tencent"
+          url: "https://www.tencent.com/en-us/about.html"
+        info:
+          enable: false
+        content: |
+         在腾讯科技有限公司（中国北京）担任后台软件开发实习生，致力于开发QQ服务与部门内部业务高质量的软件解决方案<br/>Worked as a backend software development intern at Tencent (Beijing, China), committed to developing high-quality software solutions for QQ services and internal business of the department.<br> 
+         <br>最近课题|Topics:
+          - [TRPC-GO](https://trpc.group/)
+          - [Golang](https://golang.google.cn/)
+          - [QQ9](https://im.qq.com/index/)
+
+      - job: "实习生|Intern"
+        company: "华为 Huawei"
+        companyUrl: "https://www.huawei.com/"
+        date: "2023·7 - 2023·8"
+        featuredLink:
+          enable: true
+          name: "了解华为|more about Huawei"
+          url: "https://www.huawei.com/en/corporate-information"
+        info:
+          enable: false
+        content: |
+          参与华为西安研究所数字能源部门实训营，参与智能光伏、ICT、散热智能管控等项目实践。
+          <br />Participated in the digital energy department training camp of Huawei Xi'an Research Institute and participated in the practice of smart photovoltaic, ICT, intelligent heat dissipation management and control projects.
+          <br><br>最近课题|Topics:
+          - [HDC2024](https://developer.huawei.com/home/hdc/hdc2024.html?promotion_cid=1002)
+          - [HarmonyOS NEXT->](https://www.harmonyos.com/)
+
+      - job: "校园大使&软件开发实习生|Campus Ambassador & Software Developer-intern"
+        company: "美团 Meituan"
+        companyUrl: "https://www.meituan.com/"
+        date: Long term campus ambassador and internship not start yet
+        info:
+          enable: false
+
+      - job: "实习生|Intern"
+        company: "昇思 MindSpore"
+        companyUrl: "https://www.mindspore.cn/"
+        date: "2023·9-2024·4"
+        featuredLink:
+          enable: true
+          name: 了解昇思-华为自研的深度学习框架 | more about MindSpore
+          url: https://www.mindspore.cn/docs/zh-CN/r2.3.0rc2/design/overview.html
+        content: |
+          负责 MindSpore Insight 与易用性 SIG 部分工作<br>
+          参与模型移植、参数转化等工作共计 15 项，直接落地产品 3 项<br>
+          Responsible for the MindSpore Insight and Usability SIG;<br>Participated in a total of 15 projects such as model transplantation and parameter transformation, and directly implemented 3 products;
+        info:
+          enable: true
+          content: 华为实习子项目|Conduct by Huawei
+
+      - job: "见习|trainee"
+        company: "University of Melbourne"
+        companyUrl: "https://www.unimelb.edu.au/"
+        date: "2023·7 - 2023·8"
+        featuredLink:
+          enable: true
+          name: more about Wade Institute
+          url: https://wadeinstitute.org.au/
+        content: "Participate in an international leadership improvement program and obtain a completion certificate.<br />Participated in the entire process, designed and developed the innovative project of the University of Melbourne - Wall Breaker."
+        info:
+          enable: false
+  # Education
+  education:
+    enable: true
+    # title: "Custom Name"
+    index: false
+    items:
+      - title: "Master of Business Administration"
+        school:
+          name: "University of California, Berkeley"
+          url: "https://example.org"
+        date: "2013 - 2015"
+        GPA: "3.8 out of 5.0"
+        content: |-
+          Extracurricular Activities
+            - Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            - Tempora esse, eaque delectus nulla quo doloribus itaque expedita alias natus optio totam maxime nihil excepturi velit a animi laborum hic similique.
+      - title: "Bachelor of Science in Computer Science"
+        school:
+          name: "Massachusetts Institute of Technology"
+          url: "https://example.org"
+        date: "2009 - 2013"
+        GPA: "3.9 out of 5.0"
+        content: |-
+          I Publiced two papers in the ACM SIGCHI Conference on Artificial Intelligence.
+          - [Fast and Accurate Object Detection with a Single Convolutional Neural Network](https://example.com)
+          - Face mask detection using a single convolutional neural network.
+
+          Extracurricular Activities
+            - Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            - Tempora esse, eaque delectus nulla quo doloribus itaque expedita alias natus optio totam maxime nihil excepturi velit a animi laborum hic similique.
+        featuredLink:
+          enable: true
+          name: "My academic record"
+          url: "https://example.com"
+      - title: "High School"
+        school:
+          name: "Thomas Jefferson High School for Science and Technology."
+          url: "https://example.org"
+        GPA: "4.2 out of 5.0"
+        featuredLink:
+          enable: true
+          url: "https://example.com"
+
+  # Achievements
+  achievements:
+    enable: true
+    # title: "Custom Name"
+    items:
+      - title: Google kickstart runner
+        content: I solved all problems with optimal solution.
+        url: https://example.com
+        image: /images/achievment.jpg
+      - title: Facebook Hackathon Winner
+        content: Developed a product using Artificial Intelligence.
+        image: /images/achievment.jpg
+      - title: Hugo Profile
+        content: Developed a theme and getting 1K+ downloads per month.
+        url: "https://github.com/gurusabarish/hugo-profile"
+        image: /images/achievment.jpg
+      - title: Microsoft Imagine Runner
+        content: We are developed a product which can help others.
+      - title: Google Summer of Code
+        content: Contributed to a open source project.
+        url: https://example.com
+
+  # projects
+  projects:
+    enable: true
+    # title: "Custom Name"
+    items:
+      - title: Hugo Profile
+        content: A highly customizable and mobile first Hugo template for personal portfolio and blog.
+        image: /images/projects/profile.png
+        featured:
+          name: Demo
+          link: https://hugo-profile.netlify.app
+        badges:
+          - "Hugo"
+          - "Bootstrap"
+          - "Javascript"
+        links:
+          - icon: fa fa-envelope
+            url: mailto:?subject=Hugo%20Profile%20Template&body=Check%20it%20out:%20https%3a%2f%2fhugo-profile.netlify.app%2fblog%2fmarkdown-syntax%2f
+          - icon: fab fa-github
+            url: https://github.com/gurusabarish/hugo-profile
+          - icon: fab fa-twitter
+            url: https://twitter.com/intent/tweet?text=Check+it+out:&url=https%3A%2F%2Fgithub.com%2Fgurusabarish%2Fhugo-profile
+
+      - title: Image Converter
+        content: A web app to convert image to pdf, png to jpg, png to jpg and png to webp without database using django.
+        image: /images/projects/converter.jpg
+        featured:
+          name: Demo
+          link: https://django-converter.herokuapp.com
+        badges:
+          - "Django"
+          - "Bootstrap"
+        links:
+          - icon: fab fa-github
+            url: https://github.com/gurusabarish/converter
+
+      - title: Hugo Profile V2
+        content: A clean and simple Hugo template for personal portfolio and blog.
+        image: /images/projects/profile2.jpg
+        featured:
+          name: Demo V2
+          link: https://hugo-profile-2.netlify.app
+        badges:
+          - "Hugo"
+          - "Bootstrap"
+          - "Javascript"
+        links:
+          - icon: fab fa-github
+            url: https://github.com/gurusabarish/HugoProfileV2
+
+  #Contact
+  contact:
+    enable: true
+    title: "联系我|Get in touch😊"
+    content: 如果您有任何问题或想法，欢迎发送邮件交流(或在页面底部留言)<br />Please email me if you have any questions or ideas (Or leave a message at the bottom of the page)
+    btnName: 发送邮件|Send mail📧
+    btnLink: mailto:tommy_shang2021@petalmail.com
+    # formspree:
+    #   enable: true # `contact.email` value will be ignored
+    #   formId: abcdefgh # Take it from your form's endpoint, like 'https://formspree.io/f/abcdefgh'
+    #   emailCaption: "Enter your email address"
+    #   messageCaption: "Enter your message here"
+    #   messageRows: 5
+
+  footer:
+    recentPosts:
+      path: "blogs"
+      count: 3
+      title: 最新发布|Recent Post
+      enable: true
+      disableFeaturedImage: false
+    # socialNetworks:
+    #   github: https://github.com
+    #   linkedin: https://linkedin.com
+    #   twitter: https://twitter.com
+    #   instagram: https://instagram.com
+    #   facebook: https://facebook.com
+
+  # List pages like blogs and posts
+  listPages:
+    disableFeaturedImage: false
+
+  # Single pages like blog and post
+  singlePages:
+    socialShare: true
+    readTime:
+      enable: true
+      content: "min read"
+    scrollprogress:
+      enable: true
+    tags:
+      openInNewTab: true
+
+  # For translations
+  terms:
+    read: "Read"
+    toc: "Table Of Contents"
+    copyright: "All rights reserved"
+    pageNotFound: "Page not found"
+    emailText: "Check out this site"
+
+  datesFormat:
+    article: "Jan 2, 2006"
+    articleList: "Jan 2, 2006"
+    articleRecent: "Jan 2, 2006"
+
+  #customScripts: -| # You can add custom scripts which will be added before </body> tag
+  #  <script type="text/javascript"><!-- any script here --></script>
