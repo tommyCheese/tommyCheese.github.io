@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数值微分 on Tommy Cheese</title>
+    <link>https://tommycheese.github.io/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/</link>
+    <description>Recent content in 数值微分 on Tommy Cheese</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>梯度之上：Hessian 矩阵</title>
+      <link>https://tommycheese.github.io/blogs/h/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/blogs/h/</guid>
+      <description>本文讨论研究梯度下降法的一个有力的数学工具：海森矩阵。在讨论海森矩阵之前，需要首先了解梯度和雅克比矩阵的基本概念。&#xA;:star:本文假设读者已经熟悉梯度下降法和简单的数值分析、线性代数知识 原文链接&#xA;梯度、雅克比矩阵 梯度下降算法需要当前函数点的导数信息，当此函数点包含多个方向时，梯度是包含所有方向的（偏）导数向量。&#xA;上述情况对应于输出为一个的情况，当函数的输出也为一个向量时，我们需要把输出向量的每一个元素对于多个输入的梯度罗列在一起，罗列形成的矩阵就是雅克比矩阵（Jacobian Matrix）。&#xA;举例说明：&#xA;若函数$f$接受三个输入$x1、x2、x3$，产生一个输出$y$，则其梯度为： $$ \begin{equation} Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}] \end{equation} $$&#xA;若函数$f2$接受三个输入$x1、x2、x3$，产生三个输出$y1、y2、y3$，则其雅克比矩阵为： $$ \begin{equation} Jacobian = \begin{bmatrix} \frac{\partial y_1}{\partial x_1} &amp;amp; \frac{\partial y_1}{\partial x_2}&amp;amp;\frac{\partial y_1}{\partial x_3} \ \frac{\partial y_2}{\partial x_1} &amp;amp; \frac{\partial y_2}{\partial x_2}&amp;amp;\frac{\partial y_2}{\partial x_3} \ \frac{\partial y_3}{\partial x_1} &amp;amp; \frac{\partial y_3}{\partial x_2}&amp;amp;\frac{\partial y_3}{\partial x_3} \end{bmatrix} \end{equation} $$&#xA;利用二阶导数，我们可以知道关于函数在特定方向 $d$ 上的凹凸信息，利用凹凸信息可以在一定程度上预判梯度下降法的表现效果。如果在特定方向 $d$ 上：&#xA;二阶导数为正，则函数在方向$d$上一阶导数增加，函数值下降更慢；&#xA;二阶导数为负，则函数在方向$d$上一阶导数减少，函数值下降更快；&#xA;二阶导数为零，则函数在方向$d$上一阶导数不变，函数值匀速下降；</description>
+    </item>
+  </channel>
+</rss>
