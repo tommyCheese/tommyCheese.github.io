@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html>
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href=/%f0%9f%a7%80.png type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      media="print" onload="this.media='all'" />
+<noscript>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+  
+
+
+<meta property="og:url" content="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/">
+  <meta property="og:site_name" content="Tommy Cheese">
+  <meta property="og:title" content="再读整洁架构之道（四）组件构建原则">
+  <meta property="og:description" content="再读整洁架构之道（四）组件构建原则">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blogs">
+    <meta property="article:published_time" content="2024-07-06T17:27:18+08:00">
+    <meta property="article:modified_time" content="2024-07-06T17:27:18+08:00">
+    <meta property="article:tag" content="阅读">
+    <meta property="article:tag" content="整洁架构之道">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="再读整洁架构之道（四）组件构建原则">
+  <meta name="twitter:description" content="再读整洁架构之道（四）组件构建原则">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+         
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="再读整洁架构之道（四）组件构建原则">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+  
+  
+
+  <title>
+再读整洁架构之道（四）组件构建原则 | Tommy Cheese
+
+  </title>
+</head>
+
+<body class="light">
+  
+  
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-lg animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+            
+            <a class="navbar-brand primary-font text-wrap" href="/">
+                
+                <img src="/%f0%9f%a7%80.png" width="30" height="30"
+                    class="d-inline-block align-top">
+                Tommy Cheese
+                
+            </a>
+
+            
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block" placeholder='Ctrl &#43; k to Search...'
+                        aria-label="Search" oninput="searchOnChange(event)">
+                </div>
+            
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+            
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+                    
+                        <li class="nav-item navbar-text d-block d-md-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder='Ctrl &#43; k to Search...' aria-label="Search" oninput="searchOnChange(event)">
+                            </div>
+                        </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#about" aria-label="about">
+                            关于|About🥰
+                        </a>
+                    </li>
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#experience"
+                            aria-label="experience">
+                            Experience|⛵
+                        </a>
+                    </li>
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#contact"
+                            aria-label="contact">
+                            联系我|Get in touch😊
+                        </a>
+                    </li>
+                    
+
+                    
+                        <li class="nav-item navbar-text d-none d-lg-block d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+                    
+
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/blogs" title="Blog posts">
+                            
+                            博客|Blogs📝
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/tags" title="Blog tags">
+                            
+                            标签|Tags🏷
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/gallery" title="Blog posts">
+                            
+                            Explore🌏
+                        </a>
+                    </li>
+                    
+                    
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+                    
+                    <li class="nav-item navbar-text">
+                        
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+                    
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4">再读整洁架构之道（四）组件构建原则</h1>
+            <div class="text-center">
+              
+                Tommy Cheese
+                <small>|</small>
+              
+              Jul 6, 2024
+
+              
+              <span id="readingTime">
+                min read
+              </span>
+              
+            </div>
+          </div>
+          
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/arh4.png" alt="再读整洁架构之道（四）组件构建原则">
+          </div>
+          
+          <article class="page-content  p-2">
+          <h1 id="再读整洁架构之道四组件构建原则">再读整洁架构之道（四）组件构建原则</h1>
+<p>第三篇主要叙述如何设计模块和类，在本篇将会更近一步，叙述如何进行组件的设计。</p>
+<p>组件是软件的部署单元，是整个软件系统在部署过程中可以独立完成部署的最小实体，组件可以被单独开发，组件化的插件式架构已经成为我们习以为常的软件构建形式了。</p>
+<h2 id="组件聚合">组件聚合</h2>
+<p>组件聚合告诉我们哪些模块和类应该组合在一起形成组件。主要有三个原则：</p>
+<ul>
+<li>复用/发布等同原则；</li>
+<li>共同闭包原则；</li>
+<li>共同复用原则；</li>
+</ul>
+<h3 id="复用发布等同原则rep">复用/发布等同原则REP</h3>
+<p>REP指出软件复用的最小粒度应等同于其发布的最小粒度。</p>
+<p>REP是从代码复用角度考虑的，它规定了具备相同主题和功能的代码可以进行组合形成组件。REP建议软件复用应该按照组件来进行的。</p>
+<p>通俗来讲，某个组件打包发布后可能会形成版本号或唯一标识，我们通过引入现成代码库的方式复用代码，引入的单位就是组件打包的结果，引入的凭据就是版本号。</p>
+<h3 id="共同闭包ccp">共同闭包CCP</h3>
+<p>CCP指出我们应该将那些会同时修改，并且为相同目的而修改的类放到同一个组件中，而将不会同时修改，并且不会为了相同目的而修改的那些类放到不同的组件中。</p>
+<p>CCP是从代码维护角度考虑的，对于由于同一原因/修改目的代码应该组合形成组件，这样就可以有效地降低因软件发布、验证及部署所带来的工作压力。</p>
+<p>前面说过，CCP是SRP的组件版，SRP和CCP都可以用以下的语言概括：</p>
+<p><strong>将由于相同原因而修改，并且需要同时修改的“东西”放在一起。将由于不同原因而修改，并且不同时修改的东西分开。</strong></p>
+<ul>
+<li>在SRP中，东西是指函数和其他组成类或模块的成分；</li>
+<li>在CCP中，东西是指构成组件的类和模块。</li>
+</ul>
+<h3 id="共同复用crp">共同复用CRP</h3>
+<p>CRP指出不要强迫一个组件的用户依赖他们不需要的东西。</p>
+<p>CRP规定了对于使用场景不同、使用频次不同的代码需要进行拆分到不同的组件中。CRP 是为了避免不必要的切分，是ISP接口隔离原则的普适版。</p>
+<p>CRP是接口隔离的普适版，ISP和CRP都可以用以下的语言概括：</p>
+<p><strong>不要依赖不需要用到的“东西”。</strong></p>
+<ul>
+<li>在ISP中，东西是指包含不需要的方法的函数/类；</li>
+<li>在CCP中，东西是指包含不需要的函数的类/模块；</li>
+</ul>
+<h3 id="思考">思考</h3>
+<p>那么REP、CCP、CRP三者之间有什么关系呢？</p>
+<p>实际上三者存在着<strong>竞争关系</strong>。</p>
+<p>REP和CCP是黏合性原则，它们指导我们应该把哪些类/模块放在一起形成组件，而CRP属于排他性原则，它知道我们哪些类/模块不应该放在一起。</p>
+<p><img src="/image-20240706143525187.png" alt="image-20240706143525187"></p>
+<ul>
+<li>如果架构师只关注REP和CCP，那么会发现软件依赖了的组件中包含了很多并不需要的部分，这样会导致太多不必要的发布；</li>
+<li>如果架构师只关注CRP和CCP，那么会发现软件的复用会变得非常困难；</li>
+<li>如果架构师只关注REP和CRP，那么会发现如果部分类/模块需要变更，很多相关模块也不可避免的要跟随变更；</li>
+</ul>
+<p>软件架构师的任务就是要在这三个原则中间进行取舍，组件的构成安排应随着项目重心的不同，以及研发性与复用性的不同而不断演化，因此确定项目朝着哪个方向演进是要动态判断的。</p>
+<h2 id="组件耦合">组件耦合</h2>
+<p>组件耦合告诉我们如何安排组件之间的关系。它包含三个原则：</p>
+<ul>
+<li>无依赖环原则ADP；</li>
+<li>稳定依赖原则SDP；</li>
+<li>稳定抽象原则SAP；</li>
+</ul>
+<h3 id="无依赖环原则adp">无依赖环原则ADP</h3>
+<p>ADP告诉我们组件依赖关系图中不应该出现环。</p>
+<p>版本号控制机制解决了一觉醒来综合征的问题，而此机制需要遵循ADP，首先让我们读一下作者是怎么介绍一觉醒来综合征的：</p>
+<p>当你花了一整天的时间，好不容易搞定了一段代码，第二天上班时却发现这段代码莫名其妙地又不能工作了。这大概率是其他工作人员修改了你项目所依赖的组件。</p>
+<p>要想解决这个问题一般有两种方案：</p>
+<ul>
+<li>每周构建</li>
+<li>版本号控制机制</li>
+</ul>
+<p><strong><u>每周构建</u></strong>：每个人先在自己的代码仓工作，每周固定时间（比如周五）再进行项目构建并处理可能的冲突问题。</p>
+<p>这种方式的局限性很明显：</p>
+<ul>
+<li>随着项目越来越大，集成工作会越来越难以按时完成</li>
+<li>整个项目会变得越来越难以构建与测试，团队反馈周期会越来越长，研发质量自然也会越来越差</li>
+</ul>
+<p>因此版本号控制机制需要被引入。</p>
+<p><strong><u>版本号控制机制</u></strong>：每当一个组件发布新版本时，其他依赖这个组件的团队都可以自主决定是否立即采用新版本。</p>
+<p>版本号控制机制<strong>不允许组件结构依赖关系图中出现环</strong>，也就是要遵守无依赖换原则ADP，否则一觉醒来综合征是不可避免的。为什么呢？</p>
+<p>这是因为如果存在依赖环路，环路里的所有组件被组合成了一个更大的组件，这就要求他们都必须使用相同的版本，这样其他的组件才能成功的完成依赖。同样，存在依赖换的系统在测试时也会成为一个棘手的问题，虽然打桩mock技术已经被广泛应用，但同时为环路中的组件重复打桩也已经十分的不优雅了。</p>
+<p>那么如何消除循环依赖呢？方案有两个：</p>
+<ul>
+<li>使用依赖反转创建接口；</li>
+<li>创建新组件。</li>
+</ul>
+<p>应用DIP解决循环依赖很好理解，下面讲述一个在工作中遇到的案例来说明如何使用创建新组件来打破循环依赖。</p>
+<p>现在有这样的一个场景，团队正在使用领域驱动设计的方法设计系统架构，现在实体Entity Dog需要依赖Dog Repo完成Save存储操作。此时Entity模块依赖了Repo模块，很不幸的是在Entity模块中我们还定义了Dog PO（简直糟透了），Repo的Save又需要使用PO来完成对象的转换并存储。此时Entity和Repo之间就发生了循环依赖，幸运的是，在Go中模块之间的相互依赖是不允许的，检查起会提醒“循环导入”错误，怎么处理这个问题呢？</p>
+<p>答案是我们需要新创建一个PO模块，并把Entity中的PO移动到模块，Repo中依赖PO的函数也要划分到PO中，这样就消除了依赖环。</p>
+<p>类似的例子还有很多很多，是否还记得我们使用anaconda下载Python库时遇到的库版本冲突问题……</p>
+<p>在这里多插一句，笔者在设计组件结构的时候很自然的就想到要和系统功能对应，也就是说，组件应该是和系统功能一一对应的，这样组件依赖图就和系统功能模块划分也一一对应起来。想当然认为在系统设计的一开始组件依赖结构图也就产出了。</p>
+<p>但作者特别提到，自顶向下的设计是不可能的。让我们看看书中是怎么描述的：</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>组件结构图必须随着软件系统的变化而变化和扩张，而不可能在系统构建的最初就被完美设计出。因为组件依赖结构图并不和功能一一对应，它更像是应用程序在构建性与维护性方面的一张地图。</p>
+<p>被设计并实现出来的模块越来越多，项目中就逐渐出现了要对组件依赖关系进行管理的需求，我们希望将项目变更所影响的范围被限制得越小越好，因此需要应用单一职责原则(SRP)和共同闭包原则(CCP)来将经常同时被变更的类聚合在一起。</p>
+<p>组件结构图中的一个重要目标是指导如何隔离频繁的变更。我们不希望那些频繁变更的组件影响到其他本来应该很稳定的组件。</p>
+<p>另外，随着应用程序的增长，创建可重用组件的需要也会逐渐重要起来。这时CRP又会开始影响组件的组成。最后当循环依赖出现时，随着无循环依赖原则(ADP)的应用，组件依赖关系会产生相应的抖动和扩张。</p>
+</blockquote>
+<h3 id="稳定依赖原则sdp">稳定依赖原则SDP</h3>
+<p>SDP告诉我们依赖关系必须要指向更稳定的方向。通常来说，要做到软件架构的越底层越稳定。</p>
+<p>任何一个我们预期会经常变更的组件都不应该被一个难于修改的组件所依赖，否则这个多变的组件也将会变得非常难以被修改。这就是软件开发的困难之处，我们精心设计的一个容易被修改的组件很可能会由于别人的一条简单依赖而变得非常难以被修改，通过遵循SDP，这样的问题就能够被避免。</p>
+<p>判断组件是否稳定，可以使用稳定性指标。作者定义稳定性指标可以通过如下公式计算：
+$$
+I=\frac{Fan-out}{Fan-in+Fan-out}
+$$
+其中Fan-in为组件的入依赖数量，Fan-out为出依赖数量，这意味着一个组件的出依赖越少越稳定，因为如果出依赖为 0 意味着没有因素可以让组件改变。</p>
+<p>稳定依赖原则(SDP)的要求就是要让每个组件的I指标都必须大于其所依赖组件的I指标（即被指向的组件更稳定）。</p>
+<p>SDP并不是要求所有组件都应该是稳定的，我们设计组件架构图的目的就是要决定应该让哪些组件稳定，让哪些组件不稳定，所有组件都稳定的架构是不灵活的，不灵活的架构没有足够的架构价值。</p>
+<h3 id="稳定抽象原则sap">稳定抽象原则SAP</h3>
+<p>SAP指出一个组件的抽象化程度应该与其稳定性保持一致。</p>
+<p>高层策略等应该存在稳定的组件中，但这样做会导致高层策略很难修改，幸运的是开闭原则 OCP 告诉我们稳定的组件可以被设计成容易扩展的，抽象类具有稳定抽象能力，可以设计一个抽象类具有较好的稳定性并且易于扩展和修改。</p>
+<blockquote>
+<p>抽象类是接口和类之间的缓冲地带。</p>
+</blockquote>
+<p>稳定抽象原则(SAP)为组件的稳定性与它的抽象化程度建立了一种关联。原则要求稳定的组件同时应该是抽象的，这样它的稳定性就不会影响到扩展性。同时一个不稳定的组件应该包含具体的实现代码，这样它的不稳定性就可以通过具体的代码被轻易修改。因此，如果一个组件想要成为稳定组件，那么它就应该由接口和抽象类组成，以便将来做扩展。</p>
+<p>和稳定性类似，我们也可以使用抽象程度指标来衡量组件的抽象程度：
+$$
+A=\frac{N_c}{N_a}
+$$
+其中Nc是指组件中类的数量，而Na是组件中抽象类和接口的数量。A指标的取值范围是从0到1，值为0代表组件中没有任何抽象类，值为1就意味着组件中只有抽象类。</p>
+<h3 id="思考-1">思考🤔</h3>
+<p>SDP和SAP有什么关联吗？</p>
+<p><strong>第一点，从SDP、SAP与DIP上说</strong></p>
+<p>实际上，SDP+SAP=组件DIP。因为SDP要求的是让依赖关系指向更稳定的方向，而SAP则告诉我们稳定性本身就隐含了对抽象化的要求，即依赖关系应该指向更抽象的方向。</p>
+<p>怎么理解这句话呢？</p>
+<p>可以想到，DIP在类上的作用是为了保证灵活性，SDP+SAP实际上就是为了保证组件在稳定的基础上足够灵活，并且 DIP 和 SDP+SAP 在软件架构上的影响都是具体实现类指向抽象类/接口，因此从作用上看SDP+SAP=组件DIP。</p>
+<p>但是DIP和SDP+SAP还是有不同之处，对类来说，设计是没有灰色地带的，一个类要么是抽象类，要么就不是。SDP与SAP这对原则是应用在组件层面上的，我们要允许一个组件部分抽象，部分稳定。</p>
+<p><strong>其次，从SAP和SDP的目的达成来说</strong></p>
+<p>此外，SDP指出依赖应该指向稳定的位置，SAP要求我们在设计组件时，高层的策略应该设计在抽象的组件，以便我们在架构设计时将策略与细节分开，同时便于我们进行插件式开发，SDP和SAP他们在目的上是一致的。</p>
+<blockquote>
+<p>看到了吧，这里又提到了<strong>插件式开发</strong>这个词，上次是在哪里提到的？对，依赖反转DIP，这也说明了SAP+SDP确实类似于组件DIP。</p>
+</blockquote>
+<h3 id="主序列">主序列</h3>
+<p>把组件稳定性指标I与组件抽象程度指标A结合在一起，画出一张图，a=-i+1这条直线就叫做主序列线。</p>
+<p><img src="/image-20240706171725797.png" alt="image-20240706171725797"></p>
+<p>整个区域可以分为三个区域：</p>
+<ul>
+<li>痛苦区：靠近(0,0)的区域，在这个区域内的组件十分稳定但同时又十分的具体，因此不易改变，如数据库表；工具库也是处于痛苦区的组件，虽然其 I 指标为 1（工具库依赖非常多的组件，因此其不稳定），但不能被修改，否则很多代码会出现问题；</li>
+<li>无用区：处于(1,1)附近的组件，该位置上的组件通常是无限抽象的，但是没有被其他组件依赖，这样的组件往往无法使用，对于这个区域中的软件组件来说，其源码或者类中的设计问题通常是由于历史原因造成的，比如忘记清除的旧代码；</li>
+<li>主序列线区：在整条主序列线上的区域，组件所能处于最优的位置是线的两端(0, 1)与(1, 0)。一个优秀的软件架构师应该争取将自己设计的大部分组件尽可能地推向这两个位置。</li>
+</ul>
+<p>怎么衡量组件的综合性能呢？答案是计算它与主序列线的距离，来量化一个系统设计与主序列的契合程度，这个值为D值，值为0意味着组件是直接位于主序列线上的，值为1则意味着组件在距离主序列最远的位置。
+$$
+D=|A+I-1|
+$$
+这样我们就可以用D指标大于0多少来指导组件的重构与重新设计。</p>
+<p>除此以外，D还可以有更多的作用，比如计算设计中所有组件的D指标的平均值和方差，用统计学的方法来量化分析一个系统设计：</p>
+<ul>
+<li>对于一个良好的系统设计来说，D指标的平均值和方差都应该接近于0；</li>
+<li>方差作为组件的“达标红线”来使用，我们可以通过它找出系统设计中那些不合常规的组件；</li>
+<li>还可以按照时间追踪 D 的方差值，来观察随着时间的变化，软件系统架构的稳定和抽象变化。</li>
+</ul>
+<p>（第四篇完）</p>
+
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+          
+          <aside class="toc">
+              <h5>
+                Table Of Contents
+              </h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#组件聚合">组件聚合</a>
+      <ul>
+        <li><a href="#复用发布等同原则rep">复用/发布等同原则REP</a></li>
+        <li><a href="#共同闭包ccp">共同闭包CCP</a></li>
+        <li><a href="#共同复用crp">共同复用CRP</a></li>
+        <li><a href="#思考">思考</a></li>
+      </ul>
+    </li>
+    <li><a href="#组件耦合">组件耦合</a>
+      <ul>
+        <li><a href="#无依赖环原则adp">无依赖环原则ADP</a></li>
+        <li><a href="#稳定依赖原则sdp">稳定依赖原则SDP</a></li>
+        <li><a href="#稳定抽象原则sap">稳定抽象原则SAP</a></li>
+        <li><a href="#思考-1">思考🤔</a></li>
+        <li><a href="#主序列">主序列</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+          
+
+          
+          <aside class="tags">
+            <h5>Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+              
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/tags/%E9%98%85%E8%AF%BB"
+                target="_blank"
+              >阅读</a></li>
+              
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93"
+                target="_blank"
+              >整洁架构之道</a></li>
+              
+            </ul>
+          </aside>
+          
+
+          
+          <aside class="social">
+            <h5>Social</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2ftommycheese.github.io%2fblogs%2f%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2f">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=%e5%86%8d%e8%af%bb%e6%95%b4%e6%b4%81%e6%9e%b6%e6%9e%84%e4%b9%8b%e9%81%93%ef%bc%88%e5%9b%9b%ef%bc%89%e7%bb%84%e4%bb%b6%e6%9e%84%e5%bb%ba%e5%8e%9f%e5%88%99&url=https%3a%2f%2ftommycheese.github.io%2fblogs%2f%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2f">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=%e5%86%8d%e8%af%bb%e6%95%b4%e6%b4%81%e6%9e%b6%e6%9e%84%e4%b9%8b%e9%81%93%ef%bc%88%e5%9b%9b%ef%bc%89%e7%bb%84%e4%bb%b6%e6%9e%84%e5%bb%ba%e5%8e%9f%e5%88%99: https%3a%2f%2ftommycheese.github.io%2fblogs%2f%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2f">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href='mailto:?subject=%e5%86%8d%e8%af%bb%e6%95%b4%e6%b4%81%e6%9e%b6%e6%9e%84%e4%b9%8b%e9%81%93%ef%bc%88%e5%9b%9b%ef%bc%89%e7%bb%84%e4%bb%b6%e6%9e%84%e5%bb%ba%e5%8e%9f%e5%88%99&amp;body=Check%20out%20this%20site https%3a%2f%2ftommycheese.github.io%2fblogs%2f%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2f'>
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<Script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+  
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+    
+ 
+ 
+<div class="container py-3" id="recent-posts">
+    
+    
+    <div class="h3 text-center text-secondary py-3">
+        最新发布|Recent Post
+    </div>
+    <div class="row justify-content-center">
+        
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                
+                <div class="card-header">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/">
+                        <img src="/blogimages/arh4.png" class="card-img-top" alt="再读整洁架构之道（四）组件构建原则">
+                    </a>
+                </div>
+                
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再读整洁架构之道（四）组件构建原则">再读整洁架构之道（四）组件构建原则</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>再读整洁架构之道（四）组件构建原则 第三篇主要叙述如何设计模块和类，在本篇将会更近一步，叙述如何进行组件的设计。
+组件是软件的部署单元，是整个软件系统在部署过程中可以独立完成部署的最小实体，组件可以被单独开发，组件化的插件式架构已经成为我们习以为常的软件构建形式了。
+组件聚合 组件聚合告诉我们哪些模块和类应该组合在一起形成组件。主要有三个原则：
+复用/发布等同原则； 共同闭包原则； 共同复用原则； 复用/发布等同原则REP REP指出软件复用的最小粒度应等同于其发布的最小粒度。
+REP是从代码复用角度考虑的，它规定了具备相同主题和功能的代码可以进行组合形成组件。REP建议软件复用应该按照组件来 …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Jul 6, 2024</span>
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                
+                <div class="card-header">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/">
+                        <img src="/blogimages/arh3.png" class="card-img-top" alt="再读整洁架构之道（三）SOLID设计原则">
+                    </a>
+                </div>
+                
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再读整洁架构之道（三）SOLID设计原则">再读整洁架构之道（三）SOLID设计原则</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>再读整洁架构之道（三）SOLID原则 构建软件模块的主要目标有三个：
+使软件可容忍被改动 使软件更容易被理解 构建可在多个软件系统中复用的组件 SOLID原则的主要作用就是告诉我们如何将数据和函数组织成为类，以及如何将这些类链接起来成为程序。SOLID原则指导我们如何设计模块，在架构设计层面，我们会有其他的设计原则。
+SOLID原则是指单一职责原则SRP、开闭原则OCP、里式替换原则LSP、接口隔离原则ISP和接口反转DIP。
+单一职责原则SRP SRP定义每个软件模块只对一个功能负责，只有一个理由可以让模块改变，任何一个软件模块都应该只对某一类行为者负责。
+组件层面的SRP被称作共同闭包原 …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Jul 5, 2024</span>
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                
+                <div class="card-header">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/">
+                        <img src="/blogimages/arh2.png" class="card-img-top" alt="再读整洁架构之道（二）编程范式">
+                    </a>
+                </div>
+                
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再读整洁架构之道（二）编程范式">再读整洁架构之道（二）编程范式</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>再读整洁架构之道（二） 编程范式指的是程序的编写模式，它告诉我们应该在什么时候采用什么样的代码结构。
+截止目前，一共出现了三种编程范式：结构化编程范式、面向对象编程范式和函数式编程。
+作者认为，每种编程方式不是在给架构设计者的武器库进行扩充，相反，架构师和程序员的武器已经够多了，这三种编程范式是在对他们利用的武器进行限制，这也是为什么他们叫做“范式”。
+结构化编程范式 结构化编程对程序控制权的直接转移进行了限制和规范，特别指的是限制了程序中goto的随意使用。
+分解程序 Dijkstra希望使用数学推导方法对程序进行推理证明：让程序就成为了一种欧几里得结构，这样可以用一些已经证明的结构串联起新 …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Jul 5, 2024</span>
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div id="disqus_thread"></div>
+    <script>
+        
+
+        
+
+        (function () { 
+            var d = document, s = d.createElement('script');
+            s.src = 'https://tommycheese.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+    <div class="text-center pt-2">
+    
+
+    
+
+    
+
+    
+
+    
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/" title="Tommy Cheese">
+                        <img alt="Footer logo" src="/%f0%9f%a7%80.png"
+                            height="40px" width="40px">
+                    </a>
+                </div>
+            
+            &copy; 2024  All rights reserved
+            <div class="text-secondary">
+                Made with
+                <span class="text-danger">
+                    &#10084;
+                </span>
+                and hugo<br>Powered by github.io
+            </div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>
