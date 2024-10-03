@@ -4,7 +4,7 @@
     <title>Blogs on Tommy Cheese</title>
     <link>https://tommycheese.github.io/blogs/</link>
     <description>Recent content in Blogs on Tommy Cheese</description>
-    <generator>Hugo</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 29 Jul 2024 06:13:15 +0800</lastBuildDate>
     <atom:link href="https://tommycheese.github.io/blogs/index.xml" rel="self" type="application/rss+xml" />
