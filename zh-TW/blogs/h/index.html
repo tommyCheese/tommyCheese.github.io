@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-page-path="/blogs/h/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="梯度之上：Hessian 矩陣">
+<meta property="og:description" content="從梯度和 Jacobian 矩陣出發，介紹 Hessian 矩陣及其在理解梯度下降中的作用。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/zh-TW/blogs/h/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2023-09-01T22:53:58+05:30">
+<meta property="article:modified_time" content="2023-09-01T22:53:58+05:30"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="梯度之上：Hessian 矩陣">
+<meta name="twitter:description" content="從梯度和 Jacobian 矩陣出發，介紹 Hessian 矩陣及其在理解梯度下降中的作用。">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="從梯度和 Jacobian 矩陣出發，介紹 Hessian 矩陣及其在理解梯度下降中的作用。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>梯度之上：Hessian 矩陣 · Tommy Cheese</title>
+<meta property="og:locale" content="zh_TW"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/h/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/h/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/h/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/h/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/h/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/h/"><link rel="canonical" href="https://tommycheese.github.io/zh-TW/blogs/h/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/zh-TW/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="搜尋文章（Ctrl + K）" aria-label="搜尋文章" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="語言">🌐 繁體中文</summary><nav aria-label="語言"><a href="/blogs/h/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/h/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/h/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/h/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/h/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW" aria-current="true">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="切換導覽選單" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="搜尋文章（Ctrl + K）" aria-label="搜尋文章" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#about" aria-label="關於" data-i18n-aria-label="nav.about" data-i18n="nav.about">關於</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#experience" aria-label="經歷" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">經歷</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#contact" aria-label="聯絡我" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">聯絡我</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/blogs/" title="部落格" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="部落格">部落格</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/tags/" title="標籤" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="標籤">標籤</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/gallery/" title="探索" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="探索">探索</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="切換明暗主題">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.h.title">梯度之上：Hessian 矩陣</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2023-09-01" data-date="2023-09-01">2023年9月1日</time>
+
+
+              <span id="readingTime"> · 閱讀約需 3 分鐘</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/hessen.png" alt="梯度之上：Hessian 矩陣" data-i18n-alt="post.h.title">
+          </div>
+
+          <article class="page-content  p-2"><p>本文討論研究梯度下降法的一個有力的數學工具：海森矩陣。在討論海森矩陣之前，需要首先了解梯度和雅克比矩陣的基本概念。</p>
+<blockquote>
+<p>⭐本文假設讀者已經熟悉梯度下降法和簡單的數值分析、線性代數知識
+<a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/">原文連結</a></p>
+</blockquote>
+<h2 id="梯度雅克比矩阵">梯度、雅克比矩陣</h2>
+<p>梯度下降演算法需要當前函式點的導數資訊，當此函式點包含多個方向時，梯度是包含所有方向的（偏）導數向量。</p>
+<p>上述情況對應於<strong>輸出為一個</strong>的情況，當函式的輸出也為一個向量時，我們需要把輸出向量的每一個元素對於多個輸入的梯度<strong>羅列在一起</strong>，羅列形成的矩陣就是<strong>雅克比矩陣（Jacobian Matrix）</strong>。</p>
+<p>舉例說明：</p>
+<ul>
+<li>若函式$f$接受三個輸入$x1、x2、x3$，產生一個輸出$y$，則其梯度為：</li>
+</ul>
+<p>$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$</p>
+<ul>
+<li>若函式$f2$接受三個輸入$x1、x2、x3$，產生三個輸出$y1、y2、y3$，則其雅克比矩陣為：</li>
+</ul>
+<p>$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;  \frac{\partial y_1}{\partial x_2}&amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;  \frac{\partial y_2}{\partial x_2}&amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;  \frac{\partial y_3}{\partial x_2}&amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$</p>
+<p>利用二階導數，我們可以知道關於函式在特定方向 $d$ 上的凹凸資訊，利用凹凸資訊可以在一定程度上預判梯度下降法的表現效果。如果在特定方向 $d$ 上：</p>
+<ul>
+<li>
+<p>二階導數為正，則函式在方向$d$上一階導數增加，函式值下降更慢；</p>
+</li>
+<li>
+<p>二階導數為負，則函式在方向$d$上一階導數減少，函式值下降更快；</p>
+</li>
+<li>
+<p>二階導數為零，則函式在方向$d$上一階導數不變，函式值勻速下降；</p>
+<blockquote>
+<p>⭐注意在梯度下降法中是對損失函式進行下降，因此需要使用減函式來分析函式中<strong>某一小段</strong>（經常使用二次函式的減半部近似：二階泰勒展開、牛頓法）中的導數變化情況；</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="海森矩阵">海森矩陣</h2>
+<p>和雅克比矩陣類似，<strong>海森矩陣（Hessian 矩陣）<strong>可以包含函式中二階導的資訊：
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+同時由於二階導數計算順序的可交換性，即 $\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$，因此</strong>海森矩陣是一個對稱矩陣</strong>，對於對稱矩陣我們可以使用<strong>特徵分解</strong>來研究特徵值和二階導數的關係，便於我們快速獲得某個方向的二階導數。</p>
+<p>針對於特定方向d，已知此方向的二階導數可以寫成 $d^THd$ ，則：</p>
+<blockquote>
+<p>🔗 <a href="https://blog.csdn.net/weixin_42397505/article/details/112066943">基於Hessian矩陣的二階方向導數與性質_Hi 喀什噶爾的胡楊的部落格-CSDN部落格_二階方向導數</a></p>
+</blockquote>
+<ul>
+<li>
+<p>若d是H對應特徵值λ的特徵向量：</p>
+<p>因為d為對應λ的特徵向量（以下簡稱特徵向量），則據定義有：
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$</p>
+<p>因此特徵向量對應的特徵值λ即為此方向的二階導數；</p>
+</li>
+<li>
+<p>若d為其他方向：設$e_i$為$H$對應特徵值$\lambda_i$的特徵向量，由上可知，
+$$
+\lambda_i=e_i^THe_i
+$$
+可知任何一個方向$d=\sum_i^mt_ie_i$為特徵向量的線性組合，其中m為特徵值個數，$t_i$為第$i$個特徵向量的加權數，則：
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+因此任意非特徵向量方向的二階導數是所有特徵值的加權和，特別的，此時的加權和是一個橢球體，在二維的特徵值情況下，二階導數是一個橢圓，橢圓方程為：
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+<img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="在這裡插入圖片描述"></p>
+<p>由圖可知，最大二階導數由最大特徵值決定（長半軸），而最小二階導數由最小特徵值決定（短半軸）。</p>
+</li>
+</ul>
+<h2 id="海森矩阵应用">海森矩陣應用</h2>
+<p>在弄清海森矩陣的基本定義後，就可以使用海森矩陣的一些性質來分析最佳化方法中的一些問題了。如確定區域性最大點、區域性最小點和鞍點、確定學習率、以及使用病態條件來確定梯度下降的表現等，同時我們還可以利用Hessian矩陣來實現<strong>牛頓法</strong>這種最佳化演算法，。</p>
+<p>（本節完）</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">目錄</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E6%A2%AF%E5%BA%A6%E9%9B%85%E5%85%8B%E6%AF%94%E7%9F%A9%E9%98%B5">梯度、雅克比矩陣</a></li>
+    <li><a href="#%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5">海森矩陣</a></li>
+    <li><a href="#%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5%E5%BA%94%E7%94%A8">海森矩陣應用</a></li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">標籤</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/zh-TW/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/" target="_blank"><span data-i18n="tag.数值微分">數值微分</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">分享</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2Fh%2F" aria-label="分享 · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8A%EF%BC%9AHessian+%E7%9F%A9%E9%99%A3&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2Fh%2F" aria-label="分享 · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8A%EF%BC%9AHessian+%E7%9F%A9%E9%99%A3+https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2Fh%2F" aria-label="分享 · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8A%EF%BC%9AHessian+%E7%9F%A9%E9%99%A3&amp;body=%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8A%EF%BC%9AHessian+%E7%9F%A9%E9%99%A3+https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2Fh%2F" aria-label="分享 · 傳送郵件">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/h/"; this.language = "zh_TW"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="回到頂端">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最新文章</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="再讀整潔架構之道（六）邊界" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再讀整潔架構之道（六）邊界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">再讀整潔架構之道（六）邊界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">討論如何透過架構邊界約束相依關係、隔離業務邏輯，並延後框架與資料庫等細節決策。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="再讀整潔架構之道（五）軟體架構" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再讀整潔架構之道（五）軟體架構" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">再讀整潔架構之道（五）軟體架構</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">從元件劃分、關係與通訊方式出發，討論軟體架構如何服務於研發、部署、執行和維護，並保留設計選擇。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="領域驅動設計初識" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="領域驅動設計初識" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">領域驅動設計初識</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">介紹領域驅動設計的策略設計與戰術設計，以及領域、子領域、限界上下文等基本概念。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">2024年7月26日</time></span>
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/zh-TW/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese 網站標誌" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 保留所有權利</span><div class="text-secondary">用心打造，基於 Hugo<br>由 GitHub Pages 提供支援</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

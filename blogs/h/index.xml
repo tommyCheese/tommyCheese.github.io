@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>梯度之上：Hessian 矩阵 on Tommy Cheese</title>
+    <title>梯度之上：Hessian 矩阵 · Tommy Cheese</title>
     <link>https://tommycheese.github.io/blogs/h/</link>
-    <description>Recent content in 梯度之上：Hessian 矩阵 on Tommy Cheese</description>
+    <description>Tommy Cheese 的个人博客，记录软件工程、人工智能与学习实践。</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate></lastBuildDate>
-    <atom:link href="https://tommycheese.github.io/blogs/h/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-CN</language>
+    <lastBuildDate/>
+    <atom:link href="https://tommycheese.github.io/blogs/h/index.xml" rel="self" type="application/rss+xml"/>
   </channel>
 </rss>

@@ -1,45 +1,32 @@
 async function handleFormspreeSubmit(event) {
   event.preventDefault();
-  var form = document.getElementById("contact-form");
-  var data = new FormData(event.target);
-  fetch(event.target.action, {
-    method: form.method,
-    body: data,
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        contactAlert("success", "Thanks for your submission!");
-        form.reset();
-      } else {
-        response.json().then((data) => {
-          var errMessage = data.errors;
-          for (var i = 0; i < errMessage.length; i++) {
-            contactAlert("danger", errMessage[i].message);
-          }
-        });
-      }
-    })
-    .catch((error) => {
-      contactAlert("danger", "Oops! There was a problem submitting your form");
+  const form = event.target;
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
     });
+    if (!response.ok) throw new Error("Submission failed");
+    contactAlert("success", window.siteI18n.t("contact.success"));
+    form.reset();
+  } catch (_) {
+    contactAlert("danger", window.siteI18n.t("contact.error"));
+  }
 }
 
 function contactAlert(type, message) {
-  var contactFormStatus = document.getElementById("contact-form-status");
-  var alert = `<div class="alert alert-${type} d-flex align-items-center" role="alert">
-                     <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:">
-                        <use xlink:href="#check-circle-fill" />
-                    </svg>
-                    <div>${message}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>`;
-  contactFormStatus.innerHTML = alert;
-
-  // Remove alert after 3 seconds
-  setTimeout(function () {
-    contactFormStatus.innerHTML = "";
-  }, 3000);
+  const container = document.getElementById("contact-form-status");
+  const alert = document.createElement("div");
+  alert.className = "alert alert-" + type;
+  alert.setAttribute("role", "status");
+  alert.textContent = message;
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "btn-close float-end";
+  close.setAttribute("aria-label", window.siteI18n.t("action.close"));
+  close.addEventListener("click", () => alert.remove());
+  alert.append(close);
+  container.replaceChildren(alert);
+  setTimeout(() => alert.remove(), 5000);
 }

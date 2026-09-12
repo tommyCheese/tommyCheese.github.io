@@ -1,0 +1,36 @@
+
+          <h2 id="前记">Preface</h2>
+<p>Why read it again? I had already read Clean Architecture once, but without enough project experience and trial and error, I felt that my understanding remained shallow. During my work, I finally had the opportunity to take part in several projects and implement real requirements. Better still, the team used Clean Architecture—more specifically, event-driven development with DDD and Clean Architecture. I will discuss DDD in detail later. Rereading this book 📚 proved very rewarding, so in this series I will describe Clean Architecture from my own perspective. More precisely, these are reading notes that I hope to share with fellow developers.</p>
+<p>The book is available here: <a href="https://weread.qq.com/web/bookDetail/480322f072021a3248038c8">Clean Architecture — Robert C. Martin — WeRead (qq.com)</a></p>
+<p>This series follows the chapters of the book and gradually explores the ideas alongside the author. Because this is a rereading, I will inevitably refer to ideas from other parts of the book. If you encounter something unfamiliar or difficult to understand, it will probably be covered in a later chapter.</p>
+<p>Let us begin.</p>
+<h2 id="设计与架构的含义">The Meaning of Design and Architecture</h2>
+<p>Design and architecture are not fundamentally different. Low-level design details and high-level architectural information together define a software system.</p>
+<p><strong>The ultimate goal of software architecture is to meet the requirements for building and maintaining a system with the least human effort</strong>. Cost can therefore serve as a measure of the quality of an architectural design.</p>
+<p>A system built hastily and without design can become a <strong>big ball of mud</strong>. In such a system, code quality and improvements to design structure have been neglected throughout development. Careful architectural design can help prevent this outcome and reduce costs.</p>
+<p>Software development has two key lessons:</p>
+<ul>
+<li>To go fast, first learn to go steadily.</li>
+<li>Overconfidence can cause a redesign to fall into the same traps as the original project.</li>
+</ul>
+<h2 id="两个价值维度">Two Dimensions of Value</h2>
+<p>A software system offers two kinds of value:</p>
+<ul>
+<li>Behavioral value: making a machine operate in a specified way to create or increase profit for its users.</li>
+<li>Architectural value: keeping software flexible, so that the cost of changing it depends on the scope of a requirement rather than its shape.</li>
+</ul>
+<p>How should we understand the scope and shape of a requirement?
+In my view, scope means the broad extent of the requirement and the <strong>domain</strong> to which it belongs, while shape means its specific details.</p>
+<p>Which dimension matters more?
+The author considers architectural value more important than behavioral value, because:</p>
+<ul>
+<li>If a program works but cannot be changed, it will stop working when requirements change, and we will be unable to modify it to keep it useful. Its value will then become zero.</li>
+<li>If a program does not currently work but is easy to change, fixing it and continuing to adapt it as requirements evolve should both be straightforward. Such a program can continue to create value.</li>
+</ul>
+<p>A common mistake shared by business and development teams is failing to distinguish genuinely urgent and important features from urgent but unimportant ones. As a result, important architectural concerns give way to unimportant behavioral features.</p>
+<p><strong>Balancing the importance of system architecture against the urgency of features is the responsibility of software developers themselves</strong>.</p>
+<blockquote>
+<p>Author’s note: Similar problems arise even between development teams. For example, some front-end teams assume that the back end merely needs to expose a set of interfaces and that this is easy, overlooking the importance of good design.</p>
+</blockquote>
+<h3 id="为好的软件架构持续斗争">Keep Fighting for Good Software Architecture ✊</h3>
+<p>If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.</p>

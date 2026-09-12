@@ -1,0 +1,1305 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Home · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/en/</link>
+    <description>Tommy Cheese’s personal blog on software engineering, artificial intelligence, and learning through practice.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/en/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>OpenCode v2 Extensions: Architecture and Integration</title>
+      <link>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</guid>
+      <category>Agent Development</category>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Research date: 2026-09-13. This article describes the general plugin capabilities of OpenCode v2, including plugin types, loading, capability registration, execution hooks, permission boundaries, and lifecycle management, as a reference for plugin development and embedded integration.&lt;/p&gt;
+&lt;p&gt;The code baseline is the &lt;code&gt;v2&lt;/code&gt; branch of the OpenCode repository under study, at commit &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;. Source references use repository-relative paths at that fixed commit. The interfaces and behavior described here apply to that version and do not promise compatibility with other OpenCode versions or the legacy plugin API.&lt;/p&gt;
+&lt;p&gt;This article is a source-code study and capability overview. Code examples illustrate interfaces and calling conventions and have not been independently executed.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="plugin-扩展入口"&gt;Plugin: The Extension Entry Point&lt;/h2&gt;
+&lt;h3 id="什么是-plugin"&gt;What Is a Plugin?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;OpenCode extensions connect to existing workflows by registering capabilities and execution hooks.&lt;/strong&gt; In the current OpenCode v2 implementation, extensions primarily correspond to the Plugin mechanism. Plugins can provide agents, tools, skills, models, and commands, or adjust behavior at specific execution points. The OpenCode core remains responsible for session execution, model requests, tool results, and execution records.&lt;/p&gt;
+&lt;figure class="plugin-flow"&gt;&lt;img src="https://tommycheese.github.io/blogimages/en/opencode-v2-plugin-flow.svg" alt="Article illustration" width="429" height="722"&gt;&lt;figcaption&gt;The Plugin Flow: Loading, Capability Registration, and Session Execution&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;details&gt;&lt;summary&gt;View the Mermaid diagram source&lt;/summary&gt;&lt;pre&gt;&lt;code class="language-mermaid"&gt;flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&amp;gt; B[插件加载与生命周期管理]
+    B --&amp;gt; C[构建助手、工具、技能等能力]
+    C --&amp;gt; D[会话选择助手]
+    D --&amp;gt; E[准备上下文与工具快照]
+    E --&amp;gt; F[请求阶段钩子]
+    F --&amp;gt; G[调用模型]
+    G --&amp;gt; H{返回内容}
+    H --&amp;gt;|工具调用| I[工具执行与钩子]
+    I --&amp;gt; J[保存结果与执行事件]
+    J --&amp;gt; G
+    H --&amp;gt;|最终回答| K[本次执行结束]
+&lt;/code&gt;&lt;/pre&gt;&lt;/details&gt;
+&lt;h3 id="plugin-的分类"&gt;Plugin Categories&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Internal, external, and SDK plugins differ by their source of integration but ultimately share the same runtime management.&lt;/strong&gt; All three can register agents, tools, and execution hooks. Their main differences are who supplies the definition, how it enters the host, and whether the host injects additional internal core services. This article covers server-side plugins; TUI plugins for the terminal interface use a separate extension entry point.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Comparison&lt;/th&gt;
+&lt;th scope="col"&gt;Internal plugin&lt;/th&gt;
+&lt;th scope="col"&gt;External plugin&lt;/th&gt;
+&lt;th scope="col"&gt;SDK plugin&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Provider&lt;/td&gt;
+&lt;td&gt;OpenCode source code and distribution&lt;/td&gt;
+&lt;td&gt;Project or independent plugin package maintainer&lt;/td&gt;
+&lt;td&gt;Application host embedding OpenCode&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Entry point&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PluginInternal&lt;/code&gt;’s &lt;code&gt;pre&lt;/code&gt; / &lt;code&gt;post&lt;/code&gt; collection&lt;/td&gt;
+&lt;td&gt;Directory discovery, configured files, or packages&lt;/td&gt;
+&lt;td&gt;Embedded host’s &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Loading form&lt;/td&gt;
+&lt;td&gt;The core imports definitions directly&lt;/td&gt;
+&lt;td&gt;The module is resolved and its default export is read&lt;/td&gt;
+&lt;td&gt;The plugin object is passed directly in memory&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Available interfaces&lt;/td&gt;
+&lt;td&gt;Public Context plus host-injected internal services&lt;/td&gt;
+&lt;td&gt;Public Plugin Context&lt;/td&gt;
+&lt;td&gt;Public Plugin Context; closures can access dependencies explicitly supplied by the host&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Primary configuration&lt;/td&gt;
+&lt;td&gt;Native configuration, internal services, or built-in defaults&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;plugins[].options&lt;/code&gt; → &lt;code&gt;ctx.options&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Host code and closures; the registration interface has no separate &lt;code&gt;options&lt;/code&gt; parameter&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Update source&lt;/td&gt;
+&lt;td&gt;Follows the OpenCode code version; some plugins watch configuration themselves&lt;/td&gt;
+&lt;td&gt;Configuration changes, supported local entry changes, or package configuration changes&lt;/td&gt;
+&lt;td&gt;The host registers the plugin again, incrementing the internal revision&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Instance scope&lt;/td&gt;
+&lt;td&gt;Activated independently for each Location&lt;/td&gt;
+&lt;td&gt;Activated according to each Location’s configuration&lt;/td&gt;
+&lt;td&gt;Definitions are shared within a host; activation is independent for each Location&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Use cases&lt;/td&gt;
+&lt;td&gt;Implementing native agents, tools, providers, and configuration handling&lt;/td&gt;
+&lt;td&gt;Adding project or business capabilities to an existing OpenCode service&lt;/td&gt;
+&lt;td&gt;Embedding and managing OpenCode within a JS/TS application&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Effect and Promise are two interfaces for authoring plugins. An Effect plugin object using the public interface can either be default-exported and loaded through configuration or passed directly to the embedded SDK for registration. Its core capabilities can be reused, while loading order and configuration delivery differ.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Internal plugins organize some of OpenCode’s own functionality as plugins.&lt;/strong&gt; They are not special files installed by users in a directory. The core imports them statically and explicitly includes them in the &lt;code&gt;PluginInternal&lt;/code&gt; collection. &lt;code&gt;PluginInternal.list()&lt;/code&gt; obtains the services needed by the current Location, injects them into internal plugins through &lt;code&gt;Effect.provide(context)&lt;/code&gt;, and passes the result to the unified loader.&lt;/p&gt;
+&lt;p&gt;There are two layers of Context here: &lt;code&gt;effect(ctx)&lt;/code&gt; still receives the public Plugin Context. Internal plugins obtain additional services such as &lt;code&gt;Config.Service&lt;/code&gt;, &lt;code&gt;Permission.Service&lt;/code&gt;, &lt;code&gt;Shell.Service&lt;/code&gt;, &lt;code&gt;Location.Service&lt;/code&gt; through the Effect environment. Their additional capabilities come from explicit host dependency injection, not from a plugin ID beginning with &lt;code&gt;opencode.&lt;/code&gt;.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Internal plugin example&lt;/th&gt;
+&lt;th scope="col"&gt;Collection&lt;/th&gt;
+&lt;th scope="col"&gt;Actual responsibility&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Registering the base definitions of native agents&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.tool.shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Registering the Shell tool with native execution, permission, and runtime-state services&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Native provider, search, and other tool plugins&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Providing foundational model, search, and tool capabilities&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.config.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Reading agent configuration and related Markdown files and applying the results to the agent catalog&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Provider, skill, policy, and model-variant configuration plugins&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Applying configuration or postprocessing to capabilities contributed earlier&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;This also explains the relationship between custom agents and internal plugins: users edit agent configuration, while &lt;code&gt;opencode.config.agent&lt;/code&gt; reads, watches, and applies it. Each custom agent is an Agent definition and does not require its own plugin. External or SDK plugins can also register Agents, which configuration plugins may subsequently adjust.&lt;/p&gt;
+&lt;p&gt;Built-in plugins participate in configuration-based enablement and disablement as well. For example, &lt;code&gt;-opencode.config.agent&lt;/code&gt; removes the plugin responsible for applying agent configuration from the active set, affecting that configuration capability. Whether to keep a built-in plugin enabled should be decided according to its actual responsibility.&lt;/p&gt;
+&lt;p&gt;Adding native functionality that depends on private Core services generally requires changing OpenCode’s source and adding the plugin to the built-in collection. New service dependencies also require corresponding changes to service assembly. These changes are built, released, and upgraded with OpenCode. Internal plugins suit engine functionality; ordinary business tools should prefer public interfaces.&lt;/p&gt;
+&lt;p&gt;Sources: internal plugin collections and service injection (&lt;code&gt;packages/core/src/plugin/internal.ts&lt;/code&gt;), native agent plugin (&lt;code&gt;packages/core/src/plugin/agent.ts&lt;/code&gt;), agent configuration plugin (&lt;code&gt;packages/core/src/config/plugin/agent.ts&lt;/code&gt;), Shell tool plugin (&lt;code&gt;packages/core/src/tool/plugin/shell.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;External plugins add capabilities to an existing OpenCode service through files or packages.&lt;/strong&gt; “External” means that the code is not in the built-in collection; it still runs inside the OpenCode process. The loader supplies the public Plugin Context without the extra Core service injection provided to internal plugins. It can still access files, networks, and other resources permitted by the runtime. This is neither a separate process nor a security sandbox.&lt;/p&gt;
+&lt;p&gt;External plugins have two discovery paths:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Automatic discovery&lt;/strong&gt;: scans &lt;code&gt;plugin/&lt;/code&gt; and &lt;code&gt;plugins/&lt;/code&gt; under native configuration directories. The current implementation directly recognizes &lt;code&gt;.ts&lt;/code&gt;, &lt;code&gt;.js&lt;/code&gt; files and can also resolve package directories and eligible symbolic links. For a package directory, it first checks &lt;code&gt;package.json&lt;/code&gt; for a string-valued &lt;code&gt;exports&lt;/code&gt;, &lt;code&gt;module&lt;/code&gt;, &lt;code&gt;main&lt;/code&gt;, then &lt;code&gt;index.ts&lt;/code&gt;, &lt;code&gt;index.js&lt;/code&gt;. This simple discovery logic should not be treated as support for every complex package-export rule.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Explicit configuration&lt;/strong&gt;:&lt;code&gt;plugins&lt;/code&gt; accepts relative paths, absolute paths, file URLs, and resolvable packages. Relative paths are resolved against the configuration file’s directory. Local paths go through module loading; package targets go through the package resolver, which tries the &lt;code&gt;server&lt;/code&gt; subpath or the package root entry.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Automatic discovery results enter the operation list first, followed by explicit configuration. Configuration can therefore disable automatically discovered plugins. Automatic discovery does not directly enumerate &lt;code&gt;.mjs&lt;/code&gt; files. Such entry points must be explicitly configured and loaded by the runtime.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The paths above are configuration-format examples. A plugin uses &lt;code&gt;ctx.options&lt;/code&gt; to read &lt;code&gt;serviceUrl&lt;/code&gt; and must validate required fields, value ranges, and address restrictions itself. Receiving an object does not mean that its business configuration has been validated.&lt;/p&gt;
+&lt;p&gt;An external module must default-export a plugin object containing &lt;code&gt;id + effect&lt;/code&gt; or &lt;code&gt;id + setup&lt;/code&gt;:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Authoring style&lt;/th&gt;
+&lt;th scope="col"&gt;Initialization entry&lt;/th&gt;
+&lt;th scope="col"&gt;Integration and cleanup&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Effect&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;effect(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Executed by the host within the plugin Scope; resources use scoped lifecycles or finalizers&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Promise&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;setup(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;The loader uses &lt;code&gt;fromPromise&lt;/code&gt; to adapt it to an Effect plugin; initialization may return a cleanup function&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;@opencode-ai/plugin/effect&lt;/code&gt; provides the Effect API, while the package root &lt;code&gt;@opencode-ai/plugin&lt;/code&gt; provides the Promise API for this branch. The legacy plugin API has a separate &lt;code&gt;v1&lt;/code&gt; entry point; sharing the name “OpenCode plugin” does not imply interface compatibility.&lt;/p&gt;
+&lt;p&gt;The typical loading chain for an external plugin is:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;File or configuration changes can trigger regeneration of the plugin set. Updates are limited to the supported discovery and watching scope; arbitrary dependency-file changes do not necessarily refresh immediately. In particular, when an explicitly configured entry is a directory, changes inside that directory are not guaranteed to trigger reloading. Package upgrades should also be managed through explicit deployment or configuration changes.&lt;/p&gt;
+&lt;p&gt;If module import or export-format validation fails, the loader records a warning and skips that source. Initialization failures after activation begins are handled by unified plugin management. When diagnosing availability, verify separately that the file was discovered, the module resolved, the plugin activated, and the capability registered. A configuration entry alone does not prove that a tool is available.&lt;/p&gt;
+&lt;p&gt;Sources: discovery and local watching (&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;), module loading and configuration injection (&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;), public package entry points (&lt;code&gt;packages/plugin/package.json&lt;/code&gt;), Promise adapter (&lt;code&gt;packages/plugin/src/promise/adapter.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SDK plugins are registered directly by an embedded host and suit applications that use OpenCode as an internal execution engine.&lt;/strong&gt; Here, SDK specifically means the &lt;code&gt;@opencode-ai/sdk-next&lt;/code&gt; embedded host in the current branch. &lt;code&gt;OpenCode.create()&lt;/code&gt; creates a runtime and an in-memory HTTP routing chain within the application process. That internal chain needs no network listener, though tools, models, and business services can still make their own network requests.&lt;/p&gt;
+&lt;p&gt;The host submits an Effect plugin object directly through &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;, bypassing external module discovery, package resolution, and default-export validation. This does not upload code to an already running remote OpenCode service. A regular HTTP client or the &lt;code&gt;ctx.plugin.list()&lt;/code&gt; in Plugin Context is not this embedded registration entry point.&lt;/p&gt;
+&lt;p&gt;The following example shows how an embedded host registers and queries plugins. Dependencies must match the research baseline:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&amp;gt;
+      ctx.agent.transform((draft) =&amp;gt; {
+        draft.update("reviewer", (agent) =&amp;gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The example agent defines only its purpose and prompt; permissions require separate configuration. When the example finishes, the Scope that owns the host closes. A real embedded application should keep that Scope alive throughout the service lifecycle.&lt;/p&gt;
+&lt;p&gt;The scope and update behavior of SDK plugins have two layers:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Layer&lt;/th&gt;
+&lt;th scope="col"&gt;Managed content&lt;/th&gt;
+&lt;th scope="col"&gt;Effective scope&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Host registry&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Map&amp;lt;plugin.id, Versioned&amp;gt;&lt;/code&gt;, storing definitions and increasing revision numbers&lt;/td&gt;
+&lt;td&gt;Shared within one embedded host; each host has its own registry&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Location activation set&lt;/td&gt;
+&lt;td&gt;Plugin instances, Transforms, Hooks, and Scopes within that directory context&lt;/td&gt;
+&lt;td&gt;Activated and cleaned up independently for each Location&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Every registration publishes &lt;code&gt;sdk.plugin.updated&lt;/code&gt;. Running Locations regenerate their plugin sets when notified. Locations started later, or restarted after disposal, read the current definitions from the host registry. Registering once at the host level therefore does not mean initialization runs only once. Mutable objects captured in closures may also be shared by multiple Location instances in the same host and must not be assumed to represent a single session’s state.&lt;/p&gt;
+&lt;p&gt;Registering the same ID again in one SDK registry replaces its definition and creates a new revision. Separate hosts do not overwrite one another. Registration returning means only that the definition was stored and an update published; it does not mean every Location has finished activation. To verify effectiveness, inspect the target Location’s actual plugin and capability lists and wait for activation events when necessary.&lt;/p&gt;
+&lt;p&gt;The current SDK registry exposes only &lt;code&gt;register&lt;/code&gt; and &lt;code&gt;all&lt;/code&gt;, with no separate &lt;code&gt;unregister&lt;/code&gt; interface. A Location can still disable activation by plugin ID through configuration, but that does not remove the definition from the host registry. Closing the host cleans up runtime resources. A newly created host requires registration again; the in-memory registry is not a persistent installation record.&lt;/p&gt;
+&lt;p&gt;The SDK registration entry accepts Effect plugins. The external loader’s automatic Promise adaptation does not happen here. To reuse a Promise definition, explicitly use the corresponding &lt;code&gt;fromPromise&lt;/code&gt; adapter. The SDK path performs no additional &lt;code&gt;options&lt;/code&gt; injection, and the public Context supplies an empty object by default. Hosts typically pass configuration and business clients through factories or closures.&lt;/p&gt;
+&lt;p&gt;SDK plugins do not automatically receive the Core service environment available to internal plugins. A host may explicitly supply dependencies, but depending directly on private Core services introduces additional version coupling. In the research baseline, &lt;code&gt;sdk-next&lt;/code&gt; is still a transitional package marked &lt;code&gt;private: true&lt;/code&gt;; this example is not a promise that a stable public npm API is available for installation.&lt;/p&gt;
+&lt;p&gt;Sources: embedded host entry point (&lt;code&gt;packages/sdk-next/src/opencode.ts&lt;/code&gt;), SDK registry (&lt;code&gt;packages/core/src/plugin/sdk.ts&lt;/code&gt;), SDK package status (&lt;code&gt;packages/sdk-next/package.json&lt;/code&gt;), public plugin host (&lt;code&gt;packages/core/src/plugin/host.ts&lt;/code&gt;). Embedded test source (&lt;code&gt;packages/sdk-next/test/embedded.test.ts&lt;/code&gt;) covers updates across Locations, reactivation after Location disposal, and isolation between hosts. These cases were reviewed for this article but not independently executed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The three sources merge into one ordered activation set.&lt;/strong&gt; Once enabled entries have been determined, the current order is:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;ConfigPluginSource&lt;/code&gt; handles external sources and configuration operations; &lt;code&gt;PluginSupervisor&lt;/code&gt; merges them with internal and SDK definitions; &lt;code&gt;Plugin.Service&lt;/code&gt; performs the final duplicate-ID checks and manages Scopes, initialization, and replacement. The sources are not three independent execution engines.&lt;/p&gt;
+&lt;p&gt;This order means that capabilities such as agents contributed by external and SDK plugins can still be adjusted by later configuration plugins. To determine an agent’s final prompt, model, or permissions, inspect the final capability catalog rather than only its initial plugin definition.&lt;/p&gt;
+&lt;p&gt;Plugin IDs, package names, and entry paths serve different purposes. If configuration loads a file whose exported plugin ID is &lt;code&gt;example.reviewer&lt;/code&gt;, disable it with &lt;code&gt;-example.reviewer&lt;/code&gt;. Selectors support exact IDs, &lt;code&gt;prefix.*&lt;/code&gt;, and &lt;code&gt;*&lt;/code&gt;. Configuration operations run in sequence, and later operations may re-enable an existing definition.&lt;/p&gt;
+&lt;p&gt;Two duplicate-name rules are easy to confuse:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Registering the same ID again in one SDK registry&lt;/strong&gt;: updates that definition through a supported registry replacement operation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Different active sources contributing the same ID&lt;/strong&gt;: causes activation to reject that round’s entire set for duplicate IDs; definitions are not silently overridden according to source priority. Do not submit the same plugin definition through both an external file and SDK registration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Also, the current &lt;code&gt;Plugin.Service&lt;/code&gt; skips activation when the IDs and versions of the entire ordered set are unchanged. When the set changes, it iterates over the new set, cleaning up and reinitializing existing plugins. Updating one source can therefore reinitialize other, unchanged plugins. All three plugin types must release resources correctly and must not treat initialization as a business action that runs only once. A failed replacement attempts to restore the plugin’s previous version, but cannot undo external business side effects.&lt;/p&gt;
+&lt;p&gt;Sources: source merging and enablement order (&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;), unified activation and replacement (&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;), configuration and loading-order test source (&lt;code&gt;packages/core/test/config/plugin.test.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="plugin-核心实现一-transform"&gt;Core Plugin Mechanism 1: Transform&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Transforms declare capabilities; Hooks participate in an individual execution.&lt;/strong&gt; When choosing an extension point, first determine which domain the requirement belongs to.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Requirement&lt;/th&gt;
+&lt;th scope="col"&gt;Native extension interface&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Register, modify, or remove agents&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.agent.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Register tools that can actually execute&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Provide skill instructions and resource entry points&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.skill.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Add commands&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.command.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adjust providers, model catalogs, and default selections&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.catalog.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Provide reference-material sources&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.reference.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Configure authentication and connections&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.integration.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Provide a search backend&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.websearch.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Modify the current request’s context and visible tools&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Inspect tool inputs or organize results&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adjust the model SDK or model instance&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.aisdk.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adjust model HTTP requests or responses&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("http.request" / "http.response", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adjust command creation parameters&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.shell.hook("create.before", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Observe live events&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.event.subscribe()&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Create, submit to, wait for, or interrupt sessions&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;State domains such as Agent, Catalog, Command, Integration, Reference, and Skill retain active Transforms and rebuild their state from the base state in sequence. Unloading a plugin removes its Transforms and regenerates the result. A Transform should edit only the Draft supplied to the current callback, retain no Draft references, and avoid external business side effects during rebuilding. If external data is needed, load and store it first, then trigger the domain’s &lt;code&gt;reload()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The underlying Tool implementation uses Scope-bound registration and request snapshots. Its lifecycle ownership matches the other domains, but that does not mean all &lt;code&gt;transform&lt;/code&gt; methods use identical state containers or return types.&lt;/p&gt;
+&lt;h2 id="plugin-核心实现二-hook"&gt;Core Plugin Mechanism 2: Hook&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;A Hook is an extension point provided by the host within an execution flow.&lt;/strong&gt; Plugins register callbacks at these points. When OpenCode reaches the corresponding stage, it invokes the callbacks with that stage’s context. Plugins can read data, adjust parameters, or process results according to the interface contract, participating in model requests, tool execution, and related flows.&lt;/p&gt;
+&lt;p&gt;Using a Hook has two stages: registration and invocation. During initialization, a plugin declares its participation through interfaces such as &lt;code&gt;ctx.session.hook(...)&lt;/code&gt;, &lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;. The host invokes the callback only when execution reaches that point. Once registered, the callback may run repeatedly whenever the point is reached. The host waits for it to complete, then continues according to the interface contract. For example, &lt;code&gt;tool.execute.before&lt;/code&gt; allows a plugin to return &lt;code&gt;Tool.Error&lt;/code&gt; to reject the tool execution.&lt;/p&gt;
+&lt;p&gt;Transforms build the available capabilities, while Hooks adjust their behavior at specific execution points. For example, register a tool with &lt;code&gt;ctx.tool.transform&lt;/code&gt;, inspect the input of an individual tool invocation with &lt;code&gt;ctx.tool.hook("execute.before", ...)&lt;/code&gt;, and adjust the context about to be sent to a model with &lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;. Hooks participate in the current call chain, while &lt;code&gt;ctx.event.subscribe()&lt;/code&gt; subscribes to events to observe execution.&lt;/p&gt;
+&lt;p&gt;Runtime Hooks execute serially in registration order. Later Hooks see earlier modifications. If several plugins modify the same field, inspect the final loading order. Built-in plugins are divided into leading and trailing collections, so external plugins cannot simply be assumed to override everything last.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Hook&lt;/th&gt;
+&lt;th scope="col"&gt;Content that can be changed or observed&lt;/th&gt;
+&lt;th scope="col"&gt;Considerations&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.context&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;System prompts, messages, and current-request tool definitions&lt;/td&gt;
+&lt;td&gt;Agent and model identifiers identify the context; changing messages affects the current request and does not append persistent history&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Tool input&lt;/td&gt;
+&lt;td&gt;Can return &lt;code&gt;Tool.Error&lt;/code&gt; to prevent execution&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.after&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Successful result or tool error&lt;/td&gt;
+&lt;td&gt;Useful for organizing results and adding information&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.http.request/response&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Model HTTP requests and responses&lt;/td&gt;
+&lt;td&gt;May expose credentials and complete input; control what is logged&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;aisdk.sdk/language&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SDK and actual model instance&lt;/td&gt;
+&lt;td&gt;Suitable for provider adaptation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;shell.create.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Command, directory, timeout, shell, and environment variables&lt;/td&gt;
+&lt;td&gt;String-based rules alone do not provide operating-system isolation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Among the current public Hook types, only &lt;code&gt;tool.execute.before&lt;/code&gt; declares a recoverable &lt;code&gt;Tool.Error&lt;/code&gt; failure channel. Other Hooks should not be treated as general middleware for throwing arbitrary business errors.&lt;/p&gt;
+&lt;p&gt;Sources: Plugin Context (&lt;code&gt;packages/plugin/src/effect/plugin.ts&lt;/code&gt;), state rebuilding (&lt;code&gt;packages/core/src/state.ts&lt;/code&gt;), Hook registration and execution (&lt;code&gt;packages/core/src/plugin/hooks.ts&lt;/code&gt;), tool registration and snapshots (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="工具示例与生命周期"&gt;Tool Examples and Lifecycle&lt;/h2&gt;
+&lt;h3 id="示例一-使用-plugin-transform-定义-tool"&gt;Example 1: Define a Tool with a Plugin Transform&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;A tool contains a model-visible definition and a host-executed function.&lt;/strong&gt; After the model generates a tool name and input, OpenCode processes the call using the tool capabilities captured for that request. The function receives the host-provided &lt;code&gt;sessionID&lt;/code&gt;, &lt;code&gt;agent&lt;/code&gt;, &lt;code&gt;messageID&lt;/code&gt; and invocation &lt;code&gt;id&lt;/code&gt;. Long-running operations can report progress through &lt;code&gt;context.progress()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The following standalone tool example uses the Effect API:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&amp;gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&amp;gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Distinguish result fields by their purpose: &lt;code&gt;output&lt;/code&gt; is a structured value for programmatic use when an output Schema has been declared; &lt;code&gt;content&lt;/code&gt; is supplied to the model and becomes part of session content; &lt;code&gt;metadata&lt;/code&gt; carries bounded additional state. Returning &lt;code&gt;output&lt;/code&gt; without declaring an output Schema is an error in the current runtime.&lt;/p&gt;
+&lt;p&gt;The source reveals two validation details that interface names alone do not convey:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tool.execute.before&lt;/code&gt; runs before Schema decoding inside the tool function. A Hook must therefore treat the input as an unknown structure; decoding happens afterward on the potentially modified input.&lt;/li&gt;
+&lt;li&gt;Effect Schema and supported Standard Schemas validate inputs at runtime. The plain JSON Schema branch passes input through directly. The plain JSON Schema output branch also checks only that the result is a JSON value, not that it satisfies each declared constraint. Business tools must not equate supplying a JSON Schema to the model with server-side parameter validation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In the current tool pipeline, failure of the pre-execution Hook immediately aborts subsequent processing. Do not assume that &lt;code&gt;execute.after&lt;/code&gt; always runs for such rejections. An audit design must cover rejection paths instead of observing only events after successful execution.&lt;/p&gt;
+&lt;p&gt;Expected, recoverable tool failures can be mapped to &lt;code&gt;Tool.Error&lt;/code&gt;. Cancellation, unexpected programming defects, and successful results must retain distinct meanings; do not swallow them all and return ordinary success text.&lt;/p&gt;
+&lt;p&gt;Sources: tool types (&lt;code&gt;packages/schema/src/tool.ts&lt;/code&gt;), tool execution wrapper (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;), actual parameter validation (&lt;code&gt;packages/core/src/tool/runtime.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="示例二-使用-code-mode-组合工具调用"&gt;Example 2: Compose Tool Calls with Code Mode&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Code Mode determines how some tools are presented and composed.&lt;/strong&gt; The current branch exposes tools with &lt;code&gt;codemode: false&lt;/code&gt; directly to the model. Other tools may enter the Code Mode catalog, where &lt;code&gt;execute&lt;/code&gt; runs a small piece of code to combine calls and process results. Actual tool calls made within Code Mode still return to the host’s tool execution path.&lt;/p&gt;
+&lt;p&gt;This suits sequential queries, filtering, and aggregation. The Code Mode runtime restricts direct file access, imports, and similar operations, but these restrictions do not mean that the entire OpenCode service or external plugins run in an operating-system sandbox. The &lt;code&gt;echo&lt;/code&gt; example above sets &lt;code&gt;codemode: false&lt;/code&gt; to demonstrate direct exposure of a tool to the model.&lt;/p&gt;
+&lt;p&gt;A model request captures a snapshot of tool registrations when it is prepared. Hot-updating a plugin does not cause an already prepared request to use a completely new tool catalog; subsequent requests prepare capabilities again. Plugin-contributed execution functions should also avoid depending on unowned background resources that may already have been cleaned up.&lt;/p&gt;
+&lt;p&gt;Sources: tool classification and snapshots (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;), Code Mode(&lt;code&gt;packages/core/src/codemode/tool.ts&lt;/code&gt;), current-request tool availability checks (&lt;code&gt;packages/core/src/session/model-request.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="plugin-的-location"&gt;Plugin Locations&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Plugin instances are managed per Location; persistent business state requires separate storage.&lt;/strong&gt; A Location is an execution context made up of a directory and an optional native Workspace identifier. One OpenCode process can host multiple Locations simultaneously, and the same plugin may activate independently in each.&lt;/p&gt;
+&lt;p&gt;Each plugin instance owns a Scope containing its Transforms, Hooks, tool registrations, and correctly bound resources. Closing the Scope cleans up those registrations. Plugin-owned timers, network subscriptions, and file watchers also need cleanup bindings. Promise plugins may return a cleanup function from &lt;code&gt;setup&lt;/code&gt;, while Effect plugins use the corresponding scoped resources and finalizers.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Local plugin entry files and configuration sources are watched for changes. If an explicitly configured entry is a directory, changes to files inside it do not receive the same automatic hot-update guarantee. Loading, updates, and stopping also depend on actual watcher behavior and runtime state. A claim of hot-update support does not replace verification through the native capability catalog.&lt;/p&gt;
+&lt;p&gt;Plugin recovery restores code and registrations only; it cannot undo side effects already caused in files, databases, or remote services. Scheduled tasks, approval state, retry counts, and idempotency keys should be maintained in reliable storage. In-memory session state must at least be isolated by &lt;code&gt;sessionID&lt;/code&gt;. Module-level global variables may also be shared across plugin instances and require particular care.&lt;/p&gt;
+&lt;p&gt;Sources: plugin Scopes and recovery (&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;), plugin file watching (&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="plugin-最佳实践"&gt;Plugin Best Practices&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Prefer Existing Configuration and Public Interfaces&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use Agent configuration when changing only prompts, purpose, or step limits.&lt;/li&gt;
+&lt;li&gt;Use a Skill to provide methods and knowledge.&lt;/li&gt;
+&lt;li&gt;Register a Tool to add executable operations.&lt;/li&gt;
+&lt;li&gt;Use the corresponding Hook to adjust behavior at an &lt;strong&gt;execution point&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;When a plugin needs persistent business state or external services, explicitly design storage, authentication, transactions, and idempotency handling. Do not rely on plugin memory to provide these guarantees.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A single-responsibility plugin may consist of one TS extension file. Split capabilities into multiple plugin IDs only when they need independent enablement, versions, or failure policies. Ordinary external plugins should depend on public plugin, client, and schema interfaces and avoid private Core implementations. Distributions should specify compatible host and dependency versions, module entry points, and build methods.&lt;/p&gt;
+&lt;p&gt;When upgrading a Plugin, check at least the following behaviors instead of merely confirming that its module can be imported:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Agents, tools, and skills appear in the actual capability catalog, and their contributions disappear after unloading.&lt;/li&gt;
+&lt;li&gt;Multiple-plugin ordering, configuration overrides, and final state after failed hot updates behave as expected.&lt;/li&gt;
+&lt;li&gt;Tool input, output, cancellation, and execution rejection retain the correct semantics.&lt;/li&gt;
+&lt;li&gt;Session model and agent selections actually take effect, and subagents receive the intended permissions and context.&lt;/li&gt;
+&lt;li&gt;Custom tools and the services they call correctly check session ownership, business authorization, state transitions, and duplicate requests.&lt;/li&gt;
+&lt;li&gt;Persistent state can be restored after a service restart, and missing live events are handled correctly.&lt;/li&gt;
+&lt;li&gt;Tool results and events accurately represent progress, completion, failure, and cancellation.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (6): Boundaries</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
+      <pubDate>Mon, 29 Jul 2024 06:13:15 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</guid>
+      <description>&lt;h2 id="什么是边界"&gt;What Are Boundaries?&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Software architecture is the art of drawing boundaries.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Boundaries divide software into elements and constrain dependencies across their two sides. Drawing boundaries early in a project allows decisions to be deferred, ensuring that those decisions will not later interfere with the system’s &lt;strong&gt;core business logic&lt;/strong&gt;. Boundaries also reduce or eliminate unnecessary architectural coupling. Coupling—especially coupling caused by premature, immature decisions about frameworks, databases, and other details that should have been postponed—is what consumes the most human effort in a system.&lt;/p&gt;
+&lt;p&gt;How should we draw boundaries? Two basic principles help:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Place boundaries between unrelated concerns, such as the GUI and business logic. Input and output through a GUI are incidental to the business logic, which should support different GUI implementations.&lt;/li&gt;
+&lt;li&gt;Draw boundaries along the axes of change in a system. Components on opposite sides should change for different reasons and at different rates. The principles that guide these axes are SRP at the module or class level and CCP at the component level.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having established why boundaries matter and where they belong, we can consider the basic process of drawing them:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;First divide the system into components. Some contain core business logic; others are plugins that provide necessary functionality unrelated to that core.&lt;/li&gt;
+&lt;li&gt;Modify the source code so that these noncore components depend on the system’s core business logic components.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Drawing boundaries is a concrete application of dependency inversion and stable abstractions. Dependency arrows should point from low-level concrete implementations toward high-level abstractions.&lt;/p&gt;
+&lt;h2 id="边界剖析"&gt;Anatomy of Boundaries&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A system’s architecture is defined by its software components and the boundaries between them&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Boundaries take several forms. This chapter examines them through calls that cross boundaries.&lt;/p&gt;
+&lt;p&gt;At runtime, crossing a boundary means a function on one side calls a function on the other and passes data to it. Designing these calls properly requires careful control of source-code dependencies. Without that control, changing one module’s source may force other modules to change or be recompiled and redeployed. Clear boundaries help reduce this effect.&lt;/p&gt;
+&lt;p&gt;Cross-boundary calls occur at several levels: source code, deployment, services, and physical boundaries.&lt;/p&gt;
+&lt;h3 id="源码层次的跨边界调用"&gt;Crossing Boundaries at the Source-Code Level&lt;/h3&gt;
+&lt;p&gt;Source-code boundaries appear in monolithic architectures. Such architectures generally need some form of dynamic polymorphism to manage internal dependencies.&lt;/p&gt;
+&lt;p&gt;The simplest cross-boundary call occurs when a low-level client calls a high-level service function. Runtime and compile-time dependencies then point in the same direction, from the low-level component to the high-level component.&lt;/p&gt;
+&lt;p&gt;(Original diagram unavailable)&lt;/p&gt;
+&lt;p&gt;When a client in a high-level component needs to call a service in a low-level component, dynamic polymorphism is needed to invert the dependency. The Service interface in the diagram is a form of SPI.&lt;/p&gt;
+&lt;p&gt;(Original diagram unavailable)&lt;/p&gt;
+&lt;h3 id="部署层次的跨边界调用"&gt;Crossing Boundaries at the Deployment Level&lt;/h3&gt;
+&lt;p&gt;At the deployment level, deployable units are packaged into a convenient file format. Apart from this distinction, components decoupled at deployment boundaries are nearly identical to a monolithic structure.&lt;/p&gt;
+&lt;p&gt;Deployment boundaries involve physical boundaries because separately deployed units must communicate across them. Common physical boundaries include dynamically linked libraries, threads, and local processes.&lt;/p&gt;
+&lt;h3 id="服务层次的跨边界调用"&gt;Crossing Boundaries at the Service Level&lt;/h3&gt;
+&lt;p&gt;Services form the strongest architectural boundaries. A service is a process. When defining architectural boundaries at this level, minimize communication wherever possible, and ensure that it can tolerate high latency. Otherwise, the same rules used for local processes apply: lower-level services should act as plugins for higher-level services.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (5): Software Architecture</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
+      <pubDate>Sun, 28 Jul 2024 19:23:23 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</guid>
+      <description>&lt;p&gt;It is time to turn to software architecture. Having covered modules, classes, and components, this article focuses on the basic definition of architecture.&lt;/p&gt;
+&lt;h2 id="写在最前面"&gt;Before We Begin&lt;/h2&gt;
+&lt;p&gt;🌟 A software architect must be a programmer and must continue doing hands-on development. Without personally experiencing the difficulties caused by a system’s design, architects lose touch with the pain of poor design and gradually lose their sense of direction.&lt;/p&gt;
+&lt;h2 id="什么是软件架构"&gt;What Is Software Architecture?&lt;/h2&gt;
+&lt;p&gt;Architectural work is fundamentally about deciding how to divide a system into components and arrange their relationships and communication—in other words, defining boundaries.&lt;/p&gt;
+&lt;p&gt;Architectural design generally has two purposes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To make components easier to develop, deploy, run, and maintain.&lt;/li&gt;
+&lt;li&gt;To make all this work easier by &lt;strong&gt;keeping as many options open as possible for as long as possible&lt;/strong&gt;;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The quality of a system’s architecture is not closely related to whether its behavior works correctly. Many systems with poor architecture work perfectly well. The trouble usually appears during development, deployment, and subsequent enhancements. This supports the author’s view that architectural value can outweigh behavioral value.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The goals of architectural design are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core goal: organize architecture around use cases, isolating them from surrounding concerns by postponing decisions and preserving options.&lt;/li&gt;
+&lt;li&gt;Primary goal: support the full software lifecycle. Good architecture makes a system understandable, changeable, maintainable, and easy to deploy.&lt;/li&gt;
+&lt;li&gt;Ultimate goal: maximize programmer productivity while minimizing the system’s &lt;strong&gt;total&lt;/strong&gt; operating cost.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Architectural design focuses on separating &lt;strong&gt;policies&lt;/strong&gt; and regrouping them according to how they change, thereby establishing boundaries. Applicable principles include SRP, CCP, CSP, SDP, SAP, and others.&lt;/p&gt;
+&lt;h2 id="软件架构的职责"&gt;The Responsibilities of Architecture&lt;/h2&gt;
+&lt;p&gt;Architecture supports development, deployment, operation, and maintenance.&lt;/p&gt;
+&lt;p&gt;Development: architecture should facilitate software development, so different teams may need different architectural designs. This reflects Conway’s law to some extent.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Why does Conway’s law imply that architecture reflects a team’s structure? This video explains:&lt;a href="https://www.bilibili.com/video/BV1bb421E7i6/?spm_id_from=333.337.search-card.all.click&amp;amp;vd_source=8c0f6bcaf6b2e92f574553f45e565994"&gt;Conway’s Law: Why Does Your Architecture Reflect Your Team Structure? — Bilibili&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Deployment: architecture should make deployment easy, ideally with one click.&lt;/p&gt;
+&lt;p&gt;Operation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;As mentioned earlier, architecture has less influence on runtime efficiency than on the other concerns. The author attributes this largely to the fact that additional hardware can compensate for operational shortcomings, while architectural design requires more expensive human effort.&lt;/li&gt;
+&lt;li&gt;Beyond efficiency, architecture should reveal the system’s runtime requirements. A well-designed architecture makes operation apparent to developers. Use cases, features, and required behaviors should be visible as first-class elements, simplifying understanding. The chapter “Screaming Architecture” explores this idea in detail.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Maintenance: maintenance is usually the most expensive part of a system’s lifecycle. Its costs fall into two categories: &lt;strong&gt;spelunking&lt;/strong&gt; and &lt;strong&gt;risk&lt;/strong&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Spelunking: the effort of exploring an existing system to find the best location and method for adding a feature or fixing a problem.&lt;/li&gt;
+&lt;li&gt;Risk: the possibility that those changes introduce new problems, along with the cost of managing that possibility.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="保持可选项"&gt;Keeping Options Open&lt;/h2&gt;
+&lt;p&gt;Recall the two kinds of value: behavioral and architectural. Increasing architectural value means making software more flexible, and flexibility comes from keeping more architectural options open.&lt;/p&gt;
+&lt;p&gt;The elements of a software system fall into two categories: &lt;strong&gt;policy&lt;/strong&gt; and &lt;strong&gt;details&lt;/strong&gt;. Policy contains the business rules and procedures that provide the system’s real value. Details enable users, other systems, and programmers to interact with policy without defining it. I/O devices and databases are examples. Choices about these details should remain open for as long as possible.&lt;/p&gt;
+&lt;p&gt;The architect’s goal is to create a system in which policy is the &lt;strong&gt;fundamental element&lt;/strong&gt; and details are separated from it, allowing decisions about details to be &lt;strong&gt;deferred&lt;/strong&gt;. The later a decision is made, the more information is available to make it well. A good architect works to maximize the number of options that remain open.&lt;/p&gt;
+&lt;p&gt;The author uses device independence to illustrate the value of deferring details. Modern operating systems support many I/O devices, but early computers relied largely on punched paper tape. Programmers naturally coupled tape-reading and tape-writing code to the system. Magnetic tape required new code, then optical discs required more. To avoid repeated implementation and poor adaptability, developers introduced device independence: devices were abstracted behind functions that the operating system called, and developers supplied the concrete implementations. I/O became a plugin to the operating system. This was an early form of OCP: welcome additions 👏 and resist modifications 🥊.&lt;/p&gt;
+&lt;h2 id="保持独立性"&gt;Preserving Independence&lt;/h2&gt;
+&lt;p&gt;Good architecture provides sufficient independence.&lt;/p&gt;
+&lt;p&gt;Decoupling helps preserve that independence.&lt;/p&gt;
+&lt;p&gt;Decoupling can be horizontal or vertical.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Horizontal decoupling, or decoupling by layer: divide a system into layers such as the UI and database.&lt;/li&gt;
+&lt;li&gt;Vertical decoupling, or decoupling by use case: also divide the layers into vertical slices by use case. For example, separate the UI for adding an order from the UI for deleting an order.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Decoupling according to reasons for change allows new use cases to be added without affecting existing ones.&lt;/p&gt;
+&lt;p&gt;Decoupling can also happen at different levels: source code, deployment, or services.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Source-code level: control dependencies between source modules. Components interact through function calls. This is a monolithic structure.&lt;/li&gt;
+&lt;li&gt;Deployment level: control dependencies between deployment units such as JAR files. Components may communicate across threads—not necessarily networks—through sockets or shared memory.&lt;/li&gt;
+&lt;li&gt;Service level: reduce intercomponent dependencies to data structures and communicate through network packets, as microservices do with RPC or REST.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;No strict rule makes one level of decoupling universally better. The best choice may change as a project matures. A well-designed architecture should allow a system to begin as a monolith deployed in one file, grow into independently deployable units or services, and return to a monolith if circumstances change. It should also protect most source code from these transitions. For the system as a whole, &lt;strong&gt;decoupling mode should itself remain an option&lt;/strong&gt;. Large deployments may use one mode and small deployments another.&lt;/p&gt;
+&lt;p&gt;With decoupling established, let us consider its effects on independence.&lt;/p&gt;
+&lt;h3 id="解耦对系统运行独立性的意义"&gt;Operational Independence&lt;/h3&gt;
+&lt;p&gt;If use cases with different concerns are properly isolated, high-throughput and low-throughput use cases naturally separate. Separating the UI and database from business logic allows them to run on different servers. Applications requiring greater bandwidth can also run multiple instances across servers.&lt;/p&gt;
+&lt;h3 id="解耦对系统开发独立性的意义"&gt;Development Independence&lt;/h3&gt;
+&lt;p&gt;When a system is properly decoupled by layers and use cases, its architecture supports multiple teams regardless of whether they are organized by features, components, layers, or another division of work.&lt;/p&gt;
+&lt;h3 id="解耦对系统部署独立性的意义"&gt;Deployment Independence&lt;/h3&gt;
+&lt;p&gt;With effective decoupling, layer implementations and use cases can even be hot-swapped while a system runs. Adding a use case may require only adding new JAR files or starting new services, leaving everything else unaffected.&lt;/p&gt;
+&lt;h2 id="什么是代码重复"&gt;What Is Code Duplication?&lt;/h2&gt;
+&lt;p&gt;There are two kinds of duplication:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;True duplication: repetition that should be eliminated.&lt;/li&gt;
+&lt;li&gt;False duplication: code that looks similar but follows different evolutionary paths, with different rates and reasons for change. CRP calls for code with different usage patterns to live in different components. Ignoring this can make false duplication look like code that should be merged. Some apparent duplication is necessary—remember the salary-calculation example?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 5)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>An Introduction to Domain-Driven Design</title>
+      <link>https://tommycheese.github.io/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
+      <pubDate>Fri, 26 Jul 2024 19:49:45 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</guid>
+      <description>&lt;h1 id="领域驱动设计概述"&gt;Overview of Domain-Driven Design&lt;/h1&gt;
+&lt;p&gt;Domain-Driven Design (DDD) is a model-driven approach that captures domain knowledge in a domain model and uses that model to build &lt;strong&gt;more maintainable&lt;/strong&gt; software.&lt;/p&gt;
+&lt;p&gt;DDD divides the design process into strategic and tactical design. Strategic design addresses domains, subdomains, and bounded contexts, while tactical design addresses entities, value objects, domain events, and related concepts. Their relationship is shown below:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/DDD1.png" alt="img"&gt;&lt;/p&gt;
+&lt;h2 id="战略设计阶段相关概念"&gt;Concepts in Strategic Design&lt;/h2&gt;
+&lt;h3 id="领域"&gt;Domain&lt;/h3&gt;
+&lt;p&gt;A domain is the problem area that a system addresses. Product information management, for example, can be a system’s domain.&lt;/p&gt;
+&lt;h3 id="子域"&gt;Subdomain&lt;/h3&gt;
+&lt;p&gt;A domain can be divided into subdomains based on differences in the language used:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core domain: the subdomain that determines a product’s competitive advantage. It contains the most important, distinctive, and central business functionality.&lt;/li&gt;
+&lt;li&gt;Generic subdomain: general-purpose functionality shared by multiple subdomains, such as authentication and authorization. These systems are not constrained by company-specific characteristics and need little customization.&lt;/li&gt;
+&lt;li&gt;Supporting subdomain: a subdomain containing neither core nor generic functionality. It is specific to the business but is not broadly reusable, such as a data dictionary for reference codes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="限界上下文"&gt;Bounded Context&lt;/h3&gt;
+&lt;p&gt;A bounded context defines a boundary within which a particular model is used to solve a particular problem.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;A bounded context is a subdomain or a collection of subdomains&lt;/strong&gt;, &lt;strong&gt;Ensure that a bounded context supports a complete business process&lt;/strong&gt;, &lt;strong&gt;Ensure that the domains involved in that process belong to the same bounded context&lt;/strong&gt;. Bounded contexts provide a basis for dividing microservices, with each bounded context corresponding to a microservice.&lt;/p&gt;
+&lt;p&gt;Why do we need bounded contexts? Because &lt;strong&gt;context&lt;/strong&gt; can make coding difficult. Consider an example:&lt;/p&gt;
+&lt;p&gt;In recruitment, “platform” might describe the school or organization someone comes from. In diving, it means the structure from which an athlete dives. In rail transport, it means the area where passengers board trains. Imagine that a diver, an HR specialist, and a train attendant meet without knowing one another’s professions. The HR specialist asks the diver, “Which platform are you from?”…&lt;/p&gt;
+&lt;p&gt;All three use the same word, “platform,” but &lt;strong&gt;without an agreed context&lt;/strong&gt; they may interpret it differently. The solution is to separate the diving, recruitment, and transport domains and define terminology within each. Discussion within one domain then avoids as much ambiguity as possible. This is the agreement that a context establishes, and it explains why it is useful to define the domains involved in a business process within a bounded context: to reduce ambiguity.&lt;/p&gt;
+&lt;p&gt;Software design encounters the same problem. Suppose you design a large product covering diving, recruitment, and passenger transport without separating these services. You use a platform data structure for diving platforms, another platform for recruitment organizations, and yet another platform for railway platforms. When the three business areas inevitably meet, disaster follows: the screen fills with almost identically named variables that mean different things. What can we do?&lt;/p&gt;
+&lt;p&gt;By defining the precise meaning of a term within a particular domain, we can use that term freely within it. This is the essential role of a bounded context.&lt;/p&gt;
+&lt;h2 id="战术设计阶段相关概念"&gt;Concepts in Tactical Design&lt;/h2&gt;
+&lt;h3 id="值对象和实体"&gt;Value Objects and Entities&lt;/h3&gt;
+&lt;p&gt;Let us begin with value objects and entities.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A value object is identified by its attribute values. If all the values inside two value objects are equal, we consider the objects equal. The attributes of a value object are therefore immutable.&lt;/li&gt;
+&lt;li&gt;An entity is a business object with a unique identity, state, and a lifecycle. Its attributes may change. Two entities with identical attributes are not necessarily the same entity; only identical identities, such as IDs, make them the same.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;An example helps distinguish value objects from entities:&lt;/p&gt;
+&lt;p&gt;Suppose we have a white value object Color white{R:255, G:255, B:255} and a tire entity tire{Air:&lt;em&gt;,Size:&lt;/em&gt;}:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mutability: every attribute of white is immutable, because changing any of them means the object no longer represents white. A tire’s pressure, size, and other values may change, because it remains a tire even when these parameters change.&lt;/li&gt;
+&lt;li&gt;Equality: the immutability of a value object gives it its equality rule. Two white objects must have the same values, so two value objects are equal when all their internal values are equal. An entity does not have this property because its attributes are mutable.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Entities generally take one of four forms:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Bloodless model: the model contains only data definitions and getter/setter methods. Business and application logic reside in the service layer. Such a class is called a POJO in Java.&lt;/li&gt;
+&lt;li&gt;Anemic model: the model contains some business logic, but excludes logic that depends on the persistence layer. Persistence-dependent business logic resides in the service layer.&lt;/li&gt;
+&lt;li&gt;Rich domain model: the model contains all business logic, including logic that depends on the persistence layer.&lt;/li&gt;
+&lt;li&gt;Overloaded domain model: application logic unrelated to the business, such as authorization and transactions, is also placed in the domain model.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Repository (Repo)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A repository provides storage operations for entities. Its operations should be as low-level as possible, have short names, and remain limited in number. A MyBatis Mapper in Java can be viewed as one implementation of a repository.&lt;/p&gt;
+&lt;h3 id="聚合与聚合根"&gt;Aggregates and Aggregate Roots&lt;/h3&gt;
+&lt;p&gt;An aggregate is a larger unit of encapsulation that groups entities and value objects sharing a lifecycle and inseparable business meaning. Only the aggregate root exposes references outside the aggregate. Aggregates also express cohesion. Aggregate roots may call one another, and their names are generally nouns.&lt;/p&gt;
+&lt;p&gt;Aggregate roots provide encapsulation in the following ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;All operations on an aggregate must go through its root; external code must not directly manipulate its elements. For example, purple paintwork + tires + a steel frame + … = a car. When driving, we do not independently operate the tires, steering wheel, or paintwork as separate objects. We operate the car as an aggregate root, indirectly affecting its other entities and value objects.&lt;/li&gt;
+&lt;li&gt;An aggregate defines a &lt;strong&gt;boundary&lt;/strong&gt; within which every component must remain valid with respect to the business logic.&lt;/li&gt;
+&lt;li&gt;An aggregate must be operated on within an atomic transaction, or inconsistencies may arise. It is the unit of operation: retrieving it from the repository, modifying it, and putting it back form one atomic operation. For example, if a car aggregate contains wheel entities and a steel, aluminum, or carbon frame entity, removing a wheel for maintenance without reinstalling it cannot count as a completed operation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="领域事件domain-events"&gt;Domain Events&lt;/h3&gt;
+&lt;p&gt;Changes to an entity’s attributes produce domain events. A domain event represents something a domain expert considers important: a noteworthy occurrence within the domain. It usually indicates a change in a domain object’s state.&lt;strong&gt;Domain events carry messages and trigger further actions in a system, making them an important way to decouple domain models&lt;/strong&gt;. We often use a &lt;strong&gt;message queue&lt;/strong&gt; to deliver domain events, so that every subscribing subdomain can perform its own response.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A message bus is another implementation option 👋.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For example, a change in a tire entity’s pressure may emit a leaked event. This conveys that the tire has leaked and triggers other responses, such as changes in the power system or steering feel. Domain events are generally named in the past tense to indicate that they have already happened and cannot be undone.&lt;/p&gt;
+&lt;h3 id="领域服务domain-service"&gt;Domain Service&lt;/h3&gt;
+&lt;p&gt;Some actions in a domain appear &lt;strong&gt;not to belong to any object&lt;/strong&gt;. They represent important domain behavior that cannot be ignored or simply attached to an entity or value object. When such behavior is identified, the recommended approach is to declare a service for it: a domain service.&lt;/p&gt;
+&lt;p&gt;A domain service is not the same as a service in microservices. Services and aggregate roots seem similar because both may operate on multiple entities, but their purposes differ: &lt;strong&gt;an aggregate root groups entities, while a service synchronizes the states of multiple entities—for example, adding an item entity to a list entity&lt;/strong&gt; (such as delivering mail to an inbox). Service abstractions are therefore generally named with verbs.&lt;/p&gt;
+&lt;h2 id="ddd领域建模设计领域模型"&gt;Domain Modeling in DDD&lt;/h2&gt;
+&lt;p&gt;The usual steps in DDD domain modeling are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Identify initial subdomains and bounded contexts from the requirements, along with the relationships between contexts.&lt;/li&gt;
+&lt;li&gt;Analyze each context to identify entities and value objects, and decide which model style each entity needs: bloodless, anemic, rich, or overloaded.&lt;/li&gt;
+&lt;li&gt;Associate entities and value objects, organize them into aggregates, and define aggregate boundaries and roots.&lt;/li&gt;
+&lt;li&gt;Design repositories for aggregate roots and consider how entities and value objects should be created.&lt;/li&gt;
+&lt;li&gt;Implement the domain model in the project, evaluate its suitability in practice, and use the results to identify shortcomings and refactor.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is DDD’s two-stage design approach: strategic design first, followed by tactical design.&lt;/p&gt;
+&lt;p&gt;In practice, I suggest using bloodless entities, whose methods consist only of setters and getters, or anemic entities containing simple logic without database operations, such as attribute validation.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is one approach to DDD modeling: top-down design. A bottom-up approach is also possible, starting with domain objects such as entities and value objects before identifying subdomains and bounded contexts.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(End of section)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (4): Component Principles</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
+      <pubDate>Sat, 06 Jul 2024 17:27:18 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</guid>
+      <description>&lt;h1 id="再读整洁架构之道四组件构建原则"&gt;Rereading Clean Architecture (Part 4): Component Design Principles&lt;/h1&gt;
+&lt;p&gt;Part 3 discussed the design of modules and classes. This article goes a step further and explores component design.&lt;/p&gt;
+&lt;p&gt;A component is a deployment unit: the smallest part of a software system that can be deployed independently. Components can also be developed independently. Component-based plugin architectures have become a familiar way to build software.&lt;/p&gt;
+&lt;h2 id="组件聚合"&gt;Component Cohesion&lt;/h2&gt;
+&lt;p&gt;Component cohesion tells us which modules and classes should be grouped into components. Three main principles apply:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reuse/Release Equivalence Principle.&lt;/li&gt;
+&lt;li&gt;Common Closure Principle.&lt;/li&gt;
+&lt;li&gt;Common Reuse Principle.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="复用发布等同原则rep"&gt;Reuse/Release Equivalence Principle (REP)&lt;/h3&gt;
+&lt;p&gt;REP states that the unit of reuse should be the same as the unit of release.&lt;/p&gt;
+&lt;p&gt;REP approaches the problem from the perspective of code reuse. Code sharing a common theme and function can be grouped into a component, and reuse should take place at that component boundary.&lt;/p&gt;
+&lt;p&gt;Put simply, a packaged and released component may receive a version number or unique identifier. We reuse code by importing an existing library: the unit imported is the packaged component, and the version identifies that release.&lt;/p&gt;
+&lt;h3 id="共同闭包ccp"&gt;Common Closure Principle (CCP)&lt;/h3&gt;
+&lt;p&gt;CCP states that classes changing together for the same reason should belong to the same component, while classes changing at different times for different reasons should belong to different components.&lt;/p&gt;
+&lt;p&gt;CCP takes the perspective of maintenance. Grouping code that changes for the same reason reduces the effort required for release, verification, and deployment.&lt;/p&gt;
+&lt;p&gt;As discussed earlier, CCP is the component-level version of SRP. Both can be summarized as follows:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Gather together things that change for the same reason and at the same time. Separate things that change for different reasons and at different times.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For SRP, “things” means functions and other elements that make up a class or module.&lt;/li&gt;
+&lt;li&gt;For CCP, “things” means the classes and modules that make up a component.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="共同复用crp"&gt;Common Reuse Principle (CRP)&lt;/h3&gt;
+&lt;p&gt;CRP states that users of a component should not be forced to depend on things they do not need.&lt;/p&gt;
+&lt;p&gt;CRP calls for code with different usage patterns and frequencies to be placed in separate components. It guides component boundaries and generalizes the Interface Segregation Principle (ISP).&lt;/p&gt;
+&lt;p&gt;As a generalized form of interface segregation, CRP and ISP can both be summarized as:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Do not depend on things you do not need.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For ISP, “things” means functions or classes exposing unnecessary methods.&lt;/li&gt;
+&lt;li&gt;At the component level, “things” means classes or modules containing unnecessary functions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="思考"&gt;Reflection&lt;/h3&gt;
+&lt;p&gt;How do REP, CCP, and CRP relate to one another?&lt;/p&gt;
+&lt;p&gt;They are actually in &lt;strong&gt;competition&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;REP and CCP are inclusive principles: they tell us which classes and modules belong together. CRP is exclusive: it tells us which classes and modules should not be grouped together.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/image-20240706143525187.png" alt="image-20240706143525187"&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If an architect considers only REP and CCP, components will include many parts their users do not need, causing too many unnecessary releases.&lt;/li&gt;
+&lt;li&gt;If an architect considers only CRP and CCP, reuse will become very difficult.&lt;/li&gt;
+&lt;li&gt;If an architect considers only REP and CRP, changing some classes or modules will inevitably require changes in many related modules.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The architect must balance these three principles. Component composition should evolve as the project’s priorities shift between development and reuse, so its direction must be assessed dynamically.&lt;/p&gt;
+&lt;h2 id="组件耦合"&gt;Component Coupling&lt;/h2&gt;
+&lt;p&gt;Component coupling tells us how to arrange relationships between components. It includes three principles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Acyclic Dependencies Principle (ADP).&lt;/li&gt;
+&lt;li&gt;Stable Dependencies Principle (SDP).&lt;/li&gt;
+&lt;li&gt;Stable Abstractions Principle (SAP).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="无依赖环原则adp"&gt;Acyclic Dependencies Principle (ADP)&lt;/h3&gt;
+&lt;p&gt;ADP states that the component dependency graph must contain no cycles.&lt;/p&gt;
+&lt;p&gt;Version management addresses “the morning-after syndrome,” but requires ADP. First, consider the author’s description of the syndrome:&lt;/p&gt;
+&lt;p&gt;You spend an entire day getting some code to work, only to arrive the next morning and discover that it has mysteriously stopped working. Most likely, someone else changed a component your project depends on.&lt;/p&gt;
+&lt;p&gt;There are generally two ways to address this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Weekly builds.&lt;/li&gt;
+&lt;li&gt;Version management.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;Weekly builds&lt;/u&gt;&lt;/strong&gt;: everyone works in their own repository, then the project is built and integration conflicts are resolved at a fixed time each week, such as Friday.&lt;/p&gt;
+&lt;p&gt;The limitations are clear:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;As the project grows, integration becomes increasingly difficult to complete on time.&lt;/li&gt;
+&lt;li&gt;The whole project becomes harder to build and test, feedback cycles lengthen, and development quality declines.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is why version management is needed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;Version management&lt;/u&gt;&lt;/strong&gt;: when a component releases a new version, each dependent team can decide whether to adopt it immediately.&lt;/p&gt;
+&lt;p&gt;Version management &lt;strong&gt;does not permit cycles in the component dependency graph&lt;/strong&gt;. It must follow ADP, or the morning-after syndrome becomes unavoidable. Why?&lt;/p&gt;
+&lt;p&gt;A dependency cycle effectively combines all its components into one larger component. Their versions must remain coordinated for other components to depend on them successfully. Cycles also complicate testing: although mocking is common, repeatedly mocking components throughout a cycle is an awkward approach.&lt;/p&gt;
+&lt;p&gt;How can circular dependencies be removed? There are two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Introduce interfaces through dependency inversion.&lt;/li&gt;
+&lt;li&gt;Create a new component.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Using DIP to break a cycle is straightforward. The following example from work shows how a new component can achieve the same result.&lt;/p&gt;
+&lt;p&gt;A team is designing a system with DDD. A Dog entity depends on Dog Repo to perform Save operations, so the Entity module depends on Repo. Unfortunately, Dog PO is also defined inside Entity, while Repo.Save needs that persistence object for conversion and storage. Entity and Repo now depend on one another. Go rejects mutually dependent packages and reports an import cycle. How should this be resolved?&lt;/p&gt;
+&lt;p&gt;Create a separate PO module and move the PO out of Entity. Move the relevant PO-dependent functions from Repo into it as appropriate, removing the cycle. Dependency injection is another option. In Spring Boot, @AutoWired can address this kind of wiring problem; conceptually, a dependency container introduces another component through which the dependency cycle is resolved.&lt;/p&gt;
+&lt;p&gt;There are many similar examples. Recall the library version conflicts that can occur when installing Python packages with Anaconda…&lt;/p&gt;
+&lt;p&gt;As an aside, I initially assumed that component structure should map directly to system features: one component per feature, with the dependency graph mirroring the functional decomposition. That suggested the component dependency graph could be produced at the very beginning of system design.&lt;/p&gt;
+&lt;p&gt;The author explicitly argues that top-down design of the complete component structure is impossible. The book explains:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[!NOTE]&lt;/p&gt;
+&lt;p&gt;The component graph must change and grow with the software system; it cannot be perfectly designed at the outset. Component dependencies do not map one-to-one to features. Instead, they form a map of the application’s buildability and maintainability.&lt;/p&gt;
+&lt;p&gt;As more modules are designed and implemented, the need to manage their dependencies emerges. We want changes to affect as little of the project as possible, so SRP and CCP help group classes that frequently change together.&lt;/p&gt;
+&lt;p&gt;One important purpose of a component graph is to guide the isolation of frequent changes. Components that change often should not disturb components intended to remain stable.&lt;/p&gt;
+&lt;p&gt;As the application grows, reusable components also become more important, bringing CRP into the picture. Finally, when cycles appear, applying ADP causes the dependency structure to shift and expand.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="稳定依赖原则sdp"&gt;Stable Dependencies Principle (SDP)&lt;/h3&gt;
+&lt;p&gt;SDP states that dependencies must point toward greater stability. In general, the supporting foundations of an architecture should be more stable.&lt;/p&gt;
+&lt;p&gt;A component expected to change frequently should not be depended on by a component that is difficult to change. Otherwise, the volatile component also becomes hard to change. This is a challenge in software development: a component carefully designed for easy modification can lose that flexibility because someone adds a dependency on it. Following SDP helps avoid this.&lt;/p&gt;
+&lt;p&gt;Component stability can be assessed with a metric. The author defines the instability metric as:
+$$
+I=\frac{Fan-out}{Fan-in+Fan-out}
+$$
+Fan-in is the number of incoming dependencies and Fan-out the number of outgoing dependencies. Fewer outgoing dependencies imply greater stability: with zero outgoing dependencies, no dependency can force the component to change.&lt;/p&gt;
+&lt;p&gt;SDP requires each component’s I metric to be greater than that of the components it depends on: the components it points to must be more stable.&lt;/p&gt;
+&lt;p&gt;SDP does not require every component to be stable. The purpose of designing the component architecture is to decide which should be stable and which should be unstable. An architecture in which everything is stable lacks flexibility and therefore architectural value.&lt;/p&gt;
+&lt;h3 id="稳定抽象原则sap"&gt;Stable Abstractions Principle (SAP)&lt;/h3&gt;
+&lt;p&gt;SAP states that a component’s level of abstraction should match its stability.&lt;/p&gt;
+&lt;p&gt;High-level policies should reside in stable components, but this can make those policies difficult to change. Fortunately, OCP tells us that stable components can remain open to extension. Abstract classes provide a way to achieve stability while still allowing extension and modification.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Abstract classes form a buffer between interfaces and concrete classes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;SAP connects stability with abstraction. A stable component should also be abstract so that stability does not prevent extension. An unstable component should contain concrete implementation code so that its instability can be accommodated through easy changes. A component intended to be stable should therefore consist of interfaces and abstract classes that allow future extension.&lt;/p&gt;
+&lt;p&gt;Like stability, abstractness can be measured with a metric:
+$$
+A=\frac{N_c}{N_a}
+$$
+Here, Nc denotes the number of classes in the component, and Na the number of abstract classes and interfaces. A ranges from 0 to 1: 0 means no abstract classes, while 1 means only abstract classes.&lt;/p&gt;
+&lt;h3 id="思考-1"&gt;Reflection 🤔&lt;/h3&gt;
+&lt;p&gt;How are SDP and SAP related?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;First, consider SDP and SAP in relation to DIP&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In effect, SDP + SAP = component-level DIP. SDP requires dependencies to point toward greater stability, while SAP implies that stability requires abstraction. Dependencies should therefore point toward greater abstraction.&lt;/p&gt;
+&lt;p&gt;How should this be understood?&lt;/p&gt;
+&lt;p&gt;DIP preserves flexibility at the class level. SDP and SAP together preserve flexibility while providing component stability. Their architectural effect is the same: concrete implementations depend on abstract classes or interfaces. In this sense, SDP + SAP is component-level DIP.&lt;/p&gt;
+&lt;p&gt;There is a difference, however. At the class level there is no middle ground: a class is either abstract or it is not. SDP and SAP operate at the component level, where partial abstraction and partial stability are possible.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Second, consider their shared goals&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;SDP directs dependencies toward stability. SAP places high-level policy in abstract components, helping separate policy from details and enabling plugin-based development. Their goals are aligned.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Notice that &lt;strong&gt;plugin-based development&lt;/strong&gt; appears again. Where did we encounter it before? In dependency inversion. This further illustrates why SAP + SDP resembles component-level DIP.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="主序列"&gt;The Main Sequence&lt;/h3&gt;
+&lt;p&gt;Plot component instability I against abstractness A. The line a = -i + 1 is called the main sequence.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/image-20240706171725797.png" alt="image-20240706171725797"&gt;&lt;/p&gt;
+&lt;p&gt;The diagram contains three regions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Zone of pain: near (0,0), components are highly stable and highly concrete, making them difficult to change. Database schemas are an example. Utility libraries also fall into this zone: although their I metric is 1 because they depend on many components and are therefore unstable, changing them can break large amounts of code.&lt;/li&gt;
+&lt;li&gt;Zone of uselessness: near (1,1), components are highly abstract but have no dependents. Such abstractions often serve no practical purpose. Design problems in this region may reflect historical leftovers, such as old code that was never removed.&lt;/li&gt;
+&lt;li&gt;Main sequence: components along this line balance the two measures. The ideal positions are its endpoints, (0,1) and (1,0). A good architect aims to move most components toward these positions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;How can a component be evaluated overall? Calculate its distance from the main sequence to quantify how closely the design fits it. This distance is D: 0 means directly on the main sequence, while 1 means as far from it as possible.
+$$
+D=|A+I-1|
+$$
+The amount by which D exceeds zero can then guide component refactoring and redesign.&lt;/p&gt;
+&lt;p&gt;D has further uses. For example, the mean and variance of D across all components provide statistical measures for evaluating a system design:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In a well-designed system, both the mean and variance of D should be close to zero.&lt;/li&gt;
+&lt;li&gt;Variance can help establish a threshold for identifying unusual components that deserve attention.&lt;/li&gt;
+&lt;li&gt;Tracking the variance of D over time also shows how architectural stability and abstraction evolve.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 4)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (3): SOLID Design Principles</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
+      <pubDate>Fri, 05 Jul 2024 14:11:30 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</guid>
+      <description>&lt;h1 id="再读整洁架构之道三solid原则"&gt;Rereading Clean Architecture (Part 3): The SOLID Principles&lt;/h1&gt;
+&lt;p&gt;There are three main goals when building software modules:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make software tolerant of change.&lt;/li&gt;
+&lt;li&gt;Make software easier to understand.&lt;/li&gt;
+&lt;li&gt;Build components that can be reused across multiple software systems.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The SOLID principles primarily tell us how to organize data and functions into classes and how to connect those classes into programs. They guide module design; other design principles apply at the architectural level.&lt;/p&gt;
+&lt;p&gt;SOLID refers to the Single Responsibility Principle, &lt;strong&gt;S&lt;/strong&gt;RP; the Open–Closed Principle, &lt;strong&gt;O&lt;/strong&gt;CP; the Liskov Substitution Principle, &lt;strong&gt;L&lt;/strong&gt;SP; the Interface Segregation Principle, &lt;strong&gt;I&lt;/strong&gt;SP; and Dependency Inversion, &lt;strong&gt;D&lt;/strong&gt;IP.&lt;/p&gt;
+&lt;h2 id="单一职责原则srp"&gt;Single Responsibility Principle (SRP)&lt;/h2&gt;
+&lt;p&gt;SRP states that each software module should be responsible for a single function: &lt;strong&gt;there should be only one reason for a module to change&lt;/strong&gt;. Each software module should be responsible to one kind of actor.&lt;/p&gt;
+&lt;p&gt;At the component level, SRP is known as the Common Closure Principle (CCP).&lt;/p&gt;
+&lt;p&gt;What happens when a module is designed without following SRP? Consider this example.&lt;/p&gt;
+&lt;p&gt;Suppose the finance, human resources, and engineering departments all depend on a payroll and working-hours program with three functions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CalculateSalary: calculate salary.&lt;/li&gt;
+&lt;li&gt;CalculateTime: calculate working hours.&lt;/li&gt;
+&lt;li&gt;Save: save information.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The three departments use the program without incident until one day the finance department changes its salary calculation rules. Its maintainer updates CalculateSalary. Then something unexpected happens: salaries for human resources and engineering change as well…&lt;/p&gt;
+&lt;h2 id="开闭原则ocp"&gt;Open–Closed Principle (OCP)&lt;/h2&gt;
+&lt;p&gt;“Welcome additions; resist modifications!”&lt;/p&gt;
+&lt;p&gt;OCP states that a software system should allow its behavior to be changed by adding code, rather than only by modifying existing code. Well-designed software should be easy to extend while resisting modification.&lt;/p&gt;
+&lt;p&gt;OCP applies to components as well as classes and modules. It originated in the concept of device independence. Specifically, dependency inversion lets us design I/O devices as plugins, making it easy to add new devices without changing existing ones.&lt;/p&gt;
+&lt;p&gt;OCP is implemented by dividing a system into components and organizing their dependencies hierarchically so that changes in lower-level components do not affect higher-level components.&lt;/p&gt;
+&lt;h2 id="里式替换lsp原则"&gt;Liskov Substitution Principle (LSP)&lt;/h2&gt;
+&lt;p&gt;LSP states that if interchangeable components are used to build a software system, they must follow the same contract so that one can substitute for another.&lt;/p&gt;
+&lt;p&gt;LSP is fundamentally a principle of substitutability: if, for every object o1 of type S, there is an object o2 of type T such that a program P operating on T behaves identically when o1 replaces o2, then S is a subtype of T.&lt;/p&gt;
+&lt;p&gt;LSP can and should be applied at the architectural level. Once substitutability is violated, a system architecture must introduce extensive, complicated mechanisms to compensate.&lt;/p&gt;
+&lt;h2 id="接口隔离原则isp"&gt;Interface Segregation Principle (ISP)&lt;/h2&gt;
+&lt;p&gt;ISP states that unnecessary dependencies should be avoided. At any level of software design, depending on something that is not needed can introduce unexpected trouble.&lt;/p&gt;
+&lt;h2 id="依赖反转dip"&gt;Dependency Inversion Principle (DIP)&lt;/h2&gt;
+&lt;p&gt;DIP states that code implementing high-level policy should not depend on code implementing low-level details. Instead, code implementing those details should depend on the high-level policy.&lt;/p&gt;
+&lt;p&gt;To understand dependency inversion, distinguish control flow from source-code dependency flow. Suppose control flows from component A to component B. In a direct implementation, A imports B, so the source-code dependency also points from A to B. System behavior determines control flow, which in turn dictates source-code dependencies, leaving the architecture little freedom. Introducing an interface changes this: B implements the interface, and A depends on the interface instead of importing B. Across that boundary, the source-code dependency is reversed relative to control flow. This is dependency inversion.&lt;/p&gt;
+&lt;p&gt;Dependency inversion gives architectural design freedom. A flexible system should depend more on abstractions—such as interfaces and abstract classes—than on concrete implementations.&lt;/p&gt;
+&lt;p&gt;DIP yields several coding guidelines:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use abstract interfaces and avoid depending on volatile concrete implementation classes wherever possible.&lt;/li&gt;
+&lt;li&gt;Do not derive classes from concrete implementation classes.&lt;/li&gt;
+&lt;li&gt;Do not override functions that contain concrete implementations.&lt;/li&gt;
+&lt;li&gt;Avoid referring in code to the names of concrete implementations or other things likely to change.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 3)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (2): Programming Paradigms</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
+      <pubDate>Fri, 05 Jul 2024 07:25:33 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id="再读整洁架构之道二"&gt;Rereading Clean Architecture (Part 2)&lt;/h1&gt;
+&lt;p&gt;A programming paradigm is a way of writing programs. It tells us which code structures to use and when to use them.&lt;/p&gt;
+&lt;p&gt;Three programming paradigms have emerged: structured programming, object-oriented programming, and functional programming.&lt;/p&gt;
+&lt;p&gt;The author argues that these approaches do not add weapons to an architect’s arsenal. Architects and programmers already have plenty of weapons; the three paradigms instead impose &lt;strong&gt;constraints&lt;/strong&gt; on their use. That is why they are called paradigms.&lt;/p&gt;
+&lt;h2 id="结构化编程范式"&gt;Structured Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Structured programming restricts and disciplines the direct transfer of program control, especially the unrestricted use of goto statements.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="分解程序"&gt;Decomposing Programs&lt;/h3&gt;
+&lt;p&gt;Dijkstra hoped to reason about programs using mathematical proofs: a program would become a Euclidean structure, with new programs assembled from proven structures so that the correctness of the whole could be derived.&lt;/p&gt;
+&lt;p&gt;He also found that large numbers of goto statements make programs difficult to decompose, while their functions can be expressed entirely with branches and loops.&lt;/p&gt;
+&lt;p&gt;Structured programming therefore shows that programs can be decomposed. A large problem can be divided into a set of high-level functions, each of which can be divided further into lower-level functions, recursively. More importantly, every resulting function can itself be written using structured programming.&lt;/p&gt;
+&lt;p&gt;However, programming through formal proof never became mainstream. The scientific method is used more often in practice.&lt;/p&gt;
+&lt;h3 id="科学证明法"&gt;The Scientific Method&lt;/h3&gt;
+&lt;p&gt;Scientific theories and laws can be falsified, but cannot be proved true. Similarly, testing can disprove a program’s correctness but cannot prove it: tests can reveal bugs, but cannot establish that none exist. Using the scientific method, structured programming encourages us to recursively break a program into small, provable functions and then write &lt;strong&gt;tests&lt;/strong&gt; that attempt to show those functions are wrong. If these tests fail to falsify them, we can treat the functions as sufficiently correct and infer the correctness of the overall program.&lt;/p&gt;
+&lt;h2 id="面向对象编程范式"&gt;Object-Oriented Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Object-oriented programming restricts and disciplines the indirect transfer of program control.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Specifically, object-oriented programming uses &lt;strong&gt;polymorphism&lt;/strong&gt; to constrain function pointers. This can be understood as limiting the targets a function pointer may reference. For example, polymorphism in Java commonly operates between objects of classes related through inheritance.&lt;/p&gt;
+&lt;p&gt;The author also regards polymorphism as the defining feature of OOP. It enables &lt;strong&gt;dependency inversion&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;Dependency inversion introduces interfaces to give us complete control over source-code dependencies without being constrained by the system’s flow of control.&lt;/p&gt;
+&lt;p&gt;Dependency inversion enables plugin-based development. Inverting the dependencies between business logic and the web UI or database decouples the core business logic from both, turning the UI and database into plugins for that logic.&lt;/p&gt;
+&lt;p&gt;Object-oriented programming is the ability to control source-code dependencies through polymorphism. This enables architects to build plugin architectures that separate high-level policy components from low-level implementation components. Low-level components can be compiled as plugins and developed and deployed independently of the high-level components.&lt;/p&gt;
+&lt;h2 id="函数式编程范式"&gt;Functional Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Functional programming restricts and disciplines assignment.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In other words, variables in functional programming languages are immutable.&lt;/p&gt;
+&lt;p&gt;The author makes the following argument, quoted from the book:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“All race conditions, deadlocks, and concurrent update problems arise from mutable variables. If variables never change, races and concurrent updates cannot occur. If lock state is immutable, deadlocks cannot occur either.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Immutability is feasible if we ignore limits on storage capacity and processing speed. In practice, however, we must account for those limits. To make immutability practical to a useful extent, we need &lt;strong&gt;segregation of mutability&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id="可变性的隔离"&gt;Segregation of Mutability&lt;/h3&gt;
+&lt;p&gt;A common approach is to split an application, or its internal services, &lt;strong&gt;into mutable and immutable components&lt;/strong&gt;. Immutable components perform tasks through pure functions without changing any state. They communicate with one or more nonfunctional, mutable components to modify variable state.&lt;/p&gt;
+&lt;p&gt;Git provides an example. It records file additions, modifications, and deletions by moving references, while the stored file contents are not actually modified or deleted; new data is added and existing data is retrieved. This is an example of immutability.&lt;/p&gt;
+&lt;p&gt;Transaction management in MySQL and transactional memory also draw on this idea.&lt;/p&gt;
+&lt;h2 id="总结"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;The three programming paradigms are closely related to software architecture:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Polymorphism is how we cross architectural boundaries.&lt;/li&gt;
+&lt;li&gt;Functional programming is how we discipline and constrain where data is stored and who can access it.&lt;/li&gt;
+&lt;li&gt;Structured programming provides the foundation for implementing individual modules.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The three paradigms align with the three major concerns of software architecture: &lt;strong&gt;component independence&lt;/strong&gt; (object-oriented programming), &lt;strong&gt;data management&lt;/strong&gt; (functional programming), and functionality (structured programming).&lt;/p&gt;
+&lt;h2 id="再次思考"&gt;Further Reflection&lt;/h2&gt;
+&lt;p&gt;All three programming paradigms impose new &lt;strong&gt;constraints&lt;/strong&gt; on programmers. Each limits a way of writing code; none adds a new capability. In other words, programming paradigms tell us what not to do.&lt;/p&gt;
+&lt;p&gt;(End of Part 2)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (1)</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
+      <pubDate>Wed, 03 Jul 2024 23:10:20 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</guid>
+      <description>&lt;h2 id="前记"&gt;Preface&lt;/h2&gt;
+&lt;p&gt;Why read it again? I had already read Clean Architecture once, but without enough project experience and trial and error, I felt that my understanding remained shallow. During my work, I finally had the opportunity to take part in several projects and implement real requirements. Better still, the team used Clean Architecture—more specifically, event-driven development with DDD and Clean Architecture. I will discuss DDD in detail later. Rereading this book 📚 proved very rewarding, so in this series I will describe Clean Architecture from my own perspective. More precisely, these are reading notes that I hope to share with fellow developers.&lt;/p&gt;
+&lt;p&gt;The book is available here: &lt;a href="https://weread.qq.com/web/bookDetail/480322f072021a3248038c8"&gt;Clean Architecture — Robert C. Martin — WeRead (qq.com)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This series follows the chapters of the book and gradually explores the ideas alongside the author. Because this is a rereading, I will inevitably refer to ideas from other parts of the book. If you encounter something unfamiliar or difficult to understand, it will probably be covered in a later chapter.&lt;/p&gt;
+&lt;p&gt;Let us begin.&lt;/p&gt;
+&lt;h2 id="设计与架构的含义"&gt;The Meaning of Design and Architecture&lt;/h2&gt;
+&lt;p&gt;Design and architecture are not fundamentally different. Low-level design details and high-level architectural information together define a software system.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The ultimate goal of software architecture is to meet the requirements for building and maintaining a system with the least human effort&lt;/strong&gt;. Cost can therefore serve as a measure of the quality of an architectural design.&lt;/p&gt;
+&lt;p&gt;A system built hastily and without design can become a &lt;strong&gt;big ball of mud&lt;/strong&gt;. In such a system, code quality and improvements to design structure have been neglected throughout development. Careful architectural design can help prevent this outcome and reduce costs.&lt;/p&gt;
+&lt;p&gt;Software development has two key lessons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To go fast, first learn to go steadily.&lt;/li&gt;
+&lt;li&gt;Overconfidence can cause a redesign to fall into the same traps as the original project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="两个价值维度"&gt;Two Dimensions of Value&lt;/h2&gt;
+&lt;p&gt;A software system offers two kinds of value:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Behavioral value: making a machine operate in a specified way to create or increase profit for its users.&lt;/li&gt;
+&lt;li&gt;Architectural value: keeping software flexible, so that the cost of changing it depends on the scope of a requirement rather than its shape.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;How should we understand the scope and shape of a requirement?
+In my view, scope means the broad extent of the requirement and the &lt;strong&gt;domain&lt;/strong&gt; to which it belongs, while shape means its specific details.&lt;/p&gt;
+&lt;p&gt;Which dimension matters more?
+The author considers architectural value more important than behavioral value, because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If a program works but cannot be changed, it will stop working when requirements change, and we will be unable to modify it to keep it useful. Its value will then become zero.&lt;/li&gt;
+&lt;li&gt;If a program does not currently work but is easy to change, fixing it and continuing to adapt it as requirements evolve should both be straightforward. Such a program can continue to create value.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A common mistake shared by business and development teams is failing to distinguish genuinely urgent and important features from urgent but unimportant ones. As a result, important architectural concerns give way to unimportant behavioral features.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Balancing the importance of system architecture against the urgency of features is the responsibility of software developers themselves&lt;/strong&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Author’s note: Similar problems arise even between development teams. For example, some front-end teams assume that the back end merely needs to expose a set of interfaces and that this is easy, overlooking the importance of good design.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="为好的软件架构持续斗争"&gt;Keep Fighting for Good Software Architecture ✊&lt;/h3&gt;
+&lt;p&gt;If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>How to Load PyTorch Model Parameters into MindSpore</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h3 id="问题简述"&gt;Problem Overview&lt;/h3&gt;
+&lt;p&gt;In day-to-day model development and training, many existing open-source projects and paper implementations use PyTorch for model design, development, training, and inference. When we need to develop models with MindSpore, two problems arise:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The model is implemented in PyTorch.&lt;/li&gt;
+&lt;li&gt;Parameters saved after training a PyTorch model cannot be loaded directly by a MindSpore model.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first problem can be addressed using the official MindSpore documentation: &lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB"&gt;Typical Differences from PyTorch&lt;/a&gt; and &lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8"&gt;PyTorch–MindSpore API Mapping&lt;/a&gt; to migrate the model.&lt;/p&gt;
+&lt;p&gt;For parameter conversion, MindConverter is no longer supported in the latest MindSpore version discussed here. We can therefore &lt;strong&gt;convert parameters manually&lt;/strong&gt;, transforming PyTorch model parameters into a format MindSpore can recognize before loading them.&lt;/p&gt;
+&lt;h3 id="解决方案"&gt;Solution&lt;/h3&gt;
+&lt;p&gt;I will not repeat the model code migration process here.&lt;/p&gt;
+&lt;p&gt;The main steps for parameter conversion are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Load the PyTorch model with PyTorch and obtain its parameters, prams_torch.&lt;/li&gt;
+&lt;li&gt;Load the MindSpore model with MindSpore and obtain its parameters, prams_ms.&lt;/li&gt;
+&lt;li&gt;Match PyTorch parameter names to MindSpore parameter names one by one where corresponding parameters exist.&lt;/li&gt;
+&lt;li&gt;Build a torch_2_ms key mapping and use it to place PyTorch parameter values under the corresponding MindSpore parameter names.&lt;/li&gt;
+&lt;li&gt;Load the parameters with MindSpore.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="案例分析"&gt;Case Study&lt;/h3&gt;
+&lt;p&gt;Different models contain different modules and parameter types. Here, one network illustrates the basic conversion approach; the same reasoning applies to other models.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://arxiv.org/abs/1905.11946"&gt;EfficientNet&lt;/a&gt; is a paper published by Google in 2019. See the paper for the detailed network architecture. Here we use &lt;strong&gt;EfficientNet+FC&lt;/strong&gt; as an example of a model with a fully connected layer to explore parameter conversion.&lt;/p&gt;
+&lt;h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch"&gt;Load the PyTorch Model and Obtain prams_torch&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_pytorch.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_pytorch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_pytorch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cuda()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_weights_dict &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;state_dict()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_weights_dict&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(param_torch)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'param_torch.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After this step, the PyTorch model parameters have been saved to param_torch.csv. Inspect the data:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;_bn0.num_batches_tracked&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms"&gt;Load the MindSpore Model and Obtain prams_ms&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mindspore &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_mindspore.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mindspore_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_ms&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mindspore_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parameters_dict()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(prams_ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'prams_ms.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After this step, the MindSpore model parameters have been saved to prams_ms.csv. Inspect the data:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应"&gt;Match PyTorch Parameter Names to MindSpore Parameter Names&lt;/h4&gt;
+&lt;p&gt;We now have parameter key tables for MindSpore and PyTorch, provided in the attachments. Comparing their naming conventions reveals consistent patterns, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Batch Normalization:
+&lt;ul&gt;
+&lt;li&gt;Weights: weight|bias → gamma|beta.&lt;/li&gt;
+&lt;li&gt;Moving mean and variance: running_mean|running_var → moving_mean|moving_variance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Custom blocks: PyTorch uses the _blocks. prefix.&lt;/li&gt;
+&lt;li&gt;Other differences.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="键名映射表"&gt;Key Mapping Table&lt;/h4&gt;
+&lt;p&gt;We can use these patterns to write a Python script that converts key names and generates a mapping table:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pytorch&lt;/th&gt;
+&lt;th&gt;mindspore&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Next, retrieve each weight value from the PyTorch weight dictionary using the corresponding Pytorch_key in the mapping file, wrap it with mindspore.Parameter, and assign it to the corresponding mindspore.key:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ms_param_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;values:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; i
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; param_mapping[ms_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_values_dict[pt_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; isinstance(pt_val, np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ndarray):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;        pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_val&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cpu()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;numpy()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Parameter(pt_val, ms_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    print(ms_val)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_values_dict[ms_key] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ms_val
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用mindspore加载参数"&gt;Load the Parameters with MindSpore&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;load_param_into_net(mindspore_model, ms_values_dict)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The parameters should now be accepted by MindSpore.&lt;/p&gt;
+&lt;h3 id="whats-more"&gt;What’s more&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;When storing parameter values, pay attention to differences in parameter precision between PyTorch and MindSpore.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Beyond the Gradient: The Hessian Matrix</title>
+      <link>https://tommycheese.github.io/en/blogs/h/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/h/</guid>
+      <description>&lt;p&gt;This article explores the Hessian matrix, a powerful mathematical tool for studying gradient descent. Before discussing the Hessian, we first need the basic concepts of gradients and the Jacobian matrix.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐ This article assumes familiarity with gradient descent and basic numerical analysis and linear algebra.
+&lt;a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/"&gt;Original article&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="梯度雅克比矩阵"&gt;Gradients and the Jacobian Matrix&lt;/h2&gt;
+&lt;p&gt;Gradient descent requires derivative information at the current point of a function. For a function with multiple input directions, its gradient is the vector of partial derivatives in those directions.&lt;/p&gt;
+&lt;p&gt;The discussion above assumes &lt;strong&gt;a single output&lt;/strong&gt;. When the function’s output is also a vector, we must take the gradient of each output element with respect to the inputs and &lt;strong&gt;stack them together&lt;/strong&gt;. The resulting matrix is the &lt;strong&gt;Jacobian matrix&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If a function $f$ takes three inputs $x1、x2、x3$ and produces one output $y$, its gradient is:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If a function $f2$ takes three inputs $x1、x2、x3$ and produces three outputs $y1、y2、y3$, its Jacobian is:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;amp;  \frac{\partial y_1}{\partial x_2}&amp;amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;amp;  \frac{\partial y_2}{\partial x_2}&amp;amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;amp;  \frac{\partial y_3}{\partial x_2}&amp;amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$&lt;/p&gt;
+&lt;p&gt;Second derivatives describe the curvature of a function in a particular direction $d$. This information helps anticipate the behavior of gradient descent. Along direction $d$:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If the second derivative is positive, the first derivative increases along $d$, and the function value decreases more slowly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the second derivative is negative, the first derivative decreases along $d$, and the function value decreases more quickly.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the second derivative is zero, the first derivative remains constant along $d$, and the function value decreases at a constant rate.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐ Gradient descent reduces a loss function, so we analyze how derivatives change within &lt;strong&gt;a small local segment&lt;/strong&gt; of a decreasing function. The decreasing side of a quadratic function is often used as an approximation, as in a second-order Taylor expansion or Newton’s method.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵"&gt;The Hessian Matrix&lt;/h2&gt;
+&lt;p&gt;Like the Jacobian, the &lt;strong&gt;Hessian matrix &lt;strong&gt;contains information about the function’s second derivatives:
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+Because mixed second derivatives can be interchanged, namely $\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$, &lt;/strong&gt;the Hessian is a symmetric matrix&lt;/strong&gt;. For a symmetric matrix, we can use &lt;strong&gt;eigendecomposition&lt;/strong&gt; to study the relationship between eigenvalues and second derivatives and obtain a directional second derivative efficiently.&lt;/p&gt;
+&lt;p&gt;For a particular direction d, the second directional derivative can be written as $d^THd$. Therefore:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;🔗 &lt;a href="https://blog.csdn.net/weixin_42397505/article/details/112066943"&gt;Second Directional Derivatives and Properties of the Hessian Matrix — CSDN&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If d is an eigenvector of H corresponding to eigenvalue λ:&lt;/p&gt;
+&lt;p&gt;Since d is an eigenvector corresponding to λ, by definition:
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$&lt;/p&gt;
+&lt;p&gt;The eigenvalue λ corresponding to that eigenvector is therefore the second derivative in that direction.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For another direction d, let $e_i$ be an eigenvector of $H$ with eigenvalue $\lambda_i$. From the result above,
+$$
+\lambda_i=e_i^THe_i
+$$
+Any direction $d=\sum_i^mt_ie_i$ is a linear combination of eigenvectors, where m is the number of eigenvalues and $t_i$ is the weight of the $i$th eigenvector. Thus:
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+The second derivative in an arbitrary direction that is not an eigenvector is therefore a weighted sum of all eigenvalues. In particular, this weighted sum describes an ellipsoid. With two eigenvalues, it is an ellipse, with the equation:
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+&lt;img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="Article illustration"&gt;&lt;/p&gt;
+&lt;p&gt;The figure shows that the maximum second derivative is determined by the largest eigenvalue, along the major semiaxis, and the minimum by the smallest eigenvalue, along the minor semiaxis.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵应用"&gt;Applications of the Hessian Matrix&lt;/h2&gt;
+&lt;p&gt;With the definition of the Hessian established, we can use its properties to analyze optimization methods: identifying local maxima, local minima, and saddle points; choosing learning rates; and assessing how ill-conditioning affects gradient descent. We can also use the Hessian to implement &lt;strong&gt;Newton’s method&lt;/strong&gt; as an optimization algorithm.&lt;/p&gt;
+&lt;p&gt;(End of section)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Explore</title>
+      <link>https://tommycheese.github.io/en/gallery/</link>
+      <pubDate>Sat, 25 Jun 2022 18:35:46 +0530</pubDate>
+      <guid>https://tommycheese.github.io/en/gallery/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

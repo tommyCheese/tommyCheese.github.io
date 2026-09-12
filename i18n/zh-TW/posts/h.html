@@ -1,0 +1,88 @@
+<p>本文討論研究梯度下降法的一個有力的數學工具：海森矩陣。在討論海森矩陣之前，需要首先了解梯度和雅克比矩陣的基本概念。</p>
+<blockquote>
+<p>⭐本文假設讀者已經熟悉梯度下降法和簡單的數值分析、線性代數知識
+<a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/">原文連結</a></p>
+</blockquote>
+<h2 id="梯度雅克比矩阵">梯度、雅克比矩陣</h2>
+<p>梯度下降演算法需要當前函式點的導數資訊，當此函式點包含多個方向時，梯度是包含所有方向的（偏）導數向量。</p>
+<p>上述情況對應於<strong>輸出為一個</strong>的情況，當函式的輸出也為一個向量時，我們需要把輸出向量的每一個元素對於多個輸入的梯度<strong>羅列在一起</strong>，羅列形成的矩陣就是<strong>雅克比矩陣（Jacobian Matrix）</strong>。</p>
+<p>舉例說明：</p>
+<ul>
+<li>若函式$f$接受三個輸入$x1、x2、x3$，產生一個輸出$y$，則其梯度為：</li>
+</ul>
+<p>$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$</p>
+<ul>
+<li>若函式$f2$接受三個輸入$x1、x2、x3$，產生三個輸出$y1、y2、y3$，則其雅克比矩陣為：</li>
+</ul>
+<p>$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;  \frac{\partial y_1}{\partial x_2}&amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;  \frac{\partial y_2}{\partial x_2}&amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;  \frac{\partial y_3}{\partial x_2}&amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$</p>
+<p>利用二階導數，我們可以知道關於函式在特定方向 $d$ 上的凹凸資訊，利用凹凸資訊可以在一定程度上預判梯度下降法的表現效果。如果在特定方向 $d$ 上：</p>
+<ul>
+<li>
+<p>二階導數為正，則函式在方向$d$上一階導數增加，函式值下降更慢；</p>
+</li>
+<li>
+<p>二階導數為負，則函式在方向$d$上一階導數減少，函式值下降更快；</p>
+</li>
+<li>
+<p>二階導數為零，則函式在方向$d$上一階導數不變，函式值勻速下降；</p>
+<blockquote>
+<p>⭐注意在梯度下降法中是對損失函式進行下降，因此需要使用減函式來分析函式中<strong>某一小段</strong>（經常使用二次函式的減半部近似：二階泰勒展開、牛頓法）中的導數變化情況；</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="海森矩阵">海森矩陣</h2>
+<p>和雅克比矩陣類似，<strong>海森矩陣（Hessian 矩陣）<strong>可以包含函式中二階導的資訊：
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+同時由於二階導數計算順序的可交換性，即 $\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$，因此</strong>海森矩陣是一個對稱矩陣</strong>，對於對稱矩陣我們可以使用<strong>特徵分解</strong>來研究特徵值和二階導數的關係，便於我們快速獲得某個方向的二階導數。</p>
+<p>針對於特定方向d，已知此方向的二階導數可以寫成 $d^THd$ ，則：</p>
+<blockquote>
+<p>🔗 <a href="https://blog.csdn.net/weixin_42397505/article/details/112066943">基於Hessian矩陣的二階方向導數與性質_Hi 喀什噶爾的胡楊的部落格-CSDN部落格_二階方向導數</a></p>
+</blockquote>
+<ul>
+<li>
+<p>若d是H對應特徵值λ的特徵向量：</p>
+<p>因為d為對應λ的特徵向量（以下簡稱特徵向量），則據定義有：
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$</p>
+<p>因此特徵向量對應的特徵值λ即為此方向的二階導數；</p>
+</li>
+<li>
+<p>若d為其他方向：設$e_i$為$H$對應特徵值$\lambda_i$的特徵向量，由上可知，
+$$
+\lambda_i=e_i^THe_i
+$$
+可知任何一個方向$d=\sum_i^mt_ie_i$為特徵向量的線性組合，其中m為特徵值個數，$t_i$為第$i$個特徵向量的加權數，則：
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+因此任意非特徵向量方向的二階導數是所有特徵值的加權和，特別的，此時的加權和是一個橢球體，在二維的特徵值情況下，二階導數是一個橢圓，橢圓方程為：
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+<img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="在這裡插入圖片描述"></p>
+<p>由圖可知，最大二階導數由最大特徵值決定（長半軸），而最小二階導數由最小特徵值決定（短半軸）。</p>
+</li>
+</ul>
+<h2 id="海森矩阵应用">海森矩陣應用</h2>
+<p>在弄清海森矩陣的基本定義後，就可以使用海森矩陣的一些性質來分析最佳化方法中的一些問題了。如確定區域性最大點、區域性最小點和鞍點、確定學習率、以及使用病態條件來確定梯度下降的表現等，同時我們還可以利用Hessian矩陣來實現<strong>牛頓法</strong>這種最佳化演算法，。</p>
+<p>（本節完）</p>

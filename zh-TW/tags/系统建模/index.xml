@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>系統建模 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/zh-TW/tags/%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1/</link>
+    <description>Tommy Cheese 的個人部落格，記錄軟體工程、人工智慧與學習實踐。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <lastBuildDate>Fri, 26 Jul 2024 19:49:45 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/zh-TW/tags/%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>領域驅動設計初識</title>
+      <link>https://tommycheese.github.io/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
+      <pubDate>Fri, 26 Jul 2024 19:49:45 +0800</pubDate>
+      <guid>https://tommycheese.github.io/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</guid>
+      <description>&lt;h1 id="领域驱动设计概述"&gt;領域驅動設計概述&lt;/h1&gt;
+&lt;p&gt;領域驅動設計（DDD, Domain-Driven Design）是一種模型驅動設計的方法，它通過領域模型捕捉領域知識，使用領域模型構造&lt;strong&gt;更易維護&lt;/strong&gt;的軟體.&lt;/p&gt;
+&lt;p&gt;DDD的設計過程分為戰略設計與戰術設計，其中戰略設計面向領域、子域以及限界上下文的設計，而戰術設計面向實體、值物件、領域事件等設計，關係如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/DDD1.png" alt="img"&gt;&lt;/p&gt;
+&lt;h2 id="战略设计阶段相关概念"&gt;戰略設計階段相關概念&lt;/h2&gt;
+&lt;h3 id="领域"&gt;領域&lt;/h3&gt;
+&lt;p&gt;領域是系統要解決問題的領域，如商品資訊管理就可以是系統要解決問題的領域.&lt;/p&gt;
+&lt;h3 id="子域"&gt;子域&lt;/h3&gt;
+&lt;p&gt;根據使用語言的不同可以將領域劃分為不同的子域：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;核心域：決定產品核心競爭力的子域，是最為重要、業務最核心、個性的部分；&lt;/li&gt;
+&lt;li&gt;通用域：被多個子域使用的通用功能子域，比如用到的通用系統，例如認證、許可權等等，這類應用沒有企業特點限制，不需要做太多的定製化；&lt;/li&gt;
+&lt;li&gt;支撐域：不包含核心功能與通用功能的子域，具有企業特性，但不具有通用性，例如資料程式碼類的資料字典等系統；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="限界上下文"&gt;限界上下文&lt;/h3&gt;
+&lt;p&gt;限界上下文，即限定使用不同模型來解決不同問題所產生的不同區域.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;限界上下文是一個子域或者多個子域的集合&lt;/strong&gt;，&lt;strong&gt;要保證一個限界上下文須支援一個完整的業務流程&lt;/strong&gt;，&lt;strong&gt;保證這個業務流程所涉及的領域都在一個限界上下文中&lt;/strong&gt;.限界上下文是微服務拆分的依據，即每個限界上下文對應一個微服務.&lt;/p&gt;
+&lt;p&gt;那麼為什麼要進行限界上下文呢？這是因為&lt;strong&gt;上下文&lt;/strong&gt;的存在導致編碼十分困難，舉個例子說明：&lt;/p&gt;
+&lt;p&gt;例如在招聘域我們可能會使用“平臺”來表明來自於哪個學校、機構；在跳水域我們使用“平臺”來表明選手從那個跳臺跳水；而在鐵路交通運輸領域，我們可能會使用“平臺”來描述鐵路站臺……在某一天的某一個機會，跳水選手、HR和乘務員聚到了一起，並且他們都不瞭解對方的身份，如果此時HR問跳水選手說你來自哪個平臺……&lt;/p&gt;
+&lt;p&gt;看到了吧，同樣是使用“平臺”這個詞語，但三個人在&lt;strong&gt;沒有約定&lt;/strong&gt;的情況下可能對於詞語的理解不盡相同，解決這個問題的辦法就是把跳水域、招聘域和交通域隔離，分別定義域內的術語，在一個域內討論就可以最大可能的避免歧義，這就是約定.這也是為什麼最好把業務所涉及的領域定義在一個限界上下文中：減少歧義.&lt;/p&gt;
+&lt;p&gt;在軟體系統的設計中同樣會遇到類似的問題，如果你負責設計一個足夠大的計算機軟體產品，產品涉及到跳水服務、招聘服務與乘車服務，系統沒有對服務做任何切分，你在跳水有關業務邏輯中使用platform資料結構描述跳臺、在招聘業務中使用platform代表平臺、在交通業務中使用platform代表站臺，當這三個業務不可避免的交匯到一起時，災難就發生了，面對滿螢幕不同語義但幾乎同名的變數，我們能怎麼辦？&lt;/p&gt;
+&lt;p&gt;顯然，限定某一個領域術語的細節，我們就可以在領域中暢通無阻的使用這個術語了，這就是限界上下文的重要作用.&lt;/p&gt;
+&lt;h2 id="战术设计阶段相关概念"&gt;戰術設計階段相關概念&lt;/h2&gt;
+&lt;h3 id="值对象和实体"&gt;值物件和實體&lt;/h3&gt;
+&lt;p&gt;首先了解一下值物件和實體.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;值物件是通過屬性值來識別的物件，即如果兩個值物件的內部值都是相同的，那麼我們就認為這兩個值物件是相同的.顯然，值物件的屬性不可變.&lt;/li&gt;
+&lt;li&gt;實體是擁有唯一標識和狀態，且具有生命週期的業務物件.實體的屬性是可變的，如果兩個實體的屬性是完全相同的，我們也不認為他們是相同的實體，只有他們兩個的標識（如ID）是相同的才會被認為是相同的實體.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;舉例區分值物件和實體：&lt;/p&gt;
+&lt;p&gt;假如現在我們有一個白色值物件Color white{R:255, G:255, B:255}和一個輪胎實體tire{Air:&lt;em&gt;,Size:&lt;/em&gt;}：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可變性：白色中的每一個屬性都是不可變的，因為一旦變化此物件就不再代表”白色“；而輪胎中的氣壓、尺寸等值可以改變，因為了即便這些引數發生了變化它仍然是輪胎；&lt;/li&gt;
+&lt;li&gt;可比較性：正是由於值物件的值不可變性賦予了其相等的規則，兩個白色物件的值一定會是相同的，因此如果兩個值物件的內部值都是相同的，那麼我們就認為這兩個值物件是相同的，實體則由於其屬性的可變性而喪失了這個特點.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;對於實體而言，其形態一般有四種：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;失血模型：模型僅僅包含資料的定義和getter/setter方法，業務邏輯和應用邏輯都放到服務層中.這種類在Java中叫POJO.&lt;/li&gt;
+&lt;li&gt;貧血模型：貧血模型中包含了一些業務邏輯，但不包含依賴持久層的業務邏輯.這部分依賴於持久層的業務邏輯將會放到服務層中.&lt;/li&gt;
+&lt;li&gt;充血模型：充血模型中包含了所有的業務邏輯，包括依賴於持久層的業務邏輯.&lt;/li&gt;
+&lt;li&gt;脹血模型：脹血模型就是把和業務邏輯不相關的其他應用邏輯（如授權、事務等）全部都放到領域模型中.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;資源庫Repo&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Repo是針對Entity設計的儲存操作，Repo中的操作應該儘可能低階、命名要簡短，並且不能定義太多.Java中的MyBatis Mapper可以看作是Repo的一種實現.&lt;/p&gt;
+&lt;h3 id="聚合与聚合根"&gt;聚合與聚合根&lt;/h3&gt;
+&lt;p&gt;聚合是一種更大範圍的封裝，把一組有相同生命週期、在業務上不可分隔的實體和值物件放在一起考慮，只有聚合根可以對外暴露引用，聚合也是一種內聚性的表現.聚合根之間也可相互呼叫，聚合根抽象出來一般名字為名詞.&lt;/p&gt;
+&lt;p&gt;聚合根通過以下幾種手段實現封裝：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;必須通過操作聚合根來實現操作整個聚合，外部操作不允許直接操作聚合中的元素.比如紫色（外觀）+輪胎+鋼架+…=汽車，我們開車時不能也不會去單獨操作輪胎、方向盤、外觀…，相反，我們通過操作汽車這個聚合根來間接操作其他實體/值物件.&lt;/li&gt;
+&lt;li&gt;聚合定義了一組&lt;strong&gt;邊界&lt;/strong&gt;，邊界內所有的元件必須對業務邏輯有效；&lt;/li&gt;
+&lt;li&gt;必須在一個原子性的事務中操作聚合，否則可能會出現異常，也就是說聚合是操作的單元，從倉庫取出聚合、操作完成後放回是一個原子性的操作；如何理解原子性？加入汽車聚合根有輪子實體、鋼/鋁/碳架實體，你不能拆掉汽車的一個輪子檢修完後不裝上.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="领域事件domain-events"&gt;領域事件Domain Events&lt;/h3&gt;
+&lt;p&gt;當實體的屬性發生變化時就會產生領域事件，領域事件是領域專家認為重要的事情.領域事件是發生在領域中且值得注意的事件.而領域事件通常意味著領域物件狀態的改變.&lt;strong&gt;領域事件在系統中起到了傳遞訊息、觸發其他動作的作用，是解耦領域模型的重要手段之一&lt;/strong&gt;.我們往往利用&lt;strong&gt;訊息佇列&lt;/strong&gt;來傳遞領域事件，這樣所有訂閱此訊息的子域都會進行自己內部的響應操作.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;訊息匯流排也是一種實現方法👋.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如輪胎實體氣壓發生變化時，會釋放領域leaked漏氣事件，此漏氣事件傳遞了“輪胎漏氣”這個訊息，從而引發一系列其他的響應，如動能系統變化、方向盤手感變化等等，領域事件通常會使用過去式命名來說明事件已經發生，不可撤銷.&lt;/p&gt;
+&lt;h3 id="领域服务domain-service"&gt;領域服務Domain Service&lt;/h3&gt;
+&lt;p&gt;有些領域中的動作看上去&lt;strong&gt;並不屬於任何物件&lt;/strong&gt;.它們代表了領域中的一個重要的行為，不能忽略它們或者簡單地把它們合併到某個實體或者值物件中.當這樣的行為從領域中被識別出來時，推薦的實踐方式是將它宣告成一個服務，這個服務就是領域服務.&lt;/p&gt;
+&lt;p&gt;領域服務不是微服務中的“服務”概念.服務和聚合根概念有些相近，他們都可以操作多個實體，但是二者理念和作用不同，&lt;strong&gt;聚合根是對實體的組合，而服務是用於同步多個實體的狀態，比如將某個item實體加入到list實體&lt;/strong&gt;（比如把mail投遞到inbox）.所以Servie一般抽象出來都是動詞.&lt;/p&gt;
+&lt;h2 id="ddd领域建模设计领域模型"&gt;DDD領域建模（設計領域模型）&lt;/h2&gt;
+&lt;p&gt;DDD領域建模一般步驟如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;根據需求劃分出初步的子域和限界上下文，以及上下文之間的關係；&lt;/li&gt;
+&lt;li&gt;進一步分析每個上下文內部，識別出哪些是實體，哪些是值物件，並確定實體需要使用哪種程式碼形態：失血、貧血、充血、脹血；&lt;/li&gt;
+&lt;li&gt;對實體、值物件進行關聯和聚合，劃分出聚合的範疇和聚合根；&lt;/li&gt;
+&lt;li&gt;為聚合根設計資源庫repo，並思考實體或值物件的建立方式；&lt;/li&gt;
+&lt;li&gt;在工程中實踐領域模型，並在實踐中檢驗模型的合理性，倒推模型中不足的地方並重構.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;這就是DDD採用兩階段設計原則——先進行戰略設計、隨後進行戰術設計。&lt;/p&gt;
+&lt;p&gt;在實踐中，建議實體採用失血模型（實體方法只包括setter/getter）或者貧血模型（包含不涉及資料庫操作的簡單邏輯，如屬性合法性校驗）；&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;實際上這是DDD建模方式之一，是自頂向下的設計方法，還存在一種方式是使用自下而上的方法，即先確定領域模型——實體、值物件等，再確定子域、限界上下文…&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;（本節完）&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

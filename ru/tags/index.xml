@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Теги · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ru/tags/</link>
+    <description>Личный блог Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ru/tags/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Разработка агентов</title>
+      <link>https://tommycheese.github.io/ru/tags/agent%E5%BC%80%E5%8F%91/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/agent%E5%BC%80%E5%8F%91/</guid>
+      <description>Заметки о механизмах расширения агентов, разработке инструментов и встраиваемой интеграции.</description>
+    </item>
+    <item>
+      <title>Чистая архитектура</title>
+      <link>https://tommycheese.github.io/ru/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</link>
+      <pubDate>Mon, 29 Jul 2024 06:13:15 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Чтение</title>
+      <link>https://tommycheese.github.io/ru/tags/%E9%98%85%E8%AF%BB/</link>
+      <pubDate>Mon, 29 Jul 2024 06:13:15 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E9%98%85%E8%AF%BB/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Моделирование систем</title>
+      <link>https://tommycheese.github.io/ru/tags/%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1/</link>
+      <pubDate>Fri, 26 Jul 2024 19:49:45 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Методология проектирования систем</title>
+      <link>https://tommycheese.github.io/ru/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95%E8%AE%BA/</link>
+      <pubDate>Fri, 26 Jul 2024 19:49:45 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95%E8%AE%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Численное дифференцирование</title>
+      <link>https://tommycheese.github.io/ru/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ascend</title>
+      <link>https://tommycheese.github.io/ru/tags/%E6%98%87%E8%85%BE/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E6%98%87%E8%85%BE/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Глубокое обучение</title>
+      <link>https://tommycheese.github.io/ru/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ru/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

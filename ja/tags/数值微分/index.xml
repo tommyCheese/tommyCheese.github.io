@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>数値微分 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/</link>
+    <description>ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>勾配の先へ：ヘッセ行列</title>
+      <link>https://tommycheese.github.io/ja/blogs/h/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ja/blogs/h/</guid>
+      <description>&lt;p&gt;この記事では、勾配降下法を研究するための強力な数学的道具であるヘッセ行列を取り上げます。その前に、勾配とヤコビ行列の基本概念を理解する必要があります。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐この記事は、読者が勾配降下法と、初歩的な数値解析・線形代数を理解していることを前提とします。
+&lt;a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/"&gt;元の記事へのリンク&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="梯度雅克比矩阵"&gt;勾配とヤコビ行列&lt;/h2&gt;
+&lt;p&gt;勾配降下法では、現在の点における関数の微分の情報が必要です。その点で複数の方向を扱う場合、勾配はすべての方向の偏微分をまとめたベクトルです。&lt;/p&gt;
+&lt;p&gt;これは、&lt;strong&gt;出力が一つ&lt;/strong&gt;の場合です。関数の出力もベクトルである場合は、出力ベクトルの各要素について、複数の入力に対する勾配を&lt;strong&gt;並べてまとめる&lt;/strong&gt;必要があります。こうしてできる行列が、&lt;strong&gt;ヤコビ行列（Jacobian Matrix）&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;例を見てみましょう：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;関数$f$が三つの入力$x1、x2、x3$を受け取り、一つの出力$y$を返す場合、その勾配は次のようになります：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;関数$f2$が三つの入力$x1、x2、x3$を受け取り、三つの出力$y1、y2、y3$を返す場合、そのヤコビ行列は次のようになります：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;amp;  \frac{\partial y_1}{\partial x_2}&amp;amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;amp;  \frac{\partial y_2}{\partial x_2}&amp;amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;amp;  \frac{\partial y_3}{\partial x_2}&amp;amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$&lt;/p&gt;
+&lt;p&gt;二階微分を使うと、特定の方向 $d$ における関数の凹凸を知ることができます。その情報から、勾配降下法の振る舞いをある程度予測できます。特定の方向 $d$ について：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が正なら、方向$d$の一階微分は増加し、関数値の減少は遅くなります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が負なら、方向$d$の一階微分は減少し、関数値の減少は速くなります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が0なら、方向$d$の一階微分は変わらず、関数値は一定の速さで減少します。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐勾配降下法では損失関数を減少させるので、減少している関数を使い、その中の&lt;strong&gt;ごく小さな区間&lt;/strong&gt;における微分の変化を分析する必要があります。二次関数の減少側で近似することが多く、二次のテイラー展開やニュートン法がその例です。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵"&gt;ヘッセ行列&lt;/h2&gt;
+&lt;p&gt;ヤコビ行列と同様に、&lt;strong&gt;ヘッセ行列（Hessian行列）&lt;strong&gt;は、関数の二階微分の情報をまとめます：
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+二階偏微分では微分の順序を交換でき、$\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$となるため、&lt;/strong&gt;ヘッセ行列は対称行列です&lt;/strong&gt;。対称行列には、&lt;strong&gt;固有値分解&lt;/strong&gt;を使って固有値と二階微分の関係を調べられるので、ある方向の二階微分を素早く求めるのに役立ちます。&lt;/p&gt;
+&lt;p&gt;特定の方向dについて、二階方向微分が $d^THd$ と書けるとわかっているとき、次のようになります：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;🔗 &lt;a href="https://blog.csdn.net/weixin_42397505/article/details/112066943"&gt;Hessian行列に基づく二階方向微分とその性質—CSDNブログ&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;dがHの固有値λに対応する固有ベクトルである場合：&lt;/p&gt;
+&lt;p&gt;dはλに対応する固有ベクトルなので、定義より次が成り立ちます：
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$&lt;/p&gt;
+&lt;p&gt;したがって、その固有ベクトルに対応する固有値λが、その方向の二階微分です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;dがそれ以外の方向である場合：$e_i$を$H$の固有値$\lambda_i$に対応する固有ベクトルとすると、前述のとおり、
+$$
+\lambda_i=e_i^THe_i
+$$
+となります。任意の方向$d=\sum_i^mt_ie_i$は固有ベクトルの線形結合で表せます。mは固有値の数、$t_i$は第$i$固有ベクトルの重みです。したがって、
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+となり、固有ベクトル以外の任意の方向の二階微分は、すべての固有値の加重和になります。特に、この加重和は楕円体を表し、固有値が二次元の場合には二階微分は楕円になり、その式は次のとおりです：
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+&lt;img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="二階方向微分と固有値の関係を表す図"&gt;&lt;/p&gt;
+&lt;p&gt;図から、最大の二階微分は最大固有値（長半軸）で決まり、最小の二階微分は最小固有値（短半軸）で決まることがわかります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵应用"&gt;ヘッセ行列の応用&lt;/h2&gt;
+&lt;p&gt;基本的な定義がわかれば、ヘッセ行列の性質を使って、最適化における問題を分析できます。たとえば、局所最大点、局所最小点、鞍点の判定、学習率の決定、悪条件に基づく勾配降下法の挙動の評価などです。また、Hessian行列を使って、&lt;strong&gt;ニュートン法&lt;/strong&gt;という最適化アルゴリズムも実現できます。&lt;/p&gt;
+&lt;p&gt;（本節・完）&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

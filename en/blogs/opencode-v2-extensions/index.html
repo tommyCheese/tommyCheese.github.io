@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" data-page-path="/blogs/opencode-v2-extensions/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="OpenCode v2 Extensions: Architecture and Integration">
+<meta property="og:description" content="An overview of internal, external, and SDK plugins in OpenCode v2, covering Transforms, Hooks, tool registration, Code Mode, and the Location lifecycle.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta property="og:image:alt" content="Modular connections between the Agent core, plugins, tools, and execution hooks">
+<meta property="og:url" content="https://tommycheese.github.io/en/blogs/opencode-v2-extensions/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2026-09-13T00:00:00+08:00">
+<meta property="article:modified_time" content="2026-09-13T00:00:00+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png">
+<meta name="twitter:image:alt" content="Modular connections between the Agent core, plugins, tools, and execution hooks">
+<meta name="twitter:title" content="OpenCode v2 Extensions: Architecture and Integration">
+<meta name="twitter:description" content="An overview of internal, external, and SDK plugins in OpenCode v2, covering Transforms, Hooks, tool registration, Code Mode, and the Location lifecycle.">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="An overview of internal, external, and SDK plugins in OpenCode v2, covering Transforms, Hooks, tool registration, Code Mode, and the Location lifecycle.">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>OpenCode v2 Extensions: Architecture and Integration · Tommy Cheese</title>
+<link rel="alternate" type="application/rss+xml" title="Agent Development" href="/en/tags/agent%E5%BC%80%E5%8F%91/index.xml" data-i18n-title="tag.agent开发">
+<style>
+  #single .page-content { overflow-wrap: anywhere; }
+  #single .page-content h2, #single .page-content h3 { scroll-margin-top: 100px; }
+  #single .page-content pre { overflow: auto; padding: 1.25rem; }
+  #single .page-content pre code { white-space: pre; overflow-wrap: normal; }
+  #single .page-content blockquote { font-size: 1rem; font-weight: 400; padding: 1rem 1.25rem; }
+  #single .page-content table { font-size: .94rem; opacity: 1; }
+  #single .page-content th, #single .page-content td { min-width: 9rem; }
+  #single .plugin-flow { text-align: center; margin: 2rem auto; }
+  #single .plugin-flow img { display: block; width: 100%; max-width: 543px; height: auto; margin: auto; }
+  #single .plugin-flow figcaption { color: var(--text-secondary-color); font-size: .9rem; margin-top: .75rem; }
+  #single details { margin-bottom: 1.5rem; }
+  #single summary { cursor: pointer; }
+</style>
+<meta property="og:locale" content="en_US"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/opencode-v2-extensions/"><link rel="canonical" href="https://tommycheese.github.io/en/blogs/opencode-v2-extensions/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/en/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="Language">🌐 English</summary><nav aria-label="Language"><a href="/blogs/opencode-v2-extensions/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/opencode-v2-extensions/" lang="en" hreflang="en" data-language="en" aria-current="true">English</a><a href="/ja/blogs/opencode-v2-extensions/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/opencode-v2-extensions/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/opencode-v2-extensions/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#about" aria-label="About" data-i18n-aria-label="nav.about" data-i18n="nav.about">About</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#experience" aria-label="Experience" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">Experience</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#contact" aria-label="Get in touch" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">Get in touch</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/blogs/" title="Blog" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="Blog">Blog</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/tags/" title="Tags" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="Tags">Tags</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/gallery/" title="Explore" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="Explore">Explore</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="Toggle light or dark theme">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.opencode-v2-extensions.title">OpenCode v2 Extensions: Architecture and Integration</h1>
+            <div class="text-center"><time datetime="2026-09-13T00:00:00+08:00" data-date="2026-09-13">Sep 13, 2026</time> · <a href="/en/tags/agent%E5%BC%80%E5%8F%91/"><span data-i18n="tag.agent开发">Agent Development</span></a> · <a href="/blogs/opencode-v2-extensions/article.md" download data-i18n="action.downloadMarkdown">Download original Markdown</a></div>
+          </div>
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" fetchpriority="high" decoding="async" alt="Modular connections between the Agent core, plugins, tools, and execution hooks" data-i18n-alt="article.coverAlt">
+          </div>
+          <article class="page-content p-2"><blockquote>
+<p>Research date: 2026-09-13. This article describes the general plugin capabilities of OpenCode v2, including plugin types, loading, capability registration, execution hooks, permission boundaries, and lifecycle management, as a reference for plugin development and embedded integration.</p>
+<p>The code baseline is the <code>v2</code> branch of the OpenCode repository under study, at commit <code>2308db16387c9b59e88d732a93ec9bac54462b03</code>. Source references use repository-relative paths at that fixed commit. The interfaces and behavior described here apply to that version and do not promise compatibility with other OpenCode versions or the legacy plugin API.</p>
+<p>This article is a source-code study and capability overview. Code examples illustrate interfaces and calling conventions and have not been independently executed.</p>
+</blockquote>
+<h2 id="plugin-扩展入口">Plugin: The Extension Entry Point</h2>
+<h3 id="什么是-plugin">What Is a Plugin?</h3>
+<p><strong>OpenCode extensions connect to existing workflows by registering capabilities and execution hooks.</strong> In the current OpenCode v2 implementation, extensions primarily correspond to the Plugin mechanism. Plugins can provide agents, tools, skills, models, and commands, or adjust behavior at specific execution points. The OpenCode core remains responsible for session execution, model requests, tool results, and execution records.</p>
+<figure class="plugin-flow"><img src="/blogimages/en/opencode-v2-plugin-flow.svg" alt="Article illustration" width="429" height="722"><figcaption>The Plugin Flow: Loading, Capability Registration, and Session Execution</figcaption></figure>
+<details><summary>View the Mermaid diagram source</summary><pre><code class="language-mermaid">flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&gt; B[插件加载与生命周期管理]
+    B --&gt; C[构建助手、工具、技能等能力]
+    C --&gt; D[会话选择助手]
+    D --&gt; E[准备上下文与工具快照]
+    E --&gt; F[请求阶段钩子]
+    F --&gt; G[调用模型]
+    G --&gt; H{返回内容}
+    H --&gt;|工具调用| I[工具执行与钩子]
+    I --&gt; J[保存结果与执行事件]
+    J --&gt; G
+    H --&gt;|最终回答| K[本次执行结束]
+</code></pre></details>
+<h3 id="plugin-的分类">Plugin Categories</h3>
+<p><strong>Internal, external, and SDK plugins differ by their source of integration but ultimately share the same runtime management.</strong> All three can register agents, tools, and execution hooks. Their main differences are who supplies the definition, how it enters the host, and whether the host injects additional internal core services. This article covers server-side plugins; TUI plugins for the terminal interface use a separate extension entry point.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Comparison</th>
+<th scope="col">Internal plugin</th>
+<th scope="col">External plugin</th>
+<th scope="col">SDK plugin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provider</td>
+<td>OpenCode source code and distribution</td>
+<td>Project or independent plugin package maintainer</td>
+<td>Application host embedding OpenCode</td>
+</tr>
+<tr>
+<td>Entry point</td>
+<td><code>PluginInternal</code>’s <code>pre</code> / <code>post</code> collection</td>
+<td>Directory discovery, configured files, or packages</td>
+<td>Embedded host’s <code>opencode.plugin(definition)</code></td>
+</tr>
+<tr>
+<td>Loading form</td>
+<td>The core imports definitions directly</td>
+<td>The module is resolved and its default export is read</td>
+<td>The plugin object is passed directly in memory</td>
+</tr>
+<tr>
+<td>Available interfaces</td>
+<td>Public Context plus host-injected internal services</td>
+<td>Public Plugin Context</td>
+<td>Public Plugin Context; closures can access dependencies explicitly supplied by the host</td>
+</tr>
+<tr>
+<td>Primary configuration</td>
+<td>Native configuration, internal services, or built-in defaults</td>
+<td><code>plugins[].options</code> → <code>ctx.options</code></td>
+<td>Host code and closures; the registration interface has no separate <code>options</code> parameter</td>
+</tr>
+<tr>
+<td>Update source</td>
+<td>Follows the OpenCode code version; some plugins watch configuration themselves</td>
+<td>Configuration changes, supported local entry changes, or package configuration changes</td>
+<td>The host registers the plugin again, incrementing the internal revision</td>
+</tr>
+<tr>
+<td>Instance scope</td>
+<td>Activated independently for each Location</td>
+<td>Activated according to each Location’s configuration</td>
+<td>Definitions are shared within a host; activation is independent for each Location</td>
+</tr>
+<tr>
+<td>Use cases</td>
+<td>Implementing native agents, tools, providers, and configuration handling</td>
+<td>Adding project or business capabilities to an existing OpenCode service</td>
+<td>Embedding and managing OpenCode within a JS/TS application</td>
+</tr>
+</tbody></table>
+<p>Effect and Promise are two interfaces for authoring plugins. An Effect plugin object using the public interface can either be default-exported and loaded through configuration or passed directly to the embedded SDK for registration. Its core capabilities can be reused, while loading order and configuration delivery differ.</p>
+<p><strong>Internal plugins organize some of OpenCode’s own functionality as plugins.</strong> They are not special files installed by users in a directory. The core imports them statically and explicitly includes them in the <code>PluginInternal</code> collection. <code>PluginInternal.list()</code> obtains the services needed by the current Location, injects them into internal plugins through <code>Effect.provide(context)</code>, and passes the result to the unified loader.</p>
+<p>There are two layers of Context here: <code>effect(ctx)</code> still receives the public Plugin Context. Internal plugins obtain additional services such as <code>Config.Service</code>, <code>Permission.Service</code>, <code>Shell.Service</code>, <code>Location.Service</code> through the Effect environment. Their additional capabilities come from explicit host dependency injection, not from a plugin ID beginning with <code>opencode.</code>.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Internal plugin example</th>
+<th scope="col">Collection</th>
+<th scope="col">Actual responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opencode.agent</code></td>
+<td><code>pre</code></td>
+<td>Registering the base definitions of native agents</td>
+</tr>
+<tr>
+<td><code>opencode.tool.shell</code></td>
+<td><code>pre</code></td>
+<td>Registering the Shell tool with native execution, permission, and runtime-state services</td>
+</tr>
+<tr>
+<td>Native provider, search, and other tool plugins</td>
+<td><code>pre</code></td>
+<td>Providing foundational model, search, and tool capabilities</td>
+</tr>
+<tr>
+<td><code>opencode.config.agent</code></td>
+<td><code>post</code></td>
+<td>Reading agent configuration and related Markdown files and applying the results to the agent catalog</td>
+</tr>
+<tr>
+<td>Provider, skill, policy, and model-variant configuration plugins</td>
+<td><code>post</code></td>
+<td>Applying configuration or postprocessing to capabilities contributed earlier</td>
+</tr>
+</tbody></table>
+<p>This also explains the relationship between custom agents and internal plugins: users edit agent configuration, while <code>opencode.config.agent</code> reads, watches, and applies it. Each custom agent is an Agent definition and does not require its own plugin. External or SDK plugins can also register Agents, which configuration plugins may subsequently adjust.</p>
+<p>Built-in plugins participate in configuration-based enablement and disablement as well. For example, <code>-opencode.config.agent</code> removes the plugin responsible for applying agent configuration from the active set, affecting that configuration capability. Whether to keep a built-in plugin enabled should be decided according to its actual responsibility.</p>
+<p>Adding native functionality that depends on private Core services generally requires changing OpenCode’s source and adding the plugin to the built-in collection. New service dependencies also require corresponding changes to service assembly. These changes are built, released, and upgraded with OpenCode. Internal plugins suit engine functionality; ordinary business tools should prefer public interfaces.</p>
+<p>Sources: internal plugin collections and service injection (<code>packages/core/src/plugin/internal.ts</code>), native agent plugin (<code>packages/core/src/plugin/agent.ts</code>), agent configuration plugin (<code>packages/core/src/config/plugin/agent.ts</code>), Shell tool plugin (<code>packages/core/src/tool/plugin/shell.ts</code>).</p>
+<p><strong>External plugins add capabilities to an existing OpenCode service through files or packages.</strong> “External” means that the code is not in the built-in collection; it still runs inside the OpenCode process. The loader supplies the public Plugin Context without the extra Core service injection provided to internal plugins. It can still access files, networks, and other resources permitted by the runtime. This is neither a separate process nor a security sandbox.</p>
+<p>External plugins have two discovery paths:</p>
+<ul>
+<li><strong>Automatic discovery</strong>: scans <code>plugin/</code> and <code>plugins/</code> under native configuration directories. The current implementation directly recognizes <code>.ts</code>, <code>.js</code> files and can also resolve package directories and eligible symbolic links. For a package directory, it first checks <code>package.json</code> for a string-valued <code>exports</code>, <code>module</code>, <code>main</code>, then <code>index.ts</code>, <code>index.js</code>. This simple discovery logic should not be treated as support for every complex package-export rule.</li>
+<li><strong>Explicit configuration</strong>:<code>plugins</code> accepts relative paths, absolute paths, file URLs, and resolvable packages. Relative paths are resolved against the configuration file’s directory. Local paths go through module loading; package targets go through the package resolver, which tries the <code>server</code> subpath or the package root entry.</li>
+</ul>
+<p>Automatic discovery results enter the operation list first, followed by explicit configuration. Configuration can therefore disable automatically discovered plugins. Automatic discovery does not directly enumerate <code>.mjs</code> files. Such entry points must be explicitly configured and loaded by the runtime.</p>
+<pre><code class="language-json">{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+</code></pre>
+<p>The paths above are configuration-format examples. A plugin uses <code>ctx.options</code> to read <code>serviceUrl</code> and must validate required fields, value ranges, and address restrictions itself. Receiving an object does not mean that its business configuration has been validated.</p>
+<p>An external module must default-export a plugin object containing <code>id + effect</code> or <code>id + setup</code>:</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Authoring style</th>
+<th scope="col">Initialization entry</th>
+<th scope="col">Integration and cleanup</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Effect</td>
+<td><code>effect(ctx)</code></td>
+<td>Executed by the host within the plugin Scope; resources use scoped lifecycles or finalizers</td>
+</tr>
+<tr>
+<td>Promise</td>
+<td><code>setup(ctx)</code></td>
+<td>The loader uses <code>fromPromise</code> to adapt it to an Effect plugin; initialization may return a cleanup function</td>
+</tr>
+</tbody></table>
+<p><code>@opencode-ai/plugin/effect</code> provides the Effect API, while the package root <code>@opencode-ai/plugin</code> provides the Promise API for this branch. The legacy plugin API has a separate <code>v1</code> entry point; sharing the name “OpenCode plugin” does not imply interface compatibility.</p>
+<p>The typical loading chain for an external plugin is:</p>
+<pre><code class="language-text">配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+</code></pre>
+<p>File or configuration changes can trigger regeneration of the plugin set. Updates are limited to the supported discovery and watching scope; arbitrary dependency-file changes do not necessarily refresh immediately. In particular, when an explicitly configured entry is a directory, changes inside that directory are not guaranteed to trigger reloading. Package upgrades should also be managed through explicit deployment or configuration changes.</p>
+<p>If module import or export-format validation fails, the loader records a warning and skips that source. Initialization failures after activation begins are handled by unified plugin management. When diagnosing availability, verify separately that the file was discovered, the module resolved, the plugin activated, and the capability registered. A configuration entry alone does not prove that a tool is available.</p>
+<p>Sources: discovery and local watching (<code>packages/core/src/config/plugin/source.ts</code>), module loading and configuration injection (<code>packages/core/src/plugin/supervisor.ts</code>), public package entry points (<code>packages/plugin/package.json</code>), Promise adapter (<code>packages/plugin/src/promise/adapter.ts</code>).</p>
+<p><strong>SDK plugins are registered directly by an embedded host and suit applications that use OpenCode as an internal execution engine.</strong> Here, SDK specifically means the <code>@opencode-ai/sdk-next</code> embedded host in the current branch. <code>OpenCode.create()</code> creates a runtime and an in-memory HTTP routing chain within the application process. That internal chain needs no network listener, though tools, models, and business services can still make their own network requests.</p>
+<p>The host submits an Effect plugin object directly through <code>opencode.plugin(definition)</code>, bypassing external module discovery, package resolution, and default-export validation. This does not upload code to an already running remote OpenCode service. A regular HTTP client or the <code>ctx.plugin.list()</code> in Plugin Context is not this embedded registration entry point.</p>
+<p>The following example shows how an embedded host registers and queries plugins. Dependencies must match the research baseline:</p>
+<pre><code class="language-ts">import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&gt;
+      ctx.agent.transform((draft) =&gt; {
+        draft.update("reviewer", (agent) =&gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+</code></pre>
+<p>The example agent defines only its purpose and prompt; permissions require separate configuration. When the example finishes, the Scope that owns the host closes. A real embedded application should keep that Scope alive throughout the service lifecycle.</p>
+<p>The scope and update behavior of SDK plugins have two layers:</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Layer</th>
+<th scope="col">Managed content</th>
+<th scope="col">Effective scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Host registry</td>
+<td><code>Map&lt;plugin.id, Versioned&gt;</code>, storing definitions and increasing revision numbers</td>
+<td>Shared within one embedded host; each host has its own registry</td>
+</tr>
+<tr>
+<td>Location activation set</td>
+<td>Plugin instances, Transforms, Hooks, and Scopes within that directory context</td>
+<td>Activated and cleaned up independently for each Location</td>
+</tr>
+</tbody></table>
+<p>Every registration publishes <code>sdk.plugin.updated</code>. Running Locations regenerate their plugin sets when notified. Locations started later, or restarted after disposal, read the current definitions from the host registry. Registering once at the host level therefore does not mean initialization runs only once. Mutable objects captured in closures may also be shared by multiple Location instances in the same host and must not be assumed to represent a single session’s state.</p>
+<p>Registering the same ID again in one SDK registry replaces its definition and creates a new revision. Separate hosts do not overwrite one another. Registration returning means only that the definition was stored and an update published; it does not mean every Location has finished activation. To verify effectiveness, inspect the target Location’s actual plugin and capability lists and wait for activation events when necessary.</p>
+<p>The current SDK registry exposes only <code>register</code> and <code>all</code>, with no separate <code>unregister</code> interface. A Location can still disable activation by plugin ID through configuration, but that does not remove the definition from the host registry. Closing the host cleans up runtime resources. A newly created host requires registration again; the in-memory registry is not a persistent installation record.</p>
+<p>The SDK registration entry accepts Effect plugins. The external loader’s automatic Promise adaptation does not happen here. To reuse a Promise definition, explicitly use the corresponding <code>fromPromise</code> adapter. The SDK path performs no additional <code>options</code> injection, and the public Context supplies an empty object by default. Hosts typically pass configuration and business clients through factories or closures.</p>
+<p>SDK plugins do not automatically receive the Core service environment available to internal plugins. A host may explicitly supply dependencies, but depending directly on private Core services introduces additional version coupling. In the research baseline, <code>sdk-next</code> is still a transitional package marked <code>private: true</code>; this example is not a promise that a stable public npm API is available for installation.</p>
+<p>Sources: embedded host entry point (<code>packages/sdk-next/src/opencode.ts</code>), SDK registry (<code>packages/core/src/plugin/sdk.ts</code>), SDK package status (<code>packages/sdk-next/package.json</code>), public plugin host (<code>packages/core/src/plugin/host.ts</code>). Embedded test source (<code>packages/sdk-next/test/embedded.test.ts</code>) covers updates across Locations, reactivation after Location disposal, and isolation between hosts. These cases were reviewed for this article but not independently executed.</p>
+<p><strong>The three sources merge into one ordered activation set.</strong> Once enabled entries have been determined, the current order is:</p>
+<pre><code class="language-text">内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+</code></pre>
+<p><code>ConfigPluginSource</code> handles external sources and configuration operations; <code>PluginSupervisor</code> merges them with internal and SDK definitions; <code>Plugin.Service</code> performs the final duplicate-ID checks and manages Scopes, initialization, and replacement. The sources are not three independent execution engines.</p>
+<p>This order means that capabilities such as agents contributed by external and SDK plugins can still be adjusted by later configuration plugins. To determine an agent’s final prompt, model, or permissions, inspect the final capability catalog rather than only its initial plugin definition.</p>
+<p>Plugin IDs, package names, and entry paths serve different purposes. If configuration loads a file whose exported plugin ID is <code>example.reviewer</code>, disable it with <code>-example.reviewer</code>. Selectors support exact IDs, <code>prefix.*</code>, and <code>*</code>. Configuration operations run in sequence, and later operations may re-enable an existing definition.</p>
+<p>Two duplicate-name rules are easy to confuse:</p>
+<ul>
+<li><strong>Registering the same ID again in one SDK registry</strong>: updates that definition through a supported registry replacement operation.</li>
+<li><strong>Different active sources contributing the same ID</strong>: causes activation to reject that round’s entire set for duplicate IDs; definitions are not silently overridden according to source priority. Do not submit the same plugin definition through both an external file and SDK registration.</li>
+</ul>
+<p>Also, the current <code>Plugin.Service</code> skips activation when the IDs and versions of the entire ordered set are unchanged. When the set changes, it iterates over the new set, cleaning up and reinitializing existing plugins. Updating one source can therefore reinitialize other, unchanged plugins. All three plugin types must release resources correctly and must not treat initialization as a business action that runs only once. A failed replacement attempts to restore the plugin’s previous version, but cannot undo external business side effects.</p>
+<p>Sources: source merging and enablement order (<code>packages/core/src/plugin/supervisor.ts</code>), unified activation and replacement (<code>packages/core/src/plugin.ts</code>), configuration and loading-order test source (<code>packages/core/test/config/plugin.test.ts</code>).</p>
+<h2 id="plugin-核心实现一-transform">Core Plugin Mechanism 1: Transform</h2>
+<p><strong>Transforms declare capabilities; Hooks participate in an individual execution.</strong> When choosing an extension point, first determine which domain the requirement belongs to.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Requirement</th>
+<th scope="col">Native extension interface</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Register, modify, or remove agents</td>
+<td><code>ctx.agent.transform</code></td>
+</tr>
+<tr>
+<td>Register tools that can actually execute</td>
+<td><code>ctx.tool.transform</code></td>
+</tr>
+<tr>
+<td>Provide skill instructions and resource entry points</td>
+<td><code>ctx.skill.transform</code></td>
+</tr>
+<tr>
+<td>Add commands</td>
+<td><code>ctx.command.transform</code></td>
+</tr>
+<tr>
+<td>Adjust providers, model catalogs, and default selections</td>
+<td><code>ctx.catalog.transform</code></td>
+</tr>
+<tr>
+<td>Provide reference-material sources</td>
+<td><code>ctx.reference.transform</code></td>
+</tr>
+<tr>
+<td>Configure authentication and connections</td>
+<td><code>ctx.integration.transform</code></td>
+</tr>
+<tr>
+<td>Provide a search backend</td>
+<td><code>ctx.websearch.transform</code></td>
+</tr>
+<tr>
+<td>Modify the current request’s context and visible tools</td>
+<td><code>ctx.session.hook("context", ...)</code></td>
+</tr>
+<tr>
+<td>Inspect tool inputs or organize results</td>
+<td><code>ctx.tool.hook(...)</code></td>
+</tr>
+<tr>
+<td>Adjust the model SDK or model instance</td>
+<td><code>ctx.aisdk.hook(...)</code></td>
+</tr>
+<tr>
+<td>Adjust model HTTP requests or responses</td>
+<td><code>ctx.session.hook("http.request" / "http.response", ...)</code></td>
+</tr>
+<tr>
+<td>Adjust command creation parameters</td>
+<td><code>ctx.shell.hook("create.before", ...)</code></td>
+</tr>
+<tr>
+<td>Observe live events</td>
+<td><code>ctx.event.subscribe()</code></td>
+</tr>
+<tr>
+<td>Create, submit to, wait for, or interrupt sessions</td>
+<td><code>ctx.session.*</code></td>
+</tr>
+</tbody></table>
+<p>State domains such as Agent, Catalog, Command, Integration, Reference, and Skill retain active Transforms and rebuild their state from the base state in sequence. Unloading a plugin removes its Transforms and regenerates the result. A Transform should edit only the Draft supplied to the current callback, retain no Draft references, and avoid external business side effects during rebuilding. If external data is needed, load and store it first, then trigger the domain’s <code>reload()</code>.</p>
+<p>The underlying Tool implementation uses Scope-bound registration and request snapshots. Its lifecycle ownership matches the other domains, but that does not mean all <code>transform</code> methods use identical state containers or return types.</p>
+<h2 id="plugin-核心实现二-hook">Core Plugin Mechanism 2: Hook</h2>
+<p><strong>A Hook is an extension point provided by the host within an execution flow.</strong> Plugins register callbacks at these points. When OpenCode reaches the corresponding stage, it invokes the callbacks with that stage’s context. Plugins can read data, adjust parameters, or process results according to the interface contract, participating in model requests, tool execution, and related flows.</p>
+<p>Using a Hook has two stages: registration and invocation. During initialization, a plugin declares its participation through interfaces such as <code>ctx.session.hook(...)</code>, <code>ctx.tool.hook(...)</code>. The host invokes the callback only when execution reaches that point. Once registered, the callback may run repeatedly whenever the point is reached. The host waits for it to complete, then continues according to the interface contract. For example, <code>tool.execute.before</code> allows a plugin to return <code>Tool.Error</code> to reject the tool execution.</p>
+<p>Transforms build the available capabilities, while Hooks adjust their behavior at specific execution points. For example, register a tool with <code>ctx.tool.transform</code>, inspect the input of an individual tool invocation with <code>ctx.tool.hook("execute.before", ...)</code>, and adjust the context about to be sent to a model with <code>ctx.session.hook("context", ...)</code>. Hooks participate in the current call chain, while <code>ctx.event.subscribe()</code> subscribes to events to observe execution.</p>
+<p>Runtime Hooks execute serially in registration order. Later Hooks see earlier modifications. If several plugins modify the same field, inspect the final loading order. Built-in plugins are divided into leading and trailing collections, so external plugins cannot simply be assumed to override everything last.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Hook</th>
+<th scope="col">Content that can be changed or observed</th>
+<th scope="col">Considerations</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>session.context</code></td>
+<td>System prompts, messages, and current-request tool definitions</td>
+<td>Agent and model identifiers identify the context; changing messages affects the current request and does not append persistent history</td>
+</tr>
+<tr>
+<td><code>tool.execute.before</code></td>
+<td>Tool input</td>
+<td>Can return <code>Tool.Error</code> to prevent execution</td>
+</tr>
+<tr>
+<td><code>tool.execute.after</code></td>
+<td>Successful result or tool error</td>
+<td>Useful for organizing results and adding information</td>
+</tr>
+<tr>
+<td><code>session.http.request/response</code></td>
+<td>Model HTTP requests and responses</td>
+<td>May expose credentials and complete input; control what is logged</td>
+</tr>
+<tr>
+<td><code>aisdk.sdk/language</code></td>
+<td>SDK and actual model instance</td>
+<td>Suitable for provider adaptation</td>
+</tr>
+<tr>
+<td><code>shell.create.before</code></td>
+<td>Command, directory, timeout, shell, and environment variables</td>
+<td>String-based rules alone do not provide operating-system isolation</td>
+</tr>
+</tbody></table>
+<p>Among the current public Hook types, only <code>tool.execute.before</code> declares a recoverable <code>Tool.Error</code> failure channel. Other Hooks should not be treated as general middleware for throwing arbitrary business errors.</p>
+<p>Sources: Plugin Context (<code>packages/plugin/src/effect/plugin.ts</code>), state rebuilding (<code>packages/core/src/state.ts</code>), Hook registration and execution (<code>packages/core/src/plugin/hooks.ts</code>), tool registration and snapshots (<code>packages/core/src/tool.ts</code>).</p>
+<h2 id="工具示例与生命周期">Tool Examples and Lifecycle</h2>
+<h3 id="示例一-使用-plugin-transform-定义-tool">Example 1: Define a Tool with a Plugin Transform</h3>
+<p><strong>A tool contains a model-visible definition and a host-executed function.</strong> After the model generates a tool name and input, OpenCode processes the call using the tool capabilities captured for that request. The function receives the host-provided <code>sessionID</code>, <code>agent</code>, <code>messageID</code> and invocation <code>id</code>. Long-running operations can report progress through <code>context.progress()</code>.</p>
+<p>The following standalone tool example uses the Effect API:</p>
+<pre><code class="language-ts">import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+</code></pre>
+<p>Distinguish result fields by their purpose: <code>output</code> is a structured value for programmatic use when an output Schema has been declared; <code>content</code> is supplied to the model and becomes part of session content; <code>metadata</code> carries bounded additional state. Returning <code>output</code> without declaring an output Schema is an error in the current runtime.</p>
+<p>The source reveals two validation details that interface names alone do not convey:</p>
+<ul>
+<li><code>tool.execute.before</code> runs before Schema decoding inside the tool function. A Hook must therefore treat the input as an unknown structure; decoding happens afterward on the potentially modified input.</li>
+<li>Effect Schema and supported Standard Schemas validate inputs at runtime. The plain JSON Schema branch passes input through directly. The plain JSON Schema output branch also checks only that the result is a JSON value, not that it satisfies each declared constraint. Business tools must not equate supplying a JSON Schema to the model with server-side parameter validation.</li>
+</ul>
+<p>In the current tool pipeline, failure of the pre-execution Hook immediately aborts subsequent processing. Do not assume that <code>execute.after</code> always runs for such rejections. An audit design must cover rejection paths instead of observing only events after successful execution.</p>
+<p>Expected, recoverable tool failures can be mapped to <code>Tool.Error</code>. Cancellation, unexpected programming defects, and successful results must retain distinct meanings; do not swallow them all and return ordinary success text.</p>
+<p>Sources: tool types (<code>packages/schema/src/tool.ts</code>), tool execution wrapper (<code>packages/core/src/tool.ts</code>), actual parameter validation (<code>packages/core/src/tool/runtime.ts</code>).</p>
+<h3 id="示例二-使用-code-mode-组合工具调用">Example 2: Compose Tool Calls with Code Mode</h3>
+<p><strong>Code Mode determines how some tools are presented and composed.</strong> The current branch exposes tools with <code>codemode: false</code> directly to the model. Other tools may enter the Code Mode catalog, where <code>execute</code> runs a small piece of code to combine calls and process results. Actual tool calls made within Code Mode still return to the host’s tool execution path.</p>
+<p>This suits sequential queries, filtering, and aggregation. The Code Mode runtime restricts direct file access, imports, and similar operations, but these restrictions do not mean that the entire OpenCode service or external plugins run in an operating-system sandbox. The <code>echo</code> example above sets <code>codemode: false</code> to demonstrate direct exposure of a tool to the model.</p>
+<p>A model request captures a snapshot of tool registrations when it is prepared. Hot-updating a plugin does not cause an already prepared request to use a completely new tool catalog; subsequent requests prepare capabilities again. Plugin-contributed execution functions should also avoid depending on unowned background resources that may already have been cleaned up.</p>
+<p>Sources: tool classification and snapshots (<code>packages/core/src/tool.ts</code>), Code Mode(<code>packages/core/src/codemode/tool.ts</code>), current-request tool availability checks (<code>packages/core/src/session/model-request.ts</code>).</p>
+<h3 id="plugin-的-location">Plugin Locations</h3>
+<p><strong>Plugin instances are managed per Location; persistent business state requires separate storage.</strong> A Location is an execution context made up of a directory and an optional native Workspace identifier. One OpenCode process can host multiple Locations simultaneously, and the same plugin may activate independently in each.</p>
+<p>Each plugin instance owns a Scope containing its Transforms, Hooks, tool registrations, and correctly bound resources. Closing the Scope cleans up those registrations. Plugin-owned timers, network subscriptions, and file watchers also need cleanup bindings. Promise plugins may return a cleanup function from <code>setup</code>, while Effect plugins use the corresponding scoped resources and finalizers.</p>
+<pre><code class="language-text">首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+</code></pre>
+<p>Local plugin entry files and configuration sources are watched for changes. If an explicitly configured entry is a directory, changes to files inside it do not receive the same automatic hot-update guarantee. Loading, updates, and stopping also depend on actual watcher behavior and runtime state. A claim of hot-update support does not replace verification through the native capability catalog.</p>
+<p>Plugin recovery restores code and registrations only; it cannot undo side effects already caused in files, databases, or remote services. Scheduled tasks, approval state, retry counts, and idempotency keys should be maintained in reliable storage. In-memory session state must at least be isolated by <code>sessionID</code>. Module-level global variables may also be shared across plugin instances and require particular care.</p>
+<p>Sources: plugin Scopes and recovery (<code>packages/core/src/plugin.ts</code>), plugin file watching (<code>packages/core/src/config/plugin/source.ts</code>).</p>
+<h2 id="plugin-最佳实践">Plugin Best Practices</h2>
+<p><strong>Prefer Existing Configuration and Public Interfaces</strong>:</p>
+<ul>
+<li>Use Agent configuration when changing only prompts, purpose, or step limits.</li>
+<li>Use a Skill to provide methods and knowledge.</li>
+<li>Register a Tool to add executable operations.</li>
+<li>Use the corresponding Hook to adjust behavior at an <strong>execution point</strong>.</li>
+<li>When a plugin needs persistent business state or external services, explicitly design storage, authentication, transactions, and idempotency handling. Do not rely on plugin memory to provide these guarantees.</li>
+</ul>
+<p>A single-responsibility plugin may consist of one TS extension file. Split capabilities into multiple plugin IDs only when they need independent enablement, versions, or failure policies. Ordinary external plugins should depend on public plugin, client, and schema interfaces and avoid private Core implementations. Distributions should specify compatible host and dependency versions, module entry points, and build methods.</p>
+<p>When upgrading a Plugin, check at least the following behaviors instead of merely confirming that its module can be imported:</p>
+<ul>
+<li>Agents, tools, and skills appear in the actual capability catalog, and their contributions disappear after unloading.</li>
+<li>Multiple-plugin ordering, configuration overrides, and final state after failed hot updates behave as expected.</li>
+<li>Tool input, output, cancellation, and execution rejection retain the correct semantics.</li>
+<li>Session model and agent selections actually take effect, and subagents receive the intended permissions and context.</li>
+<li>Custom tools and the services they call correctly check session ownership, business authorization, state transitions, and duplicate requests.</li>
+<li>Persistent state can be restored after a service restart, and missing live events are handled correctly.</li>
+<li>Tool results and events accurately represent progress, completion, failure, and cancellation.</li>
+</ul>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+          <aside class="toc">
+            <h5 data-i18n="article.toc">Contents</h5>
+            <div class="toc-content"><nav id="TableOfContents" aria-label="Contents" data-i18n-aria-label="article.toc"><ul>
+<li><a href="#plugin-%E6%89%A9%E5%B1%95%E5%85%A5%E5%8F%A3">Plugin: The Extension Entry Point</a><ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF-plugin">What Is a Plugin?</a></li>
+<li><a href="#plugin-%E7%9A%84%E5%88%86%E7%B1%BB">Plugin Categories</a></li></ul></li>
+<li><a href="#plugin-%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E4%B8%80-transform">Core Plugin Mechanism 1: Transform</a></li>
+<li><a href="#plugin-%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E4%BA%8C-hook">Core Plugin Mechanism 2: Hook</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%A4%BA%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">Tool Examples and Lifecycle</a><ul>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%80-%E4%BD%BF%E7%94%A8-plugin-transform-%E5%AE%9A%E4%B9%89-tool">Example 1: Define a Tool with a Plugin Transform</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C-%E4%BD%BF%E7%94%A8-code-mode-%E7%BB%84%E5%90%88%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8">Example 2: Compose Tool Calls with Code Mode</a></li>
+<li><a href="#plugin-%E7%9A%84-location">Plugin Locations</a></li></ul></li>
+<li><a href="#plugin-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">Plugin Best Practices</a></li></ul></nav></div>
+          </aside>
+          <aside class="tags">
+            <h5 data-i18n="article.tags">Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline"><li class="list-inline-item"><a href="/en/tags/agent%E5%BC%80%E5%8F%91/"><span data-i18n="tag.agent开发">Agent Development</span></a></li></ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" aria-label="Back to top" data-i18n-aria-label="action.backToTop"><i class="fas fa-angle-up"></i></button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">Recent posts</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <a href="/en/blogs/opencode-v2-extensions/">
+                        <img src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" loading="lazy" decoding="async" class="card-img-top" style="object-fit: cover;" alt="OpenCode v2 Extensions: Architecture and Integration" data-i18n-alt="post.opencode-v2-extensions.title">
+                    </a>
+                </div>
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/opencode-v2-extensions/" class="primary-font card-title"><h5 class="card-title bg-transparent" title="OpenCode v2 Extensions: Architecture and Integration" data-i18n-title="post.opencode-v2-extensions.title" data-i18n="post.opencode-v2-extensions.title">OpenCode v2 Extensions: Architecture and Integration</h5></a>
+                    <div class="card-text secondary-font"><p data-i18n="post.opencode-v2-extensions.description">An overview of internal, external, and SDK plugins in OpenCode v2, covering Transforms, Hooks, tool registration, Code Mode, and the Location lifecycle.</p></div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2026-09-13" data-date="2026-09-13">Sep 13, 2026</time></span>
+                    <a href="/en/blogs/opencode-v2-extensions/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="Rereading Clean Architecture (6): Boundaries" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (6): Boundaries" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">Rereading Clean Architecture (6): Boundaries</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">How architectural boundaries constrain dependencies, isolate business logic, and defer decisions about frameworks, databases, and other details.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">Jul 29, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="Rereading Clean Architecture (5): Software Architecture" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (5): Software Architecture" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">Rereading Clean Architecture (5): Software Architecture</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">Jul 28, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disqus_thread"></div>
+    <script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/opencode-v2-extensions/"; this.language = "en"; };</script><script>
+
+
+
+
+        (function () {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://tommycheese.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view comments powered by Disqus.</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/en/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese site logo" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Made with care and Hugo<br>Powered by GitHub Pages</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

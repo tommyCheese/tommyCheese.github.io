@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>Tags on Tommy Cheese</title>
+    <title>标签 · Tommy Cheese</title>
     <link>https://tommycheese.github.io/tags/</link>
-    <description>Recent content in Tags on Tommy Cheese</description>
+    <description>Tommy Cheese 的个人博客，记录软件工程、人工智能与学习实践。</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>zh-CN</language>
     <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
-    <atom:link href="https://tommycheese.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://tommycheese.github.io/tags/index.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>Agent开发</title>
       <link>https://tommycheese.github.io/tags/agent%E5%BC%80%E5%8F%91/</link>

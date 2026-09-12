@@ -1,0 +1,44 @@
+
+          <h1 id="再读整洁架构之道二">Rereading Clean Architecture (Part 2)</h1>
+<p>A programming paradigm is a way of writing programs. It tells us which code structures to use and when to use them.</p>
+<p>Three programming paradigms have emerged: structured programming, object-oriented programming, and functional programming.</p>
+<p>The author argues that these approaches do not add weapons to an architect’s arsenal. Architects and programmers already have plenty of weapons; the three paradigms instead impose <strong>constraints</strong> on their use. That is why they are called paradigms.</p>
+<h2 id="结构化编程范式">Structured Programming</h2>
+<p><strong>Structured programming restricts and disciplines the direct transfer of program control, especially the unrestricted use of goto statements.</strong></p>
+<h3 id="分解程序">Decomposing Programs</h3>
+<p>Dijkstra hoped to reason about programs using mathematical proofs: a program would become a Euclidean structure, with new programs assembled from proven structures so that the correctness of the whole could be derived.</p>
+<p>He also found that large numbers of goto statements make programs difficult to decompose, while their functions can be expressed entirely with branches and loops.</p>
+<p>Structured programming therefore shows that programs can be decomposed. A large problem can be divided into a set of high-level functions, each of which can be divided further into lower-level functions, recursively. More importantly, every resulting function can itself be written using structured programming.</p>
+<p>However, programming through formal proof never became mainstream. The scientific method is used more often in practice.</p>
+<h3 id="科学证明法">The Scientific Method</h3>
+<p>Scientific theories and laws can be falsified, but cannot be proved true. Similarly, testing can disprove a program’s correctness but cannot prove it: tests can reveal bugs, but cannot establish that none exist. Using the scientific method, structured programming encourages us to recursively break a program into small, provable functions and then write <strong>tests</strong> that attempt to show those functions are wrong. If these tests fail to falsify them, we can treat the functions as sufficiently correct and infer the correctness of the overall program.</p>
+<h2 id="面向对象编程范式">Object-Oriented Programming</h2>
+<p><strong>Object-oriented programming restricts and disciplines the indirect transfer of program control.</strong></p>
+<p>Specifically, object-oriented programming uses <strong>polymorphism</strong> to constrain function pointers. This can be understood as limiting the targets a function pointer may reference. For example, polymorphism in Java commonly operates between objects of classes related through inheritance.</p>
+<p>The author also regards polymorphism as the defining feature of OOP. It enables <strong>dependency inversion</strong>:</p>
+<p>Dependency inversion introduces interfaces to give us complete control over source-code dependencies without being constrained by the system’s flow of control.</p>
+<p>Dependency inversion enables plugin-based development. Inverting the dependencies between business logic and the web UI or database decouples the core business logic from both, turning the UI and database into plugins for that logic.</p>
+<p>Object-oriented programming is the ability to control source-code dependencies through polymorphism. This enables architects to build plugin architectures that separate high-level policy components from low-level implementation components. Low-level components can be compiled as plugins and developed and deployed independently of the high-level components.</p>
+<h2 id="函数式编程范式">Functional Programming</h2>
+<p><strong>Functional programming restricts and disciplines assignment.</strong></p>
+<p>In other words, variables in functional programming languages are immutable.</p>
+<p>The author makes the following argument, quoted from the book:</p>
+<blockquote>
+<p>“All race conditions, deadlocks, and concurrent update problems arise from mutable variables. If variables never change, races and concurrent updates cannot occur. If lock state is immutable, deadlocks cannot occur either.”</p>
+</blockquote>
+<p>Immutability is feasible if we ignore limits on storage capacity and processing speed. In practice, however, we must account for those limits. To make immutability practical to a useful extent, we need <strong>segregation of mutability</strong>.</p>
+<h3 id="可变性的隔离">Segregation of Mutability</h3>
+<p>A common approach is to split an application, or its internal services, <strong>into mutable and immutable components</strong>. Immutable components perform tasks through pure functions without changing any state. They communicate with one or more nonfunctional, mutable components to modify variable state.</p>
+<p>Git provides an example. It records file additions, modifications, and deletions by moving references, while the stored file contents are not actually modified or deleted; new data is added and existing data is retrieved. This is an example of immutability.</p>
+<p>Transaction management in MySQL and transactional memory also draw on this idea.</p>
+<h2 id="总结">Summary</h2>
+<p>The three programming paradigms are closely related to software architecture:</p>
+<ul>
+<li>Polymorphism is how we cross architectural boundaries.</li>
+<li>Functional programming is how we discipline and constrain where data is stored and who can access it.</li>
+<li>Structured programming provides the foundation for implementing individual modules.</li>
+</ul>
+<p>The three paradigms align with the three major concerns of software architecture: <strong>component independence</strong> (object-oriented programming), <strong>data management</strong> (functional programming), and functionality (structured programming).</p>
+<h2 id="再次思考">Further Reflection</h2>
+<p>All three programming paradigms impose new <strong>constraints</strong> on programmers. Each limits a way of writing code; none adds a new capability. In other words, programming paradigms tell us what not to do.</p>
+<p>(End of Part 2)</p>

@@ -1,0 +1,452 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Разработка агентов · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ru/tags/agent%E5%BC%80%E5%8F%91/</link>
+    <description>Личный блог Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
+    <language>ru</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ru/tags/agent%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Расширения OpenCode v2: устройство и интеграция</title>
+      <link>https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/</guid>
+      <category>Разработка агентов</category>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;Дата исследования: 2026-09-13. Статья описывает общие возможности плагинов OpenCode v2: типы, загрузку, регистрацию возможностей, хуки выполнения, границы разрешений и жизненный цикл. Материал предназначен для разработки плагинов и встраиваемой интеграции.&lt;/p&gt;
+&lt;p&gt;Исследование основано на ветке  &lt;code&gt;v2&lt;/code&gt;  изученного репозитория OpenCode, коммит  &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;. Ссылки на исходники используют пути относительно репозитория в этом фиксированном коммите. Описанные интерфейсы и поведение относятся к данной версии и не обещают совместимости с другими версиями OpenCode или прежним API плагинов.&lt;/p&gt;
+&lt;p&gt;Это исследование исходного кода и описание возможностей. Примеры поясняют интерфейсы и вызовы; независимо они не запускались и не проверялись.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="plugin-扩展入口"&gt;Plugin: точка входа для расширений&lt;/h2&gt;
+&lt;h3 id="什么是-plugin"&gt;Что такое Plugin&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Расширения OpenCode подключаются к существующему выполнению через регистрацию возможностей и хуков.&lt;/strong&gt; В текущей реализации OpenCode v2 понятие Extension в основном соответствует механизму Plugin. Плагин может предоставлять ассистентов, инструменты, навыки, модели, команды и другие возможности, а также менять поведение в заданных точках выполнения. Сеансы, запросы к моделям, результаты инструментов и записи выполнения по-прежнему обрабатывает ядро OpenCode.&lt;/p&gt;
+&lt;figure class="plugin-flow"&gt;&lt;img src="https://tommycheese.github.io/blogimages/ru/opencode-v2-plugin-flow.svg" alt="После загрузки плагин регистрирует возможности. Сеанс подготавливает контекст и вызывает модель через хук запроса. Вызовы инструментов сохраняют результаты через хуки выполнения и возвращают их модели; окончательный ответ завершает выполнение." width="429" height="722"&gt;&lt;figcaption&gt;Процесс Plugin: от загрузки и регистрации возможностей до выполнения сеанса&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;details&gt;&lt;summary&gt;Показать исходный код диаграммы Mermaid&lt;/summary&gt;&lt;pre&gt;&lt;code class="language-mermaid"&gt;flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&amp;gt; B[插件加载与生命周期管理]
+    B --&amp;gt; C[构建助手、工具、技能等能力]
+    C --&amp;gt; D[会话选择助手]
+    D --&amp;gt; E[准备上下文与工具快照]
+    E --&amp;gt; F[请求阶段钩子]
+    F --&amp;gt; G[调用模型]
+    G --&amp;gt; H{返回内容}
+    H --&amp;gt;|工具调用| I[工具执行与钩子]
+    I --&amp;gt; J[保存结果与执行事件]
+    J --&amp;gt; G
+    H --&amp;gt;|最终回答| K[本次执行结束]
+&lt;/code&gt;&lt;/pre&gt;&lt;/details&gt;
+&lt;h3 id="plugin-的分类"&gt;Виды Plugin&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Внутренние, внешние и SDK-плагины различаются источником подключения, но управляются единой системой выполнения.&lt;/strong&gt; Все три вида могут регистрировать ассистентов, инструменты и хуки. Различия в основном заключаются в том, кто предоставляет определение, как оно загружается в хост и внедряет ли хост дополнительные внутренние сервисы ядра. Здесь рассматриваются серверные плагины; TUI-плагины терминального интерфейса используют другую точку расширения.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Параметр сравнения&lt;/th&gt;
+&lt;th scope="col"&gt;Внутренний плагин&lt;/th&gt;
+&lt;th scope="col"&gt;Внешний плагин&lt;/th&gt;
+&lt;th scope="col"&gt;SDK-плагин&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Поставщик&lt;/td&gt;
+&lt;td&gt;Исходный код и дистрибутив OpenCode&lt;/td&gt;
+&lt;td&gt;Сопровождающие проекта или отдельного пакета плагина&lt;/td&gt;
+&lt;td&gt;Приложение-хост, встраивающее OpenCode&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Точка входа&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PluginInternal&lt;/code&gt; : наборы  &lt;code&gt;pre&lt;/code&gt; / &lt;code&gt;post&lt;/code&gt;  (наборы)&lt;/td&gt;
+&lt;td&gt;Обнаружение в каталогах, файлы или пакеты в конфигурации&lt;/td&gt;
+&lt;td&gt;Во встраиваемом хосте:  &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Способ загрузки&lt;/td&gt;
+&lt;td&gt;Ядро напрямую импортирует определение&lt;/td&gt;
+&lt;td&gt;Разрешение модуля и чтение экспорта по умолчанию&lt;/td&gt;
+&lt;td&gt;Передача объекта плагина непосредственно в памяти&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Доступные интерфейсы&lt;/td&gt;
+&lt;td&gt;Публичный Context и внутренние сервисы, внедрённые хостом&lt;/td&gt;
+&lt;td&gt;Публичный Plugin Context&lt;/td&gt;
+&lt;td&gt;Публичный Plugin Context; через замыкание доступны зависимости, явно переданные хостом&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Основной способ настройки&lt;/td&gt;
+&lt;td&gt;Нативная конфигурация, внутренние сервисы или встроенные значения по умолчанию&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;plugins[].options&lt;/code&gt; → &lt;code&gt;ctx.options&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Код хоста и замыкания; отдельного параметра  &lt;code&gt;options&lt;/code&gt;  у интерфейса регистрации нет&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Источник обновлений&lt;/td&gt;
+&lt;td&gt;Версия кода OpenCode; некоторые плагины самостоятельно отслеживают конфигурацию&lt;/td&gt;
+&lt;td&gt;Изменения конфигурации, поддерживаемых локальных точек входа или настроек пакета&lt;/td&gt;
+&lt;td&gt;Повторная регистрация хостом с увеличением внутренней ревизии&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Область экземпляра&lt;/td&gt;
+&lt;td&gt;Независимая активация для каждого Location&lt;/td&gt;
+&lt;td&gt;Отдельная активация по конфигурации каждого Location&lt;/td&gt;
+&lt;td&gt;Общие определения в одном хосте, независимая активация в каждом Location&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Применение&lt;/td&gt;
+&lt;td&gt;Реализация нативных ассистентов, инструментов, провайдеров и обработки конфигурации&lt;/td&gt;
+&lt;td&gt;Добавление проектных или бизнес-возможностей в существующий сервис OpenCode&lt;/td&gt;
+&lt;td&gt;Встраивание OpenCode в собственное приложение JS/TS и управление им&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Effect и Promise — два интерфейса написания плагинов. Объект Effect-плагина с публичным интерфейсом можно экспортировать по умолчанию для загрузки через конфигурацию или напрямую зарегистрировать во встраиваемом SDK. Основные возможности переиспользуются, но порядок загрузки и способ передачи конфигурации меняются.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Внутренние плагины оформляют часть собственных функций OpenCode в виде плагинов.&lt;/strong&gt; Это не специальные файлы, устанавливаемые пользователем в каталог. Они статически импортируются исходным кодом ядра и явно включаются в наборы  &lt;code&gt;PluginInternal&lt;/code&gt; .&lt;code&gt;PluginInternal.list()&lt;/code&gt;  получает сервисы текущего Location и через  &lt;code&gt;Effect.provide(context)&lt;/code&gt;  внедряет их во внутренние плагины, после чего передаёт их единому загрузчику.&lt;/p&gt;
+&lt;p&gt;Здесь существуют два уровня Context: &lt;code&gt;effect(ctx)&lt;/code&gt;  по-прежнему принимает публичный Plugin Context, а внутренний плагин дополнительно получает через среду Effect сервисы  &lt;code&gt;Config.Service&lt;/code&gt;, &lt;code&gt;Permission.Service&lt;/code&gt;, &lt;code&gt;Shell.Service&lt;/code&gt;, &lt;code&gt;Location.Service&lt;/code&gt;  и другие. Дополнительные возможности обусловлены явно внедрёнными зависимостями, а не тем, что ID плагина начинается с  &lt;code&gt;opencode.&lt;/code&gt; .&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Пример внутреннего плагина&lt;/th&gt;
+&lt;th scope="col"&gt;Набор&lt;/th&gt;
+&lt;th scope="col"&gt;Фактическая ответственность&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Регистрация базовых определений нативных ассистентов&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.tool.shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Регистрация инструмента Shell с нативным выполнением, разрешениями и сервисами состояния&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Нативные провайдеры, поиск и другие плагины инструментов&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Базовые возможности моделей, поиска и инструментов&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.config.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Чтение конфигурации ассистентов и связанных файлов Markdown с применением к списку ассистентов&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Плагины конфигурации провайдеров, навыков, политик и вариантов моделей&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Применение конфигурации или последующей обработки к ранее предоставленным возможностям&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Это объясняет связь пользовательских ассистентов с внутренними плагинами. Пользователь редактирует конфигурацию ассистента, а чтением, отслеживанием и применением занимается  &lt;code&gt;opencode.config.agent&lt;/code&gt;. Каждый пользовательский ассистент — определение Agent; отдельный плагин для него не требуется. Внешние и SDK-плагины тоже могут регистрировать Agent, которые затем корректируются конфигурационным плагином.&lt;/p&gt;
+&lt;p&gt;Встроенные плагины также участвуют в выборе включения и отключения. Например,  &lt;code&gt;-opencode.config.agent&lt;/code&gt;  исключает из активного набора плагин применения конфигурации ассистентов, затрагивая соответствующие настройки. Решение о сохранении встроенного плагина нужно принимать с учётом его фактической роли.&lt;/p&gt;
+&lt;p&gt;Для добавления нативных функций, зависящих от приватных сервисов Core, обычно требуется изменить исходники OpenCode и добавить плагин во встроенный набор. Новые сервисные зависимости требуют корректировки сборки сервисов. Такие изменения собираются, выпускаются и обновляются вместе с OpenCode. Внутренние плагины подходят для функций самого движка; обычные бизнес-инструменты предпочтительно подключать через публичные интерфейсы.&lt;/p&gt;
+&lt;p&gt;Основания: набор внутренних плагинов и внедрение сервисов (&lt;code&gt;packages/core/src/plugin/internal.ts&lt;/code&gt;), плагин нативных ассистентов (&lt;code&gt;packages/core/src/plugin/agent.ts&lt;/code&gt;), плагин конфигурации ассистентов (&lt;code&gt;packages/core/src/config/plugin/agent.ts&lt;/code&gt;), плагин инструмента Shell (&lt;code&gt;packages/core/src/tool/plugin/shell.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Внешние плагины добавляют возможности существующему сервису OpenCode через файлы или пакеты.&lt;/strong&gt; «Внешний» означает, что код не входит во встроенный набор. При выполнении он всё равно загружается в процесс OpenCode. Загрузчик предоставляет публичный Plugin Context, но не внедряет дополнительные сервисы Core, как для внутренних плагинов. Код может пользоваться файлами, сетью и другими возможностями среды выполнения; это не отдельный процесс и не защищённая песочница.&lt;/p&gt;
+&lt;p&gt;У внешних плагинов два пути обнаружения:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Автоматическое обнаружение&lt;/strong&gt;: сканируются  &lt;code&gt;plugin/&lt;/code&gt;  и  &lt;code&gt;plugins/&lt;/code&gt; в нативных каталогах конфигурации. Текущая реализация напрямую распознаёт файлы  &lt;code&gt;.ts&lt;/code&gt;, &lt;code&gt;.js&lt;/code&gt; , а также поддерживает каталоги пакетов и подходящие символические ссылки. В каталоге пакета проверяются строковые поля файла  &lt;code&gt;package.json&lt;/code&gt; :  &lt;code&gt;exports&lt;/code&gt;, &lt;code&gt;module&lt;/code&gt;, &lt;code&gt;main&lt;/code&gt;, затем  &lt;code&gt;index.ts&lt;/code&gt;, &lt;code&gt;index.js&lt;/code&gt;. Эту простую логику нельзя считать поддержкой всех сложных правил экспорта пакетов.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Явная конфигурация&lt;/strong&gt;:&lt;code&gt;plugins&lt;/code&gt;  принимает относительные и абсолютные пути, файловые URL и разрешимые пакеты. Относительные пути разрешаются от каталога файла конфигурации. Локальные пути передаются загрузчику модулей, пакеты — механизму разрешения пакетов, который пробует подраздел  &lt;code&gt;server&lt;/code&gt;  или корневую точку входа пакета.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Результаты автоматического обнаружения сначала добавляются в список операций, затем применяется явная конфигурация. Поэтому автоматически найденный плагин можно отключить в настройках. Автообнаружение напрямую не перечисляет файлы  &lt;code&gt;.mjs&lt;/code&gt; ; для такой точки входа путь задаётся явно, а загрузку выполняет среда исполнения.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Приведённые пути иллюстрируют формат конфигурации. Плагин через  &lt;code&gt;ctx.options&lt;/code&gt;  читает  &lt;code&gt;serviceUrl&lt;/code&gt; и самостоятельно проверяет обязательные поля, диапазоны значений и ограничения адресов. Сам факт передачи объекта не означает валидацию бизнес-настроек.&lt;/p&gt;
+&lt;p&gt;Внешний модуль должен по умолчанию экспортировать объект плагина с  &lt;code&gt;id + effect&lt;/code&gt;  или  &lt;code&gt;id + setup&lt;/code&gt; :&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Способ написания&lt;/th&gt;
+&lt;th scope="col"&gt;Точка инициализации&lt;/th&gt;
+&lt;th scope="col"&gt;Подключение и очистка&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Effect&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;effect(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Хост выполняет плагин внутри его Scope; ресурсы связываются со scoped-жизненным циклом или finalizer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Promise&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;setup(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Загрузчик через  &lt;code&gt;fromPromise&lt;/code&gt;  преобразует определение в Effect-плагин; можно вернуть функцию cleanup&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;@opencode-ai/plugin/effect&lt;/code&gt;  предоставляет Effect API, а корневой вход пакета  &lt;code&gt;@opencode-ai/plugin&lt;/code&gt;  — Promise API текущей ветки. У прежнего API отдельная точка входа  &lt;code&gt;v1&lt;/code&gt; ; принадлежность к плагинам OpenCode сама по себе не гарантирует совместимость интерфейсов.&lt;/p&gt;
+&lt;p&gt;Типичная цепочка загрузки внешнего плагина:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Изменения файлов или конфигурации могут запустить пересоздание набора плагинов в пределах поддерживаемого обнаружения и наблюдения. Произвольный файл зависимости не обязательно обновляется в реальном времени. В частности, при явном указании каталога в качестве точки входа текущая реализация не гарантирует перезагрузку при изменении файлов внутри него. Обновления версий пакетов также следует проводить явным развёртыванием или изменением конфигурации.&lt;/p&gt;
+&lt;p&gt;Ошибка импорта модуля или проверки экспорта записывается как предупреждение загрузки; соответствующий источник пропускается. Ошибку инициализации уже на этапе активации обрабатывает единое управление плагинами. При диагностике отдельно проверяйте обнаружение файла, разрешение модуля, активацию плагина и регистрацию возможностей. Наличие настройки само по себе не доказывает доступность инструмента.&lt;/p&gt;
+&lt;p&gt;Основания: обнаружение источников и локальное наблюдение (&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;), загрузка модулей и внедрение конфигурации (&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;), публичные точки входа пакета (&lt;code&gt;packages/plugin/package.json&lt;/code&gt;), адаптер Promise (&lt;code&gt;packages/plugin/src/promise/adapter.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SDK-плагины напрямую регистрируются встраиваемым хостом и подходят для использования OpenCode как внутреннего движка приложения.&lt;/strong&gt; Под SDK здесь понимается именно встраиваемый хост текущей ветки  &lt;code&gt;@opencode-ai/sdk-next&lt;/code&gt; .&lt;code&gt;OpenCode.create()&lt;/code&gt;  создаёт среду выполнения и цепочку вызовов HTTP-маршрутов в памяти процесса приложения. Для этой внутренней цепочки не требуется сетевое прослушивание; инструменты, модели и бизнес-сервисы по-прежнему могут выполнять собственные сетевые запросы.&lt;/p&gt;
+&lt;p&gt;Хост через  &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;  напрямую передаёт объект Effect-плагина, минуя обнаружение внешних модулей, разрешение пакета и проверку экспорта по умолчанию. Это не загрузка кода в уже работающий удалённый сервис OpenCode. Обычный HTTP-клиент и  &lt;code&gt;ctx.plugin.list()&lt;/code&gt;  из Plugin Context также не являются этой встраиваемой точкой регистрации.&lt;/p&gt;
+&lt;p&gt;Пример ниже показывает регистрацию и запрос плагина во встраиваемом хосте. Версии зависимостей должны соответствовать исследованной версии:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&amp;gt;
+      ctx.agent.transform((draft) =&amp;gt; {
+        draft.update("reviewer", (agent) =&amp;gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Ассистент в примере определяет только назначение и промпт; разрешения настраиваются отдельно. После примера закрывается Scope, владеющий хостом. В реальном встраиваемом приложении этот Scope должен охватывать весь жизненный цикл сервиса.&lt;/p&gt;
+&lt;p&gt;Область действия и обновления SDK-плагина следует рассматривать на двух уровнях:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Уровень&lt;/th&gt;
+&lt;th scope="col"&gt;Управляемые данные&lt;/th&gt;
+&lt;th scope="col"&gt;Область действия&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Реестр хоста&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Map&amp;lt;plugin.id, Versioned&amp;gt;&lt;/code&gt;: хранение определения и возрастающей ревизии&lt;/td&gt;
+&lt;td&gt;Общий для одного встраиваемого хоста; у разных хостов отдельные реестры&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Активный набор Location&lt;/td&gt;
+&lt;td&gt;Экземпляры плагинов, Transform, Hook и Scope в контексте данного каталога&lt;/td&gt;
+&lt;td&gt;Отдельная активация и очистка для каждого Location&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Каждая регистрация публикует  &lt;code&gt;sdk.plugin.updated&lt;/code&gt;. Уже работающие Location при обновлении пересоздают набор плагинов. Новые Location и повторно запущенные после освобождения читают текущее определение из реестра хоста. Поэтому одна регистрация хостом не означает однократную инициализацию. Изменяемые объекты в замыкании могут совместно использоваться несколькими экземплярами Location одного хоста; их нельзя автоматически считать состоянием отдельного сеанса.&lt;/p&gt;
+&lt;p&gt;Повторная передача того же ID в один SDK-реестр заменяет определение и создаёт новую ревизию. Разные хосты друг друга не перезаписывают. Возврат из регистрации означает лишь запись определения и публикацию обновления, а не завершение активации во всех Location. Для проверки нужно запросить фактические списки плагинов и возможностей целевого Location и при необходимости дождаться события активации.&lt;/p&gt;
+&lt;p&gt;Текущий SDK-реестр предоставляет только  &lt;code&gt;register&lt;/code&gt;  и  &lt;code&gt;all&lt;/code&gt;; отдельного интерфейса  &lt;code&gt;unregister&lt;/code&gt;  нет. Конфигурация каждого Location может отключить активацию по ID, но не удаляет определение из реестра хоста. Закрытие хоста очищает ресурсы выполнения. После его пересоздания плагины нужно регистрировать заново: прежняя регистрация в памяти не является постоянной записью об установке.&lt;/p&gt;
+&lt;p&gt;SDK принимает Effect-плагины. Автоматическая адаптация Promise-плагинов внешним загрузчиком здесь не выполняется. Для повторного использования Promise-определения нужно явно применить соответствующий адаптер  &lt;code&gt;fromPromise&lt;/code&gt; . SDK-путь не внедряет дополнительные  &lt;code&gt;options&lt;/code&gt; ; публичный Context по умолчанию предоставляет пустой объект. Собственные настройки и бизнес-клиенты хост обычно передаёт фабричной функцией или замыканием.&lt;/p&gt;
+&lt;p&gt;SDK-плагин также не получает автоматически среду сервисов Core внутренних плагинов. Хост может явно передать зависимости, но прямое использование приватных сервисов Core усиливает привязку к версии. В исследованном коде  &lt;code&gt;sdk-next&lt;/code&gt;  всё ещё является переходным пакетом с  &lt;code&gt;private: true&lt;/code&gt; , поэтому пример не обещает доступности опубликованного стабильного npm API для установки.&lt;/p&gt;
+&lt;p&gt;Основания: точка входа встраиваемого хоста (&lt;code&gt;packages/sdk-next/src/opencode.ts&lt;/code&gt;), SDK-реестр (&lt;code&gt;packages/core/src/plugin/sdk.ts&lt;/code&gt;), состояние SDK-пакета (&lt;code&gt;packages/sdk-next/package.json&lt;/code&gt;), публичный хост плагинов (&lt;code&gt;packages/core/src/plugin/host.ts&lt;/code&gt;). Исходники встраиваемых тестов (&lt;code&gt;packages/sdk-next/test/embedded.test.ts&lt;/code&gt;) содержат сценарии обновления между Location, повторной активации после освобождения Location и изоляции хостов. Эти сценарии изучены, но тесты независимо не запускались.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Три источника объединяются в один упорядоченный набор активации.&lt;/strong&gt; После определения включённых элементов текущий порядок таков:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;ConfigPluginSource&lt;/code&gt;  отвечает за внешние источники и операции конфигурации; &lt;code&gt;PluginSupervisor&lt;/code&gt;  объединяет их с внутренними и SDK-определениями; &lt;code&gt;Plugin.Service&lt;/code&gt;  выполняет окончательную проверку повторяющихся ID, управление Scope, инициализацию и замену. Три источника не следует представлять как три независимых движка.&lt;/p&gt;
+&lt;p&gt;Из-за такого порядка возможности ассистентов, предоставленные внешними и SDK-плагинами, могут быть изменены последующими конфигурационными плагинами. Для определения окончательного промпта, модели или разрешений нужно читать итоговый список возможностей, а не только начальное определение отдельного плагина.&lt;/p&gt;
+&lt;p&gt;ID плагина, имя пакета и путь точки входа выполняют разные роли. Например, если конфигурация загружает файл, экспортирующий плагин с ID  &lt;code&gt;example.reviewer&lt;/code&gt; , для отключения нужно указать  &lt;code&gt;-example.reviewer&lt;/code&gt;. Селекторы поддерживают точный ID, &lt;code&gt;prefix.*&lt;/code&gt;  и  &lt;code&gt;*&lt;/code&gt;. Операции конфигурации выполняются последовательно, и последующая операция может повторно включить существующее определение.&lt;/p&gt;
+&lt;p&gt;Важно различать два правила совпадения имён:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Повторная регистрация одного ID в одном SDK-реестре&lt;/strong&gt;: обновляет соответствующее определение; реестр поддерживает такую замену.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Один и тот же ID из разных действующих источников&lt;/strong&gt;: этап активации отклоняет весь текущий набор из-за дублирования ID, а не молча перезаписывает по приоритету источника. Не передавайте одно определение одновременно внешним файлом и через SDK.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Кроме того, текущий  &lt;code&gt;Plugin.Service&lt;/code&gt;  пропускает активацию, если ID и версии всего упорядоченного набора полностью совпадают. При любом изменении набора он обходит новый набор, очищает и повторно инициализирует уже существующие плагины. Обновление одного источника может переинициализировать и неизменённые плагины. Все три вида должны правильно освобождать ресурсы и не считать инициализацию однократным бизнес-действием. При неудачной замене предпринимается восстановление старой версии, но уже возникшие внешние бизнес-эффекты откатить нельзя.&lt;/p&gt;
+&lt;p&gt;Основания: объединение источников и порядок включения/отключения (&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;), единая активация и замена (&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;), исходники тестов конфигурации и порядка загрузки (&lt;code&gt;packages/core/test/config/plugin.test.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="plugin-核心实现一-transform"&gt;Первая основная часть Plugin: Transform&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Transform объявляет возможности, Hook обрабатывает конкретное выполнение.&lt;/strong&gt; Выбирая точку расширения, сначала определите, к какой области относится задача.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Задача&lt;/th&gt;
+&lt;th scope="col"&gt;Нативный интерфейс расширения&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Зарегистрировать, изменить или удалить ассистента&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.agent.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Зарегистрировать исполняемый инструмент&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Предоставить описание навыка и точки доступа к ресурсам&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.skill.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Добавить команду&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.command.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Изменить каталог провайдеров и моделей и выбор по умолчанию&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.catalog.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Предоставить источники справочных материалов&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.reference.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Настроить аутентификацию и подключение&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.integration.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Предоставить поисковый бэкенд&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.websearch.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Изменить контекст и видимые инструменты текущего запроса&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Проверить вход инструмента или обработать результат&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Изменить SDK модели или её экземпляр&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.aisdk.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Изменить HTTP-запрос или ответ модели&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("http.request" / "http.response", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Изменить параметры создания команды&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.shell.hook("create.before", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Наблюдать события в реальном времени&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.event.subscribe()&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Создавать сеанс, отправлять ему данные, ожидать или прерывать его&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Области состояния Agent, Catalog, Command, Integration, Reference, Skill и другие сохраняют активные Transform и последовательно пересоздают состояние из базового. При выгрузке плагина его Transform удаляется, затем результат строится заново. Transform должен изменять только Draft текущего вызова, не сохраняя ссылку на него и не создавая внешних бизнес-эффектов при пересборке. Внешние данные следует сначала загрузить и сохранить, а затем вызвать у соответствующей области  &lt;code&gt;reload()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;В основе Tool — регистрация инструментов, связанная со Scope, и снимки для запросов. Жизненный цикл имеет ту же принадлежность, что и перечисленные области, но нельзя заключать, что все  &lt;code&gt;transform&lt;/code&gt;  используют полностью одинаковые контейнеры состояния или возвращаемые типы.&lt;/p&gt;
+&lt;h2 id="plugin-核心实现二-hook"&gt;Вторая основная часть Plugin: Hook&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Hook — точка расширения, предусмотренная хостом в процессе выполнения.&lt;/strong&gt; Плагин регистрирует callback в точке расширения. Когда OpenCode достигает соответствующего узла, он автоматически вызывает callback и передаёт контекст узла. В рамках контракта интерфейса плагин может читать данные, менять параметры или обрабатывать результаты, участвуя в запросах модели, выполнении инструментов и других процессах.&lt;/p&gt;
+&lt;p&gt;Работа Hook делится на регистрацию и срабатывание. При инициализации плагин через  &lt;code&gt;ctx.session.hook(...)&lt;/code&gt;, &lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;  и другие интерфейсы объявляет нужные узлы. Хост вызывает callback только при достижении узла во время выполнения. После одной регистрации callback может срабатывать многократно при повторных прохождениях узла. Хост ждёт завершения callback и продолжает согласно контракту; например,  &lt;code&gt;tool.execute.before&lt;/code&gt;  позволяет через  &lt;code&gt;Tool.Error&lt;/code&gt;  отклонить выполнение инструмента.&lt;/p&gt;
+&lt;p&gt;Transform формирует доступные возможности, а Hook изменяет их поведение в конкретных узлах. Например, инструмент регистрируют через  &lt;code&gt;ctx.tool.transform&lt;/code&gt;; вход отдельного вызова проверяют через  &lt;code&gt;ctx.tool.hook("execute.before", ...)&lt;/code&gt;; контекст, который отправится модели, меняют через  &lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;. Hook входит в текущую цепочку вызовов, а  &lt;code&gt;ctx.event.subscribe()&lt;/code&gt;  служит для подписки на события и наблюдения выполнения.&lt;/p&gt;
+&lt;p&gt;Хуки выполнения вызываются последовательно в порядке регистрации. Поздний Hook видит изменения ранних. Если несколько плагинов меняют одно поле, проверяйте окончательный порядок загрузки. Встроенные плагины разделены на предшествующий и последующий наборы; нельзя считать, что внешние всегда перезаписывают последними.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Hook&lt;/th&gt;
+&lt;th scope="col"&gt;Что можно изменять или наблюдать&lt;/th&gt;
+&lt;th scope="col"&gt;Замечания&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.context&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Системный промпт, сообщения и определения инструментов текущего запроса&lt;/td&gt;
+&lt;td&gt;ID ассистента и модели задают идентичность контекста; изменение сообщений влияет только на текущий запрос и не означает добавления в постоянную историю&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Входные данные инструмента&lt;/td&gt;
+&lt;td&gt;Можно вернуть  &lt;code&gt;Tool.Error&lt;/code&gt;  для запрета выполнения&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.after&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Успешный результат или ошибка инструмента&lt;/td&gt;
+&lt;td&gt;Обработка результата и добавление информации&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.http.request/response&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;HTTP-запрос и ответ модели&lt;/td&gt;
+&lt;td&gt;Возможен доступ к учётным данным и полному вводу; содержимое журналов нужно контролировать&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;aisdk.sdk/language&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SDK и фактический экземпляр модели&lt;/td&gt;
+&lt;td&gt;Подходит для адаптации провайдера&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;shell.create.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Команда, каталог, лимит времени, Shell и переменные окружения&lt;/td&gt;
+&lt;td&gt;Строковые правила сами по себе не обеспечивают системную изоляцию&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Среди текущих публичных типов Hook только  &lt;code&gt;tool.execute.before&lt;/code&gt;  объявляет восстанавливаемый канал ошибки  &lt;code&gt;Tool.Error&lt;/code&gt; . Остальные Hook нельзя считать универсальным middleware для произвольного выбрасывания бизнес-ошибок.&lt;/p&gt;
+&lt;p&gt;Основания: Plugin Context (&lt;code&gt;packages/plugin/src/effect/plugin.ts&lt;/code&gt;), пересборка состояния (&lt;code&gt;packages/core/src/state.ts&lt;/code&gt;), регистрация и выполнение Hook (&lt;code&gt;packages/core/src/plugin/hooks.ts&lt;/code&gt;), регистрация инструментов и снимки (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="工具示例与生命周期"&gt;Примеры инструментов и жизненный цикл&lt;/h2&gt;
+&lt;h3 id="示例一-使用-plugin-transform-定义-tool"&gt;Пример 1: определение Tool через Plugin Transform&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Инструмент содержит определение, видимое модели, и функцию, исполняемую хостом.&lt;/strong&gt; После того как модель создаёт имя и вход инструмента, OpenCode обрабатывает вызов с возможностями, зафиксированными для текущего запроса. Функция инструмента получает предоставленные хостом  &lt;code&gt;sessionID&lt;/code&gt;, &lt;code&gt;agent&lt;/code&gt;, &lt;code&gt;messageID&lt;/code&gt;  и данные вызова  &lt;code&gt;id&lt;/code&gt;; длительная операция может сообщать ход выполнения через  &lt;code&gt;context.progress()&lt;/code&gt; .&lt;/p&gt;
+&lt;p&gt;Ниже приведён самостоятельный пример инструмента с Effect API:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&amp;gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&amp;gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Поля результата различаются по назначению:&lt;code&gt;output&lt;/code&gt;  — структурированное значение для программного использования после объявления выходной Schema;&lt;code&gt;content&lt;/code&gt;  передаётся модели и входит в содержимое сеанса;&lt;code&gt;metadata&lt;/code&gt;  содержит ограниченное дополнительное состояние. Возврат  &lt;code&gt;output&lt;/code&gt; без объявления выходной Schema считается ошибкой в текущей реализации.&lt;/p&gt;
+&lt;p&gt;В исходниках есть два нюанса валидации, более конкретных, чем названия интерфейсов:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tool.execute.before&lt;/code&gt;  выполняется раньше декодирования Schema внутри функции инструмента. Поэтому Hook должен считать вход неизвестной структурой. После изменений Hook вход поступает на последующее декодирование.&lt;/li&gt;
+&lt;li&gt;Effect Schema и поддерживаемые Standard Schema проверяют вход во время выполнения; ветка чистой JSON Schema передаёт вход напрямую. Выходная ветка чистой JSON Schema проверяет лишь, является ли результат JSON-значением, но не каждое объявленное ограничение. Предоставление JSON Schema модели не означает, что сервер проверил параметры бизнес-инструмента.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;В текущем канале инструментов ошибка самого предварительного Hook сразу прерывает дальнейшую обработку. Нельзя предполагать, что для такого отказа всегда сработает  &lt;code&gt;execute.after&lt;/code&gt; . Аудит должен покрывать и пути отказа, а не только события после успешного выполнения.&lt;/p&gt;
+&lt;p&gt;Ожидаемую восстанавливаемую ошибку инструмента можно отобразить в  &lt;code&gt;Tool.Error&lt;/code&gt;. Отмена, неизвестный дефект программы и успешный результат должны сохранять разные значения; нельзя поглощать их все и возвращать обычный текст успеха.&lt;/p&gt;
+&lt;p&gt;Основания: типы инструментов (&lt;code&gt;packages/schema/src/tool.ts&lt;/code&gt;), оболочка выполнения инструмента (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;), фактическая проверка параметров (&lt;code&gt;packages/core/src/tool/runtime.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="示例二-使用-code-mode-组合工具调用"&gt;Пример 2: композиция вызовов через Code Mode&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Code Mode определяет представление и композицию части инструментов.&lt;/strong&gt; Текущая ветка напрямую показывает модели инструменты с  &lt;code&gt;codemode: false&lt;/code&gt; ; остальные могут попасть в каталог Code Mode, где через  &lt;code&gt;execute&lt;/code&gt;  запускается короткий код для композиции вызовов и обработки результатов. Фактические вызовы из Code Mode всё равно возвращаются в путь выполнения инструментов хоста.&lt;/p&gt;
+&lt;p&gt;Это подходит для последовательных запросов, фильтрации и агрегации. Среда Code Mode ограничивает прямой доступ к файлам, импорты и подобные операции, но это не означает, что весь сервис OpenCode или внешние плагины работают в системной песочнице. В примере  &lt;code&gt;echo&lt;/code&gt;  выше задано  &lt;code&gt;codemode: false&lt;/code&gt;, что демонстрирует прямое предоставление инструмента модели.&lt;/p&gt;
+&lt;p&gt;Запрос к модели фиксирует снимок текущей регистрации инструментов. Горячее обновление не заставляет уже подготовленный запрос использовать новый список; последующие запросы заново подготавливают возможности. Функция инструмента, предоставленная плагином, также не должна зависеть от бесхозных фоновых ресурсов, которые могли быть очищены.&lt;/p&gt;
+&lt;p&gt;Основания: классификация инструментов и снимки (&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;), Code Mode (&lt;code&gt;packages/core/src/codemode/tool.ts&lt;/code&gt;), проверка доступности инструментов текущего запроса (&lt;code&gt;packages/core/src/session/model-request.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h3 id="plugin-的-location"&gt;Location плагина&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Экземпляры плагинов управляются по Location; постоянное бизнес-состояние нужно хранить отдельно.&lt;/strong&gt; Location — контекст выполнения из каталога и необязательного нативного ID Workspace. Один процесс OpenCode может обслуживать несколько Location одновременно, и один плагин может отдельно активироваться в каждом.&lt;/p&gt;
+&lt;p&gt;У каждого экземпляра есть Scope, которому принадлежат Transform, Hook, регистрации инструментов и правильно привязанные ресурсы. При закрытии Scope регистрации очищаются. Таймеры плагина, сетевые подписки и наблюдение файлов тоже нужно связать с очисткой. Promise-плагин может из  &lt;code&gt;setup&lt;/code&gt;  вернуть cleanup; Effect-плагин использует соответствующие scoped-ресурсы и finalizer.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Для локальных файлов точек входа и источников конфигурации предусмотрено наблюдение изменений. Если явная точка входа — каталог, изменения его внутренних файлов не имеют той же гарантии автоматического горячего обновления. Загрузка, обновление и остановка зависят и от фактического наблюдения и состояния выполнения. Поэтому заявление о поддержке горячего обновления не заменяет проверку нативного списка возможностей.&lt;/p&gt;
+&lt;p&gt;Восстановление плагина возвращает код и регистрации, но не откатывает побочные эффекты в файлах, базах данных или удалённых сервисах. Задания по расписанию, состояния согласований, числа повторных попыток и ключи идемпотентности должны храниться надёжно. Состояние сеансов в памяти нужно разделять как минимум по  &lt;code&gt;sessionID&lt;/code&gt; . Глобальные переменные модуля могут совместно использоваться разными экземплярами плагина, поэтому требуют особой осторожности.&lt;/p&gt;
+&lt;p&gt;Основания: Scope плагина и восстановление (&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;), наблюдение файлов плагина (&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id="plugin-最佳实践"&gt;Практические рекомендации для Plugin&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;При разработке сначала используйте существующую конфигурацию и публичные интерфейсы&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Для изменения промпта, назначения или предела шагов используйте конфигурацию Agent.&lt;/li&gt;
+&lt;li&gt;Для методов работы и знаний используйте Skill.&lt;/li&gt;
+&lt;li&gt;Для новых реальных действий регистрируйте Tool.&lt;/li&gt;
+&lt;li&gt;Чтобы изменить поведение в &lt;strong&gt;узле выполнения&lt;/strong&gt;, используйте соответствующий Hook.&lt;/li&gt;
+&lt;li&gt;Если плагин должен сохранять бизнес-состояние или вызывать внешние сервисы, явно спроектируйте хранение, аутентификацию, транзакции и идемпотентность. Состояние плагина в памяти не должно обеспечивать эти гарантии.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Плагин с одной ответственностью может состоять из одного TS-файла. Разделяйте его на несколько ID только тогда, когда возможности требуют независимого включения, версий или стратегии отказов. Обычные внешние плагины должны зависеть от публичных интерфейсов плагинов, клиента и schema, избегая приватных реализаций Core. При распространении явно укажите совместимые версии хоста и зависимостей, точку входа модуля и способ сборки.&lt;/p&gt;
+&lt;p&gt;При обновлении Plugin проверяйте как минимум следующее, а не только успешность импорта модуля:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Появляются ли Agent, инструменты и навыки в фактическом списке возможностей и исчезает ли их вклад после выгрузки.&lt;/li&gt;
+&lt;li&gt;Соответствует ли ожиданиям итоговое состояние при разных порядках плагинов, перекрытии конфигурации и сбоях горячего обновления.&lt;/li&gt;
+&lt;li&gt;Сохраняют ли вход, выход, отмена и отказ выполнения инструмента правильную семантику.&lt;/li&gt;
+&lt;li&gt;Действительно ли применяются выбор модели и ассистента сеанса; получают ли подчинённые ассистенты ожидаемые разрешения и контекст.&lt;/li&gt;
+&lt;li&gt;Правильно ли пользовательские инструменты и вызываемые ими сервисы проверяют принадлежность сеанса, бизнес-права, переходы состояния и повторные запросы.&lt;/li&gt;
+&lt;li&gt;Восстанавливается ли постоянное состояние после перезапуска сервиса и правильно ли обрабатывается потеря событий реального времени.&lt;/li&gt;
+&lt;li&gt;Точно ли результаты инструментов и события отражают прогресс, завершение, ошибку и отмену.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+  </channel>
+</rss>

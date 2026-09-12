@@ -1,0 +1,44 @@
+
+          <h1 id="再读整洁架构之道三solid原则">Rereading Clean Architecture (Part 3): The SOLID Principles</h1>
+<p>There are three main goals when building software modules:</p>
+<ul>
+<li>Make software tolerant of change.</li>
+<li>Make software easier to understand.</li>
+<li>Build components that can be reused across multiple software systems.</li>
+</ul>
+<p>The SOLID principles primarily tell us how to organize data and functions into classes and how to connect those classes into programs. They guide module design; other design principles apply at the architectural level.</p>
+<p>SOLID refers to the Single Responsibility Principle, <strong>S</strong>RP; the Open–Closed Principle, <strong>O</strong>CP; the Liskov Substitution Principle, <strong>L</strong>SP; the Interface Segregation Principle, <strong>I</strong>SP; and Dependency Inversion, <strong>D</strong>IP.</p>
+<h2 id="单一职责原则srp">Single Responsibility Principle (SRP)</h2>
+<p>SRP states that each software module should be responsible for a single function: <strong>there should be only one reason for a module to change</strong>. Each software module should be responsible to one kind of actor.</p>
+<p>At the component level, SRP is known as the Common Closure Principle (CCP).</p>
+<p>What happens when a module is designed without following SRP? Consider this example.</p>
+<p>Suppose the finance, human resources, and engineering departments all depend on a payroll and working-hours program with three functions:</p>
+<ul>
+<li>CalculateSalary: calculate salary.</li>
+<li>CalculateTime: calculate working hours.</li>
+<li>Save: save information.</li>
+</ul>
+<p>The three departments use the program without incident until one day the finance department changes its salary calculation rules. Its maintainer updates CalculateSalary. Then something unexpected happens: salaries for human resources and engineering change as well…</p>
+<h2 id="开闭原则ocp">Open–Closed Principle (OCP)</h2>
+<p>“Welcome additions; resist modifications!”</p>
+<p>OCP states that a software system should allow its behavior to be changed by adding code, rather than only by modifying existing code. Well-designed software should be easy to extend while resisting modification.</p>
+<p>OCP applies to components as well as classes and modules. It originated in the concept of device independence. Specifically, dependency inversion lets us design I/O devices as plugins, making it easy to add new devices without changing existing ones.</p>
+<p>OCP is implemented by dividing a system into components and organizing their dependencies hierarchically so that changes in lower-level components do not affect higher-level components.</p>
+<h2 id="里式替换lsp原则">Liskov Substitution Principle (LSP)</h2>
+<p>LSP states that if interchangeable components are used to build a software system, they must follow the same contract so that one can substitute for another.</p>
+<p>LSP is fundamentally a principle of substitutability: if, for every object o1 of type S, there is an object o2 of type T such that a program P operating on T behaves identically when o1 replaces o2, then S is a subtype of T.</p>
+<p>LSP can and should be applied at the architectural level. Once substitutability is violated, a system architecture must introduce extensive, complicated mechanisms to compensate.</p>
+<h2 id="接口隔离原则isp">Interface Segregation Principle (ISP)</h2>
+<p>ISP states that unnecessary dependencies should be avoided. At any level of software design, depending on something that is not needed can introduce unexpected trouble.</p>
+<h2 id="依赖反转dip">Dependency Inversion Principle (DIP)</h2>
+<p>DIP states that code implementing high-level policy should not depend on code implementing low-level details. Instead, code implementing those details should depend on the high-level policy.</p>
+<p>To understand dependency inversion, distinguish control flow from source-code dependency flow. Suppose control flows from component A to component B. In a direct implementation, A imports B, so the source-code dependency also points from A to B. System behavior determines control flow, which in turn dictates source-code dependencies, leaving the architecture little freedom. Introducing an interface changes this: B implements the interface, and A depends on the interface instead of importing B. Across that boundary, the source-code dependency is reversed relative to control flow. This is dependency inversion.</p>
+<p>Dependency inversion gives architectural design freedom. A flexible system should depend more on abstractions—such as interfaces and abstract classes—than on concrete implementations.</p>
+<p>DIP yields several coding guidelines:</p>
+<ul>
+<li>Use abstract interfaces and avoid depending on volatile concrete implementation classes wherever possible.</li>
+<li>Do not derive classes from concrete implementation classes.</li>
+<li>Do not override functions that contain concrete implementations.</li>
+<li>Avoid referring in code to the names of concrete implementations or other things likely to change.</li>
+</ul>
+<p>(End of Part 3)</p>

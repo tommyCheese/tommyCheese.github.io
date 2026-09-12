@@ -1,0 +1,143 @@
+
+          <h1 id="再读整洁架构之道四组件构建原则">Rereading Clean Architecture (Part 4): Component Design Principles</h1>
+<p>Part 3 discussed the design of modules and classes. This article goes a step further and explores component design.</p>
+<p>A component is a deployment unit: the smallest part of a software system that can be deployed independently. Components can also be developed independently. Component-based plugin architectures have become a familiar way to build software.</p>
+<h2 id="组件聚合">Component Cohesion</h2>
+<p>Component cohesion tells us which modules and classes should be grouped into components. Three main principles apply:</p>
+<ul>
+<li>Reuse/Release Equivalence Principle.</li>
+<li>Common Closure Principle.</li>
+<li>Common Reuse Principle.</li>
+</ul>
+<h3 id="复用发布等同原则rep">Reuse/Release Equivalence Principle (REP)</h3>
+<p>REP states that the unit of reuse should be the same as the unit of release.</p>
+<p>REP approaches the problem from the perspective of code reuse. Code sharing a common theme and function can be grouped into a component, and reuse should take place at that component boundary.</p>
+<p>Put simply, a packaged and released component may receive a version number or unique identifier. We reuse code by importing an existing library: the unit imported is the packaged component, and the version identifies that release.</p>
+<h3 id="共同闭包ccp">Common Closure Principle (CCP)</h3>
+<p>CCP states that classes changing together for the same reason should belong to the same component, while classes changing at different times for different reasons should belong to different components.</p>
+<p>CCP takes the perspective of maintenance. Grouping code that changes for the same reason reduces the effort required for release, verification, and deployment.</p>
+<p>As discussed earlier, CCP is the component-level version of SRP. Both can be summarized as follows:</p>
+<p><strong>Gather together things that change for the same reason and at the same time. Separate things that change for different reasons and at different times.</strong></p>
+<ul>
+<li>For SRP, “things” means functions and other elements that make up a class or module.</li>
+<li>For CCP, “things” means the classes and modules that make up a component.</li>
+</ul>
+<h3 id="共同复用crp">Common Reuse Principle (CRP)</h3>
+<p>CRP states that users of a component should not be forced to depend on things they do not need.</p>
+<p>CRP calls for code with different usage patterns and frequencies to be placed in separate components. It guides component boundaries and generalizes the Interface Segregation Principle (ISP).</p>
+<p>As a generalized form of interface segregation, CRP and ISP can both be summarized as:</p>
+<p><strong>Do not depend on things you do not need.</strong></p>
+<ul>
+<li>For ISP, “things” means functions or classes exposing unnecessary methods.</li>
+<li>At the component level, “things” means classes or modules containing unnecessary functions.</li>
+</ul>
+<h3 id="思考">Reflection</h3>
+<p>How do REP, CCP, and CRP relate to one another?</p>
+<p>They are actually in <strong>competition</strong>.</p>
+<p>REP and CCP are inclusive principles: they tell us which classes and modules belong together. CRP is exclusive: it tells us which classes and modules should not be grouped together.</p>
+<p><img src="/blogimages/image-20240706143525187.png" alt="image-20240706143525187"></p>
+<ul>
+<li>If an architect considers only REP and CCP, components will include many parts their users do not need, causing too many unnecessary releases.</li>
+<li>If an architect considers only CRP and CCP, reuse will become very difficult.</li>
+<li>If an architect considers only REP and CRP, changing some classes or modules will inevitably require changes in many related modules.</li>
+</ul>
+<p>The architect must balance these three principles. Component composition should evolve as the project’s priorities shift between development and reuse, so its direction must be assessed dynamically.</p>
+<h2 id="组件耦合">Component Coupling</h2>
+<p>Component coupling tells us how to arrange relationships between components. It includes three principles:</p>
+<ul>
+<li>Acyclic Dependencies Principle (ADP).</li>
+<li>Stable Dependencies Principle (SDP).</li>
+<li>Stable Abstractions Principle (SAP).</li>
+</ul>
+<h3 id="无依赖环原则adp">Acyclic Dependencies Principle (ADP)</h3>
+<p>ADP states that the component dependency graph must contain no cycles.</p>
+<p>Version management addresses “the morning-after syndrome,” but requires ADP. First, consider the author’s description of the syndrome:</p>
+<p>You spend an entire day getting some code to work, only to arrive the next morning and discover that it has mysteriously stopped working. Most likely, someone else changed a component your project depends on.</p>
+<p>There are generally two ways to address this:</p>
+<ul>
+<li>Weekly builds.</li>
+<li>Version management.</li>
+</ul>
+<p><strong><u>Weekly builds</u></strong>: everyone works in their own repository, then the project is built and integration conflicts are resolved at a fixed time each week, such as Friday.</p>
+<p>The limitations are clear:</p>
+<ul>
+<li>As the project grows, integration becomes increasingly difficult to complete on time.</li>
+<li>The whole project becomes harder to build and test, feedback cycles lengthen, and development quality declines.</li>
+</ul>
+<p>This is why version management is needed.</p>
+<p><strong><u>Version management</u></strong>: when a component releases a new version, each dependent team can decide whether to adopt it immediately.</p>
+<p>Version management <strong>does not permit cycles in the component dependency graph</strong>. It must follow ADP, or the morning-after syndrome becomes unavoidable. Why?</p>
+<p>A dependency cycle effectively combines all its components into one larger component. Their versions must remain coordinated for other components to depend on them successfully. Cycles also complicate testing: although mocking is common, repeatedly mocking components throughout a cycle is an awkward approach.</p>
+<p>How can circular dependencies be removed? There are two options:</p>
+<ul>
+<li>Introduce interfaces through dependency inversion.</li>
+<li>Create a new component.</li>
+</ul>
+<p>Using DIP to break a cycle is straightforward. The following example from work shows how a new component can achieve the same result.</p>
+<p>A team is designing a system with DDD. A Dog entity depends on Dog Repo to perform Save operations, so the Entity module depends on Repo. Unfortunately, Dog PO is also defined inside Entity, while Repo.Save needs that persistence object for conversion and storage. Entity and Repo now depend on one another. Go rejects mutually dependent packages and reports an import cycle. How should this be resolved?</p>
+<p>Create a separate PO module and move the PO out of Entity. Move the relevant PO-dependent functions from Repo into it as appropriate, removing the cycle. Dependency injection is another option. In Spring Boot, @AutoWired can address this kind of wiring problem; conceptually, a dependency container introduces another component through which the dependency cycle is resolved.</p>
+<p>There are many similar examples. Recall the library version conflicts that can occur when installing Python packages with Anaconda…</p>
+<p>As an aside, I initially assumed that component structure should map directly to system features: one component per feature, with the dependency graph mirroring the functional decomposition. That suggested the component dependency graph could be produced at the very beginning of system design.</p>
+<p>The author explicitly argues that top-down design of the complete component structure is impossible. The book explains:</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>The component graph must change and grow with the software system; it cannot be perfectly designed at the outset. Component dependencies do not map one-to-one to features. Instead, they form a map of the application’s buildability and maintainability.</p>
+<p>As more modules are designed and implemented, the need to manage their dependencies emerges. We want changes to affect as little of the project as possible, so SRP and CCP help group classes that frequently change together.</p>
+<p>One important purpose of a component graph is to guide the isolation of frequent changes. Components that change often should not disturb components intended to remain stable.</p>
+<p>As the application grows, reusable components also become more important, bringing CRP into the picture. Finally, when cycles appear, applying ADP causes the dependency structure to shift and expand.</p>
+</blockquote>
+<h3 id="稳定依赖原则sdp">Stable Dependencies Principle (SDP)</h3>
+<p>SDP states that dependencies must point toward greater stability. In general, the supporting foundations of an architecture should be more stable.</p>
+<p>A component expected to change frequently should not be depended on by a component that is difficult to change. Otherwise, the volatile component also becomes hard to change. This is a challenge in software development: a component carefully designed for easy modification can lose that flexibility because someone adds a dependency on it. Following SDP helps avoid this.</p>
+<p>Component stability can be assessed with a metric. The author defines the instability metric as:
+$$
+I=\frac{Fan-out}{Fan-in+Fan-out}
+$$
+Fan-in is the number of incoming dependencies and Fan-out the number of outgoing dependencies. Fewer outgoing dependencies imply greater stability: with zero outgoing dependencies, no dependency can force the component to change.</p>
+<p>SDP requires each component’s I metric to be greater than that of the components it depends on: the components it points to must be more stable.</p>
+<p>SDP does not require every component to be stable. The purpose of designing the component architecture is to decide which should be stable and which should be unstable. An architecture in which everything is stable lacks flexibility and therefore architectural value.</p>
+<h3 id="稳定抽象原则sap">Stable Abstractions Principle (SAP)</h3>
+<p>SAP states that a component’s level of abstraction should match its stability.</p>
+<p>High-level policies should reside in stable components, but this can make those policies difficult to change. Fortunately, OCP tells us that stable components can remain open to extension. Abstract classes provide a way to achieve stability while still allowing extension and modification.</p>
+<blockquote>
+<p>Abstract classes form a buffer between interfaces and concrete classes.</p>
+</blockquote>
+<p>SAP connects stability with abstraction. A stable component should also be abstract so that stability does not prevent extension. An unstable component should contain concrete implementation code so that its instability can be accommodated through easy changes. A component intended to be stable should therefore consist of interfaces and abstract classes that allow future extension.</p>
+<p>Like stability, abstractness can be measured with a metric:
+$$
+A=\frac{N_c}{N_a}
+$$
+Here, Nc denotes the number of classes in the component, and Na the number of abstract classes and interfaces. A ranges from 0 to 1: 0 means no abstract classes, while 1 means only abstract classes.</p>
+<h3 id="思考-1">Reflection 🤔</h3>
+<p>How are SDP and SAP related?</p>
+<p><strong>First, consider SDP and SAP in relation to DIP</strong></p>
+<p>In effect, SDP + SAP = component-level DIP. SDP requires dependencies to point toward greater stability, while SAP implies that stability requires abstraction. Dependencies should therefore point toward greater abstraction.</p>
+<p>How should this be understood?</p>
+<p>DIP preserves flexibility at the class level. SDP and SAP together preserve flexibility while providing component stability. Their architectural effect is the same: concrete implementations depend on abstract classes or interfaces. In this sense, SDP + SAP is component-level DIP.</p>
+<p>There is a difference, however. At the class level there is no middle ground: a class is either abstract or it is not. SDP and SAP operate at the component level, where partial abstraction and partial stability are possible.</p>
+<p><strong>Second, consider their shared goals</strong></p>
+<p>SDP directs dependencies toward stability. SAP places high-level policy in abstract components, helping separate policy from details and enabling plugin-based development. Their goals are aligned.</p>
+<blockquote>
+<p>Notice that <strong>plugin-based development</strong> appears again. Where did we encounter it before? In dependency inversion. This further illustrates why SAP + SDP resembles component-level DIP.</p>
+</blockquote>
+<h3 id="主序列">The Main Sequence</h3>
+<p>Plot component instability I against abstractness A. The line a = -i + 1 is called the main sequence.</p>
+<p><img src="/blogimages/image-20240706171725797.png" alt="image-20240706171725797"></p>
+<p>The diagram contains three regions:</p>
+<ul>
+<li>Zone of pain: near (0,0), components are highly stable and highly concrete, making them difficult to change. Database schemas are an example. Utility libraries also fall into this zone: although their I metric is 1 because they depend on many components and are therefore unstable, changing them can break large amounts of code.</li>
+<li>Zone of uselessness: near (1,1), components are highly abstract but have no dependents. Such abstractions often serve no practical purpose. Design problems in this region may reflect historical leftovers, such as old code that was never removed.</li>
+<li>Main sequence: components along this line balance the two measures. The ideal positions are its endpoints, (0,1) and (1,0). A good architect aims to move most components toward these positions.</li>
+</ul>
+<p>How can a component be evaluated overall? Calculate its distance from the main sequence to quantify how closely the design fits it. This distance is D: 0 means directly on the main sequence, while 1 means as far from it as possible.
+$$
+D=|A+I-1|
+$$
+The amount by which D exceeds zero can then guide component refactoring and redesign.</p>
+<p>D has further uses. For example, the mean and variance of D across all components provide statistical measures for evaluating a system design:</p>
+<ul>
+<li>In a well-designed system, both the mean and variance of D should be close to zero.</li>
+<li>Variance can help establish a threshold for identifying unusual components that deserve attention.</li>
+<li>Tracking the variance of D over time also shows how architectural stability and abstraction evolve.</li>
+</ul>
+<p>(End of Part 4)</p>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ru" data-page-path="/blogs/opencode-v2-extensions/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="Расширения OpenCode v2: устройство и интеграция">
+<meta property="og:description" content="Обзор внутренних, внешних и SDK-плагинов OpenCode v2: Transform, Hook, регистрация инструментов, Code Mode и жизненный цикл Location.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png">
+<meta property="og:image:width" content="1672">
+<meta property="og:image:height" content="941">
+<meta property="og:image:alt" content="Модульные связи ядра Agent с плагинами, инструментами и хуками выполнения">
+<meta property="og:url" content="https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2026-09-13T00:00:00+08:00">
+<meta property="article:modified_time" content="2026-09-13T00:00:00+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png">
+<meta name="twitter:image:alt" content="Модульные связи ядра Agent с плагинами, инструментами и хуками выполнения">
+<meta name="twitter:title" content="Расширения OpenCode v2: устройство и интеграция">
+<meta name="twitter:description" content="Обзор внутренних, внешних и SDK-плагинов OpenCode v2: Transform, Hook, регистрация инструментов, Code Mode и жизненный цикл Location.">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="Обзор внутренних, внешних и SDK-плагинов OpenCode v2: Transform, Hook, регистрация инструментов, Code Mode и жизненный цикл Location.">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>Расширения OpenCode v2: устройство и интеграция · Tommy Cheese</title>
+<link rel="alternate" type="application/rss+xml" title="Разработка агентов" href="/ru/tags/agent%E5%BC%80%E5%8F%91/index.xml" data-i18n-title="tag.agent开发">
+<style>
+  #single .page-content { overflow-wrap: anywhere; }
+  #single .page-content h2, #single .page-content h3 { scroll-margin-top: 100px; }
+  #single .page-content pre { overflow: auto; padding: 1.25rem; }
+  #single .page-content pre code { white-space: pre; overflow-wrap: normal; }
+  #single .page-content blockquote { font-size: 1rem; font-weight: 400; padding: 1rem 1.25rem; }
+  #single .page-content table { font-size: .94rem; opacity: 1; }
+  #single .page-content th, #single .page-content td { min-width: 9rem; }
+  #single .plugin-flow { text-align: center; margin: 2rem auto; }
+  #single .plugin-flow img { display: block; width: 100%; max-width: 543px; height: auto; margin: auto; }
+  #single .plugin-flow figcaption { color: var(--text-secondary-color); font-size: .9rem; margin-top: .75rem; }
+  #single details { margin-bottom: 1.5rem; }
+  #single summary { cursor: pointer; }
+</style>
+<meta property="og:locale" content="ru_RU"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/opencode-v2-extensions/"><link rel="canonical" href="https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/ru/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="Поиск статей (Ctrl + K)" aria-label="Поиск статей" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="Язык">🌐 Русский</summary><nav aria-label="Язык"><a href="/blogs/opencode-v2-extensions/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/opencode-v2-extensions/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/opencode-v2-extensions/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/opencode-v2-extensions/" lang="ru" hreflang="ru" data-language="ru" aria-current="true">Русский</a><a href="/zh-TW/blogs/opencode-v2-extensions/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Открыть или закрыть меню" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Поиск статей (Ctrl + K)" aria-label="Поиск статей" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#about" aria-label="Обо мне" data-i18n-aria-label="nav.about" data-i18n="nav.about">Обо мне</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#experience" aria-label="Опыт" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">Опыт</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#contact" aria-label="Связаться" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">Связаться</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/blogs/" title="Блог" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="Блог">Блог</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/tags/" title="Теги" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="Теги">Теги</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/gallery/" title="Обзор" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="Обзор">Обзор</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="Переключить светлую или тёмную тему">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.opencode-v2-extensions.title">Расширения OpenCode v2: устройство и интеграция</h1>
+            <div class="text-center"><time datetime="2026-09-13T00:00:00+08:00" data-date="2026-09-13">13 сент. 2026 г.</time> · <a href="/ru/tags/agent%E5%BC%80%E5%8F%91/"><span data-i18n="tag.agent开发">Разработка агентов</span></a> · <a href="/blogs/opencode-v2-extensions/article.md" download data-i18n="action.downloadMarkdown">Скачать оригинал в Markdown</a></div>
+          </div>
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" fetchpriority="high" decoding="async" alt="Модульные связи ядра Agent с плагинами, инструментами и хуками выполнения" data-i18n-alt="article.coverAlt">
+          </div>
+          <article class="page-content p-2"><blockquote>
+<p>Дата исследования: 2026-09-13. Статья описывает общие возможности плагинов OpenCode v2: типы, загрузку, регистрацию возможностей, хуки выполнения, границы разрешений и жизненный цикл. Материал предназначен для разработки плагинов и встраиваемой интеграции.</p>
+<p>Исследование основано на ветке  <code>v2</code>  изученного репозитория OpenCode, коммит  <code>2308db16387c9b59e88d732a93ec9bac54462b03</code>. Ссылки на исходники используют пути относительно репозитория в этом фиксированном коммите. Описанные интерфейсы и поведение относятся к данной версии и не обещают совместимости с другими версиями OpenCode или прежним API плагинов.</p>
+<p>Это исследование исходного кода и описание возможностей. Примеры поясняют интерфейсы и вызовы; независимо они не запускались и не проверялись.</p>
+</blockquote>
+<h2 id="plugin-扩展入口">Plugin: точка входа для расширений</h2>
+<h3 id="什么是-plugin">Что такое Plugin</h3>
+<p><strong>Расширения OpenCode подключаются к существующему выполнению через регистрацию возможностей и хуков.</strong> В текущей реализации OpenCode v2 понятие Extension в основном соответствует механизму Plugin. Плагин может предоставлять ассистентов, инструменты, навыки, модели, команды и другие возможности, а также менять поведение в заданных точках выполнения. Сеансы, запросы к моделям, результаты инструментов и записи выполнения по-прежнему обрабатывает ядро OpenCode.</p>
+<figure class="plugin-flow"><img src="/blogimages/ru/opencode-v2-plugin-flow.svg" alt="После загрузки плагин регистрирует возможности. Сеанс подготавливает контекст и вызывает модель через хук запроса. Вызовы инструментов сохраняют результаты через хуки выполнения и возвращают их модели; окончательный ответ завершает выполнение." width="429" height="722"><figcaption>Процесс Plugin: от загрузки и регистрации возможностей до выполнения сеанса</figcaption></figure>
+<details><summary>Показать исходный код диаграммы Mermaid</summary><pre><code class="language-mermaid">flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&gt; B[插件加载与生命周期管理]
+    B --&gt; C[构建助手、工具、技能等能力]
+    C --&gt; D[会话选择助手]
+    D --&gt; E[准备上下文与工具快照]
+    E --&gt; F[请求阶段钩子]
+    F --&gt; G[调用模型]
+    G --&gt; H{返回内容}
+    H --&gt;|工具调用| I[工具执行与钩子]
+    I --&gt; J[保存结果与执行事件]
+    J --&gt; G
+    H --&gt;|最终回答| K[本次执行结束]
+</code></pre></details>
+<h3 id="plugin-的分类">Виды Plugin</h3>
+<p><strong>Внутренние, внешние и SDK-плагины различаются источником подключения, но управляются единой системой выполнения.</strong> Все три вида могут регистрировать ассистентов, инструменты и хуки. Различия в основном заключаются в том, кто предоставляет определение, как оно загружается в хост и внедряет ли хост дополнительные внутренние сервисы ядра. Здесь рассматриваются серверные плагины; TUI-плагины терминального интерфейса используют другую точку расширения.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Параметр сравнения</th>
+<th scope="col">Внутренний плагин</th>
+<th scope="col">Внешний плагин</th>
+<th scope="col">SDK-плагин</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Поставщик</td>
+<td>Исходный код и дистрибутив OpenCode</td>
+<td>Сопровождающие проекта или отдельного пакета плагина</td>
+<td>Приложение-хост, встраивающее OpenCode</td>
+</tr>
+<tr>
+<td>Точка входа</td>
+<td><code>PluginInternal</code> : наборы  <code>pre</code> / <code>post</code>  (наборы)</td>
+<td>Обнаружение в каталогах, файлы или пакеты в конфигурации</td>
+<td>Во встраиваемом хосте:  <code>opencode.plugin(definition)</code></td>
+</tr>
+<tr>
+<td>Способ загрузки</td>
+<td>Ядро напрямую импортирует определение</td>
+<td>Разрешение модуля и чтение экспорта по умолчанию</td>
+<td>Передача объекта плагина непосредственно в памяти</td>
+</tr>
+<tr>
+<td>Доступные интерфейсы</td>
+<td>Публичный Context и внутренние сервисы, внедрённые хостом</td>
+<td>Публичный Plugin Context</td>
+<td>Публичный Plugin Context; через замыкание доступны зависимости, явно переданные хостом</td>
+</tr>
+<tr>
+<td>Основной способ настройки</td>
+<td>Нативная конфигурация, внутренние сервисы или встроенные значения по умолчанию</td>
+<td><code>plugins[].options</code> → <code>ctx.options</code></td>
+<td>Код хоста и замыкания; отдельного параметра  <code>options</code>  у интерфейса регистрации нет</td>
+</tr>
+<tr>
+<td>Источник обновлений</td>
+<td>Версия кода OpenCode; некоторые плагины самостоятельно отслеживают конфигурацию</td>
+<td>Изменения конфигурации, поддерживаемых локальных точек входа или настроек пакета</td>
+<td>Повторная регистрация хостом с увеличением внутренней ревизии</td>
+</tr>
+<tr>
+<td>Область экземпляра</td>
+<td>Независимая активация для каждого Location</td>
+<td>Отдельная активация по конфигурации каждого Location</td>
+<td>Общие определения в одном хосте, независимая активация в каждом Location</td>
+</tr>
+<tr>
+<td>Применение</td>
+<td>Реализация нативных ассистентов, инструментов, провайдеров и обработки конфигурации</td>
+<td>Добавление проектных или бизнес-возможностей в существующий сервис OpenCode</td>
+<td>Встраивание OpenCode в собственное приложение JS/TS и управление им</td>
+</tr>
+</tbody></table>
+<p>Effect и Promise — два интерфейса написания плагинов. Объект Effect-плагина с публичным интерфейсом можно экспортировать по умолчанию для загрузки через конфигурацию или напрямую зарегистрировать во встраиваемом SDK. Основные возможности переиспользуются, но порядок загрузки и способ передачи конфигурации меняются.</p>
+<p><strong>Внутренние плагины оформляют часть собственных функций OpenCode в виде плагинов.</strong> Это не специальные файлы, устанавливаемые пользователем в каталог. Они статически импортируются исходным кодом ядра и явно включаются в наборы  <code>PluginInternal</code> .<code>PluginInternal.list()</code>  получает сервисы текущего Location и через  <code>Effect.provide(context)</code>  внедряет их во внутренние плагины, после чего передаёт их единому загрузчику.</p>
+<p>Здесь существуют два уровня Context: <code>effect(ctx)</code>  по-прежнему принимает публичный Plugin Context, а внутренний плагин дополнительно получает через среду Effect сервисы  <code>Config.Service</code>, <code>Permission.Service</code>, <code>Shell.Service</code>, <code>Location.Service</code>  и другие. Дополнительные возможности обусловлены явно внедрёнными зависимостями, а не тем, что ID плагина начинается с  <code>opencode.</code> .</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Пример внутреннего плагина</th>
+<th scope="col">Набор</th>
+<th scope="col">Фактическая ответственность</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opencode.agent</code></td>
+<td><code>pre</code></td>
+<td>Регистрация базовых определений нативных ассистентов</td>
+</tr>
+<tr>
+<td><code>opencode.tool.shell</code></td>
+<td><code>pre</code></td>
+<td>Регистрация инструмента Shell с нативным выполнением, разрешениями и сервисами состояния</td>
+</tr>
+<tr>
+<td>Нативные провайдеры, поиск и другие плагины инструментов</td>
+<td><code>pre</code></td>
+<td>Базовые возможности моделей, поиска и инструментов</td>
+</tr>
+<tr>
+<td><code>opencode.config.agent</code></td>
+<td><code>post</code></td>
+<td>Чтение конфигурации ассистентов и связанных файлов Markdown с применением к списку ассистентов</td>
+</tr>
+<tr>
+<td>Плагины конфигурации провайдеров, навыков, политик и вариантов моделей</td>
+<td><code>post</code></td>
+<td>Применение конфигурации или последующей обработки к ранее предоставленным возможностям</td>
+</tr>
+</tbody></table>
+<p>Это объясняет связь пользовательских ассистентов с внутренними плагинами. Пользователь редактирует конфигурацию ассистента, а чтением, отслеживанием и применением занимается  <code>opencode.config.agent</code>. Каждый пользовательский ассистент — определение Agent; отдельный плагин для него не требуется. Внешние и SDK-плагины тоже могут регистрировать Agent, которые затем корректируются конфигурационным плагином.</p>
+<p>Встроенные плагины также участвуют в выборе включения и отключения. Например,  <code>-opencode.config.agent</code>  исключает из активного набора плагин применения конфигурации ассистентов, затрагивая соответствующие настройки. Решение о сохранении встроенного плагина нужно принимать с учётом его фактической роли.</p>
+<p>Для добавления нативных функций, зависящих от приватных сервисов Core, обычно требуется изменить исходники OpenCode и добавить плагин во встроенный набор. Новые сервисные зависимости требуют корректировки сборки сервисов. Такие изменения собираются, выпускаются и обновляются вместе с OpenCode. Внутренние плагины подходят для функций самого движка; обычные бизнес-инструменты предпочтительно подключать через публичные интерфейсы.</p>
+<p>Основания: набор внутренних плагинов и внедрение сервисов (<code>packages/core/src/plugin/internal.ts</code>), плагин нативных ассистентов (<code>packages/core/src/plugin/agent.ts</code>), плагин конфигурации ассистентов (<code>packages/core/src/config/plugin/agent.ts</code>), плагин инструмента Shell (<code>packages/core/src/tool/plugin/shell.ts</code>).</p>
+<p><strong>Внешние плагины добавляют возможности существующему сервису OpenCode через файлы или пакеты.</strong> «Внешний» означает, что код не входит во встроенный набор. При выполнении он всё равно загружается в процесс OpenCode. Загрузчик предоставляет публичный Plugin Context, но не внедряет дополнительные сервисы Core, как для внутренних плагинов. Код может пользоваться файлами, сетью и другими возможностями среды выполнения; это не отдельный процесс и не защищённая песочница.</p>
+<p>У внешних плагинов два пути обнаружения:</p>
+<ul>
+<li><strong>Автоматическое обнаружение</strong>: сканируются  <code>plugin/</code>  и  <code>plugins/</code> в нативных каталогах конфигурации. Текущая реализация напрямую распознаёт файлы  <code>.ts</code>, <code>.js</code> , а также поддерживает каталоги пакетов и подходящие символические ссылки. В каталоге пакета проверяются строковые поля файла  <code>package.json</code> :  <code>exports</code>, <code>module</code>, <code>main</code>, затем  <code>index.ts</code>, <code>index.js</code>. Эту простую логику нельзя считать поддержкой всех сложных правил экспорта пакетов.</li>
+<li><strong>Явная конфигурация</strong>:<code>plugins</code>  принимает относительные и абсолютные пути, файловые URL и разрешимые пакеты. Относительные пути разрешаются от каталога файла конфигурации. Локальные пути передаются загрузчику модулей, пакеты — механизму разрешения пакетов, который пробует подраздел  <code>server</code>  или корневую точку входа пакета.</li>
+</ul>
+<p>Результаты автоматического обнаружения сначала добавляются в список операций, затем применяется явная конфигурация. Поэтому автоматически найденный плагин можно отключить в настройках. Автообнаружение напрямую не перечисляет файлы  <code>.mjs</code> ; для такой точки входа путь задаётся явно, а загрузку выполняет среда исполнения.</p>
+<pre><code class="language-json">{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+</code></pre>
+<p>Приведённые пути иллюстрируют формат конфигурации. Плагин через  <code>ctx.options</code>  читает  <code>serviceUrl</code> и самостоятельно проверяет обязательные поля, диапазоны значений и ограничения адресов. Сам факт передачи объекта не означает валидацию бизнес-настроек.</p>
+<p>Внешний модуль должен по умолчанию экспортировать объект плагина с  <code>id + effect</code>  или  <code>id + setup</code> :</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Способ написания</th>
+<th scope="col">Точка инициализации</th>
+<th scope="col">Подключение и очистка</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Effect</td>
+<td><code>effect(ctx)</code></td>
+<td>Хост выполняет плагин внутри его Scope; ресурсы связываются со scoped-жизненным циклом или finalizer</td>
+</tr>
+<tr>
+<td>Promise</td>
+<td><code>setup(ctx)</code></td>
+<td>Загрузчик через  <code>fromPromise</code>  преобразует определение в Effect-плагин; можно вернуть функцию cleanup</td>
+</tr>
+</tbody></table>
+<p><code>@opencode-ai/plugin/effect</code>  предоставляет Effect API, а корневой вход пакета  <code>@opencode-ai/plugin</code>  — Promise API текущей ветки. У прежнего API отдельная точка входа  <code>v1</code> ; принадлежность к плагинам OpenCode сама по себе не гарантирует совместимость интерфейсов.</p>
+<p>Типичная цепочка загрузки внешнего плагина:</p>
+<pre><code class="language-text">配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+</code></pre>
+<p>Изменения файлов или конфигурации могут запустить пересоздание набора плагинов в пределах поддерживаемого обнаружения и наблюдения. Произвольный файл зависимости не обязательно обновляется в реальном времени. В частности, при явном указании каталога в качестве точки входа текущая реализация не гарантирует перезагрузку при изменении файлов внутри него. Обновления версий пакетов также следует проводить явным развёртыванием или изменением конфигурации.</p>
+<p>Ошибка импорта модуля или проверки экспорта записывается как предупреждение загрузки; соответствующий источник пропускается. Ошибку инициализации уже на этапе активации обрабатывает единое управление плагинами. При диагностике отдельно проверяйте обнаружение файла, разрешение модуля, активацию плагина и регистрацию возможностей. Наличие настройки само по себе не доказывает доступность инструмента.</p>
+<p>Основания: обнаружение источников и локальное наблюдение (<code>packages/core/src/config/plugin/source.ts</code>), загрузка модулей и внедрение конфигурации (<code>packages/core/src/plugin/supervisor.ts</code>), публичные точки входа пакета (<code>packages/plugin/package.json</code>), адаптер Promise (<code>packages/plugin/src/promise/adapter.ts</code>).</p>
+<p><strong>SDK-плагины напрямую регистрируются встраиваемым хостом и подходят для использования OpenCode как внутреннего движка приложения.</strong> Под SDK здесь понимается именно встраиваемый хост текущей ветки  <code>@opencode-ai/sdk-next</code> .<code>OpenCode.create()</code>  создаёт среду выполнения и цепочку вызовов HTTP-маршрутов в памяти процесса приложения. Для этой внутренней цепочки не требуется сетевое прослушивание; инструменты, модели и бизнес-сервисы по-прежнему могут выполнять собственные сетевые запросы.</p>
+<p>Хост через  <code>opencode.plugin(definition)</code>  напрямую передаёт объект Effect-плагина, минуя обнаружение внешних модулей, разрешение пакета и проверку экспорта по умолчанию. Это не загрузка кода в уже работающий удалённый сервис OpenCode. Обычный HTTP-клиент и  <code>ctx.plugin.list()</code>  из Plugin Context также не являются этой встраиваемой точкой регистрации.</p>
+<p>Пример ниже показывает регистрацию и запрос плагина во встраиваемом хосте. Версии зависимостей должны соответствовать исследованной версии:</p>
+<pre><code class="language-ts">import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&gt;
+      ctx.agent.transform((draft) =&gt; {
+        draft.update("reviewer", (agent) =&gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+</code></pre>
+<p>Ассистент в примере определяет только назначение и промпт; разрешения настраиваются отдельно. После примера закрывается Scope, владеющий хостом. В реальном встраиваемом приложении этот Scope должен охватывать весь жизненный цикл сервиса.</p>
+<p>Область действия и обновления SDK-плагина следует рассматривать на двух уровнях:</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Уровень</th>
+<th scope="col">Управляемые данные</th>
+<th scope="col">Область действия</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Реестр хоста</td>
+<td><code>Map&lt;plugin.id, Versioned&gt;</code>: хранение определения и возрастающей ревизии</td>
+<td>Общий для одного встраиваемого хоста; у разных хостов отдельные реестры</td>
+</tr>
+<tr>
+<td>Активный набор Location</td>
+<td>Экземпляры плагинов, Transform, Hook и Scope в контексте данного каталога</td>
+<td>Отдельная активация и очистка для каждого Location</td>
+</tr>
+</tbody></table>
+<p>Каждая регистрация публикует  <code>sdk.plugin.updated</code>. Уже работающие Location при обновлении пересоздают набор плагинов. Новые Location и повторно запущенные после освобождения читают текущее определение из реестра хоста. Поэтому одна регистрация хостом не означает однократную инициализацию. Изменяемые объекты в замыкании могут совместно использоваться несколькими экземплярами Location одного хоста; их нельзя автоматически считать состоянием отдельного сеанса.</p>
+<p>Повторная передача того же ID в один SDK-реестр заменяет определение и создаёт новую ревизию. Разные хосты друг друга не перезаписывают. Возврат из регистрации означает лишь запись определения и публикацию обновления, а не завершение активации во всех Location. Для проверки нужно запросить фактические списки плагинов и возможностей целевого Location и при необходимости дождаться события активации.</p>
+<p>Текущий SDK-реестр предоставляет только  <code>register</code>  и  <code>all</code>; отдельного интерфейса  <code>unregister</code>  нет. Конфигурация каждого Location может отключить активацию по ID, но не удаляет определение из реестра хоста. Закрытие хоста очищает ресурсы выполнения. После его пересоздания плагины нужно регистрировать заново: прежняя регистрация в памяти не является постоянной записью об установке.</p>
+<p>SDK принимает Effect-плагины. Автоматическая адаптация Promise-плагинов внешним загрузчиком здесь не выполняется. Для повторного использования Promise-определения нужно явно применить соответствующий адаптер  <code>fromPromise</code> . SDK-путь не внедряет дополнительные  <code>options</code> ; публичный Context по умолчанию предоставляет пустой объект. Собственные настройки и бизнес-клиенты хост обычно передаёт фабричной функцией или замыканием.</p>
+<p>SDK-плагин также не получает автоматически среду сервисов Core внутренних плагинов. Хост может явно передать зависимости, но прямое использование приватных сервисов Core усиливает привязку к версии. В исследованном коде  <code>sdk-next</code>  всё ещё является переходным пакетом с  <code>private: true</code> , поэтому пример не обещает доступности опубликованного стабильного npm API для установки.</p>
+<p>Основания: точка входа встраиваемого хоста (<code>packages/sdk-next/src/opencode.ts</code>), SDK-реестр (<code>packages/core/src/plugin/sdk.ts</code>), состояние SDK-пакета (<code>packages/sdk-next/package.json</code>), публичный хост плагинов (<code>packages/core/src/plugin/host.ts</code>). Исходники встраиваемых тестов (<code>packages/sdk-next/test/embedded.test.ts</code>) содержат сценарии обновления между Location, повторной активации после освобождения Location и изоляции хостов. Эти сценарии изучены, но тесты независимо не запускались.</p>
+<p><strong>Три источника объединяются в один упорядоченный набор активации.</strong> После определения включённых элементов текущий порядок таков:</p>
+<pre><code class="language-text">内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+</code></pre>
+<p><code>ConfigPluginSource</code>  отвечает за внешние источники и операции конфигурации; <code>PluginSupervisor</code>  объединяет их с внутренними и SDK-определениями; <code>Plugin.Service</code>  выполняет окончательную проверку повторяющихся ID, управление Scope, инициализацию и замену. Три источника не следует представлять как три независимых движка.</p>
+<p>Из-за такого порядка возможности ассистентов, предоставленные внешними и SDK-плагинами, могут быть изменены последующими конфигурационными плагинами. Для определения окончательного промпта, модели или разрешений нужно читать итоговый список возможностей, а не только начальное определение отдельного плагина.</p>
+<p>ID плагина, имя пакета и путь точки входа выполняют разные роли. Например, если конфигурация загружает файл, экспортирующий плагин с ID  <code>example.reviewer</code> , для отключения нужно указать  <code>-example.reviewer</code>. Селекторы поддерживают точный ID, <code>prefix.*</code>  и  <code>*</code>. Операции конфигурации выполняются последовательно, и последующая операция может повторно включить существующее определение.</p>
+<p>Важно различать два правила совпадения имён:</p>
+<ul>
+<li><strong>Повторная регистрация одного ID в одном SDK-реестре</strong>: обновляет соответствующее определение; реестр поддерживает такую замену.</li>
+<li><strong>Один и тот же ID из разных действующих источников</strong>: этап активации отклоняет весь текущий набор из-за дублирования ID, а не молча перезаписывает по приоритету источника. Не передавайте одно определение одновременно внешним файлом и через SDK.</li>
+</ul>
+<p>Кроме того, текущий  <code>Plugin.Service</code>  пропускает активацию, если ID и версии всего упорядоченного набора полностью совпадают. При любом изменении набора он обходит новый набор, очищает и повторно инициализирует уже существующие плагины. Обновление одного источника может переинициализировать и неизменённые плагины. Все три вида должны правильно освобождать ресурсы и не считать инициализацию однократным бизнес-действием. При неудачной замене предпринимается восстановление старой версии, но уже возникшие внешние бизнес-эффекты откатить нельзя.</p>
+<p>Основания: объединение источников и порядок включения/отключения (<code>packages/core/src/plugin/supervisor.ts</code>), единая активация и замена (<code>packages/core/src/plugin.ts</code>), исходники тестов конфигурации и порядка загрузки (<code>packages/core/test/config/plugin.test.ts</code>).</p>
+<h2 id="plugin-核心实现一-transform">Первая основная часть Plugin: Transform</h2>
+<p><strong>Transform объявляет возможности, Hook обрабатывает конкретное выполнение.</strong> Выбирая точку расширения, сначала определите, к какой области относится задача.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Задача</th>
+<th scope="col">Нативный интерфейс расширения</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Зарегистрировать, изменить или удалить ассистента</td>
+<td><code>ctx.agent.transform</code></td>
+</tr>
+<tr>
+<td>Зарегистрировать исполняемый инструмент</td>
+<td><code>ctx.tool.transform</code></td>
+</tr>
+<tr>
+<td>Предоставить описание навыка и точки доступа к ресурсам</td>
+<td><code>ctx.skill.transform</code></td>
+</tr>
+<tr>
+<td>Добавить команду</td>
+<td><code>ctx.command.transform</code></td>
+</tr>
+<tr>
+<td>Изменить каталог провайдеров и моделей и выбор по умолчанию</td>
+<td><code>ctx.catalog.transform</code></td>
+</tr>
+<tr>
+<td>Предоставить источники справочных материалов</td>
+<td><code>ctx.reference.transform</code></td>
+</tr>
+<tr>
+<td>Настроить аутентификацию и подключение</td>
+<td><code>ctx.integration.transform</code></td>
+</tr>
+<tr>
+<td>Предоставить поисковый бэкенд</td>
+<td><code>ctx.websearch.transform</code></td>
+</tr>
+<tr>
+<td>Изменить контекст и видимые инструменты текущего запроса</td>
+<td><code>ctx.session.hook("context", ...)</code></td>
+</tr>
+<tr>
+<td>Проверить вход инструмента или обработать результат</td>
+<td><code>ctx.tool.hook(...)</code></td>
+</tr>
+<tr>
+<td>Изменить SDK модели или её экземпляр</td>
+<td><code>ctx.aisdk.hook(...)</code></td>
+</tr>
+<tr>
+<td>Изменить HTTP-запрос или ответ модели</td>
+<td><code>ctx.session.hook("http.request" / "http.response", ...)</code></td>
+</tr>
+<tr>
+<td>Изменить параметры создания команды</td>
+<td><code>ctx.shell.hook("create.before", ...)</code></td>
+</tr>
+<tr>
+<td>Наблюдать события в реальном времени</td>
+<td><code>ctx.event.subscribe()</code></td>
+</tr>
+<tr>
+<td>Создавать сеанс, отправлять ему данные, ожидать или прерывать его</td>
+<td><code>ctx.session.*</code></td>
+</tr>
+</tbody></table>
+<p>Области состояния Agent, Catalog, Command, Integration, Reference, Skill и другие сохраняют активные Transform и последовательно пересоздают состояние из базового. При выгрузке плагина его Transform удаляется, затем результат строится заново. Transform должен изменять только Draft текущего вызова, не сохраняя ссылку на него и не создавая внешних бизнес-эффектов при пересборке. Внешние данные следует сначала загрузить и сохранить, а затем вызвать у соответствующей области  <code>reload()</code>.</p>
+<p>В основе Tool — регистрация инструментов, связанная со Scope, и снимки для запросов. Жизненный цикл имеет ту же принадлежность, что и перечисленные области, но нельзя заключать, что все  <code>transform</code>  используют полностью одинаковые контейнеры состояния или возвращаемые типы.</p>
+<h2 id="plugin-核心实现二-hook">Вторая основная часть Plugin: Hook</h2>
+<p><strong>Hook — точка расширения, предусмотренная хостом в процессе выполнения.</strong> Плагин регистрирует callback в точке расширения. Когда OpenCode достигает соответствующего узла, он автоматически вызывает callback и передаёт контекст узла. В рамках контракта интерфейса плагин может читать данные, менять параметры или обрабатывать результаты, участвуя в запросах модели, выполнении инструментов и других процессах.</p>
+<p>Работа Hook делится на регистрацию и срабатывание. При инициализации плагин через  <code>ctx.session.hook(...)</code>, <code>ctx.tool.hook(...)</code>  и другие интерфейсы объявляет нужные узлы. Хост вызывает callback только при достижении узла во время выполнения. После одной регистрации callback может срабатывать многократно при повторных прохождениях узла. Хост ждёт завершения callback и продолжает согласно контракту; например,  <code>tool.execute.before</code>  позволяет через  <code>Tool.Error</code>  отклонить выполнение инструмента.</p>
+<p>Transform формирует доступные возможности, а Hook изменяет их поведение в конкретных узлах. Например, инструмент регистрируют через  <code>ctx.tool.transform</code>; вход отдельного вызова проверяют через  <code>ctx.tool.hook("execute.before", ...)</code>; контекст, который отправится модели, меняют через  <code>ctx.session.hook("context", ...)</code>. Hook входит в текущую цепочку вызовов, а  <code>ctx.event.subscribe()</code>  служит для подписки на события и наблюдения выполнения.</p>
+<p>Хуки выполнения вызываются последовательно в порядке регистрации. Поздний Hook видит изменения ранних. Если несколько плагинов меняют одно поле, проверяйте окончательный порядок загрузки. Встроенные плагины разделены на предшествующий и последующий наборы; нельзя считать, что внешние всегда перезаписывают последними.</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Hook</th>
+<th scope="col">Что можно изменять или наблюдать</th>
+<th scope="col">Замечания</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>session.context</code></td>
+<td>Системный промпт, сообщения и определения инструментов текущего запроса</td>
+<td>ID ассистента и модели задают идентичность контекста; изменение сообщений влияет только на текущий запрос и не означает добавления в постоянную историю</td>
+</tr>
+<tr>
+<td><code>tool.execute.before</code></td>
+<td>Входные данные инструмента</td>
+<td>Можно вернуть  <code>Tool.Error</code>  для запрета выполнения</td>
+</tr>
+<tr>
+<td><code>tool.execute.after</code></td>
+<td>Успешный результат или ошибка инструмента</td>
+<td>Обработка результата и добавление информации</td>
+</tr>
+<tr>
+<td><code>session.http.request/response</code></td>
+<td>HTTP-запрос и ответ модели</td>
+<td>Возможен доступ к учётным данным и полному вводу; содержимое журналов нужно контролировать</td>
+</tr>
+<tr>
+<td><code>aisdk.sdk/language</code></td>
+<td>SDK и фактический экземпляр модели</td>
+<td>Подходит для адаптации провайдера</td>
+</tr>
+<tr>
+<td><code>shell.create.before</code></td>
+<td>Команда, каталог, лимит времени, Shell и переменные окружения</td>
+<td>Строковые правила сами по себе не обеспечивают системную изоляцию</td>
+</tr>
+</tbody></table>
+<p>Среди текущих публичных типов Hook только  <code>tool.execute.before</code>  объявляет восстанавливаемый канал ошибки  <code>Tool.Error</code> . Остальные Hook нельзя считать универсальным middleware для произвольного выбрасывания бизнес-ошибок.</p>
+<p>Основания: Plugin Context (<code>packages/plugin/src/effect/plugin.ts</code>), пересборка состояния (<code>packages/core/src/state.ts</code>), регистрация и выполнение Hook (<code>packages/core/src/plugin/hooks.ts</code>), регистрация инструментов и снимки (<code>packages/core/src/tool.ts</code>).</p>
+<h2 id="工具示例与生命周期">Примеры инструментов и жизненный цикл</h2>
+<h3 id="示例一-使用-plugin-transform-定义-tool">Пример 1: определение Tool через Plugin Transform</h3>
+<p><strong>Инструмент содержит определение, видимое модели, и функцию, исполняемую хостом.</strong> После того как модель создаёт имя и вход инструмента, OpenCode обрабатывает вызов с возможностями, зафиксированными для текущего запроса. Функция инструмента получает предоставленные хостом  <code>sessionID</code>, <code>agent</code>, <code>messageID</code>  и данные вызова  <code>id</code>; длительная операция может сообщать ход выполнения через  <code>context.progress()</code> .</p>
+<p>Ниже приведён самостоятельный пример инструмента с Effect API:</p>
+<pre><code class="language-ts">import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+</code></pre>
+<p>Поля результата различаются по назначению:<code>output</code>  — структурированное значение для программного использования после объявления выходной Schema;<code>content</code>  передаётся модели и входит в содержимое сеанса;<code>metadata</code>  содержит ограниченное дополнительное состояние. Возврат  <code>output</code> без объявления выходной Schema считается ошибкой в текущей реализации.</p>
+<p>В исходниках есть два нюанса валидации, более конкретных, чем названия интерфейсов:</p>
+<ul>
+<li><code>tool.execute.before</code>  выполняется раньше декодирования Schema внутри функции инструмента. Поэтому Hook должен считать вход неизвестной структурой. После изменений Hook вход поступает на последующее декодирование.</li>
+<li>Effect Schema и поддерживаемые Standard Schema проверяют вход во время выполнения; ветка чистой JSON Schema передаёт вход напрямую. Выходная ветка чистой JSON Schema проверяет лишь, является ли результат JSON-значением, но не каждое объявленное ограничение. Предоставление JSON Schema модели не означает, что сервер проверил параметры бизнес-инструмента.</li>
+</ul>
+<p>В текущем канале инструментов ошибка самого предварительного Hook сразу прерывает дальнейшую обработку. Нельзя предполагать, что для такого отказа всегда сработает  <code>execute.after</code> . Аудит должен покрывать и пути отказа, а не только события после успешного выполнения.</p>
+<p>Ожидаемую восстанавливаемую ошибку инструмента можно отобразить в  <code>Tool.Error</code>. Отмена, неизвестный дефект программы и успешный результат должны сохранять разные значения; нельзя поглощать их все и возвращать обычный текст успеха.</p>
+<p>Основания: типы инструментов (<code>packages/schema/src/tool.ts</code>), оболочка выполнения инструмента (<code>packages/core/src/tool.ts</code>), фактическая проверка параметров (<code>packages/core/src/tool/runtime.ts</code>).</p>
+<h3 id="示例二-使用-code-mode-组合工具调用">Пример 2: композиция вызовов через Code Mode</h3>
+<p><strong>Code Mode определяет представление и композицию части инструментов.</strong> Текущая ветка напрямую показывает модели инструменты с  <code>codemode: false</code> ; остальные могут попасть в каталог Code Mode, где через  <code>execute</code>  запускается короткий код для композиции вызовов и обработки результатов. Фактические вызовы из Code Mode всё равно возвращаются в путь выполнения инструментов хоста.</p>
+<p>Это подходит для последовательных запросов, фильтрации и агрегации. Среда Code Mode ограничивает прямой доступ к файлам, импорты и подобные операции, но это не означает, что весь сервис OpenCode или внешние плагины работают в системной песочнице. В примере  <code>echo</code>  выше задано  <code>codemode: false</code>, что демонстрирует прямое предоставление инструмента модели.</p>
+<p>Запрос к модели фиксирует снимок текущей регистрации инструментов. Горячее обновление не заставляет уже подготовленный запрос использовать новый список; последующие запросы заново подготавливают возможности. Функция инструмента, предоставленная плагином, также не должна зависеть от бесхозных фоновых ресурсов, которые могли быть очищены.</p>
+<p>Основания: классификация инструментов и снимки (<code>packages/core/src/tool.ts</code>), Code Mode (<code>packages/core/src/codemode/tool.ts</code>), проверка доступности инструментов текущего запроса (<code>packages/core/src/session/model-request.ts</code>).</p>
+<h3 id="plugin-的-location">Location плагина</h3>
+<p><strong>Экземпляры плагинов управляются по Location; постоянное бизнес-состояние нужно хранить отдельно.</strong> Location — контекст выполнения из каталога и необязательного нативного ID Workspace. Один процесс OpenCode может обслуживать несколько Location одновременно, и один плагин может отдельно активироваться в каждом.</p>
+<p>У каждого экземпляра есть Scope, которому принадлежат Transform, Hook, регистрации инструментов и правильно привязанные ресурсы. При закрытии Scope регистрации очищаются. Таймеры плагина, сетевые подписки и наблюдение файлов тоже нужно связать с очисткой. Promise-плагин может из  <code>setup</code>  вернуть cleanup; Effect-плагин использует соответствующие scoped-ресурсы и finalizer.</p>
+<pre><code class="language-text">首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+</code></pre>
+<p>Для локальных файлов точек входа и источников конфигурации предусмотрено наблюдение изменений. Если явная точка входа — каталог, изменения его внутренних файлов не имеют той же гарантии автоматического горячего обновления. Загрузка, обновление и остановка зависят и от фактического наблюдения и состояния выполнения. Поэтому заявление о поддержке горячего обновления не заменяет проверку нативного списка возможностей.</p>
+<p>Восстановление плагина возвращает код и регистрации, но не откатывает побочные эффекты в файлах, базах данных или удалённых сервисах. Задания по расписанию, состояния согласований, числа повторных попыток и ключи идемпотентности должны храниться надёжно. Состояние сеансов в памяти нужно разделять как минимум по  <code>sessionID</code> . Глобальные переменные модуля могут совместно использоваться разными экземплярами плагина, поэтому требуют особой осторожности.</p>
+<p>Основания: Scope плагина и восстановление (<code>packages/core/src/plugin.ts</code>), наблюдение файлов плагина (<code>packages/core/src/config/plugin/source.ts</code>).</p>
+<h2 id="plugin-最佳实践">Практические рекомендации для Plugin</h2>
+<p><strong>При разработке сначала используйте существующую конфигурацию и публичные интерфейсы</strong>:</p>
+<ul>
+<li>Для изменения промпта, назначения или предела шагов используйте конфигурацию Agent.</li>
+<li>Для методов работы и знаний используйте Skill.</li>
+<li>Для новых реальных действий регистрируйте Tool.</li>
+<li>Чтобы изменить поведение в <strong>узле выполнения</strong>, используйте соответствующий Hook.</li>
+<li>Если плагин должен сохранять бизнес-состояние или вызывать внешние сервисы, явно спроектируйте хранение, аутентификацию, транзакции и идемпотентность. Состояние плагина в памяти не должно обеспечивать эти гарантии.</li>
+</ul>
+<p>Плагин с одной ответственностью может состоять из одного TS-файла. Разделяйте его на несколько ID только тогда, когда возможности требуют независимого включения, версий или стратегии отказов. Обычные внешние плагины должны зависеть от публичных интерфейсов плагинов, клиента и schema, избегая приватных реализаций Core. При распространении явно укажите совместимые версии хоста и зависимостей, точку входа модуля и способ сборки.</p>
+<p>При обновлении Plugin проверяйте как минимум следующее, а не только успешность импорта модуля:</p>
+<ul>
+<li>Появляются ли Agent, инструменты и навыки в фактическом списке возможностей и исчезает ли их вклад после выгрузки.</li>
+<li>Соответствует ли ожиданиям итоговое состояние при разных порядках плагинов, перекрытии конфигурации и сбоях горячего обновления.</li>
+<li>Сохраняют ли вход, выход, отмена и отказ выполнения инструмента правильную семантику.</li>
+<li>Действительно ли применяются выбор модели и ассистента сеанса; получают ли подчинённые ассистенты ожидаемые разрешения и контекст.</li>
+<li>Правильно ли пользовательские инструменты и вызываемые ими сервисы проверяют принадлежность сеанса, бизнес-права, переходы состояния и повторные запросы.</li>
+<li>Восстанавливается ли постоянное состояние после перезапуска сервиса и правильно ли обрабатывается потеря событий реального времени.</li>
+<li>Точно ли результаты инструментов и события отражают прогресс, завершение, ошибку и отмену.</li>
+</ul>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+          <aside class="toc">
+            <h5 data-i18n="article.toc">Содержание</h5>
+            <div class="toc-content"><nav id="TableOfContents" aria-label="Содержание" data-i18n-aria-label="article.toc"><ul>
+<li><a href="#plugin-%E6%89%A9%E5%B1%95%E5%85%A5%E5%8F%A3">Plugin: точка входа для расширений</a><ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF-plugin">Что такое Plugin</a></li>
+<li><a href="#plugin-%E7%9A%84%E5%88%86%E7%B1%BB">Виды Plugin</a></li></ul></li>
+<li><a href="#plugin-%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E4%B8%80-transform">Первая основная часть Plugin: Transform</a></li>
+<li><a href="#plugin-%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E4%BA%8C-hook">Вторая основная часть Plugin: Hook</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%A4%BA%E4%BE%8B%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">Примеры инструментов и жизненный цикл</a><ul>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%80-%E4%BD%BF%E7%94%A8-plugin-transform-%E5%AE%9A%E4%B9%89-tool">Пример 1: определение Tool через Plugin Transform</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C-%E4%BD%BF%E7%94%A8-code-mode-%E7%BB%84%E5%90%88%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8">Пример 2: композиция вызовов через Code Mode</a></li>
+<li><a href="#plugin-%E7%9A%84-location">Location плагина</a></li></ul></li>
+<li><a href="#plugin-%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">Практические рекомендации для Plugin</a></li></ul></nav></div>
+          </aside>
+          <aside class="tags">
+            <h5 data-i18n="article.tags">Теги</h5>
+            <ul class="tags-ul list-unstyled list-inline"><li class="list-inline-item"><a href="/ru/tags/agent%E5%BC%80%E5%8F%91/"><span data-i18n="tag.agent开发">Разработка агентов</span></a></li></ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" aria-label="Наверх" data-i18n-aria-label="action.backToTop"><i class="fas fa-angle-up"></i></button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">Последние статьи</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <a href="/ru/blogs/opencode-v2-extensions/">
+                        <img src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" loading="lazy" decoding="async" class="card-img-top" style="object-fit: cover;" alt="Расширения OpenCode v2: устройство и интеграция" data-i18n-alt="post.opencode-v2-extensions.title">
+                    </a>
+                </div>
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/opencode-v2-extensions/" class="primary-font card-title"><h5 class="card-title bg-transparent" title="Расширения OpenCode v2: устройство и интеграция" data-i18n-title="post.opencode-v2-extensions.title" data-i18n="post.opencode-v2-extensions.title">Расширения OpenCode v2: устройство и интеграция</h5></a>
+                    <div class="card-text secondary-font"><p data-i18n="post.opencode-v2-extensions.description">Обзор внутренних, внешних и SDK-плагинов OpenCode v2: Transform, Hook, регистрация инструментов, Code Mode и жизненный цикл Location.</p></div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2026-09-13" data-date="2026-09-13">13 сент. 2026 г.</time></span>
+                    <a href="/ru/blogs/opencode-v2-extensions/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="Перечитывая «Чистую архитектуру» (6): границы" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Перечитывая «Чистую архитектуру» (6): границы" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">Перечитывая «Чистую архитектуру» (6): границы</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">Как архитектурные границы ограничивают зависимости, изолируют бизнес-логику и позволяют отложить выбор фреймворков, баз данных и других деталей.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">29 июл. 2024 г.</time></span>
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="Перечитывая «Чистую архитектуру» (5): архитектура ПО" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Перечитывая «Чистую архитектуру» (5): архитектура ПО" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">Перечитывая «Чистую архитектуру» (5): архитектура ПО</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">О разделении системы на компоненты и их взаимодействии: как архитектура поддерживает разработку, развёртывание, эксплуатацию и сопровождение, сохраняя варианты проектирования.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">28 июл. 2024 г.</time></span>
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disqus_thread"></div>
+    <script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/opencode-v2-extensions/"; this.language = "ru"; };</script><script>
+
+
+
+
+        (function () {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://tommycheese.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Включите JavaScript, чтобы просматривать комментарии Disqus.</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/ru/" title="Tommy Cheese">
+                        <img alt="Логотип сайта Tommy Cheese" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 Все права защищены</span><div class="text-secondary">Создано с заботой на Hugo<br>Работает на GitHub Pages</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>
