@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href=/%f0%9f%a7%80.png type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      media="print" onload="this.media='all'" />
+<noscript>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Alata&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="OpenCode v2 扩展机制研究与接入说明" />
+<meta property="og:description" content="Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://tommycheese.github.io/blogs/opencode-v2-extensions/" /><meta property="article:section" content="blogs" />
+<meta property="article:published_time" content="2026-09-13T00:00:00+08:00" />
+<meta property="article:modified_time" content="2026-09-13T00:00:00+08:00" /><meta property="og:site_name" content="Tomme Cheese blogs" />
+
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="OpenCode v2 扩展机制研究与接入说明"/>
+<meta name="twitter:description" content="Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。"/>
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>
+OpenCode v2 扩展机制研究与接入说明 | Tommy Cheese
+
+  </title>
+<link rel="canonical" href="https://tommycheese.github.io/blogs/opencode-v2-extensions/">
+<link rel="alternate" type="application/rss+xml" title="Agent开发" href="/tags/agent%E5%BC%80%E5%8F%91/index.xml">
+<style>
+  #single .page-content { overflow-wrap: anywhere; }
+  #single .page-content h2, #single .page-content h3 { scroll-margin-top: 100px; }
+  #single .page-content pre { overflow: auto; padding: 1.25rem; }
+  #single .page-content pre code { white-space: pre; overflow-wrap: normal; }
+  #single .page-content blockquote { font-size: 1rem; font-weight: 400; padding: 1rem 1.25rem; }
+  #single .page-content table { font-size: .94rem; opacity: 1; }
+  #single .page-content th, #single .page-content td { min-width: 9rem; }
+  #single .plugin-flow { text-align: center; margin: 2rem auto; }
+  #single .plugin-flow img { display: block; width: 100%; max-width: 543px; height: auto; margin: auto; }
+  #single .plugin-flow figcaption { color: var(--text-secondary-color); font-size: .9rem; margin-top: .75rem; }
+  #single details { margin-bottom: 1.5rem; }
+  #single summary { cursor: pointer; }
+</style>
+</head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-lg animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30"
+                    class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-md-block" placeholder='Ctrl &#43; k to Search...'
+                        aria-label="Search" oninput="searchOnChange(event)">
+                </div>
+
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg aria-hidden="true" height="24" viewBox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-md-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder='Ctrl &#43; k to Search...' aria-label="Search" oninput="searchOnChange(event)">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#about" aria-label="about">
+                            关于|About🥰
+                        </a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#experience"
+                            aria-label="experience">
+                            经历|Experience⛵
+                        </a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/#contact"
+                            aria-label="contact">
+                            联系我|Get in touch😊
+                        </a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-lg-block d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/blogs" title="Blog posts">
+
+                            博客|Blogs📝
+                        </a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/tags" title="Blog tags">
+
+                            标签|Tags🏷
+                        </a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/gallery" title="Blog posts">
+
+                            Explore🌏
+                        </a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4">OpenCode v2 扩展机制研究与接入说明</h1>
+            <div class="text-center"><time datetime="2026-09-13T00:00:00+08:00">2026年9月13日</time> · <a href="/tags/agent%E5%BC%80%E5%8F%91/">Agent开发</a> · <a href="article.md" download>Markdown</a></div>
+          </div>
+          <article class="page-content p-2">
+<blockquote>
+<p>研究日期：2026-09-13。本文描述 OpenCode v2 的通用插件能力，包括插件类型、加载机制、能力注册、执行钩子、权限边界与生命周期，供插件开发和嵌入式集成参考。</p>
+<p>代码基线为所研究的 OpenCode 仓库 <code>v2</code> 分支，提交为 <code>2308db16387c9b59e88d732a93ec9bac54462b03</code>。源码引用采用该固定提交内的仓库相对路径；文中的接口与行为以此版本为准，不代表其他 OpenCode 版本或旧版插件 API 的兼容承诺。</p>
+<p>本文是源码研究与能力说明。代码示例用于解释接口和调用方式，未经独立运行验证。</p>
+</blockquote>
+<h2 id="plugin-扩展入口">Plugin：扩展入口</h2>
+<h3 id="什么是-plugin">什么是 Plugin</h3>
+<p><strong>OpenCode 的扩展通过注册能力和执行钩子接入已有运行流程。</strong> Extension 在当前 OpenCode v2 实现中主要对应 Plugin 机制。插件可以提供助手、工具、技能、模型、命令等能力，也可以在指定执行节点调整行为；会话运行、模型请求、工具结果和执行记录仍由 OpenCode 核心处理。</p>
+<figure class="plugin-flow"><img src="/blogimages/opencode-v2-plugin-flow.svg" alt="插件加载后注册能力，会话准备上下文，经请求钩子调用模型；工具调用经执行钩子保存结果并返回模型，最终回答结束本次执行。" width="429" height="722"><figcaption>Plugin 从加载、能力注册到会话执行的流程</figcaption></figure>
+<details><summary>查看 Mermaid 流程图源码</summary><pre><code class="language-mermaid">flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&gt; B[插件加载与生命周期管理]
+    B --&gt; C[构建助手、工具、技能等能力]
+    C --&gt; D[会话选择助手]
+    D --&gt; E[准备上下文与工具快照]
+    E --&gt; F[请求阶段钩子]
+    F --&gt; G[调用模型]
+    G --&gt; H{返回内容}
+    H --&gt;|工具调用| I[工具执行与钩子]
+    I --&gt; J[保存结果与执行事件]
+    J --&gt; G
+    H --&gt;|最终回答| K[本次执行结束]
+</code></pre></details>
+<h3 id="plugin-的分类">Plugin 的分类</h3>
+<p><strong>内部插件、外部插件和 SDK 插件按接入来源区分，最终进入同一套运行管理。</strong> 三者都可以注册助手、工具和执行钩子。区别主要在于谁提供插件定义、如何装入宿主，以及宿主是否额外注入核心内部服务。这里讨论的是服务端插件；终端界面的 TUI 插件属于另一个扩展入口。</p>
+<table>
+<thead>
+<tr>
+<th scope="col">比较项</th>
+<th scope="col">内部插件</th>
+<th scope="col">外部插件</th>
+<th scope="col">SDK 插件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>提供者</td>
+<td>OpenCode 源码与发行版本</td>
+<td>项目或独立插件包的维护者</td>
+<td>嵌入 OpenCode 的应用宿主</td>
+</tr>
+<tr>
+<td>入口</td>
+<td><code>PluginInternal</code> 的 <code>pre</code> / <code>post</code> 集合</td>
+<td>目录发现、配置中的文件或包</td>
+<td>嵌入式宿主的 <code>opencode.plugin(definition)</code></td>
+</tr>
+<tr>
+<td>装载形式</td>
+<td>核心代码直接导入定义</td>
+<td>解析模块并读取默认导出</td>
+<td>在内存中直接传入插件对象</td>
+</tr>
+<tr>
+<td>可用接口</td>
+<td>公开 Context，加上宿主注入的内部服务</td>
+<td>公开 Plugin Context</td>
+<td>公开 Plugin Context；可通过闭包使用宿主主动传入的依赖</td>
+</tr>
+<tr>
+<td>主要配置方式</td>
+<td>原生配置、内部服务或内置默认值</td>
+<td><code>plugins[].options</code> → <code>ctx.options</code></td>
+<td>宿主代码与闭包；注册接口没有单独的 <code>options</code> 参数</td>
+</tr>
+<tr>
+<td>更新来源</td>
+<td>跟随 OpenCode 代码版本；部分插件自行监听配置变化</td>
+<td>配置变化、受支持的本地入口变化或包配置变更</td>
+<td>宿主再次注册插件，递增内部修订号</td>
+</tr>
+<tr>
+<td>实例范围</td>
+<td>每个 Location 独立激活</td>
+<td>按各 Location 的配置分别激活</td>
+<td>同一宿主共享定义，每个 Location 独立激活</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>实现原生助手、工具、供应商与配置处理</td>
+<td>给已有 OpenCode 服务增加项目或业务能力</td>
+<td>在自己的 JS/TS 应用中嵌入并管理 OpenCode</td>
+</tr>
+</tbody></table>
+<p>Effect 和 Promise 是插件的两种编写接口方法。一个采用公开接口的 Effect 插件对象，既可以默认导出后由配置加载，也可以直接交给嵌入式 SDK 注册；核心能力可以复用，但加载顺序和配置传入方式会发生变化。</p>
+<p><strong>内部插件把 OpenCode 自身的一部分功能组织成插件。</strong> 它们不是用户安装到目录里的特殊文件，而是由核心源码静态导入，并在 <code>PluginInternal</code> 中明确列入集合。<code>PluginInternal.list()</code> 获取当前 Location 所需的服务，通过 <code>Effect.provide(context)</code> 注入内部插件，再交给统一加载器。</p>
+<p>这里有两层 Context：<code>effect(ctx)</code> 的参数仍然是公开 Plugin Context；内部插件通过 Effect 环境另外取得 <code>Config.Service</code>、<code>Permission.Service</code>、<code>Shell.Service</code>、<code>Location.Service</code> 等服务。因此，“内部插件有更多能力”的依据是宿主明确注入了依赖，不是插件 ID 以 <code>opencode.</code> 开头。</p>
+<table>
+<thead>
+<tr>
+<th scope="col">内部插件示例</th>
+<th scope="col">所处集合</th>
+<th scope="col">实际职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>opencode.agent</code></td>
+<td><code>pre</code></td>
+<td>注册原生助手的基础定义</td>
+</tr>
+<tr>
+<td><code>opencode.tool.shell</code></td>
+<td><code>pre</code></td>
+<td>注册 Shell 工具，结合原生执行、权限和运行状态服务</td>
+</tr>
+<tr>
+<td>原生供应商、搜索及其他工具插件</td>
+<td><code>pre</code></td>
+<td>提供模型、搜索和工具的基础能力</td>
+</tr>
+<tr>
+<td><code>opencode.config.agent</code></td>
+<td><code>post</code></td>
+<td>读取助手配置和相关 Markdown 文件，把结果应用到助手清单</td>
+</tr>
+<tr>
+<td>配置供应商、技能、策略及模型变体插件</td>
+<td><code>post</code></td>
+<td>在前面贡献的能力上应用配置或后续处理</td>
+</tr>
+</tbody></table>
+<p>这也解释了自定义助手与内部插件的关系：用户编辑助手配置，真正负责读取、监听和应用这些配置的是 <code>opencode.config.agent</code>。每个自定义助手是一份 Agent 定义，并不需要对应一个独立插件。外部插件或 SDK 插件也可以注册 Agent，之后再由配置插件调整。</p>
+<p>内置插件同样参与配置中的启停选择。例如 <code>-opencode.config.agent</code> 会让负责应用助手配置的插件退出当前激活集合，相应配置能力也会受到影响。是否保留某个内置插件，应根据其实际职责判断。</p>
+<p>需要增加依赖 Core 私有服务的原生功能时，通常要修改 OpenCode 源码，把插件加入内置集合；若新增服务依赖，还需要调整相应服务装配。这类变更随 OpenCode 一起构建、发布和升级。内部插件适合引擎自身功能，普通业务工具优先通过公开接口接入。</p>
+<p>依据：内部插件集合与服务注入（<code>packages/core/src/plugin/internal.ts</code>）、原生助手插件（<code>packages/core/src/plugin/agent.ts</code>）、助手配置插件（<code>packages/core/src/config/plugin/agent.ts</code>）、Shell 工具插件（<code>packages/core/src/tool/plugin/shell.ts</code>）。</p>
+<p><strong>外部插件通过文件或包给现有 OpenCode 服务增加能力。</strong> “外部”指代码来源不在内置集合中，执行时仍然装入 OpenCode 进程。加载器向它提供公开 Plugin Context，不会像内部插件一样额外注入 Core 服务。它仍能使用运行环境允许的文件、网络等能力；这不是一个独立进程或安全沙箱。</p>
+<p>外部插件有两条发现路径：</p>
+<ul>
+<li><strong>自动发现</strong>：扫描原生配置目录下的 <code>plugin/</code> 和 <code>plugins/</code>。当前实现直接识别 <code>.ts</code>、<code>.js</code> 文件，也支持解析包目录及符合条件的符号链接。包目录会尝试 <code>package.json</code> 中字符串形式的 <code>exports</code>、<code>module</code>、<code>main</code>，再尝试 <code>index.ts</code>、<code>index.js</code>；不能把这里的简单发现逻辑等同于支持所有复杂包导出规则。</li>
+<li><strong>显式配置</strong>：<code>plugins</code> 接受相对路径、绝对路径、文件 URL 和可解析的包。相对路径按配置文件所在目录解析；本地路径进入模块加载，包目标交给包解析器，并尝试 <code>server</code> 子入口或包根入口。</li>
+</ul>
+<p>自动发现结果先进入操作列表，显式配置随后应用，因此可以在配置中关闭自动发现的插件。自动发现并不直接枚举 <code>.mjs</code> 文件；使用此类入口时，需要显式配置其路径，并由运行环境完成模块加载。</p>
+<pre><code class="language-json">{
+  &quot;plugins&quot;: [
+    {
+      &quot;package&quot;: &quot;./plugins/example.ts&quot;,
+      &quot;options&quot;: {
+        &quot;serviceUrl&quot;: &quot;https://api.example.com&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+<p>上述路径是配置格式示例。插件通过 <code>ctx.options</code> 读取 <code>serviceUrl</code>，并自行检查必填项、取值范围和地址约束；传入对象不代表业务配置已经完成校验。</p>
+<p>外部模块必须默认导出一个带有 <code>id + effect</code> 或 <code>id + setup</code> 的插件对象：</p>
+<table>
+<thead>
+<tr>
+<th scope="col">编写方式</th>
+<th scope="col">初始化入口</th>
+<th scope="col">接入方式与清理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Effect</td>
+<td><code>effect(ctx)</code></td>
+<td>由宿主在插件 Scope 内执行；资源绑定 scoped 生命周期或 finalizer</td>
+</tr>
+<tr>
+<td>Promise</td>
+<td><code>setup(ctx)</code></td>
+<td>加载器通过 <code>fromPromise</code> 转为 Effect 插件；可以返回 cleanup 函数</td>
+</tr>
+</tbody></table>
+<p><code>@opencode-ai/plugin/effect</code> 提供 Effect API，包根入口 <code>@opencode-ai/plugin</code> 提供当前分支的 Promise API。旧版插件 API 有独立的 <code>v1</code> 入口，不能仅凭“同样是 OpenCode 插件”假定接口兼容。</p>
+<p>外部插件的典型加载链路为：</p>
+<pre><code class="language-text">配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+</code></pre>
+<p>文件或配置变化可以触发重新生成插件集合；这是发现与监听支持范围内的更新，不是任意依赖文件都能实时刷新。特别是显式配置目录入口时，当前实现不保证目录内部文件变化会触发重载。包版本的升级也应通过明确的部署或配置变更管理。</p>
+<p>模块导入或导出格式校验失败会记录加载警告，该次来源被跳过；进入激活阶段后的初始化失败则由统一插件管理处理。诊断时需要分别确认“文件已被发现”“模块已成功解析”“插件已激活”和“能力已注册”，仅看到配置项不足以证明工具可用。</p>
+<p>依据：来源发现与本地监听（<code>packages/core/src/config/plugin/source.ts</code>）、模块加载与配置注入（<code>packages/core/src/plugin/supervisor.ts</code>）、公开包入口（<code>packages/plugin/package.json</code>）、Promise 适配器（<code>packages/plugin/src/promise/adapter.ts</code>）。</p>
+<p><strong>SDK 插件由嵌入式宿主直接注册，适合把 OpenCode 作为应用内部的执行引擎。</strong> 本文的 SDK 特指当前分支的 <code>@opencode-ai/sdk-next</code> 嵌入式宿主。<code>OpenCode.create()</code> 在应用进程内创建运行环境和内存中的 HTTP 路由调用链，不需要为这条内部调用链开启网络监听；工具、模型和业务服务仍可发起各自的网络请求。</p>
+<p>宿主通过 <code>opencode.plugin(definition)</code> 直接提交 Effect 插件对象，省去外部模块发现、包解析和默认导出校验。这不是向一个已经启动的远程 OpenCode 服务上传代码。普通 HTTP 客户端和插件 Context 中的 <code>ctx.plugin.list()</code> 也不等于这个嵌入式注册入口。</p>
+<p>下例展示嵌入式宿主的插件注册与查询方式，需使用与研究基线匹配的依赖版本：</p>
+<pre><code class="language-ts">import { AbsolutePath, Location, OpenCode } from &quot;@opencode-ai/sdk-next&quot;
+import { Effect } from &quot;effect&quot;
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: &quot;example.reviewer&quot;,
+    effect: (ctx) =&gt;
+      ctx.agent.transform((draft) =&gt; {
+        draft.update(&quot;reviewer&quot;, (agent) =&gt; {
+          agent.description = &quot;检查代码并给出修改建议&quot;
+          agent.system = &quot;分析代码质量，并说明建议的依据。&quot;
+          agent.mode = &quot;primary&quot;
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+</code></pre>
+<p>示例中的助手只定义用途和提示词，权限需要另行配置。示例执行结束会关闭拥有宿主的 Scope；真实嵌入式应用应让该 Scope 覆盖整个服务生命周期。</p>
+<p>SDK 插件的范围和更新方式需要分两层理解：</p>
+<table>
+<thead>
+<tr>
+<th scope="col">层次</th>
+<th scope="col">管理内容</th>
+<th scope="col">生效范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>宿主注册表</td>
+<td><code>Map&lt;plugin.id, Versioned&gt;</code>，保存定义和递增修订号</td>
+<td>同一个嵌入式宿主共享；不同宿主拥有各自的注册表</td>
+</tr>
+<tr>
+<td>Location 激活集合</td>
+<td>该目录上下文内的插件实例、Transform、Hook 与 Scope</td>
+<td>每个 Location 分别激活与清理</td>
+</tr>
+</tbody></table>
+<p>每次注册都会发布 <code>sdk.plugin.updated</code>。已启动的 Location 收到更新后重新生成插件集合；之后新启动或被回收后重新启动的 Location，从宿主注册表读取当前定义。因此，“宿主只注册一次”不意味着插件初始化只执行一次。闭包中的可变对象也可能被同一宿主的多个 Location 实例共享，不能默认把它当作单个会话的状态。</p>
+<p>同一 SDK 注册表内再次提交相同 ID，会替换定义并产生新修订号；不同宿主之间互不覆盖。注册返回仅表示定义已写入并发布更新，不代表所有 Location 已同步完成激活。需要确认生效时，应检查目标 Location 的实际插件和能力清单，并在必要时等待激活事件。</p>
+<p>当前 SDK 注册表只提供 <code>register</code> 与 <code>all</code>，没有独立的 <code>unregister</code> 接口。各 Location 的配置仍可以通过插件 ID 禁用其激活，但这不会从宿主注册表删除定义。关闭宿主会清理运行资源；重新创建宿主需要重新注册插件，原来的内存注册不是持久安装记录。</p>
+<p>SDK 注册入口接收 Effect 插件，外部加载器对 Promise 插件的自动适配不会在这里自动发生。需要复用 Promise 定义时，应显式使用对应的 <code>fromPromise</code> 适配器。SDK 路径没有额外的 <code>options</code> 注入，公开 Context 默认提供空对象；宿主通常用工厂函数或闭包传入自己的配置与业务客户端。</p>
+<p>SDK 插件也不会自动取得内部插件的 Core 服务环境。宿主可以主动传入依赖，但直接依赖 Core 私有服务意味着承担额外的版本耦合。研究基线中的 <code>sdk-next</code> 还是 <code>private: true</code> 的过渡包，不能把这个示例视为已发布稳定 npm API 的安装承诺。</p>
+<p>依据：嵌入式宿主入口（<code>packages/sdk-next/src/opencode.ts</code>）、SDK 注册表（<code>packages/core/src/plugin/sdk.ts</code>）、SDK 包状态（<code>packages/sdk-next/package.json</code>）、公开插件宿主（<code>packages/core/src/plugin/host.ts</code>）。嵌入式测试源码（<code>packages/sdk-next/test/embedded.test.ts</code>）包含跨 Location 更新、Location 回收后重新激活及宿主间隔离的用例；本文核对了这些用例，未独立运行测试。</p>
+<p><strong>三种来源会合并成一个有顺序的激活集合。</strong> 在启用项确定之后，当前顺序是：</p>
+<pre><code class="language-text">内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+</code></pre>
+<p><code>ConfigPluginSource</code> 负责外部来源与配置操作；<code>PluginSupervisor</code> 把它们与内部、SDK 定义合并；<code>Plugin.Service</code> 负责最终的重复 ID 检查、Scope、初始化与替换。不要把不同来源理解为三套独立运行引擎。</p>
+<p>这个顺序意味着外部和 SDK 插件贡献的助手等能力，仍可能被后置配置插件调整。需要确定助手的最终提示词、模型或权限时，应读取最终能力清单，而不是只看某个插件中的初始定义。</p>
+<p>插件 ID、包名和入口路径承担不同职责。比如配置通过文件加载一个导出 ID 为 <code>example.reviewer</code> 的插件，禁用时应写 <code>-example.reviewer</code>。选择器支持精确 ID、<code>prefix.*</code> 和 <code>*</code>；配置操作按顺序执行，后续操作可以重新启用已有定义。</p>
+<p>有两个容易混淆的重名规则：</p>
+<ul>
+<li><strong>同一 SDK 注册表内重复注册相同 ID</strong>：更新该条定义，属于注册表支持的替换操作。</li>
+<li><strong>不同有效来源最终贡献相同 ID</strong>：激活阶段按重复 ID 拒绝这一轮集合，不是按来源优先级静默覆盖。外部文件与 SDK 注册不要同时提交同一插件定义。</li>
+</ul>
+<p>另外，当前 <code>Plugin.Service</code> 在整个有序集合的 ID 与版本完全一致时跳过激活；一旦集合发生变化，会遍历新集合，清理并重新初始化其中已有的插件。因此，一个来源发生更新也可能让其他未修改的插件重新初始化。三类插件都应正确释放资源，避免把初始化当作只执行一次的业务动作。替换失败会尝试恢复该插件旧版本，但无法回滚已产生的外部业务副作用。</p>
+<p>依据：来源合并与启停顺序（<code>packages/core/src/plugin/supervisor.ts</code>）、统一激活与替换（<code>packages/core/src/plugin.ts</code>）、配置与加载顺序测试源码（<code>packages/core/test/config/plugin.test.ts</code>）。</p>
+<h2 id="plugin-核心实现一-transform">Plugin 核心实现一：Transform</h2>
+<p><strong>Transform 用来声明能力，Hook 用来处理一次运行。</strong> 选择扩展点时，应先确定需求属于哪种领域。</p>
+<table>
+<thead>
+<tr>
+<th scope="col">需求</th>
+<th scope="col">原生扩展接口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>注册、修改或移除助手</td>
+<td><code>ctx.agent.transform</code></td>
+</tr>
+<tr>
+<td>注册实际可执行工具</td>
+<td><code>ctx.tool.transform</code></td>
+</tr>
+<tr>
+<td>提供技能说明与资源入口</td>
+<td><code>ctx.skill.transform</code></td>
+</tr>
+<tr>
+<td>增加命令</td>
+<td><code>ctx.command.transform</code></td>
+</tr>
+<tr>
+<td>调整供应商、模型目录与默认选择</td>
+<td><code>ctx.catalog.transform</code></td>
+</tr>
+<tr>
+<td>提供参考资料来源</td>
+<td><code>ctx.reference.transform</code></td>
+</tr>
+<tr>
+<td>配置认证和连接方式</td>
+<td><code>ctx.integration.transform</code></td>
+</tr>
+<tr>
+<td>提供搜索后端</td>
+<td><code>ctx.websearch.transform</code></td>
+</tr>
+<tr>
+<td>修改本轮上下文与可见工具</td>
+<td><code>ctx.session.hook(&quot;context&quot;, ...)</code></td>
+</tr>
+<tr>
+<td>检查工具输入或整理结果</td>
+<td><code>ctx.tool.hook(...)</code></td>
+</tr>
+<tr>
+<td>调整模型 SDK 或模型实例</td>
+<td><code>ctx.aisdk.hook(...)</code></td>
+</tr>
+<tr>
+<td>调整模型 HTTP 请求或响应</td>
+<td><code>ctx.session.hook(&quot;http.request&quot; / &quot;http.response&quot;, ...)</code></td>
+</tr>
+<tr>
+<td>调整命令创建参数</td>
+<td><code>ctx.shell.hook(&quot;create.before&quot;, ...)</code></td>
+</tr>
+<tr>
+<td>观察实时事件</td>
+<td><code>ctx.event.subscribe()</code></td>
+</tr>
+<tr>
+<td>创建、投递、等待或中断会话</td>
+<td><code>ctx.session.*</code></td>
+</tr>
+</tbody></table>
+<p>Agent、Catalog、Command、Integration、Reference、Skill 等状态领域保存活动 Transform，并从基础状态按顺序重建。卸载某个插件后，对应 Transform 被移除，再重新生成结果。Transform 应只编辑本次回调提供的 Draft，不应保存 Draft 引用，也不适合在重建时产生外部业务副作用。需要外部数据时，先加载并保存数据，再触发相应领域的 <code>reload()</code>。</p>
+<p>Tool 的底层实现采用与 Scope 绑定的工具注册和请求快照。它与上述领域具有相同的生命周期归属，但不能推断所有 <code>transform</code> 都使用完全相同的状态容器或返回类型。</p>
+<h2 id="plugin-核心实现二-hook">Plugin 核心实现二：Hook</h2>
+<p><strong>Hook（执行钩子）是宿主在运行流程中预留的扩展点。</strong> 插件向某个扩展点注册回调函数，OpenCode 执行到对应节点时，便自动调用这些回调，并传入该节点的上下文数据。插件可以按接口约定读取数据、调整参数或处理结果，从而参与模型请求、工具执行等流程。</p>
+<p>Hook 的使用分为注册和触发两个阶段：插件初始化时，通过 <code>ctx.session.hook(...)</code>、<code>ctx.tool.hook(...)</code> 等接口声明要参与的节点；实际运行到该节点时，宿主才执行注册的回调。注册一次后，回调可以随着对应节点再次执行而多次触发。宿主会等待回调完成，再按该接口的约定继续处理；例如 <code>tool.execute.before</code> 允许通过 <code>Tool.Error</code> 拒绝这次工具执行。</p>
+<p>Transform 负责构建可用能力，Hook 负责调整能力在具体执行节点的行为。例如，注册一个工具使用 <code>ctx.tool.transform</code>；检查某次工具调用的输入，可以使用 <code>ctx.tool.hook(&quot;execute.before&quot;, ...)</code>；调整即将发送给模型的上下文，可以使用 <code>ctx.session.hook(&quot;context&quot;, ...)</code>。Hook 参与当前调用链，而 <code>ctx.event.subscribe()</code> 用于订阅事件并观察运行情况。</p>
+<p>运行 Hook 按注册顺序串行执行，后注册的 Hook 可以看到前面的修改。多个插件修改同一字段时，需要检查最终加载顺序；内置插件分为前置与后置集合，不能简单假定“外部插件永远最后覆盖”。</p>
+<table>
+<thead>
+<tr>
+<th scope="col">Hook</th>
+<th scope="col">可修改或观察的内容</th>
+<th scope="col">注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>session.context</code></td>
+<td>系统提示、消息、本轮工具定义</td>
+<td>助手和模型标识是上下文身份；修改消息仅代表本轮请求调整，不等于追加持久历史</td>
+</tr>
+<tr>
+<td><code>tool.execute.before</code></td>
+<td>工具输入</td>
+<td>可以返回 <code>Tool.Error</code> 阻止执行</td>
+</tr>
+<tr>
+<td><code>tool.execute.after</code></td>
+<td>成功结果或工具错误</td>
+<td>用于整理结果和补充信息</td>
+</tr>
+<tr>
+<td><code>session.http.request/response</code></td>
+<td>模型 HTTP 请求与响应</td>
+<td>可能接触凭据和完整输入，需控制记录内容</td>
+</tr>
+<tr>
+<td><code>aisdk.sdk/language</code></td>
+<td>SDK 与实际模型实例</td>
+<td>适合供应商适配</td>
+</tr>
+<tr>
+<td><code>shell.create.before</code></td>
+<td>命令、目录、时限、Shell 与环境变量</td>
+<td>字符串规则本身不能提供系统级隔离</td>
+</tr>
+</tbody></table>
+<p>当前公开 Hook 类型中，只有 <code>tool.execute.before</code> 声明了可恢复的 <code>Tool.Error</code> 失败通道。其他 Hook 不应被当作任意抛出业务错误的通用中间件。</p>
+<p>依据：Plugin Context（<code>packages/plugin/src/effect/plugin.ts</code>）、状态重建（<code>packages/core/src/state.ts</code>）、Hook 注册与执行（<code>packages/core/src/plugin/hooks.ts</code>）、工具注册与快照（<code>packages/core/src/tool.ts</code>）。</p>
+<h2 id="工具示例与生命周期">工具示例与生命周期</h2>
+<h3 id="示例一-使用-plugin-transform-定义-tool">示例一：使用 Plugin Transform 定义 Tool</h3>
+<p><strong>工具包含模型可见的定义和宿主执行的函数。</strong> 模型生成工具名与输入后，OpenCode 使用本轮捕获的工具能力处理调用。工具函数接收宿主提供的 <code>sessionID</code>、<code>agent</code>、<code>messageID</code> 和调用 <code>id</code>，长操作可以通过 <code>context.progress()</code> 提供进度。</p>
+<p>下面是一个使用 Effect API 的独立工具示例：</p>
+<pre><code class="language-ts">import { Plugin } from &quot;@opencode-ai/plugin/effect&quot;
+import { Effect, Schema } from &quot;effect&quot;
+
+export default Plugin.define({
+  id: &quot;example.echo&quot;,
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&gt; {
+      tools.add({
+        name: &quot;echo&quot;,
+        description: &quot;返回收到的文字&quot;,
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+</code></pre>
+<p>结果字段需要按用途区分：<code>output</code> 是声明输出 Schema 后供程序使用的结构化值；<code>content</code> 提供给模型并进入会话内容；<code>metadata</code> 承载有界的附加状态。未声明输出 Schema 却返回 <code>output</code>，在当前运行实现中属于错误。</p>
+<p>源码中有两个比接口名称更具体的校验细节：</p>
+<ul>
+<li><code>tool.execute.before</code> 先于工具运行函数中的 Schema 解码执行。因此 Hook 读取输入时仍应把它当作未知结构；Hook 修改后的输入才进入后续解码。</li>
+<li>Effect Schema 和支持的 Standard Schema 会执行运行时输入校验；纯 JSON Schema 分支直接传递输入。纯 JSON Schema 输出分支也只检查是否为 JSON 值，不逐项验证声明的约束。业务工具不能把“向模型提供了 JSON Schema”视为“服务端已验证参数”。</li>
+</ul>
+<p>在当前工具通道里，执行前 Hook 自身失败会直接中止后续流程；不能假定 <code>execute.after</code> 总会为这类拒绝触发。审计设计需要覆盖拒绝路径，而不是只监听成功执行之后。</p>
+<p>预期、可恢复的工具失败可以映射为 <code>Tool.Error</code>。取消执行、未知程序缺陷和成功结果需要保留不同语义，不应统一吞掉后返回一条普通成功文本。</p>
+<p>依据：工具类型（<code>packages/schema/src/tool.ts</code>）、工具执行封装（<code>packages/core/src/tool.ts</code>）、实际参数校验（<code>packages/core/src/tool/runtime.ts</code>）。</p>
+<h3 id="示例二-使用-code-mode-组合工具调用">示例二：使用 Code Mode 组合工具调用</h3>
+<p><strong>Code Mode 决定一部分工具如何呈现与组合。</strong> 当前分支会把 <code>codemode: false</code> 的工具直接暴露给模型；其他工具可进入 Code Mode 目录，通过 <code>execute</code> 运行一小段代码来组合调用和处理结果。Code Mode 中的实际工具调用仍回到宿主的工具执行路径。</p>
+<p>这适合连续查询、过滤和聚合等场景。Code Mode 运行环境限制直接文件访问、导入等操作，但这类限制不能等同于整个 OpenCode 服务或外部插件都运行在系统沙箱中。上面的 <code>echo</code> 示例设置了 <code>codemode: false</code>，展示工具直接暴露给模型的方式。</p>
+<p>模型请求捕获当时的工具注册快照。插件热更新不会把已经准备好的请求视为使用全新的工具清单；后续请求会重新准备能力。插件贡献的工具执行函数本身也应避免依赖已被清理的无归属后台资源。</p>
+<p>依据：工具分类与快照（<code>packages/core/src/tool.ts</code>）、Code Mode（<code>packages/core/src/codemode/tool.ts</code>）、本轮工具可用性检查（<code>packages/core/src/session/model-request.ts</code>）。</p>
+<h3 id="plugin-的-location">Plugin 的 Location</h3>
+<p><strong>插件实例按 Location 管理，持久业务状态需要单独保存。</strong> Location 表示由目录和可选原生 Workspace 标识构成的执行上下文。一个 OpenCode 进程可以同时承载多个 Location，同一插件可能在多个 Location 中分别激活。</p>
+<p>每个插件实例拥有 Scope，用于归属 Transform、Hook、工具注册和正确绑定的资源。Scope 关闭时，这些注册会清理。插件自己的定时器、网络订阅和文件监听也需要绑定清理逻辑；Promise 插件可以从 <code>setup</code> 返回 cleanup，Effect 插件使用相应的 scoped 资源与 finalizer。</p>
+<pre><code class="language-text">首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+</code></pre>
+<p>本地插件入口文件和配置来源存在变化监听；显式入口是目录时，目录内部文件修改不具备同样的自动热更新保证。加载、更新和停止还受实际文件监听与运行状态影响，因此“支持热更新”不能替代读取原生能力清单的验证。</p>
+<p>插件恢复只能恢复代码和注册，无法回滚已经操作文件、数据库或远程服务产生的副作用。定时任务、审批状态、重试次数、幂等标识应由可靠存储维护。内存里的会话状态至少按 <code>sessionID</code> 隔离；模块级全局变量还可能跨插件实例共享，需要格外谨慎。</p>
+<p>依据：插件 Scope 与恢复（<code>packages/core/src/plugin.ts</code>）、插件文件监听（<code>packages/core/src/config/plugin/source.ts</code>）。</p>
+<h2 id="plugin-最佳实践">Plugin 最佳实践</h2>
+<p><strong>插件开发优先复用已有配置与公开接口</strong>：</p>
+<ul>
+<li>只调整提示词、用途或步骤上限时，使用 Agent 配置；</li>
+<li>提供方法和知识时，使用 Skill；</li>
+<li>增加实际操作时，注册 Tool；</li>
+<li>需要在<strong>执行节点</strong>调整行为时，使用对应 Hook；</li>
+<li>特别的，插件需要持久化业务状态或调用外部服务时，应显式设计存储、认证、事务与幂等处理，不依赖插件内存状态承担这些保证。</li>
+</ul>
+<p>单一职责插件可以只有一个 TS 扩展文件。只有多个能力需要独立启停、版本或失败策略时，才拆成多个插件 ID。普通外部插件应依赖公开插件、客户端和 schema 接口，避免导入 Core 私有实现。分发时需明确兼容的宿主版本、依赖版本、模块入口和构建方式。</p>
+<p>升级 Plugin 时，应至少检查以下行为，而不是只确认插件模块能够导入：</p>
+<ul>
+<li>Agent、工具和技能是否进入实际能力清单，卸载后贡献是否消失。</li>
+<li>多插件顺序、配置覆盖和热更新失败时的最终状态是否符合预期。</li>
+<li>工具输入、输出、取消和执行拒绝是否保持正确语义。</li>
+<li>会话模型与助手选择是否真正生效，子助手是否具有预期权限和上下文。</li>
+<li>自定义工具及其调用的服务是否正确检查会话归属、业务授权、状态转换和重复请求。</li>
+<li>服务重启后，持久状态能否恢复，实时事件缺失是否得到正确处理。</li>
+<li>工具结果与事件是否准确表达进度、完成、失败和取消状态。</li>
+</ul>
+
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+          <aside class="toc">
+            <h5>文章目录</h5>
+            <div class="toc-content"><nav id="TableOfContents" aria-label="文章目录"><ul>
+<li><a href="#plugin-扩展入口">Plugin：扩展入口</a><ul>
+<li><a href="#什么是-plugin">什么是 Plugin</a></li>
+<li><a href="#plugin-的分类">Plugin 的分类</a></li></ul></li>
+<li><a href="#plugin-核心实现一-transform">Plugin 核心实现一：Transform</a></li>
+<li><a href="#plugin-核心实现二-hook">Plugin 核心实现二：Hook</a></li>
+<li><a href="#工具示例与生命周期">工具示例与生命周期</a><ul>
+<li><a href="#示例一-使用-plugin-transform-定义-tool">示例一：使用 Plugin Transform 定义 Tool</a></li>
+<li><a href="#示例二-使用-code-mode-组合工具调用">示例二：使用 Code Mode 组合工具调用</a></li>
+<li><a href="#plugin-的-location">Plugin 的 Location</a></li></ul></li>
+<li><a href="#plugin-最佳实践">Plugin 最佳实践</a></li></ul></nav></div>
+          </aside>
+          <aside class="tags">
+            <h5>Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline"><li class="list-inline-item"><a href="/tags/agent%E5%BC%80%E5%8F%91/">Agent开发</a></li></ul>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" aria-label="返回顶部"><i class="fas fa-angle-up"></i></button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<Script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3">
+        最新发布|Recent Post
+    </div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/opencode-v2-extensions/" class="primary-font card-title"><h5 class="card-title bg-transparent" title="OpenCode v2 扩展机制研究与接入说明">OpenCode v2 扩展机制研究与接入说明</h5></a>
+                    <div class="card-text secondary-font"><p>Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。</p></div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Sep 13, 2026</span>
+                    <a href="/blogs/opencode-v2-extensions/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="再读整洁架构之道（六）边界">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再读整洁架构之道（六）边界">再读整洁架构之道（六）边界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>什么是边界 软件架构设计本身就是一门划分边界的艺术。
+边界的作用是将软件划分为各种元素，以便约束边界两侧的依赖关系。在项目初期划分的边界可以方便我们将一些决策尽量延后进行，确保未来这些决策不会对系统额核心业务逻辑造成干扰。划分边界同时可以降低或消除架构中不必要耦合，系统中存在的耦合——尤其是那些过早做出的、不成熟的决策所导致的耦合（如采用的框架，数据库等元素，这些细节应该被推迟）是系统最消耗人力资源的部分。
+那么如何划分边界呢？可以遵循如下的基本原则：
+边界应该划分在那些无关的事情中间：如 GUI 与业务逻辑，这意味着输入输出（GUI）对于业务逻辑来说并不重要， …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Jul 29, 2024</span>
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="再读整洁架构之道（五）软件架构">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再读整洁架构之道（五）软件架构">再读整洁架构之道（五）软件架构</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p>是时候进入软件架构了。在之前已经介绍了模块/类、组件的相关内容，这一部分会重点介绍软件架构的基本定义。
+写在最前面 🌟软件架构师自身需要是程序员，并且必须一直坚持做一线程序员，如果不亲身承受因系统设计而带来的麻烦，就体会不到设计不佳所带来的痛苦，接着就会逐渐迷失正确的设计方向。
+什么是软件架构？ 软件架构工作的实质就是讨论规划如何将系统切分成组件，并安排好组件之间的排列关系与通信方式，即确定边界。
+软件架构设计的目的一般有两个：
+为了在工作中更好的对这些组件进行研发、部署、运行以及维护； 如果想设计一个便于推进各项工作的系统，其策略就是要在设计中尽可能长时间地保留尽可能多的可选项； 一个软件系 …</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start">Jul 28, 2024</span>
+                    <a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm">Read</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disqus_thread"></div>
+    <script>
+
+
+
+
+        (function () {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://tommycheese.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/" title="Tommy Cheese">
+                        <img alt="Footer logo" src="/%f0%9f%a7%80.png"
+                            height="40px" width="40px">
+                    </a>
+                </div>
+
+            &copy; 2026  All rights reserved
+            <div class="text-secondary">
+                Made with
+                <span class="text-danger">
+                    &#10084;
+                </span>
+                and hugo<br>Powered by github.io
+            </div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

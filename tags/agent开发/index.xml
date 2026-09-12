@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Agent开发 on Tommy Cheese</title>
+    <link>https://tommycheese.github.io/tags/agent%E5%BC%80%E5%8F%91/</link>
+    <description>记录 Agent 的扩展机制、工具开发与嵌入式集成实践。</description>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/tags/agent%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenCode v2 扩展机制研究与接入说明</title>
+      <link>https://tommycheese.github.io/blogs/opencode-v2-extensions/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/blogs/opencode-v2-extensions/</guid>
+      <category>Agent开发</category>
+      <description>Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。</description>
+    </item>
+  </channel>
+</rss>
