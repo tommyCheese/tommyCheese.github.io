@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" data-page-path="/blogs/再读整洁架构之道四/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="Rereading Clean Architecture (4): Component Principles">
+<meta property="og:description" content="From modules and classes to independently deployable components: a review of component cohesion and dependency principles.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2024-07-06T17:27:18+08:00">
+<meta property="article:modified_time" content="2024-07-06T17:27:18+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Rereading Clean Architecture (4): Component Principles">
+<meta name="twitter:description" content="From modules and classes to independently deployable components: a review of component cohesion and dependency principles.">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="From modules and classes to independently deployable components: a review of component cohesion and dependency principles.">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>Rereading Clean Architecture (4): Component Principles · Tommy Cheese</title>
+<meta property="og:locale" content="en_US"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><link rel="canonical" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/en/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="Language">🌐 English</summary><nav aria-label="Language"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" lang="en" hreflang="en" data-language="en" aria-current="true">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#about" aria-label="About" data-i18n-aria-label="nav.about" data-i18n="nav.about">About</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#experience" aria-label="Experience" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">Experience</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#contact" aria-label="Get in touch" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">Get in touch</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/blogs/" title="Blog" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="Blog">Blog</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/tags/" title="Tags" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="Tags">Tags</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/gallery/" title="Explore" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="Explore">Explore</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="Toggle light or dark theme">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.再读整洁架构之道四.title">Rereading Clean Architecture (4): Component Principles</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2024-07-06" data-date="2024-07-06">Jul 6, 2024</time>
+
+
+              <span id="readingTime"> · Reading time: 9 min</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/arh4.png" alt="Rereading Clean Architecture (4): Component Principles" data-i18n-alt="post.再读整洁架构之道四.title">
+          </div>
+
+          <article class="page-content  p-2"><h1 id="再读整洁架构之道四组件构建原则">Rereading Clean Architecture (Part 4): Component Design Principles</h1>
+<p>Part 3 discussed the design of modules and classes. This article goes a step further and explores component design.</p>
+<p>A component is a deployment unit: the smallest part of a software system that can be deployed independently. Components can also be developed independently. Component-based plugin architectures have become a familiar way to build software.</p>
+<h2 id="组件聚合">Component Cohesion</h2>
+<p>Component cohesion tells us which modules and classes should be grouped into components. Three main principles apply:</p>
+<ul>
+<li>Reuse/Release Equivalence Principle.</li>
+<li>Common Closure Principle.</li>
+<li>Common Reuse Principle.</li>
+</ul>
+<h3 id="复用发布等同原则rep">Reuse/Release Equivalence Principle (REP)</h3>
+<p>REP states that the unit of reuse should be the same as the unit of release.</p>
+<p>REP approaches the problem from the perspective of code reuse. Code sharing a common theme and function can be grouped into a component, and reuse should take place at that component boundary.</p>
+<p>Put simply, a packaged and released component may receive a version number or unique identifier. We reuse code by importing an existing library: the unit imported is the packaged component, and the version identifies that release.</p>
+<h3 id="共同闭包ccp">Common Closure Principle (CCP)</h3>
+<p>CCP states that classes changing together for the same reason should belong to the same component, while classes changing at different times for different reasons should belong to different components.</p>
+<p>CCP takes the perspective of maintenance. Grouping code that changes for the same reason reduces the effort required for release, verification, and deployment.</p>
+<p>As discussed earlier, CCP is the component-level version of SRP. Both can be summarized as follows:</p>
+<p><strong>Gather together things that change for the same reason and at the same time. Separate things that change for different reasons and at different times.</strong></p>
+<ul>
+<li>For SRP, “things” means functions and other elements that make up a class or module.</li>
+<li>For CCP, “things” means the classes and modules that make up a component.</li>
+</ul>
+<h3 id="共同复用crp">Common Reuse Principle (CRP)</h3>
+<p>CRP states that users of a component should not be forced to depend on things they do not need.</p>
+<p>CRP calls for code with different usage patterns and frequencies to be placed in separate components. It guides component boundaries and generalizes the Interface Segregation Principle (ISP).</p>
+<p>As a generalized form of interface segregation, CRP and ISP can both be summarized as:</p>
+<p><strong>Do not depend on things you do not need.</strong></p>
+<ul>
+<li>For ISP, “things” means functions or classes exposing unnecessary methods.</li>
+<li>At the component level, “things” means classes or modules containing unnecessary functions.</li>
+</ul>
+<h3 id="思考">Reflection</h3>
+<p>How do REP, CCP, and CRP relate to one another?</p>
+<p>They are actually in <strong>competition</strong>.</p>
+<p>REP and CCP are inclusive principles: they tell us which classes and modules belong together. CRP is exclusive: it tells us which classes and modules should not be grouped together.</p>
+<p><img src="/blogimages/image-20240706143525187.png" alt="image-20240706143525187"></p>
+<ul>
+<li>If an architect considers only REP and CCP, components will include many parts their users do not need, causing too many unnecessary releases.</li>
+<li>If an architect considers only CRP and CCP, reuse will become very difficult.</li>
+<li>If an architect considers only REP and CRP, changing some classes or modules will inevitably require changes in many related modules.</li>
+</ul>
+<p>The architect must balance these three principles. Component composition should evolve as the project’s priorities shift between development and reuse, so its direction must be assessed dynamically.</p>
+<h2 id="组件耦合">Component Coupling</h2>
+<p>Component coupling tells us how to arrange relationships between components. It includes three principles:</p>
+<ul>
+<li>Acyclic Dependencies Principle (ADP).</li>
+<li>Stable Dependencies Principle (SDP).</li>
+<li>Stable Abstractions Principle (SAP).</li>
+</ul>
+<h3 id="无依赖环原则adp">Acyclic Dependencies Principle (ADP)</h3>
+<p>ADP states that the component dependency graph must contain no cycles.</p>
+<p>Version management addresses “the morning-after syndrome,” but requires ADP. First, consider the author’s description of the syndrome:</p>
+<p>You spend an entire day getting some code to work, only to arrive the next morning and discover that it has mysteriously stopped working. Most likely, someone else changed a component your project depends on.</p>
+<p>There are generally two ways to address this:</p>
+<ul>
+<li>Weekly builds.</li>
+<li>Version management.</li>
+</ul>
+<p><strong><u>Weekly builds</u></strong>: everyone works in their own repository, then the project is built and integration conflicts are resolved at a fixed time each week, such as Friday.</p>
+<p>The limitations are clear:</p>
+<ul>
+<li>As the project grows, integration becomes increasingly difficult to complete on time.</li>
+<li>The whole project becomes harder to build and test, feedback cycles lengthen, and development quality declines.</li>
+</ul>
+<p>This is why version management is needed.</p>
+<p><strong><u>Version management</u></strong>: when a component releases a new version, each dependent team can decide whether to adopt it immediately.</p>
+<p>Version management <strong>does not permit cycles in the component dependency graph</strong>. It must follow ADP, or the morning-after syndrome becomes unavoidable. Why?</p>
+<p>A dependency cycle effectively combines all its components into one larger component. Their versions must remain coordinated for other components to depend on them successfully. Cycles also complicate testing: although mocking is common, repeatedly mocking components throughout a cycle is an awkward approach.</p>
+<p>How can circular dependencies be removed? There are two options:</p>
+<ul>
+<li>Introduce interfaces through dependency inversion.</li>
+<li>Create a new component.</li>
+</ul>
+<p>Using DIP to break a cycle is straightforward. The following example from work shows how a new component can achieve the same result.</p>
+<p>A team is designing a system with DDD. A Dog entity depends on Dog Repo to perform Save operations, so the Entity module depends on Repo. Unfortunately, Dog PO is also defined inside Entity, while Repo.Save needs that persistence object for conversion and storage. Entity and Repo now depend on one another. Go rejects mutually dependent packages and reports an import cycle. How should this be resolved?</p>
+<p>Create a separate PO module and move the PO out of Entity. Move the relevant PO-dependent functions from Repo into it as appropriate, removing the cycle. Dependency injection is another option. In Spring Boot, @AutoWired can address this kind of wiring problem; conceptually, a dependency container introduces another component through which the dependency cycle is resolved.</p>
+<p>There are many similar examples. Recall the library version conflicts that can occur when installing Python packages with Anaconda…</p>
+<p>As an aside, I initially assumed that component structure should map directly to system features: one component per feature, with the dependency graph mirroring the functional decomposition. That suggested the component dependency graph could be produced at the very beginning of system design.</p>
+<p>The author explicitly argues that top-down design of the complete component structure is impossible. The book explains:</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>The component graph must change and grow with the software system; it cannot be perfectly designed at the outset. Component dependencies do not map one-to-one to features. Instead, they form a map of the application’s buildability and maintainability.</p>
+<p>As more modules are designed and implemented, the need to manage their dependencies emerges. We want changes to affect as little of the project as possible, so SRP and CCP help group classes that frequently change together.</p>
+<p>One important purpose of a component graph is to guide the isolation of frequent changes. Components that change often should not disturb components intended to remain stable.</p>
+<p>As the application grows, reusable components also become more important, bringing CRP into the picture. Finally, when cycles appear, applying ADP causes the dependency structure to shift and expand.</p>
+</blockquote>
+<h3 id="稳定依赖原则sdp">Stable Dependencies Principle (SDP)</h3>
+<p>SDP states that dependencies must point toward greater stability. In general, the supporting foundations of an architecture should be more stable.</p>
+<p>A component expected to change frequently should not be depended on by a component that is difficult to change. Otherwise, the volatile component also becomes hard to change. This is a challenge in software development: a component carefully designed for easy modification can lose that flexibility because someone adds a dependency on it. Following SDP helps avoid this.</p>
+<p>Component stability can be assessed with a metric. The author defines the instability metric as:
+$$
+I=\frac{Fan-out}{Fan-in+Fan-out}
+$$
+Fan-in is the number of incoming dependencies and Fan-out the number of outgoing dependencies. Fewer outgoing dependencies imply greater stability: with zero outgoing dependencies, no dependency can force the component to change.</p>
+<p>SDP requires each component’s I metric to be greater than that of the components it depends on: the components it points to must be more stable.</p>
+<p>SDP does not require every component to be stable. The purpose of designing the component architecture is to decide which should be stable and which should be unstable. An architecture in which everything is stable lacks flexibility and therefore architectural value.</p>
+<h3 id="稳定抽象原则sap">Stable Abstractions Principle (SAP)</h3>
+<p>SAP states that a component’s level of abstraction should match its stability.</p>
+<p>High-level policies should reside in stable components, but this can make those policies difficult to change. Fortunately, OCP tells us that stable components can remain open to extension. Abstract classes provide a way to achieve stability while still allowing extension and modification.</p>
+<blockquote>
+<p>Abstract classes form a buffer between interfaces and concrete classes.</p>
+</blockquote>
+<p>SAP connects stability with abstraction. A stable component should also be abstract so that stability does not prevent extension. An unstable component should contain concrete implementation code so that its instability can be accommodated through easy changes. A component intended to be stable should therefore consist of interfaces and abstract classes that allow future extension.</p>
+<p>Like stability, abstractness can be measured with a metric:
+$$
+A=\frac{N_c}{N_a}
+$$
+Here, Nc denotes the number of classes in the component, and Na the number of abstract classes and interfaces. A ranges from 0 to 1: 0 means no abstract classes, while 1 means only abstract classes.</p>
+<h3 id="思考-1">Reflection 🤔</h3>
+<p>How are SDP and SAP related?</p>
+<p><strong>First, consider SDP and SAP in relation to DIP</strong></p>
+<p>In effect, SDP + SAP = component-level DIP. SDP requires dependencies to point toward greater stability, while SAP implies that stability requires abstraction. Dependencies should therefore point toward greater abstraction.</p>
+<p>How should this be understood?</p>
+<p>DIP preserves flexibility at the class level. SDP and SAP together preserve flexibility while providing component stability. Their architectural effect is the same: concrete implementations depend on abstract classes or interfaces. In this sense, SDP + SAP is component-level DIP.</p>
+<p>There is a difference, however. At the class level there is no middle ground: a class is either abstract or it is not. SDP and SAP operate at the component level, where partial abstraction and partial stability are possible.</p>
+<p><strong>Second, consider their shared goals</strong></p>
+<p>SDP directs dependencies toward stability. SAP places high-level policy in abstract components, helping separate policy from details and enabling plugin-based development. Their goals are aligned.</p>
+<blockquote>
+<p>Notice that <strong>plugin-based development</strong> appears again. Where did we encounter it before? In dependency inversion. This further illustrates why SAP + SDP resembles component-level DIP.</p>
+</blockquote>
+<h3 id="主序列">The Main Sequence</h3>
+<p>Plot component instability I against abstractness A. The line a = -i + 1 is called the main sequence.</p>
+<p><img src="/blogimages/image-20240706171725797.png" alt="image-20240706171725797"></p>
+<p>The diagram contains three regions:</p>
+<ul>
+<li>Zone of pain: near (0,0), components are highly stable and highly concrete, making them difficult to change. Database schemas are an example. Utility libraries also fall into this zone: although their I metric is 1 because they depend on many components and are therefore unstable, changing them can break large amounts of code.</li>
+<li>Zone of uselessness: near (1,1), components are highly abstract but have no dependents. Such abstractions often serve no practical purpose. Design problems in this region may reflect historical leftovers, such as old code that was never removed.</li>
+<li>Main sequence: components along this line balance the two measures. The ideal positions are its endpoints, (0,1) and (1,0). A good architect aims to move most components toward these positions.</li>
+</ul>
+<p>How can a component be evaluated overall? Calculate its distance from the main sequence to quantify how closely the design fits it. This distance is D: 0 means directly on the main sequence, while 1 means as far from it as possible.
+$$
+D=|A+I-1|
+$$
+The amount by which D exceeds zero can then guide component refactoring and redesign.</p>
+<p>D has further uses. For example, the mean and variance of D across all components provide statistical measures for evaluating a system design:</p>
+<ul>
+<li>In a well-designed system, both the mean and variance of D should be close to zero.</li>
+<li>Variance can help establish a threshold for identifying unusual components that deserve attention.</li>
+<li>Tracking the variance of D over time also shows how architectural stability and abstraction evolve.</li>
+</ul>
+<p>(End of Part 4)</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">Contents</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E7%BB%84%E4%BB%B6%E8%81%9A%E5%90%88">Component Cohesion</a>
+      <ul>
+        <li><a href="#%E5%A4%8D%E7%94%A8%E5%8F%91%E5%B8%83%E7%AD%89%E5%90%8C%E5%8E%9F%E5%88%99rep">Reuse/Release Equivalence Principle (REP)</a></li>
+        <li><a href="#%E5%85%B1%E5%90%8C%E9%97%AD%E5%8C%85ccp">Common Closure Principle (CCP)</a></li>
+        <li><a href="#%E5%85%B1%E5%90%8C%E5%A4%8D%E7%94%A8crp">Common Reuse Principle (CRP)</a></li>
+        <li><a href="#%E6%80%9D%E8%80%83">Reflection</a></li>
+      </ul>
+    </li>
+    <li><a href="#%E7%BB%84%E4%BB%B6%E8%80%A6%E5%90%88">Component Coupling</a>
+      <ul>
+        <li><a href="#%E6%97%A0%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%8E%9F%E5%88%99adp">Acyclic Dependencies Principle (ADP)</a></li>
+        <li><a href="#%E7%A8%B3%E5%AE%9A%E4%BE%9D%E8%B5%96%E5%8E%9F%E5%88%99sdp">Stable Dependencies Principle (SDP)</a></li>
+        <li><a href="#%E7%A8%B3%E5%AE%9A%E6%8A%BD%E8%B1%A1%E5%8E%9F%E5%88%99sap">Stable Abstractions Principle (SAP)</a></li>
+        <li><a href="#%E6%80%9D%E8%80%83-1">Reflection 🤔</a></li>
+        <li><a href="#%E4%B8%BB%E5%BA%8F%E5%88%97">The Main Sequence</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/en/tags/%E9%98%85%E8%AF%BB/" target="_blank"><span data-i18n="tag.阅读">Reading</span></a></li>
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/en/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/" target="_blank"><span data-i18n="tag.整洁架构之道">Clean Architecture</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">Share</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2F" aria-label="Share · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=Rereading+Clean+Architecture+%284%29%3A+Component+Principles&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2F" aria-label="Share · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=Rereading+Clean+Architecture+%284%29%3A+Component+Principles+https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2F" aria-label="Share · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=Rereading+Clean+Architecture+%284%29%3A+Component+Principles&amp;body=Rereading+Clean+Architecture+%284%29%3A+Component+Principles+https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E5%259B%259B%2F" aria-label="Share · Send email">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/"; this.language = "en"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view comments powered by Disqus.</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="Back to top">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">Recent posts</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="Rereading Clean Architecture (6): Boundaries" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (6): Boundaries" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">Rereading Clean Architecture (6): Boundaries</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">How architectural boundaries constrain dependencies, isolate business logic, and defer decisions about frameworks, databases, and other details.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">Jul 29, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="Rereading Clean Architecture (5): Software Architecture" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (5): Software Architecture" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">Rereading Clean Architecture (5): Software Architecture</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">Jul 28, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="An Introduction to Domain-Driven Design" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="An Introduction to Domain-Driven Design" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">An Introduction to Domain-Driven Design</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">An introduction to strategic and tactical design in DDD, including domains, subdomains, bounded contexts, and other core concepts.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">Jul 26, 2024</time></span>
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>Please enable JavaScript to view comments powered by Disqus.</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/en/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese site logo" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Made with care and Hugo<br>Powered by GitHub Pages</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

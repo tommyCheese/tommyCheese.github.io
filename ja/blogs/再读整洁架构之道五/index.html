@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ja" data-page-path="/blogs/再读整洁架构之道五/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ">
+<meta property="og:description" content="コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2024-07-28T19:23:23+08:00">
+<meta property="article:modified_time" content="2024-07-28T19:23:23+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ">
+<meta name="twitter:description" content="コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ · Tommy Cheese</title>
+<meta property="og:locale" content="ja_JP"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="canonical" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/ja/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="言語">🌐 日本語</summary><nav aria-label="言語"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="ja" hreflang="ja" data-language="ja" aria-current="true">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="ナビゲーションの開閉" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#about" aria-label="私について" data-i18n-aria-label="nav.about" data-i18n="nav.about">私について</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#experience" aria-label="経歴" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">経歴</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#contact" aria-label="お問い合わせ" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">お問い合わせ</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/blogs/" title="ブログ" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="ブログ">ブログ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/tags/" title="タグ" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="タグ">タグ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/gallery/" title="探索" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="探索">探索</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="ライト・ダークテーマを切り替え">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.再读整洁架构之道五.title">『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time>
+
+
+              <span id="readingTime"> · 読了目安：8 分</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/arh5.png" alt="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-alt="post.再读整洁架构之道五.title">
+          </div>
+
+          <article class="page-content  p-2"><p>いよいよソフトウェアアーキテクチャに進みます。これまではモジュール／クラスやコンポーネントを紹介しました。この回では、ソフトウェアアーキテクチャの基本的な定義を中心に説明します。</p>
+<h2 id="写在最前面">最初に伝えたいこと</h2>
+<p>🌟ソフトウェアアーキテクト自身がプログラマーであり、現場でコードを書き続ける必要があります。システム設計がもたらす問題を自分で引き受けなければ、設計の悪さによる苦痛を実感できず、やがて正しい設計の方向を見失うからです。</p>
+<h2 id="什么是软件架构">ソフトウェアアーキテクチャとは何か</h2>
+<p>ソフトウェアアーキテクチャの仕事の本質は、システムをどのようにコンポーネントへ分割し、その配置関係や通信方法をどうするかを検討、計画することです。つまり、境界を決めることです。</p>
+<p>ソフトウェアアーキテクチャを設計する目的は、一般に二つあります：</p>
+<ul>
+<li>コンポーネントの開発、デプロイ、実行、保守を、日々の仕事の中でより円滑に行えるようにすること。</li>
+<li>さまざまな作業を進めやすいシステムを設計するために、設計の中でできるだけ長い間、<strong>できるだけ多くの選択肢を残すこと</strong>。</li>
+</ul>
+<blockquote>
+<p>ソフトウェアシステムのアーキテクチャの品質と、システムが正常に動くかどうかという振る舞いには、それほど強い関係はありません。設計はひどくても正常に動くシステムは、世の中にたくさんあります。本当の問題は、開発、デプロイ、その後の追加開発で現れがちです。これも、アーキテクチャの価値はある程度、振る舞いの価値より大きいという著者の考えを示しています。</p>
+</blockquote>
+<p>ソフトウェアアーキテクチャ設計の目標は、次のとおりです：</p>
+<ul>
+<li>中核的な目標：良いアーキテクチャはユースケースを中心に設計されるべきです。ユースケースに集中し、他の周辺要素から隔離します。そのためには選択をできる限り先送りし、選択肢を多く残します。</li>
+<li>主な目標：ソフトウェアシステムのライフサイクル全体を支えることです。適切なアーキテクチャは、システムを理解しやすく、変更しやすく、保守しやすくし、簡単にデプロイできるようにします。</li>
+<li>究極の目標：プログラマーの生産性を最大化し、その力を解放すると同時に、システムの<strong>総</strong>運用コストを最小化することです。</li>
+</ul>
+<p>アーキテクチャ設計で重視するのは、<strong>方針</strong>を互いに分離し、変更のされ方に応じて再びグループ化すること、つまり境界を引くことです。この際の指針には、SRP、CCP、CSP、SDP、SAPなどがあります。</p>
+<h2 id="软件架构的职责">ソフトウェアアーキテクチャの責務</h2>
+<p>ソフトウェアアーキテクチャは、開発、デプロイ、実行、保守という複数の側面で責務を持ちます。</p>
+<p>開発の面では、アーキテクチャはソフトウェアシステムを開発しやすくする必要があります。そのため、チームが異なれば採用するアーキテクチャ設計も異なります。これは、ある意味でコンウェイの法則を表しています。</p>
+<blockquote>
+<p>コンウェイの法則は、なぜアーキテクチャにチーム構造が反映されることを説明できるのでしょうか。詳しくは動画をご覧ください：<a href="https://www.bilibili.com/video/BV1bb421E7i6/?spm_id_from=333.337.search-card.all.click&amp;vd_source=8c0f6bcaf6b2e92f574553f45e565994">コンウェイの法則：なぜアーキテクチャにはチーム構造が反映されるのか？—bilibili</a></p>
+</blockquote>
+<p>デプロイの面では、ワンクリックで簡単にソフトウェアをデプロイできるようにする必要があります。</p>
+<p>実行の面では、</p>
+<ul>
+<li>前述のとおり、効率的な実行に対するアーキテクチャの影響は、他の側面より小さいとされています。著者はその主な理由を、実行面での配慮不足はハードウェアの追加で補える一方、アーキテクチャ設計には通常それより高価な人的資源が必要だからだと考えています。</li>
+<li>効率的な実行に寄与するだけでなく、アーキテクチャはシステムの実行時の要件も表すべきです。適切に設計されたアーキテクチャなら、開発者はシステムの動作を一目で理解できます。アーキテクチャは実行過程を明らかにし、ユースケース、機能、必須の振る舞いを、開発者に見える第一級の要素として扱うことで、システムを理解しやすくするべきです。「叫ぶアーキテクチャ」の章は、この点を重点的に説明しています。</li>
+</ul>
+<p>保守の面では、ソフトウェアシステムの保守コストは通常最も高くなります。そのコストは、<strong>探索</strong>と<strong>リスク</strong>の二つに分けられます：</p>
+<ul>
+<li>探索：探索（spelunking）のコストは、既存のソフトウェアシステムを調べ、新機能の追加や問題の修正を行う最適な場所と方法を見つける作業から生じます。</li>
+<li>リスク：リスク（risk）は、これらの変更によって新しい問題を生む可能性を指します。その可能性がリスクのコストです。</li>
+</ul>
+<h2 id="保持可选项">選択肢を残す</h2>
+<p>以前紹介した、ソフトウェアの「振る舞いの価値」と「アーキテクチャの価値」を思い出してください。アーキテクチャの価値を高めるにはソフトウェアをより柔軟にし、そのためにはアーキテクチャにできるだけ多くの選択肢を残します。</p>
+<p>ソフトウェアシステムの要素は、<strong>方針</strong>と<strong>詳細</strong>に分けられます。方針は、ソフトウェア内のすべての業務ルールと処理手順を表し、システムの本当の価値を担います。詳細は、利用者、他のシステム、プログラマーが方針とやり取りするために必要ですが、方針そのものには影響しない振る舞いを指します。IOデバイスやデータベースなどが例です。こうした詳細については、できるだけ選択肢を残すべきです。</p>
+<p>ソフトウェアアーキテクトの目標は、方針を<strong>最も基本的な要素</strong>とし、詳細を方針から切り離したシステムの形を作ることです。これにより、具体的な意思決定で<strong>詳細に関する決定を先送りできます</strong>。プロジェクトの後半になるほど、妥当な判断のための情報が増えるからです。優れたアーキテクトは、選択肢の数を最大化することに力を注ぐべきです。</p>
+<p>著者は、詳細の決定を先送りする重要性をデバイス独立性の例で説明しています。現代のOSには多種多様な入出力デバイスがありますが、コンピューターの初期には、穿孔紙テープが主流で、ほぼ唯一の入出力手段でした。プログラマーは自然に、紙テープを読み書きするコードをシステムコードへ結合させていました。磁気テープが登場すると、その入出力に対応する新しいコードが必要になり、光ディスクが登場するとまた同じことが起きました。この重複開発と適応性の低さに対応するため、デバイス独立性という考え方が生まれました。デバイスを関数として抽象化し、OSは関数を通じて入出力デバイスとやり取りし、開発者はその具体的な実装だけを提供します。こうして入出力はOSのプラグインになりました。これは、オープン・クローズドの原則の原型でもあります。「追加を歓迎👏し、変更に抗う🥊！」ということです。</p>
+<h2 id="保持独立性">独立性を保つ</h2>
+<p>良いソフトウェアアーキテクチャには、十分な独立性が必要です。</p>
+<p>結合を解くことで、アーキテクチャの独立性を確保できます。</p>
+<p>分離には、水平方向と垂直方向があります。</p>
+<ul>
+<li>水平方向の分離（レイヤーごとの分離）：システムをUI、データベースなど、複数の水平レイヤーに分けます。</li>
+<li>ユースケースの分離（垂直方向の分離）：水平レイヤーを分離すると同時に、ユースケースごとに垂直方向にも分割します。たとえば、注文を追加するユースケースのUIと、注文を削除するユースケースのUIを分けます。</li>
+</ul>
+<p>変更理由の違いに応じてシステムを分離すれば、既存のユースケースに影響を与えずに、新しいユースケースを追加し続けられます。</p>
+<p>分離を行うレベルも選べます。ソースコード、デプロイ、サービスという三つのレベルがあります。</p>
+<ul>
+<li>ソースコードレベル：モジュール間のソースコードの依存関係を制御し、コンポーネントは関数呼び出しでやり取りします。この形をモノリシック構造と呼びます。</li>
+<li>デプロイレベル：Jarファイルなどのデプロイ単位間の依存関係を制御します。コンポーネントは、スレッド間通信（ネットワーク越しではない点に注意）、Socket通信、共有メモリによる通信などを使います。</li>
+<li>サービスレベル：コンポーネント間の依存をデータ構造のレベルまで減らし、ネットワークパケットで通信します。マイクロサービスがrpcやrestでやり取りする形などが例です。</li>
+</ul>
+<p>どの分離レベルが優れているかを決める厳密な基準はありません。プロジェクトの成熟に伴って、最適な方式は変わり得るからです。適切に設計されたアーキテクチャなら、一つのファイルとしてデプロイするモノリシック構造から始め、独立した複数のデプロイ単位、さらには独立したサービスやマイクロサービスへ成長できます。そして状況が変われば、再びモノリシック構造へ段階的に戻せます。この過程でも、システムのソースコードの大部分は変更の影響から守られるべきです。システム全体にとって、<strong>分離の方式も選択肢の一つであるべきです</strong>。大規模なデプロイではある方式を使い、小規模なデプロイでは別の方式を使えます。</p>
+<p>分離について理解したので、システムの独立性にどのような影響を与えるかを見てみましょう。</p>
+<h3 id="解耦对系统运行独立性的意义">実行の独立性に対する分離の意義</h3>
+<p>異なる側面のユースケースが適切に分離されていれば、高スループットが必要なユースケースと低スループットでよいユースケースは自然に分かれます。UIやデータベースを業務ロジックから分離できれば、それぞれを別のサーバーで動かせます。大きな帯域を必要とするアプリケーションは、複数のサーバーで複数のインスタンスを動かせます。</p>
+<h3 id="解耦对系统开发独立性的意义">開発の独立性に対する分離の意義</h3>
+<p>システムが水平レイヤーとユースケースに従って適切に分離されていれば、アーキテクチャは複数チームでの開発を支えられます。チームの分担が機能単位、コンポーネント単位、レイヤー単位、あるいは別の軸であっても対応できます。</p>
+<h3 id="解耦对系统部署独立性的意义">デプロイの独立性に対する分離の意義</h3>
+<p>適切に分離できていれば、システムの実行中に各レイヤーの実装やユースケースをホットスワップできます。この場合、新しいユースケースを追加するには、新しいjarファイルを置くか、いくつかのサービスを起動するだけで済み、それ以外の部分は一切影響を受けません。</p>
+<h2 id="什么是代码重复">コードの重複とは何か</h2>
+<p>コードの重複には二種類あります：</p>
+<ul>
+<li>本当の重複：コードから取り除くべき部分です。</li>
+<li>見かけ上の重複：同じように見えても、実際には異なる進化の道筋を持ち、変更の頻度や境界も異なるコードです。CRPは、利用頻度が異なるコードを別のコンポーネントへ分けるよう求めます。この点を考慮せずに読むと、見かけ上の重複を本当の重複と誤認しかねません。このような「重複」は必要な場合があります。給与計算の例を覚えていますか。</li>
+</ul>
+<p>（第五回・完）</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">目次</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2">最初に伝えたいこと</a></li>
+    <li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">ソフトウェアアーキテクチャとは何か</a></li>
+    <li><a href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E7%9A%84%E8%81%8C%E8%B4%A3">ソフトウェアアーキテクチャの責務</a></li>
+    <li><a href="#%E4%BF%9D%E6%8C%81%E5%8F%AF%E9%80%89%E9%A1%B9">選択肢を残す</a></li>
+    <li><a href="#%E4%BF%9D%E6%8C%81%E7%8B%AC%E7%AB%8B%E6%80%A7">独立性を保つ</a>
+      <ul>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">実行の独立性に対する分離の意義</a></li>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">開発の独立性に対する分離の意義</a></li>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">デプロイの独立性に対する分離の意義</a></li>
+      </ul>
+    </li>
+    <li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BB%A3%E7%A0%81%E9%87%8D%E5%A4%8D">コードの重複とは何か</a></li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">タグ</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/ja/tags/%E9%98%85%E8%AF%BB/" target="_blank"><span data-i18n="tag.阅读">読書</span></a></li>
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/ja/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/" target="_blank"><span data-i18n="tag.整洁架构之道">クリーンアーキテクチャ</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">共有</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="共有 · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=%E3%80%8E%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3%E3%80%8F%E5%86%8D%E8%AA%AD%EF%BC%885%EF%BC%89%EF%BC%9A%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="共有 · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=%E3%80%8E%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3%E3%80%8F%E5%86%8D%E8%AA%AD%EF%BC%885%EF%BC%89%EF%BC%9A%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3+https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="共有 · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=%E3%80%8E%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3%E3%80%8F%E5%86%8D%E8%AA%AD%EF%BC%885%EF%BC%89%EF%BC%9A%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3&amp;body=%E3%80%8E%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3%E3%80%8F%E5%86%8D%E8%AA%AD%EF%BC%885%EF%BC%89%EF%BC%9A%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3+https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="共有 · メールを送信">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"; this.language = "ja"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Disqus のコメントを表示するには JavaScript を有効にしてください。</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="ページ上部へ">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最近の記事</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">『クリーンアーキテクチャ』再読（6）：境界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">アーキテクチャの境界によって依存関係を制約し、ビジネスロジックを分離し、フレームワークやデータベースなどの詳細の決定を遅らせる方法を考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="ドメイン駆動設計入門" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="ドメイン駆動設計入門" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">ドメイン駆動設計入門</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">DDD の戦略的設計と戦術的設計、ドメイン、サブドメイン、境界づけられたコンテキストなどの基本概念を紹介します。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">2024年7月26日</time></span>
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>Disqus のコメントを表示するには JavaScript を有効にしてください。</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/ja/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese サイトロゴ" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Hugo で心を込めて制作<br>GitHub Pages で公開</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

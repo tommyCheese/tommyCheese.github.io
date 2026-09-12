@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru" data-page-path="/blogs/h/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="За пределами градиента: матрица Гессе">
+<meta property="og:description" content="От градиентов и матрицы Якоби к матрице Гессе и её роли в понимании градиентного спуска.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/ru/blogs/h/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2023-09-01T22:53:58+05:30">
+<meta property="article:modified_time" content="2023-09-01T22:53:58+05:30"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="За пределами градиента: матрица Гессе">
+<meta name="twitter:description" content="От градиентов и матрицы Якоби к матрице Гессе и её роли в понимании градиентного спуска.">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="От градиентов и матрицы Якоби к матрице Гессе и её роли в понимании градиентного спуска.">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>За пределами градиента: матрица Гессе · Tommy Cheese</title>
+<meta property="og:locale" content="ru_RU"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/h/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/h/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/h/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/h/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/h/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/h/"><link rel="canonical" href="https://tommycheese.github.io/ru/blogs/h/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/ru/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="Поиск статей (Ctrl + K)" aria-label="Поиск статей" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="Язык">🌐 Русский</summary><nav aria-label="Язык"><a href="/blogs/h/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/h/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/h/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/h/" lang="ru" hreflang="ru" data-language="ru" aria-current="true">Русский</a><a href="/zh-TW/blogs/h/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Открыть или закрыть меню" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Поиск статей (Ctrl + K)" aria-label="Поиск статей" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#about" aria-label="Обо мне" data-i18n-aria-label="nav.about" data-i18n="nav.about">Обо мне</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#experience" aria-label="Опыт" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">Опыт</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/#contact" aria-label="Связаться" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">Связаться</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/blogs/" title="Блог" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="Блог">Блог</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/tags/" title="Теги" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="Теги">Теги</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ru/gallery/" title="Обзор" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="Обзор">Обзор</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="Переключить светлую или тёмную тему">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.h.title">За пределами градиента: матрица Гессе</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2023-09-01" data-date="2023-09-01">1 сент. 2023 г.</time>
+
+
+              <span id="readingTime"> · Время чтения: 3 мин</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/hessen.png" alt="За пределами градиента: матрица Гессе" data-i18n-alt="post.h.title">
+          </div>
+
+          <article class="page-content  p-2"><p>В этой статье рассматривается мощный математический инструмент для изучения градиентного спуска — матрица Гессе. Прежде чем переходить к ней, необходимо познакомиться с основными понятиями градиента и матрицы Якоби.</p>
+<blockquote>
+<p>⭐ Предполагается, что читатель уже знаком с градиентным спуском и основами численного анализа и линейной алгебры.
+<a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/">Ссылка на оригинал</a></p>
+</blockquote>
+<h2 id="梯度雅克比矩阵">Градиент и матрица Якоби</h2>
+<p>Алгоритму градиентного спуска нужна информация о производной функции в текущей точке. Если направлений несколько, градиент представляет собой вектор (частных) производных по всем направлениям.</p>
+<p>Это относится к случаю <strong>одного выходного значения</strong>. Если же результат функции тоже является вектором, необходимо градиенты каждого элемента выходного вектора по нескольким входам <strong>собрать вместе</strong>. Полученная матрица называется <strong>матрицей Якоби (Jacobian Matrix)</strong>.</p>
+<p>Рассмотрим примеры:</p>
+<ul>
+<li>Если функция $f$ принимает три входа $x1、x2、x3$ и выдаёт один результат $y$, её градиент имеет вид:</li>
+</ul>
+<p>$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$</p>
+<ul>
+<li>Если функция $f2$ принимает три входа $x1、x2、x3$ и выдаёт три результата $y1、y2、y3$, её матрица Якоби имеет вид:</li>
+</ul>
+<p>$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;  \frac{\partial y_1}{\partial x_2}&amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;  \frac{\partial y_2}{\partial x_2}&amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;  \frac{\partial y_3}{\partial x_2}&amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$</p>
+<p>Вторая производная даёт информацию о выпуклости или вогнутости функции в заданном направлении $d$. Это позволяет в определённой мере предвидеть поведение градиентного спуска. В направлении $d$:</p>
+<ul>
+<li>
+<p>Если вторая производная положительна, первая производная в направлении $d$ растёт, а значение функции убывает медленнее.</p>
+</li>
+<li>
+<p>Если вторая производная отрицательна, первая производная в направлении $d$ уменьшается, а значение функции убывает быстрее.</p>
+</li>
+<li>
+<p>Если вторая производная равна нулю, первая производная в направлении $d$ не меняется, и значение функции убывает с постоянной скоростью.</p>
+<blockquote>
+<p>⭐ В градиентном спуске уменьшают функцию потерь, поэтому изменение производной анализируют на убывающем <strong>небольшом участке</strong> функции. Для приближения часто используют убывающую часть квадратичной функции: разложение Тейлора второго порядка или метод Ньютона.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="海森矩阵">Матрица Гессе</h2>
+<p>Аналогично матрице Якоби, <strong>матрица Гессе (Hessian)<strong> содержит информацию о вторых производных функции:
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+Поскольку порядок вычисления смешанных вторых производных можно менять, то есть $\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$, </strong>матрица Гессе симметрична</strong>. Для симметричной матрицы можно использовать <strong>спектральное разложение</strong>, чтобы исследовать связь собственных значений со вторыми производными и быстро получать вторую производную в выбранном направлении.</p>
+<p>Для заданного направления d вторая производная записывается как $d^THd$. Тогда:</p>
+<blockquote>
+<p>🔗 <a href="https://blog.csdn.net/weixin_42397505/article/details/112066943">Вторые производные по направлению и свойства матрицы Гессе — статья в блоге CSDN</a></p>
+</blockquote>
+<ul>
+<li>
+<p>Если d — собственный вектор H, соответствующий собственному значению λ:</p>
+<p>Поскольку d является собственным вектором, соответствующим λ (далее — собственным вектором), по определению:
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$</p>
+<p>Следовательно, собственное значение λ, соответствующее собственному вектору, является второй производной в этом направлении.</p>
+</li>
+<li>
+<p>Если d имеет другое направление, пусть $e_i$ — собственный вектор $H$, соответствующий собственному значению $\lambda_i$. Из предыдущего следует:
+$$
+\lambda_i=e_i^THe_i
+$$
+Любое направление $d=\sum_i^mt_ie_i$ представляет собой линейную комбинацию собственных векторов, где m — число собственных значений, а $t_i$ — вес $i$-го собственного вектора. Тогда:
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+Таким образом, вторая производная в направлении, не совпадающем с собственным вектором, является взвешенной суммой всех собственных значений. В частности, эта взвешенная сумма образует эллипсоид. В двумерном случае собственных значений вторая производная задаёт эллипс с уравнением:
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+<img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="Иллюстрация"></p>
+<p>Из рисунка видно, что наибольшую вторую производную определяет максимальное собственное значение (большая полуось), а наименьшую — минимальное собственное значение (малая полуось).</p>
+</li>
+</ul>
+<h2 id="海森矩阵应用">Применение матрицы Гессе</h2>
+<p>Разобравшись с определением, можно применять свойства матрицы Гессе для анализа задач оптимизации: определять локальные максимумы, минимумы и седловые точки, выбирать скорость обучения и оценивать поведение градиентного спуска при плохой обусловленности. Матрица Гессе также позволяет реализовать <strong>метод Ньютона</strong> — ещё один алгоритм оптимизации.</p>
+<p>(Конец раздела)</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">Содержание</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E6%A2%AF%E5%BA%A6%E9%9B%85%E5%85%8B%E6%AF%94%E7%9F%A9%E9%98%B5">Градиент и матрица Якоби</a></li>
+    <li><a href="#%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5">Матрица Гессе</a></li>
+    <li><a href="#%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5%E5%BA%94%E7%94%A8">Применение матрицы Гессе</a></li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">Теги</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/ru/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/" target="_blank"><span data-i18n="tag.数值微分">Численное дифференцирование</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">Поделиться</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fru%2Fblogs%2Fh%2F" aria-label="Поделиться · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=%D0%97%D0%B0+%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8+%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%3A+%D0%BC%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0+%D0%93%D0%B5%D1%81%D1%81%D0%B5&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fru%2Fblogs%2Fh%2F" aria-label="Поделиться · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=%D0%97%D0%B0+%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8+%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%3A+%D0%BC%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0+%D0%93%D0%B5%D1%81%D1%81%D0%B5+https%3A%2F%2Ftommycheese.github.io%2Fru%2Fblogs%2Fh%2F" aria-label="Поделиться · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=%D0%97%D0%B0+%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8+%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%3A+%D0%BC%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0+%D0%93%D0%B5%D1%81%D1%81%D0%B5&amp;body=%D0%97%D0%B0+%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8+%D0%B3%D1%80%D0%B0%D0%B4%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%3A+%D0%BC%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0+%D0%93%D0%B5%D1%81%D1%81%D0%B5+https%3A%2F%2Ftommycheese.github.io%2Fru%2Fblogs%2Fh%2F" aria-label="Поделиться · Написать письмо">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/h/"; this.language = "ru"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Включите JavaScript, чтобы просматривать комментарии Disqus.</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="Наверх">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">Последние статьи</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="Перечитывая «Чистую архитектуру» (6): границы" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Перечитывая «Чистую архитектуру» (6): границы" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">Перечитывая «Чистую архитектуру» (6): границы</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">Как архитектурные границы ограничивают зависимости, изолируют бизнес-логику и позволяют отложить выбор фреймворков, баз данных и других деталей.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">29 июл. 2024 г.</time></span>
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="Перечитывая «Чистую архитектуру» (5): архитектура ПО" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Перечитывая «Чистую архитектуру» (5): архитектура ПО" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">Перечитывая «Чистую архитектуру» (5): архитектура ПО</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">О разделении системы на компоненты и их взаимодействии: как архитектура поддерживает разработку, развёртывание, эксплуатацию и сопровождение, сохраняя варианты проектирования.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">28 июл. 2024 г.</time></span>
+                    <a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ru/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="Введение в предметно-ориентированное проектирование" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ru/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Введение в предметно-ориентированное проектирование" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">Введение в предметно-ориентированное проектирование</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">Введение в стратегическое и тактическое проектирование DDD: предметные области, подобласти, ограниченные контексты и другие базовые понятия.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">26 июл. 2024 г.</time></span>
+                    <a href="/ru/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Читать</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>Включите JavaScript, чтобы просматривать комментарии Disqus.</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/ru/" title="Tommy Cheese">
+                        <img alt="Логотип сайта Tommy Cheese" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 Все права защищены</span><div class="text-secondary">Создано с заботой на Hugo<br>Работает на GitHub Pages</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+.language-switch {
+  position: relative;
+  margin: 0 .5rem;
+  color: var(--text-color);
+  font-size: .9rem;
+}
+.language-switch summary {
+  cursor: pointer;
+  padding: .55rem .7rem;
+  border: 1px solid var(--text-secondary-color);
+  border-radius: .6rem;
+  list-style: none;
+  white-space: nowrap;
+}
+.language-switch summary::-webkit-details-marker { display: none; }
+.language-switch summary:focus-visible,
+.language-switch a:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
+.language-switch nav {
+  position: absolute;
+  right: 0;
+  top: calc(100% + .4rem);
+  min-width: 10rem;
+  padding: .4rem;
+  background: var(--secondary-color);
+  border: 1px solid var(--text-secondary-color);
+  border-radius: .6rem;
+  box-shadow: 0 8px 24px #0002;
+  z-index: 1000;
+}
+.language-switch a { display: block; padding: .5rem .7rem; color: var(--text-color); text-decoration: none; border-radius: .35rem; }
+.language-switch a:hover, .language-switch a[aria-current="true"] { background: var(--background-color); }
+.navbar-brand { flex-shrink: 0; }
+.navbar > .container-fluid { gap: .4rem; }
+html[lang="ja"] body, html[lang="zh-CN"] body, html[lang="zh-TW"] body { line-break: strict; }
+#single .page-content { overflow-wrap: anywhere; }
+#single .page-content pre { overflow: auto; }
+#single .page-content pre code { overflow-wrap: normal; }
+@media (max-width: 1199.98px) {
+  #profileHeader .navbar-collapse { flex-basis: 100%; }
+}
+@media (max-width: 575.98px) {
+  .language-switch { margin-left: auto; margin-right: 0; }
+  .language-switch summary { padding: .45rem .5rem; font-size: .8rem; }
+}

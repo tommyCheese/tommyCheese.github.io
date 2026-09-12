@@ -1,0 +1,73 @@
+
+          <p>It is time to turn to software architecture. Having covered modules, classes, and components, this article focuses on the basic definition of architecture.</p>
+<h2 id="写在最前面">Before We Begin</h2>
+<p>🌟 A software architect must be a programmer and must continue doing hands-on development. Without personally experiencing the difficulties caused by a system’s design, architects lose touch with the pain of poor design and gradually lose their sense of direction.</p>
+<h2 id="什么是软件架构">What Is Software Architecture?</h2>
+<p>Architectural work is fundamentally about deciding how to divide a system into components and arrange their relationships and communication—in other words, defining boundaries.</p>
+<p>Architectural design generally has two purposes:</p>
+<ul>
+<li>To make components easier to develop, deploy, run, and maintain.</li>
+<li>To make all this work easier by <strong>keeping as many options open as possible for as long as possible</strong>;</li>
+</ul>
+<blockquote>
+<p>The quality of a system’s architecture is not closely related to whether its behavior works correctly. Many systems with poor architecture work perfectly well. The trouble usually appears during development, deployment, and subsequent enhancements. This supports the author’s view that architectural value can outweigh behavioral value.</p>
+</blockquote>
+<p>The goals of architectural design are:</p>
+<ul>
+<li>Core goal: organize architecture around use cases, isolating them from surrounding concerns by postponing decisions and preserving options.</li>
+<li>Primary goal: support the full software lifecycle. Good architecture makes a system understandable, changeable, maintainable, and easy to deploy.</li>
+<li>Ultimate goal: maximize programmer productivity while minimizing the system’s <strong>total</strong> operating cost.</li>
+</ul>
+<p>Architectural design focuses on separating <strong>policies</strong> and regrouping them according to how they change, thereby establishing boundaries. Applicable principles include SRP, CCP, CSP, SDP, SAP, and others.</p>
+<h2 id="软件架构的职责">The Responsibilities of Architecture</h2>
+<p>Architecture supports development, deployment, operation, and maintenance.</p>
+<p>Development: architecture should facilitate software development, so different teams may need different architectural designs. This reflects Conway’s law to some extent.</p>
+<blockquote>
+<p>Why does Conway’s law imply that architecture reflects a team’s structure? This video explains:<a href="https://www.bilibili.com/video/BV1bb421E7i6/?spm_id_from=333.337.search-card.all.click&amp;vd_source=8c0f6bcaf6b2e92f574553f45e565994">Conway’s Law: Why Does Your Architecture Reflect Your Team Structure? — Bilibili</a></p>
+</blockquote>
+<p>Deployment: architecture should make deployment easy, ideally with one click.</p>
+<p>Operation:</p>
+<ul>
+<li>As mentioned earlier, architecture has less influence on runtime efficiency than on the other concerns. The author attributes this largely to the fact that additional hardware can compensate for operational shortcomings, while architectural design requires more expensive human effort.</li>
+<li>Beyond efficiency, architecture should reveal the system’s runtime requirements. A well-designed architecture makes operation apparent to developers. Use cases, features, and required behaviors should be visible as first-class elements, simplifying understanding. The chapter “Screaming Architecture” explores this idea in detail.</li>
+</ul>
+<p>Maintenance: maintenance is usually the most expensive part of a system’s lifecycle. Its costs fall into two categories: <strong>spelunking</strong> and <strong>risk</strong>.</p>
+<ul>
+<li>Spelunking: the effort of exploring an existing system to find the best location and method for adding a feature or fixing a problem.</li>
+<li>Risk: the possibility that those changes introduce new problems, along with the cost of managing that possibility.</li>
+</ul>
+<h2 id="保持可选项">Keeping Options Open</h2>
+<p>Recall the two kinds of value: behavioral and architectural. Increasing architectural value means making software more flexible, and flexibility comes from keeping more architectural options open.</p>
+<p>The elements of a software system fall into two categories: <strong>policy</strong> and <strong>details</strong>. Policy contains the business rules and procedures that provide the system’s real value. Details enable users, other systems, and programmers to interact with policy without defining it. I/O devices and databases are examples. Choices about these details should remain open for as long as possible.</p>
+<p>The architect’s goal is to create a system in which policy is the <strong>fundamental element</strong> and details are separated from it, allowing decisions about details to be <strong>deferred</strong>. The later a decision is made, the more information is available to make it well. A good architect works to maximize the number of options that remain open.</p>
+<p>The author uses device independence to illustrate the value of deferring details. Modern operating systems support many I/O devices, but early computers relied largely on punched paper tape. Programmers naturally coupled tape-reading and tape-writing code to the system. Magnetic tape required new code, then optical discs required more. To avoid repeated implementation and poor adaptability, developers introduced device independence: devices were abstracted behind functions that the operating system called, and developers supplied the concrete implementations. I/O became a plugin to the operating system. This was an early form of OCP: welcome additions 👏 and resist modifications 🥊.</p>
+<h2 id="保持独立性">Preserving Independence</h2>
+<p>Good architecture provides sufficient independence.</p>
+<p>Decoupling helps preserve that independence.</p>
+<p>Decoupling can be horizontal or vertical.</p>
+<ul>
+<li>Horizontal decoupling, or decoupling by layer: divide a system into layers such as the UI and database.</li>
+<li>Vertical decoupling, or decoupling by use case: also divide the layers into vertical slices by use case. For example, separate the UI for adding an order from the UI for deleting an order.</li>
+</ul>
+<p>Decoupling according to reasons for change allows new use cases to be added without affecting existing ones.</p>
+<p>Decoupling can also happen at different levels: source code, deployment, or services.</p>
+<ul>
+<li>Source-code level: control dependencies between source modules. Components interact through function calls. This is a monolithic structure.</li>
+<li>Deployment level: control dependencies between deployment units such as JAR files. Components may communicate across threads—not necessarily networks—through sockets or shared memory.</li>
+<li>Service level: reduce intercomponent dependencies to data structures and communicate through network packets, as microservices do with RPC or REST.</li>
+</ul>
+<p>No strict rule makes one level of decoupling universally better. The best choice may change as a project matures. A well-designed architecture should allow a system to begin as a monolith deployed in one file, grow into independently deployable units or services, and return to a monolith if circumstances change. It should also protect most source code from these transitions. For the system as a whole, <strong>decoupling mode should itself remain an option</strong>. Large deployments may use one mode and small deployments another.</p>
+<p>With decoupling established, let us consider its effects on independence.</p>
+<h3 id="解耦对系统运行独立性的意义">Operational Independence</h3>
+<p>If use cases with different concerns are properly isolated, high-throughput and low-throughput use cases naturally separate. Separating the UI and database from business logic allows them to run on different servers. Applications requiring greater bandwidth can also run multiple instances across servers.</p>
+<h3 id="解耦对系统开发独立性的意义">Development Independence</h3>
+<p>When a system is properly decoupled by layers and use cases, its architecture supports multiple teams regardless of whether they are organized by features, components, layers, or another division of work.</p>
+<h3 id="解耦对系统部署独立性的意义">Deployment Independence</h3>
+<p>With effective decoupling, layer implementations and use cases can even be hot-swapped while a system runs. Adding a use case may require only adding new JAR files or starting new services, leaving everything else unaffected.</p>
+<h2 id="什么是代码重复">What Is Code Duplication?</h2>
+<p>There are two kinds of duplication:</p>
+<ul>
+<li>True duplication: repetition that should be eliminated.</li>
+<li>False duplication: code that looks similar but follows different evolutionary paths, with different rates and reasons for change. CRP calls for code with different usage patterns to live in different components. Ignoring this can make false duplication look like code that should be merged. Some apparent duplication is necessary—remember the salary-calculation example?</li>
+</ul>
+<p>(End of Part 5)</p>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-page-path="/blogs/再读整洁架构之道一/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="再讀整潔架構之道（一）">
+<meta property="og:description" content="結合專案實踐重新閱讀《架構整潔之道》，以讀書筆記的形式整理軟體架構的思考。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2024-07-03T23:10:20+08:00">
+<meta property="article:modified_time" content="2024-07-03T23:10:20+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="再讀整潔架構之道（一）">
+<meta name="twitter:description" content="結合專案實踐重新閱讀《架構整潔之道》，以讀書筆記的形式整理軟體架構的思考。">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="結合專案實踐重新閱讀《架構整潔之道》，以讀書筆記的形式整理軟體架構的思考。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>再讀整潔架構之道（一） · Tommy Cheese</title>
+<meta property="og:locale" content="zh_TW"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><link rel="canonical" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/zh-TW/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="搜尋文章（Ctrl + K）" aria-label="搜尋文章" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="語言">🌐 繁體中文</summary><nav aria-label="語言"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW" aria-current="true">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="切換導覽選單" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="搜尋文章（Ctrl + K）" aria-label="搜尋文章" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#about" aria-label="關於" data-i18n-aria-label="nav.about" data-i18n="nav.about">關於</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#experience" aria-label="經歷" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">經歷</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/#contact" aria-label="聯絡我" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">聯絡我</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/blogs/" title="部落格" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="部落格">部落格</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/tags/" title="標籤" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="標籤">標籤</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/zh-TW/gallery/" title="探索" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="探索">探索</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="切換明暗主題">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.再读整洁架构之道一.title">再讀整潔架構之道（一）</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2024-07-03" data-date="2024-07-03">2024年7月3日</time>
+
+
+              <span id="readingTime"> · 閱讀約需 3 分鐘</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/arh1.png" alt="再讀整潔架構之道（一）" data-i18n-alt="post.再读整洁架构之道一.title">
+          </div>
+
+          <article class="page-content  p-2"><h2 id="前记">前記</h2>
+<p>為什麼是再讀？因為在這之前筆者已經閱讀過一遍架構之道這本書，但當時缺乏專案的鍛鍊和試錯，總覺得讀的不深，終於有幸在工作期間接觸到了一些專案和需求，更幸運的是專案組在開發時採用的架構正好是整潔架構，詳細的說，是事件驅動開發DDD+整潔架構，關於DDD的詳細內容將會在之後討論，筆者就重新閱讀了這本書📚，收穫頗豐，因此這一個系列，我準備用自己的拙見描述一下整潔架構，更準確的說，應該是是讀書筆記，以茲同仁。</p>
+<p>這本書的詳細地址為：<a href="https://weread.qq.com/web/bookDetail/480322f072021a3248038c8">架構整潔之道-羅伯特 C. 馬丁-微信讀書 (qq.com)</a></p>
+<p>本系列會以圖書的章節組織作為思路，跟隨作者的腳步逐漸深入，同時，由於是再讀，所以不可避免的也會穿插一些圖書中其他部分的內容，所以，如果你在閱讀時發現了一些難於理解或者沒聽說過的內容，那它大機率是在之後章節中的內容。</p>
+<p>讓我們開始吧。</p>
+<h2 id="设计与架构的含义">設計與架構的含義</h2>
+<p>設計與架構，本質上並沒有區別，底層設計細節和頂層架構資訊共同定義了軟體系統。</p>
+<p><strong>軟體架構的終極目標是用最小的人力成本來滿足構建和維護系統的需求</strong>，因此成本可以評估一個軟體架構設計的優劣。</p>
+<p>沒有經過設計、匆匆構建的系統可能成為<strong>亂麻系統</strong>，亂麻系統在構建過程中被長期忽視程式碼質量和設計結構最佳化。認真設計軟體架構可以在一定程度上避免系統成為亂麻系統，從而降低成本。</p>
+<p>軟體開發具有兩個核心特點：</p>
+<ul>
+<li>要想跑得快，要先跑得穩；</li>
+<li>過度自信只會使得重構設計陷入和原專案一樣的困局。</li>
+</ul>
+<h2 id="两个价值维度">兩個價值維度</h2>
+<p>軟體系統包含兩種價值：</p>
+<ul>
+<li>行為價值：讓機器按照某種指定方式運轉，給系統的使用者創造或者提高利潤；</li>
+<li>架構價值：軟體要夠靈活，更改軟體的成本要做到與需求的範疇相關，與形狀無關。</li>
+</ul>
+<p>怎麼理解需求的範疇與形狀？
+筆者自己理解範疇即需求大致的範圍和所屬<strong>領域</strong>，而形狀指需求的細節內容。</p>
+<p>那麼哪個價值維度更重要呢？
+作者認為架構價值比行為價值更重要，因為：</p>
+<ul>
+<li>如果某程式可以正常工作，但是無法修改，那麼當需求變更的時候它就不再能夠正常工作了，我們也無法通過修改讓它能繼續正常工作。因此，這個程式的價值將成為0；</li>
+<li>如果某程式目前無法正常工作，但是我們可以很容易地修改它，那麼將它改好，並且隨著需求變化不停地修改它，都應該是很容易的事。因此，這個程式會持續產生價值。</li>
+</ul>
+<p>業務部門與研發部門經常犯的共同錯誤是沒有把真正緊急並且重要的功能和緊急但是不重要的功能分開，結果就是重要的系統架構問題讓位給了不重要的系統行為功能。</p>
+<p><strong>平衡系統架構的重要性與功能的緊急程度這件事，是軟體研發人員自己的職責</strong>。</p>
+<blockquote>
+<p>筆者注：同時，即便同樣是研發人員，不同的小組也會存在類似問題，正如某些前端部門認為後臺只需要提供一系列介面很容易，而不知道良好設計的重要性。</p>
+</blockquote>
+<h3 id="为好的软件架构持续斗争">為好的軟體架構持續鬥爭✊</h3>
+<p>如果忽視軟體架構的價值，系統將會變得越來越難以維護，終會有一天，系統將會變得再也無法修改。如果系統變成了這個樣子，那麼說明軟體開發團隊沒有和需求方做足夠的抗爭，沒有完成自己應盡的職責。</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">目錄</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E5%89%8D%E8%AE%B0">前記</a></li>
+    <li><a href="#%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E7%9A%84%E5%90%AB%E4%B9%89">設計與架構的含義</a></li>
+    <li><a href="#%E4%B8%A4%E4%B8%AA%E4%BB%B7%E5%80%BC%E7%BB%B4%E5%BA%A6">兩個價值維度</a>
+      <ul>
+        <li><a href="#%E4%B8%BA%E5%A5%BD%E7%9A%84%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E6%8C%81%E7%BB%AD%E6%96%97%E4%BA%89">為好的軟體架構持續鬥爭✊</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">標籤</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/zh-TW/tags/%E9%98%85%E8%AF%BB/" target="_blank"><span data-i18n="tag.阅读">閱讀</span></a></li>
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/zh-TW/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/" target="_blank"><span data-i18n="tag.整洁架构之道">整潔架構之道</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">分享</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25B8%2580%2F" aria-label="分享 · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=%E5%86%8D%E8%AE%80%E6%95%B4%E6%BD%94%E6%9E%B6%E6%A7%8B%E4%B9%8B%E9%81%93%EF%BC%88%E4%B8%80%EF%BC%89&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25B8%2580%2F" aria-label="分享 · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=%E5%86%8D%E8%AE%80%E6%95%B4%E6%BD%94%E6%9E%B6%E6%A7%8B%E4%B9%8B%E9%81%93%EF%BC%88%E4%B8%80%EF%BC%89+https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25B8%2580%2F" aria-label="分享 · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=%E5%86%8D%E8%AE%80%E6%95%B4%E6%BD%94%E6%9E%B6%E6%A7%8B%E4%B9%8B%E9%81%93%EF%BC%88%E4%B8%80%EF%BC%89&amp;body=%E5%86%8D%E8%AE%80%E6%95%B4%E6%BD%94%E6%9E%B6%E6%A7%8B%E4%B9%8B%E9%81%93%EF%BC%88%E4%B8%80%EF%BC%89+https%3A%2F%2Ftommycheese.github.io%2Fzh-TW%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25B8%2580%2F" aria-label="分享 · 傳送郵件">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/"; this.language = "zh_TW"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="回到頂端">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最新文章</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="再讀整潔架構之道（六）邊界" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再讀整潔架構之道（六）邊界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">再讀整潔架構之道（六）邊界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">討論如何透過架構邊界約束相依關係、隔離業務邏輯，並延後框架與資料庫等細節決策。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="再讀整潔架構之道（五）軟體架構" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="再讀整潔架構之道（五）軟體架構" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">再讀整潔架構之道（五）軟體架構</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">從元件劃分、關係與通訊方式出發，討論軟體架構如何服務於研發、部署、執行和維護，並保留設計選擇。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
+                    <a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="領域驅動設計初識" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="領域驅動設計初識" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">領域驅動設計初識</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">介紹領域驅動設計的策略設計與戰術設計，以及領域、子領域、限界上下文等基本概念。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">2024年7月26日</time></span>
+                    <a href="/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">閱讀</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/zh-TW/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese 網站標誌" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 保留所有權利</span><div class="text-secondary">用心打造，基於 Hugo<br>由 GitHub Pages 提供支援</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

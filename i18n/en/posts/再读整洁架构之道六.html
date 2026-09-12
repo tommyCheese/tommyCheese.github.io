@@ -1,0 +1,35 @@
+
+          <h2 id="什么是边界">What Are Boundaries?</h2>
+<blockquote>
+<p>Software architecture is the art of drawing boundaries.</p>
+</blockquote>
+<p>Boundaries divide software into elements and constrain dependencies across their two sides. Drawing boundaries early in a project allows decisions to be deferred, ensuring that those decisions will not later interfere with the system’s <strong>core business logic</strong>. Boundaries also reduce or eliminate unnecessary architectural coupling. Coupling—especially coupling caused by premature, immature decisions about frameworks, databases, and other details that should have been postponed—is what consumes the most human effort in a system.</p>
+<p>How should we draw boundaries? Two basic principles help:</p>
+<ul>
+<li>Place boundaries between unrelated concerns, such as the GUI and business logic. Input and output through a GUI are incidental to the business logic, which should support different GUI implementations.</li>
+<li>Draw boundaries along the axes of change in a system. Components on opposite sides should change for different reasons and at different rates. The principles that guide these axes are SRP at the module or class level and CCP at the component level.</li>
+</ul>
+<p>Having established why boundaries matter and where they belong, we can consider the basic process of drawing them:</p>
+<ol>
+<li>First divide the system into components. Some contain core business logic; others are plugins that provide necessary functionality unrelated to that core.</li>
+<li>Modify the source code so that these noncore components depend on the system’s core business logic components.</li>
+</ol>
+<p>Drawing boundaries is a concrete application of dependency inversion and stable abstractions. Dependency arrows should point from low-level concrete implementations toward high-level abstractions.</p>
+<h2 id="边界剖析">Anatomy of Boundaries</h2>
+<blockquote>
+<p>A system’s architecture is defined by its software components and the boundaries between them</p>
+</blockquote>
+<p>Boundaries take several forms. This chapter examines them through calls that cross boundaries.</p>
+<p>At runtime, crossing a boundary means a function on one side calls a function on the other and passes data to it. Designing these calls properly requires careful control of source-code dependencies. Without that control, changing one module’s source may force other modules to change or be recompiled and redeployed. Clear boundaries help reduce this effect.</p>
+<p>Cross-boundary calls occur at several levels: source code, deployment, services, and physical boundaries.</p>
+<h3 id="源码层次的跨边界调用">Crossing Boundaries at the Source-Code Level</h3>
+<p>Source-code boundaries appear in monolithic architectures. Such architectures generally need some form of dynamic polymorphism to manage internal dependencies.</p>
+<p>The simplest cross-boundary call occurs when a low-level client calls a high-level service function. Runtime and compile-time dependencies then point in the same direction, from the low-level component to the high-level component.</p>
+<p>(Original diagram unavailable)</p>
+<p>When a client in a high-level component needs to call a service in a low-level component, dynamic polymorphism is needed to invert the dependency. The Service interface in the diagram is a form of SPI.</p>
+<p>(Original diagram unavailable)</p>
+<h3 id="部署层次的跨边界调用">Crossing Boundaries at the Deployment Level</h3>
+<p>At the deployment level, deployable units are packaged into a convenient file format. Apart from this distinction, components decoupled at deployment boundaries are nearly identical to a monolithic structure.</p>
+<p>Deployment boundaries involve physical boundaries because separately deployed units must communicate across them. Common physical boundaries include dynamically linked libraries, threads, and local processes.</p>
+<h3 id="服务层次的跨边界调用">Crossing Boundaries at the Service Level</h3>
+<p>Services form the strongest architectural boundaries. A service is a process. When defining architectural boundaries at this level, minimize communication wherever possible, and ensure that it can tolerate high latency. Otherwise, the same rules used for local processes apply: lower-level services should act as plugins for higher-level services.</p>

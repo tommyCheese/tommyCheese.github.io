@@ -1,0 +1,423 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Clean Architecture · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/en/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</link>
+    <description>Tommy Cheese’s personal blog on software engineering, artificial intelligence, and learning through practice.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 29 Jul 2024 06:13:15 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/en/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Rereading Clean Architecture (6): Boundaries</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
+      <pubDate>Mon, 29 Jul 2024 06:13:15 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</guid>
+      <description>&lt;h2 id="什么是边界"&gt;What Are Boundaries?&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Software architecture is the art of drawing boundaries.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Boundaries divide software into elements and constrain dependencies across their two sides. Drawing boundaries early in a project allows decisions to be deferred, ensuring that those decisions will not later interfere with the system’s &lt;strong&gt;core business logic&lt;/strong&gt;. Boundaries also reduce or eliminate unnecessary architectural coupling. Coupling—especially coupling caused by premature, immature decisions about frameworks, databases, and other details that should have been postponed—is what consumes the most human effort in a system.&lt;/p&gt;
+&lt;p&gt;How should we draw boundaries? Two basic principles help:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Place boundaries between unrelated concerns, such as the GUI and business logic. Input and output through a GUI are incidental to the business logic, which should support different GUI implementations.&lt;/li&gt;
+&lt;li&gt;Draw boundaries along the axes of change in a system. Components on opposite sides should change for different reasons and at different rates. The principles that guide these axes are SRP at the module or class level and CCP at the component level.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Having established why boundaries matter and where they belong, we can consider the basic process of drawing them:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;First divide the system into components. Some contain core business logic; others are plugins that provide necessary functionality unrelated to that core.&lt;/li&gt;
+&lt;li&gt;Modify the source code so that these noncore components depend on the system’s core business logic components.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Drawing boundaries is a concrete application of dependency inversion and stable abstractions. Dependency arrows should point from low-level concrete implementations toward high-level abstractions.&lt;/p&gt;
+&lt;h2 id="边界剖析"&gt;Anatomy of Boundaries&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A system’s architecture is defined by its software components and the boundaries between them&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Boundaries take several forms. This chapter examines them through calls that cross boundaries.&lt;/p&gt;
+&lt;p&gt;At runtime, crossing a boundary means a function on one side calls a function on the other and passes data to it. Designing these calls properly requires careful control of source-code dependencies. Without that control, changing one module’s source may force other modules to change or be recompiled and redeployed. Clear boundaries help reduce this effect.&lt;/p&gt;
+&lt;p&gt;Cross-boundary calls occur at several levels: source code, deployment, services, and physical boundaries.&lt;/p&gt;
+&lt;h3 id="源码层次的跨边界调用"&gt;Crossing Boundaries at the Source-Code Level&lt;/h3&gt;
+&lt;p&gt;Source-code boundaries appear in monolithic architectures. Such architectures generally need some form of dynamic polymorphism to manage internal dependencies.&lt;/p&gt;
+&lt;p&gt;The simplest cross-boundary call occurs when a low-level client calls a high-level service function. Runtime and compile-time dependencies then point in the same direction, from the low-level component to the high-level component.&lt;/p&gt;
+&lt;p&gt;(Original diagram unavailable)&lt;/p&gt;
+&lt;p&gt;When a client in a high-level component needs to call a service in a low-level component, dynamic polymorphism is needed to invert the dependency. The Service interface in the diagram is a form of SPI.&lt;/p&gt;
+&lt;p&gt;(Original diagram unavailable)&lt;/p&gt;
+&lt;h3 id="部署层次的跨边界调用"&gt;Crossing Boundaries at the Deployment Level&lt;/h3&gt;
+&lt;p&gt;At the deployment level, deployable units are packaged into a convenient file format. Apart from this distinction, components decoupled at deployment boundaries are nearly identical to a monolithic structure.&lt;/p&gt;
+&lt;p&gt;Deployment boundaries involve physical boundaries because separately deployed units must communicate across them. Common physical boundaries include dynamically linked libraries, threads, and local processes.&lt;/p&gt;
+&lt;h3 id="服务层次的跨边界调用"&gt;Crossing Boundaries at the Service Level&lt;/h3&gt;
+&lt;p&gt;Services form the strongest architectural boundaries. A service is a process. When defining architectural boundaries at this level, minimize communication wherever possible, and ensure that it can tolerate high latency. Otherwise, the same rules used for local processes apply: lower-level services should act as plugins for higher-level services.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (5): Software Architecture</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
+      <pubDate>Sun, 28 Jul 2024 19:23:23 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</guid>
+      <description>&lt;p&gt;It is time to turn to software architecture. Having covered modules, classes, and components, this article focuses on the basic definition of architecture.&lt;/p&gt;
+&lt;h2 id="写在最前面"&gt;Before We Begin&lt;/h2&gt;
+&lt;p&gt;🌟 A software architect must be a programmer and must continue doing hands-on development. Without personally experiencing the difficulties caused by a system’s design, architects lose touch with the pain of poor design and gradually lose their sense of direction.&lt;/p&gt;
+&lt;h2 id="什么是软件架构"&gt;What Is Software Architecture?&lt;/h2&gt;
+&lt;p&gt;Architectural work is fundamentally about deciding how to divide a system into components and arrange their relationships and communication—in other words, defining boundaries.&lt;/p&gt;
+&lt;p&gt;Architectural design generally has two purposes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To make components easier to develop, deploy, run, and maintain.&lt;/li&gt;
+&lt;li&gt;To make all this work easier by &lt;strong&gt;keeping as many options open as possible for as long as possible&lt;/strong&gt;;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The quality of a system’s architecture is not closely related to whether its behavior works correctly. Many systems with poor architecture work perfectly well. The trouble usually appears during development, deployment, and subsequent enhancements. This supports the author’s view that architectural value can outweigh behavioral value.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The goals of architectural design are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Core goal: organize architecture around use cases, isolating them from surrounding concerns by postponing decisions and preserving options.&lt;/li&gt;
+&lt;li&gt;Primary goal: support the full software lifecycle. Good architecture makes a system understandable, changeable, maintainable, and easy to deploy.&lt;/li&gt;
+&lt;li&gt;Ultimate goal: maximize programmer productivity while minimizing the system’s &lt;strong&gt;total&lt;/strong&gt; operating cost.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Architectural design focuses on separating &lt;strong&gt;policies&lt;/strong&gt; and regrouping them according to how they change, thereby establishing boundaries. Applicable principles include SRP, CCP, CSP, SDP, SAP, and others.&lt;/p&gt;
+&lt;h2 id="软件架构的职责"&gt;The Responsibilities of Architecture&lt;/h2&gt;
+&lt;p&gt;Architecture supports development, deployment, operation, and maintenance.&lt;/p&gt;
+&lt;p&gt;Development: architecture should facilitate software development, so different teams may need different architectural designs. This reflects Conway’s law to some extent.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Why does Conway’s law imply that architecture reflects a team’s structure? This video explains:&lt;a href="https://www.bilibili.com/video/BV1bb421E7i6/?spm_id_from=333.337.search-card.all.click&amp;amp;vd_source=8c0f6bcaf6b2e92f574553f45e565994"&gt;Conway’s Law: Why Does Your Architecture Reflect Your Team Structure? — Bilibili&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Deployment: architecture should make deployment easy, ideally with one click.&lt;/p&gt;
+&lt;p&gt;Operation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;As mentioned earlier, architecture has less influence on runtime efficiency than on the other concerns. The author attributes this largely to the fact that additional hardware can compensate for operational shortcomings, while architectural design requires more expensive human effort.&lt;/li&gt;
+&lt;li&gt;Beyond efficiency, architecture should reveal the system’s runtime requirements. A well-designed architecture makes operation apparent to developers. Use cases, features, and required behaviors should be visible as first-class elements, simplifying understanding. The chapter “Screaming Architecture” explores this idea in detail.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Maintenance: maintenance is usually the most expensive part of a system’s lifecycle. Its costs fall into two categories: &lt;strong&gt;spelunking&lt;/strong&gt; and &lt;strong&gt;risk&lt;/strong&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Spelunking: the effort of exploring an existing system to find the best location and method for adding a feature or fixing a problem.&lt;/li&gt;
+&lt;li&gt;Risk: the possibility that those changes introduce new problems, along with the cost of managing that possibility.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="保持可选项"&gt;Keeping Options Open&lt;/h2&gt;
+&lt;p&gt;Recall the two kinds of value: behavioral and architectural. Increasing architectural value means making software more flexible, and flexibility comes from keeping more architectural options open.&lt;/p&gt;
+&lt;p&gt;The elements of a software system fall into two categories: &lt;strong&gt;policy&lt;/strong&gt; and &lt;strong&gt;details&lt;/strong&gt;. Policy contains the business rules and procedures that provide the system’s real value. Details enable users, other systems, and programmers to interact with policy without defining it. I/O devices and databases are examples. Choices about these details should remain open for as long as possible.&lt;/p&gt;
+&lt;p&gt;The architect’s goal is to create a system in which policy is the &lt;strong&gt;fundamental element&lt;/strong&gt; and details are separated from it, allowing decisions about details to be &lt;strong&gt;deferred&lt;/strong&gt;. The later a decision is made, the more information is available to make it well. A good architect works to maximize the number of options that remain open.&lt;/p&gt;
+&lt;p&gt;The author uses device independence to illustrate the value of deferring details. Modern operating systems support many I/O devices, but early computers relied largely on punched paper tape. Programmers naturally coupled tape-reading and tape-writing code to the system. Magnetic tape required new code, then optical discs required more. To avoid repeated implementation and poor adaptability, developers introduced device independence: devices were abstracted behind functions that the operating system called, and developers supplied the concrete implementations. I/O became a plugin to the operating system. This was an early form of OCP: welcome additions 👏 and resist modifications 🥊.&lt;/p&gt;
+&lt;h2 id="保持独立性"&gt;Preserving Independence&lt;/h2&gt;
+&lt;p&gt;Good architecture provides sufficient independence.&lt;/p&gt;
+&lt;p&gt;Decoupling helps preserve that independence.&lt;/p&gt;
+&lt;p&gt;Decoupling can be horizontal or vertical.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Horizontal decoupling, or decoupling by layer: divide a system into layers such as the UI and database.&lt;/li&gt;
+&lt;li&gt;Vertical decoupling, or decoupling by use case: also divide the layers into vertical slices by use case. For example, separate the UI for adding an order from the UI for deleting an order.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Decoupling according to reasons for change allows new use cases to be added without affecting existing ones.&lt;/p&gt;
+&lt;p&gt;Decoupling can also happen at different levels: source code, deployment, or services.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Source-code level: control dependencies between source modules. Components interact through function calls. This is a monolithic structure.&lt;/li&gt;
+&lt;li&gt;Deployment level: control dependencies between deployment units such as JAR files. Components may communicate across threads—not necessarily networks—through sockets or shared memory.&lt;/li&gt;
+&lt;li&gt;Service level: reduce intercomponent dependencies to data structures and communicate through network packets, as microservices do with RPC or REST.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;No strict rule makes one level of decoupling universally better. The best choice may change as a project matures. A well-designed architecture should allow a system to begin as a monolith deployed in one file, grow into independently deployable units or services, and return to a monolith if circumstances change. It should also protect most source code from these transitions. For the system as a whole, &lt;strong&gt;decoupling mode should itself remain an option&lt;/strong&gt;. Large deployments may use one mode and small deployments another.&lt;/p&gt;
+&lt;p&gt;With decoupling established, let us consider its effects on independence.&lt;/p&gt;
+&lt;h3 id="解耦对系统运行独立性的意义"&gt;Operational Independence&lt;/h3&gt;
+&lt;p&gt;If use cases with different concerns are properly isolated, high-throughput and low-throughput use cases naturally separate. Separating the UI and database from business logic allows them to run on different servers. Applications requiring greater bandwidth can also run multiple instances across servers.&lt;/p&gt;
+&lt;h3 id="解耦对系统开发独立性的意义"&gt;Development Independence&lt;/h3&gt;
+&lt;p&gt;When a system is properly decoupled by layers and use cases, its architecture supports multiple teams regardless of whether they are organized by features, components, layers, or another division of work.&lt;/p&gt;
+&lt;h3 id="解耦对系统部署独立性的意义"&gt;Deployment Independence&lt;/h3&gt;
+&lt;p&gt;With effective decoupling, layer implementations and use cases can even be hot-swapped while a system runs. Adding a use case may require only adding new JAR files or starting new services, leaving everything else unaffected.&lt;/p&gt;
+&lt;h2 id="什么是代码重复"&gt;What Is Code Duplication?&lt;/h2&gt;
+&lt;p&gt;There are two kinds of duplication:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;True duplication: repetition that should be eliminated.&lt;/li&gt;
+&lt;li&gt;False duplication: code that looks similar but follows different evolutionary paths, with different rates and reasons for change. CRP calls for code with different usage patterns to live in different components. Ignoring this can make false duplication look like code that should be merged. Some apparent duplication is necessary—remember the salary-calculation example?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 5)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (4): Component Principles</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
+      <pubDate>Sat, 06 Jul 2024 17:27:18 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</guid>
+      <description>&lt;h1 id="再读整洁架构之道四组件构建原则"&gt;Rereading Clean Architecture (Part 4): Component Design Principles&lt;/h1&gt;
+&lt;p&gt;Part 3 discussed the design of modules and classes. This article goes a step further and explores component design.&lt;/p&gt;
+&lt;p&gt;A component is a deployment unit: the smallest part of a software system that can be deployed independently. Components can also be developed independently. Component-based plugin architectures have become a familiar way to build software.&lt;/p&gt;
+&lt;h2 id="组件聚合"&gt;Component Cohesion&lt;/h2&gt;
+&lt;p&gt;Component cohesion tells us which modules and classes should be grouped into components. Three main principles apply:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reuse/Release Equivalence Principle.&lt;/li&gt;
+&lt;li&gt;Common Closure Principle.&lt;/li&gt;
+&lt;li&gt;Common Reuse Principle.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="复用发布等同原则rep"&gt;Reuse/Release Equivalence Principle (REP)&lt;/h3&gt;
+&lt;p&gt;REP states that the unit of reuse should be the same as the unit of release.&lt;/p&gt;
+&lt;p&gt;REP approaches the problem from the perspective of code reuse. Code sharing a common theme and function can be grouped into a component, and reuse should take place at that component boundary.&lt;/p&gt;
+&lt;p&gt;Put simply, a packaged and released component may receive a version number or unique identifier. We reuse code by importing an existing library: the unit imported is the packaged component, and the version identifies that release.&lt;/p&gt;
+&lt;h3 id="共同闭包ccp"&gt;Common Closure Principle (CCP)&lt;/h3&gt;
+&lt;p&gt;CCP states that classes changing together for the same reason should belong to the same component, while classes changing at different times for different reasons should belong to different components.&lt;/p&gt;
+&lt;p&gt;CCP takes the perspective of maintenance. Grouping code that changes for the same reason reduces the effort required for release, verification, and deployment.&lt;/p&gt;
+&lt;p&gt;As discussed earlier, CCP is the component-level version of SRP. Both can be summarized as follows:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Gather together things that change for the same reason and at the same time. Separate things that change for different reasons and at different times.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For SRP, “things” means functions and other elements that make up a class or module.&lt;/li&gt;
+&lt;li&gt;For CCP, “things” means the classes and modules that make up a component.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="共同复用crp"&gt;Common Reuse Principle (CRP)&lt;/h3&gt;
+&lt;p&gt;CRP states that users of a component should not be forced to depend on things they do not need.&lt;/p&gt;
+&lt;p&gt;CRP calls for code with different usage patterns and frequencies to be placed in separate components. It guides component boundaries and generalizes the Interface Segregation Principle (ISP).&lt;/p&gt;
+&lt;p&gt;As a generalized form of interface segregation, CRP and ISP can both be summarized as:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Do not depend on things you do not need.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For ISP, “things” means functions or classes exposing unnecessary methods.&lt;/li&gt;
+&lt;li&gt;At the component level, “things” means classes or modules containing unnecessary functions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="思考"&gt;Reflection&lt;/h3&gt;
+&lt;p&gt;How do REP, CCP, and CRP relate to one another?&lt;/p&gt;
+&lt;p&gt;They are actually in &lt;strong&gt;competition&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;REP and CCP are inclusive principles: they tell us which classes and modules belong together. CRP is exclusive: it tells us which classes and modules should not be grouped together.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/image-20240706143525187.png" alt="image-20240706143525187"&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If an architect considers only REP and CCP, components will include many parts their users do not need, causing too many unnecessary releases.&lt;/li&gt;
+&lt;li&gt;If an architect considers only CRP and CCP, reuse will become very difficult.&lt;/li&gt;
+&lt;li&gt;If an architect considers only REP and CRP, changing some classes or modules will inevitably require changes in many related modules.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The architect must balance these three principles. Component composition should evolve as the project’s priorities shift between development and reuse, so its direction must be assessed dynamically.&lt;/p&gt;
+&lt;h2 id="组件耦合"&gt;Component Coupling&lt;/h2&gt;
+&lt;p&gt;Component coupling tells us how to arrange relationships between components. It includes three principles:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Acyclic Dependencies Principle (ADP).&lt;/li&gt;
+&lt;li&gt;Stable Dependencies Principle (SDP).&lt;/li&gt;
+&lt;li&gt;Stable Abstractions Principle (SAP).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="无依赖环原则adp"&gt;Acyclic Dependencies Principle (ADP)&lt;/h3&gt;
+&lt;p&gt;ADP states that the component dependency graph must contain no cycles.&lt;/p&gt;
+&lt;p&gt;Version management addresses “the morning-after syndrome,” but requires ADP. First, consider the author’s description of the syndrome:&lt;/p&gt;
+&lt;p&gt;You spend an entire day getting some code to work, only to arrive the next morning and discover that it has mysteriously stopped working. Most likely, someone else changed a component your project depends on.&lt;/p&gt;
+&lt;p&gt;There are generally two ways to address this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Weekly builds.&lt;/li&gt;
+&lt;li&gt;Version management.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;Weekly builds&lt;/u&gt;&lt;/strong&gt;: everyone works in their own repository, then the project is built and integration conflicts are resolved at a fixed time each week, such as Friday.&lt;/p&gt;
+&lt;p&gt;The limitations are clear:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;As the project grows, integration becomes increasingly difficult to complete on time.&lt;/li&gt;
+&lt;li&gt;The whole project becomes harder to build and test, feedback cycles lengthen, and development quality declines.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This is why version management is needed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;u&gt;Version management&lt;/u&gt;&lt;/strong&gt;: when a component releases a new version, each dependent team can decide whether to adopt it immediately.&lt;/p&gt;
+&lt;p&gt;Version management &lt;strong&gt;does not permit cycles in the component dependency graph&lt;/strong&gt;. It must follow ADP, or the morning-after syndrome becomes unavoidable. Why?&lt;/p&gt;
+&lt;p&gt;A dependency cycle effectively combines all its components into one larger component. Their versions must remain coordinated for other components to depend on them successfully. Cycles also complicate testing: although mocking is common, repeatedly mocking components throughout a cycle is an awkward approach.&lt;/p&gt;
+&lt;p&gt;How can circular dependencies be removed? There are two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Introduce interfaces through dependency inversion.&lt;/li&gt;
+&lt;li&gt;Create a new component.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Using DIP to break a cycle is straightforward. The following example from work shows how a new component can achieve the same result.&lt;/p&gt;
+&lt;p&gt;A team is designing a system with DDD. A Dog entity depends on Dog Repo to perform Save operations, so the Entity module depends on Repo. Unfortunately, Dog PO is also defined inside Entity, while Repo.Save needs that persistence object for conversion and storage. Entity and Repo now depend on one another. Go rejects mutually dependent packages and reports an import cycle. How should this be resolved?&lt;/p&gt;
+&lt;p&gt;Create a separate PO module and move the PO out of Entity. Move the relevant PO-dependent functions from Repo into it as appropriate, removing the cycle. Dependency injection is another option. In Spring Boot, @AutoWired can address this kind of wiring problem; conceptually, a dependency container introduces another component through which the dependency cycle is resolved.&lt;/p&gt;
+&lt;p&gt;There are many similar examples. Recall the library version conflicts that can occur when installing Python packages with Anaconda…&lt;/p&gt;
+&lt;p&gt;As an aside, I initially assumed that component structure should map directly to system features: one component per feature, with the dependency graph mirroring the functional decomposition. That suggested the component dependency graph could be produced at the very beginning of system design.&lt;/p&gt;
+&lt;p&gt;The author explicitly argues that top-down design of the complete component structure is impossible. The book explains:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[!NOTE]&lt;/p&gt;
+&lt;p&gt;The component graph must change and grow with the software system; it cannot be perfectly designed at the outset. Component dependencies do not map one-to-one to features. Instead, they form a map of the application’s buildability and maintainability.&lt;/p&gt;
+&lt;p&gt;As more modules are designed and implemented, the need to manage their dependencies emerges. We want changes to affect as little of the project as possible, so SRP and CCP help group classes that frequently change together.&lt;/p&gt;
+&lt;p&gt;One important purpose of a component graph is to guide the isolation of frequent changes. Components that change often should not disturb components intended to remain stable.&lt;/p&gt;
+&lt;p&gt;As the application grows, reusable components also become more important, bringing CRP into the picture. Finally, when cycles appear, applying ADP causes the dependency structure to shift and expand.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="稳定依赖原则sdp"&gt;Stable Dependencies Principle (SDP)&lt;/h3&gt;
+&lt;p&gt;SDP states that dependencies must point toward greater stability. In general, the supporting foundations of an architecture should be more stable.&lt;/p&gt;
+&lt;p&gt;A component expected to change frequently should not be depended on by a component that is difficult to change. Otherwise, the volatile component also becomes hard to change. This is a challenge in software development: a component carefully designed for easy modification can lose that flexibility because someone adds a dependency on it. Following SDP helps avoid this.&lt;/p&gt;
+&lt;p&gt;Component stability can be assessed with a metric. The author defines the instability metric as:
+$$
+I=\frac{Fan-out}{Fan-in+Fan-out}
+$$
+Fan-in is the number of incoming dependencies and Fan-out the number of outgoing dependencies. Fewer outgoing dependencies imply greater stability: with zero outgoing dependencies, no dependency can force the component to change.&lt;/p&gt;
+&lt;p&gt;SDP requires each component’s I metric to be greater than that of the components it depends on: the components it points to must be more stable.&lt;/p&gt;
+&lt;p&gt;SDP does not require every component to be stable. The purpose of designing the component architecture is to decide which should be stable and which should be unstable. An architecture in which everything is stable lacks flexibility and therefore architectural value.&lt;/p&gt;
+&lt;h3 id="稳定抽象原则sap"&gt;Stable Abstractions Principle (SAP)&lt;/h3&gt;
+&lt;p&gt;SAP states that a component’s level of abstraction should match its stability.&lt;/p&gt;
+&lt;p&gt;High-level policies should reside in stable components, but this can make those policies difficult to change. Fortunately, OCP tells us that stable components can remain open to extension. Abstract classes provide a way to achieve stability while still allowing extension and modification.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Abstract classes form a buffer between interfaces and concrete classes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;SAP connects stability with abstraction. A stable component should also be abstract so that stability does not prevent extension. An unstable component should contain concrete implementation code so that its instability can be accommodated through easy changes. A component intended to be stable should therefore consist of interfaces and abstract classes that allow future extension.&lt;/p&gt;
+&lt;p&gt;Like stability, abstractness can be measured with a metric:
+$$
+A=\frac{N_c}{N_a}
+$$
+Here, Nc denotes the number of classes in the component, and Na the number of abstract classes and interfaces. A ranges from 0 to 1: 0 means no abstract classes, while 1 means only abstract classes.&lt;/p&gt;
+&lt;h3 id="思考-1"&gt;Reflection 🤔&lt;/h3&gt;
+&lt;p&gt;How are SDP and SAP related?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;First, consider SDP and SAP in relation to DIP&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In effect, SDP + SAP = component-level DIP. SDP requires dependencies to point toward greater stability, while SAP implies that stability requires abstraction. Dependencies should therefore point toward greater abstraction.&lt;/p&gt;
+&lt;p&gt;How should this be understood?&lt;/p&gt;
+&lt;p&gt;DIP preserves flexibility at the class level. SDP and SAP together preserve flexibility while providing component stability. Their architectural effect is the same: concrete implementations depend on abstract classes or interfaces. In this sense, SDP + SAP is component-level DIP.&lt;/p&gt;
+&lt;p&gt;There is a difference, however. At the class level there is no middle ground: a class is either abstract or it is not. SDP and SAP operate at the component level, where partial abstraction and partial stability are possible.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Second, consider their shared goals&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;SDP directs dependencies toward stability. SAP places high-level policy in abstract components, helping separate policy from details and enabling plugin-based development. Their goals are aligned.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Notice that &lt;strong&gt;plugin-based development&lt;/strong&gt; appears again. Where did we encounter it before? In dependency inversion. This further illustrates why SAP + SDP resembles component-level DIP.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="主序列"&gt;The Main Sequence&lt;/h3&gt;
+&lt;p&gt;Plot component instability I against abstractness A. The line a = -i + 1 is called the main sequence.&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://tommycheese.github.io/blogimages/image-20240706171725797.png" alt="image-20240706171725797"&gt;&lt;/p&gt;
+&lt;p&gt;The diagram contains three regions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Zone of pain: near (0,0), components are highly stable and highly concrete, making them difficult to change. Database schemas are an example. Utility libraries also fall into this zone: although their I metric is 1 because they depend on many components and are therefore unstable, changing them can break large amounts of code.&lt;/li&gt;
+&lt;li&gt;Zone of uselessness: near (1,1), components are highly abstract but have no dependents. Such abstractions often serve no practical purpose. Design problems in this region may reflect historical leftovers, such as old code that was never removed.&lt;/li&gt;
+&lt;li&gt;Main sequence: components along this line balance the two measures. The ideal positions are its endpoints, (0,1) and (1,0). A good architect aims to move most components toward these positions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;How can a component be evaluated overall? Calculate its distance from the main sequence to quantify how closely the design fits it. This distance is D: 0 means directly on the main sequence, while 1 means as far from it as possible.
+$$
+D=|A+I-1|
+$$
+The amount by which D exceeds zero can then guide component refactoring and redesign.&lt;/p&gt;
+&lt;p&gt;D has further uses. For example, the mean and variance of D across all components provide statistical measures for evaluating a system design:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In a well-designed system, both the mean and variance of D should be close to zero.&lt;/li&gt;
+&lt;li&gt;Variance can help establish a threshold for identifying unusual components that deserve attention.&lt;/li&gt;
+&lt;li&gt;Tracking the variance of D over time also shows how architectural stability and abstraction evolve.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 4)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (3): SOLID Design Principles</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
+      <pubDate>Fri, 05 Jul 2024 14:11:30 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</guid>
+      <description>&lt;h1 id="再读整洁架构之道三solid原则"&gt;Rereading Clean Architecture (Part 3): The SOLID Principles&lt;/h1&gt;
+&lt;p&gt;There are three main goals when building software modules:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make software tolerant of change.&lt;/li&gt;
+&lt;li&gt;Make software easier to understand.&lt;/li&gt;
+&lt;li&gt;Build components that can be reused across multiple software systems.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The SOLID principles primarily tell us how to organize data and functions into classes and how to connect those classes into programs. They guide module design; other design principles apply at the architectural level.&lt;/p&gt;
+&lt;p&gt;SOLID refers to the Single Responsibility Principle, &lt;strong&gt;S&lt;/strong&gt;RP; the Open–Closed Principle, &lt;strong&gt;O&lt;/strong&gt;CP; the Liskov Substitution Principle, &lt;strong&gt;L&lt;/strong&gt;SP; the Interface Segregation Principle, &lt;strong&gt;I&lt;/strong&gt;SP; and Dependency Inversion, &lt;strong&gt;D&lt;/strong&gt;IP.&lt;/p&gt;
+&lt;h2 id="单一职责原则srp"&gt;Single Responsibility Principle (SRP)&lt;/h2&gt;
+&lt;p&gt;SRP states that each software module should be responsible for a single function: &lt;strong&gt;there should be only one reason for a module to change&lt;/strong&gt;. Each software module should be responsible to one kind of actor.&lt;/p&gt;
+&lt;p&gt;At the component level, SRP is known as the Common Closure Principle (CCP).&lt;/p&gt;
+&lt;p&gt;What happens when a module is designed without following SRP? Consider this example.&lt;/p&gt;
+&lt;p&gt;Suppose the finance, human resources, and engineering departments all depend on a payroll and working-hours program with three functions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CalculateSalary: calculate salary.&lt;/li&gt;
+&lt;li&gt;CalculateTime: calculate working hours.&lt;/li&gt;
+&lt;li&gt;Save: save information.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The three departments use the program without incident until one day the finance department changes its salary calculation rules. Its maintainer updates CalculateSalary. Then something unexpected happens: salaries for human resources and engineering change as well…&lt;/p&gt;
+&lt;h2 id="开闭原则ocp"&gt;Open–Closed Principle (OCP)&lt;/h2&gt;
+&lt;p&gt;“Welcome additions; resist modifications!”&lt;/p&gt;
+&lt;p&gt;OCP states that a software system should allow its behavior to be changed by adding code, rather than only by modifying existing code. Well-designed software should be easy to extend while resisting modification.&lt;/p&gt;
+&lt;p&gt;OCP applies to components as well as classes and modules. It originated in the concept of device independence. Specifically, dependency inversion lets us design I/O devices as plugins, making it easy to add new devices without changing existing ones.&lt;/p&gt;
+&lt;p&gt;OCP is implemented by dividing a system into components and organizing their dependencies hierarchically so that changes in lower-level components do not affect higher-level components.&lt;/p&gt;
+&lt;h2 id="里式替换lsp原则"&gt;Liskov Substitution Principle (LSP)&lt;/h2&gt;
+&lt;p&gt;LSP states that if interchangeable components are used to build a software system, they must follow the same contract so that one can substitute for another.&lt;/p&gt;
+&lt;p&gt;LSP is fundamentally a principle of substitutability: if, for every object o1 of type S, there is an object o2 of type T such that a program P operating on T behaves identically when o1 replaces o2, then S is a subtype of T.&lt;/p&gt;
+&lt;p&gt;LSP can and should be applied at the architectural level. Once substitutability is violated, a system architecture must introduce extensive, complicated mechanisms to compensate.&lt;/p&gt;
+&lt;h2 id="接口隔离原则isp"&gt;Interface Segregation Principle (ISP)&lt;/h2&gt;
+&lt;p&gt;ISP states that unnecessary dependencies should be avoided. At any level of software design, depending on something that is not needed can introduce unexpected trouble.&lt;/p&gt;
+&lt;h2 id="依赖反转dip"&gt;Dependency Inversion Principle (DIP)&lt;/h2&gt;
+&lt;p&gt;DIP states that code implementing high-level policy should not depend on code implementing low-level details. Instead, code implementing those details should depend on the high-level policy.&lt;/p&gt;
+&lt;p&gt;To understand dependency inversion, distinguish control flow from source-code dependency flow. Suppose control flows from component A to component B. In a direct implementation, A imports B, so the source-code dependency also points from A to B. System behavior determines control flow, which in turn dictates source-code dependencies, leaving the architecture little freedom. Introducing an interface changes this: B implements the interface, and A depends on the interface instead of importing B. Across that boundary, the source-code dependency is reversed relative to control flow. This is dependency inversion.&lt;/p&gt;
+&lt;p&gt;Dependency inversion gives architectural design freedom. A flexible system should depend more on abstractions—such as interfaces and abstract classes—than on concrete implementations.&lt;/p&gt;
+&lt;p&gt;DIP yields several coding guidelines:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use abstract interfaces and avoid depending on volatile concrete implementation classes wherever possible.&lt;/li&gt;
+&lt;li&gt;Do not derive classes from concrete implementation classes.&lt;/li&gt;
+&lt;li&gt;Do not override functions that contain concrete implementations.&lt;/li&gt;
+&lt;li&gt;Avoid referring in code to the names of concrete implementations or other things likely to change.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(End of Part 3)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (2): Programming Paradigms</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
+      <pubDate>Fri, 05 Jul 2024 07:25:33 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id="再读整洁架构之道二"&gt;Rereading Clean Architecture (Part 2)&lt;/h1&gt;
+&lt;p&gt;A programming paradigm is a way of writing programs. It tells us which code structures to use and when to use them.&lt;/p&gt;
+&lt;p&gt;Three programming paradigms have emerged: structured programming, object-oriented programming, and functional programming.&lt;/p&gt;
+&lt;p&gt;The author argues that these approaches do not add weapons to an architect’s arsenal. Architects and programmers already have plenty of weapons; the three paradigms instead impose &lt;strong&gt;constraints&lt;/strong&gt; on their use. That is why they are called paradigms.&lt;/p&gt;
+&lt;h2 id="结构化编程范式"&gt;Structured Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Structured programming restricts and disciplines the direct transfer of program control, especially the unrestricted use of goto statements.&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="分解程序"&gt;Decomposing Programs&lt;/h3&gt;
+&lt;p&gt;Dijkstra hoped to reason about programs using mathematical proofs: a program would become a Euclidean structure, with new programs assembled from proven structures so that the correctness of the whole could be derived.&lt;/p&gt;
+&lt;p&gt;He also found that large numbers of goto statements make programs difficult to decompose, while their functions can be expressed entirely with branches and loops.&lt;/p&gt;
+&lt;p&gt;Structured programming therefore shows that programs can be decomposed. A large problem can be divided into a set of high-level functions, each of which can be divided further into lower-level functions, recursively. More importantly, every resulting function can itself be written using structured programming.&lt;/p&gt;
+&lt;p&gt;However, programming through formal proof never became mainstream. The scientific method is used more often in practice.&lt;/p&gt;
+&lt;h3 id="科学证明法"&gt;The Scientific Method&lt;/h3&gt;
+&lt;p&gt;Scientific theories and laws can be falsified, but cannot be proved true. Similarly, testing can disprove a program’s correctness but cannot prove it: tests can reveal bugs, but cannot establish that none exist. Using the scientific method, structured programming encourages us to recursively break a program into small, provable functions and then write &lt;strong&gt;tests&lt;/strong&gt; that attempt to show those functions are wrong. If these tests fail to falsify them, we can treat the functions as sufficiently correct and infer the correctness of the overall program.&lt;/p&gt;
+&lt;h2 id="面向对象编程范式"&gt;Object-Oriented Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Object-oriented programming restricts and disciplines the indirect transfer of program control.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Specifically, object-oriented programming uses &lt;strong&gt;polymorphism&lt;/strong&gt; to constrain function pointers. This can be understood as limiting the targets a function pointer may reference. For example, polymorphism in Java commonly operates between objects of classes related through inheritance.&lt;/p&gt;
+&lt;p&gt;The author also regards polymorphism as the defining feature of OOP. It enables &lt;strong&gt;dependency inversion&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;Dependency inversion introduces interfaces to give us complete control over source-code dependencies without being constrained by the system’s flow of control.&lt;/p&gt;
+&lt;p&gt;Dependency inversion enables plugin-based development. Inverting the dependencies between business logic and the web UI or database decouples the core business logic from both, turning the UI and database into plugins for that logic.&lt;/p&gt;
+&lt;p&gt;Object-oriented programming is the ability to control source-code dependencies through polymorphism. This enables architects to build plugin architectures that separate high-level policy components from low-level implementation components. Low-level components can be compiled as plugins and developed and deployed independently of the high-level components.&lt;/p&gt;
+&lt;h2 id="函数式编程范式"&gt;Functional Programming&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Functional programming restricts and disciplines assignment.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In other words, variables in functional programming languages are immutable.&lt;/p&gt;
+&lt;p&gt;The author makes the following argument, quoted from the book:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;“All race conditions, deadlocks, and concurrent update problems arise from mutable variables. If variables never change, races and concurrent updates cannot occur. If lock state is immutable, deadlocks cannot occur either.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Immutability is feasible if we ignore limits on storage capacity and processing speed. In practice, however, we must account for those limits. To make immutability practical to a useful extent, we need &lt;strong&gt;segregation of mutability&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id="可变性的隔离"&gt;Segregation of Mutability&lt;/h3&gt;
+&lt;p&gt;A common approach is to split an application, or its internal services, &lt;strong&gt;into mutable and immutable components&lt;/strong&gt;. Immutable components perform tasks through pure functions without changing any state. They communicate with one or more nonfunctional, mutable components to modify variable state.&lt;/p&gt;
+&lt;p&gt;Git provides an example. It records file additions, modifications, and deletions by moving references, while the stored file contents are not actually modified or deleted; new data is added and existing data is retrieved. This is an example of immutability.&lt;/p&gt;
+&lt;p&gt;Transaction management in MySQL and transactional memory also draw on this idea.&lt;/p&gt;
+&lt;h2 id="总结"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;The three programming paradigms are closely related to software architecture:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Polymorphism is how we cross architectural boundaries.&lt;/li&gt;
+&lt;li&gt;Functional programming is how we discipline and constrain where data is stored and who can access it.&lt;/li&gt;
+&lt;li&gt;Structured programming provides the foundation for implementing individual modules.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The three paradigms align with the three major concerns of software architecture: &lt;strong&gt;component independence&lt;/strong&gt; (object-oriented programming), &lt;strong&gt;data management&lt;/strong&gt; (functional programming), and functionality (structured programming).&lt;/p&gt;
+&lt;h2 id="再次思考"&gt;Further Reflection&lt;/h2&gt;
+&lt;p&gt;All three programming paradigms impose new &lt;strong&gt;constraints&lt;/strong&gt; on programmers. Each limits a way of writing code; none adds a new capability. In other words, programming paradigms tell us what not to do.&lt;/p&gt;
+&lt;p&gt;(End of Part 2)&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Rereading Clean Architecture (1)</title>
+      <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
+      <pubDate>Wed, 03 Jul 2024 23:10:20 +0800</pubDate>
+      <guid>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</guid>
+      <description>&lt;h2 id="前记"&gt;Preface&lt;/h2&gt;
+&lt;p&gt;Why read it again? I had already read Clean Architecture once, but without enough project experience and trial and error, I felt that my understanding remained shallow. During my work, I finally had the opportunity to take part in several projects and implement real requirements. Better still, the team used Clean Architecture—more specifically, event-driven development with DDD and Clean Architecture. I will discuss DDD in detail later. Rereading this book 📚 proved very rewarding, so in this series I will describe Clean Architecture from my own perspective. More precisely, these are reading notes that I hope to share with fellow developers.&lt;/p&gt;
+&lt;p&gt;The book is available here: &lt;a href="https://weread.qq.com/web/bookDetail/480322f072021a3248038c8"&gt;Clean Architecture — Robert C. Martin — WeRead (qq.com)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This series follows the chapters of the book and gradually explores the ideas alongside the author. Because this is a rereading, I will inevitably refer to ideas from other parts of the book. If you encounter something unfamiliar or difficult to understand, it will probably be covered in a later chapter.&lt;/p&gt;
+&lt;p&gt;Let us begin.&lt;/p&gt;
+&lt;h2 id="设计与架构的含义"&gt;The Meaning of Design and Architecture&lt;/h2&gt;
+&lt;p&gt;Design and architecture are not fundamentally different. Low-level design details and high-level architectural information together define a software system.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The ultimate goal of software architecture is to meet the requirements for building and maintaining a system with the least human effort&lt;/strong&gt;. Cost can therefore serve as a measure of the quality of an architectural design.&lt;/p&gt;
+&lt;p&gt;A system built hastily and without design can become a &lt;strong&gt;big ball of mud&lt;/strong&gt;. In such a system, code quality and improvements to design structure have been neglected throughout development. Careful architectural design can help prevent this outcome and reduce costs.&lt;/p&gt;
+&lt;p&gt;Software development has two key lessons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To go fast, first learn to go steadily.&lt;/li&gt;
+&lt;li&gt;Overconfidence can cause a redesign to fall into the same traps as the original project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="两个价值维度"&gt;Two Dimensions of Value&lt;/h2&gt;
+&lt;p&gt;A software system offers two kinds of value:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Behavioral value: making a machine operate in a specified way to create or increase profit for its users.&lt;/li&gt;
+&lt;li&gt;Architectural value: keeping software flexible, so that the cost of changing it depends on the scope of a requirement rather than its shape.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;How should we understand the scope and shape of a requirement?
+In my view, scope means the broad extent of the requirement and the &lt;strong&gt;domain&lt;/strong&gt; to which it belongs, while shape means its specific details.&lt;/p&gt;
+&lt;p&gt;Which dimension matters more?
+The author considers architectural value more important than behavioral value, because:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If a program works but cannot be changed, it will stop working when requirements change, and we will be unable to modify it to keep it useful. Its value will then become zero.&lt;/li&gt;
+&lt;li&gt;If a program does not currently work but is easy to change, fixing it and continuing to adapt it as requirements evolve should both be straightforward. Such a program can continue to create value.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A common mistake shared by business and development teams is failing to distinguish genuinely urgent and important features from urgent but unimportant ones. As a result, important architectural concerns give way to unimportant behavioral features.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Balancing the importance of system architecture against the urgency of features is the responsibility of software developers themselves&lt;/strong&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Author’s note: Similar problems arise even between development teams. For example, some front-end teams assume that the back end merely needs to expose a set of interfaces and that this is easy, overlooking the importance of good design.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="为好的软件架构持续斗争"&gt;Keep Fighting for Good Software Architecture ✊&lt;/h3&gt;
+&lt;p&gt;If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

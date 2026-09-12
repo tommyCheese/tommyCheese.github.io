@@ -1,0 +1,249 @@
+<h3 id="问题简述">問題簡述</h3>
+<p>在日常的模型開發、訓練過程中我們經常會遇到這樣的現象：在現有的開源專案或者論文復現中，多數模型使用Pytorch設計、開發和訓練推理，當我們需要使用MindSpore框架進行模型開發時，會遇到以下兩個問題：</p>
+<ul>
+<li>模型使用Pytorch編碼；</li>
+<li>Pytorch模型訓練後儲存的引數無法被MindSpore模型直接載入。</li>
+</ul>
+<p>對於第一個問題，我們可以根據昇思官方提供的文件：<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB">與Pytorch典型區別</a>和<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8">PyTorch與MindSpore API對映表</a>來完成模型的遷移；</p>
+<p>對於模型引數的轉換，在最新的MindSpore版本中MindConverter不再支援，因此可以考慮針對模型引數，我們進行<strong>手動的轉換</strong>，將Pytorch模型引數轉換為MindSpore能識別的格式後，再進行載入。</p>
+<h3 id="解决方案">解決方案</h3>
+<p>模型的編碼轉換不再贅述。</p>
+<p>引數轉換主要思路如下：</p>
+<ul>
+<li>使用Pytorch載入Pytorch模型，並取得模型引數prams_torch；</li>
+<li>使用MindSpore載入MindSpore模型，並取得模型引數prams_ms；</li>
+<li>將Pytorch模型的引數名和MindSpore模型引數名一一對應（有的話）；</li>
+<li>建立torch_2_ms鍵名對映表，使用鍵名對映表將Pytorch模型引數值載入到MindSpore引數名對應的位置上；</li>
+<li>使用MindSpore載入引數。</li>
+</ul>
+<h3 id="案例分析">案例分析</h3>
+<p>不同模型的模組不相同，引數型別也不盡相同，此處我們以一個網路舉例，說明轉換的基本思路，不同的模型其轉換思路是類似的。</p>
+<p><a href="https://arxiv.org/abs/1905.11946">EfficientNet</a>是谷歌於2019年發表的文章，詳細網路架構可檢視文章描述，此處我們以<strong>EfficientNet+FC</strong>全連線層的模型為例，探討如何進行網路模型引數的轉換。</p>
+<h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch">使用Pytorch載入Pytorch模型，並取得模型引數prams_torch</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_pytorch.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_pytorch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pytorch_model <span style="color:#f92672">=</span> EN_pytorch<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>pytorch_model<span style="color:#f92672">.</span>cuda()
+</span></span><span style="display:flex;"><span>pytorch_weights_dict <span style="color:#f92672">=</span> pytorch_model<span style="color:#f92672">.</span>state_dict()
+</span></span><span style="display:flex;"><span>param_torch <span style="color:#f92672">=</span> pytorch_weights_dict<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>param_torch_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(param_torch)
+</span></span><span style="display:flex;"><span>param_torch_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'param_torch.csv'</span>)
+</span></span></code></pre></div><p>步驟結束後，我們就將pytorch的模型引數存到了param_torch.csv下，觀察資料：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.weight</td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.bias</td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.running_mean</td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.running_var</td>
+</tr>
+<tr>
+<td>5</td>
+<td>_bn0.num_batches_tracked</td>
+</tr>
+<tr>
+<td>6</td>
+<td>_blocks.0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>7</td>
+<td>_blocks.0._bn1.weight</td>
+</tr>
+<tr>
+<td>8</td>
+<td>_blocks.0._bn1.bias</td>
+</tr>
+<tr>
+<td>9</td>
+<td>_blocks.0._bn1.running_mean</td>
+</tr>
+<tr>
+<td>10</td>
+<td>_blocks.0._bn1.running_var</td>
+</tr>
+</tbody>
+</table>
+<h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms">使用MindSpore載入MindSpore模型，並取得模型引數prams_ms</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> mindspore <span style="color:#66d9ef">as</span> ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_mindspore.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mindspore_model <span style="color:#f92672">=</span> EN_ms<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>prams_ms <span style="color:#f92672">=</span> mindspore_model<span style="color:#f92672">.</span>parameters_dict()<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>prams_ms_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(prams_ms)
+</span></span><span style="display:flex;"><span>prams_ms_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'prams_ms.csv'</span>)
+</span></span></code></pre></div><p>步驟結束後，我們就將MindSpore的模型引數存到了prams_ms.csv下，觀察資料：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0._depthwise_conv.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>0._bn1.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>0._bn1.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>0._bn1.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0._bn1.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>0._se_reduce.weight</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应">將Pytorch模型的引數名和MindSpore模型引數名一一對應</h4>
+<p>自此我們就得到了MindSpore和Pytorch各自的引數鍵名錶（附在附件區域），隨後觀察二者引數命名上的差異，可以發現固定的規律，以下述幾個方面為例：</p>
+<ul>
+<li>Batch Normalization：
+<ul>
+<li>權重：weight|bias——gamma|beta；</li>
+<li>移動加權和方差：running_mean|running_var——moving_mean|moving_variance；</li>
+</ul>
+</li>
+<li>自定義blocks：pytorch帶前置的_blocks.；</li>
+<li>其他</li>
+</ul>
+<h4 id="键名映射表">鍵名對映表</h4>
+<p>這樣就可以根據規律寫出一個Python指令碼來完成鍵名的轉化，並生成鍵名對映表：</p>
+<table>
+<thead>
+<tr>
+<th>Pytorch</th>
+<th>mindspore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_conv_stem.weight</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>_bn0.weight</td>
+<td>_bn0.gamma</td>
+</tr>
+<tr>
+<td>_bn0.bias</td>
+<td>_bn0.beta</td>
+</tr>
+<tr>
+<td>_bn0.running_mean</td>
+<td>_bn0.moving_mean</td>
+</tr>
+<tr>
+<td>_bn0.running_var</td>
+<td>_bn0.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._depthwise_conv.weight</td>
+<td>0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.weight</td>
+<td>0._bn1.gamma</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.bias</td>
+<td>0._bn1.beta</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_mean</td>
+<td>0._bn1.moving_mean</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_var</td>
+<td>0._bn1.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._se_reduce.weight</td>
+<td>0._se_reduce.weight</td>
+</tr>
+</tbody>
+</table>
+<p>隨後在Pytorch的權重字典中，按照對應檔案的Pytorch_key取出權重值，隨後使用mindspore.Parameter進行封裝，新增到mindspore.key對應的權值中去：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> ms_param_lst<span style="color:#f92672">.</span>values:
+</span></span><span style="display:flex;"><span>    ms_key <span style="color:#f92672">=</span> i
+</span></span><span style="display:flex;"><span>    pt_key <span style="color:#f92672">=</span> param_mapping[ms_key]
+</span></span><span style="display:flex;"><span>    pt_val <span style="color:#f92672">=</span> pt_values_dict[pt_key]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> isinstance(pt_val, np<span style="color:#f92672">.</span>ndarray):
+</span></span><span style="display:flex;"><span>        pt_val <span style="color:#f92672">=</span> pt_val<span style="color:#f92672">.</span>cpu()<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span>    ms_val <span style="color:#f92672">=</span> Parameter(pt_val, ms_key)
+</span></span><span style="display:flex;"><span>    print(ms_val)
+</span></span><span style="display:flex;"><span>    ms_values_dict[ms_key] <span style="color:#f92672">=</span> ms_val
+</span></span></code></pre></div><h4 id="使用mindspore加载参数">使用MindSpore載入引數</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>load_param_into_net(mindspore_model, ms_values_dict)
+</span></span></code></pre></div><p>此時，引數應該就可以被MindSpore接受了。</p>
+<h3 id="whats-more">What’s more</h3>
+<ul>
+<li>在引數值的儲存過程中，要注意Pytorch和MindSpore引數精度的差異；</li>
+</ul>
+<p>（完）</p>

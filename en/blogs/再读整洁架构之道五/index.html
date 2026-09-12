@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" data-page-path="/blogs/再读整洁架构之道五/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="Rereading Clean Architecture (5): Software Architecture">
+<meta property="og:description" content="A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2024-07-28T19:23:23+08:00">
+<meta property="article:modified_time" content="2024-07-28T19:23:23+08:00"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Rereading Clean Architecture (5): Software Architecture">
+<meta name="twitter:description" content="A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>Rereading Clean Architecture (5): Software Architecture · Tommy Cheese</title>
+<meta property="og:locale" content="en_US"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="canonical" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/en/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="Language">🌐 English</summary><nav aria-label="Language"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="en" hreflang="en" data-language="en" aria-current="true">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="Search posts (Ctrl + K)" aria-label="Search posts" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#about" aria-label="About" data-i18n-aria-label="nav.about" data-i18n="nav.about">About</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#experience" aria-label="Experience" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">Experience</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/#contact" aria-label="Get in touch" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">Get in touch</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/blogs/" title="Blog" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="Blog">Blog</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/tags/" title="Tags" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="Tags">Tags</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/en/gallery/" title="Explore" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="Explore">Explore</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="Toggle light or dark theme">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.再读整洁架构之道五.title">Rereading Clean Architecture (5): Software Architecture</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2024-07-28" data-date="2024-07-28">Jul 28, 2024</time>
+
+
+              <span id="readingTime"> · Reading time: 6 min</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/arh5.png" alt="Rereading Clean Architecture (5): Software Architecture" data-i18n-alt="post.再读整洁架构之道五.title">
+          </div>
+
+          <article class="page-content  p-2"><p>It is time to turn to software architecture. Having covered modules, classes, and components, this article focuses on the basic definition of architecture.</p>
+<h2 id="写在最前面">Before We Begin</h2>
+<p>🌟 A software architect must be a programmer and must continue doing hands-on development. Without personally experiencing the difficulties caused by a system’s design, architects lose touch with the pain of poor design and gradually lose their sense of direction.</p>
+<h2 id="什么是软件架构">What Is Software Architecture?</h2>
+<p>Architectural work is fundamentally about deciding how to divide a system into components and arrange their relationships and communication—in other words, defining boundaries.</p>
+<p>Architectural design generally has two purposes:</p>
+<ul>
+<li>To make components easier to develop, deploy, run, and maintain.</li>
+<li>To make all this work easier by <strong>keeping as many options open as possible for as long as possible</strong>;</li>
+</ul>
+<blockquote>
+<p>The quality of a system’s architecture is not closely related to whether its behavior works correctly. Many systems with poor architecture work perfectly well. The trouble usually appears during development, deployment, and subsequent enhancements. This supports the author’s view that architectural value can outweigh behavioral value.</p>
+</blockquote>
+<p>The goals of architectural design are:</p>
+<ul>
+<li>Core goal: organize architecture around use cases, isolating them from surrounding concerns by postponing decisions and preserving options.</li>
+<li>Primary goal: support the full software lifecycle. Good architecture makes a system understandable, changeable, maintainable, and easy to deploy.</li>
+<li>Ultimate goal: maximize programmer productivity while minimizing the system’s <strong>total</strong> operating cost.</li>
+</ul>
+<p>Architectural design focuses on separating <strong>policies</strong> and regrouping them according to how they change, thereby establishing boundaries. Applicable principles include SRP, CCP, CSP, SDP, SAP, and others.</p>
+<h2 id="软件架构的职责">The Responsibilities of Architecture</h2>
+<p>Architecture supports development, deployment, operation, and maintenance.</p>
+<p>Development: architecture should facilitate software development, so different teams may need different architectural designs. This reflects Conway’s law to some extent.</p>
+<blockquote>
+<p>Why does Conway’s law imply that architecture reflects a team’s structure? This video explains:<a href="https://www.bilibili.com/video/BV1bb421E7i6/?spm_id_from=333.337.search-card.all.click&amp;vd_source=8c0f6bcaf6b2e92f574553f45e565994">Conway’s Law: Why Does Your Architecture Reflect Your Team Structure? — Bilibili</a></p>
+</blockquote>
+<p>Deployment: architecture should make deployment easy, ideally with one click.</p>
+<p>Operation:</p>
+<ul>
+<li>As mentioned earlier, architecture has less influence on runtime efficiency than on the other concerns. The author attributes this largely to the fact that additional hardware can compensate for operational shortcomings, while architectural design requires more expensive human effort.</li>
+<li>Beyond efficiency, architecture should reveal the system’s runtime requirements. A well-designed architecture makes operation apparent to developers. Use cases, features, and required behaviors should be visible as first-class elements, simplifying understanding. The chapter “Screaming Architecture” explores this idea in detail.</li>
+</ul>
+<p>Maintenance: maintenance is usually the most expensive part of a system’s lifecycle. Its costs fall into two categories: <strong>spelunking</strong> and <strong>risk</strong>.</p>
+<ul>
+<li>Spelunking: the effort of exploring an existing system to find the best location and method for adding a feature or fixing a problem.</li>
+<li>Risk: the possibility that those changes introduce new problems, along with the cost of managing that possibility.</li>
+</ul>
+<h2 id="保持可选项">Keeping Options Open</h2>
+<p>Recall the two kinds of value: behavioral and architectural. Increasing architectural value means making software more flexible, and flexibility comes from keeping more architectural options open.</p>
+<p>The elements of a software system fall into two categories: <strong>policy</strong> and <strong>details</strong>. Policy contains the business rules and procedures that provide the system’s real value. Details enable users, other systems, and programmers to interact with policy without defining it. I/O devices and databases are examples. Choices about these details should remain open for as long as possible.</p>
+<p>The architect’s goal is to create a system in which policy is the <strong>fundamental element</strong> and details are separated from it, allowing decisions about details to be <strong>deferred</strong>. The later a decision is made, the more information is available to make it well. A good architect works to maximize the number of options that remain open.</p>
+<p>The author uses device independence to illustrate the value of deferring details. Modern operating systems support many I/O devices, but early computers relied largely on punched paper tape. Programmers naturally coupled tape-reading and tape-writing code to the system. Magnetic tape required new code, then optical discs required more. To avoid repeated implementation and poor adaptability, developers introduced device independence: devices were abstracted behind functions that the operating system called, and developers supplied the concrete implementations. I/O became a plugin to the operating system. This was an early form of OCP: welcome additions 👏 and resist modifications 🥊.</p>
+<h2 id="保持独立性">Preserving Independence</h2>
+<p>Good architecture provides sufficient independence.</p>
+<p>Decoupling helps preserve that independence.</p>
+<p>Decoupling can be horizontal or vertical.</p>
+<ul>
+<li>Horizontal decoupling, or decoupling by layer: divide a system into layers such as the UI and database.</li>
+<li>Vertical decoupling, or decoupling by use case: also divide the layers into vertical slices by use case. For example, separate the UI for adding an order from the UI for deleting an order.</li>
+</ul>
+<p>Decoupling according to reasons for change allows new use cases to be added without affecting existing ones.</p>
+<p>Decoupling can also happen at different levels: source code, deployment, or services.</p>
+<ul>
+<li>Source-code level: control dependencies between source modules. Components interact through function calls. This is a monolithic structure.</li>
+<li>Deployment level: control dependencies between deployment units such as JAR files. Components may communicate across threads—not necessarily networks—through sockets or shared memory.</li>
+<li>Service level: reduce intercomponent dependencies to data structures and communicate through network packets, as microservices do with RPC or REST.</li>
+</ul>
+<p>No strict rule makes one level of decoupling universally better. The best choice may change as a project matures. A well-designed architecture should allow a system to begin as a monolith deployed in one file, grow into independently deployable units or services, and return to a monolith if circumstances change. It should also protect most source code from these transitions. For the system as a whole, <strong>decoupling mode should itself remain an option</strong>. Large deployments may use one mode and small deployments another.</p>
+<p>With decoupling established, let us consider its effects on independence.</p>
+<h3 id="解耦对系统运行独立性的意义">Operational Independence</h3>
+<p>If use cases with different concerns are properly isolated, high-throughput and low-throughput use cases naturally separate. Separating the UI and database from business logic allows them to run on different servers. Applications requiring greater bandwidth can also run multiple instances across servers.</p>
+<h3 id="解耦对系统开发独立性的意义">Development Independence</h3>
+<p>When a system is properly decoupled by layers and use cases, its architecture supports multiple teams regardless of whether they are organized by features, components, layers, or another division of work.</p>
+<h3 id="解耦对系统部署独立性的意义">Deployment Independence</h3>
+<p>With effective decoupling, layer implementations and use cases can even be hot-swapped while a system runs. Adding a use case may require only adding new JAR files or starting new services, leaving everything else unaffected.</p>
+<h2 id="什么是代码重复">What Is Code Duplication?</h2>
+<p>There are two kinds of duplication:</p>
+<ul>
+<li>True duplication: repetition that should be eliminated.</li>
+<li>False duplication: code that looks similar but follows different evolutionary paths, with different rates and reasons for change. CRP calls for code with different usage patterns to live in different components. Ignoring this can make false duplication look like code that should be merged. Some apparent duplication is necessary—remember the salary-calculation example?</li>
+</ul>
+<p>(End of Part 5)</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">Contents</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2">Before We Begin</a></li>
+    <li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">What Is Software Architecture?</a></li>
+    <li><a href="#%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E7%9A%84%E8%81%8C%E8%B4%A3">The Responsibilities of Architecture</a></li>
+    <li><a href="#%E4%BF%9D%E6%8C%81%E5%8F%AF%E9%80%89%E9%A1%B9">Keeping Options Open</a></li>
+    <li><a href="#%E4%BF%9D%E6%8C%81%E7%8B%AC%E7%AB%8B%E6%80%A7">Preserving Independence</a>
+      <ul>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">Operational Independence</a></li>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">Development Independence</a></li>
+        <li><a href="#%E8%A7%A3%E8%80%A6%E5%AF%B9%E7%B3%BB%E7%BB%9F%E9%83%A8%E7%BD%B2%E7%8B%AC%E7%AB%8B%E6%80%A7%E7%9A%84%E6%84%8F%E4%B9%89">Deployment Independence</a></li>
+      </ul>
+    </li>
+    <li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BB%A3%E7%A0%81%E9%87%8D%E5%A4%8D">What Is Code Duplication?</a></li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">Tags</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/en/tags/%E9%98%85%E8%AF%BB/" target="_blank"><span data-i18n="tag.阅读">Reading</span></a></li>
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/en/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/" target="_blank"><span data-i18n="tag.整洁架构之道">Clean Architecture</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">Share</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="Share · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=Rereading+Clean+Architecture+%285%29%3A+Software+Architecture&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="Share · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=Rereading+Clean+Architecture+%285%29%3A+Software+Architecture+https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="Share · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=Rereading+Clean+Architecture+%285%29%3A+Software+Architecture&amp;body=Rereading+Clean+Architecture+%285%29%3A+Software+Architecture+https%3A%2F%2Ftommycheese.github.io%2Fen%2Fblogs%2F%25E5%2586%258D%25E8%25AF%25BB%25E6%2595%25B4%25E6%25B4%2581%25E6%259E%25B6%25E6%259E%2584%25E4%25B9%258B%25E9%2581%2593%25E4%25BA%2594%2F" aria-label="Share · Send email">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"; this.language = "en"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view comments powered by Disqus.</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="Back to top">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">Recent posts</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="Rereading Clean Architecture (6): Boundaries" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (6): Boundaries" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">Rereading Clean Architecture (6): Boundaries</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">How architectural boundaries constrain dependencies, isolate business logic, and defer decisions about frameworks, databases, and other details.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">Jul 29, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="Rereading Clean Architecture (5): Software Architecture" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="Rereading Clean Architecture (5): Software Architecture" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">Rereading Clean Architecture (5): Software Architecture</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">A look at component boundaries, relationships, and communication, and how software architecture supports development, deployment, operation, and maintenance while keeping design options open.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">Jul 28, 2024</time></span>
+                    <a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="An Introduction to Domain-Driven Design" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="An Introduction to Domain-Driven Design" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">An Introduction to Domain-Driven Design</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">An introduction to strategic and tactical design in DDD, including domains, subdomains, bounded contexts, and other core concepts.</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">Jul 26, 2024</time></span>
+                    <a href="/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">Read</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>Please enable JavaScript to view comments powered by Disqus.</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/en/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese site logo" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Made with care and Hugo<br>Powered by GitHub Pages</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

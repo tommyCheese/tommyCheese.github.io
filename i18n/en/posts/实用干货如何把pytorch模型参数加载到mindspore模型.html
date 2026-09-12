@@ -1,0 +1,250 @@
+
+          <h3 id="问题简述">Problem Overview</h3>
+<p>In day-to-day model development and training, many existing open-source projects and paper implementations use PyTorch for model design, development, training, and inference. When we need to develop models with MindSpore, two problems arise:</p>
+<ul>
+<li>The model is implemented in PyTorch.</li>
+<li>Parameters saved after training a PyTorch model cannot be loaded directly by a MindSpore model.</li>
+</ul>
+<p>The first problem can be addressed using the official MindSpore documentation: <a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB">Typical Differences from PyTorch</a> and <a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8">PyTorch–MindSpore API Mapping</a> to migrate the model.</p>
+<p>For parameter conversion, MindConverter is no longer supported in the latest MindSpore version discussed here. We can therefore <strong>convert parameters manually</strong>, transforming PyTorch model parameters into a format MindSpore can recognize before loading them.</p>
+<h3 id="解决方案">Solution</h3>
+<p>I will not repeat the model code migration process here.</p>
+<p>The main steps for parameter conversion are:</p>
+<ul>
+<li>Load the PyTorch model with PyTorch and obtain its parameters, prams_torch.</li>
+<li>Load the MindSpore model with MindSpore and obtain its parameters, prams_ms.</li>
+<li>Match PyTorch parameter names to MindSpore parameter names one by one where corresponding parameters exist.</li>
+<li>Build a torch_2_ms key mapping and use it to place PyTorch parameter values under the corresponding MindSpore parameter names.</li>
+<li>Load the parameters with MindSpore.</li>
+</ul>
+<h3 id="案例分析">Case Study</h3>
+<p>Different models contain different modules and parameter types. Here, one network illustrates the basic conversion approach; the same reasoning applies to other models.</p>
+<p><a href="https://arxiv.org/abs/1905.11946">EfficientNet</a> is a paper published by Google in 2019. See the paper for the detailed network architecture. Here we use <strong>EfficientNet+FC</strong> as an example of a model with a fully connected layer to explore parameter conversion.</p>
+<h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch">Load the PyTorch Model and Obtain prams_torch</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_pytorch.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_pytorch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pytorch_model <span style="color:#f92672">=</span> EN_pytorch<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>pytorch_model<span style="color:#f92672">.</span>cuda()
+</span></span><span style="display:flex;"><span>pytorch_weights_dict <span style="color:#f92672">=</span> pytorch_model<span style="color:#f92672">.</span>state_dict()
+</span></span><span style="display:flex;"><span>param_torch <span style="color:#f92672">=</span> pytorch_weights_dict<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>param_torch_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(param_torch)
+</span></span><span style="display:flex;"><span>param_torch_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'param_torch.csv'</span>)
+</span></span></code></pre></div><p>After this step, the PyTorch model parameters have been saved to param_torch.csv. Inspect the data:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.weight</td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.bias</td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.running_mean</td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.running_var</td>
+</tr>
+<tr>
+<td>5</td>
+<td>_bn0.num_batches_tracked</td>
+</tr>
+<tr>
+<td>6</td>
+<td>_blocks.0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>7</td>
+<td>_blocks.0._bn1.weight</td>
+</tr>
+<tr>
+<td>8</td>
+<td>_blocks.0._bn1.bias</td>
+</tr>
+<tr>
+<td>9</td>
+<td>_blocks.0._bn1.running_mean</td>
+</tr>
+<tr>
+<td>10</td>
+<td>_blocks.0._bn1.running_var</td>
+</tr>
+</tbody>
+</table>
+<h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms">Load the MindSpore Model and Obtain prams_ms</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> mindspore <span style="color:#66d9ef">as</span> ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_mindspore.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mindspore_model <span style="color:#f92672">=</span> EN_ms<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>prams_ms <span style="color:#f92672">=</span> mindspore_model<span style="color:#f92672">.</span>parameters_dict()<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>prams_ms_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(prams_ms)
+</span></span><span style="display:flex;"><span>prams_ms_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'prams_ms.csv'</span>)
+</span></span></code></pre></div><p>After this step, the MindSpore model parameters have been saved to prams_ms.csv. Inspect the data:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0._depthwise_conv.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>0._bn1.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>0._bn1.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>0._bn1.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0._bn1.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>0._se_reduce.weight</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应">Match PyTorch Parameter Names to MindSpore Parameter Names</h4>
+<p>We now have parameter key tables for MindSpore and PyTorch, provided in the attachments. Comparing their naming conventions reveals consistent patterns, including:</p>
+<ul>
+<li>Batch Normalization:
+<ul>
+<li>Weights: weight|bias → gamma|beta.</li>
+<li>Moving mean and variance: running_mean|running_var → moving_mean|moving_variance.</li>
+</ul>
+</li>
+<li>Custom blocks: PyTorch uses the _blocks. prefix.</li>
+<li>Other differences.</li>
+</ul>
+<h4 id="键名映射表">Key Mapping Table</h4>
+<p>We can use these patterns to write a Python script that converts key names and generates a mapping table:</p>
+<table>
+<thead>
+<tr>
+<th>Pytorch</th>
+<th>mindspore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_conv_stem.weight</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>_bn0.weight</td>
+<td>_bn0.gamma</td>
+</tr>
+<tr>
+<td>_bn0.bias</td>
+<td>_bn0.beta</td>
+</tr>
+<tr>
+<td>_bn0.running_mean</td>
+<td>_bn0.moving_mean</td>
+</tr>
+<tr>
+<td>_bn0.running_var</td>
+<td>_bn0.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._depthwise_conv.weight</td>
+<td>0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.weight</td>
+<td>0._bn1.gamma</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.bias</td>
+<td>0._bn1.beta</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_mean</td>
+<td>0._bn1.moving_mean</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_var</td>
+<td>0._bn1.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._se_reduce.weight</td>
+<td>0._se_reduce.weight</td>
+</tr>
+</tbody>
+</table>
+<p>Next, retrieve each weight value from the PyTorch weight dictionary using the corresponding Pytorch_key in the mapping file, wrap it with mindspore.Parameter, and assign it to the corresponding mindspore.key:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> ms_param_lst<span style="color:#f92672">.</span>values:
+</span></span><span style="display:flex;"><span>    ms_key <span style="color:#f92672">=</span> i
+</span></span><span style="display:flex;"><span>    pt_key <span style="color:#f92672">=</span> param_mapping[ms_key]
+</span></span><span style="display:flex;"><span>    pt_val <span style="color:#f92672">=</span> pt_values_dict[pt_key]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> isinstance(pt_val, np<span style="color:#f92672">.</span>ndarray):
+</span></span><span style="display:flex;"><span>        pt_val <span style="color:#f92672">=</span> pt_val<span style="color:#f92672">.</span>cpu()<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span>    ms_val <span style="color:#f92672">=</span> Parameter(pt_val, ms_key)
+</span></span><span style="display:flex;"><span>    print(ms_val)
+</span></span><span style="display:flex;"><span>    ms_values_dict[ms_key] <span style="color:#f92672">=</span> ms_val
+</span></span></code></pre></div><h4 id="使用mindspore加载参数">Load the Parameters with MindSpore</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>load_param_into_net(mindspore_model, ms_values_dict)
+</span></span></code></pre></div><p>The parameters should now be accepted by MindSpore.</p>
+<h3 id="whats-more">What’s more</h3>
+<ul>
+<li>When storing parameter values, pay attention to differences in parameter precision between PyTorch and MindSpore.</li>
+</ul>
+<p>(End)</p>

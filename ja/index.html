@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ja" data-page-path="/">
+
+<head>
+	<meta name="generator" content="Hugo 0.123.7"><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="Tommy Cheese">
+<meta property="og:description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tommycheese.github.io/ja/"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Tommy Cheese">
+<meta name="twitter:description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+<link rel="stylesheet" href="/css/index.css" media="all">
+<link rel="stylesheet" href="/css/projects.css" media="all">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RPQTR1FJGV"></script>
+<script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-RPQTR1FJGV'); </script>
+
+
+
+
+
+  <title>Tommy Cheese</title>
+<meta property="og:locale" content="ja_JP"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/"><link rel="canonical" href="https://tommycheese.github.io/ja/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/ja/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="言語">🌐 日本語</summary><nav aria-label="言語"><a href="/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/" lang="ja" hreflang="ja" data-language="ja" aria-current="true">日本語</a><a href="/ru/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="ナビゲーションの開閉" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#about" aria-label="私について" data-i18n-aria-label="nav.about" data-i18n="nav.about">私について</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#experience" aria-label="経歴" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">経歴</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#contact" aria-label="お問い合わせ" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">お問い合わせ</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/blogs/" title="ブログ" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="ブログ">ブログ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/tags/" title="タグ" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="タグ">タグ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/gallery/" title="探索" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="探索">探索</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="ライト・ダークテーマを切り替え">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="hero" class="py-5 align-middle">
+    <div class="container px-3 px-sm-5 px-md-5 px-lg-5 pt-lg-3">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-8 content animate" id="primary-font">
+                <span class="subtitle"><span data-i18n="homepage.greeting">こんにちは、私は</span></span>
+                <h2>
+                    Tommy Cheese
+                </h2>
+                <h3><span data-i18n="homepage.headline">歩み続ける</span></h3>
+                <p class="hero-content"><span data-i18n="homepage.motto">事実に基づいて真理を求める</span></p>
+                <div class="row">
+                    <div class="col-auto h-100">
+
+                        <a href="#" class="btn" download><span data-i18n="action.resume">履歴書</span></a>
+
+                    </div>
+                    <div class="col-auto px-0 h-100"><span>
+
+
+
+</span>
+</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12 col-md-9 pt-5 image animate px-5 px-md-5 px-lg-0 text-center">
+                        <img id="dynImg" src="/images/town.jpg" class="img-thumbnail mx-auto" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-bottom-svg d-md-block d-lg-block d-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="201" height="201" viewbox="0 0 201 201">
+            <g id="Group_1168" data-name="Group 1168" transform="translate(-384 -1392)">
+                <rect id="Rectangle_2206" data-name="Rectangle 2206" width="12" height="2" rx="1" transform="translate(391 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2271" data-name="Rectangle 2271" width="12" height="2" rx="1" transform="translate(391 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2238" data-name="Rectangle 2238" width="12" height="2" rx="1" transform="translate(391 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2278" data-name="Rectangle 2278" width="12" height="2" rx="1" transform="translate(391 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2222" data-name="Rectangle 2222" width="12" height="2" rx="1" transform="translate(391 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2272" data-name="Rectangle 2272" width="12" height="2" rx="1" transform="translate(391 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2241" data-name="Rectangle 2241" width="12" height="2" rx="1" transform="translate(391 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2288" data-name="Rectangle 2288" width="12" height="2" rx="1" transform="translate(391 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2214" data-name="Rectangle 2214" width="12" height="2" rx="1" transform="translate(499 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2289" data-name="Rectangle 2289" width="12" height="2" rx="1" transform="translate(499 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2256" data-name="Rectangle 2256" width="12" height="2" rx="1" transform="translate(499 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2290" data-name="Rectangle 2290" width="12" height="2" rx="1" transform="translate(499 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2231" data-name="Rectangle 2231" width="12" height="2" rx="1" transform="translate(499 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2291" data-name="Rectangle 2291" width="12" height="2" rx="1" transform="translate(499 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2257" data-name="Rectangle 2257" width="12" height="2" rx="1" transform="translate(499 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2292" data-name="Rectangle 2292" width="12" height="2" rx="1" transform="translate(499 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2210" data-name="Rectangle 2210" width="12" height="2" rx="1" transform="translate(445 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2279" data-name="Rectangle 2279" width="12" height="2" rx="1" transform="translate(445 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2248" data-name="Rectangle 2248" width="12" height="2" rx="1" transform="translate(445 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2280" data-name="Rectangle 2280" width="12" height="2" rx="1" transform="translate(445 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2226" data-name="Rectangle 2226" width="12" height="2" rx="1" transform="translate(445 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2281" data-name="Rectangle 2281" width="12" height="2" rx="1" transform="translate(445 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2249" data-name="Rectangle 2249" width="12" height="2" rx="1" transform="translate(445 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2293" data-name="Rectangle 2293" width="12" height="2" rx="1" transform="translate(445 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2219" data-name="Rectangle 2219" width="12" height="2" rx="1" transform="translate(553 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2310" data-name="Rectangle 2310" width="12" height="2" rx="1" transform="translate(553 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2262" data-name="Rectangle 2262" width="12" height="2" rx="1" transform="translate(553 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2311" data-name="Rectangle 2311" width="12" height="2" rx="1" transform="translate(553 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2232" data-name="Rectangle 2232" width="12" height="2" rx="1" transform="translate(553 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2312" data-name="Rectangle 2312" width="12" height="2" rx="1" transform="translate(553 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2263" data-name="Rectangle 2263" width="12" height="2" rx="1" transform="translate(553 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2313" data-name="Rectangle 2313" width="12" height="2" rx="1" transform="translate(553 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2209" data-name="Rectangle 2209" width="12" height="2" rx="1" transform="translate(418 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2273" data-name="Rectangle 2273" width="12" height="2" rx="1" transform="translate(418 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2242" data-name="Rectangle 2242" width="12" height="2" rx="1" transform="translate(418 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2282" data-name="Rectangle 2282" width="12" height="2" rx="1" transform="translate(418 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2223" data-name="Rectangle 2223" width="12" height="2" rx="1" transform="translate(418 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2274" data-name="Rectangle 2274" width="12" height="2" rx="1" transform="translate(418 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2243" data-name="Rectangle 2243" width="12" height="2" rx="1" transform="translate(418 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2294" data-name="Rectangle 2294" width="12" height="2" rx="1" transform="translate(418 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2217" data-name="Rectangle 2217" width="12" height="2" rx="1" transform="translate(526 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2314" data-name="Rectangle 2314" width="12" height="2" rx="1" transform="translate(526 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2258" data-name="Rectangle 2258" width="12" height="2" rx="1" transform="translate(526 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2315" data-name="Rectangle 2315" width="12" height="2" rx="1" transform="translate(526 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2233" data-name="Rectangle 2233" width="12" height="2" rx="1" transform="translate(526 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2316" data-name="Rectangle 2316" width="12" height="2" rx="1" transform="translate(526 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2259" data-name="Rectangle 2259" width="12" height="2" rx="1" transform="translate(526 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2317" data-name="Rectangle 2317" width="12" height="2" rx="1" transform="translate(526 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2211" data-name="Rectangle 2211" width="12" height="2" rx="1" transform="translate(472 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2295" data-name="Rectangle 2295" width="12" height="2" rx="1" transform="translate(472 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2250" data-name="Rectangle 2250" width="12" height="2" rx="1" transform="translate(472 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2296" data-name="Rectangle 2296" width="12" height="2" rx="1" transform="translate(472 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2227" data-name="Rectangle 2227" width="12" height="2" rx="1" transform="translate(472 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2297" data-name="Rectangle 2297" width="12" height="2" rx="1" transform="translate(472 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2251" data-name="Rectangle 2251" width="12" height="2" rx="1" transform="translate(472 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2298" data-name="Rectangle 2298" width="12" height="2" rx="1" transform="translate(472 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2221" data-name="Rectangle 2221" width="12" height="2" rx="1" transform="translate(580 1392) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2318" data-name="Rectangle 2318" width="12" height="2" rx="1" transform="translate(580 1500) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2264" data-name="Rectangle 2264" width="12" height="2" rx="1" transform="translate(580 1446) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2319" data-name="Rectangle 2319" width="12" height="2" rx="1" transform="translate(580 1554) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2236" data-name="Rectangle 2236" width="12" height="2" rx="1" transform="translate(580 1419) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2320" data-name="Rectangle 2320" width="12" height="2" rx="1" transform="translate(580 1527) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2265" data-name="Rectangle 2265" width="12" height="2" rx="1" transform="translate(580 1473) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2321" data-name="Rectangle 2321" width="12" height="2" rx="1" transform="translate(580 1581) rotate(90)" fill="#282f49"></rect>
+                <rect id="Rectangle_2207" data-name="Rectangle 2207" width="12" height="2" rx="1" transform="translate(396 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2270" data-name="Rectangle 2270" width="12" height="2" rx="1" transform="translate(396 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2239" data-name="Rectangle 2239" width="12" height="2" rx="1" transform="translate(396 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2283" data-name="Rectangle 2283" width="12" height="2" rx="1" transform="translate(396 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2224" data-name="Rectangle 2224" width="12" height="2" rx="1" transform="translate(396 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2275" data-name="Rectangle 2275" width="12" height="2" rx="1" transform="translate(396 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2244" data-name="Rectangle 2244" width="12" height="2" rx="1" transform="translate(396 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2299" data-name="Rectangle 2299" width="12" height="2" rx="1" transform="translate(396 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2215" data-name="Rectangle 2215" width="12" height="2" rx="1" transform="translate(504 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2300" data-name="Rectangle 2300" width="12" height="2" rx="1" transform="translate(504 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2252" data-name="Rectangle 2252" width="12" height="2" rx="1" transform="translate(504 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2301" data-name="Rectangle 2301" width="12" height="2" rx="1" transform="translate(504 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2228" data-name="Rectangle 2228" width="12" height="2" rx="1" transform="translate(504 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2302" data-name="Rectangle 2302" width="12" height="2" rx="1" transform="translate(504 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2253" data-name="Rectangle 2253" width="12" height="2" rx="1" transform="translate(504 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2303" data-name="Rectangle 2303" width="12" height="2" rx="1" transform="translate(504 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2212" data-name="Rectangle 2212" width="12" height="2" rx="1" transform="translate(450 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2284" data-name="Rectangle 2284" width="12" height="2" rx="1" transform="translate(450 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2245" data-name="Rectangle 2245" width="12" height="2" rx="1" transform="translate(450 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2285" data-name="Rectangle 2285" width="12" height="2" rx="1" transform="translate(450 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2229" data-name="Rectangle 2229" width="12" height="2" rx="1" transform="translate(450 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2286" data-name="Rectangle 2286" width="12" height="2" rx="1" transform="translate(450 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2246" data-name="Rectangle 2246" width="12" height="2" rx="1" transform="translate(450 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2304" data-name="Rectangle 2304" width="12" height="2" rx="1" transform="translate(450 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2218" data-name="Rectangle 2218" width="12" height="2" rx="1" transform="translate(558 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2322" data-name="Rectangle 2322" width="12" height="2" rx="1" transform="translate(558 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2266" data-name="Rectangle 2266" width="12" height="2" rx="1" transform="translate(558 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2323" data-name="Rectangle 2323" width="12" height="2" rx="1" transform="translate(558 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2234" data-name="Rectangle 2234" width="12" height="2" rx="1" transform="translate(558 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2324" data-name="Rectangle 2324" width="12" height="2" rx="1" transform="translate(558 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2267" data-name="Rectangle 2267" width="12" height="2" rx="1" transform="translate(558 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2325" data-name="Rectangle 2325" width="12" height="2" rx="1" transform="translate(558 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2208" data-name="Rectangle 2208" width="12" height="2" rx="1" transform="translate(423 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2276" data-name="Rectangle 2276" width="12" height="2" rx="1" transform="translate(423 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2240" data-name="Rectangle 2240" width="12" height="2" rx="1" transform="translate(423 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2287" data-name="Rectangle 2287" width="12" height="2" rx="1" transform="translate(423 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2225" data-name="Rectangle 2225" width="12" height="2" rx="1" transform="translate(423 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2277" data-name="Rectangle 2277" width="12" height="2" rx="1" transform="translate(423 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2247" data-name="Rectangle 2247" width="12" height="2" rx="1" transform="translate(423 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2305" data-name="Rectangle 2305" width="12" height="2" rx="1" transform="translate(423 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2216" data-name="Rectangle 2216" width="12" height="2" rx="1" transform="translate(531 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2326" data-name="Rectangle 2326" width="12" height="2" rx="1" transform="translate(531 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2260" data-name="Rectangle 2260" width="12" height="2" rx="1" transform="translate(531 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2327" data-name="Rectangle 2327" width="12" height="2" rx="1" transform="translate(531 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2235" data-name="Rectangle 2235" width="12" height="2" rx="1" transform="translate(531 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2328" data-name="Rectangle 2328" width="12" height="2" rx="1" transform="translate(531 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2261" data-name="Rectangle 2261" width="12" height="2" rx="1" transform="translate(531 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2329" data-name="Rectangle 2329" width="12" height="2" rx="1" transform="translate(531 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2213" data-name="Rectangle 2213" width="12" height="2" rx="1" transform="translate(477 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2306" data-name="Rectangle 2306" width="12" height="2" rx="1" transform="translate(477 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2254" data-name="Rectangle 2254" width="12" height="2" rx="1" transform="translate(477 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2307" data-name="Rectangle 2307" width="12" height="2" rx="1" transform="translate(477 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2230" data-name="Rectangle 2230" width="12" height="2" rx="1" transform="translate(477 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2308" data-name="Rectangle 2308" width="12" height="2" rx="1" transform="translate(477 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2255" data-name="Rectangle 2255" width="12" height="2" rx="1" transform="translate(477 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2309" data-name="Rectangle 2309" width="12" height="2" rx="1" transform="translate(477 1588) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2220" data-name="Rectangle 2220" width="12" height="2" rx="1" transform="translate(585 1399) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2330" data-name="Rectangle 2330" width="12" height="2" rx="1" transform="translate(585 1507) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2268" data-name="Rectangle 2268" width="12" height="2" rx="1" transform="translate(585 1453) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2331" data-name="Rectangle 2331" width="12" height="2" rx="1" transform="translate(585 1561) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2237" data-name="Rectangle 2237" width="12" height="2" rx="1" transform="translate(585 1426) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2332" data-name="Rectangle 2332" width="12" height="2" rx="1" transform="translate(585 1534) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2269" data-name="Rectangle 2269" width="12" height="2" rx="1" transform="translate(585 1480) rotate(-180)" fill="#282f49"></rect>
+                <rect id="Rectangle_2333" data-name="Rectangle 2333" width="12" height="2" rx="1" transform="translate(585 1588) rotate(-180)" fill="#282f49"></rect>
+            </g>
+        </svg>
+    </div>
+
+</section>
+
+<section id="about" class="py-0 py-sm-5">
+    <div class="container bg-transparent">
+        <h3 class="text-center bg-transparent"><span data-i18n="nav.about">私について</span></h3>
+        <div class="bg-transparent row justify-content-center px-3 py-5">
+
+            <div class="col-sm-12 col-md-8 col-lg-4 mb-5 mb-sm-0 mb-md-5 mb-lg-0 d-none d-sm-none d-md-block">
+                <div class="image d-flex px-5">
+                    <img src="/images/grass.jpg" class="img-thumbnail mx-auto rounded-circle" alt="">
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-8 content">
+                <p><span data-i18n="homepage.about">コンピューター科学とデータサイエンスを背景に、データサイエンス開発、ソフトウェア工学、文学、心理学に強い関心を持っています。現在、修士課程で学んでいます。</span></p>
+<span data-i18n="homepage.topics">現在、関心を持っているテーマ：</span><ul>
+
+                    <li><span data-i18n="topic.ai">人工知能</span></li>
+
+                    <li><span data-i18n="topic.softwareEngineering">ソフトウェア工学</span></li>
+
+                    <li><span data-i18n="topic.go">Go 言語</span></li>
+
+                    <li><span data-i18n="topic.java">Java 言語</span></li>
+
+                    <li><span data-i18n="topic.digitalProducts">デジタル製品</span></li>
+
+                    <li><span data-i18n="topic.woodCarving">木彫り</span></li>
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="experience" class="py-5">
+    <div class="container">
+        <h3 class="text-center"><span data-i18n="nav.experience">経歴</span></h3>
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-8 col-lg-8 py-5">
+                <div class="experience-container px-3 pt-2">
+                    <ul class="nav nav-pills mb-3 bg-transparent primary-font" id="pills-tab" role="tablist">
+
+
+                        <li class="nav-item px-1 bg-transparent" role="presentation">
+                            <div class="nav-link active bg-transparent" aria-selected="true" role="tab" data-bs-toggle="pill" id="腾讯-tencent-2024·4---present-tab" data-bs-target="#pills-腾讯-tencent-2024·4---present" aria-controls="腾讯-tencent-2024·4---present"><span data-i18n="experience.tencent.company">Tencent</span></div>
+                        </li>
+
+
+
+                        <li class="nav-item px-1 bg-transparent" role="presentation">
+                            <div class="nav-link bg-transparent" aria-selected="true" role="tab" data-bs-toggle="pill" id="华为-Huawei-2023·7---2023·8-tab" data-bs-target="#pills-华为-Huawei-2023·7---2023·8" aria-controls="华为-Huawei-2023·7---2023·8"><span data-i18n="experience.huawei.company">Huawei</span></div>
+                        </li>
+
+
+
+                        <li class="nav-item px-1 bg-transparent" role="presentation">
+                            <div class="nav-link bg-transparent" aria-selected="true" role="tab" data-bs-toggle="pill" id="美团-Meituan-Long-term-campus-ambassador-tab" data-bs-target="#pills-美团-Meituan-Long-term-campus-ambassador" aria-controls="美团-Meituan-Long-term-campus-ambassador"><span data-i18n="experience.meituan.company">Meituan</span></div>
+                        </li>
+
+
+
+                        <li class="nav-item px-1 bg-transparent" role="presentation">
+                            <div class="nav-link bg-transparent" aria-selected="true" role="tab" data-bs-toggle="pill" id="昇思-MindSpore-2023·9-2024·4-tab" data-bs-target="#pills-昇思-MindSpore-2023·9-2024·4" aria-controls="昇思-MindSpore-2023·9-2024·4"><span data-i18n="experience.mindspore.company">MindSpore</span></div>
+                        </li>
+
+
+
+                        <li class="nav-item px-1 bg-transparent" role="presentation">
+                            <div class="nav-link bg-transparent" aria-selected="true" role="tab" data-bs-toggle="pill" id="University-of-Melbourne-2023·7---2023·8-tab" data-bs-target="#pills-University-of-Melbourne-2023·7---2023·8" aria-controls="University-of-Melbourne-2023·7---2023·8"><span data-i18n="experience.melbourne.company">メルボルン大学</span></div>
+                        </li>
+
+
+                    </ul>
+                    <div class="tab-content pb-5 pt-2 bg-transparent primary-font" id="pills-tabContent">
+
+
+                        <div class="tab-pane fade show active bg-transparent" role="tabpanel" id="pills-腾讯-tencent-2024·4---present" aria-labelledby="pills-腾讯-tencent-2024·4---present-tab">
+                            <div>
+                                <span class="h4"><span data-i18n="experience.tencent.role">ソフトウェア開発</span></span>
+                                <small>-</small>
+                                <a href="https://www.tencent.com/" target="_blank"><span data-i18n="experience.tencent.company">Tencent</span></a>
+                                <div class="pb-1">
+                                    <small><span data-i18n="experience.tencent.period">2024年4月〜現在</span></small>
+
+                                </div>
+
+
+                                <div class="py-2 featuredLink">
+                                    <a class="p-2 px-4 btn btn-outline-primary btn-sm" href="https://www.tencent.com/en-us/about.html" target="_blank"><span data-i18n="experience.tencent.more">Tencent について</span></a>
+                                </div>
+
+                            </div>
+
+                            <p><span data-i18n="experience.tencent.summary">中国・北京の Tencent で開発インターンとして、QQ のサービスと部門内業務に向けた高品質なソフトウェアソリューションの開発に取り組みました。</span><br><br>
+<br><span data-i18n="experience.topics">最近のテーマ：</span></p>
+<ul>
+<li><a href="https://trpc.group/">TRPC-GO</a></li>
+<li><a href="https://golang.google.cn/">Golang</a></li>
+<li><a href="https://im.qq.com/linuxqq/index.shtml">QQ For Linux</a></li>
+</ul>
+                        </div>
+
+
+
+                        <div class="tab-pane fade bg-transparent" role="tabpanel" id="pills-华为-Huawei-2023·7---2023·8" aria-labelledby="pills-华为-Huawei-2023·7---2023·8-tab">
+                            <div>
+                                <span class="h4"><span data-i18n="experience.huawei.role">デジタルエネルギー開発実習</span></span>
+                                <small>-</small>
+                                <a href="https://www.huawei.com/" target="_blank"><span data-i18n="experience.huawei.company">Huawei</span></a>
+
+                                <div class="pb-1">
+                                    <small><span data-i18n="experience.huawei.period">2023年7月〜8月</span></small>
+
+                                </div>
+
+
+                                <div class="py-2 featuredLink">
+                                    <a class="p-2 px-4 btn btn-outline-primary btn-sm" href="https://www.huawei.com/en/corporate-information" target="_blank"><span data-i18n="experience.huawei.more">Huawei について</span></a>
+                                </div>
+
+                            </div>
+
+                            <div class="pt-2">
+                                <p><span data-i18n="experience.huawei.summary">Huawei 西安研究所のデジタルエネルギー部門の研修に参加し、スマート太陽光発電、ICT、インテリジェントな熱管理などのプロジェクトを実践しました。</span><br><br><br><span data-i18n="experience.topics">最近のテーマ：</span></p>
+<ul>
+<li><a href="https://www.huawei.com/cn/tech4all"><span data-i18n="experience.huawei.tech4all">TECH4ALL デジタルインクルージョン</span></a></li>
+<li><a href="https://developer.huawei.com/consumer/cn/activityDetail/harmonyos-next-preview/">HarmonyOS NEXT-&gt;</a></li>
+</ul>
+                            </div>
+                        </div>
+
+
+
+                        <div class="tab-pane fade bg-transparent" role="tabpanel" id="pills-美团-Meituan-Long-term-campus-ambassador" aria-labelledby="pills-美团-Meituan-Long-term-campus-ambassador-tab">
+                            <div>
+                                <span class="h4"><span data-i18n="experience.meituan.role">キャンパスアンバサダー・バックエンド開発</span></span>
+                                <small>-</small>
+                                <a href="https://www.meituan.com/" target="_blank"><span data-i18n="experience.meituan.company">Meituan</span></a>
+
+                                <div class="pb-1">
+                                    <small><span data-i18n="experience.meituan.period">長期キャンパスアンバサダー</span></small>
+
+                                </div>
+
+
+                                <div class="py-2 featuredLink">
+                                    <a class="p-2 px-4 btn btn-outline-primary btn-sm" href="https://www.meituan.com/" target="_blank"><span data-i18n="experience.meituan.more">Meituan について：より良い食事と暮らしを支援</span></a>
+                                </div>
+
+                            </div>
+
+                            <div class="pt-2">
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="tab-pane fade bg-transparent" role="tabpanel" id="pills-昇思-MindSpore-2023·9-2024·4" aria-labelledby="pills-昇思-MindSpore-2023·9-2024·4-tab">
+                            <div>
+                                <span class="h4"><span data-i18n="experience.mindspore.role">インターン</span></span>
+                                <small>-</small>
+                                <a href="https://www.mindspore.cn/" target="_blank"><span data-i18n="experience.mindspore.company">MindSpore</span></a>
+
+                                <div class="pb-1">
+                                    <small><span data-i18n="experience.mindspore.period">2023年9月〜2024年4月</span></small>
+
+                                    <span class="p-2">
+                                        <span style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Huawei インターンシップのサブプロジェクト" data-i18n-data-bs-original-title="experience.mindspore.huaweiProject">
+                                            <i class="fas fa-info-circle fa-xs"></i>
+                                        </span>
+                                    </span>
+
+                                </div>
+
+
+                                <div class="py-2 featuredLink">
+                                    <a class="p-2 px-4 btn btn-outline-primary btn-sm" href="https://www.mindspore.cn/docs/zh-CN/r2.3.0rc2/design/overview.html" target="_blank"><span data-i18n="experience.mindspore.more">Huawei 開発の深層学習フレームワーク MindSpore について</span></a>
+                                </div>
+
+                            </div>
+
+                            <div class="pt-2"><span data-i18n="experience.mindspore.summary">MindSpore Insight とユーザビリティ SIG の一部業務を担当しました。</span><br><span data-i18n="experience.mindspore.achievements">モデル移植やパラメーター変換など計15件の業務に参加し、3件を製品として実用化しました。</span><br><br></div>
+                        </div>
+
+
+
+                        <div class="tab-pane fade bg-transparent" role="tabpanel" id="pills-University-of-Melbourne-2023·7---2023·8" aria-labelledby="pills-University-of-Melbourne-2023·7---2023·8-tab">
+                            <div>
+                                <span class="h4"><span data-i18n="experience.melbourne.role">研修生</span></span>
+                                <small>-</small>
+                                <a href="https://www.unimelb.edu.au/" target="_blank"><span data-i18n="experience.melbourne.company">メルボルン大学</span></a>
+
+                                <div class="pb-1">
+                                    <small><span data-i18n="experience.huawei.period">2023年7月〜8月</span></small>
+
+                                </div>
+
+
+                                <div class="py-2 featuredLink">
+                                    <a class="p-2 px-4 btn btn-outline-primary btn-sm" href="https://wadeinstitute.org.au/" target="_blank"><span data-i18n="experience.melbourne.more">Wade Institute について</span></a>
+                                </div>
+
+                            </div>
+
+                            <div class="pt-2"><span data-i18n="experience.melbourne.summary">国際リーダーシップ向上プログラムに参加し、修了証を取得しました。</span><br><span data-i18n="experience.melbourne.project">メルボルン大学のイノベーションプロジェクト Wall Breaker の設計・開発に全工程を通して参加しました。</span></div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section id="contact" class="py-5">
+    <div class="container">
+        <h3 class="text-center"><span data-i18n="nav.contact">お問い合わせ</span></h3>
+        <div class="px-0 px-md-5 px-lg-5">
+            <div class="row justify-content-center px-md-5">
+                <div class="col-md-8 py-3">
+                    <div class="text-center"><span data-i18n="homepage.contact">ご質問やアイデアがあれば、メールでお気軽にご連絡ください。ページ下部へのコメントも歓迎します。</span><br></div>
+
+                    <div class="text-center pt-3">
+                        <a href="mailto:tommy_shang2021@petalmail.com%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20" target="_blank" class="btn"><span data-i18n="action.sendMail">メールを送信</span></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contact-form-status"></div>
+</section>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check-circle-fill" viewbox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+  </symbol>
+  <symbol id="info-fill" viewbox="0 0 16 16">
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
+  </symbol>
+  <symbol id="exclamation-triangle-fill" viewbox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+  </symbol>
+</svg>
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最近の記事</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <a href="/ja/blogs/opencode-v2-extensions/">
+                        <img src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" loading="lazy" decoding="async" class="card-img-top" style="object-fit: cover;" alt="OpenCode v2 拡張機構の調査と導入ガイド" data-i18n-alt="post.opencode-v2-extensions.title">
+                    </a>
+                </div>
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/opencode-v2-extensions/" class="primary-font card-title"><h5 class="card-title bg-transparent" title="OpenCode v2 拡張機構の調査と導入ガイド" data-i18n-title="post.opencode-v2-extensions.title" data-i18n="post.opencode-v2-extensions.title">OpenCode v2 拡張機構の調査と導入ガイド</h5></a>
+                    <div class="card-text secondary-font"><p data-i18n="post.opencode-v2-extensions.description">OpenCode v2 の内部・外部・SDK プラグインを整理し、Transform、Hook、ツール登録、Code Mode、Location のライフサイクルを解説します。</p></div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2026-09-13" data-date="2026-09-13">2026年9月13日</time></span>
+                    <a href="/ja/blogs/opencode-v2-extensions/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">『クリーンアーキテクチャ』再読（6）：境界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">アーキテクチャの境界によって依存関係を制約し、ビジネスロジックを分離し、フレームワークやデータベースなどの詳細の決定を遅らせる方法を考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="disqus_thread"></div>
+    <script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/"; this.language = "ja"; };</script><script>
+
+
+
+
+        (function () {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://tommycheese.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Disqus のコメントを表示するには JavaScript を有効にしてください。</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/ja/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese サイトロゴ" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Hugo で心を込めて制作<br>GitHub Pages で公開</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>

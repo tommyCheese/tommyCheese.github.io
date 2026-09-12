@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Ascend · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ru/tags/%E6%98%87%E8%85%BE/</link>
+    <description>Личный блог Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ru/tags/%E6%98%87%E8%85%BE/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Как загрузить параметры модели PyTorch в MindSpore</title>
+      <link>https://tommycheese.github.io/ru/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ru/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h3 id="问题简述"&gt;Описание задачи&lt;/h3&gt;
+&lt;p&gt;При разработке и обучении моделей часто встречается следующая ситуация: в открытых проектах и воспроизведениях научных работ большинство моделей спроектированы и реализованы на Pytorch, который также используется для обучения и инференса. Если же разработку нужно вести на MindSpore, возникают две проблемы:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Код модели написан на Pytorch.&lt;/li&gt;
+&lt;li&gt;Сохранённые после обучения параметры модели Pytorch нельзя напрямую загрузить в модель MindSpore.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Первую проблему можно решить переносом модели по официальной документации MindSpore: &lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB"&gt;Типичные отличия от Pytorch&lt;/a&gt; и &lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8"&gt;Таблица соответствия API PyTorch и MindSpore&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Для преобразования параметров MindConverter в рассматриваемой актуальной версии MindSpore больше не поддерживается. Поэтому можно выполнить &lt;strong&gt;ручное преобразование&lt;/strong&gt;: перевести параметры модели Pytorch в формат, распознаваемый MindSpore, и затем загрузить их.&lt;/p&gt;
+&lt;h3 id="解决方案"&gt;Решение&lt;/h3&gt;
+&lt;p&gt;На преобразовании кода модели подробно останавливаться не будем.&lt;/p&gt;
+&lt;p&gt;Основная схема преобразования параметров:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Загрузить модель Pytorch средствами Pytorch и получить параметры prams_torch.&lt;/li&gt;
+&lt;li&gt;Загрузить модель MindSpore средствами MindSpore и получить параметры prams_ms.&lt;/li&gt;
+&lt;li&gt;Установить взаимно однозначное соответствие между именами параметров моделей Pytorch и MindSpore, где оно существует.&lt;/li&gt;
+&lt;li&gt;Создать таблицу соответствия ключей torch_2_ms и с её помощью поместить значения параметров Pytorch в позиции, соответствующие именам параметров MindSpore.&lt;/li&gt;
+&lt;li&gt;Загрузить параметры средствами MindSpore.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="案例分析"&gt;Разбор примера&lt;/h3&gt;
+&lt;p&gt;Модули и типы параметров у моделей различаются. На примере одной сети рассмотрим основной подход к преобразованию; для других моделей он будет аналогичным.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://arxiv.org/abs/1905.11946"&gt;EfficientNet&lt;/a&gt; — работа Google, опубликованная в 2019 году. Подробная архитектура сети описана в статье. Здесь в качестве примера возьмём &lt;strong&gt;EfficientNet+FC&lt;/strong&gt; модель с полносвязным слоем и рассмотрим преобразование параметров сети.&lt;/p&gt;
+&lt;h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch"&gt;Загрузка модели Pytorch и получение параметров prams_torch&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_pytorch.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_pytorch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_pytorch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cuda()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_weights_dict &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;state_dict()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_weights_dict&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(param_torch)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'param_torch.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;После этого шага параметры модели pytorch сохранены в param_torch.csv. Посмотрим на данные:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;_bn0.num_batches_tracked&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms"&gt;Загрузка модели MindSpore и получение параметров prams_ms&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mindspore &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_mindspore.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mindspore_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_ms&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mindspore_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parameters_dict()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(prams_ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'prams_ms.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;После этого шага параметры модели MindSpore сохранены в prams_ms.csv. Посмотрим на данные:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应"&gt;Сопоставление имён параметров моделей Pytorch и MindSpore&lt;/h4&gt;
+&lt;p&gt;Теперь у нас есть таблицы ключей параметров MindSpore и Pytorch, приложенные в разделе вложений. Сравнив их, можно обнаружить устойчивые закономерности именования. Вот несколько примеров:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Batch Normalization:
+&lt;ul&gt;
+&lt;li&gt;Веса: weight|bias — gamma|beta.&lt;/li&gt;
+&lt;li&gt;Скользящие среднее и дисперсия: running_mean|running_var — moving_mean|moving_variance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Пользовательские blocks: у pytorch есть префикс _blocks.&lt;/li&gt;
+&lt;li&gt;Другие различия&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="键名映射表"&gt;Таблица соответствия ключей&lt;/h4&gt;
+&lt;p&gt;По найденным закономерностям можно написать Python-скрипт, который преобразует имена ключей и создаст таблицу соответствия:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pytorch&lt;/th&gt;
+&lt;th&gt;mindspore&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Затем из словаря весов Pytorch берём значение по Pytorch_key из файла соответствия, оборачиваем его в mindspore.Parameter и добавляем в набор весов по соответствующему mindspore.key:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ms_param_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;values:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; i
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; param_mapping[ms_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_values_dict[pt_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; isinstance(pt_val, np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ndarray):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;        pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_val&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cpu()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;numpy()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Parameter(pt_val, ms_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    print(ms_val)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_values_dict[ms_key] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ms_val
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用mindspore加载参数"&gt;Загрузка параметров средствами MindSpore&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;load_param_into_net(mindspore_model, ms_values_dict)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Теперь MindSpore должен принять параметры.&lt;/p&gt;
+&lt;h3 id="whats-more"&gt;What’s more&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;При сохранении значений параметров учитывайте различия точности параметров между Pytorch и MindSpore.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(Конец)&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

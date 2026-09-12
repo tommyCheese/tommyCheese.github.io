@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja" data-page-path="/blogs/实用干货如何把pytorch模型参数加载到mindspore模型/">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
+<link rel="icon" href="/%f0%9f%a7%80.png" type="image/gif">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+</noscript>
+
+
+<link rel="stylesheet" href="/css/font.css" media="all">
+
+
+
+<meta property="og:title" content="PyTorch のモデルパラメーターを MindSpore に読み込む方法">
+<meta property="og:description" content="PyTorch と MindSpore のモデルパラメーターの非互換性に対し、手動で変換して MindSpore モデルに読み込む実践方法を紹介します。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><meta property="article:section" content="blogs">
+<meta property="article:published_time" content="2023-09-01T22:53:58+05:30">
+<meta property="article:modified_time" content="2023-09-01T22:53:58+05:30"><meta property="og:site_name" content="Tomme Cheese blogs">
+
+
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="PyTorch のモデルパラメーターを MindSpore に読み込む方法">
+<meta name="twitter:description" content="PyTorch と MindSpore のモデルパラメーターの非互換性に対し、手動で変換して MindSpore モデルに読み込む実践方法を紹介します。">
+
+
+<link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
+<link rel="stylesheet" href="/css/footer.css" media="all">
+
+
+<link rel="stylesheet" href="/css/theme.css" media="all">
+
+<style>
+    :root {
+        --text-color: #343a40;
+        --text-secondary-color: #6c757d;
+        --background-color: #eaedf0;
+        --secondary-background-color: #64ffda1a;
+        --primary-color: #007bff;
+        --secondary-color: #f8f9fa;
+
+
+        --text-color-dark: #e4e6eb;
+        --text-secondary-color-dark: #b0b3b8;
+        --background-color-dark: #18191a;
+        --secondary-background-color-dark: #212529;
+        --primary-color-dark: #ffffff;
+        --secondary-color-dark: #212529;
+    }
+    body {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    html {
+        background-color: var(--background-color) !important;
+    }
+
+    body::-webkit-scrollbar {
+        height: 0px;
+        width: 8px;
+        background-color: var(--background-color);
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 1rem;
+        background: #b0b0b0;
+        outline: 1px solid var(--background-color);
+    }
+
+    #search-content::-webkit-scrollbar {
+        width: .5em;
+        height: .1em;
+        background-color: var(--background-color);
+    }
+</style>
+
+
+
+<meta name="description" content="PyTorch と MindSpore のモデルパラメーターの非互換性に対し、手動で変換して MindSpore モデルに読み込む実践方法を紹介します。">
+<link rel="stylesheet" href="/css/single.css">
+
+
+<script defer src="/fontawesome-6/all-6.4.2.js"></script>
+
+
+
+
+
+  <title>PyTorch のモデルパラメーターを MindSpore に読み込む方法 · Tommy Cheese</title>
+<meta property="og:locale" content="ja_JP"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><link rel="canonical" href="https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"><script src="/js/i18n-messages.js" defer></script><script src="/js/i18n.js" defer></script><link rel="stylesheet" href="/css/i18n.css"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+
+<body class="light">
+
+
+<script>
+    let localStorageValue = localStorage.getItem("pref-theme");
+    let mediaQuery = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    switch (localStorageValue) {
+        case "dark":
+            document.body.classList.add('dark');
+            break;
+        case "light":
+            document.body.classList.remove('dark');
+            break;
+        default:
+            if (mediaQuery) {
+                document.body.classList.add('dark');
+            }
+            break;
+    }
+</script>
+
+
+
+
+<script>
+    var prevScrollPos = window.pageYOffset;
+    window.addEventListener("scroll", function showHeaderOnScroll() {
+        let profileHeaderElem = document.getElementById("profileHeader");
+        let currentScrollPos = window.pageYOffset;
+        let resetHeaderStyle = false;
+        let showNavBarOnScrollUp =  true ;
+        let showNavBar = showNavBarOnScrollUp ? prevScrollPos > currentScrollPos : currentScrollPos > 0;
+        if (showNavBar) {
+            profileHeaderElem.classList.add("showHeaderOnTop");
+        } else {
+            resetHeaderStyle = true;
+        }
+        if(currentScrollPos === 0) {
+            resetHeaderStyle = true;
+        }
+        if(resetHeaderStyle) {
+            profileHeaderElem.classList.remove("showHeaderOnTop");
+        }
+        prevScrollPos = currentScrollPos;
+    });
+</script>
+
+
+
+<header id="profileHeader">
+    <nav class="pt-3 navbar navbar-expand-xl animate">
+        <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
+
+            <a class="navbar-brand primary-font text-wrap" href="/ja/">
+
+                <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
+                Tommy Cheese
+
+            </a>
+
+
+                <div>
+                    <input id="search" autocomplete="off" class="form-control mr-sm-2 d-none d-xl-block" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                </div>
+
+
+
+            <details class="language-switch"><summary aria-label="言語">🌐 日本語</summary><nav aria-label="言語"><a href="/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/" lang="ja" hreflang="ja" data-language="ja" aria-current="true">日本語</a><a href="/ru/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="ナビゲーションの開閉" data-i18n-aria-label="ui.toggleNavigation">
+                <svg aria-hidden="true" height="24" viewbox="0 0 16 16" version="1.1" width="24" data-view-component="true">
+                    <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path>
+                </svg>
+            </button>
+
+
+            <div class="collapse navbar-collapse text-wrap primary-font" id="navbarContent">
+                <ul class="navbar-nav ms-auto text-center">
+
+                        <li class="nav-item navbar-text d-block d-xl-none">
+                            <div class="nav-link">
+                                <input id="search" autocomplete="off" class="form-control mr-sm-2" placeholder="記事を検索（Ctrl + K）" aria-label="記事を検索" oninput="searchOnChange(event)" data-i18n-aria-label="search.label" data-i18n-placeholder="search.placeholder">
+                            </div>
+                        </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#about" aria-label="私について" data-i18n-aria-label="nav.about" data-i18n="nav.about">私について</a>
+                    </li>
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#experience" aria-label="経歴" data-i18n-aria-label="nav.experience" data-i18n="nav.experience">経歴</a>
+                    </li>
+
+
+
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/#contact" aria-label="お問い合わせ" data-i18n-aria-label="nav.contact" data-i18n="nav.contact">お問い合わせ</a>
+                    </li>
+
+
+
+                        <li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                        <div class="dropdown-divider"></div>
+
+
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/blogs/" title="ブログ" data-i18n-title="nav.blogs" data-i18n="nav.blogs" data-i18n-aria-label="nav.blogs" aria-label="ブログ">ブログ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/tags/" title="タグ" data-i18n-title="nav.tags" data-i18n="nav.tags" data-i18n-aria-label="nav.tags" aria-label="タグ">タグ</a>
+                    </li>
+
+
+
+
+                    <li class="nav-item navbar-text">
+                        <a class="nav-link" href="/ja/gallery/" title="探索" data-i18n-title="nav.gallery" data-i18n="nav.gallery" data-i18n-aria-label="nav.gallery" aria-label="探索">探索</a>
+                    </li>
+
+
+                    <script>
+                        function imgchange() {
+                            let pt = localStorage.getItem("pref-theme");
+                            let img = document.getElementById("dynImg");
+                            if (!img) return;
+
+                            switch (pt) {
+                                case "dark":
+                                    img.setAttribute("src", "/images/town.jpg")
+                                    break;
+                                case "light":
+                                    img.setAttribute("src", "/exporeImages/2.jpg")
+                                    break;
+                            }
+                        }
+                    </script>
+
+                    <li class="nav-item navbar-text">
+
+                        <div class="text-center">
+                            <button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="ライト・ダークテーマを切り替え">
+                                <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+<div id="content">
+<section id="single">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-md-12 col-lg-9">
+        <div class="pr-lg-4">
+          <div class="title mb-5">
+            <h1 class="text-center mb-4" data-i18n="post.实用干货如何把pytorch模型参数加载到mindspore模型.title">PyTorch のモデルパラメーターを MindSpore に読み込む方法</h1>
+            <div class="text-center">
+
+                Tommy Cheese
+                <small>|</small>
+
+              <time datetime="2023-09-01" data-date="2023-09-01">2023年9月1日</time>
+
+
+              <span id="readingTime"> · 読了目安：3 分</span>
+
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/p2m.png" alt="PyTorch のモデルパラメーターを MindSpore に読み込む方法" data-i18n-alt="post.实用干货如何把pytorch模型参数加载到mindspore模型.title">
+          </div>
+
+          <article class="page-content  p-2"><h3 id="问题简述">問題の概要</h3>
+<p>日々のモデル開発や学習では、既存のオープンソースプロジェクトや論文の再実装の多くが、Pytorchでモデルを設計、開発し、学習や推論を行っているという状況によく出会います。MindSporeフレームワークを使ってモデルを開発したい場合、次の二つの問題があります：</p>
+<ul>
+<li>モデルのコードがPytorchで書かれていること。</li>
+<li>Pytorchの学習後に保存されたパラメータを、MindSporeのモデルで直接読み込めないこと。</li>
+</ul>
+<p>一つ目の問題は、MindSporeの公式ドキュメントである<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB">Pytorchとの主な違い</a>と<a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8">PyTorchとMindSporeのAPI対応表</a>を参考に、モデルを移植できます。</p>
+<p>モデルパラメータの変換については、最新のMindSporeではMindConverterが対応していないため、パラメータを<strong>手動で変換する</strong>方法を検討できます。PytorchのパラメータをMindSporeが認識できる形式に変換してから、読み込みます。</p>
+<h3 id="解决方案">解決方法</h3>
+<p>モデルのコードの変換方法は、ここでは繰り返しません。</p>
+<p>パラメータ変換の基本的な流れは、次のとおりです：</p>
+<ul>
+<li>PytorchでPytorchモデルを読み込み、モデルパラメータprams_torchを取得する。</li>
+<li>MindSporeでMindSporeモデルを読み込み、モデルパラメータprams_msを取得する。</li>
+<li>PytorchとMindSporeのパラメータ名を、対応するもの同士で一対一に結び付ける。</li>
+<li>torch_2_msというキー名の対応表を作り、その表を使ってPytorchのパラメータ値を、対応するMindSporeのパラメータ名へ割り当てる。</li>
+<li>MindSporeでパラメータを読み込む。</li>
+</ul>
+<h3 id="案例分析">具体例</h3>
+<p>モデルによってモジュールやパラメータの型は異なります。ここでは一つのネットワークを例に、変換の基本的な考え方を説明します。他のモデルでも、考え方は同様です。</p>
+<p><a href="https://arxiv.org/abs/1905.11946">EfficientNet</a>は、Googleが2019年に発表した論文です。ネットワーク構造の詳細は論文をご覧ください。ここでは、<strong>EfficientNet＋FC</strong>全結合層のモデルを例に、ネットワークのパラメータの変換方法を考えます。</p>
+<h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch">PytorchでPytorchモデルを読み込み、モデルパラメータprams_torchを取得する</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_pytorch.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_pytorch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pytorch_model <span style="color:#f92672">=</span> EN_pytorch<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>pytorch_model<span style="color:#f92672">.</span>cuda()
+</span></span><span style="display:flex;"><span>pytorch_weights_dict <span style="color:#f92672">=</span> pytorch_model<span style="color:#f92672">.</span>state_dict()
+</span></span><span style="display:flex;"><span>param_torch <span style="color:#f92672">=</span> pytorch_weights_dict<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>param_torch_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(param_torch)
+</span></span><span style="display:flex;"><span>param_torch_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'param_torch.csv'</span>)
+</span></span></code></pre></div><p>この手順を終えると、pytorchのモデルパラメータがparam_torch.csvに保存されます。データを確認しましょう：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.weight</td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.bias</td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.running_mean</td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.running_var</td>
+</tr>
+<tr>
+<td>5</td>
+<td>_bn0.num_batches_tracked</td>
+</tr>
+<tr>
+<td>6</td>
+<td>_blocks.0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>7</td>
+<td>_blocks.0._bn1.weight</td>
+</tr>
+<tr>
+<td>8</td>
+<td>_blocks.0._bn1.bias</td>
+</tr>
+<tr>
+<td>9</td>
+<td>_blocks.0._bn1.running_mean</td>
+</tr>
+<tr>
+<td>10</td>
+<td>_blocks.0._bn1.running_var</td>
+</tr>
+</tbody>
+</table>
+<h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms">MindSporeでMindSporeモデルを読み込み、モデルパラメータprams_msを取得する</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> mindspore <span style="color:#66d9ef">as</span> ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> test.efficientnet_mindspore.model <span style="color:#f92672">import</span> EfficientNet <span style="color:#66d9ef">as</span> EN_ms
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mindspore_model <span style="color:#f92672">=</span> EN_ms<span style="color:#f92672">.</span>from_name(cfg[<span style="color:#e6db74">'model'</span>], override_params<span style="color:#f92672">=</span>{<span style="color:#e6db74">'num_classes'</span>: <span style="color:#ae81ff">3</span>})
+</span></span><span style="display:flex;"><span>prams_ms <span style="color:#f92672">=</span> mindspore_model<span style="color:#f92672">.</span>parameters_dict()<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>prams_ms_lst <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(prams_ms)
+</span></span><span style="display:flex;"><span>prams_ms_lst<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">'prams_ms.csv'</span>)
+</span></span></code></pre></div><p>この手順を終えると、MindSporeのモデルパラメータがprams_ms.csvに保存されます。データを確認しましょう：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>keys</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>_conv_stem.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>_bn0.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>_bn0.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>_bn0.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>_bn0.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0._depthwise_conv.weight</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>0._bn1.moving_mean</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>0._bn1.moving_variance</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>0._bn1.gamma</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0._bn1.beta</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>0._se_reduce.weight</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应">PytorchとMindSporeのパラメータ名を一対一に対応付ける</h4>
+<p>これでMindSporeとPytorchそれぞれのパラメータのキー名一覧が得られました。添付ファイル欄にも掲載しています。両者の命名の違いを観察すると、一定の規則が見つかります。たとえば次のとおりです：</p>
+<ul>
+<li>Batch Normalization：
+<ul>
+<li>重み：weight|bias——gamma|beta。</li>
+<li>移動平均と分散：running_mean|running_var——moving_mean|moving_variance。</li>
+</ul>
+</li>
+<li>独自のblocks：pytorchには_blocks.という接頭辞が付いています。</li>
+<li>その他</li>
+</ul>
+<h4 id="键名映射表">キー名の対応表</h4>
+<p>この規則に従ってPythonスクリプトを書けば、キー名を変換し、対応表を生成できます：</p>
+<table>
+<thead>
+<tr>
+<th>Pytorch</th>
+<th>mindspore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_conv_stem.weight</td>
+<td>_conv_stem.weight</td>
+</tr>
+<tr>
+<td>_bn0.weight</td>
+<td>_bn0.gamma</td>
+</tr>
+<tr>
+<td>_bn0.bias</td>
+<td>_bn0.beta</td>
+</tr>
+<tr>
+<td>_bn0.running_mean</td>
+<td>_bn0.moving_mean</td>
+</tr>
+<tr>
+<td>_bn0.running_var</td>
+<td>_bn0.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._depthwise_conv.weight</td>
+<td>0._depthwise_conv.weight</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.weight</td>
+<td>0._bn1.gamma</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.bias</td>
+<td>0._bn1.beta</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_mean</td>
+<td>0._bn1.moving_mean</td>
+</tr>
+<tr>
+<td>_blocks.0._bn1.running_var</td>
+<td>0._bn1.moving_variance</td>
+</tr>
+<tr>
+<td>_blocks.0._se_reduce.weight</td>
+<td>0._se_reduce.weight</td>
+</tr>
+</tbody>
+</table>
+<p>続いて、Pytorchの重み辞書から、対応ファイルのPytorch_keyに従って重みを取り出します。その値をmindspore.Parameterで包み、mindspore.keyに対応する重みとして追加します：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> ms_param_lst<span style="color:#f92672">.</span>values:
+</span></span><span style="display:flex;"><span>    ms_key <span style="color:#f92672">=</span> i
+</span></span><span style="display:flex;"><span>    pt_key <span style="color:#f92672">=</span> param_mapping[ms_key]
+</span></span><span style="display:flex;"><span>    pt_val <span style="color:#f92672">=</span> pt_values_dict[pt_key]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> isinstance(pt_val, np<span style="color:#f92672">.</span>ndarray):
+</span></span><span style="display:flex;"><span>        pt_val <span style="color:#f92672">=</span> pt_val<span style="color:#f92672">.</span>cpu()<span style="color:#f92672">.</span>numpy()
+</span></span><span style="display:flex;"><span>    ms_val <span style="color:#f92672">=</span> Parameter(pt_val, ms_key)
+</span></span><span style="display:flex;"><span>    print(ms_val)
+</span></span><span style="display:flex;"><span>    ms_values_dict[ms_key] <span style="color:#f92672">=</span> ms_val
+</span></span></code></pre></div><h4 id="使用mindspore加载参数">MindSporeでパラメータを読み込む</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>load_param_into_net(mindspore_model, ms_values_dict)
+</span></span></code></pre></div><p>これで、MindSporeがパラメータを読み込めるはずです。</p>
+<h3 id="whats-more">補足</h3>
+<ul>
+<li>パラメータ値を保存するときは、PytorchとMindSporeの数値精度の違いに注意してください。</li>
+</ul>
+<p>（完）</p>
+</article>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-12 col-lg-3">
+        <div id="stickySideBar" class="sticky-sidebar">
+
+          <aside class="toc">
+              <h5 data-i18n="article.toc">目次</h5>
+              <div class="toc-content">
+                <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#%E9%97%AE%E9%A2%98%E7%AE%80%E8%BF%B0">問題の概要</a></li>
+        <li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解決方法</a></li>
+        <li><a href="#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90">具体例</a></li>
+        <li><a href="#whats-more">補足</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+              </div>
+          </aside>
+
+
+
+          <aside class="tags">
+            <h5 data-i18n="article.tags">タグ</h5>
+            <ul class="tags-ul list-unstyled list-inline">
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/ja/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" target="_blank"><span data-i18n="tag.深度学习">深層学習</span></a></li>
+
+              <li class="list-inline-item"><a href="https://tommycheese.github.io/ja/tags/%E6%98%87%E8%85%BE/" target="_blank"><span data-i18n="tag.昇腾">Ascend</span></a></li>
+
+            </ul>
+          </aside>
+
+
+
+          <aside class="social">
+            <h5 data-i18n="article.share">共有</h5>
+            <div class="social-content">
+              <ul class="list-inline">
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%25AE%259E%25E7%2594%25A8%25E5%25B9%25B2%25E8%25B4%25A7%25E5%25A6%2582%25E4%25BD%2595%25E6%258A%258Apytorch%25E6%25A8%25A1%25E5%259E%258B%25E5%258F%2582%25E6%2595%25B0%25E5%258A%25A0%25E8%25BD%25BD%25E5%2588%25B0mindspore%25E6%25A8%25A1%25E5%259E%258B%2F" aria-label="共有 · LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://twitter.com/share?text=PyTorch+%E3%81%AE%E3%83%A2%E3%83%87%E3%83%AB%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%82%92+MindSpore+%E3%81%AB%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80%E6%96%B9%E6%B3%95&amp;url=https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%25AE%259E%25E7%2594%25A8%25E5%25B9%25B2%25E8%25B4%25A7%25E5%25A6%2582%25E4%25BD%2595%25E6%258A%258Apytorch%25E6%25A8%25A1%25E5%259E%258B%25E5%258F%2582%25E6%2595%25B0%25E5%258A%25A0%25E8%25BD%25BD%25E5%2588%25B0mindspore%25E6%25A8%25A1%25E5%259E%258B%2F" aria-label="共有 · X / Twitter">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="https://api.whatsapp.com/send?text=PyTorch+%E3%81%AE%E3%83%A2%E3%83%87%E3%83%AB%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%82%92+MindSpore+%E3%81%AB%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80%E6%96%B9%E6%B3%95+https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%25AE%259E%25E7%2594%25A8%25E5%25B9%25B2%25E8%25B4%25A7%25E5%25A6%2582%25E4%25BD%2595%25E6%258A%258Apytorch%25E6%25A8%25A1%25E5%259E%258B%25E5%258F%2582%25E6%2595%25B0%25E5%258A%25A0%25E8%25BD%25BD%25E5%2588%25B0mindspore%25E6%25A8%25A1%25E5%259E%258B%2F" aria-label="共有 · WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item text-center">
+                  <a target="_blank" href="mailto:?subject=PyTorch+%E3%81%AE%E3%83%A2%E3%83%87%E3%83%AB%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%82%92+MindSpore+%E3%81%AB%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80%E6%96%B9%E6%B3%95&amp;body=PyTorch+%E3%81%AE%E3%83%A2%E3%83%87%E3%83%AB%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%83%BC%E3%82%92+MindSpore+%E3%81%AB%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80%E6%96%B9%E6%B3%95+https%3A%2F%2Ftommycheese.github.io%2Fja%2Fblogs%2F%25E5%25AE%259E%25E7%2594%25A8%25E5%25B9%25B2%25E8%25B4%25A7%25E5%25A6%2582%25E4%25BD%2595%25E6%258A%258Apytorch%25E6%25A8%25A1%25E5%259E%258B%25E5%258F%2582%25E6%2595%25B0%25E5%258A%25A0%25E8%25BD%25BD%25E5%2588%25B0mindspore%25E6%25A8%25A1%25E5%259E%258B%2F" aria-label="共有 · メールを送信">
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
+        <div id="disqus_thread"></div>
+<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/"; this.language = "ja"; };</script><script>
+
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Disqus のコメントを表示するには JavaScript を有効にしてください。</noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="ページ上部へ">
+    <i class="fas fa-angle-up"></i>
+  </button>
+</section>
+
+
+<div class="progress">
+  <div id="scroll-progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<script src="/js/scrollProgressBar.js"></script>
+
+
+<script>
+  var topScroll = document.getElementById("topScroll");
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      topScroll.style.display = "block";
+    } else {
+      topScroll.style.display = "none";
+    }
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+
+  let stickySideBarElem = document.getElementById("stickySideBar");
+  let stickyNavBar =  true ;
+  if(stickyNavBar) {
+    let headerElem = document.getElementById("profileHeader");
+    let headerHeight = headerElem.offsetHeight + 15;
+    stickySideBarElem.style.top = headerHeight + "px";
+  } else {
+    stickySideBarElem.style.top = "50px";
+  }
+</script>
+
+
+<script src="/js/readingTime.js"></script>
+
+
+
+  </div><footer>
+
+
+
+<div class="container py-3" id="recent-posts">
+
+
+    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最近の記事</span></div>
+    <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/">
+                        <img src="/blogimages/arh6.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-alt="post.再读整洁架构之道六.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">『クリーンアーキテクチャ』再読（6）：境界</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道六.description">アーキテクチャの境界によって依存関係を制約し、ビジネスロジックを分離し、フレームワークやデータベースなどの詳細の決定を遅らせる方法を考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/">
+                        <img src="/blogimages/arh5.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-alt="post.再读整洁架构之道五.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.再读整洁架构之道五.description">コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
+                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 pt-2">
+            <div class="card h-100">
+
+                <div class="card-header">
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/">
+                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="ドメイン駆動設計入門" data-i18n-alt="post.ddd领域驱动设计初识.title">
+                    </a>
+                </div>
+
+                <div class="card-body bg-transparent p-3 shadow-sm">
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="primary-font card-title">
+                        <h5 class="card-title bg-transparent" title="ドメイン駆動設計入門" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">ドメイン駆動設計入門</h5>
+                    </a>
+                    <div class="card-text secondary-font">
+                        <p data-i18n="post.ddd领域驱动设计初识.description">DDD の戦略的設計と戦術的設計、ドメイン、サブドメイン、境界づけられたコンテキストなどの基本概念を紹介します。</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer">
+                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">2024年7月26日</time></span>
+                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<noscript>Disqus のコメントを表示するには JavaScript を有効にしてください。</noscript>
+    <div class="text-center pt-2">
+
+
+
+
+
+
+
+
+
+</div><div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+
+                <div class="pb-2">
+                    <a href="https://tommycheese.github.io/ja/" title="Tommy Cheese">
+                        <img alt="Tommy Cheese サイトロゴ" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
+                    </a>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Hugo で心を込めて制作<br>GitHub Pages で公開</div>
+        </div>
+    </div>
+</div>
+</footer><script src="/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+</script>
+
+
+    <script src="/js/search.js"></script>
+
+
+
+
+
+<!-- MathJax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha384-M5jmNxKC9EVnuqeMwRHvFuYUE8Hhp0TgBruj/GZRkYtiMrCRgH7yvv5KY+Owi7TW" crossorigin="anonymous"></script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['$$','$$'], ['\[','\]']],
+        processEscapes: true,
+        processEnvironments: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+        TeX: { equationNumbers: { autoNumber: "AMS" },
+             extensions: ["AMSmath.js", "AMSsymbols.js"] }
+      }
+    });
+</script>
+
+
+
+
+
+
+
+
+  <section id="search-content" class="py-2">
+    <div class="container" id="search-results"></div>
+  </section>
+</body>
+
+</html>
