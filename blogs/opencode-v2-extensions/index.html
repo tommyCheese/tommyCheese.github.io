@@ -31,12 +31,19 @@
 <meta property="og:title" content="OpenCode v2 扩展机制研究与接入说明" />
 <meta property="og:description" content="Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。" />
 <meta property="og:type" content="article" />
+<meta property="og:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png" />
+<meta property="og:image:width" content="1672" />
+<meta property="og:image:height" content="941" />
+<meta property="og:image:alt" content="Agent 核心与插件、工具和执行钩子的模块化连接" />
 <meta property="og:url" content="https://tommycheese.github.io/blogs/opencode-v2-extensions/" /><meta property="article:section" content="blogs" />
 <meta property="article:published_time" content="2026-09-13T00:00:00+08:00" />
 <meta property="article:modified_time" content="2026-09-13T00:00:00+08:00" /><meta property="og:site_name" content="Tomme Cheese blogs" />
 
 
-<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="OpenCode v2 扩展机制研究与接入说明"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://tommycheese.github.io/blogimages/opencode-v2-extensions-cover.png"/>
+<meta name="twitter:image:alt" content="Agent 核心与插件、工具和执行钩子的模块化连接"/>
+<meta name="twitter:title" content="OpenCode v2 扩展机制研究与接入说明"/>
 <meta name="twitter:description" content="Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。"/>
 
 
@@ -343,6 +350,9 @@ OpenCode v2 扩展机制研究与接入说明 | Tommy Cheese
           <div class="title mb-5">
             <h1 class="text-center mb-4">OpenCode v2 扩展机制研究与接入说明</h1>
             <div class="text-center"><time datetime="2026-09-13T00:00:00+08:00">2026年9月13日</time> · <a href="/tags/agent%E5%BC%80%E5%8F%91/">Agent开发</a> · <a href="article.md" download>Markdown</a></div>
+          </div>
+          <div class="featured-image">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" fetchpriority="high" decoding="async" alt="Agent 核心与插件、工具和执行钩子的模块化连接">
           </div>
           <article class="page-content p-2">
 <blockquote>
@@ -864,6 +874,11 @@ export default Plugin.define({
 
         <div class="col-lg-4 col-md-6 pt-2">
             <div class="card h-100">
+                <div class="card-header">
+                    <a href="/blogs/opencode-v2-extensions/">
+                        <img src="/blogimages/opencode-v2-extensions-cover.png" width="1672" height="941" loading="lazy" decoding="async" class="card-img-top" style="object-fit: cover;" alt="Agent 核心与插件、工具和执行钩子的模块化连接">
+                    </a>
+                </div>
                 <div class="card-body bg-transparent p-3 shadow-sm">
                     <a href="/blogs/opencode-v2-extensions/" class="primary-font card-title"><h5 class="card-title bg-transparent" title="OpenCode v2 扩展机制研究与接入说明">OpenCode v2 扩展机制研究与接入说明</h5></a>
                     <div class="card-text secondary-font"><p>Agent开发专题：梳理 OpenCode v2 的内部、外部与 SDK 插件，介绍 Transform、Hook、工具注册、Code Mode 和 Location 生命周期。</p></div>
