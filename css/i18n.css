@@ -1,19 +1,38 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
 .language-switch {
   position: relative;
-  margin: 0 .5rem;
   color: var(--text-color);
   font-size: .9rem;
 }
-.language-switch summary {
+.language-switch summary,
+.header-actions button#theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  border-radius: .35rem;
+  line-height: 1;
   cursor: pointer;
-  padding: .55rem .7rem;
-  border: 1px solid var(--text-secondary-color);
-  border-radius: .6rem;
-  list-style: none;
-  white-space: nowrap;
 }
+.language-switch summary {
+  list-style: none;
+}
+.language-switch summary svg { width: 18px; height: 18px; }
+.language-switch summary:hover,
+.language-switch[open] summary { color: var(--primary-color); }
 .language-switch summary::-webkit-details-marker { display: none; }
 .language-switch summary:focus-visible,
+.header-actions #theme-toggle:focus-visible,
 .language-switch a:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
 .language-switch nav {
   position: absolute;
@@ -26,6 +45,7 @@
   border-radius: .6rem;
   box-shadow: 0 8px 24px #0002;
   z-index: 1000;
+  text-align: start;
 }
 .language-switch a { display: block; padding: .5rem .7rem; color: var(--text-color); text-decoration: none; border-radius: .35rem; }
 .language-switch a:hover, .language-switch a[aria-current="true"] { background: var(--background-color); }
@@ -37,8 +57,5 @@ html[lang="ja"] body, html[lang="zh-CN"] body, html[lang="zh-TW"] body { line-br
 #single .page-content pre code { overflow-wrap: normal; }
 @media (max-width: 1199.98px) {
   #profileHeader .navbar-collapse { flex-basis: 100%; }
-}
-@media (max-width: 575.98px) {
-  .language-switch { margin-left: auto; margin-right: 0; }
-  .language-switch summary { padding: .45rem .5rem; font-size: .8rem; }
+  .language-switch nav { left: 50%; right: auto; transform: translateX(-50%); }
 }
