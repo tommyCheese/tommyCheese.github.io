@@ -12,7 +12,7 @@ sys.path.insert(0,str(ROOT/'scripts'))
 from build_i18n import LOCALES, PREFIX, MESSAGES, BASE, UI_REVISION
 
 pages = [ROOT/'index.html', ROOT/'404.html']
-for folder in ['blogs','tags','categories','gallery']:
+for folder in ['blogs','tags','categories','gallery','topics']:
     pages.extend((ROOT/folder).rglob('*.html'))
 articles = {p.parent.name:html.document_fromstring(p.read_text()).find('.//article') for p in pages if p.parent.parent.name=='blogs'}
 articles = {slug:article for slug,article in articles.items() if article is not None}
