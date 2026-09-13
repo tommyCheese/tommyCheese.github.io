@@ -13,7 +13,6 @@
       <link>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</guid>
-      <category>Agent Development</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Research date: 2026-09-13. This article describes the general plugin capabilities of OpenCode v2, including plugin types, loading, capability registration, execution hooks, permission boundaries, and lifecycle management, as a reference for plugin development and embedded integration.&lt;/p&gt;
 &lt;p&gt;The code baseline is the &lt;code&gt;v2&lt;/code&gt; branch of the OpenCode repository under study, at commit &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;. Source references use repository-relative paths at that fixed commit. The interfaces and behavior described here apply to that version and do not promise compatibility with other OpenCode versions or the legacy plugin API.&lt;/p&gt;
@@ -448,7 +447,7 @@ export default Plugin.define({
 &lt;li&gt;Tool results and events accurately represent progress, completion, failure, and cancellation.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Agent Development</category><category>Plugin Development</category></item>
     <item>
       <title>Rereading Clean Architecture (6): Boundaries</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -489,7 +488,7 @@ export default Plugin.define({
 &lt;h3 id="服务层次的跨边界调用"&gt;Crossing Boundaries at the Service Level&lt;/h3&gt;
 &lt;p&gt;Services form the strongest architectural boundaries. A service is a process. When defining architectural boundaries at this level, minimize communication wherever possible, and ensure that it can tolerate high latency. Otherwise, the same rules used for local processes apply: lower-level services should act as plugins for higher-level services.&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (5): Software Architecture</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -568,7 +567,7 @@ export default Plugin.define({
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 5)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>An Introduction to Domain-Driven Design</title>
       <link>https://tommycheese.github.io/en/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
@@ -651,7 +650,7 @@ export default Plugin.define({
 &lt;/blockquote&gt;
 &lt;p&gt;(End of section)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Domain-Driven Design</category></item>
     <item>
       <title>Rereading Clean Architecture (4): Component Principles</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -800,7 +799,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 4)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (3): SOLID Design Principles</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -850,7 +849,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 3)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (2): Programming Paradigms</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -900,7 +899,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;p&gt;All three programming paradigms impose new &lt;strong&gt;constraints&lt;/strong&gt; on programmers. Each limits a way of writing code; none adds a new capability. In other words, programming paradigms tell us what not to do.&lt;/p&gt;
 &lt;p&gt;(End of Part 2)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (1)</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -942,7 +941,7 @@ The author considers architectural value more important than behavioral value, b
 &lt;h3 id="为好的软件架构持续斗争"&gt;Keep Fighting for Good Software Architecture ✊&lt;/h3&gt;
 &lt;p&gt;If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>How to Load PyTorch Model Parameters into MindSpore</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
@@ -1198,7 +1197,7 @@ The author considers architectural value more important than behavioral value, b
 &lt;/ul&gt;
 &lt;p&gt;(End)&lt;/p&gt;
 </description>
-    </item>
+    <category>Machine Learning</category><category>Model Migration</category></item>
     <item>
       <title>Beyond the Gradient: The Hessian Matrix</title>
       <link>https://tommycheese.github.io/en/blogs/h/</link>
@@ -1293,6 +1292,6 @@ $$
 &lt;p&gt;With the definition of the Hessian established, we can use its properties to analyze optimization methods: identifying local maxima, local minima, and saddle points; choosing learning rates; and assessing how ill-conditioning affects gradient descent. We can also use the Hessian to implement &lt;strong&gt;Newton’s method&lt;/strong&gt; as an optimization algorithm.&lt;/p&gt;
 &lt;p&gt;(End of section)&lt;/p&gt;
 </description>
-    </item>
+    <category>Machine Learning</category><category>Mathematical Foundations</category></item>
   </channel>
 </rss>

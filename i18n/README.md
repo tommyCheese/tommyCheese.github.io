@@ -36,3 +36,9 @@ node --test tests/i18n.test.cjs
 新增或调整精选文章时修改 `FEATURED`；专题文章与阅读顺序维护在 `TOPICS` 和 `ARCHITECTURE` 中。`index.json` 仍是文章元数据来源，日期从各文章页面的 `time` 元素读取。新增界面文案仍需在五语言字典中同步维护。构建会重建这些区域，请勿直接修改生成后的精选卡片、专题正文或上下篇导航。
 
 完成构建后，另运行 `python tests/check_reading.py` 检查专题覆盖、目录锚点、系列顺序、正文完整性和站内链接。
+
+## 博客标签
+
+`scripts/tag_taxonomy.py` 是标签的唯一配置来源：`GROUPS` 定义技术方向和细分主题，`POST_TAGS` 为每篇文章指定一个方向和一个主题，`ALIASES` 保存旧标签与新标签的对应关系。新增文章时必须补充 `POST_TAGS`；新增标签时在五语言字典中添加 `tag.<slug>` 和 `tag.<slug>.description`。
+
+构建自动生成标签目录、文章列表、文章侧栏标签、搜索标签和 RSS 分类。旧标签页自动跳转到对应的新标签；旧 RSS 地址继续提供新分类内容，站点地图只收录规范地址。请勿手动编辑生成的标签页或订阅源。运行 `python tests/check_tags.py` 检查文章归属、计数、重定向与 RSS 一致性。

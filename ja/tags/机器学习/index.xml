@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>機械学習 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ja/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+    <description>ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ja/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>PyTorch のモデルパラメーターを MindSpore に読み込む方法</title>
+      <link>https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h3 id="问题简述"&gt;問題の概要&lt;/h3&gt;
+&lt;p&gt;日々のモデル開発や学習では、既存のオープンソースプロジェクトや論文の再実装の多くが、Pytorchでモデルを設計、開発し、学習や推論を行っているという状況によく出会います。MindSporeフレームワークを使ってモデルを開発したい場合、次の二つの問題があります：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;モデルのコードがPytorchで書かれていること。&lt;/li&gt;
+&lt;li&gt;Pytorchの学習後に保存されたパラメータを、MindSporeのモデルで直接読み込めないこと。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一つ目の問題は、MindSporeの公式ドキュメントである&lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB"&gt;Pytorchとの主な違い&lt;/a&gt;と&lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8"&gt;PyTorchとMindSporeのAPI対応表&lt;/a&gt;を参考に、モデルを移植できます。&lt;/p&gt;
+&lt;p&gt;モデルパラメータの変換については、最新のMindSporeではMindConverterが対応していないため、パラメータを&lt;strong&gt;手動で変換する&lt;/strong&gt;方法を検討できます。PytorchのパラメータをMindSporeが認識できる形式に変換してから、読み込みます。&lt;/p&gt;
+&lt;h3 id="解决方案"&gt;解決方法&lt;/h3&gt;
+&lt;p&gt;モデルのコードの変換方法は、ここでは繰り返しません。&lt;/p&gt;
+&lt;p&gt;パラメータ変換の基本的な流れは、次のとおりです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PytorchでPytorchモデルを読み込み、モデルパラメータprams_torchを取得する。&lt;/li&gt;
+&lt;li&gt;MindSporeでMindSporeモデルを読み込み、モデルパラメータprams_msを取得する。&lt;/li&gt;
+&lt;li&gt;PytorchとMindSporeのパラメータ名を、対応するもの同士で一対一に結び付ける。&lt;/li&gt;
+&lt;li&gt;torch_2_msというキー名の対応表を作り、その表を使ってPytorchのパラメータ値を、対応するMindSporeのパラメータ名へ割り当てる。&lt;/li&gt;
+&lt;li&gt;MindSporeでパラメータを読み込む。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="案例分析"&gt;具体例&lt;/h3&gt;
+&lt;p&gt;モデルによってモジュールやパラメータの型は異なります。ここでは一つのネットワークを例に、変換の基本的な考え方を説明します。他のモデルでも、考え方は同様です。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://arxiv.org/abs/1905.11946"&gt;EfficientNet&lt;/a&gt;は、Googleが2019年に発表した論文です。ネットワーク構造の詳細は論文をご覧ください。ここでは、&lt;strong&gt;EfficientNet＋FC&lt;/strong&gt;全結合層のモデルを例に、ネットワークのパラメータの変換方法を考えます。&lt;/p&gt;
+&lt;h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch"&gt;PytorchでPytorchモデルを読み込み、モデルパラメータprams_torchを取得する&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_pytorch.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_pytorch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_pytorch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cuda()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_weights_dict &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;state_dict()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_weights_dict&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(param_torch)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'param_torch.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この手順を終えると、pytorchのモデルパラメータがparam_torch.csvに保存されます。データを確認しましょう：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;_bn0.num_batches_tracked&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms"&gt;MindSporeでMindSporeモデルを読み込み、モデルパラメータprams_msを取得する&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mindspore &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_mindspore.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mindspore_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_ms&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mindspore_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parameters_dict()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(prams_ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'prams_ms.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;この手順を終えると、MindSporeのモデルパラメータがprams_ms.csvに保存されます。データを確認しましょう：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应"&gt;PytorchとMindSporeのパラメータ名を一対一に対応付ける&lt;/h4&gt;
+&lt;p&gt;これでMindSporeとPytorchそれぞれのパラメータのキー名一覧が得られました。添付ファイル欄にも掲載しています。両者の命名の違いを観察すると、一定の規則が見つかります。たとえば次のとおりです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Batch Normalization：
+&lt;ul&gt;
+&lt;li&gt;重み：weight|bias——gamma|beta。&lt;/li&gt;
+&lt;li&gt;移動平均と分散：running_mean|running_var——moving_mean|moving_variance。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;独自のblocks：pytorchには_blocks.という接頭辞が付いています。&lt;/li&gt;
+&lt;li&gt;その他&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="键名映射表"&gt;キー名の対応表&lt;/h4&gt;
+&lt;p&gt;この規則に従ってPythonスクリプトを書けば、キー名を変換し、対応表を生成できます：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pytorch&lt;/th&gt;
+&lt;th&gt;mindspore&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;続いて、Pytorchの重み辞書から、対応ファイルのPytorch_keyに従って重みを取り出します。その値をmindspore.Parameterで包み、mindspore.keyに対応する重みとして追加します：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ms_param_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;values:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; i
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; param_mapping[ms_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_values_dict[pt_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; isinstance(pt_val, np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ndarray):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;        pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_val&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cpu()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;numpy()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Parameter(pt_val, ms_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    print(ms_val)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_values_dict[ms_key] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ms_val
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用mindspore加载参数"&gt;MindSporeでパラメータを読み込む&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;load_param_into_net(mindspore_model, ms_values_dict)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;これで、MindSporeがパラメータを読み込めるはずです。&lt;/p&gt;
+&lt;h3 id="whats-more"&gt;補足&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;パラメータ値を保存するときは、PytorchとMindSporeの数値精度の違いに注意してください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;（完）&lt;/p&gt;
+</description>
+    <category>機械学習</category><category>モデル移行</category></item>
+    <item>
+      <title>勾配の先へ：ヘッセ行列</title>
+      <link>https://tommycheese.github.io/ja/blogs/h/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/ja/blogs/h/</guid>
+      <description>&lt;p&gt;この記事では、勾配降下法を研究するための強力な数学的道具であるヘッセ行列を取り上げます。その前に、勾配とヤコビ行列の基本概念を理解する必要があります。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐この記事は、読者が勾配降下法と、初歩的な数値解析・線形代数を理解していることを前提とします。
+&lt;a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/"&gt;元の記事へのリンク&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="梯度雅克比矩阵"&gt;勾配とヤコビ行列&lt;/h2&gt;
+&lt;p&gt;勾配降下法では、現在の点における関数の微分の情報が必要です。その点で複数の方向を扱う場合、勾配はすべての方向の偏微分をまとめたベクトルです。&lt;/p&gt;
+&lt;p&gt;これは、&lt;strong&gt;出力が一つ&lt;/strong&gt;の場合です。関数の出力もベクトルである場合は、出力ベクトルの各要素について、複数の入力に対する勾配を&lt;strong&gt;並べてまとめる&lt;/strong&gt;必要があります。こうしてできる行列が、&lt;strong&gt;ヤコビ行列（Jacobian Matrix）&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;例を見てみましょう：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;関数$f$が三つの入力$x1、x2、x3$を受け取り、一つの出力$y$を返す場合、その勾配は次のようになります：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;関数$f2$が三つの入力$x1、x2、x3$を受け取り、三つの出力$y1、y2、y3$を返す場合、そのヤコビ行列は次のようになります：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;amp;  \frac{\partial y_1}{\partial x_2}&amp;amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;amp;  \frac{\partial y_2}{\partial x_2}&amp;amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;amp;  \frac{\partial y_3}{\partial x_2}&amp;amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$&lt;/p&gt;
+&lt;p&gt;二階微分を使うと、特定の方向 $d$ における関数の凹凸を知ることができます。その情報から、勾配降下法の振る舞いをある程度予測できます。特定の方向 $d$ について：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が正なら、方向$d$の一階微分は増加し、関数値の減少は遅くなります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が負なら、方向$d$の一階微分は減少し、関数値の減少は速くなります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階微分が0なら、方向$d$の一階微分は変わらず、関数値は一定の速さで減少します。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐勾配降下法では損失関数を減少させるので、減少している関数を使い、その中の&lt;strong&gt;ごく小さな区間&lt;/strong&gt;における微分の変化を分析する必要があります。二次関数の減少側で近似することが多く、二次のテイラー展開やニュートン法がその例です。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵"&gt;ヘッセ行列&lt;/h2&gt;
+&lt;p&gt;ヤコビ行列と同様に、&lt;strong&gt;ヘッセ行列（Hessian行列）&lt;strong&gt;は、関数の二階微分の情報をまとめます：
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+二階偏微分では微分の順序を交換でき、$\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$となるため、&lt;/strong&gt;ヘッセ行列は対称行列です&lt;/strong&gt;。対称行列には、&lt;strong&gt;固有値分解&lt;/strong&gt;を使って固有値と二階微分の関係を調べられるので、ある方向の二階微分を素早く求めるのに役立ちます。&lt;/p&gt;
+&lt;p&gt;特定の方向dについて、二階方向微分が $d^THd$ と書けるとわかっているとき、次のようになります：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;🔗 &lt;a href="https://blog.csdn.net/weixin_42397505/article/details/112066943"&gt;Hessian行列に基づく二階方向微分とその性質—CSDNブログ&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;dがHの固有値λに対応する固有ベクトルである場合：&lt;/p&gt;
+&lt;p&gt;dはλに対応する固有ベクトルなので、定義より次が成り立ちます：
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$&lt;/p&gt;
+&lt;p&gt;したがって、その固有ベクトルに対応する固有値λが、その方向の二階微分です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;dがそれ以外の方向である場合：$e_i$を$H$の固有値$\lambda_i$に対応する固有ベクトルとすると、前述のとおり、
+$$
+\lambda_i=e_i^THe_i
+$$
+となります。任意の方向$d=\sum_i^mt_ie_i$は固有ベクトルの線形結合で表せます。mは固有値の数、$t_i$は第$i$固有ベクトルの重みです。したがって、
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+となり、固有ベクトル以外の任意の方向の二階微分は、すべての固有値の加重和になります。特に、この加重和は楕円体を表し、固有値が二次元の場合には二階微分は楕円になり、その式は次のとおりです：
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+&lt;img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="二階方向微分と固有値の関係を表す図"&gt;&lt;/p&gt;
+&lt;p&gt;図から、最大の二階微分は最大固有値（長半軸）で決まり、最小の二階微分は最小固有値（短半軸）で決まることがわかります。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵应用"&gt;ヘッセ行列の応用&lt;/h2&gt;
+&lt;p&gt;基本的な定義がわかれば、ヘッセ行列の性質を使って、最適化における問題を分析できます。たとえば、局所最大点、局所最小点、鞍点の判定、学習率の決定、悪条件に基づく勾配降下法の挙動の評価などです。また、Hessian行列を使って、&lt;strong&gt;ニュートン法&lt;/strong&gt;という最適化アルゴリズムも実現できます。&lt;/p&gt;
+&lt;p&gt;（本節・完）&lt;/p&gt;
+</description>
+    <category>機械学習</category><category>数学の基礎</category></item>
+  </channel>
+</rss>

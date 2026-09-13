@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>Agent開發 · Tommy Cheese</title>
+    <title>Agent 開發 · Tommy Cheese</title>
     <link>https://tommycheese.github.io/zh-TW/tags/agent%E5%BC%80%E5%8F%91/</link>
     <description>Tommy Cheese 的個人部落格，記錄軟體工程、人工智慧與學習實踐。</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://tommycheese.github.io/zh-TW/tags/agent%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml"/>
@@ -12,7 +13,6 @@
       <link>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</guid>
-      <category>Agent開發</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;研究日期：2026-09-13。本文描述 OpenCode v2 的通用外掛能力，包括外掛型別、載入機制、能力註冊、執行鉤子、許可權邊界與生命週期，供外掛開發和嵌入式整合參考。&lt;/p&gt;
 &lt;p&gt;程式碼基線為所研究的 OpenCode 倉庫 &lt;code&gt;v2&lt;/code&gt; 分支，提交為 &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;。原始碼引用採用該固定提交內的倉庫相對路徑；文中的介面與行為以此版本為準，不代表其他 OpenCode 版本或舊版外掛 API 的相容承諾。&lt;/p&gt;
@@ -447,6 +447,6 @@ export default Plugin.define({
 &lt;li&gt;工具結果與事件是否準確表達進度、完成、失敗和取消狀態。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
-  </channel>
+    <category>Agent 開發</category><category>外掛開發</category></item>
+    </channel>
 </rss>

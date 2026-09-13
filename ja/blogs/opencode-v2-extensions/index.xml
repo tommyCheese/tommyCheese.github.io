@@ -12,7 +12,6 @@
       <link>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</guid>
-      <category>Agent 開発</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;調査日：2026-09-13。本記事では、OpenCode v2の汎用的なプラグイン機能を説明します。プラグインの種類、読み込みの仕組み、機能の登録、実行フック、権限の境界、ライフサイクルを取り上げ、プラグイン開発や組み込み用途の参考にします。&lt;/p&gt;
 &lt;p&gt;コードの基準は、調査対象のOpenCodeリポジトリの &lt;code&gt;v2&lt;/code&gt; ブランチで、コミットは &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;です。ソースコードの参照には、この固定コミット内のリポジトリ相対パスを使います。記載するインターフェースや動作はこのバージョンを基準としており、他のOpenCodeバージョンや旧プラグインAPIとの互換性を保証するものではありません。&lt;/p&gt;
@@ -447,6 +446,6 @@ export default Plugin.define({
 &lt;li&gt;ツール結果とイベントが、進捗、完了、失敗、キャンセルの状態を正確に表すか。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Agent 開発</category><category>プラグイン開発</category></item>
   </channel>
 </rss>

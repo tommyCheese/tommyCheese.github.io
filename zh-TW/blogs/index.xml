@@ -13,7 +13,6 @@
       <link>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</guid>
-      <category>Agent開發</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;研究日期：2026-09-13。本文描述 OpenCode v2 的通用外掛能力，包括外掛型別、載入機制、能力註冊、執行鉤子、許可權邊界與生命週期，供外掛開發和嵌入式整合參考。&lt;/p&gt;
 &lt;p&gt;程式碼基線為所研究的 OpenCode 倉庫 &lt;code&gt;v2&lt;/code&gt; 分支，提交為 &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;。原始碼引用採用該固定提交內的倉庫相對路徑；文中的介面與行為以此版本為準，不代表其他 OpenCode 版本或舊版外掛 API 的相容承諾。&lt;/p&gt;
@@ -448,7 +447,7 @@ export default Plugin.define({
 &lt;li&gt;工具結果與事件是否準確表達進度、完成、失敗和取消狀態。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Agent 開發</category><category>外掛開發</category></item>
     <item>
       <title>再讀整潔架構之道（六）邊界</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -489,7 +488,7 @@ export default Plugin.define({
 &lt;h3 id="服务层次的跨边界调用"&gt;服務層次的跨邊界呼叫&lt;/h3&gt;
 &lt;p&gt;服務是系統架構中最強的邊界形式，一個服務就是一個程序。在劃分架構邊界時，一定要儘可能地控制通訊次數。在這個層次上通訊必須能夠適應高延時情況。除此之外，我們可以在服務層次上使用與本地程序相同的規則。也就是讓較低層次服務成為較高層次服務的“外掛”。&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（五）軟體架構</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -568,7 +567,7 @@ export default Plugin.define({
 &lt;/ul&gt;
 &lt;p&gt;（第五篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>領域驅動設計初識</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
@@ -651,7 +650,7 @@ export default Plugin.define({
 &lt;/blockquote&gt;
 &lt;p&gt;（本節完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>領域驅動設計</category></item>
     <item>
       <title>再讀整潔架構之道（四）元件建構原則</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -800,7 +799,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;（第四篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（三）SOLID 設計原則</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -850,7 +849,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;（第三篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（二）程式設計範式</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -900,7 +899,7 @@ $$
 &lt;p&gt;三種程式設計範式都對程式設計師提出了新的&lt;strong&gt;限制&lt;/strong&gt;。每個範式都約束了某種編寫程式碼的方式，沒有一個程式設計範式是在增加新能力。也就是說，程式設計範式帶來的是——什麼不應該做。&lt;/p&gt;
 &lt;p&gt;（第二篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（一）</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -942,7 +941,7 @@ $$
 &lt;h3 id="为好的软件架构持续斗争"&gt;為好的軟體架構持續鬥爭✊&lt;/h3&gt;
 &lt;p&gt;如果忽視軟體架構的價值，系統將會變得越來越難以維護，終會有一天，系統將會變得再也無法修改。如果系統變成了這個樣子，那麼說明軟體開發團隊沒有和需求方做足夠的抗爭，沒有完成自己應盡的職責。&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>實用分享：如何將 PyTorch 模型參數載入 MindSpore 模型？</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
@@ -1198,7 +1197,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;（完）&lt;/p&gt;
 </description>
-    </item>
+    <category>機器學習</category><category>模型遷移</category></item>
     <item>
       <title>梯度之上：Hessian 矩陣</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/h/</link>
@@ -1293,6 +1292,6 @@ $$
 &lt;p&gt;在弄清海森矩陣的基本定義後，就可以使用海森矩陣的一些性質來分析最佳化方法中的一些問題了。如確定區域性最大點、區域性最小點和鞍點、確定學習率、以及使用病態條件來確定梯度下降的表現等，同時我們還可以利用Hessian矩陣來實現&lt;strong&gt;牛頓法&lt;/strong&gt;這種最佳化演算法，。&lt;/p&gt;
 &lt;p&gt;（本節完）&lt;/p&gt;
 </description>
-    </item>
+    <category>機器學習</category><category>數學基礎</category></item>
   </channel>
 </rss>

@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>機器學習 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/zh-TW/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+    <description>Tommy Cheese 的個人部落格，記錄軟體工程、人工智慧與學習實踐。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <lastBuildDate>Fri, 01 Sep 2023 22:53:58 +0530</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/zh-TW/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>實用分享：如何將 PyTorch 模型參數載入 MindSpore 模型？</title>
+      <link>https://tommycheese.github.io/zh-TW/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/zh-TW/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h3 id="问题简述"&gt;問題簡述&lt;/h3&gt;
+&lt;p&gt;在日常的模型開發、訓練過程中我們經常會遇到這樣的現象：在現有的開源專案或者論文復現中，多數模型使用Pytorch設計、開發和訓練推理，當我們需要使用MindSpore框架進行模型開發時，會遇到以下兩個問題：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;模型使用Pytorch編碼；&lt;/li&gt;
+&lt;li&gt;Pytorch模型訓練後儲存的引數無法被MindSpore模型直接載入。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;對於第一個問題，我們可以根據昇思官方提供的文件：&lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/migration_guide/typical_api_comparision.html#%E4%B8%8Epytorch%E5%85%B8%E5%9E%8B%E6%8E%A5%E5%8F%A3%E5%8C%BA%E5%88%AB"&gt;與Pytorch典型區別&lt;/a&gt;和&lt;a href="https://www.mindspore.cn/docs/zh-CN/r2.1/note/api_mapping/pytorch_api_mapping.html#pytorch%E4%B8%8Emindspore-api%E6%98%A0%E5%B0%84%E8%A1%A8"&gt;PyTorch與MindSpore API對映表&lt;/a&gt;來完成模型的遷移；&lt;/p&gt;
+&lt;p&gt;對於模型引數的轉換，在最新的MindSpore版本中MindConverter不再支援，因此可以考慮針對模型引數，我們進行&lt;strong&gt;手動的轉換&lt;/strong&gt;，將Pytorch模型引數轉換為MindSpore能識別的格式後，再進行載入。&lt;/p&gt;
+&lt;h3 id="解决方案"&gt;解決方案&lt;/h3&gt;
+&lt;p&gt;模型的編碼轉換不再贅述。&lt;/p&gt;
+&lt;p&gt;引數轉換主要思路如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用Pytorch載入Pytorch模型，並取得模型引數prams_torch；&lt;/li&gt;
+&lt;li&gt;使用MindSpore載入MindSpore模型，並取得模型引數prams_ms；&lt;/li&gt;
+&lt;li&gt;將Pytorch模型的引數名和MindSpore模型引數名一一對應（有的話）；&lt;/li&gt;
+&lt;li&gt;建立torch_2_ms鍵名對映表，使用鍵名對映表將Pytorch模型引數值載入到MindSpore引數名對應的位置上；&lt;/li&gt;
+&lt;li&gt;使用MindSpore載入引數。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="案例分析"&gt;案例分析&lt;/h3&gt;
+&lt;p&gt;不同模型的模組不相同，引數型別也不盡相同，此處我們以一個網路舉例，說明轉換的基本思路，不同的模型其轉換思路是類似的。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://arxiv.org/abs/1905.11946"&gt;EfficientNet&lt;/a&gt;是谷歌於2019年發表的文章，詳細網路架構可檢視文章描述，此處我們以&lt;strong&gt;EfficientNet+FC&lt;/strong&gt;全連線層的模型為例，探討如何進行網路模型引數的轉換。&lt;/p&gt;
+&lt;h4 id="使用pytorch加载pytorch模型并取得模型参数prams_torch"&gt;使用Pytorch載入Pytorch模型，並取得模型引數prams_torch&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_pytorch.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_pytorch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_pytorch&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cuda()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytorch_weights_dict &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;state_dict()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pytorch_weights_dict&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(param_torch)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;param_torch_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'param_torch.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;步驟結束後，我們就將pytorch的模型引數存到了param_torch.csv下，觀察資料：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;_bn0.num_batches_tracked&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="使用mindspore加载mindspore模型并取得模型参数prams_ms"&gt;使用MindSpore載入MindSpore模型，並取得模型引數prams_ms&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; mindspore &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; test.efficientnet_mindspore.model &lt;span style="color:#f92672"&gt;import&lt;/span&gt; EfficientNet &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; EN_ms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mindspore_model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; EN_ms&lt;span style="color:#f92672"&gt;.&lt;/span&gt;from_name(cfg[&lt;span style="color:#e6db74"&gt;'model'&lt;/span&gt;], override_params&lt;span style="color:#f92672"&gt;=&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;'num_classes'&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms &lt;span style="color:#f92672"&gt;=&lt;/span&gt; mindspore_model&lt;span style="color:#f92672"&gt;.&lt;/span&gt;parameters_dict()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;keys()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(prams_ms)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;prams_ms_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;'prams_ms.csv'&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;步驟結束後，我們就將MindSpore的模型引數存到了prams_ms.csv下，觀察資料：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;keys&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="将pytorch模型的参数名和mindspore模型参数名一一对应"&gt;將Pytorch模型的引數名和MindSpore模型引數名一一對應&lt;/h4&gt;
+&lt;p&gt;自此我們就得到了MindSpore和Pytorch各自的引數鍵名錶（附在附件區域），隨後觀察二者引數命名上的差異，可以發現固定的規律，以下述幾個方面為例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Batch Normalization：
+&lt;ul&gt;
+&lt;li&gt;權重：weight|bias——gamma|beta；&lt;/li&gt;
+&lt;li&gt;移動加權和方差：running_mean|running_var——moving_mean|moving_variance；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;自定義blocks：pytorch帶前置的_blocks.；&lt;/li&gt;
+&lt;li&gt;其他&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="键名映射表"&gt;鍵名對映表&lt;/h4&gt;
+&lt;p&gt;這樣就可以根據規律寫出一個Python指令碼來完成鍵名的轉化，並生成鍵名對映表：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Pytorch&lt;/th&gt;
+&lt;th&gt;mindspore&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;td&gt;_conv_stem.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.weight&lt;/td&gt;
+&lt;td&gt;_bn0.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.bias&lt;/td&gt;
+&lt;td&gt;_bn0.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_mean&lt;/td&gt;
+&lt;td&gt;_bn0.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_bn0.running_var&lt;/td&gt;
+&lt;td&gt;_bn0.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._depthwise_conv.weight&lt;/td&gt;
+&lt;td&gt;0._depthwise_conv.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.weight&lt;/td&gt;
+&lt;td&gt;0._bn1.gamma&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.bias&lt;/td&gt;
+&lt;td&gt;0._bn1.beta&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_mean&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_mean&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._bn1.running_var&lt;/td&gt;
+&lt;td&gt;0._bn1.moving_variance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;_blocks.0._se_reduce.weight&lt;/td&gt;
+&lt;td&gt;0._se_reduce.weight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;隨後在Pytorch的權重字典中，按照對應檔案的Pytorch_key取出權重值，隨後使用mindspore.Parameter進行封裝，新增到mindspore.key對應的權值中去：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ms_param_lst&lt;span style="color:#f92672"&gt;.&lt;/span&gt;values:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; i
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; param_mapping[ms_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_values_dict[pt_key]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; isinstance(pt_val, np&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ndarray):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;        pt_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pt_val&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cpu()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;numpy()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_val &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Parameter(pt_val, ms_key)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    print(ms_val)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;    ms_values_dict[ms_key] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ms_val
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="使用mindspore加载参数"&gt;使用MindSpore載入引數&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;load_param_into_net(mindspore_model, ms_values_dict)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此時，引數應該就可以被MindSpore接受了。&lt;/p&gt;
+&lt;h3 id="whats-more"&gt;What’s more&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;在引數值的儲存過程中，要注意Pytorch和MindSpore引數精度的差異；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;（完）&lt;/p&gt;
+</description>
+    <category>機器學習</category><category>模型遷移</category></item>
+    <item>
+      <title>梯度之上：Hessian 矩陣</title>
+      <link>https://tommycheese.github.io/zh-TW/blogs/h/</link>
+      <pubDate>Fri, 01 Sep 2023 22:53:58 +0530</pubDate>
+      <guid>https://tommycheese.github.io/zh-TW/blogs/h/</guid>
+      <description>&lt;p&gt;本文討論研究梯度下降法的一個有力的數學工具：海森矩陣。在討論海森矩陣之前，需要首先了解梯度和雅克比矩陣的基本概念。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐本文假設讀者已經熟悉梯度下降法和簡單的數值分析、線性代數知識
+&lt;a href="https://tommycheese.github.io/blogs/%E6%A2%AF%E5%BA%A6%E4%B9%8B%E4%B8%8Ahessian-%E7%9F%A9%E9%98%B5/"&gt;原文連結&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="梯度雅克比矩阵"&gt;梯度、雅克比矩陣&lt;/h2&gt;
+&lt;p&gt;梯度下降演算法需要當前函式點的導數資訊，當此函式點包含多個方向時，梯度是包含所有方向的（偏）導數向量。&lt;/p&gt;
+&lt;p&gt;上述情況對應於&lt;strong&gt;輸出為一個&lt;/strong&gt;的情況，當函式的輸出也為一個向量時，我們需要把輸出向量的每一個元素對於多個輸入的梯度&lt;strong&gt;羅列在一起&lt;/strong&gt;，羅列形成的矩陣就是&lt;strong&gt;雅克比矩陣（Jacobian Matrix）&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;舉例說明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若函式$f$接受三個輸入$x1、x2、x3$，產生一個輸出$y$，則其梯度為：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Grad = [\frac{\partial y}{\partial x_1}, \frac{\partial y}{\partial x_2}, \frac{\partial y}{\partial x_3}]
+\end{equation}
+$$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;若函式$f2$接受三個輸入$x1、x2、x3$，產生三個輸出$y1、y2、y3$，則其雅克比矩陣為：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$
+\begin{equation}
+Jacobian  = \begin{bmatrix}
+\frac{\partial y_1}{\partial x_1} &amp;amp;  \frac{\partial y_1}{\partial x_2}&amp;amp;\frac{\partial y_1}{\partial x_3} \
+\frac{\partial y_2}{\partial x_1} &amp;amp;  \frac{\partial y_2}{\partial x_2}&amp;amp;\frac{\partial y_2}{\partial x_3} \
+\frac{\partial y_3}{\partial x_1} &amp;amp;  \frac{\partial y_3}{\partial x_2}&amp;amp;\frac{\partial y_3}{\partial x_3}
+\end{bmatrix}
+\end{equation}
+$$&lt;/p&gt;
+&lt;p&gt;利用二階導數，我們可以知道關於函式在特定方向 $d$ 上的凹凸資訊，利用凹凸資訊可以在一定程度上預判梯度下降法的表現效果。如果在特定方向 $d$ 上：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;二階導數為正，則函式在方向$d$上一階導數增加，函式值下降更慢；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階導數為負，則函式在方向$d$上一階導數減少，函式值下降更快；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二階導數為零，則函式在方向$d$上一階導數不變，函式值勻速下降；&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⭐注意在梯度下降法中是對損失函式進行下降，因此需要使用減函式來分析函式中&lt;strong&gt;某一小段&lt;/strong&gt;（經常使用二次函式的減半部近似：二階泰勒展開、牛頓法）中的導數變化情況；&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵"&gt;海森矩陣&lt;/h2&gt;
+&lt;p&gt;和雅克比矩陣類似，&lt;strong&gt;海森矩陣（Hessian 矩陣）&lt;strong&gt;可以包含函式中二階導的資訊：
+$$
+Hessian   = \begin{bmatrix}
+\frac{\partial^2y}{\partial x_1\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_1\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_1\partial x_3} \
+\frac{\partial^2y}{\partial x_2\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_2\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_2\partial x_3} \
+\frac{\partial^2y}{\partial x_3\partial x_1} &amp;amp;  \frac{\partial^2y}{\partial x_3\partial x_2}&amp;amp;\frac{\partial^2y}{\partial x_3\partial x_3}
+\end{bmatrix}
+$$
+同時由於二階導數計算順序的可交換性，即 $\frac{\partial^2y}{\partial x_1\partial x_2}=\frac{\partial^2y}{\partial x_2\partial x_1}$，因此&lt;/strong&gt;海森矩陣是一個對稱矩陣&lt;/strong&gt;，對於對稱矩陣我們可以使用&lt;strong&gt;特徵分解&lt;/strong&gt;來研究特徵值和二階導數的關係，便於我們快速獲得某個方向的二階導數。&lt;/p&gt;
+&lt;p&gt;針對於特定方向d，已知此方向的二階導數可以寫成 $d^THd$ ，則：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;🔗 &lt;a href="https://blog.csdn.net/weixin_42397505/article/details/112066943"&gt;基於Hessian矩陣的二階方向導數與性質_Hi 喀什噶爾的胡楊的部落格-CSDN部落格_二階方向導數&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;若d是H對應特徵值λ的特徵向量：&lt;/p&gt;
+&lt;p&gt;因為d為對應λ的特徵向量（以下簡稱特徵向量），則據定義有：
+$$
+Hd = \lambda d\
+\Rightarrow  d^THd=d^T\lambda d = \lambda d^Td=\lambda    \ \ \ 对称矩阵d^T = d^-
+$$&lt;/p&gt;
+&lt;p&gt;因此特徵向量對應的特徵值λ即為此方向的二階導數；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;若d為其他方向：設$e_i$為$H$對應特徵值$\lambda_i$的特徵向量，由上可知，
+$$
+\lambda_i=e_i^THe_i
+$$
+可知任何一個方向$d=\sum_i^mt_ie_i$為特徵向量的線性組合，其中m為特徵值個數，$t_i$為第$i$個特徵向量的加權數，則：
+$$
+d^THd=(\sum_i^mt_ie_i)^TH(\sum_i^mt_ie_i)=\sum_i^mt_ie_i^THt_ie_i=\sum_i^mt_i^2\lambda_i
+$$
+因此任意非特徵向量方向的二階導數是所有特徵值的加權和，特別的，此時的加權和是一個橢球體，在二維的特徵值情況下，二階導數是一個橢圓，橢圓方程為：
+$$
+y=\frac{\lambda_1}{\frac{1}{t_1^2}}+\frac{\lambda_2}{\frac{1}{t_2^2}}
+$$
+&lt;img src="https://img-blog.csdnimg.cn/img_convert/bb30779d25d486346799cb0fce7d34ad.png#pic_center" alt="在這裡插入圖片描述"&gt;&lt;/p&gt;
+&lt;p&gt;由圖可知，最大二階導數由最大特徵值決定（長半軸），而最小二階導數由最小特徵值決定（短半軸）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="海森矩阵应用"&gt;海森矩陣應用&lt;/h2&gt;
+&lt;p&gt;在弄清海森矩陣的基本定義後，就可以使用海森矩陣的一些性質來分析最佳化方法中的一些問題了。如確定區域性最大點、區域性最小點和鞍點、確定學習率、以及使用病態條件來確定梯度下降的表現等，同時我們還可以利用Hessian矩陣來實現&lt;strong&gt;牛頓法&lt;/strong&gt;這種最佳化演算法，。&lt;/p&gt;
+&lt;p&gt;（本節完）&lt;/p&gt;
+</description>
+    <category>機器學習</category><category>數學基礎</category></item>
+  </channel>
+</rss>

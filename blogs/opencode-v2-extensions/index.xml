@@ -12,7 +12,6 @@
       <link>https://tommycheese.github.io/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/blogs/opencode-v2-extensions/</guid>
-      <category>Agent开发</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;研究日期：2026-09-13。本文描述 OpenCode v2 的通用插件能力，包括插件类型、加载机制、能力注册、执行钩子、权限边界与生命周期，供插件开发和嵌入式集成参考。&lt;/p&gt;
 &lt;p&gt;代码基线为所研究的 OpenCode 仓库 &lt;code&gt;v2&lt;/code&gt; 分支，提交为 &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;。源码引用采用该固定提交内的仓库相对路径；文中的接口与行为以此版本为准，不代表其他 OpenCode 版本或旧版插件 API 的兼容承诺。&lt;/p&gt;
@@ -448,6 +447,6 @@ export default Plugin.define({
 &lt;/ul&gt;
 
           </description>
-    </item>
+    <category>Agent 开发</category><category>插件开发</category></item>
   </channel>
 </rss>

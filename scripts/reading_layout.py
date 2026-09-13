@@ -66,7 +66,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
             menu.insert(start + offset, item)
 
     for old in doc.xpath('//*[@id="recent-posts"]'):
-        if path in ['/', '/blogs/', '/topics/'] or doc.xpath('//article'):
+        if path in ['/', '/blogs/', '/topics/'] or path.startswith('/tags/') or doc.xpath('//article'):
             old.getparent().remove(old)
     footer = doc.find('.//footer')
     if footer is not None:

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" data-page-path="/tags/数值微分/" data-ui-version="f087ad27afd5">
+<html lang="ja" data-page-path="/tags/数学基础/" data-ui-version="aa3356d5c7f9">
 
 <head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,14 +21,14 @@
 
 
 
-<meta property="og:title" content="数値微分">
-<meta property="og:description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+<meta property="og:title" content="数学の基礎">
+<meta property="og:description" content="ヘッセ行列、微分、最適化の基礎。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><meta property="og:site_name" content="Tomme Cheese blogs">
+<meta property="og:url" content="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><meta property="og:site_name" content="Tomme Cheese blogs">
 
 
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="数値微分">
-<meta name="twitter:description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="数学の基礎">
+<meta name="twitter:description" content="ヘッセ行列、微分、最適化の基礎。">
 
 
 <link rel="stylesheet" href="/bootstrap-5/css/bootstrap.min.css" media="all"><link rel="stylesheet" href="/css/header.css" media="all">
@@ -90,15 +90,15 @@
 
 
 
-<meta name="description" content="ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。">
+<meta name="description" content="ヘッセ行列、微分、最適化の基礎。">
 <link rel="stylesheet" href="/css/list.css" media="all">
 
 
 
 
 
-  <title>数値微分 · Tommy Cheese</title>
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/ja/index.xml"><link rel="stylesheet" href="/css/reading.css?v=f087ad27afd5" data-reading-layout="style"><meta property="og:locale" content="ja_JP"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><link rel="canonical" href="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"><script src="/js/i18n-messages.js?v=f087ad27afd5" defer></script><script src="/js/i18n.js?v=f087ad27afd5" defer></script><link rel="stylesheet" href="/css/i18n.css?v=f087ad27afd5"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+  <title>数学の基礎 · Tommy Cheese</title>
+<link rel="stylesheet" href="/css/reading.css?v=aa3356d5c7f9" data-reading-layout="style"><link rel="alternate" type="application/rss+xml" title="RSS" href="/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/index.xml"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url=/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9"><meta property="og:locale" content="ja_JP"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><link rel="canonical" href="https://tommycheese.github.io/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><script src="/js/i18n-messages.js?v=aa3356d5c7f9" defer></script><script src="/js/i18n.js?v=aa3356d5c7f9" defer></script><link rel="stylesheet" href="/css/i18n.css?v=aa3356d5c7f9"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
 
 <body class="light">
 
@@ -154,7 +154,7 @@
     <nav class="pt-3 navbar navbar-expand-xl animate">
         <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
 
-            <a class="navbar-brand primary-font text-wrap" href="/ja/?v=f087ad27afd5">
+            <a class="navbar-brand primary-font text-wrap" href="/ja/?v=aa3356d5c7f9">
 
                 <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
                 Tommy Cheese
@@ -186,7 +186,7 @@
 
 
 
-                    <li class="nav-item navbar-text"><a data-i18n="nav.blogs" href="/ja/blogs/?v=f087ad27afd5" class="nav-link">ブログ</a></li><li class="nav-item navbar-text"><a data-i18n="nav.topics" href="/ja/topics/?v=f087ad27afd5" class="nav-link">テーマ別</a></li><li class="nav-item navbar-text"><a data-i18n="nav.tags" href="/ja/tags/?v=f087ad27afd5" class="nav-link">タグ</a></li><li class="nav-item navbar-text"><a data-i18n="nav.about" href="/ja/?v=f087ad27afd5#about" class="nav-link">私について</a></li><li class="nav-item navbar-text"><a data-i18n="nav.gallery" href="/ja/gallery/?v=f087ad27afd5" class="nav-link">探索</a></li><li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                    <li class="nav-item navbar-text"><a data-i18n="nav.blogs" href="/ja/blogs/?v=aa3356d5c7f9" class="nav-link">ブログ</a></li><li class="nav-item navbar-text"><a data-i18n="nav.topics" href="/ja/topics/?v=aa3356d5c7f9" class="nav-link">テーマ別</a></li><li class="nav-item navbar-text"><a data-i18n="nav.tags" href="/ja/tags/?v=aa3356d5c7f9" class="nav-link">タグ</a></li><li class="nav-item navbar-text"><a data-i18n="nav.about" href="/ja/?v=aa3356d5c7f9#about" class="nav-link">私について</a></li><li class="nav-item navbar-text"><a data-i18n="nav.gallery" href="/ja/gallery/?v=aa3356d5c7f9" class="nav-link">探索</a></li><li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
                         <div class="dropdown-divider"></div>
 
 
@@ -214,7 +214,7 @@
                     <li class="nav-item navbar-text">
 
                         <div class="text-center header-actions">
-                            <details class="language-switch"><summary aria-label="言語 · 日本語" title="言語 · 日本語"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18"></path></svg></summary><nav aria-label="言語"><a href="/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/?v=f087ad27afd5" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/?v=f087ad27afd5" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/?v=f087ad27afd5" lang="ja" hreflang="ja" data-language="ja" aria-current="true">日本語</a><a href="/ru/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/?v=f087ad27afd5" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/?v=f087ad27afd5" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="ライト・ダークテーマを切り替え">
+                            <details class="language-switch"><summary aria-label="言語 · 日本語" title="言語 · 日本語"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18"></path></svg></summary><nav aria-label="言語"><a href="/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" lang="ja" hreflang="ja" data-language="ja" aria-current="true">日本語</a><a href="/ru/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW">繁體中文</a></nav></details><button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="ライト・ダークテーマを切り替え">
                                 <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
@@ -241,130 +241,11 @@
     </nav>
 </header>
 <div id="content">
-<div class="container pt-5" id="list-page">
-    <h2 class="text-center pb-2"><span data-i18n="tag.数值微分">数値微分</span></h2>
-    <div class="row">
-
-        <div class="col-lg-4 col-md-6 my-3">
-            <div class="card-columns">
-                <div class="card h-100">
-
-                    <div class="card-header">
-                        <a href="/ja/blogs/h/?v=f087ad27afd5">
-                            <img src="/blogimages/hessen.png" class="card-img-top" alt="勾配の先へ：ヘッセ行列" data-i18n-alt="post.h.title">
-                        </a>
-                    </div>
-
-                    <div class="card-body bg-transparent p-4 shadow-sm">
-                        <a href="/ja/blogs/h/?v=f087ad27afd5" class="primary-font card-title">
-                            <h5 class="card-title bg-transparent" title="勾配の先へ：ヘッセ行列" data-i18n-title="post.h.title" data-i18n="post.h.title">勾配の先へ：ヘッセ行列</h5>
-                        </a>
-                        <div class="card-text secondary-font">
-                            <p data-i18n="post.h.description">勾配とヤコビ行列を出発点に、ヘッセ行列と勾配降下法を理解するうえでの役割を紹介します。</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto post-footer bg-transparent py-3">
-                        <span class="float-start bg-transparent"><time datetime="2023-09-01" data-date="2023-09-01">2023年9月1日</time></span>
-                        <a href="/ja/blogs/h/?v=f087ad27afd5" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-auto m-3">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-  </div><footer>
+<div id="list-page" class="tag-directory topic-directory container"><h1 data-i18n="tags.moved">タグを統合しました</h1><a data-i18n="tag.数学基础" href="/ja/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/?v=aa3356d5c7f9" rel="tag">数学の基礎</a></div></div><footer>
 
 
 
-<div class="feed-link container" data-reading-layout="feed"><a data-i18n="action.subscribe" href="/ja/index.xml">RSS を購読</a></div><div class="container py-3" id="recent-posts">
-
-
-    <div class="h3 text-center text-secondary py-3"><span data-i18n="section.recent">最近の記事</span></div>
-    <div class="row justify-content-center">
-
-        <div class="col-lg-4 col-md-6 pt-2">
-            <div class="card h-100">
-
-                <div class="card-header">
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/?v=f087ad27afd5">
-                        <img src="/blogimages/arh6.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-alt="post.再读整洁架构之道六.title">
-                    </a>
-                </div>
-
-                <div class="card-body bg-transparent p-3 shadow-sm">
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/?v=f087ad27afd5" class="primary-font card-title">
-                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（6）：境界" data-i18n-title="post.再读整洁架构之道六.title" data-i18n="post.再读整洁架构之道六.title">『クリーンアーキテクチャ』再読（6）：境界</h5>
-                    </a>
-                    <div class="card-text secondary-font">
-                        <p data-i18n="post.再读整洁架构之道六.description">アーキテクチャの境界によって依存関係を制約し、ビジネスロジックを分離し、フレームワークやデータベースなどの詳細の決定を遅らせる方法を考えます。</p>
-                    </div>
-                </div>
-                <div class="mt-auto card-footer">
-                    <span class="float-start"><time datetime="2024-07-29" data-date="2024-07-29">2024年7月29日</time></span>
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/?v=f087ad27afd5" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 pt-2">
-            <div class="card h-100">
-
-                <div class="card-header">
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=f087ad27afd5">
-                        <img src="/blogimages/arh5.png" class="card-img-top" alt="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-alt="post.再读整洁架构之道五.title">
-                    </a>
-                </div>
-
-                <div class="card-body bg-transparent p-3 shadow-sm">
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=f087ad27afd5" class="primary-font card-title">
-                        <h5 class="card-title bg-transparent" title="『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ" data-i18n-title="post.再读整洁架构之道五.title" data-i18n="post.再读整洁架构之道五.title">『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</h5>
-                    </a>
-                    <div class="card-text secondary-font">
-                        <p data-i18n="post.再读整洁架构之道五.description">コンポーネントの分割・関係・通信方式を出発点に、開発、デプロイ、運用、保守を支えながら設計の選択肢を保つソフトウェアアーキテクチャを考えます。</p>
-                    </div>
-                </div>
-                <div class="mt-auto card-footer">
-                    <span class="float-start"><time datetime="2024-07-28" data-date="2024-07-28">2024年7月28日</time></span>
-                    <a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=f087ad27afd5" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 pt-2">
-            <div class="card h-100">
-
-                <div class="card-header">
-                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/?v=f087ad27afd5">
-                        <img src="/blogimages/DDD1.png" class="card-img-top" alt="ドメイン駆動設計入門" data-i18n-alt="post.ddd领域驱动设计初识.title">
-                    </a>
-                </div>
-
-                <div class="card-body bg-transparent p-3 shadow-sm">
-                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/?v=f087ad27afd5" class="primary-font card-title">
-                        <h5 class="card-title bg-transparent" title="ドメイン駆動設計入門" data-i18n-title="post.ddd领域驱动设计初识.title" data-i18n="post.ddd领域驱动设计初识.title">ドメイン駆動設計入門</h5>
-                    </a>
-                    <div class="card-text secondary-font">
-                        <p data-i18n="post.ddd领域驱动设计初识.description">DDD の戦略的設計と戦術的設計、ドメイン、サブドメイン、境界づけられたコンテキストなどの基本概念を紹介します。</p>
-                    </div>
-                </div>
-                <div class="mt-auto card-footer">
-                    <span class="float-start"><time datetime="2024-07-26" data-date="2024-07-26">2024年7月26日</time></span>
-                    <a href="/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/?v=f087ad27afd5" class="float-end btn btn-outline-info btn-sm" data-i18n="action.read">読む</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div id="disqus_thread"></div>
+<div class="feed-link container" data-reading-layout="feed"><a data-i18n="action.subscribe" href="/ja/index.xml">RSS を購読</a></div><div id="disqus_thread"></div>
     <script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/tags/%E6%95%B0%E5%80%BC%E5%BE%AE%E5%88%86/"; this.language = "ja"; };</script><script>
 
 
@@ -393,10 +274,10 @@
         <div class="col-md-4 text-center">
 
                 <div class="pb-2">
-                    <a href="https://tommycheese.github.io/ja/?v=f087ad27afd5" title="Tommy Cheese">
+                    <a href="https://tommycheese.github.io/ja/?v=aa3356d5c7f9" title="Tommy Cheese">
                         <img alt="Tommy Cheese サイトロゴ" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
                     </a>
-                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary">Hugo で心を込めて制作<br>GitHub Pages で公開</div>
+                </div><span data-i18n="footer.copyright">© 2026 All rights reserved</span><div class="text-secondary" data-i18n="footer.madeWith">❤️を込めて制作</div>
         </div>
     </div>
 </div>
@@ -430,7 +311,7 @@
 </script>
 
 
-    <script src="/js/search.js"></script>
+    <script src="/js/search.js?v=aa3356d5c7f9"></script>
 
 
 

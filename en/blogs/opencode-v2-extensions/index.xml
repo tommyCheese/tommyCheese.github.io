@@ -12,7 +12,6 @@
       <link>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/en/blogs/opencode-v2-extensions/</guid>
-      <category>Agent Development</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Research date: 2026-09-13. This article describes the general plugin capabilities of OpenCode v2, including plugin types, loading, capability registration, execution hooks, permission boundaries, and lifecycle management, as a reference for plugin development and embedded integration.&lt;/p&gt;
 &lt;p&gt;The code baseline is the &lt;code&gt;v2&lt;/code&gt; branch of the OpenCode repository under study, at commit &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;. Source references use repository-relative paths at that fixed commit. The interfaces and behavior described here apply to that version and do not promise compatibility with other OpenCode versions or the legacy plugin API.&lt;/p&gt;
@@ -447,6 +446,6 @@ export default Plugin.define({
 &lt;li&gt;Tool results and events accurately represent progress, completion, failure, and cancellation.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Agent Development</category><category>Plugin Development</category></item>
   </channel>
 </rss>

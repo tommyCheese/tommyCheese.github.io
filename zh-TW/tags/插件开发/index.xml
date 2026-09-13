@@ -1,0 +1,452 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>外掛開發 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/zh-TW/tags/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/</link>
+    <description>Tommy Cheese 的個人部落格，記錄軟體工程、人工智慧與學習實踐。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/zh-TW/tags/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>OpenCode v2 擴充機制研究與接入說明</title>
+      <link>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/zh-TW/blogs/opencode-v2-extensions/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;研究日期：2026-09-13。本文描述 OpenCode v2 的通用外掛能力，包括外掛型別、載入機制、能力註冊、執行鉤子、許可權邊界與生命週期，供外掛開發和嵌入式整合參考。&lt;/p&gt;
+&lt;p&gt;程式碼基線為所研究的 OpenCode 倉庫 &lt;code&gt;v2&lt;/code&gt; 分支，提交為 &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;。原始碼引用採用該固定提交內的倉庫相對路徑；文中的介面與行為以此版本為準，不代表其他 OpenCode 版本或舊版外掛 API 的相容承諾。&lt;/p&gt;
+&lt;p&gt;本文是原始碼研究與能力說明。程式碼示例用於解釋介面和呼叫方式，未經獨立執行驗證。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="plugin-扩展入口"&gt;Plugin：擴充套件入口&lt;/h2&gt;
+&lt;h3 id="什么是-plugin"&gt;什麼是 Plugin&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;OpenCode 的擴充套件通過註冊能力和執行鉤子接入已有執行流程。&lt;/strong&gt; Extension 在當前 OpenCode v2 實現中主要對應 Plugin 機制。外掛可以提供助手、工具、技能、模型、命令等能力，也可以在指定執行節點調整行為；會話執行、模型請求、工具結果和執行記錄仍由 OpenCode 核心處理。&lt;/p&gt;
+&lt;figure class="plugin-flow"&gt;&lt;img src="https://tommycheese.github.io/blogimages/zh-TW/opencode-v2-plugin-flow.svg" alt="外掛載入後註冊能力，會話準備上下文，經請求鉤子呼叫模型；工具呼叫經執行鉤子儲存結果並返回模型，最終回答結束本次執行。" width="429" height="722"&gt;&lt;figcaption&gt;Plugin 從載入、能力註冊到會話執行的流程&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;details&gt;&lt;summary&gt;檢視 Mermaid 流程圖原始碼&lt;/summary&gt;&lt;pre&gt;&lt;code class="language-mermaid"&gt;flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&amp;gt; B[插件加载与生命周期管理]
+    B --&amp;gt; C[构建助手、工具、技能等能力]
+    C --&amp;gt; D[会话选择助手]
+    D --&amp;gt; E[准备上下文与工具快照]
+    E --&amp;gt; F[请求阶段钩子]
+    F --&amp;gt; G[调用模型]
+    G --&amp;gt; H{返回内容}
+    H --&amp;gt;|工具调用| I[工具执行与钩子]
+    I --&amp;gt; J[保存结果与执行事件]
+    J --&amp;gt; G
+    H --&amp;gt;|最终回答| K[本次执行结束]
+&lt;/code&gt;&lt;/pre&gt;&lt;/details&gt;
+&lt;h3 id="plugin-的分类"&gt;Plugin 的分類&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;內部外掛、外部外掛和 SDK 外掛按接入來源區分，最終進入同一套執行管理。&lt;/strong&gt; 三者都可以註冊助手、工具和執行鉤子。區別主要在於誰提供外掛定義、如何裝入宿主，以及宿主是否額外注入核心內部服務。這裡討論的是服務端外掛；終端介面的 TUI 外掛屬於另一個擴充套件入口。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;比較項&lt;/th&gt;
+&lt;th scope="col"&gt;內部外掛&lt;/th&gt;
+&lt;th scope="col"&gt;外部外掛&lt;/th&gt;
+&lt;th scope="col"&gt;SDK 外掛&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;提供者&lt;/td&gt;
+&lt;td&gt;OpenCode 原始碼與發行版本&lt;/td&gt;
+&lt;td&gt;專案或獨立外掛包的維護者&lt;/td&gt;
+&lt;td&gt;嵌入 OpenCode 的應用宿主&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;入口&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PluginInternal&lt;/code&gt; 的 &lt;code&gt;pre&lt;/code&gt; / &lt;code&gt;post&lt;/code&gt; 集合&lt;/td&gt;
+&lt;td&gt;目錄發現、配置中的檔案或包&lt;/td&gt;
+&lt;td&gt;嵌入式宿主的 &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;裝載形式&lt;/td&gt;
+&lt;td&gt;核心程式碼直接匯入定義&lt;/td&gt;
+&lt;td&gt;解析模組並讀取預設匯出&lt;/td&gt;
+&lt;td&gt;在記憶體中直接傳入外掛物件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;可用介面&lt;/td&gt;
+&lt;td&gt;公開 Context，加上宿主注入的內部服務&lt;/td&gt;
+&lt;td&gt;公開 Plugin Context&lt;/td&gt;
+&lt;td&gt;公開 Plugin Context；可通過閉包使用宿主主動傳入的依賴&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;主要配置方式&lt;/td&gt;
+&lt;td&gt;原生配置、內部服務或內建預設值&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;plugins[].options&lt;/code&gt; → &lt;code&gt;ctx.options&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;宿主程式碼與閉包；註冊介面沒有單獨的 &lt;code&gt;options&lt;/code&gt; 引數&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;更新來源&lt;/td&gt;
+&lt;td&gt;跟隨 OpenCode 程式碼版本；部分外掛自行監聽配置變化&lt;/td&gt;
+&lt;td&gt;配置變化、受支援的本地入口變化或包配置變更&lt;/td&gt;
+&lt;td&gt;宿主再次註冊外掛，遞增內部修訂號&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;例項範圍&lt;/td&gt;
+&lt;td&gt;每個 Location 獨立啟用&lt;/td&gt;
+&lt;td&gt;按各 Location 的配置分別啟用&lt;/td&gt;
+&lt;td&gt;同一宿主共享定義，每個 Location 獨立啟用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;適用場景&lt;/td&gt;
+&lt;td&gt;實現原生助手、工具、供應商與配置處理&lt;/td&gt;
+&lt;td&gt;給已有 OpenCode 服務增加專案或業務能力&lt;/td&gt;
+&lt;td&gt;在自己的 JS/TS 應用中嵌入並管理 OpenCode&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Effect 和 Promise 是外掛的兩種編寫介面方法。一個採用公開介面的 Effect 外掛物件，既可以預設匯出後由配置載入，也可以直接交給嵌入式 SDK 註冊；核心能力可以複用，但載入順序和配置傳入方式會發生變化。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;內部外掛把 OpenCode 自身的一部分功能組織成外掛。&lt;/strong&gt; 它們不是使用者安裝到目錄裡的特殊檔案，而是由核心原始碼靜態匯入，並在 &lt;code&gt;PluginInternal&lt;/code&gt; 中明確列入集合。&lt;code&gt;PluginInternal.list()&lt;/code&gt; 獲取當前 Location 所需的服務，通過 &lt;code&gt;Effect.provide(context)&lt;/code&gt; 注入內部外掛，再交給統一載入器。&lt;/p&gt;
+&lt;p&gt;這裡有兩層 Context：&lt;code&gt;effect(ctx)&lt;/code&gt; 的引數仍然是公開 Plugin Context；內部外掛通過 Effect 環境另外取得 &lt;code&gt;Config.Service&lt;/code&gt;、&lt;code&gt;Permission.Service&lt;/code&gt;、&lt;code&gt;Shell.Service&lt;/code&gt;、&lt;code&gt;Location.Service&lt;/code&gt; 等服務。因此，“內部外掛有更多能力”的依據是宿主明確注入了依賴，不是外掛 ID 以 &lt;code&gt;opencode.&lt;/code&gt; 開頭。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;內部外掛示例&lt;/th&gt;
+&lt;th scope="col"&gt;所處集合&lt;/th&gt;
+&lt;th scope="col"&gt;實際職責&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;註冊原生助手的基礎定義&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.tool.shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;註冊 Shell 工具，結合原生執行、許可權和執行狀態服務&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;原生供應商、搜尋及其他工具外掛&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;提供模型、搜尋和工具的基礎能力&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.config.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;讀取助手配置和相關 Markdown 檔案，把結果應用到助手清單&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;配置供應商、技能、策略及模型變體外掛&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在前面貢獻的能力上應用配置或後續處理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;這也解釋了自定義助手與內部外掛的關係：使用者編輯助手配置，真正負責讀取、監聽和應用這些配置的是 &lt;code&gt;opencode.config.agent&lt;/code&gt;。每個自定義助手是一份 Agent 定義，並不需要對應一個獨立外掛。外部外掛或 SDK 外掛也可以註冊 Agent，之後再由配置外掛調整。&lt;/p&gt;
+&lt;p&gt;內建外掛同樣參與配置中的啟停選擇。例如 &lt;code&gt;-opencode.config.agent&lt;/code&gt; 會讓負責應用助手配置的外掛退出當前啟用集合，相應配置能力也會受到影響。是否保留某個內建外掛，應根據其實際職責判斷。&lt;/p&gt;
+&lt;p&gt;需要增加依賴 Core 私有服務的原生功能時，通常要修改 OpenCode 原始碼，把外掛加入內建集合；若新增服務依賴，還需要調整相應服務裝配。這類變更隨 OpenCode 一起構建、釋出和升級。內部外掛適合引擎自身功能，普通業務工具優先通過公開介面接入。&lt;/p&gt;
+&lt;p&gt;依據：內部外掛集合與服務注入（&lt;code&gt;packages/core/src/plugin/internal.ts&lt;/code&gt;）、原生助手外掛（&lt;code&gt;packages/core/src/plugin/agent.ts&lt;/code&gt;）、助手配置外掛（&lt;code&gt;packages/core/src/config/plugin/agent.ts&lt;/code&gt;）、Shell 工具外掛（&lt;code&gt;packages/core/src/tool/plugin/shell.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;外部外掛通過檔案或包給現有 OpenCode 服務增加能力。&lt;/strong&gt; “外部”指程式碼來源不在內建集合中，執行時仍然裝入 OpenCode 程序。載入器向它提供公開 Plugin Context，不會像內部外掛一樣額外注入 Core 服務。它仍能使用執行環境允許的檔案、網路等能力；這不是一個獨立程序或安全沙箱。&lt;/p&gt;
+&lt;p&gt;外部外掛有兩條發現路徑：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;自動發現&lt;/strong&gt;：掃描原生配置目錄下的 &lt;code&gt;plugin/&lt;/code&gt; 和 &lt;code&gt;plugins/&lt;/code&gt;。當前實現直接識別 &lt;code&gt;.ts&lt;/code&gt;、&lt;code&gt;.js&lt;/code&gt; 檔案，也支援解析包目錄及符合條件的符號連結。包目錄會嘗試 &lt;code&gt;package.json&lt;/code&gt; 中字串形式的 &lt;code&gt;exports&lt;/code&gt;、&lt;code&gt;module&lt;/code&gt;、&lt;code&gt;main&lt;/code&gt;，再嘗試 &lt;code&gt;index.ts&lt;/code&gt;、&lt;code&gt;index.js&lt;/code&gt;；不能把這裡的簡單發現邏輯等同於支援所有複雜包匯出規則。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;顯式配置&lt;/strong&gt;：&lt;code&gt;plugins&lt;/code&gt; 接受相對路徑、絕對路徑、檔案 URL 和可解析的包。相對路徑按配置檔案所在目錄解析；本地路徑進入模組載入，包目標交給包解析器，並嘗試 &lt;code&gt;server&lt;/code&gt; 子入口或包根入口。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;自動發現結果先進入操作列表，顯式配置隨後應用，因此可以在配置中關閉自動發現的外掛。自動發現並不直接列舉 &lt;code&gt;.mjs&lt;/code&gt; 檔案；使用此類入口時，需要顯式配置其路徑，並由執行環境完成模組載入。&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上述路徑是配置格式示例。外掛通過 &lt;code&gt;ctx.options&lt;/code&gt; 讀取 &lt;code&gt;serviceUrl&lt;/code&gt;，並自行檢查必填項、取值範圍和地址約束；傳入物件不代表業務配置已經完成校驗。&lt;/p&gt;
+&lt;p&gt;外部模組必須預設匯出一個帶有 &lt;code&gt;id + effect&lt;/code&gt; 或 &lt;code&gt;id + setup&lt;/code&gt; 的外掛物件：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;編寫方式&lt;/th&gt;
+&lt;th scope="col"&gt;初始化入口&lt;/th&gt;
+&lt;th scope="col"&gt;接入方式與清理&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Effect&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;effect(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;由宿主在外掛 Scope 內執行；資源繫結 scoped 生命週期或 finalizer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Promise&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;setup(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;載入器通過 &lt;code&gt;fromPromise&lt;/code&gt; 轉為 Effect 外掛；可以返回 cleanup 函式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;@opencode-ai/plugin/effect&lt;/code&gt; 提供 Effect API，包根入口 &lt;code&gt;@opencode-ai/plugin&lt;/code&gt; 提供當前分支的 Promise API。舊版外掛 API 有獨立的 &lt;code&gt;v1&lt;/code&gt; 入口，不能僅憑“同樣是 OpenCode 外掛”假定介面相容。&lt;/p&gt;
+&lt;p&gt;外部外掛的典型載入鏈路為：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;檔案或配置變化可以觸發重新生成外掛集合；這是發現與監聽支援範圍內的更新，不是任意依賴檔案都能即時重新整理。特別是顯式配置目錄入口時，當前實現不保證目錄內部檔案變化會觸發過載。包版本的升級也應通過明確的部署或配置變更管理。&lt;/p&gt;
+&lt;p&gt;模組匯入或匯出格式校驗失敗會記錄載入警告，該次來源被跳過；進入啟用階段後的初始化失敗則由統一外掛管理處理。診斷時需要分別確認“檔案已被發現”“模組已成功解析”“外掛已啟用”和“能力已註冊”，僅看到配置項不足以證明工具可用。&lt;/p&gt;
+&lt;p&gt;依據：來源發現與本地監聽（&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;）、模組載入與配置注入（&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;）、公開包入口（&lt;code&gt;packages/plugin/package.json&lt;/code&gt;）、Promise 介面卡（&lt;code&gt;packages/plugin/src/promise/adapter.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SDK 外掛由嵌入式宿主直接註冊，適合把 OpenCode 作為應用內部的執行引擎。&lt;/strong&gt; 本文的 SDK 特指當前分支的 &lt;code&gt;@opencode-ai/sdk-next&lt;/code&gt; 嵌入式宿主。&lt;code&gt;OpenCode.create()&lt;/code&gt; 在應用程序內建立執行環境和記憶體中的 HTTP 路由呼叫鏈，不需要為這條內部呼叫鏈開啟網路監聽；工具、模型和業務服務仍可發起各自的網路請求。&lt;/p&gt;
+&lt;p&gt;宿主通過 &lt;code&gt;opencode.plugin(definition)&lt;/code&gt; 直接提交 Effect 外掛物件，省去外部模組發現、包解析和預設匯出校驗。這不是向一個已經啟動的遠端 OpenCode 服務上傳程式碼。普通 HTTP 客戶端和外掛 Context 中的 &lt;code&gt;ctx.plugin.list()&lt;/code&gt; 也不等於這個嵌入式註冊入口。&lt;/p&gt;
+&lt;p&gt;下例展示嵌入式宿主的外掛註冊與查詢方式，需使用與研究基線匹配的依賴版本：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&amp;gt;
+      ctx.agent.transform((draft) =&amp;gt; {
+        draft.update("reviewer", (agent) =&amp;gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;示例中的助手只定義用途和提示詞，許可權需要另行配置。示例執行結束會關閉擁有宿主的 Scope；真實嵌入式應用應讓該 Scope 覆蓋整個服務生命週期。&lt;/p&gt;
+&lt;p&gt;SDK 外掛的範圍和更新方式需要分兩層理解：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;層次&lt;/th&gt;
+&lt;th scope="col"&gt;管理內容&lt;/th&gt;
+&lt;th scope="col"&gt;生效範圍&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;宿主登錄檔&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Map&amp;lt;plugin.id, Versioned&amp;gt;&lt;/code&gt;，儲存定義和遞增修訂號&lt;/td&gt;
+&lt;td&gt;同一個嵌入式宿主共享；不同宿主擁有各自的登錄檔&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Location 啟用集合&lt;/td&gt;
+&lt;td&gt;該目錄上下文內的外掛例項、Transform、Hook 與 Scope&lt;/td&gt;
+&lt;td&gt;每個 Location 分別啟用與清理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;每次註冊都會發布 &lt;code&gt;sdk.plugin.updated&lt;/code&gt;。已啟動的 Location 收到更新後重新生成外掛集合；之後新啟動或被回收後重新啟動的 Location，從宿主登錄檔讀取當前定義。因此，“宿主只註冊一次”不意味著外掛初始化只執行一次。閉包中的可變物件也可能被同一宿主的多個 Location 例項共享，不能預設把它當作單個會話的狀態。&lt;/p&gt;
+&lt;p&gt;同一 SDK 登錄檔內再次提交相同 ID，會替換定義併產生新修訂號；不同宿主之間互不覆蓋。註冊返回僅表示定義已寫入併發布更新，不代表所有 Location 已同步完成啟用。需要確認生效時，應檢查目標 Location 的實際外掛和能力清單，並在必要時等待啟用事件。&lt;/p&gt;
+&lt;p&gt;當前 SDK 登錄檔只提供 &lt;code&gt;register&lt;/code&gt; 與 &lt;code&gt;all&lt;/code&gt;，沒有獨立的 &lt;code&gt;unregister&lt;/code&gt; 介面。各 Location 的配置仍可以通過外掛 ID 停用其啟用，但這不會從宿主登錄檔刪除定義。關閉宿主會清理執行資源；重新建立宿主需要重新註冊外掛，原來的記憶體註冊不是持久安裝記錄。&lt;/p&gt;
+&lt;p&gt;SDK 註冊入口接收 Effect 外掛，外部載入器對 Promise 外掛的自動適配不會在這裡自動發生。需要複用 Promise 定義時，應顯式使用對應的 &lt;code&gt;fromPromise&lt;/code&gt; 介面卡。SDK 路徑沒有額外的 &lt;code&gt;options&lt;/code&gt; 注入，公開 Context 預設提供空物件；宿主通常用工廠函式或閉包傳入自己的配置與業務客戶端。&lt;/p&gt;
+&lt;p&gt;SDK 外掛也不會自動取得內部外掛的 Core 服務環境。宿主可以主動傳入依賴，但直接依賴 Core 私有服務意味著承擔額外的版本耦合。研究基線中的 &lt;code&gt;sdk-next&lt;/code&gt; 還是 &lt;code&gt;private: true&lt;/code&gt; 的過渡包，不能把這個示例視為已釋出穩定 npm API 的安裝承諾。&lt;/p&gt;
+&lt;p&gt;依據：嵌入式宿主入口（&lt;code&gt;packages/sdk-next/src/opencode.ts&lt;/code&gt;）、SDK 登錄檔（&lt;code&gt;packages/core/src/plugin/sdk.ts&lt;/code&gt;）、SDK 包狀態（&lt;code&gt;packages/sdk-next/package.json&lt;/code&gt;）、公開外掛宿主（&lt;code&gt;packages/core/src/plugin/host.ts&lt;/code&gt;）。嵌入式測試原始碼（&lt;code&gt;packages/sdk-next/test/embedded.test.ts&lt;/code&gt;）包含跨 Location 更新、Location 回收後重新啟用及宿主間隔離的用例；本文核對了這些用例，未獨立執行測試。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;三種來源會合併成一個有順序的啟用集合。&lt;/strong&gt; 在啟用項確定之後，當前順序是：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;ConfigPluginSource&lt;/code&gt; 負責外部來源與配置操作；&lt;code&gt;PluginSupervisor&lt;/code&gt; 把它們與內部、SDK 定義合併；&lt;code&gt;Plugin.Service&lt;/code&gt; 負責最終的重複 ID 檢查、Scope、初始化與替換。不要把不同來源理解為三套獨立執行引擎。&lt;/p&gt;
+&lt;p&gt;這個順序意味著外部和 SDK 外掛貢獻的助手等能力，仍可能被後置配置外掛調整。需要確定助手的最終提示詞、模型或許可權時，應讀取最終能力清單，而不是隻看某個外掛中的初始定義。&lt;/p&gt;
+&lt;p&gt;外掛 ID、包名和入口路徑承擔不同職責。比如配置通過檔案載入一個匯出 ID 為 &lt;code&gt;example.reviewer&lt;/code&gt; 的外掛，停用時應寫 &lt;code&gt;-example.reviewer&lt;/code&gt;。選擇器支援精確 ID、&lt;code&gt;prefix.*&lt;/code&gt; 和 &lt;code&gt;*&lt;/code&gt;；配置操作按順序執行，後續操作可以重新啟用已有定義。&lt;/p&gt;
+&lt;p&gt;有兩個容易混淆的重名規則：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;同一 SDK 登錄檔內重複註冊相同 ID&lt;/strong&gt;：更新該條定義，屬於登錄檔支援的替換操作。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不同有效來源最終貢獻相同 ID&lt;/strong&gt;：啟用階段按重複 ID 拒絕這一輪集合，不是按來源優先順序靜默覆蓋。外部檔案與 SDK 註冊不要同時提交同一外掛定義。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外，當前 &lt;code&gt;Plugin.Service&lt;/code&gt; 在整個有序集合的 ID 與版本完全一致時跳過啟用；一旦集合發生變化，會遍歷新集合，清理並重新初始化其中已有的外掛。因此，一個來源發生更新也可能讓其他未修改的外掛重新初始化。三類外掛都應正確釋放資源，避免把初始化當作只執行一次的業務動作。替換失敗會嘗試恢復該外掛舊版本，但無法回滾已產生的外部業務副作用。&lt;/p&gt;
+&lt;p&gt;依據：來源合併與啟停順序（&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;）、統一啟用與替換（&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;）、配置與載入順序測試原始碼（&lt;code&gt;packages/core/test/config/plugin.test.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="plugin-核心实现一-transform"&gt;Plugin 核心實現一：Transform&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Transform 用來宣告能力，Hook 用來處理一次執行。&lt;/strong&gt; 選擇擴充套件點時，應先確定需求屬於哪種領域。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;需求&lt;/th&gt;
+&lt;th scope="col"&gt;原生擴充套件介面&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;註冊、修改或移除助手&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.agent.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;註冊實際可執行工具&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;提供技能說明與資源入口&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.skill.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;增加命令&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.command.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;調整供應商、模型目錄與預設選擇&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.catalog.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;提供參考資料來源&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.reference.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;配置認證和連線方式&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.integration.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;提供搜尋後端&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.websearch.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;修改本輪上下文與可見工具&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;檢查工具輸入或整理結果&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;調整模型 SDK 或模型例項&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.aisdk.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;調整模型 HTTP 請求或響應&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("http.request" / "http.response", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;調整命令建立引數&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.shell.hook("create.before", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;觀察即時事件&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.event.subscribe()&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;建立、投遞、等待或中斷會話&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Agent、Catalog、Command、Integration、Reference、Skill 等狀態領域儲存活動 Transform，並從基礎狀態按順序重建。解除安裝某個外掛後，對應 Transform 被移除，再重新生成結果。Transform 應只編輯本次回撥提供的 Draft，不應儲存 Draft 引用，也不適合在重建時產生外部業務副作用。需要外部資料時，先載入並儲存資料，再觸發相應領域的 &lt;code&gt;reload()&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;Tool 的底層實現採用與 Scope 繫結的工具註冊和請求快照。它與上述領域具有相同的生命週期歸屬，但不能推斷所有 &lt;code&gt;transform&lt;/code&gt; 都使用完全相同的狀態容器或返回型別。&lt;/p&gt;
+&lt;h2 id="plugin-核心实现二-hook"&gt;Plugin 核心實現二：Hook&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Hook（執行鉤子）是宿主在執行流程中預留的擴充套件點。&lt;/strong&gt; 外掛向某個擴充套件點註冊回撥函式，OpenCode 執行到對應節點時，便自動呼叫這些回撥，並傳入該節點的上下文資料。外掛可以按介面約定讀取資料、調整引數或處理結果，從而參與模型請求、工具執行等流程。&lt;/p&gt;
+&lt;p&gt;Hook 的使用分為註冊和觸發兩個階段：外掛初始化時，通過 &lt;code&gt;ctx.session.hook(...)&lt;/code&gt;、&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt; 等介面宣告要參與的節點；實際執行到該節點時，宿主才執行註冊的回撥。註冊一次後，回撥可以隨著對應節點再次執行而多次觸發。宿主會等待回撥完成，再按該介面的約定繼續處理；例如 &lt;code&gt;tool.execute.before&lt;/code&gt; 允許通過 &lt;code&gt;Tool.Error&lt;/code&gt; 拒絕這次工具執行。&lt;/p&gt;
+&lt;p&gt;Transform 負責構建可用能力，Hook 負責調整能力在具體執行節點的行為。例如，註冊一個工具使用 &lt;code&gt;ctx.tool.transform&lt;/code&gt;；檢查某次工具呼叫的輸入，可以使用 &lt;code&gt;ctx.tool.hook("execute.before", ...)&lt;/code&gt;；調整即將傳送給模型的上下文，可以使用 &lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;。Hook 參與當前呼叫鏈，而 &lt;code&gt;ctx.event.subscribe()&lt;/code&gt; 用於訂閱事件並觀察執行情況。&lt;/p&gt;
+&lt;p&gt;執行 Hook 按註冊順序序列執行，後註冊的 Hook 可以看到前面的修改。多個外掛修改同一欄位時，需要檢查最終載入順序；內建外掛分為前置與後置集合，不能簡單假定“外部外掛永遠最後覆蓋”。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Hook&lt;/th&gt;
+&lt;th scope="col"&gt;可修改或觀察的內容&lt;/th&gt;
+&lt;th scope="col"&gt;注意事項&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.context&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;系統提示、訊息、本輪工具定義&lt;/td&gt;
+&lt;td&gt;助手和模型標識是上下文身份；修改訊息僅代表本輪請求調整，不等於追加持久歷史&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;工具輸入&lt;/td&gt;
+&lt;td&gt;可以返回 &lt;code&gt;Tool.Error&lt;/code&gt; 阻止執行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.after&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;成功結果或工具錯誤&lt;/td&gt;
+&lt;td&gt;用於整理結果和補充資訊&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.http.request/response&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;模型 HTTP 請求與響應&lt;/td&gt;
+&lt;td&gt;可能接觸憑據和完整輸入，需控制記錄內容&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;aisdk.sdk/language&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SDK 與實際模型例項&lt;/td&gt;
+&lt;td&gt;適合供應商適配&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;shell.create.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;命令、目錄、時限、Shell 與環境變數&lt;/td&gt;
+&lt;td&gt;字串規則本身不能提供系統級隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;當前公開 Hook 型別中，只有 &lt;code&gt;tool.execute.before&lt;/code&gt; 聲明瞭可恢復的 &lt;code&gt;Tool.Error&lt;/code&gt; 失敗通道。其他 Hook 不應被當作任意丟擲業務錯誤的通用中介軟體。&lt;/p&gt;
+&lt;p&gt;依據：Plugin Context（&lt;code&gt;packages/plugin/src/effect/plugin.ts&lt;/code&gt;）、狀態重建（&lt;code&gt;packages/core/src/state.ts&lt;/code&gt;）、Hook 註冊與執行（&lt;code&gt;packages/core/src/plugin/hooks.ts&lt;/code&gt;）、工具註冊與快照（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="工具示例与生命周期"&gt;工具示例與生命週期&lt;/h2&gt;
+&lt;h3 id="示例一-使用-plugin-transform-定义-tool"&gt;示例一：使用 Plugin Transform 定義 Tool&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;工具包含模型可見的定義和宿主執行的函式。&lt;/strong&gt; 模型生成工具名與輸入後，OpenCode 使用本輪捕獲的工具能力處理呼叫。工具函式接收宿主提供的 &lt;code&gt;sessionID&lt;/code&gt;、&lt;code&gt;agent&lt;/code&gt;、&lt;code&gt;messageID&lt;/code&gt; 和呼叫 &lt;code&gt;id&lt;/code&gt;，長操作可以通過 &lt;code&gt;context.progress()&lt;/code&gt; 提供進度。&lt;/p&gt;
+&lt;p&gt;下面是一個使用 Effect API 的獨立工具示例：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&amp;gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&amp;gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;結果欄位需要按用途區分：&lt;code&gt;output&lt;/code&gt; 是宣告輸出 Schema 後供程式使用的結構化值；&lt;code&gt;content&lt;/code&gt; 提供給模型並進入會話內容；&lt;code&gt;metadata&lt;/code&gt; 承載有界的附加狀態。未宣告輸出 Schema 卻返回 &lt;code&gt;output&lt;/code&gt;，在當前執行實現中屬於錯誤。&lt;/p&gt;
+&lt;p&gt;原始碼中有兩個比介面名稱更具體的校驗細節：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tool.execute.before&lt;/code&gt; 先於工具執行函式中的 Schema 解碼執行。因此 Hook 讀取輸入時仍應把它當作未知結構；Hook 修改後的輸入才進入後續解碼。&lt;/li&gt;
+&lt;li&gt;Effect Schema 和支援的 Standard Schema 會執行執行時輸入校驗；純 JSON Schema 分支直接傳遞輸入。純 JSON Schema 輸出分支也只檢查是否為 JSON 值，不逐項驗證宣告的約束。業務工具不能把“向模型提供了 JSON Schema”視為“服務端已驗證引數”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在當前工具通道里，執行前 Hook 自身失敗會直接中止後續流程；不能假定 &lt;code&gt;execute.after&lt;/code&gt; 總會為這類拒絕觸發。審計設計需要覆蓋拒絕路徑，而不是隻監聽成功執行之後。&lt;/p&gt;
+&lt;p&gt;預期、可恢復的工具失敗可以對映為 &lt;code&gt;Tool.Error&lt;/code&gt;。取消執行、未知程式缺陷和成功結果需要保留不同語義，不應統一吞掉後返回一條普通成功文本。&lt;/p&gt;
+&lt;p&gt;依據：工具型別（&lt;code&gt;packages/schema/src/tool.ts&lt;/code&gt;）、工具執行封裝（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）、實際引數校驗（&lt;code&gt;packages/core/src/tool/runtime.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h3 id="示例二-使用-code-mode-组合工具调用"&gt;示例二：使用 Code Mode 組合工具呼叫&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Code Mode 決定一部分工具如何呈現與組合。&lt;/strong&gt; 當前分支會把 &lt;code&gt;codemode: false&lt;/code&gt; 的工具直接暴露給模型；其他工具可進入 Code Mode 目錄，通過 &lt;code&gt;execute&lt;/code&gt; 執行一小段程式碼來組合呼叫和處理結果。Code Mode 中的實際工具呼叫仍回到宿主的工具執行路徑。&lt;/p&gt;
+&lt;p&gt;這適合連續查詢、過濾和聚合等場景。Code Mode 執行環境限制直接檔案訪問、匯入等操作，但這類限制不能等同於整個 OpenCode 服務或外部外掛都執行在系統沙箱中。上面的 &lt;code&gt;echo&lt;/code&gt; 示例設定了 &lt;code&gt;codemode: false&lt;/code&gt;，展示工具直接暴露給模型的方式。&lt;/p&gt;
+&lt;p&gt;模型請求捕獲當時的工具註冊快照。外掛熱更新不會把已經準備好的請求視為使用全新的工具清單；後續請求會重新準備能力。外掛貢獻的工具執行函式本身也應避免依賴已被清理的無歸屬後臺資源。&lt;/p&gt;
+&lt;p&gt;依據：工具分類與快照（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）、Code Mode（&lt;code&gt;packages/core/src/codemode/tool.ts&lt;/code&gt;）、本輪工具可用性檢查（&lt;code&gt;packages/core/src/session/model-request.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h3 id="plugin-的-location"&gt;Plugin 的 Location&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;外掛例項按 Location 管理，持久業務狀態需要單獨儲存。&lt;/strong&gt; Location 表示由目錄和可選原生 Workspace 標識構成的執行上下文。一個 OpenCode 程序可以同時承載多個 Location，同一外掛可能在多個 Location 中分別啟用。&lt;/p&gt;
+&lt;p&gt;每個外掛例項擁有 Scope，用於歸屬 Transform、Hook、工具註冊和正確繫結的資源。Scope 關閉時，這些註冊會清理。外掛自己的定時器、網路訂閱和檔案監聽也需要繫結清理邏輯；Promise 外掛可以從 &lt;code&gt;setup&lt;/code&gt; 返回 cleanup，Effect 外掛使用相應的 scoped 資源與 finalizer。&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;本地外掛入口檔案和配置來源存在變化監聽；顯式入口是目錄時，目錄內部檔案修改不具備同樣的自動熱更新保證。載入、更新和停止還受實際檔案監聽與執行狀態影響，因此“支援熱更新”不能替代讀取原生能力清單的驗證。&lt;/p&gt;
+&lt;p&gt;外掛恢復只能恢復程式碼和註冊，無法回滾已經操作檔案、資料庫或遠端服務產生的副作用。定時任務、審批狀態、重試次數、冪等標識應由可靠儲存維護。記憶體裡的會話狀態至少按 &lt;code&gt;sessionID&lt;/code&gt; 隔離；模組級全域性變數還可能跨外掛例項共享，需要格外謹慎。&lt;/p&gt;
+&lt;p&gt;依據：外掛 Scope 與恢復（&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;）、外掛檔案監聽（&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="plugin-最佳实践"&gt;Plugin 最佳實踐&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;外掛開發優先複用已有配置與公開介面&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只調整提示詞、用途或步驟上限時，使用 Agent 配置；&lt;/li&gt;
+&lt;li&gt;提供方法和知識時，使用 Skill；&lt;/li&gt;
+&lt;li&gt;增加實際操作時，註冊 Tool；&lt;/li&gt;
+&lt;li&gt;需要在&lt;strong&gt;執行節點&lt;/strong&gt;調整行為時，使用對應 Hook；&lt;/li&gt;
+&lt;li&gt;特別的，外掛需要持久化業務狀態或呼叫外部服務時，應顯式設計儲存、認證、事務與冪等處理，不依賴外掛記憶體狀態承擔這些保證。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;單一職責外掛可以只有一個 TS 擴充套件檔案。只有多個能力需要獨立啟停、版本或失敗策略時，才拆成多個外掛 ID。普通外部外掛應依賴公開外掛、客戶端和 schema 介面，避免匯入 Core 私有實現。分發時需明確相容的宿主版本、依賴版本、模組入口和構建方式。&lt;/p&gt;
+&lt;p&gt;升級 Plugin 時，應至少檢查以下行為，而不是隻確認外掛模組能夠匯入：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Agent、工具和技能是否進入實際能力清單，解除安裝後貢獻是否消失。&lt;/li&gt;
+&lt;li&gt;多外掛順序、配置覆蓋和熱更新失敗時的最終狀態是否符合預期。&lt;/li&gt;
+&lt;li&gt;工具輸入、輸出、取消和執行拒絕是否保持正確語義。&lt;/li&gt;
+&lt;li&gt;會話模型與助手選擇是否真正生效，子助手是否具有預期許可權和上下文。&lt;/li&gt;
+&lt;li&gt;自定義工具及其呼叫的服務是否正確檢查會話歸屬、業務授權、狀態轉換和重複請求。&lt;/li&gt;
+&lt;li&gt;服務重啟後，持久狀態能否恢復，即時事件缺失是否得到正確處理。&lt;/li&gt;
+&lt;li&gt;工具結果與事件是否準確表達進度、完成、失敗和取消狀態。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    <category>Agent 開發</category><category>外掛開發</category></item>
+    </channel>
+</rss>
