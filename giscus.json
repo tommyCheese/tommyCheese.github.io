@@ -1,0 +1,8 @@
+{
+  "origins": [
+    "https://tommycheese.github.io",
+    "http://127.0.0.1:8873",
+    "http://localhost:8873"
+  ],
+  "defaultCommentOrder": "oldest"
+}
