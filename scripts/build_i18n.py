@@ -9,12 +9,13 @@ from hashlib import sha256
 import json
 import re
 from lxml import html, etree
+from reading_layout import enhance_layout
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
-UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py'])).hexdigest()[:12]
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','css/reading.css','js/reading.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
@@ -311,7 +312,7 @@ def build_diagrams():
 
 def build():
     files = [ROOT/'index.html', ROOT/'404.html']
-    for folder in ['blogs','tags','categories','gallery']:
+    for folder in ['blogs','tags','categories','gallery','topics']:
         files.extend(sorted((ROOT/folder).rglob('*.html')))
     sources = {file: file.read_text() for file in files}
     paths = {page_path(file) for file in files}
@@ -320,7 +321,10 @@ def build():
     for entry in index_source:
         slug = unquote(urlsplit(entry['permalink']).path).strip('/').split('/')[-1]
         if slug != 'gallery':
-            articles[slug] = entry
+            articles[slug] = dict(entry)
+            article_doc = html.document_fromstring(sources[ROOT/'blogs'/slug/'index.html'])
+            dates = article_doc.xpath('//*[@id="single"]//div[contains(@class,"title")]//time/@datetime')
+            articles[slug]['date'] = dates[0][:10] if dates else ''
     # Fail before writing any output if a requested translation is missing.
     for locale in LOCALES:
         if MESSAGES[locale].keys()!=MESSAGES['zh-CN'].keys():
@@ -409,8 +413,10 @@ def build():
             elif path.startswith('/tags/') and path!='/tags/':
                 title=t('tag.'+unquote(path.split('/')[2]),locale);description=t('site.description',locale)
             else:
-                page_key={'/':'page.home','/blogs/':'page.blogs','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
+                page_key={'/':'page.home','/blogs/':'page.blogs','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
                 title='Tommy Cheese' if path=='/' else t(page_key,locale);description=t('site.description',locale)
+            if not alias:
+                enhance_layout(doc,path,locale,articles,MESSAGES[locale],UI_REVISION)
             for element in doc.xpath('//footer//div[@class="text-secondary"]'):
                 set_text(element,t('footer.madeWith',locale))
                 br=html.Element('br');br.tail=t('footer.poweredBy',locale);element.append(br)
