@@ -3,8 +3,9 @@
 from pathlib import Path
 from copy import deepcopy
 from datetime import datetime
-from urllib.parse import urlsplit, urlunsplit, unquote, quote, urlencode
+from urllib.parse import urlsplit, urlunsplit, unquote, quote, urlencode, parse_qsl
 from math import ceil
+from hashlib import sha256
 import json
 import re
 from lxml import html, etree
@@ -13,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
@@ -120,14 +122,27 @@ def localized_url(value, locale, current_path, known_paths):
         return value
     result = PREFIX[locale] + canonical_path
     result = quote(result, safe='/%.~-')
-    return urlunsplit((parsed.scheme, parsed.netloc, result, parsed.query, parsed.fragment))
+    query=urlencode([(key,value) for key,value in parse_qsl(parsed.query,keep_blank_values=True) if key!='v'])
+    return urlunsplit((parsed.scheme, parsed.netloc, result, query, parsed.fragment))
+
+
+def versioned_page_url(value, known_paths):
+    parsed=urlsplit(value)
+    if parsed.scheme not in ['', 'http', 'https'] or parsed.netloc not in ['', 'tommycheese.github.io']:
+        return value
+    path=re.sub(r'^/(en|ja|ru|zh-TW)(?=/|$)','',unquote(parsed.path)) or '/'
+    if not parsed.path.startswith('/') or path.removesuffix('index.html') not in known_paths:
+        return value
+    query=[(key,value) for key,value in parse_qsl(parsed.query,keep_blank_values=True) if key!='v']
+    return urlunsplit((parsed.scheme,parsed.netloc,parsed.path,urlencode(query+[('v',UI_REVISION)]),parsed.fragment))
 
 
 def add_metadata(doc, path, locale, title, description):
     doc.set('lang', locale)
     doc.set('data-page-path', path)
+    doc.set('data-ui-version', UI_REVISION)
     head = doc.find('head')
-    for element in head.xpath('script[@src="/js/i18n-messages.js" or @src="/js/i18n.js"] | link[@href="/css/i18n.css"] | noscript[@id="i18n-no-script"]'):
+    for element in head.xpath('script[starts-with(@src,"/js/i18n-messages.js") or starts-with(@src,"/js/i18n.js")] | link[starts-with(@href,"/css/i18n.css")] | noscript[@id="i18n-no-script"]'):
         head.remove(element)
     for element in head.xpath('link[@rel="canonical" or @hreflang]'):
         head.remove(element)
@@ -150,10 +165,8 @@ def add_metadata(doc, path, locale, title, description):
     for element in head.xpath('meta[@property="og:url"]'):
         element.set('content', BASE + PREFIX[locale] + quote(path, safe='/%.~-'))
     for src in ['/js/i18n-messages.js', '/js/i18n.js']:
-        if not head.xpath(f'script[@src="{src}"]'):
-            head.append(html.Element('script', src=src, defer='defer'))
-    if not head.xpath('link[@href="/css/i18n.css"]'):
-        head.append(html.Element('link', rel='stylesheet', href='/css/i18n.css'))
+        head.append(html.Element('script', src=src+'?v='+UI_REVISION, defer='defer'))
+    head.append(html.Element('link', rel='stylesheet', href='/css/i18n.css?v='+UI_REVISION))
     if not head.xpath('noscript[@id="i18n-no-script"]'):
         fallback=html.Element('noscript',id='i18n-no-script')
         style=html.Element('style')
@@ -177,7 +190,7 @@ def add_language_switch(doc, path, locale):
     details.append(summary)
     nav = html.Element('nav', {'aria-label': t('ui.language', locale)})
     for code, name in LOCALES.items():
-        anchor = html.Element('a', href=PREFIX[code] + quote(path, safe='/%.~-'), lang=code, hreflang=code, **{'data-language': code})
+        anchor = html.Element('a', href=PREFIX[code] + quote(path, safe='/%.~-')+'?v='+UI_REVISION, lang=code, hreflang=code, **{'data-language': code})
         anchor.text = name
         if code == locale:
             anchor.set('aria-current', 'true')
@@ -409,11 +422,12 @@ def build():
                 set_text(element,t('comments.enableJavaScript',locale))
             # All UI links use the chosen edition; downloads/media stay shared.
             for element in doc.xpath('//*[@href]'):
-                element.set('href',localized_url(element.get('href'),locale,path,paths))
+                href=localized_url(element.get('href'),locale,path,paths)
+                element.set('href',versioned_page_url(href,paths) if element.tag=='a' else href)
             if alias:
                 for element in doc.xpath('//meta[@http-equiv="refresh"]'):
                     value=element.get('content');target=value.split('url=',1)[-1]
-                    element.set('content','0; url='+localized_url(target,locale,path,paths))
+                    element.set('content','0; url='+versioned_page_url(localized_url(target,locale,path,paths),paths))
                 doc.set('lang',locale)
             else:
                 add_metadata(doc,path,locale,title,description)

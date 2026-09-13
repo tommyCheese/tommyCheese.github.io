@@ -6,7 +6,7 @@ const path = require('node:path');
 const script = fs.readFileSync(path.join(__dirname, '../js/i18n.js'), 'utf8');
 const messages = fs.readFileSync(path.join(__dirname, '../js/i18n-messages.js'), 'utf8');
 
-function run({ locale = 'zh-CN', url = 'https://tommycheese.github.io/', saved, languages = ['zh-CN'], storageBlocked = false, pagePath = '/' } = {}) {
+function run({ locale = 'zh-CN', url = 'https://tommycheese.github.io/', saved, languages = ['zh-CN'], storageBlocked = false, pagePath = '/', version } = {}) {
   const location = new URL(url);
   const redirects = [];
   location.replace = value => redirects.push(value);
@@ -18,7 +18,7 @@ function run({ locale = 'zh-CN', url = 'https://tommycheese.github.io/', saved, 
   const context = {
     URL, encodeURIComponent, location, navigator: { languages },
     localStorage: { getItem() { if (storageBlocked) throw Error(); return saved; }, setItem(key, value) { if (storageBlocked) throw Error(); saved = value; } },
-    document: { documentElement: { lang: locale, dataset: { pagePath } }, querySelectorAll: selector => selector === '[data-language]' ? anchors : [], addEventListener() {} },
+    document: { documentElement: { lang: locale, dataset: { pagePath, uiVersion: version } }, querySelectorAll: selector => selector === '[data-language]' ? anchors : [], addEventListener() {} },
     addEventListener(name, handler) { events[name] = handler; }
   };
   context.window = context;
@@ -69,4 +69,16 @@ test('GitHub Pages root 404 selects the requested edition without redirect loops
     ['/ja/404.html?from=%2Fja%2Fmissing%2F']);
   assert.deepEqual(run({ locale: 'ja', url: 'https://tommycheese.github.io/ja/404.html', pagePath: '/404.html' }).redirects, []);
   assert.deepEqual(run({ url: 'https://tommycheese.github.io/missing/', pagePath: '/404.html' }).redirects, []);
+});
+
+test('language changes replace stale UI versions while preserving the current query and chapter', () => {
+  const state = run({ locale: 'en', url: 'https://tommycheese.github.io/en/blogs/example/?q=agent&v=old#one', version: 'latest' });
+  assert.equal(state.anchors[3].href, '/ru/blogs/example/?q=agent&v=latest#one');
+  state.location.hash = '#two';
+  state.events.hashchange();
+  assert.equal(state.anchors[3].href, '/ru/blogs/example/?q=agent&v=latest#two');
+  assert.equal(state.api.link('/en/blogs/example/?v=old#one', 'ja'), '/ja/blogs/example/?v=latest#one');
+  assert.deepEqual(run({ languages: ['ru'], version: 'latest' }).redirects, ['/ru/?v=latest']);
+  assert.deepEqual(run({ url: 'https://tommycheese.github.io/ja/missing/', pagePath: '/404.html', version: 'latest' }).redirects,
+    ['/ja/404.html?from=%2Fja%2Fmissing%2F&v=latest']);
 });
