@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
-from build_i18n import LOCALES, PREFIX, MESSAGES, BASE
+from build_i18n import LOCALES, PREFIX, MESSAGES, BASE, UI_REVISION
 
 pages = [ROOT/'index.html', ROOT/'404.html']
 for folder in ['blogs','tags','categories','gallery']:
@@ -44,7 +44,12 @@ for locale in LOCALES:
         for anchor in language_links:
             target=ROOT/unquote(urlsplit(anchor.get('href')).path).lstrip('/')
             require((target if target.suffix else target/'index.html').exists(),f'{name}: broken language link')
-        require(len(doc.xpath('//script[@src="/js/i18n.js"]'))==1,f'{name}: runtime count')
+        require(len(doc.xpath('//script[starts-with(@src,"/js/i18n.js?v=")]'))==1,f'{name}: versioned runtime count')
+        require(doc.get('data-ui-version')==UI_REVISION,f'{name}: current UI version')
+        require(doc.xpath('//link[starts-with(@href,"/css/i18n.css?v=")]/@href')==['/css/i18n.css?v='+UI_REVISION],f'{name}: versioned stylesheet')
+        for anchor in language_links:
+            require(parse_qs(urlsplit(anchor.get('href')).query).get('v')==[UI_REVISION],f'{name}: language link UI version')
+        require(not urlsplit(doc.xpath('//link[@rel="canonical"]/@href')[0]).query,f'{name}: clean canonical URL')
         require(len(doc.xpath('//*[@id="disqus_thread"]'))<=1,f'{name}: duplicated comments')
         for text in doc.xpath('//body//text()[not(ancestor::article or ancestor::script or ancestor::style or ancestor::svg)]'):
             require(not re.search(r'[\u3400-\u9fff].*\|.*[A-Za-z]',text),f'{name}: bilingual UI {text[:80]}')

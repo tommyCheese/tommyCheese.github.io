@@ -6,6 +6,7 @@
     ? document.documentElement.lang : "zh-CN";
   const messages = window.SITE_MESSAGES || {};
   const prefix = locale === "zh-CN" ? "" : "/" + locale;
+  const version = document.documentElement.dataset?.uiVersion;
 
   function normalize(value) {
     const tag = String(value || "").toLowerCase();
@@ -24,6 +25,7 @@
     if (![location.origin, "https://tommycheese.github.io"].includes(url.origin)) return value;
     const path = url.pathname.replace(/^\/(en|ja|ru|zh-TW)(?=\/|$)/, "") || "/";
     url.pathname = (target === "zh-CN" ? "" : "/" + target) + path;
+    if (version) url.searchParams.set("v", version);
     return url.pathname + url.search + url.hash;
   }
 
@@ -33,7 +35,7 @@
   if (document.documentElement.dataset?.pagePath === "/404.html") {
     const requested = location.pathname.match(/^\/(en|ja|ru|zh-TW)(?=\/|$)/)?.[1];
     if (requested && requested !== locale) {
-      location.replace("/" + requested + "/404.html?from=" + encodeURIComponent(location.pathname));
+      location.replace(link("/" + requested + "/404.html?from=" + encodeURIComponent(location.pathname), requested));
       return;
     }
   }
@@ -44,6 +46,7 @@
       const url = new URL(anchor.href, location.href);
       url.hash = location.hash;
       url.search = location.search;
+      if (version) url.searchParams.set("v", version);
       anchor.href = url.pathname + url.search + url.hash;
     });
   }
