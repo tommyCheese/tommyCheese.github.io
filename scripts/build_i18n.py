@@ -164,12 +164,16 @@ def add_metadata(doc, path, locale, title, description):
 def add_language_switch(doc, path, locale):
     for old in doc.xpath('//*[@class="language-switch"]'):
         old.getparent().remove(old)
-    containers = doc.xpath('//*[@id="profileHeader"]//nav/div[contains(@class,"container-fluid")]')
-    if not containers:
+    toggles = doc.xpath('//*[@id="profileHeader"]//*[@id="theme-toggle"]')
+    if not toggles:
         return
     details = html.Element('details', {'class': 'language-switch'})
-    summary = html.Element('summary', {'aria-label': t('ui.language', locale)})
-    summary.text = '🌐 ' + LOCALES[locale]
+    label = t('ui.language', locale) + ' · ' + LOCALES[locale]
+    summary = html.Element('summary', {'aria-label': label, 'title': label})
+    icon = etree.Element('svg', {'viewBox':'0 0 24 24','width':'18','height':'18','fill':'none','stroke':'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true','focusable':'false'})
+    etree.SubElement(icon,'circle',cx='12',cy='12',r='9')
+    etree.SubElement(icon,'path',d='M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18')
+    summary.append(icon)
     details.append(summary)
     nav = html.Element('nav', {'aria-label': t('ui.language', locale)})
     for code, name in LOCALES.items():
@@ -179,9 +183,12 @@ def add_language_switch(doc, path, locale):
             anchor.set('aria-current', 'true')
         nav.append(anchor)
     details.append(nav)
-    container = containers[0]
-    toggle = container.xpath('./button[contains(@class,"navbar-toggler")]')
-    container.insert(container.index(toggle[0]) if toggle else 1, details)
+    toggle = toggles[0]
+    container = toggle.getparent()
+    classes = container.get('class','').split()
+    if 'header-actions' not in classes:
+        container.set('class',' '.join(classes + ['header-actions']))
+    container.insert(container.index(toggle), details)
 
 
 def translate_dates(doc, locale):
