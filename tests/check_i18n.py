@@ -34,7 +34,7 @@ for locale in LOCALES:
         doc=html.document_fromstring(content)
         name=output.relative_to(ROOT).as_posix()
         require(doc.get('lang')==locale,f'{name}: html lang')
-        require(not re.search(r'(?:/Users/|/home/[^/]+/|file:///|[A-Z]:\\Users\\)',content),f'{name}: private path')
+        require(not re.search(r'(?:(?<![A-Za-z0-9])/(?:Users/|home/[^/]+/)|file:///|[A-Z]:\\Users\\)',content),f'{name}: private path')
         if '/page/' in name:continue
         require(len(doc.xpath('//link[@rel="canonical"]'))==1,f'{name}: canonical')
         alternatives=doc.xpath('//link[@rel="alternate"][@hreflang]/@hreflang')

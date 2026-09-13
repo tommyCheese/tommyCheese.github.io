@@ -48,7 +48,7 @@ window.SITE_MESSAGES = {
     "footer.copyright": "© 2024 保留所有权利",
     "footer.madeWith": "基于❤️构建",
     "footer.logoAlt": "Tommy Cheese 站点标志",
-    "comments.enableJavaScript": "请启用 JavaScript 以查看 Disqus 评论。",
+    "comments.enableJavaScript": "请启用 JavaScript 加载评论，或通过上方链接前往 GitHub 参与讨论。",
     "contact.success": "感谢您的留言！",
     "contact.error": "提交失败，请稍后重试。",
     "contact.successLabel": "成功",
@@ -160,7 +160,11 @@ window.SITE_MESSAGES = {
     "tag.模型迁移": "模型迁移",
     "tag.模型迁移.description": "PyTorch 与 MindSpore 之间的模型参数转换。",
     "tag.数学基础": "数学基础",
-    "tag.数学基础.description": "Hessian 矩阵、微分与优化基础。"
+    "tag.数学基础.description": "Hessian 矩阵、微分与优化基础。",
+    "comments.title": "评论",
+    "comments.intro": "使用 GitHub 账号参与讨论，所有语言版本共用此评论区。",
+    "comments.onGitHub": "在 GitHub 查看讨论",
+    "comments.legacy": "查看旧评论（Disqus）"
   },
   "en": {
     "nav.about": "About",
@@ -210,7 +214,7 @@ window.SITE_MESSAGES = {
     "footer.copyright": "© 2024 All rights reserved",
     "footer.madeWith": "Built with ❤️",
     "footer.logoAlt": "Tommy Cheese site logo",
-    "comments.enableJavaScript": "Please enable JavaScript to view comments powered by Disqus.",
+    "comments.enableJavaScript": "Enable JavaScript to load comments, or use the link above to join the discussion on GitHub.",
     "contact.success": "Thanks for your message!",
     "contact.error": "Your message could not be submitted. Please try again later.",
     "contact.successLabel": "Success",
@@ -322,7 +326,11 @@ window.SITE_MESSAGES = {
     "tag.模型迁移": "Model Migration",
     "tag.模型迁移.description": "Converting model parameters between PyTorch and MindSpore.",
     "tag.数学基础": "Mathematical Foundations",
-    "tag.数学基础.description": "The Hessian matrix, differentiation, and optimization basics."
+    "tag.数学基础.description": "The Hessian matrix, differentiation, and optimization basics.",
+    "comments.title": "Comments",
+    "comments.intro": "Join the conversation with your GitHub account. All language editions share this discussion.",
+    "comments.onGitHub": "View discussion on GitHub",
+    "comments.legacy": "Previous comments (Disqus)"
   },
   "ja": {
     "nav.about": "私について",
@@ -372,7 +380,7 @@ window.SITE_MESSAGES = {
     "footer.copyright": "© 2024 All rights reserved",
     "footer.madeWith": "❤️を込めて制作",
     "footer.logoAlt": "Tommy Cheese サイトロゴ",
-    "comments.enableJavaScript": "Disqus のコメントを表示するには JavaScript を有効にしてください。",
+    "comments.enableJavaScript": "JavaScript を有効にしてコメントを表示するか、上のリンクから GitHub の議論にご参加ください。",
     "contact.success": "メッセージをありがとうございます！",
     "contact.error": "送信できませんでした。しばらくしてから再度お試しください。",
     "contact.successLabel": "成功",
@@ -484,7 +492,11 @@ window.SITE_MESSAGES = {
     "tag.模型迁移": "モデル移行",
     "tag.模型迁移.description": "PyTorch と MindSpore 間のモデルパラメータ変換。",
     "tag.数学基础": "数学の基礎",
-    "tag.数学基础.description": "ヘッセ行列、微分、最適化の基礎。"
+    "tag.数学基础.description": "ヘッセ行列、微分、最適化の基礎。",
+    "comments.title": "コメント",
+    "comments.intro": "GitHub アカウントでご参加ください。すべての言語版で同じコメント欄を共有しています。",
+    "comments.onGitHub": "GitHub で議論を見る",
+    "comments.legacy": "以前のコメント（Disqus）"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -534,7 +546,7 @@ window.SITE_MESSAGES = {
     "footer.copyright": "© 2024 Все права защищены",
     "footer.madeWith": "Создано с ❤️",
     "footer.logoAlt": "Логотип сайта Tommy Cheese",
-    "comments.enableJavaScript": "Включите JavaScript, чтобы просматривать комментарии Disqus.",
+    "comments.enableJavaScript": "Включите JavaScript для загрузки комментариев или перейдите по ссылке выше к обсуждению на GitHub.",
     "contact.success": "Спасибо за сообщение!",
     "contact.error": "Не удалось отправить сообщение. Попробуйте позже.",
     "contact.successLabel": "Успешно",
@@ -646,7 +658,11 @@ window.SITE_MESSAGES = {
     "tag.模型迁移": "Перенос моделей",
     "tag.模型迁移.description": "Преобразование параметров моделей между PyTorch и MindSpore.",
     "tag.数学基础": "Математические основы",
-    "tag.数学基础.description": "Матрица Гессе, дифференцирование и основы оптимизации."
+    "tag.数学基础.description": "Матрица Гессе, дифференцирование и основы оптимизации.",
+    "comments.title": "Комментарии",
+    "comments.intro": "Присоединяйтесь к обсуждению с аккаунтом GitHub. Все языковые версии используют общие комментарии.",
+    "comments.onGitHub": "Обсуждение на GitHub",
+    "comments.legacy": "Прежние комментарии (Disqus)"
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -696,7 +712,7 @@ window.SITE_MESSAGES = {
     "footer.copyright": "© 2024 保留所有權利",
     "footer.madeWith": "基於❤️構建",
     "footer.logoAlt": "Tommy Cheese 網站標誌",
-    "comments.enableJavaScript": "請啟用 JavaScript 以查看 Disqus 留言。",
+    "comments.enableJavaScript": "請啟用 JavaScript 載入留言，或透過上方連結前往 GitHub 參與討論。",
     "contact.success": "感謝您的留言！",
     "contact.error": "提交失敗，請稍後再試。",
     "contact.successLabel": "成功",
@@ -808,6 +824,10 @@ window.SITE_MESSAGES = {
     "tag.模型迁移": "模型遷移",
     "tag.模型迁移.description": "PyTorch 與 MindSpore 之間的模型參數轉換。",
     "tag.数学基础": "數學基礎",
-    "tag.数学基础.description": "Hessian 矩陣、微分與最佳化基礎。"
+    "tag.数学基础.description": "Hessian 矩陣、微分與最佳化基礎。",
+    "comments.title": "留言",
+    "comments.intro": "使用 GitHub 帳號參與討論，所有語言版本共用此留言區。",
+    "comments.onGitHub": "在 GitHub 查看討論",
+    "comments.legacy": "查看舊留言（Disqus）"
   }
 };

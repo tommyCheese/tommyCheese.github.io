@@ -11,12 +11,13 @@ import re
 from lxml import html, etree
 from reading_layout import enhance_layout
 from tag_taxonomy import POST_TAGS, canonical_tag_path, prepare_tag_sources, render_tags, prepare_tag_feeds
+from comments_layout import render_comments
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
-UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','css/reading.css','js/reading.js','js/search.js'])).hexdigest()[:12]
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','js/search.js','js/comments.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
@@ -270,24 +271,6 @@ def article_extras(doc, article, path, locale, title):
         meta.set('content',t('article.coverAlt',locale) if path=='/blogs/opencode-v2-extensions/' else title)
 
 
-def localize_comments(doc, path, locale):
-    # Keep existing comment threads attached to their original, unprefixed URL.
-    scripts = doc.xpath('//script[not(@src)]')
-    comment_scripts = [s for s in scripts if s.text and 'disqus.com/embed.js' in s.text]
-    if not comment_scripts:return
-    for duplicate in comment_scripts[1:]:duplicate.getparent().remove(duplicate)
-    comment_scripts = comment_scripts[:1]
-    for duplicate in doc.xpath('//*[@id="disqus_thread"]')[1:]:duplicate.getparent().remove(duplicate)
-    for old in doc.xpath('//*[@id="i18n-comments"]'):old.getparent().remove(old)
-    config = html.Element('script',id='i18n-comments')
-    config.text = 'window.disqus_config = function () { this.page.url = '+json.dumps(BASE+quote(path,safe='/%.~-'))+'; this.language = '+json.dumps({'zh-CN':'zh','zh-TW':'zh_TW'}.get(locale,locale))+'; };'
-    comment_scripts[0].addprevious(config)
-    for script in comment_scripts:
-        script.text=re.sub(r'window\.disqus_config\s*=\s*function\s*\(\)\s*\{.*?\};','',script.text,flags=re.S)
-        # A local preview does not connect to Disqus or display an untranslated warning.
-        script.text=script.text.replace("document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';",'')
-
-
 def build_diagrams():
     diagrams=json.loads((ROOT/'i18n/diagrams.json').read_text())
     for filename,translations in diagrams.items():
@@ -429,8 +412,8 @@ def build():
                 if element.text and '©' in element.text:element.text=t('footer.copyright',locale).replace('2024','2026')
             for element in doc.xpath('//footer//*[@data-i18n="footer.copyright"]'):
                 element.text=t('footer.copyright',locale).replace('2024','2026')
-            for element in doc.xpath('//noscript[contains(.,"Disqus")]'):
-                set_text(element,t('comments.enableJavaScript',locale))
+            if not alias:
+                render_comments(doc,path,locale,MESSAGES[locale],UI_REVISION)
             # All UI links use the chosen edition; downloads/media stay shared.
             for element in doc.xpath('//*[@href]'):
                 href=localized_url(element.get('href'),locale,path,paths)
@@ -444,7 +427,6 @@ def build():
                 add_metadata(doc,canonical_tag_path(path),locale,title,description)
                 add_language_switch(doc,canonical_tag_path(path),locale)
                 translate_dates(doc,locale)
-                localize_comments(doc,path,locale)
                 # Existing article-only pages lack dynImg; avoid a theme toggle error.
                 for script in doc.xpath('//script[not(@src)]'):
                     if script.text and 'let img = document.getElementById("dynImg");' in script.text and 'if (!img) return;' not in script.text:

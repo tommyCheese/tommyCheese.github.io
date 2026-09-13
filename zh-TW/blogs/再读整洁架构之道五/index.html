@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" data-page-path="/blogs/再读整洁架构之道五/" data-ui-version="aa3356d5c7f9">
+<html lang="zh-TW" data-page-path="/blogs/再读整洁架构之道五/" data-ui-version="6bde82c9c37b">
 
 <head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,7 +103,7 @@
 
 
   <title>再讀整潔架構之道（五）軟體架構 · Tommy Cheese</title>
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/zh-TW/index.xml"><link rel="stylesheet" href="/css/reading.css?v=aa3356d5c7f9" data-reading-layout="style"><meta property="og:locale" content="zh_TW"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="canonical" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><script src="/js/i18n-messages.js?v=aa3356d5c7f9" defer></script><script src="/js/i18n.js?v=aa3356d5c7f9" defer></script><link rel="stylesheet" href="/css/i18n.css?v=aa3356d5c7f9"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/zh-TW/index.xml"><link rel="stylesheet" href="/css/reading.css?v=6bde82c9c37b" data-reading-layout="style"><meta name="giscus:backlink" content="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/" data-comments-layout="backlink"><meta property="og:locale" content="zh_TW"><link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><link rel="canonical" href="https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"><script src="/js/i18n-messages.js?v=6bde82c9c37b" defer></script><script src="/js/i18n.js?v=6bde82c9c37b" defer></script><link rel="stylesheet" href="/css/i18n.css?v=6bde82c9c37b"><noscript id="i18n-no-script"><style>#navbarContent { display: block !important; } .navbar-toggler { display: none !important; }</style></noscript></head>
 
 <body class="light">
 
@@ -159,7 +159,7 @@
     <nav class="pt-3 navbar navbar-expand-xl animate">
         <div class="container-fluid mx-xs-2 mx-sm-5 mx-md-5 mx-lg-5">
 
-            <a class="navbar-brand primary-font text-wrap" href="/zh-TW/?v=aa3356d5c7f9">
+            <a class="navbar-brand primary-font text-wrap" href="/zh-TW/?v=6bde82c9c37b">
 
                 <img src="/%f0%9f%a7%80.png" width="30" height="30" class="d-inline-block align-top">
                 Tommy Cheese
@@ -191,7 +191,7 @@
 
 
 
-                    <li class="nav-item navbar-text"><a data-i18n="nav.blogs" href="/zh-TW/blogs/?v=aa3356d5c7f9" class="nav-link">部落格</a></li><li class="nav-item navbar-text"><a data-i18n="nav.topics" href="/zh-TW/topics/?v=aa3356d5c7f9" class="nav-link">專題</a></li><li class="nav-item navbar-text"><a data-i18n="nav.tags" href="/zh-TW/tags/?v=aa3356d5c7f9" class="nav-link">標籤</a></li><li class="nav-item navbar-text"><a data-i18n="nav.about" href="/zh-TW/?v=aa3356d5c7f9#about" class="nav-link">關於</a></li><li class="nav-item navbar-text"><a data-i18n="nav.gallery" href="/zh-TW/gallery/?v=aa3356d5c7f9" class="nav-link">探索</a></li><li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
+                    <li class="nav-item navbar-text"><a data-i18n="nav.blogs" href="/zh-TW/blogs/?v=6bde82c9c37b" class="nav-link">部落格</a></li><li class="nav-item navbar-text"><a data-i18n="nav.topics" href="/zh-TW/topics/?v=6bde82c9c37b" class="nav-link">專題</a></li><li class="nav-item navbar-text"><a data-i18n="nav.tags" href="/zh-TW/tags/?v=6bde82c9c37b" class="nav-link">標籤</a></li><li class="nav-item navbar-text"><a data-i18n="nav.about" href="/zh-TW/?v=6bde82c9c37b#about" class="nav-link">關於</a></li><li class="nav-item navbar-text"><a data-i18n="nav.gallery" href="/zh-TW/gallery/?v=6bde82c9c37b" class="nav-link">探索</a></li><li class="nav-item navbar-text d-none d-xl-block"><div class="nav-link nav-link-sep"></div></li>
                         <div class="dropdown-divider"></div>
 
 
@@ -219,7 +219,7 @@
                     <li class="nav-item navbar-text">
 
                         <div class="text-center header-actions">
-                            <details class="language-switch"><summary aria-label="語言 · 繁體中文" title="語言 · 繁體中文"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18"></path></svg></summary><nav aria-label="語言"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=aa3356d5c7f9" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=aa3356d5c7f9" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=aa3356d5c7f9" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=aa3356d5c7f9" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=aa3356d5c7f9" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW" aria-current="true">繁體中文</a></nav></details><button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="切換明暗主題">
+                            <details class="language-switch"><summary aria-label="語言 · 繁體中文" title="語言 · 繁體中文"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a17 17 0 0 1 0 18 17 17 0 0 1 0-18"></path></svg></summary><nav aria-label="語言"><a href="/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=6bde82c9c37b" lang="zh-CN" hreflang="zh-CN" data-language="zh-CN">简体中文</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=6bde82c9c37b" lang="en" hreflang="en" data-language="en">English</a><a href="/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=6bde82c9c37b" lang="ja" hreflang="ja" data-language="ja">日本語</a><a href="/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=6bde82c9c37b" lang="ru" hreflang="ru" data-language="ru">Русский</a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/?v=6bde82c9c37b" lang="zh-TW" hreflang="zh-TW" data-language="zh-TW" aria-current="true">繁體中文</a></nav></details><button id="theme-toggle" onclick="imgchange()" data-i18n-aria-label="ui.toggleTheme" aria-label="切換明暗主題">
                                 <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
@@ -359,7 +359,7 @@
 </ul>
 <p>（第五篇完）</p>
 </article>
-        <nav class="reading-trail" aria-label="繼續閱讀" data-reading-layout="trail"><h2 data-i18n="article.continue">繼續閱讀</h2><a data-i18n="topics.architecture.title" href="/zh-TW/topics/?v=aa3356d5c7f9#architecture" class="topic-backlink">軟體架構</a><p class="series-position">整潔架構系列 · 第 5 / 6 篇</p><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/?v=aa3356d5c7f9" class="series-neighbor" rel="prev"><span data-i18n="article.previous">上一篇</span><strong data-i18n="post.再读整洁架构之道四.title">再讀整潔架構之道（四）元件建構原則</strong></a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/?v=aa3356d5c7f9" class="series-neighbor" rel="next"><span data-i18n="article.next">下一篇</span><strong data-i18n="post.再读整洁架构之道六.title">再讀整潔架構之道（六）邊界</strong></a></nav></div>
+        <nav class="reading-trail" aria-label="繼續閱讀" data-reading-layout="trail"><h2 data-i18n="article.continue">繼續閱讀</h2><a data-i18n="topics.architecture.title" href="/zh-TW/topics/?v=6bde82c9c37b#architecture" class="topic-backlink">軟體架構</a><p class="series-position">整潔架構系列 · 第 5 / 6 篇</p><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/?v=6bde82c9c37b" class="series-neighbor" rel="prev"><span data-i18n="article.previous">上一篇</span><strong data-i18n="post.再读整洁架构之道四.title">再讀整潔架構之道（四）元件建構原則</strong></a><a href="/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/?v=6bde82c9c37b" class="series-neighbor" rel="next"><span data-i18n="article.next">下一篇</span><strong data-i18n="post.再读整洁架构之道六.title">再讀整潔架構之道（六）邊界</strong></a></nav><section id="comments" class="comments-section" data-comments-layout="section" aria-labelledby="comments-heading"><h2 data-i18n="comments.title" id="comments-heading">留言</h2><p data-i18n="comments.intro" class="comments-intro">使用 GitHub 帳號參與討論，所有語言版本共用此留言區。</p><div class="giscus" data-repo="tommyCheese/tommyCheese.github.io" data-repo-id="R_kgDOMRkVTw" data-category="Announcements" data-category-id="DIC_kwDOMRkVT84DFgwq" data-term="/blogs/再读整洁架构之道五/" data-lang="zh-TW"></div><p class="comments-links"><a data-i18n="comments.onGitHub" href="https://github.com/tommyCheese/tommyCheese.github.io/discussions?discussions_q=%22%2Fblogs%2F%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94%2F%22" target="_blank" rel="noopener noreferrer">在 GitHub 查看討論</a></p><noscript data-i18n="comments.enableJavaScript">請啟用 JavaScript 載入留言，或透過上方連結前往 GitHub 參與討論。</noscript></section></div>
       </div>
       <div class="col-sm-12 col-md-12 col-lg-3">
         <div id="stickySideBar" class="sticky-sidebar">
@@ -390,7 +390,7 @@
 
           <aside class="tags">
             <h5 data-i18n="article.tags">標籤</h5>
-            <ul class="tags-ul list-unstyled list-inline"><li class="list-inline-item"><a data-i18n="tag.软件架构" href="/zh-TW/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/?v=aa3356d5c7f9" rel="tag">軟體架構</a></li><li class="list-inline-item"><a data-i18n="tag.整洁架构之道" href="/zh-TW/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/?v=aa3356d5c7f9" rel="tag">整潔架構</a></li></ul></aside>
+            <ul class="tags-ul list-unstyled list-inline"><li class="list-inline-item"><a data-i18n="tag.软件架构" href="/zh-TW/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/?v=6bde82c9c37b" rel="tag">軟體架構</a></li><li class="list-inline-item"><a data-i18n="tag.整洁架构之道" href="/zh-TW/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/?v=6bde82c9c37b" rel="tag">整潔架構</a></li></ul></aside>
 
 
 
@@ -425,27 +425,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-9 p-4">
-        <div id="disqus_thread"></div>
-<script id="i18n-comments">window.disqus_config = function () { this.page.url = "https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/"; this.language = "zh_TW"; };</script><script>
-
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "tommycheese" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      </div>
     </div>
-  </div>
   <button class="p-2 px-3" onclick="topFunction()" id="topScroll" data-i18n-aria-label="action.backToTop" aria-label="回到頂端">
     <i class="fas fa-angle-up"></i>
   </button>
@@ -496,8 +476,7 @@
 
 
 
-<div class="feed-link container" data-reading-layout="feed"><a data-i18n="action.subscribe" href="/zh-TW/index.xml">訂閱 RSS</a></div><noscript>請啟用 JavaScript 以查看 Disqus 留言。</noscript>
-    <div class="text-center pt-2">
+<div class="feed-link container" data-reading-layout="feed"><a data-i18n="action.subscribe" href="/zh-TW/index.xml">訂閱 RSS</a></div><div class="text-center pt-2">
 
 
 
@@ -512,7 +491,7 @@
         <div class="col-md-4 text-center">
 
                 <div class="pb-2">
-                    <a href="https://tommycheese.github.io/zh-TW/?v=aa3356d5c7f9" title="Tommy Cheese">
+                    <a href="https://tommycheese.github.io/zh-TW/?v=6bde82c9c37b" title="Tommy Cheese">
                         <img alt="Tommy Cheese 網站標誌" src="/%f0%9f%a7%80.png" height="40px" width="40px" data-i18n-alt="image.footerLogo">
                     </a>
                 </div><span data-i18n="footer.copyright">© 2026 保留所有權利</span><div class="text-secondary" data-i18n="footer.madeWith">基於❤️構建</div>
@@ -549,7 +528,7 @@
 </script>
 
 
-    <script src="/js/search.js?v=aa3356d5c7f9"></script>
+    <script src="/js/search.js?v=6bde82c9c37b"></script>
 
 
 
@@ -582,6 +561,6 @@
   <section id="search-content" class="py-2">
     <div class="container" id="search-results"></div>
   </section>
-<script src="/js/reading.js?v=aa3356d5c7f9" defer data-reading-layout="runtime"></script></body>
+<script src="/js/reading.js?v=6bde82c9c37b" defer data-reading-layout="runtime"></script><script src="/js/comments.js?v=6bde82c9c37b" defer data-comments-layout="runtime"></script></body>
 
 </html>
