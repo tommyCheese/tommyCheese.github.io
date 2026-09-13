@@ -13,7 +13,6 @@
       <link>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</guid>
-      <category>Agent 開発</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;調査日：2026-09-13。本記事では、OpenCode v2の汎用的なプラグイン機能を説明します。プラグインの種類、読み込みの仕組み、機能の登録、実行フック、権限の境界、ライフサイクルを取り上げ、プラグイン開発や組み込み用途の参考にします。&lt;/p&gt;
 &lt;p&gt;コードの基準は、調査対象のOpenCodeリポジトリの &lt;code&gt;v2&lt;/code&gt; ブランチで、コミットは &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;です。ソースコードの参照には、この固定コミット内のリポジトリ相対パスを使います。記載するインターフェースや動作はこのバージョンを基準としており、他のOpenCodeバージョンや旧プラグインAPIとの互換性を保証するものではありません。&lt;/p&gt;
@@ -448,7 +447,7 @@ export default Plugin.define({
 &lt;li&gt;ツール結果とイベントが、進捗、完了、失敗、キャンセルの状態を正確に表すか。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Agent 開発</category><category>プラグイン開発</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（6）：境界</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -489,7 +488,7 @@ export default Plugin.define({
 &lt;h3 id="服务层次的跨边界调用"&gt;サービスレベルの境界を越える呼び出し&lt;/h3&gt;
 &lt;p&gt;サービスは、システムアーキテクチャで最も強い境界の形です。一つのサービスは一つのプロセスです。アーキテクチャの境界を引く際には、通信回数をできるだけ抑える必要があります。このレベルの通信は、大きな遅延に対応できなければなりません。それ以外は、ローカルプロセスと同じルールをサービスレベルにも適用できます。つまり、低レベルのサービスを高レベルのサービスの「プラグイン」にします。&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -568,7 +567,7 @@ export default Plugin.define({
 &lt;/ul&gt;
 &lt;p&gt;（第五回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>ドメイン駆動設計入門</title>
       <link>https://tommycheese.github.io/ja/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
@@ -651,7 +650,7 @@ export default Plugin.define({
 &lt;/blockquote&gt;
 &lt;p&gt;（本節・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>ドメイン駆動設計</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（4）：コンポーネントの原則</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -800,7 +799,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;/ul&gt;
 &lt;p&gt;（第四回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（3）：SOLID 設計原則</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -850,7 +849,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;/ul&gt;
 &lt;p&gt;（第三回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（2）：プログラミングパラダイム</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -900,7 +899,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;p&gt;三つのプログラミングパラダイムはいずれも、プログラマーに新たな&lt;strong&gt;制限&lt;/strong&gt;を課します。それぞれが特定のコードの書き方を制約しており、新しい能力を追加するものではありません。つまり、パラダイムが教えてくれるのは「何をしてはいけないか」です。&lt;/p&gt;
 &lt;p&gt;（第二回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（1）</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -942,7 +941,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;h3 id="为好的软件架构持续斗争"&gt;良いソフトウェアアーキテクチャのために戦い続けよう✊&lt;/h3&gt;
 &lt;p&gt;ソフトウェアアーキテクチャの価値を軽視すると、システムは次第に保守が難しくなり、やがて変更できなくなります。そうなったなら、開発チームは要求を出す側と十分に議論せず、果たすべき責任を果たさなかったということです。&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>PyTorch のモデルパラメーターを MindSpore に読み込む方法</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
@@ -1198,7 +1197,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;/ul&gt;
 &lt;p&gt;（完）&lt;/p&gt;
 </description>
-    </item>
+    <category>機械学習</category><category>モデル移行</category></item>
     <item>
       <title>勾配の先へ：ヘッセ行列</title>
       <link>https://tommycheese.github.io/ja/blogs/h/</link>
@@ -1293,6 +1292,6 @@ $$
 &lt;p&gt;基本的な定義がわかれば、ヘッセ行列の性質を使って、最適化における問題を分析できます。たとえば、局所最大点、局所最小点、鞍点の判定、学習率の決定、悪条件に基づく勾配降下法の挙動の評価などです。また、Hessian行列を使って、&lt;strong&gt;ニュートン法&lt;/strong&gt;という最適化アルゴリズムも実現できます。&lt;/p&gt;
 &lt;p&gt;（本節・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>機械学習</category><category>数学の基礎</category></item>
   </channel>
 </rss>

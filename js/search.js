@@ -30,7 +30,7 @@ async function searchOnChange(event) {
     const entries = await searchIndex;
     if (request !== searchRequest) return;
     const needle = query.normalize("NFKC").toLocaleLowerCase(window.siteI18n.locale);
-    const matches = entries.filter(item => [item.title, item.description, item.content]
+    const matches = entries.filter(item => [item.title, item.description, item.content, ...(item.tags || [])]
       .some(value => String(value || "").normalize("NFKC").toLocaleLowerCase(window.siteI18n.locale).includes(needle)));
     container.replaceChildren();
     if (!matches.length) { status(t("search.noResults", { query })); return; }

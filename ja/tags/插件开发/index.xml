@@ -1,0 +1,452 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>プラグイン開発 · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ja/tags/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/</link>
+    <description>ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://tommycheese.github.io/ja/tags/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>OpenCode v2 拡張機構の調査と導入ガイド</title>
+      <link>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</link>
+      <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
+      <guid>https://tommycheese.github.io/ja/blogs/opencode-v2-extensions/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;調査日：2026-09-13。本記事では、OpenCode v2の汎用的なプラグイン機能を説明します。プラグインの種類、読み込みの仕組み、機能の登録、実行フック、権限の境界、ライフサイクルを取り上げ、プラグイン開発や組み込み用途の参考にします。&lt;/p&gt;
+&lt;p&gt;コードの基準は、調査対象のOpenCodeリポジトリの &lt;code&gt;v2&lt;/code&gt; ブランチで、コミットは &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;です。ソースコードの参照には、この固定コミット内のリポジトリ相対パスを使います。記載するインターフェースや動作はこのバージョンを基準としており、他のOpenCodeバージョンや旧プラグインAPIとの互換性を保証するものではありません。&lt;/p&gt;
+&lt;p&gt;本記事はソースコードの調査と機能の説明です。コード例はインターフェースや呼び出し方を示すためのもので、独立した実行検証は行っていません。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="plugin-扩展入口"&gt;Plugin：拡張の入口&lt;/h2&gt;
+&lt;h3 id="什么是-plugin"&gt;Pluginとは何か&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;OpenCodeの拡張は、機能の登録と実行フックを通じて、既存の実行フローに接続します。&lt;/strong&gt; 現在のOpenCode v2の実装では、Extensionは主にPluginの仕組みに相当します。プラグインは、アシスタント、ツール、スキル、モデル、コマンドなどを提供し、指定された実行箇所で振る舞いを調整できます。セッションの実行、モデルリクエスト、ツール結果、実行記録は、引き続きOpenCodeのコアが処理します。&lt;/p&gt;
+&lt;figure class="plugin-flow"&gt;&lt;img src="https://tommycheese.github.io/blogimages/ja/opencode-v2-plugin-flow.svg" alt="プラグインの読み込み後に機能を登録し、セッションがコンテキストを準備してリクエストフック経由でモデルを呼び出す。ツール呼び出しは実行フック経由で結果を保存してモデルに返し、最終回答で今回の実行を終了する。" width="429" height="722"&gt;&lt;figcaption&gt;Pluginの読み込み、機能登録、セッション実行までの流れ&lt;/figcaption&gt;&lt;/figure&gt;
+&lt;details&gt;&lt;summary&gt;Mermaidフローチャートのソースを表示&lt;/summary&gt;&lt;pre&gt;&lt;code class="language-mermaid"&gt;flowchart TD
+    A[配置文件、本地插件或 SDK 注册] --&amp;gt; B[插件加载与生命周期管理]
+    B --&amp;gt; C[构建助手、工具、技能等能力]
+    C --&amp;gt; D[会话选择助手]
+    D --&amp;gt; E[准备上下文与工具快照]
+    E --&amp;gt; F[请求阶段钩子]
+    F --&amp;gt; G[调用模型]
+    G --&amp;gt; H{返回内容}
+    H --&amp;gt;|工具调用| I[工具执行与钩子]
+    I --&amp;gt; J[保存结果与执行事件]
+    J --&amp;gt; G
+    H --&amp;gt;|最终回答| K[本次执行结束]
+&lt;/code&gt;&lt;/pre&gt;&lt;/details&gt;
+&lt;h3 id="plugin-的分类"&gt;Pluginの分類&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;内部プラグイン、外部プラグイン、SDKプラグインは、接続元によって区別されますが、最終的には同じ実行管理に組み込まれます。&lt;/strong&gt; いずれもアシスタント、ツール、実行フックを登録できます。主な違いは、誰が定義を提供するか、どのようにホストへ読み込むか、ホストがコアの内部サービスを追加で注入するかです。ここで扱うのはサーバー側のプラグインです。ターミナルUIのTUIプラグインは、別の拡張の入口です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;比較項目&lt;/th&gt;
+&lt;th scope="col"&gt;内部プラグイン&lt;/th&gt;
+&lt;th scope="col"&gt;外部プラグイン&lt;/th&gt;
+&lt;th scope="col"&gt;SDKプラグイン&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;提供元&lt;/td&gt;
+&lt;td&gt;OpenCodeのソースコードと配布バージョン&lt;/td&gt;
+&lt;td&gt;プロジェクトや独立したプラグインパッケージの保守担当者&lt;/td&gt;
+&lt;td&gt;OpenCodeを組み込むアプリケーションのホスト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;入口&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;PluginInternal&lt;/code&gt; 内の &lt;code&gt;pre&lt;/code&gt; ／ &lt;code&gt;post&lt;/code&gt; コレクション&lt;/td&gt;
+&lt;td&gt;ディレクトリの探索、設定で指定したファイルやパッケージ&lt;/td&gt;
+&lt;td&gt;組み込みホストの &lt;code&gt;opencode.plugin(definition)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;読み込みの形式&lt;/td&gt;
+&lt;td&gt;コアコードが定義を直接インポート&lt;/td&gt;
+&lt;td&gt;モジュールを解決し、デフォルトエクスポートを取得&lt;/td&gt;
+&lt;td&gt;メモリ上でプラグインオブジェクトを直接渡す&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;利用できるインターフェース&lt;/td&gt;
+&lt;td&gt;公開Contextと、ホストが注入する内部サービス&lt;/td&gt;
+&lt;td&gt;公開Plugin Context&lt;/td&gt;
+&lt;td&gt;公開Plugin Context。ホストが明示的に渡した依存をクロージャーで利用可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;主な設定方法&lt;/td&gt;
+&lt;td&gt;ネイティブ設定、内部サービス、組み込みの既定値&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;plugins[].options&lt;/code&gt; → &lt;code&gt;ctx.options&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ホストコードとクロージャー。登録インターフェースには独立した &lt;code&gt;options&lt;/code&gt; 引数がない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;更新元&lt;/td&gt;
+&lt;td&gt;OpenCodeのコードバージョンに追従。一部のプラグインは設定変更を独自に監視&lt;/td&gt;
+&lt;td&gt;設定変更、対応するローカル入口の変更、パッケージ設定の変更&lt;/td&gt;
+&lt;td&gt;ホストが再登録し、内部リビジョン番号を増加&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;インスタンスの範囲&lt;/td&gt;
+&lt;td&gt;Locationごとに独立して有効化&lt;/td&gt;
+&lt;td&gt;各Locationの設定に従って個別に有効化&lt;/td&gt;
+&lt;td&gt;同じホストで定義を共有し、Locationごとに独立して有効化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;用途&lt;/td&gt;
+&lt;td&gt;ネイティブのアシスタント、ツール、プロバイダー、設定処理を実装&lt;/td&gt;
+&lt;td&gt;既存のOpenCodeサービスにプロジェクト固有や業務固有の機能を追加&lt;/td&gt;
+&lt;td&gt;自分のJS/TSアプリケーションにOpenCodeを組み込み、管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;EffectとPromiseは、プラグインを書くための二つのインターフェースです。公開インターフェースを使うEffectプラグインオブジェクトは、デフォルトエクスポートして設定から読み込むことも、組み込みSDKへ直接渡して登録することもできます。中核となる機能は再利用できますが、読み込み順序と設定の渡し方は変わります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;内部プラグインは、OpenCode自身の一部の機能をプラグインとして構成したものです。&lt;/strong&gt; ユーザーがディレクトリへインストールする特別なファイルではなく、コアのソースコードから静的にインポートされ、 &lt;code&gt;PluginInternal&lt;/code&gt; 内のコレクションに明示的に登録されています。&lt;code&gt;PluginInternal.list()&lt;/code&gt; は、現在のLocationに必要なサービスを取得し、 &lt;code&gt;Effect.provide(context)&lt;/code&gt; で内部プラグインへ注入したうえで、共通のローダーへ渡します。&lt;/p&gt;
+&lt;p&gt;ここには二層のContextがあります：&lt;code&gt;effect(ctx)&lt;/code&gt; の引数は公開Plugin Contextのままです。内部プラグインはEffect環境を通じて、別途 &lt;code&gt;Config.Service&lt;/code&gt;、&lt;code&gt;Permission.Service&lt;/code&gt;、&lt;code&gt;Shell.Service&lt;/code&gt;、&lt;code&gt;Location.Service&lt;/code&gt; などのサービスを取得します。したがって、内部プラグインがより多くの機能を使えるのは、ホストが依存を明示的に注入しているためであり、プラグインIDが &lt;code&gt;opencode.&lt;/code&gt; で始まるからではありません。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;内部プラグインの例&lt;/th&gt;
+&lt;th scope="col"&gt;所属するコレクション&lt;/th&gt;
+&lt;th scope="col"&gt;実際の責務&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ネイティブアシスタントの基本定義を登録&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.tool.shell&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Shellツールを登録し、ネイティブ実行、権限、実行状態のサービスと連携&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネイティブのプロバイダー、検索、その他のツールのプラグイン&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pre&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;モデル、検索、ツールの基本機能を提供&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;opencode.config.agent&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;アシスタント設定と関連Markdownファイルを読み込み、アシスタント一覧へ反映&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロバイダー、スキル、ポリシー、モデルバリアントの設定プラグイン&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;post&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;先行するプラグインが提供した機能へ設定や後処理を適用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;これにより、カスタムアシスタントと内部プラグインの関係もわかります。ユーザーはアシスタント設定を編集し、その設定の読み込み、監視、適用を実際に担当するのは &lt;code&gt;opencode.config.agent&lt;/code&gt;です。各カスタムアシスタントは一つのAgent定義であり、それぞれに独立したプラグインが必要なわけではありません。外部プラグインやSDKプラグインもAgentを登録でき、その後で設定プラグインによる調整を受けられます。&lt;/p&gt;
+&lt;p&gt;組み込みプラグインも、設定による有効化・無効化の対象です。たとえば &lt;code&gt;-opencode.config.agent&lt;/code&gt; を指定すると、アシスタント設定を適用するプラグインが現在の有効な集合から外れ、その設定機能にも影響します。組み込みプラグインを残すかどうかは、実際の責務に基づいて判断するべきです。&lt;/p&gt;
+&lt;p&gt;Coreの非公開サービスに依存するネイティブ機能を追加する場合、通常はOpenCodeのソースコードを変更して、プラグインを組み込みの集合に追加します。新たなサービス依存が必要なら、サービスの組み立ても変更します。こうした変更はOpenCodeとともにビルド、配布、更新されます。内部プラグインはエンジン自身の機能に適しており、一般的な業務ツールは公開インターフェースから接続することを優先します。&lt;/p&gt;
+&lt;p&gt;根拠：内部プラグインの集合とサービス注入（&lt;code&gt;packages/core/src/plugin/internal.ts&lt;/code&gt;）、ネイティブアシスタントのプラグイン（&lt;code&gt;packages/core/src/plugin/agent.ts&lt;/code&gt;）、アシスタント設定のプラグイン（&lt;code&gt;packages/core/src/config/plugin/agent.ts&lt;/code&gt;）、Shellツールのプラグイン（&lt;code&gt;packages/core/src/tool/plugin/shell.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;外部プラグインは、ファイルやパッケージを通じて既存のOpenCodeサービスに機能を追加します。&lt;/strong&gt; 「外部」とは、コードの提供元が組み込みの集合に含まれないことを指します。実行時にはOpenCodeのプロセスへ読み込まれます。ローダーは公開Plugin Contextを提供しますが、内部プラグインのようにCoreサービスを追加注入しません。一方、実行環境で許可されるファイルやネットワークの機能は利用できます。独立したプロセスやセキュリティサンドボックスではありません。&lt;/p&gt;
+&lt;p&gt;外部プラグインの探索経路は二つあります：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;自動探索&lt;/strong&gt;：ネイティブ設定ディレクトリ内の &lt;code&gt;plugin/&lt;/code&gt; と &lt;code&gt;plugins/&lt;/code&gt;を走査します。現在の実装は、 &lt;code&gt;.ts&lt;/code&gt;と&lt;code&gt;.js&lt;/code&gt; のファイルを直接認識し、パッケージディレクトリや条件を満たすシンボリックリンクの解決にも対応します。パッケージディレクトリでは、まず &lt;code&gt;package.json&lt;/code&gt; 内の文字列形式の &lt;code&gt;exports&lt;/code&gt;、&lt;code&gt;module&lt;/code&gt;、&lt;code&gt;main&lt;/code&gt;を試し、続いて &lt;code&gt;index.ts&lt;/code&gt;と&lt;code&gt;index.js&lt;/code&gt;を試します。この単純な探索処理が、複雑なパッケージのエクスポート規則をすべてサポートするわけではありません。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;明示的な設定&lt;/strong&gt;：&lt;code&gt;plugins&lt;/code&gt; は、相対パス、絶対パス、ファイルURL、解決可能なパッケージを受け付けます。相対パスは設定ファイルのあるディレクトリを基準に解決されます。ローカルパスはモジュールの読み込みへ進み、パッケージはパッケージリゾルバーに渡され、 &lt;code&gt;server&lt;/code&gt; サブエントリーまたはパッケージのルートエントリーを試します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;自動探索の結果が先に操作一覧へ入り、その後で明示的な設定が適用されるため、自動で見つかったプラグインを設定から無効にできます。自動探索は &lt;code&gt;.mjs&lt;/code&gt; ファイルを直接列挙しません。この形式の入口を使う場合は、パスを明示的に設定し、実行環境にモジュールの読み込みを任せる必要があります。&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-json"&gt;{
+  "plugins": [
+    {
+      "package": "./plugins/example.ts",
+      "options": {
+        "serviceUrl": "https://api.example.com"
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上のパスは設定形式の例です。プラグインは &lt;code&gt;ctx.options&lt;/code&gt; を通じて &lt;code&gt;serviceUrl&lt;/code&gt;を読み取り、必須項目、値の範囲、接続先の制約を自分で検証します。オブジェクトが渡されたことは、業務設定が検証済みであることを意味しません。&lt;/p&gt;
+&lt;p&gt;外部モジュールは、 &lt;code&gt;id + effect&lt;/code&gt; または &lt;code&gt;id + setup&lt;/code&gt; を持つプラグインオブジェクトをデフォルトエクスポートしなければなりません：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;記述方式&lt;/th&gt;
+&lt;th scope="col"&gt;初期化の入口&lt;/th&gt;
+&lt;th scope="col"&gt;接続方法とクリーンアップ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Effect&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;effect(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ホストがプラグインのScope内で実行。リソースはscopedライフサイクルまたはfinalizerへ紐付ける&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Promise&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;setup(ctx)&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ローダーが &lt;code&gt;fromPromise&lt;/code&gt; でEffectプラグインへ変換。cleanup関数を返せる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;@opencode-ai/plugin/effect&lt;/code&gt; はEffect APIを提供し、パッケージのルート入口 &lt;code&gt;@opencode-ai/plugin&lt;/code&gt; はこのブランチのPromise APIを提供します。旧プラグインAPIには独立した &lt;code&gt;v1&lt;/code&gt; 入口があります。「同じOpenCodeプラグインだから」という理由だけで、インターフェースに互換性があると考えてはいけません。&lt;/p&gt;
+&lt;p&gt;外部プラグインの典型的な読み込み経路は、次のとおりです：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;配置目录 / plugins 配置
+  → ConfigPluginSource 生成有序操作与本地文件时间戳
+  → PluginSupervisor 解析路径或包、导入模块、校验默认导出
+  → 适配 Promise 定义，并注入该来源的 options
+  → Plugin.Service 创建 Location 内的插件实例
+  → 注册助手、工具、钩子及需要清理的资源
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ファイルや設定の変更は、プラグイン集合の再生成を起動できます。ただし、これは探索と監視がサポートする範囲内での更新であり、任意の依存ファイルがリアルタイムで更新されるわけではありません。特に、ディレクトリを入口として明示的に設定した場合、内部のファイル変更によって再読み込みされることは、現在の実装では保証されません。パッケージのバージョン更新も、明示的なデプロイや設定変更として管理するべきです。&lt;/p&gt;
+&lt;p&gt;モジュールのインポートやエクスポート形式の検証に失敗すると、読み込み警告を記録し、その提供元をスキップします。有効化段階に入った後の初期化失敗は、共通のプラグイン管理が扱います。診断では「ファイルが見つかった」「モジュールを解決できた」「プラグインが有効化された」「機能が登録された」をそれぞれ確認します。設定項目が見えるだけでは、ツールが使えることの証明にはなりません。&lt;/p&gt;
+&lt;p&gt;根拠：提供元の探索とローカル監視（&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;）、モジュールの読み込みと設定注入（&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;）、公開パッケージの入口（&lt;code&gt;packages/plugin/package.json&lt;/code&gt;）、Promiseアダプター（&lt;code&gt;packages/plugin/src/promise/adapter.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SDKプラグインは、組み込みホストが直接登録するもので、OpenCodeをアプリケーション内部の実行エンジンとして使う場合に適しています。&lt;/strong&gt; 本記事でいうSDKは、このブランチの &lt;code&gt;@opencode-ai/sdk-next&lt;/code&gt; 組み込みホストを指します。&lt;code&gt;OpenCode.create()&lt;/code&gt; は、アプリケーションのプロセス内に実行環境とメモリ上のHTTPルーティング呼び出し経路を作ります。この内部経路のためにネットワークで待ち受ける必要はありませんが、ツール、モデル、業務サービスはそれぞれのネットワークリクエストを送信できます。&lt;/p&gt;
+&lt;p&gt;ホストは &lt;code&gt;opencode.plugin(definition)&lt;/code&gt; を通じてEffectプラグインオブジェクトを直接渡すため、外部モジュールの探索、パッケージ解決、デフォルトエクスポートの検証を省略できます。すでに起動しているリモートのOpenCodeサービスにコードをアップロードするものではありません。通常のHTTPクライアントや、プラグインContext内の &lt;code&gt;ctx.plugin.list()&lt;/code&gt; も、この組み込み登録の入口とは異なります。&lt;/p&gt;
+&lt;p&gt;次の例は、組み込みホストでプラグインを登録、照会する方法を示します。調査対象の基準と一致する依存バージョンが必要です：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { AbsolutePath, Location, OpenCode } from "@opencode-ai/sdk-next"
+import { Effect } from "effect"
+
+const program = Effect.gen(function* () {
+  const opencode = yield* OpenCode.create()
+
+  yield* opencode.plugin({
+    id: "example.reviewer",
+    effect: (ctx) =&amp;gt;
+      ctx.agent.transform((draft) =&amp;gt; {
+        draft.update("reviewer", (agent) =&amp;gt; {
+          agent.description = "检查代码并给出修改建议"
+          agent.system = "分析代码质量，并说明建议的依据。"
+          agent.mode = "primary"
+        })
+      }).pipe(Effect.asVoid),
+  })
+
+  const location = Location.Ref.make({
+    directory: AbsolutePath.make(process.cwd()),
+  })
+  return yield* opencode.plugin.list({ location })
+})
+
+const result = await Effect.runPromise(program.pipe(Effect.scoped))
+console.log(result.data)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;例のアシスタントは用途とプロンプトだけを定義しており、権限は別途設定する必要があります。例の実行が終わると、ホストを所有するScopeが閉じます。実際の組み込みアプリケーションでは、そのScopeがサービス全体のライフサイクルを覆うようにします。&lt;/p&gt;
+&lt;p&gt;SDKプラグインの範囲と更新方法は、二層に分けて理解する必要があります：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;層&lt;/th&gt;
+&lt;th scope="col"&gt;管理するもの&lt;/th&gt;
+&lt;th scope="col"&gt;有効範囲&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;ホストのレジストリ&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Map&amp;lt;plugin.id, Versioned&amp;gt;&lt;/code&gt;で、定義と増加するリビジョン番号を保持&lt;/td&gt;
+&lt;td&gt;同じ組み込みホスト内で共有。異なるホストにはそれぞれ独自のレジストリがある&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Locationの有効な集合&lt;/td&gt;
+&lt;td&gt;そのディレクトリコンテキスト内のプラグインインスタンス、Transform、Hook、Scope&lt;/td&gt;
+&lt;td&gt;Locationごとに有効化とクリーンアップを実施&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;登録のたびに &lt;code&gt;sdk.plugin.updated&lt;/code&gt;が発行されます。起動済みのLocationは更新を受け取るとプラグイン集合を再生成します。その後に新しく起動するLocationや、回収後に再起動するLocationは、ホストのレジストリから現在の定義を読み取ります。したがって、「ホストが一度だけ登録した」ことは、プラグインの初期化が一度だけ実行されることを意味しません。クロージャー内の可変オブジェクトも、同じホストの複数のLocationインスタンスで共有され得るので、一つのセッションだけの状態だと決めつけてはいけません。&lt;/p&gt;
+&lt;p&gt;同じSDKレジストリ内で同じIDを再登録すると、定義が置き換わり、新しいリビジョン番号が発生します。異なるホスト同士では上書きされません。登録処理が戻ったことは、定義が保存され更新が発行されたことを示すだけで、すべてのLocationが有効化を完了したという意味ではありません。反映を確認するには、対象Locationの実際のプラグイン一覧と機能一覧を確認し、必要なら有効化イベントを待ちます。&lt;/p&gt;
+&lt;p&gt;現在のSDKレジストリが提供するのは &lt;code&gt;register&lt;/code&gt; と &lt;code&gt;all&lt;/code&gt;だけで、独立した &lt;code&gt;unregister&lt;/code&gt; インターフェースはありません。各Locationの設定では、プラグインIDで有効化を禁止できますが、ホストのレジストリから定義が削除されるわけではありません。ホストを閉じると実行リソースがクリーンアップされます。ホストを作り直した場合は再登録が必要で、メモリ上の登録は永続的なインストール記録ではありません。&lt;/p&gt;
+&lt;p&gt;SDKの登録入口はEffectプラグインを受け取ります。外部ローダーによるPromiseプラグインの自動変換は、ここでは自動で行われません。Promiseの定義を再利用するには、対応する &lt;code&gt;fromPromise&lt;/code&gt; アダプターを明示的に使います。SDK経路では追加の &lt;code&gt;options&lt;/code&gt; 注入はなく、公開Contextには既定で空のオブジェクトが入ります。ホストは通常、ファクトリー関数やクロージャーで独自の設定や業務クライアントを渡します。&lt;/p&gt;
+&lt;p&gt;SDKプラグインも、内部プラグイン向けのCoreサービス環境を自動では取得しません。ホストから明示的に依存を渡すことはできますが、Coreの非公開サービスへ直接依存すると、追加のバージョン結合を引き受けることになります。調査対象の &lt;code&gt;sdk-next&lt;/code&gt; は、まだ &lt;code&gt;private: true&lt;/code&gt; の移行用パッケージです。この例を、安定した公開npm APIをインストールできる保証とみなしてはいけません。&lt;/p&gt;
+&lt;p&gt;根拠：組み込みホストの入口（&lt;code&gt;packages/sdk-next/src/opencode.ts&lt;/code&gt;）、SDKレジストリ（&lt;code&gt;packages/core/src/plugin/sdk.ts&lt;/code&gt;）、SDKパッケージの状態（&lt;code&gt;packages/sdk-next/package.json&lt;/code&gt;）、公開プラグインホスト（&lt;code&gt;packages/core/src/plugin/host.ts&lt;/code&gt;）。組み込みテストのソースコード（&lt;code&gt;packages/sdk-next/test/embedded.test.ts&lt;/code&gt;）には、Locationをまたぐ更新、Location回収後の再有効化、ホスト間の分離のケースが含まれています。本記事ではこれらのケースを確認しましたが、テストを独立して実行してはいません。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;三つの提供元は、一つの順序付きの有効化集合へ統合されます。&lt;/strong&gt; 有効にする項目が決まった後の、現在の順序は次のとおりです：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;内部 pre → SDK 注册插件 → 外部文件 / 包插件 → 内部 post
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;ConfigPluginSource&lt;/code&gt; は外部の提供元と設定操作を担当し、&lt;code&gt;PluginSupervisor&lt;/code&gt; はそれらを内部定義、SDK定義と統合し、&lt;code&gt;Plugin.Service&lt;/code&gt; は最終的なID重複検査、Scope、初期化、置き換えを担当します。異なる提供元を、三つの独立した実行エンジンと考えてはいけません。&lt;/p&gt;
+&lt;p&gt;この順序のため、外部プラグインやSDKプラグインが提供したアシスタントなどの機能は、後段の設定プラグインによって調整される場合があります。最終的なプロンプト、モデル、権限を知りたい場合は、個々のプラグインの初期定義だけを見るのではなく、最終的な機能一覧を読み取る必要があります。&lt;/p&gt;
+&lt;p&gt;プラグインID、パッケージ名、入口のパスは、それぞれ別の役割を持ちます。たとえば、ファイルから読み込むプラグインの公開IDが &lt;code&gt;example.reviewer&lt;/code&gt; なら、無効化するときには &lt;code&gt;-example.reviewer&lt;/code&gt;と書きます。セレクターは完全一致のID、&lt;code&gt;prefix.*&lt;/code&gt; 、 &lt;code&gt;*&lt;/code&gt;をサポートします。設定操作は順番に実行され、後の操作で既存の定義を再び有効にできます。&lt;/p&gt;
+&lt;p&gt;同名に関する二つの規則は、混同しやすいので注意が必要です：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;同じSDKレジストリ内で同じIDを再登録する場合&lt;/strong&gt;：その定義を更新します。レジストリがサポートする置き換え操作です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;異なる有効な提供元が最終的に同じIDを提供する場合&lt;/strong&gt;：有効化段階でID重複として、その回の集合全体が拒否されます。提供元の優先順位で黙って上書きされるわけではありません。外部ファイルとSDK登録から、同じプラグイン定義を同時に渡さないでください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;また、現在の &lt;code&gt;Plugin.Service&lt;/code&gt; は、順序付き集合全体のIDとバージョンが完全に一致していれば有効化をスキップします。集合が変わると新しい集合を順に処理し、既存のプラグインもクリーンアップして再初期化します。そのため、一つの提供元の更新で、変更されていない他のプラグインも再初期化され得ます。三種類ともリソースを正しく解放し、初期化を一度だけ行う業務操作として扱わないようにします。置き換えに失敗すると旧バージョンの復元を試みますが、すでに発生した外部の業務上の副作用は巻き戻せません。&lt;/p&gt;
+&lt;p&gt;根拠：提供元の統合と有効化・無効化の順序（&lt;code&gt;packages/core/src/plugin/supervisor.ts&lt;/code&gt;）、共通の有効化と置き換え（&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;）、設定と読み込み順序のテストソース（&lt;code&gt;packages/core/test/config/plugin.test.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="plugin-核心实现一-transform"&gt;Pluginの中核実装その1：Transform&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Transformは機能を宣言し、Hookは個々の実行を処理します。&lt;/strong&gt; 拡張点を選ぶ際には、まず要件がどの領域に属するかを確認します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;要件&lt;/th&gt;
+&lt;th scope="col"&gt;ネイティブの拡張インターフェース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;アシスタントの登録、変更、削除&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.agent.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;実行可能なツールの登録&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;スキルの説明とリソース入口の提供&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.skill.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;コマンドの追加&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.command.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロバイダー、モデルカタログ、既定の選択の調整&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.catalog.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;参考資料の提供元の追加&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.reference.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;認証と接続方法の設定&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.integration.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;検索バックエンドの提供&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.websearch.transform&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;今回のコンテキストと利用可能なツールの変更&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ツール入力の検査や結果の整形&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデルSDKやモデルインスタンスの調整&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.aisdk.hook(...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデルのHTTPリクエストやレスポンスの調整&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.hook("http.request" / "http.response", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;コマンド作成引数の調整&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.shell.hook("create.before", ...)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;リアルタイムイベントの監視&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.event.subscribe()&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;セッションの作成、送信、待機、中断&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ctx.session.*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Agent、Catalog、Command、Integration、Reference、Skillなどの状態領域は、有効なTransformを保持し、基本状態から順番に再構築します。プラグインを外すと対応するTransformが削除され、結果が再生成されます。Transformは、そのコールバックに渡されたDraftだけを編集し、Draftへの参照を保持してはいけません。再構築時に外部の業務上の副作用を発生させる用途にも向きません。外部データが必要なら、先にデータを読み込んで保存し、それから対応する領域の &lt;code&gt;reload()&lt;/code&gt;を起動します。&lt;/p&gt;
+&lt;p&gt;Toolの内部実装は、Scopeに紐付いたツール登録とリクエストのスナップショットを使います。ライフサイクルの帰属は前述の領域と共通していますが、すべての &lt;code&gt;transform&lt;/code&gt; がまったく同じ状態コンテナや戻り値の型を使うと推測してはいけません。&lt;/p&gt;
+&lt;h2 id="plugin-核心实现二-hook"&gt;Pluginの中核実装その2：Hook&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Hook（実行フック）は、ホストが実行フローの中に用意した拡張点です。&lt;/strong&gt; プラグインは拡張点へコールバック関数を登録します。OpenCodeの実行がその箇所に達すると、コールバックが自動で呼ばれ、その箇所のコンテキストデータが渡されます。プラグインはインターフェースの契約に従ってデータを読み、引数を調整し、結果を処理することで、モデルリクエストやツール実行に参加できます。&lt;/p&gt;
+&lt;p&gt;Hookの利用には、登録と実行の二段階があります。プラグイン初期化時に、 &lt;code&gt;ctx.session.hook(...)&lt;/code&gt;や&lt;code&gt;ctx.tool.hook(...)&lt;/code&gt; などで参加する箇所を宣言し、実際にその箇所へ達したときに、ホストが登録済みのコールバックを実行します。一度登録すれば、対応箇所が再び実行されるたびに、コールバックも何度でも呼ばれます。ホストはコールバックの完了を待ち、各インターフェースの契約に従って処理を続けます。たとえば、 &lt;code&gt;tool.execute.before&lt;/code&gt; では &lt;code&gt;Tool.Error&lt;/code&gt; を使って、そのツール実行を拒否できます。&lt;/p&gt;
+&lt;p&gt;Transformは利用可能な機能を構築し、Hookは具体的な実行箇所でその機能の振る舞いを調整します。たとえば、ツールの登録には &lt;code&gt;ctx.tool.transform&lt;/code&gt;を使い、あるツール呼び出しの入力を検査するには &lt;code&gt;ctx.tool.hook("execute.before", ...)&lt;/code&gt;を使い、モデルへ送る直前のコンテキストを調整するには &lt;code&gt;ctx.session.hook("context", ...)&lt;/code&gt;を使います。Hookは現在の呼び出し経路に参加し、 &lt;code&gt;ctx.event.subscribe()&lt;/code&gt; はイベントを購読して実行状況を観察するために使います。&lt;/p&gt;
+&lt;p&gt;実行時のHookは登録順に直列で実行され、後から登録したHookは先の変更を参照できます。複数のプラグインが同じフィールドを変更する場合は、最終的な読み込み順序を確認する必要があります。組み込みプラグインには前段と後段の集合があるため、「外部プラグインが必ず最後に上書きする」とは限りません。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Hook&lt;/th&gt;
+&lt;th scope="col"&gt;変更または観察できる内容&lt;/th&gt;
+&lt;th scope="col"&gt;注意点&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.context&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;システムプロンプト、メッセージ、今回のツール定義&lt;/td&gt;
+&lt;td&gt;アシスタントとモデルの識別子はコンテキストの識別情報。メッセージの変更は今回のリクエストだけの調整であり、永続的な履歴への追加ではない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ツール入力&lt;/td&gt;
+&lt;td&gt;戻り値に &lt;code&gt;Tool.Error&lt;/code&gt; を指定すると実行を阻止できる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool.execute.after&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;成功結果またはツールエラー&lt;/td&gt;
+&lt;td&gt;結果の整形や情報の補足に利用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session.http.request/response&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;モデルのHTTPリクエストとレスポンス&lt;/td&gt;
+&lt;td&gt;認証情報や入力全体に触れる可能性があるため、記録する内容を制御する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;aisdk.sdk/language&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SDKと実際のモデルインスタンス&lt;/td&gt;
+&lt;td&gt;プロバイダーへの適合に利用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;shell.create.before&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;コマンド、ディレクトリ、時間制限、Shell、環境変数&lt;/td&gt;
+&lt;td&gt;文字列のルールだけでは、システムレベルの隔離を提供できない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;現在の公開Hook型では、 &lt;code&gt;tool.execute.before&lt;/code&gt; だけが、回復可能な &lt;code&gt;Tool.Error&lt;/code&gt; 型の失敗を返す経路を宣言しています。他のHookを、任意の業務エラーを投げられる汎用ミドルウェアとして扱ってはいけません。&lt;/p&gt;
+&lt;p&gt;根拠：Plugin Context（&lt;code&gt;packages/plugin/src/effect/plugin.ts&lt;/code&gt;）、状態の再構築（&lt;code&gt;packages/core/src/state.ts&lt;/code&gt;）、Hookの登録と実行（&lt;code&gt;packages/core/src/plugin/hooks.ts&lt;/code&gt;）、ツールの登録とスナップショット（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="工具示例与生命周期"&gt;ツールの例とライフサイクル&lt;/h2&gt;
+&lt;h3 id="示例一-使用-plugin-transform-定义-tool"&gt;例1：Plugin Transformを使ってToolを定義する&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;ツールは、モデルから見える定義と、ホストが実行する関数で構成されます。&lt;/strong&gt; モデルがツール名と入力を生成すると、OpenCodeはそのリクエストで取得したツール機能を使って呼び出しを処理します。ツール関数は、ホストが渡す &lt;code&gt;sessionID&lt;/code&gt;、&lt;code&gt;agent&lt;/code&gt;、&lt;code&gt;messageID&lt;/code&gt; と呼び出しの &lt;code&gt;id&lt;/code&gt;を受け取ります。長い操作では、 &lt;code&gt;context.progress()&lt;/code&gt; で進捗を伝えられます。&lt;/p&gt;
+&lt;p&gt;以下は、Effect APIを使った独立したツールの例です：&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-ts"&gt;import { Plugin } from "@opencode-ai/plugin/effect"
+import { Effect, Schema } from "effect"
+
+export default Plugin.define({
+  id: "example.echo",
+  effect: Effect.fn(function* (ctx) {
+    yield* ctx.tool.transform((tools) =&amp;gt; {
+      tools.add({
+        name: "echo",
+        description: "返回收到的文字",
+        input: Schema.Struct({ text: Schema.String }),
+        output: Schema.Struct({ text: Schema.String }),
+        options: { codemode: false },
+        execute: ({ text }) =&amp;gt;
+          Effect.succeed({
+            output: { text },
+            content: text,
+          }),
+      })
+    })
+  }),
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;結果のフィールドは、用途ごとに区別する必要があります：&lt;code&gt;output&lt;/code&gt; は、出力Schemaを宣言した場合に、プログラムが利用する構造化された値です。&lt;code&gt;content&lt;/code&gt; はモデルへ渡され、セッションの内容に含まれます。&lt;code&gt;metadata&lt;/code&gt; は、範囲を限定した補助的な状態を保持します。出力Schemaを宣言せずに &lt;code&gt;output&lt;/code&gt;を返すと、現在の実行実装ではエラーになります。&lt;/p&gt;
+&lt;p&gt;ソースコードには、インターフェース名だけではわからない二つの具体的な検証上の注意点があります：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;tool.execute.before&lt;/code&gt; は、ツール実行関数内のSchemaによるデコードより先に実行されます。そのため、Hookで入力を読む際には、まだ未知の構造として扱う必要があります。Hookが変更した後の入力が、後続のデコードへ渡されます。&lt;/li&gt;
+&lt;li&gt;Effect Schemaと対応するStandard Schemaは、実行時の入力検証を行います。一方、純粋なJSON Schemaの分岐では入力をそのまま渡します。純粋なJSON Schemaの出力分岐も、JSON値かどうかを確認するだけで、宣言された制約を個別には検証しません。業務ツールでは、「モデルへJSON Schemaを提供した」ことを「サーバー側で引数を検証済み」と考えてはいけません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;現在のツール処理経路では、実行前のHook自体が失敗すると、その後の処理が直ちに中止されます。この種の拒否について、 &lt;code&gt;execute.after&lt;/code&gt; が必ず呼ばれるとは限りません。監査では、正常な実行後の監視だけでなく、拒否される経路も扱う必要があります。&lt;/p&gt;
+&lt;p&gt;予期される回復可能なツールの失敗は、 &lt;code&gt;Tool.Error&lt;/code&gt;へ対応付けられます。実行のキャンセル、未知のプログラム上の欠陥、成功結果は、それぞれ異なる意味を保つ必要があります。すべてを握りつぶし、通常の成功テキストとして返してはいけません。&lt;/p&gt;
+&lt;p&gt;根拠：ツールの型（&lt;code&gt;packages/schema/src/tool.ts&lt;/code&gt;）、ツール実行のラッパー（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）、実際の引数検証（&lt;code&gt;packages/core/src/tool/runtime.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h3 id="示例二-使用-code-mode-组合工具调用"&gt;例2：Code Modeでツール呼び出しを組み合わせる&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Code Modeは、一部のツールをどのように提示し、組み合わせるかを決めます。&lt;/strong&gt; 現在のブランチでは、 &lt;code&gt;codemode: false&lt;/code&gt; のツールをモデルへ直接公開します。他のツールはCode Modeのカタログに入り、 &lt;code&gt;execute&lt;/code&gt; で短いコードを実行して、呼び出しの組み合わせや結果の処理を行えます。Code Mode内の実際のツール呼び出しも、ホストのツール実行経路へ戻ります。&lt;/p&gt;
+&lt;p&gt;これは、連続した問い合わせ、フィルタリング、集計などに適しています。Code Modeの実行環境は、直接のファイルアクセスやインポートなどを制限しますが、その制限はOpenCodeサービス全体や外部プラグインがシステムのサンドボックス内で動くことを意味しません。前述の &lt;code&gt;echo&lt;/code&gt; の例は &lt;code&gt;codemode: false&lt;/code&gt;を設定し、ツールをモデルへ直接公開する方法を示しています。&lt;/p&gt;
+&lt;p&gt;モデルリクエストは、その時点のツール登録のスナップショットを取得します。プラグインのホット更新が起きても、準備済みのリクエストが新しいツール一覧を使うことにはなりません。後続のリクエストで機能が再準備されます。プラグインが提供するツール実行関数も、すでにクリーンアップされた、所有者のないバックグラウンドリソースに依存しないようにする必要があります。&lt;/p&gt;
+&lt;p&gt;根拠：ツールの分類とスナップショット（&lt;code&gt;packages/core/src/tool.ts&lt;/code&gt;）、Code Mode（&lt;code&gt;packages/core/src/codemode/tool.ts&lt;/code&gt;）、今回のツールの利用可否の検査（&lt;code&gt;packages/core/src/session/model-request.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h3 id="plugin-的-location"&gt;PluginのLocation&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;プラグインインスタンスはLocationごとに管理され、永続的な業務状態は別途保存する必要があります。&lt;/strong&gt; Locationは、ディレクトリと任意のネイティブWorkspace識別子で構成される実行コンテキストです。一つのOpenCodeプロセスは複数のLocationを同時に扱え、同じプラグインが各Locationで個別に有効化される場合があります。&lt;/p&gt;
+&lt;p&gt;各プラグインインスタンスはScopeを持ち、Transform、Hook、ツール登録、正しく紐付けられたリソースを所有します。Scopeを閉じると、これらの登録はクリーンアップされます。プラグイン自身のタイマー、ネットワーク購読、ファイル監視にもクリーンアップ処理を紐付ける必要があります。Promiseプラグインは &lt;code&gt;setup&lt;/code&gt; からcleanupを返し、Effectプラグインは対応するscopedリソースやfinalizerを使います。&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-text"&gt;首次加载 → 创建 Scope → 注册能力与钩子 → 服务会话
+文件或配置变化 → 替换插件 → 清理旧 Scope → 激活新版本
+新版本激活失败 → 尝试恢复旧版本 → 恢复失败则停用
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ローカルのプラグイン入口ファイルと設定元には、変更監視があります。ただし、明示的な入口がディレクトリの場合、その内部のファイル変更について同じ自動ホット更新は保証されません。読み込み、更新、停止は、実際のファイル監視や実行状態にも影響されるため、「ホット更新に対応している」だけでは不十分です。ネイティブの機能一覧を読み、反映を確認する必要があります。&lt;/p&gt;
+&lt;p&gt;プラグインの復元で戻せるのは、コードと登録だけです。ファイル、データベース、リモートサービスへの操作ですでに発生した副作用は巻き戻せません。定期処理、承認状態、再試行回数、冪等性の識別子は、信頼できるストレージで管理するべきです。メモリ上のセッション状態は、少なくとも &lt;code&gt;sessionID&lt;/code&gt; ごとに分離します。モジュールレベルのグローバル変数は、プラグインインスタンスをまたいで共有される場合もあるため、特に注意が必要です。&lt;/p&gt;
+&lt;p&gt;根拠：プラグインのScopeと復元（&lt;code&gt;packages/core/src/plugin.ts&lt;/code&gt;）、プラグインのファイル監視（&lt;code&gt;packages/core/src/config/plugin/source.ts&lt;/code&gt;）。&lt;/p&gt;
+&lt;h2 id="plugin-最佳实践"&gt;Pluginのベストプラクティス&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;プラグイン開発では、既存の設定と公開インターフェースの再利用を優先します&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロンプト、用途、ステップ上限だけを調整する場合は、Agent設定を使います。&lt;/li&gt;
+&lt;li&gt;手順や知識を提供する場合は、Skillを使います。&lt;/li&gt;
+&lt;li&gt;実際の操作を追加する場合は、Toolを登録します。&lt;/li&gt;
+&lt;li&gt;特定の&lt;strong&gt;実行箇所&lt;/strong&gt;で振る舞いを調整する場合は、対応するHookを使います。&lt;/li&gt;
+&lt;li&gt;特に、業務状態を永続化したり外部サービスを呼び出したりする場合は、ストレージ、認証、トランザクション、冪等性を明示的に設計します。それらの保証をプラグインのメモリ状態に頼ってはいけません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;単一責任のプラグインなら、一つのTS拡張ファイルだけでも構いません。複数の機能に、独立した有効化・無効化、バージョン管理、失敗時の方針が必要なときだけ、複数のプラグインIDに分けます。通常の外部プラグインは、公開プラグイン、クライアント、schemaのインターフェースに依存し、Coreの非公開実装のインポートを避けます。配布時には、互換性のあるホストバージョン、依存バージョン、モジュールの入口、ビルド方法を明示します。&lt;/p&gt;
+&lt;p&gt;Pluginを更新するときは、モジュールをインポートできるかだけでなく、少なくとも次の動作を確認するべきです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Agent、ツール、スキルが実際の機能一覧に現れ、アンインストール後には提供した機能が消えるか。&lt;/li&gt;
+&lt;li&gt;複数プラグインの順序、設定の上書き、ホット更新の失敗後の最終状態が、想定どおりか。&lt;/li&gt;
+&lt;li&gt;ツールの入力、出力、キャンセル、実行拒否が、それぞれ正しい意味を保っているか。&lt;/li&gt;
+&lt;li&gt;セッションのモデルやアシスタントの選択が実際に反映され、サブアシスタントが想定どおりの権限とコンテキストを持つか。&lt;/li&gt;
+&lt;li&gt;カスタムツールと、その呼び出し先のサービスが、セッションの帰属、業務上の認可、状態遷移、重複リクエストを正しく検証するか。&lt;/li&gt;
+&lt;li&gt;サービス再起動後に永続状態を復元でき、リアルタイムイベントの欠落が正しく扱われるか。&lt;/li&gt;
+&lt;li&gt;ツール結果とイベントが、進捗、完了、失敗、キャンセルの状態を正確に表すか。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    <category>Agent 開発</category><category>プラグイン開発</category></item>
+    </channel>
+</rss>

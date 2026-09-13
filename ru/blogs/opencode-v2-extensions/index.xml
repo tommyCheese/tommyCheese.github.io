@@ -12,7 +12,6 @@
       <link>https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/ru/blogs/opencode-v2-extensions/</guid>
-      <category>Разработка агентов</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;Дата исследования: 2026-09-13. Статья описывает общие возможности плагинов OpenCode v2: типы, загрузку, регистрацию возможностей, хуки выполнения, границы разрешений и жизненный цикл. Материал предназначен для разработки плагинов и встраиваемой интеграции.&lt;/p&gt;
 &lt;p&gt;Исследование основано на ветке  &lt;code&gt;v2&lt;/code&gt;  изученного репозитория OpenCode, коммит  &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;. Ссылки на исходники используют пути относительно репозитория в этом фиксированном коммите. Описанные интерфейсы и поведение относятся к данной версии и не обещают совместимости с другими версиями OpenCode или прежним API плагинов.&lt;/p&gt;
@@ -447,6 +446,6 @@ export default Plugin.define({
 &lt;li&gt;Точно ли результаты инструментов и события отражают прогресс, завершение, ошибку и отмену.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-    </item>
+    <category>Разработка агентов</category><category>Разработка плагинов</category></item>
   </channel>
 </rss>

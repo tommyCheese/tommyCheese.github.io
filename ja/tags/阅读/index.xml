@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>読書 · Tommy Cheese</title>
-    <link>https://tommycheese.github.io/ja/tags/%E9%98%85%E8%AF%BB/</link>
+    <title>クリーンアーキテクチャ · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ja/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</link>
     <description>ソフトウェア工学、人工知能、学びと実践について綴る Tommy Cheese の個人ブログ。</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Mon, 29 Jul 2024 06:13:15 +0800</lastBuildDate>
-    <atom:link href="https://tommycheese.github.io/ja/tags/%E9%98%85%E8%AF%BB/index.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://tommycheese.github.io/ja/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/index.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>『クリーンアーキテクチャ』再読（6）：境界</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -48,7 +48,7 @@
 &lt;h3 id="服务层次的跨边界调用"&gt;サービスレベルの境界を越える呼び出し&lt;/h3&gt;
 &lt;p&gt;サービスは、システムアーキテクチャで最も強い境界の形です。一つのサービスは一つのプロセスです。アーキテクチャの境界を引く際には、通信回数をできるだけ抑える必要があります。このレベルの通信は、大きな遅延に対応できなければなりません。それ以外は、ローカルプロセスと同じルールをサービスレベルにも適用できます。つまり、低レベルのサービスを高レベルのサービスの「プラグイン」にします。&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（5）：ソフトウェアアーキテクチャ</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -127,7 +127,7 @@
 &lt;/ul&gt;
 &lt;p&gt;（第五回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（4）：コンポーネントの原則</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -276,7 +276,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;/ul&gt;
 &lt;p&gt;（第四回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（3）：SOLID 設計原則</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -326,7 +326,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;/ul&gt;
 &lt;p&gt;（第三回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（2）：プログラミングパラダイム</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -376,7 +376,7 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;p&gt;三つのプログラミングパラダイムはいずれも、プログラマーに新たな&lt;strong&gt;制限&lt;/strong&gt;を課します。それぞれが特定のコードの書き方を制約しており、新しい能力を追加するものではありません。つまり、パラダイムが教えてくれるのは「何をしてはいけないか」です。&lt;/p&gt;
 &lt;p&gt;（第二回・完）&lt;/p&gt;
 </description>
-    </item>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
     <item>
       <title>『クリーンアーキテクチャ』再読（1）</title>
       <link>https://tommycheese.github.io/ja/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -418,6 +418,6 @@ Dが0からどれだけ離れているかを、コンポーネントのリファ
 &lt;h3 id="为好的软件架构持续斗争"&gt;良いソフトウェアアーキテクチャのために戦い続けよう✊&lt;/h3&gt;
 &lt;p&gt;ソフトウェアアーキテクチャの価値を軽視すると、システムは次第に保守が難しくなり、やがて変更できなくなります。そうなったなら、開発チームは要求を出す側と十分に議論せず、果たすべき責任を果たさなかったということです。&lt;/p&gt;
 </description>
-    </item>
-  </channel>
+    <category>ソフトウェアアーキテクチャ</category><category>クリーンアーキテクチャ</category></item>
+    </channel>
 </rss>

@@ -10,12 +10,13 @@ import json
 import re
 from lxml import html, etree
 from reading_layout import enhance_layout
+from tag_taxonomy import POST_TAGS, canonical_tag_path, prepare_tag_sources, render_tags, prepare_tag_feeds
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
-UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','css/reading.css','js/reading.js'])).hexdigest()[:12]
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','css/reading.css','js/reading.js','js/search.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
@@ -115,7 +116,7 @@ def localized_url(value, locale, current_path, known_paths):
             return current_path + 'article.md'
         return value
     path = re.sub(r'^/(en|ja|ru|zh-TW)(?=/|$)', '', path) or '/'
-    canonical_path = path.removesuffix('index.html')
+    canonical_path = canonical_tag_path(path.removesuffix('index.html'))
     if not canonical_path.endswith('/') and canonical_path + '/' in known_paths:
         canonical_path += '/'
     is_feed = canonical_path.endswith('index.xml') or canonical_path == '/index.json'
@@ -143,6 +144,8 @@ def add_metadata(doc, path, locale, title, description):
     doc.set('data-page-path', path)
     doc.set('data-ui-version', UI_REVISION)
     head = doc.find('head')
+    for script in doc.xpath('//script[starts-with(@src,"/js/search.js")]'):
+        script.set('src', '/js/search.js?v=' + UI_REVISION)
     for element in head.xpath('script[starts-with(@src,"/js/i18n-messages.js") or starts-with(@src,"/js/i18n.js")] | link[starts-with(@href,"/css/i18n.css")] | noscript[@id="i18n-no-script"]'):
         head.remove(element)
     for element in head.xpath('link[@rel="canonical" or @hreflang]'):
@@ -315,7 +318,6 @@ def build():
     for folder in ['blogs','tags','categories','gallery','topics']:
         files.extend(sorted((ROOT/folder).rglob('*.html')))
     sources = {file: file.read_text() for file in files}
-    paths = {page_path(file) for file in files}
     index_source = json.loads((ROOT/'index.json').read_text())
     articles = {}
     for entry in index_source:
@@ -325,6 +327,8 @@ def build():
             article_doc = html.document_fromstring(sources[ROOT/'blogs'/slug/'index.html'])
             dates = article_doc.xpath('//*[@id="single"]//div[contains(@class,"title")]//time/@datetime')
             articles[slug]['date'] = dates[0][:10] if dates else ''
+    prepare_tag_sources(sources, ROOT, articles)
+    paths = {page_path(file) for file in sources}
     # Fail before writing any output if a requested translation is missing.
     for locale in LOCALES:
         if MESSAGES[locale].keys()!=MESSAGES['zh-CN'].keys():
@@ -411,15 +415,16 @@ def build():
                 for element in doc.xpath('//aside[contains(@class,"social")]/h5'):text_key(element,'article.share',locale)
                 article_extras(doc,article[0],path,locale,title)
             elif path.startswith('/tags/') and path!='/tags/':
-                title=t('tag.'+unquote(path.split('/')[2]),locale);description=t('site.description',locale)
+                tag = canonical_tag_path(path).split('/')[2]
+                title=t('tag.'+tag,locale);description=t('tag.'+tag+'.description',locale)
             else:
                 page_key={'/':'page.home','/blogs/':'page.blogs','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
                 title='Tommy Cheese' if path=='/' else t(page_key,locale);description=t('site.description',locale)
             if not alias:
                 enhance_layout(doc,path,locale,articles,MESSAGES[locale],UI_REVISION)
+                render_tags(doc,path,articles,MESSAGES[locale])
             for element in doc.xpath('//footer//div[@class="text-secondary"]'):
-                set_text(element,t('footer.madeWith',locale))
-                br=html.Element('br');br.tail=t('footer.poweredBy',locale);element.append(br)
+                text_key(element,'footer.madeWith',locale)
             for element in doc.xpath('//footer//*[contains(text(),"©")]'):
                 if element.text and '©' in element.text:element.text=t('footer.copyright',locale).replace('2024','2026')
             for element in doc.xpath('//footer//*[@data-i18n="footer.copyright"]'):
@@ -430,14 +435,14 @@ def build():
             for element in doc.xpath('//*[@href]'):
                 href=localized_url(element.get('href'),locale,path,paths)
                 element.set('href',versioned_page_url(href,paths) if element.tag=='a' else href)
+            for element in doc.xpath('//meta[@http-equiv="refresh"]'):
+                value=element.get('content');target=value.split('url=',1)[-1]
+                element.set('content','0; url='+versioned_page_url(localized_url(target,locale,path,paths),paths))
             if alias:
-                for element in doc.xpath('//meta[@http-equiv="refresh"]'):
-                    value=element.get('content');target=value.split('url=',1)[-1]
-                    element.set('content','0; url='+versioned_page_url(localized_url(target,locale,path,paths),paths))
                 doc.set('lang',locale)
             else:
-                add_metadata(doc,path,locale,title,description)
-                add_language_switch(doc,path,locale)
+                add_metadata(doc,canonical_tag_path(path),locale,title,description)
+                add_language_switch(doc,canonical_tag_path(path),locale)
                 translate_dates(doc,locale)
                 localize_comments(doc,path,locale)
                 # Existing article-only pages lack dynImg; avoid a theme toggle error.
@@ -455,13 +460,14 @@ def build():
                 item['title']=t('post.'+slug+'.title',locale)
                 item['description']=t('post.'+slug+'.description',locale)
                 item['content']=html.fragment_fromstring(locale_bodies[locale][slug],create_parent='article').text_content()
+                item['tags']=[t('tag.'+tag,locale) for tag in POST_TAGS[slug]]
             else:
                 item['title']=t('page.gallery',locale);item['description']=t('site.description',locale)
             item['permalink']=localized_url(entry['permalink'],locale,'/',paths)
             entries.append(item)
         (ROOT/PREFIX[locale].lstrip('/')/'index.json').write_text(json.dumps(entries,ensure_ascii=False,separators=(',',':'))+'\n')
     build_feeds(paths,articles,locale_bodies)
-    print(f'Built {len(files)} pages × {len(LOCALES)} languages; {len(articles)} complete articles per language.')
+    print(f'Built {len(sources)} pages × {len(LOCALES)} languages; {len(articles)} complete articles per language.')
 
 
 def build_feeds(paths, articles, bodies):
@@ -473,11 +479,12 @@ def build_feeds(paths, articles, bodies):
         source_feeds.extend((ROOT/folder).rglob('*.xml'))
     source_feeds.append(ROOT/'index.xml')
     feed_sources={p:etree.parse(str(p)) for p in source_feeds}
+    prepare_tag_feeds(feed_sources, ROOT, BASE)
     original_sitemap = etree.parse(str(ROOT/'sitemap.xml'))
     last_modified = {url.findtext('{'+ns+'}loc'):url.findtext('{'+ns+'}lastmod') for url in original_sitemap.getroot()}
     for locale in LOCALES:
         for path in sorted(paths):
-            if '/page/' in path or path=='/404.html':continue
+            if '/page/' in path or path=='/404.html' or canonical_tag_path(path)!=path:continue
             entry=etree.SubElement(sitemap,'{'+ns+'}url')
             etree.SubElement(entry,'{'+ns+'}loc').text=BASE+PREFIX[locale]+quote(path,safe='/%.~-')
             modified=last_modified.get(BASE+quote(path,safe='/%.~-'))
@@ -511,17 +518,19 @@ def build_feeds(paths, articles, bodies):
                         if href.startswith('#'):href=link+href
                         anchor.set('href',href)
                     item.find('description').text=(body.text or '')+''.join(etree.tostring(c,encoding='unicode',method='html') for c in body)
+                    for category in item.findall('category'):
+                        item.remove(category)
+                    for tag in POST_TAGS[slug]:
+                        etree.SubElement(item,'category').text=t('tag.'+tag,locale)
                 elif 'tag.'+slug in MESSAGES[locale]:
                     item.find('title').text=t('tag.'+slug,locale)
                     item.find('description').text=t('tag.'+slug+'.description',locale) if 'tag.'+slug+'.description' in MESSAGES[locale] else ''
                 elif slug=='gallery':
                     item.find('title').text=t('page.gallery',locale);item.find('description').text=''
-                for category in item.findall('category'):
-                    category.text=t('tag.agent开发',locale) if category.text=='Agent开发' else category.text
             relative=file.relative_to(ROOT)
             parts=relative.parts
             if len(parts)>2 and parts[0]=='blogs':key='post.'+parts[1]+'.title'
-            elif len(parts)>2 and parts[0]=='tags':key='tag.'+parts[1]
+            elif len(parts)>2 and parts[0]=='tags':key='tag.'+canonical_tag_path('/tags/'+parts[1]+'/').split('/')[2]
             else:key={'blogs':'page.blogs','tags':'page.tags','categories':'page.categories','gallery':'page.gallery'}.get(parts[0],'page.home')
             name=t(key,locale)
             channel.find('title').text=name+' · Tommy Cheese'

@@ -48,7 +48,7 @@
 &lt;h3 id="服务层次的跨边界调用"&gt;Crossing Boundaries at the Service Level&lt;/h3&gt;
 &lt;p&gt;Services form the strongest architectural boundaries. A service is a process. When defining architectural boundaries at this level, minimize communication wherever possible, and ensure that it can tolerate high latency. Otherwise, the same rules used for local processes apply: lower-level services should act as plugins for higher-level services.&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (5): Software Architecture</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -127,7 +127,7 @@
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 5)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (4): Component Principles</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -276,7 +276,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 4)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (3): SOLID Design Principles</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -326,7 +326,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;/ul&gt;
 &lt;p&gt;(End of Part 3)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (2): Programming Paradigms</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -376,7 +376,7 @@ The amount by which D exceeds zero can then guide component refactoring and rede
 &lt;p&gt;All three programming paradigms impose new &lt;strong&gt;constraints&lt;/strong&gt; on programmers. Each limits a way of writing code; none adds a new capability. In other words, programming paradigms tell us what not to do.&lt;/p&gt;
 &lt;p&gt;(End of Part 2)&lt;/p&gt;
 </description>
-    </item>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
     <item>
       <title>Rereading Clean Architecture (1)</title>
       <link>https://tommycheese.github.io/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -418,6 +418,6 @@ The author considers architectural value more important than behavioral value, b
 &lt;h3 id="为好的软件架构持续斗争"&gt;Keep Fighting for Good Software Architecture ✊&lt;/h3&gt;
 &lt;p&gt;If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.&lt;/p&gt;
 </description>
-    </item>
-  </channel>
+    <category>Software Architecture</category><category>Clean Architecture</category></item>
+    </channel>
 </rss>

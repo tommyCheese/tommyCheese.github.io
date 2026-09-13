@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>整潔架構之道 · Tommy Cheese</title>
+    <title>整潔架構 · Tommy Cheese</title>
     <link>https://tommycheese.github.io/zh-TW/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</link>
     <description>Tommy Cheese 的個人部落格，記錄軟體工程、人工智慧與學習實踐。</description>
     <generator>Hugo -- gohugo.io</generator>
@@ -48,7 +48,7 @@
 &lt;h3 id="服务层次的跨边界调用"&gt;服務層次的跨邊界呼叫&lt;/h3&gt;
 &lt;p&gt;服務是系統架構中最強的邊界形式，一個服務就是一個程序。在劃分架構邊界時，一定要儘可能地控制通訊次數。在這個層次上通訊必須能夠適應高延時情況。除此之外，我們可以在服務層次上使用與本地程序相同的規則。也就是讓較低層次服務成為較高層次服務的“外掛”。&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（五）軟體架構</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -127,7 +127,7 @@
 &lt;/ul&gt;
 &lt;p&gt;（第五篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（四）元件建構原則</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -276,7 +276,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;（第四篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（三）SOLID 設計原則</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -326,7 +326,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;（第三篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（二）程式設計範式</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -376,7 +376,7 @@ $$
 &lt;p&gt;三種程式設計範式都對程式設計師提出了新的&lt;strong&gt;限制&lt;/strong&gt;。每個範式都約束了某種編寫程式碼的方式，沒有一個程式設計範式是在增加新能力。也就是說，程式設計範式帶來的是——什麼不應該做。&lt;/p&gt;
 &lt;p&gt;（第二篇完）&lt;/p&gt;
 </description>
-    </item>
+    <category>軟體架構</category><category>整潔架構</category></item>
     <item>
       <title>再讀整潔架構之道（一）</title>
       <link>https://tommycheese.github.io/zh-TW/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -418,6 +418,6 @@ $$
 &lt;h3 id="为好的软件架构持续斗争"&gt;為好的軟體架構持續鬥爭✊&lt;/h3&gt;
 &lt;p&gt;如果忽視軟體架構的價值，系統將會變得越來越難以維護，終會有一天，系統將會變得再也無法修改。如果系統變成了這個樣子，那麼說明軟體開發團隊沒有和需求方做足夠的抗爭，沒有完成自己應盡的職責。&lt;/p&gt;
 </description>
-    </item>
-  </channel>
+    <category>軟體架構</category><category>整潔架構</category></item>
+    </channel>
 </rss>

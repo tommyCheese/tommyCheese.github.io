@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>Чтение · Tommy Cheese</title>
-    <link>https://tommycheese.github.io/ru/tags/%E9%98%85%E8%AF%BB/</link>
+    <title>Чистая архитектура · Tommy Cheese</title>
+    <link>https://tommycheese.github.io/ru/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/</link>
     <description>Личный блог Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
     <lastBuildDate>Mon, 29 Jul 2024 06:13:15 +0800</lastBuildDate>
-    <atom:link href="https://tommycheese.github.io/ru/tags/%E9%98%85%E8%AF%BB/index.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://tommycheese.github.io/ru/tags/%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93/index.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>Перечитывая «Чистую архитектуру» (6): границы</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -48,7 +48,7 @@
 &lt;h3 id="服务层次的跨边界调用"&gt;Вызовы через границы на уровне сервисов&lt;/h3&gt;
 &lt;p&gt;Сервисы образуют самую сильную границу в архитектуре: каждый сервис является процессом. При проведении архитектурных границ необходимо максимально ограничивать число взаимодействий. На этом уровне обмен должен выдерживать высокие задержки. В остальном применимы те же правила, что для локальных процессов: низкоуровневые сервисы должны становиться плагинами высокоуровневых.&lt;/p&gt;
 </description>
-    </item>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
     <item>
       <title>Перечитывая «Чистую архитектуру» (5): архитектура ПО</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -127,7 +127,7 @@
 &lt;/ul&gt;
 &lt;p&gt;(Конец пятой статьи)&lt;/p&gt;
 </description>
-    </item>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
     <item>
       <title>Перечитывая «Чистую архитектуру» (4): принципы компонентов</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -276,7 +276,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;(Конец четвёртой статьи)&lt;/p&gt;
 </description>
-    </item>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
     <item>
       <title>Перечитывая «Чистую архитектуру» (3): принципы SOLID</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -326,7 +326,7 @@ $$
 &lt;/ul&gt;
 &lt;p&gt;(Конец третьей статьи)&lt;/p&gt;
 </description>
-    </item>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
     <item>
       <title>Перечитывая «Чистую архитектуру» (2): парадигмы программирования</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -376,7 +376,7 @@ $$
 &lt;p&gt;Все три парадигмы вводят для программиста новые &lt;strong&gt;ограничения&lt;/strong&gt;. Каждая ограничивает какой-либо способ написания кода; ни одна не добавляет новых возможностей. Иными словами, парадигмы говорят нам, чего делать не следует.&lt;/p&gt;
 &lt;p&gt;(Конец второй статьи)&lt;/p&gt;
 </description>
-    </item>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
     <item>
       <title>Перечитывая «Чистую архитектуру» (1)</title>
       <link>https://tommycheese.github.io/ru/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -416,6 +416,6 @@ $$
 &lt;h3 id="为好的软件架构持续斗争"&gt;Продолжать бороться за хорошую архитектуру ✊&lt;/h3&gt;
 &lt;p&gt;Если пренебрегать архитектурной ценностью, сопровождать систему станет всё труднее, пока однажды её уже нельзя будет изменить. Такое состояние означает, что команда разработки недостаточно отстаивала свою позицию перед заказчиками требований и не выполнила собственные обязанности.&lt;/p&gt;
 </description>
-    </item>
-  </channel>
+    <category>Архитектура ПО</category><category>Чистая архитектура</category></item>
+    </channel>
 </rss>

@@ -13,7 +13,6 @@
       <link>https://tommycheese.github.io/blogs/opencode-v2-extensions/</link>
       <pubDate>Sun, 13 Sep 2026 00:00:00 +0800</pubDate>
       <guid>https://tommycheese.github.io/blogs/opencode-v2-extensions/</guid>
-      <category>Agent开发</category>
       <description>&lt;blockquote&gt;
 &lt;p&gt;研究日期：2026-09-13。本文描述 OpenCode v2 的通用插件能力，包括插件类型、加载机制、能力注册、执行钩子、权限边界与生命周期，供插件开发和嵌入式集成参考。&lt;/p&gt;
 &lt;p&gt;代码基线为所研究的 OpenCode 仓库 &lt;code&gt;v2&lt;/code&gt; 分支，提交为 &lt;code&gt;2308db16387c9b59e88d732a93ec9bac54462b03&lt;/code&gt;。源码引用采用该固定提交内的仓库相对路径；文中的接口与行为以此版本为准，不代表其他 OpenCode 版本或旧版插件 API 的兼容承诺。&lt;/p&gt;
@@ -449,7 +448,7 @@ export default Plugin.define({
 &lt;/ul&gt;
 
           </description>
-    </item>
+    <category>Agent 开发</category><category>插件开发</category></item>
     <item>
       <title>再读整洁架构之道（六）边界</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%85%AD/</link>
@@ -491,7 +490,7 @@ export default Plugin.define({
 &lt;p&gt;服务是系统架构中最强的边界形式，一个服务就是一个进程。在划分架构边界时，一定要尽可能地控制通信次数。在这个层次上通信必须能够适应高延时情况。除此之外，我们可以在服务层次上使用与本地进程相同的规则。也就是让较低层次服务成为较高层次服务的“插件”。&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>再读整洁架构之道（五）软件架构</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%94/</link>
@@ -571,7 +570,7 @@ export default Plugin.define({
 &lt;p&gt;（第五篇完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>领域驱动设计初识</title>
       <link>https://tommycheese.github.io/blogs/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86/</link>
@@ -655,7 +654,7 @@ export default Plugin.define({
 &lt;p&gt;（本节完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>领域驱动设计</category></item>
     <item>
       <title>再读整洁架构之道（四）组件构建原则</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E5%9B%9B/</link>
@@ -805,7 +804,7 @@ $$
 &lt;p&gt;（第四篇完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>再读整洁架构之道（三）SOLID设计原则</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%89/</link>
@@ -856,7 +855,7 @@ $$
 &lt;p&gt;（第三篇完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>再读整洁架构之道（二）编程范式</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/</link>
@@ -907,7 +906,7 @@ $$
 &lt;p&gt;（第二篇完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>再读整洁架构之道（一）</title>
       <link>https://tommycheese.github.io/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/</link>
@@ -950,7 +949,7 @@ $$
 &lt;p&gt;如果忽视软件架构的价值，系统将会变得越来越难以维护，终会有一天，系统将会变得再也无法修改。如果系统变成了这个样子，那么说明软件开发团队没有和需求方做足够的抗争，没有完成自己应尽的职责。&lt;/p&gt;
 
           </description>
-    </item>
+    <category>软件架构</category><category>架构整洁之道</category></item>
     <item>
       <title>实用干货：如何把 PyTorch 模型参数加载到 MindSpore 模型？</title>
       <link>https://tommycheese.github.io/blogs/%E5%AE%9E%E7%94%A8%E5%B9%B2%E8%B4%A7%E5%A6%82%E4%BD%95%E6%8A%8Apytorch%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8A%A0%E8%BD%BD%E5%88%B0mindspore%E6%A8%A1%E5%9E%8B/</link>
@@ -1207,7 +1206,7 @@ $$
 &lt;p&gt;（完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>机器学习</category><category>模型迁移</category></item>
     <item>
       <title>梯度之上：Hessian 矩阵</title>
       <link>https://tommycheese.github.io/blogs/h/</link>
@@ -1303,6 +1302,6 @@ $$
 &lt;p&gt;（本节完）&lt;/p&gt;
 
           </description>
-    </item>
+    <category>机器学习</category><category>数学基础</category></item>
   </channel>
 </rss>
