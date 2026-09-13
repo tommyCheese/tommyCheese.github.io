@@ -61,7 +61,7 @@ a:focus-visible, summary:focus-visible {
 .tag-card p, .tag-count { color: var(--text-secondary-color); font-size: .9rem; line-height: 1.8; margin: 0; }
 .tag-subscribe { display: inline-block; margin-top: 1.5rem; color: var(--primary-color); }
 .comments-section { margin-top: 2.5rem; margin-bottom: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--text-secondary-color); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text-color); }
-.comments-section.container { max-width: 900px; }
+.comments-section.container { max-width: 900px; margin-bottom: 0; padding-bottom: 2rem; }
 .comments-section h2 { font-size: 1.3rem; font-weight: 650; }
 .comments-intro, .comments-links { font-size: .9rem; line-height: 1.8; color: var(--text-secondary-color); }
 .comments-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: 1rem; }
