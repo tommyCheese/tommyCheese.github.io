@@ -45,6 +45,37 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
     head.append(node('link', rel='stylesheet', href='/css/reading.css?v=' + revision, data_reading_layout='style'))
     head.append(node('link', rel='stylesheet', href='/css/interaction.css?v=' + revision, data_reading_layout='interaction-style'))
     doc.find('body').append(node('script', src='/js/interaction.js?v=' + revision, defer='defer', data_reading_layout='interaction-runtime'))
+    # Search launchers open one native modal instead of two competing inputs.
+    for old in doc.xpath('//*[@id="search"] | //*[@data-search-open]'):
+        desktop = 'd-none' in old.get('class', '').split()
+        trigger = node('button', type='button', class_='search-trigger' + (' d-none d-xl-inline-flex' if desktop else ''),
+                       data_search_open='', aria_haspopup='dialog', aria_controls='search-content',
+                       aria_label=messages['search.label'], data_i18n_aria_label='search.label', disabled='disabled')
+        trigger.append(label('span', 'search.label'))
+        trigger.append(node('kbd', 'Ctrl K', data_search_shortcut='', aria_hidden='true'))
+        old.getparent().replace(old, trigger)
+    for old in doc.xpath('//*[@id="search-content"]'):
+        old.getparent().remove(old)
+    search = node('dialog', id='search-content', class_='spotlight',
+                  aria_label=messages['search.label'], data_i18n_aria_label='search.label',
+                  data_reading_layout='search')
+    field = node('div', class_='spotlight-field')
+    field.append(node('i', class_='fas fa-search spotlight-icon', aria_hidden='true'))
+    field.append(node('input', id='spotlight-query', type='search', autocomplete='off', spellcheck='false',
+                      placeholder=messages['search.placeholder'], data_i18n_placeholder='search.placeholder',
+                      aria_label=messages['search.label'], data_i18n_aria_label='search.label',
+                      role='combobox', aria_autocomplete='list', aria_controls='search-results',
+                      aria_expanded='false', enterkeyhint='search'))
+    close = node('button', type='button', class_='spotlight-close', data_search_close='',
+                 aria_label=messages['search.close'], data_i18n_aria_label='search.close')
+    close.append(node('kbd', 'Esc', aria_hidden='true'))
+    field.append(close)
+    search.append(field)
+    search.append(label('p', 'search.prompt', id='search-status', role='status', aria_live='polite', aria_atomic='true'))
+    search.append(node('ul', id='search-results', role='listbox', tabindex='-1',
+                       aria_label=messages['search.label'], data_i18n_aria_label='search.label'))
+    search.append(label('div', 'search.keyboardHint', class_='spotlight-hint'))
+    doc.find('body').append(search)
     if not head.xpath('link[@type="application/rss+xml"][@title="RSS"]'):
         head.append(node('link', rel='alternate', type='application/rss+xml', title='RSS', href='/index.xml'))
 

@@ -31,7 +31,7 @@ window.SITE_MESSAGES = {
     "ui.themeLight": "浅色主题",
     "ui.themeDark": "深色主题",
     "ui.skipToContent": "跳至正文",
-    "search.placeholder": "搜索文章（Ctrl + K）",
+    "search.placeholder": "搜索文章、标签或正文…",
     "search.label": "搜索文章",
     "search.noResults": "未找到与“{query}”相关的结果",
     "search.error": "搜索暂时不可用，请稍后重试。",
@@ -164,7 +164,10 @@ window.SITE_MESSAGES = {
     "comments.title": "评论",
     "comments.intro": "使用 GitHub 账号参与讨论，所有语言版本共用此评论区。",
     "comments.onGitHub": "在 GitHub 查看讨论",
-    "comments.legacy": "查看旧评论（Disqus）"
+    "comments.legacy": "查看旧评论（Disqus）",
+    "search.prompt": "输入关键词，搜索文章、标签或正文。",
+    "search.close": "关闭搜索",
+    "search.keyboardHint": "↑↓ 选择　↵ 打开　Esc 关闭"
   },
   "en": {
     "nav.about": "About",
@@ -197,7 +200,7 @@ window.SITE_MESSAGES = {
     "ui.themeLight": "Light theme",
     "ui.themeDark": "Dark theme",
     "ui.skipToContent": "Skip to content",
-    "search.placeholder": "Search posts (Ctrl + K)",
+    "search.placeholder": "Search posts, tags or content…",
     "search.label": "Search posts",
     "search.noResults": "No results found for “{query}”",
     "search.error": "Search is unavailable. Please try again later.",
@@ -330,7 +333,10 @@ window.SITE_MESSAGES = {
     "comments.title": "Comments",
     "comments.intro": "Join the conversation with your GitHub account. All language editions share this discussion.",
     "comments.onGitHub": "View discussion on GitHub",
-    "comments.legacy": "Previous comments (Disqus)"
+    "comments.legacy": "Previous comments (Disqus)",
+    "search.prompt": "Type to search posts, tags or content.",
+    "search.close": "Close search",
+    "search.keyboardHint": "↑↓ Select　↵ Open　Esc Close"
   },
   "ja": {
     "nav.about": "私について",
@@ -363,7 +369,7 @@ window.SITE_MESSAGES = {
     "ui.themeLight": "ライトテーマ",
     "ui.themeDark": "ダークテーマ",
     "ui.skipToContent": "本文へスキップ",
-    "search.placeholder": "記事を検索（Ctrl + K）",
+    "search.placeholder": "記事・タグ・本文を検索…",
     "search.label": "記事を検索",
     "search.noResults": "「{query}」に一致する結果はありません",
     "search.error": "検索を利用できません。しばらくしてから再度お試しください。",
@@ -496,7 +502,10 @@ window.SITE_MESSAGES = {
     "comments.title": "コメント",
     "comments.intro": "GitHub アカウントでご参加ください。すべての言語版で同じコメント欄を共有しています。",
     "comments.onGitHub": "GitHub で議論を見る",
-    "comments.legacy": "以前のコメント（Disqus）"
+    "comments.legacy": "以前のコメント（Disqus）",
+    "search.prompt": "キーワードを入力して記事・タグ・本文を検索します。",
+    "search.close": "検索を閉じる",
+    "search.keyboardHint": "↑↓ 選択　↵ 開く　Esc 閉じる"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -529,7 +538,7 @@ window.SITE_MESSAGES = {
     "ui.themeLight": "Светлая тема",
     "ui.themeDark": "Тёмная тема",
     "ui.skipToContent": "Перейти к содержимому",
-    "search.placeholder": "Поиск статей (Ctrl + K)",
+    "search.placeholder": "Поиск по статьям, тегам и тексту…",
     "search.label": "Поиск статей",
     "search.noResults": "По запросу «{query}» ничего не найдено",
     "search.error": "Поиск временно недоступен. Попробуйте позже.",
@@ -662,7 +671,10 @@ window.SITE_MESSAGES = {
     "comments.title": "Комментарии",
     "comments.intro": "Присоединяйтесь к обсуждению с аккаунтом GitHub. Все языковые версии используют общие комментарии.",
     "comments.onGitHub": "Обсуждение на GitHub",
-    "comments.legacy": "Прежние комментарии (Disqus)"
+    "comments.legacy": "Прежние комментарии (Disqus)",
+    "search.prompt": "Введите запрос для поиска по статьям, тегам и тексту.",
+    "search.close": "Закрыть поиск",
+    "search.keyboardHint": "↑↓ Выбрать　↵ Открыть　Esc Закрыть"
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -695,7 +707,7 @@ window.SITE_MESSAGES = {
     "ui.themeLight": "淺色主題",
     "ui.themeDark": "深色主題",
     "ui.skipToContent": "跳至正文",
-    "search.placeholder": "搜尋文章（Ctrl + K）",
+    "search.placeholder": "搜尋文章、標籤或內文…",
     "search.label": "搜尋文章",
     "search.noResults": "找不到與「{query}」相關的結果",
     "search.error": "搜尋暫時無法使用，請稍後再試。",
@@ -828,6 +840,9 @@ window.SITE_MESSAGES = {
     "comments.title": "留言",
     "comments.intro": "使用 GitHub 帳號參與討論，所有語言版本共用此留言區。",
     "comments.onGitHub": "在 GitHub 查看討論",
-    "comments.legacy": "查看舊留言（Disqus）"
+    "comments.legacy": "查看舊留言（Disqus）",
+    "search.prompt": "輸入關鍵字，搜尋文章、標籤或內文。",
+    "search.close": "關閉搜尋",
+    "search.keyboardHint": "↑↓ 選擇　↵ 開啟　Esc 關閉"
   }
 };
