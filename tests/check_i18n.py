@@ -55,6 +55,12 @@ for locale in LOCALES:
             require(not re.search(r'[\u3400-\u9fff].*\|.*[A-Za-z]',text),f'{name}: bilingual UI {text[:80]}')
         for node in doc.xpath('//*[@data-i18n]'):
             require(node.get('data-i18n') in MESSAGES[locale],f'{name}: unknown message key')
+        require(len(doc.xpath('//dialog[@id="search-content"]'))==1,f'{name}: one native search dialog')
+        require(len(doc.xpath('//*[@id="spotlight-query"][@role="combobox"]'))==1,f'{name}: one search input')
+        require(not doc.xpath('//*[@id="search"] | //*[@oninput="searchOnChange(event)"]'),f'{name}: obsolete search input')
+        require(len(doc.xpath('//script[starts-with(@src,"/js/search.js?v=")][@defer]'))==1,f'{name}: deferred search runtime')
+        for trigger in doc.xpath('//*[@data-search-open]'):
+            require(trigger.tag=='button' and trigger.get('aria-controls')=='search-content',f'{name}: search launcher semantics')
         for anchor in doc.xpath('//aside[contains(@class,"social")]//a[@href]'):
             params=parse_qs(urlsplit(anchor.get('href')).query)
             if 'url' in params:

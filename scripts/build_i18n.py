@@ -147,6 +147,7 @@ def add_metadata(doc, path, locale, title, description):
     head = doc.find('head')
     for script in doc.xpath('//script[starts-with(@src,"/js/search.js")]'):
         script.set('src', '/js/search.js?v=' + UI_REVISION)
+        script.set('defer', 'defer')
     for element in head.xpath('script[starts-with(@src,"/js/i18n-messages.js") or starts-with(@src,"/js/i18n.js")] | link[starts-with(@href,"/css/i18n.css")] | noscript[@id="i18n-no-script"]'):
         head.remove(element)
     for element in head.xpath('link[@rel="canonical" or @hreflang]'):
