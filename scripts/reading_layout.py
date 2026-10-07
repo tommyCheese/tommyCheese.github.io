@@ -43,6 +43,8 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         old.getparent().remove(old)
     head = doc.find('head')
     head.append(node('link', rel='stylesheet', href='/css/reading.css?v=' + revision, data_reading_layout='style'))
+    head.append(node('link', rel='stylesheet', href='/css/interaction.css?v=' + revision, data_reading_layout='interaction-style'))
+    doc.find('body').append(node('script', src='/js/interaction.js?v=' + revision, defer='defer', data_reading_layout='interaction-runtime'))
     if not head.xpath('link[@type="application/rss+xml"][@title="RSS"]'):
         head.append(node('link', rel='alternate', type='application/rss+xml', title='RSS', href='/index.xml'))
 
