@@ -1,0 +1,192 @@
+/* Shared interaction finish; content and document layout stay in their owners. */
+body {
+  --ui-ease: cubic-bezier(.22, 1, .36, 1);
+  --ui-quick: 180ms;
+  --ui-settle: 320ms;
+  --ui-accent: #007aff;
+  --ui-hover: rgb(0 0 0 / 5%);
+  --ui-line: rgb(0 0 0 / 9%);
+  --ui-glass: rgb(248 249 250 / 82%);
+  --ui-pill: rgb(255 255 255 / 94%);
+  --ui-shadow: 0 12px 32px rgb(0 0 0 / 9%), 0 1px 3px rgb(0 0 0 / 6%);
+  transition: background-color var(--ui-settle) ease, color var(--ui-settle) ease;
+}
+body.dark {
+  --ui-accent: #64a9ff;
+  --ui-hover: rgb(255 255 255 / 8%);
+  --ui-line: rgb(255 255 255 / 12%);
+  --ui-glass: rgb(33 37 41 / 86%);
+  --ui-pill: rgb(255 255 255 / 13%);
+  --ui-shadow: 0 12px 32px rgb(0 0 0 / 25%), 0 1px 3px rgb(0 0 0 / 15%);
+}
+html { scroll-behavior: smooth; }
+#about, #experience, #contact { scroll-margin-top: 96px; }
+#profileHeader, #profileHeader .primary-font, #profileHeader input,
+#experience #pills-tab, body .btn {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+}
+body > #content, body > footer {
+  transition: background-color var(--ui-settle) ease, color var(--ui-settle) ease;
+}
+body :is(a, button, input, summary, [role="tab"]):focus-visible {
+  outline: 3px solid var(--ui-accent) !important;
+  outline-offset: 3px;
+}
+body > #profileHeader {
+  position: sticky;
+  top: 0;
+  background: var(--ui-glass) !important;
+  border-bottom: 1px solid var(--ui-line);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  transition: background-color var(--ui-settle) ease, box-shadow var(--ui-settle) ease;
+}
+#profileHeader.showHeaderOnTop { box-shadow: 0 4px 18px rgb(0 0 0 / 6%); }
+#profileHeader .navbar.animate { animation: ui-appear 360ms var(--ui-ease) both; }
+#profileHeader .navbar-nav a.nav-link,
+.header-actions button#theme-toggle, .language-switch summary, .navbar-toggler {
+  border-radius: 10px;
+  transition: background-color var(--ui-quick) ease, color var(--ui-quick) ease,
+    transform var(--ui-quick) var(--ui-ease) !important;
+}
+#profileHeader .navbar-nav a.nav-link:hover,
+.header-actions button#theme-toggle:hover, .language-switch summary:hover,
+.language-switch[open] summary, .navbar-toggler:hover {
+  background: var(--ui-hover) !important;
+}
+#profileHeader .navbar-nav a.nav-link[aria-current="page"] { background: var(--ui-hover); }
+.header-actions button#theme-toggle { background: transparent !important; }
+body :is(.btn, .navbar-toggler, .header-actions button, .language-switch summary):active {
+  transform: scale(.96);
+}
+body .btn {
+  transition: transform var(--ui-quick) var(--ui-ease), background-color var(--ui-quick) ease,
+    box-shadow var(--ui-quick) ease, opacity var(--ui-quick) ease !important;
+}
+body .btn:hover { box-shadow: 0 3px 9px rgb(0 0 0 / 8%); }
+body .language-switch nav, body #search-content, body .dropdown-menu {
+  background: var(--ui-glass) !important;
+  border: 1px solid var(--ui-line) !important;
+  border-radius: 14px;
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+.language-switch[open] nav, #search-content, .dropdown-menu.show {
+  animation: ui-popover 220ms var(--ui-ease) both;
+}
+.language-switch a {
+  border-radius: 8px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.language-switch a:hover, .language-switch a[aria-current="true"] {
+  background: var(--ui-hover);
+}
+#profileHeader input#search {
+  border: 1px solid var(--ui-line) !important;
+  border-radius: 10px !important;
+  transition: border-color var(--ui-quick) ease, box-shadow var(--ui-quick) ease;
+}
+#profileHeader input#search:focus {
+  border-color: var(--ui-accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent) 18%, transparent);
+}
+#search-results > .card { margin-bottom: 3px; }
+#search-results > .card a { display: block; border-radius: 10px; transition: background-color 140ms ease; }
+#search-results > .card :hover { background: transparent !important; }
+#search-results > .card a:hover, #search-results > .card a:focus-visible {
+  background: var(--ui-hover) !important;
+}
+/* A native-style segmented control, with a shared sliding selection surface. */
+#experience #pills-tab {
+  position: relative;
+  isolation: isolate;
+  width: fit-content;
+  max-width: 100%;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--ui-line);
+  border-radius: 12px;
+  background: var(--ui-hover) !important;
+}
+#experience #pills-tab .nav-item { padding: 0 !important; }
+#experience #pills-tab .nav-link {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  border-radius: 8px;
+  opacity: 1;
+  padding: .5rem 1rem;
+  transition: color var(--ui-quick) ease, background-color var(--ui-quick) ease !important;
+}
+#experience #pills-tab .nav-link:hover { background: var(--ui-hover) !important; }
+#experience #pills-tab .nav-link.active {
+  background: var(--ui-pill) !important;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+#experience #pills-tab.ui-segments::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--tab-width);
+  height: var(--tab-height);
+  transform: translate(var(--tab-x), var(--tab-y));
+  border-radius: 8px;
+  background: var(--ui-pill) !important;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+  pointer-events: none;
+  transition: transform var(--ui-settle) var(--ui-ease), width var(--ui-settle) var(--ui-ease),
+    height var(--ui-settle) var(--ui-ease), background-color var(--ui-settle) ease;
+}
+#experience #pills-tab.ui-segments .nav-link.active { background: transparent !important; box-shadow: none; }
+#experience .experience-container { box-shadow: var(--ui-shadow); border: 1px solid var(--ui-line); }
+#experience .tab-pane.show.active { animation: ui-pane 260ms var(--ui-ease) both; }
+.featured-post, .tag-card, .topic-links a, .post-row, .series-neighbor {
+  transition: transform var(--ui-settle) var(--ui-ease), box-shadow var(--ui-settle) ease,
+    background-color var(--ui-quick) ease, color var(--ui-quick) ease;
+}
+.featured-post, .tag-card { border: 1px solid var(--ui-line); }
+.topic-links a { border-color: var(--ui-line); }
+.post-row:hover { background: var(--ui-hover); }
+.featured-post:active, .tag-card:active, .topic-links a:active { transform: scale(.99); }
+.mobile-toc { border: 1px solid var(--ui-line); }
+.mobile-toc details[open] nav { animation: ui-appear 200ms var(--ui-ease) both; }
+#navbarContent.collapsing { transition: height 280ms var(--ui-ease); }
+#navbarContent.show .navbar-nav { animation: ui-appear 220ms var(--ui-ease) both; }
+.header-actions #theme-toggle svg { animation: ui-icon 300ms var(--ui-ease) both; }
+@media (hover: hover) and (pointer: fine) {
+  .featured-post:hover, .tag-card:hover, .topic-links a:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ui-shadow);
+  }
+}
+@media (max-width: 1199.98px) {
+  #profileHeader .navbar-nav .navbar-text { padding-block: .2rem; }
+  #profileHeader .navbar-nav a.nav-link { padding: .625rem .875rem; }
+}
+@keyframes ui-appear {
+  from { opacity: 0; translate: 0 -6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes ui-popover {
+  from { opacity: 0; translate: 0 -4px; scale: .98; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+@keyframes ui-pane {
+  from { opacity: 0; translate: 0 6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes ui-icon {
+  from { opacity: .5; rotate: -35deg; scale: .8; }
+  to { opacity: 1; rotate: 0deg; scale: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body *, body *::before, body *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  body :is(.featured-post, .tag-card, .topic-links a, .btn, .navbar-toggler,
+    .header-actions button, .language-switch summary) { transform: none !important; }
+}
