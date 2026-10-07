@@ -105,8 +105,7 @@
   results.addEventListener('click', event => {
     if (event.target.closest('a')) closeSearch();
   });
-  input.addEventListener('input', async event => {
-    if (event.isComposing) return;
+  async function search() {
     const query = input.value.trim();
     const currentRequest = ++request;
     clearResults();
@@ -153,5 +152,9 @@
     } catch (_) {
       if (currentRequest === request && dialog.open) showStatus(t('search.error'));
     }
+  }
+  input.addEventListener('input', event => {
+    if (!event.isComposing) return search();
   });
+  input.addEventListener('compositionend', search);
 })();
