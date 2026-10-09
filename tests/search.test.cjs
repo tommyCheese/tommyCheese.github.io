@@ -147,7 +147,7 @@ test('opening search shows navigation and clearing a query restores it', async (
 test('page keywords and aliases return the corresponding destinations', async () => {
   const ui = searchUI();
   await ui.open();
-  for (const [query, href] of [['首页', '/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/']]) {
+  for (const [query, href] of [['首页', '/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/'], ['今日要闻', '/#today-news'], ['news', '/#today-news']]) {
     ui.input.value = query;
     await ui.input.emit('input');
     assert.equal(ui.options()[0].href, href, query);

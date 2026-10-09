@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
-UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','css/interaction.css','js/interaction.js','js/search.js','js/comments.js'])).hexdigest()[:12]
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','i18n/news.json','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','css/interaction.css','js/interaction.js','js/search.js','js/comments.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
