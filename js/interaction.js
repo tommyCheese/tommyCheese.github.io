@@ -29,6 +29,7 @@
   if (!segments) return;
   const tabs = [...segments.querySelectorAll('[role="tab"]')];
   function syncSelection() {
+    segments.setAttribute('aria-orientation', window.matchMedia('(max-width: 767.98px)').matches ? 'horizontal' : 'vertical');
     const active = tabs.find(tab => tab.classList.contains('active'));
     if (!active) return;
     tabs.forEach(tab => {
@@ -53,8 +54,9 @@
     const current = tabs.indexOf(event.target.closest('[role="tab"]'));
     if (current < 0 || !window.bootstrap?.Tab) return;
     let next;
-    if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
-    if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+    const vertical = segments.getAttribute('aria-orientation') === 'vertical';
+    if (event.key === (vertical ? 'ArrowDown' : 'ArrowRight')) next = (current + 1) % tabs.length;
+    if (event.key === (vertical ? 'ArrowUp' : 'ArrowLeft')) next = (current - 1 + tabs.length) % tabs.length;
     if (event.key === 'Home') next = 0;
     if (event.key === 'End') next = tabs.length - 1;
     if (event.key === 'Enter' || event.key === ' ') next = current;
