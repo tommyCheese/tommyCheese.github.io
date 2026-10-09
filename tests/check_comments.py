@@ -22,7 +22,7 @@ for locale in LOCALES:
         assert not doc.xpath('//script[contains(., "disqus") or contains(@src, "disqus")]'), name
         assert not doc.xpath('//iframe[contains(@src, "disqus")]'), name
         section = doc.xpath('//*[@id="comments"]')
-        article = doc.find('.//article')
+        article = doc.find('.//*[@id="single"]//article')
         expected = article is not None or str(relative) in ['index.html', 'gallery/index.html']
         assert len(section) == int(expected), name
         runtime = doc.xpath('//script[@data-comments-layout="runtime"]/@src')

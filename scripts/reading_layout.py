@@ -197,7 +197,7 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
                 section.append(post_link(slug))
             directory.append(section)
 
-    article = doc.find('.//article')
+    article = doc.find('.//*[@id="single"]//article')
     if article is not None:
         toc = doc.get_element_by_id('TableOfContents', None)
         if toc is not None and len(toc):

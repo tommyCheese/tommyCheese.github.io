@@ -330,7 +330,7 @@ def build():
             path = page_path(file)
             alias = '/page/' in path
             slug = file.parent.name
-            article = doc.xpath('//article')
+            article = doc.xpath('//*[@id="single"]//article')
             if article:
                 if locale != 'zh-CN':
                     fragment = html.fragment_fromstring((ROOT/'i18n'/locale/'posts'/f'{slug}.html').read_text(), create_parent='article')
