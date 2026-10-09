@@ -1,0 +1,42 @@
+{
+  "updated_at": "2026-10-10",
+  "items": [
+    {
+      "id": "openai-gpt6-intelligent-ui",
+      "category": "ai",
+      "published_at": "2026-10-07",
+      "source": "OpenAI",
+      "url": "https://openai.com/index/gpt-6-for-everyone/",
+      "image": "https://images.ctfassets.net/kftzwdyauwt9/5frqtUAWccstAbVrCFraH6/5ae9b6bfbc3f3dff8001ed249812f97d/Intelligent-UI_Art-Card_16x9.png?w=1600&h=900&fit=fill",
+      "image_credit": "OpenAI"
+    },
+    {
+      "id": "tsmc-september-revenue",
+      "category": "semiconductors",
+      "published_at": "2026-10-08",
+      "source": "TSMC",
+      "url": "https://pr.tsmc.com/english/news/3343",
+      "image": "https://pr.tsmc.com/sites/pr/multimedia-gallery/A_6747481_0.jpg",
+      "image_credit": "Taiwan Semiconductor Manufacturing Co., Ltd.",
+      "file_photo": true
+    },
+    {
+      "id": "samsung-smartthings-now",
+      "category": "devices",
+      "published_at": "2026-10-06",
+      "source": "Samsung Newsroom",
+      "url": "https://news.samsung.com/global/samsung-introduces-smartthings-now-in-new-platform-update-that-brings-more-intuitive-user-experiences",
+      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/01154339/Samsung-Corporate-SmartThings-Now-New-Platform-Update_Thumb932.jpg",
+      "image_credit": "Samsung Electronics"
+    },
+    {
+      "id": "bmw-ix3-m60-xdrive",
+      "category": "cars",
+      "published_at": "2026-10-08",
+      "source": "BMW Group",
+      "url": "https://www.press.bmwgroup.com/global/article/detail/T0461463EN?language=en",
+      "image": "https://mediapool.bmwgroup.com/cache/P9/202610/P90659795/P90659795-the-new-bmw-ix3-m60-xdrive-10-2026-2250px.jpg",
+      "image_credit": "BMW Group"
+    }
+  ]
+}

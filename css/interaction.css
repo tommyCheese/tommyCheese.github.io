@@ -236,6 +236,7 @@ dialog.spotlight::backdrop {
 .spotlight-icon-tag { --spotlight-icon-color: #269c9a; }
 .spotlight-icon-user { --spotlight-icon-color: #ce6690; }
 .spotlight-icon-compass { --spotlight-icon-color: #399d70; }
+.spotlight-icon-news { --spotlight-icon-color: #d67c43; }
 .spotlight-result-type {
   grid-column: 3;
   grid-row: 1 / 3;

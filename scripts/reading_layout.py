@@ -1,6 +1,8 @@
 """Shared, static discovery and reading layout for every language edition."""
 from copy import deepcopy
+from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit, urlunsplit
+import json
 from lxml import html
 
 ARCHITECTURE = ['再读整洁架构之道' + number for number in '一二三四五六']
@@ -11,6 +13,7 @@ TOPICS = {
     'machine-learning': [MODEL_TRANSFER, 'h'],
 }
 FEATURED = ['opencode-v2-extensions', ARCHITECTURE[0], MODEL_TRANSFER]
+NEWS = json.loads((Path(__file__).resolve().parents[1] / 'i18n/news.json').read_text())
 
 
 def enhance_layout(doc, path, locale, articles, messages, revision):
@@ -88,7 +91,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
                 menu.remove(item)
         start = 1 if len(menu) and menu[0].xpath('.//input') else 0
         for offset, (key, href) in enumerate([
-            ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
+            ('nav.news', '/#today-news'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
             ('nav.tags', '/tags/'), ('nav.about', '/#about'), ('nav.gallery', '/gallery/'),
         ]):
             item = node('li', class_='nav-item navbar-text')
@@ -157,6 +160,31 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
 
         content = hero.getparent()
         sections = []
+        news = node('section', id='today-news', class_='home-section container', data_reading_layout='news', aria_labelledby='news-heading')
+        heading = node('div', class_='section-heading news-heading')
+        heading.append(label('h2', 'nav.news', id='news-heading'))
+        heading.append(node('span', messages['news.updated'].replace('{date}', NEWS['updated_at']), class_='news-updated'))
+        news.append(heading)
+        news.append(label('p', 'news.intro', class_='news-intro'))
+        grid = node('div', class_='news-grid')
+        for item in NEWS['items']:
+            card = node('a', href=item['url'], class_='news-card', target='_blank', rel='noopener noreferrer', data_news_id=item['id'])
+            card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else 'news-cover'))
+            copy = node('div', class_='news-copy')
+            credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
+            copy.append(node('span', credit, class_='news-image-credit'))
+            copy.append(label('span', 'news.category.' + item['category'], class_='news-category'))
+            copy.append(label('h3', 'news.' + item['id'] + '.title'))
+            copy.append(label('p', 'news.' + item['id'] + '.summary'))
+            metadata = node('div', class_='news-meta')
+            metadata.append(node('span', item['source']))
+            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
+            metadata.append(node('span', '↗', aria_hidden='true'))
+            copy.append(metadata)
+            card.append(copy)
+            grid.append(card)
+        news.append(grid)
+        sections.append(news)
         featured = node('section', id='featured-posts', class_='home-section container', data_reading_layout='featured', aria_labelledby='featured-heading')
         featured.append(label('h2', 'section.featured', id='featured-heading'))
         cards = node('div', class_='featured-grid')
