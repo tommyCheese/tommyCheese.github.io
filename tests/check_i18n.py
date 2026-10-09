@@ -65,7 +65,7 @@ for locale in LOCALES:
             params=parse_qs(urlsplit(anchor.get('href')).query)
             if 'url' in params:
                 require(params['url'][0].startswith(BASE+prefix+'/blogs/'),f'{name}: share points to wrong language')
-        article=doc.find('.//article')
+        article=doc.find('.//*[@id="single"]//article')
         if article is not None:
             original=articles[source.parent.name]
             require([e.text_content() for e in article.xpath('.//pre | .//code')]==[e.text_content() for e in original.xpath('.//pre | .//code')],f'{name}: code changed')

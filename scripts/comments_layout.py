@@ -23,7 +23,7 @@ def render_comments(doc, path, locale, messages, revision):
                 row.remove(parent)
                 if row.tag == 'div' and not len(row) and not (row.text or '').strip():
                     row.getparent().remove(row)
-    article = doc.find('.//article')
+    article = doc.find('.//*[@id="single"]//article')
     if article is None and path not in ['/', '/gallery/']:
         return
 
