@@ -9,6 +9,23 @@ import { Shell, HOME, seedState, evaluate, resolve, basicCommands } from './shel
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
 
 const $ = id => document.getElementById(id);
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const activeMotions = new Map();
+function reveal(node, distance = 6) {
+  activeMotions.get(node)?.cancel();
+  if (reducedMotion.matches || node.hidden) return;
+  const animation = node.animate([
+    { opacity: .35, translate: `0 ${distance}px` },
+    { opacity: 1, translate: '0 0' }
+  ], { duration: 240, easing: 'cubic-bezier(.22,1,.36,1)' });
+  activeMotions.set(node, animation);
+  animation.finished.then(() => {
+    if (activeMotions.get(node) === animation) activeMotions.delete(node);
+  }).catch(() => {});
+}
+reducedMotion.addEventListener('change', () => {
+  if (reducedMotion.matches) { for (const animation of activeMotions.values()) animation.cancel(); activeMotions.clear(); }
+});
 const element = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
 const KEY = 'tommy-cheese-linux-lab-v1';
 const supportedNames = new Set(manuals.map(item => item.name));
@@ -121,10 +138,7 @@ function showTaskFeedback(kind, title, detail) {
   $('feedback-title').textContent = title;
   $('feedback-detail').textContent = detail;
   banner.hidden = false;
-  // Replay a short entrance effect without moving focus away from the terminal.
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    banner.animate([{ opacity: 0, transform: 'translateY(6px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 280, easing: 'ease-out' });
-  }
+  reveal(banner);
 }
 
 function persist() {
@@ -343,6 +357,8 @@ function renderDirectoryTree() {
   };
   appendDirectory('/', tree);
 }
+let displayedDirectory;
+let displayedPreview;
 function renderWorld() {
   const s = shell.state;
   if (s.fs[browsePath]?.type !== 'dir') browsePath = s.fs[s.cwd]?.type === 'dir' ? s.cwd : HOME;
@@ -404,10 +420,15 @@ function renderWorld() {
   section('网络', [['hostname', s.network.host], ['eth0', s.network.ip], ['example.com', s.network.dns['example.com']]]);
   section('已安装软件包', s.packages.map(name => [name, '已安装']));
   section('环境变量', Object.entries(s.env));
+  if (displayedDirectory !== browsePath) reveal($('file-list'), 4);
+  if (displayedPreview !== previewPath && previewPath) reveal($('file-preview'), 4);
+  displayedDirectory = browsePath; displayedPreview = previewPath;
 }
 function setWorldTab(system) {
+  const changed = $('files-view').hidden !== system;
   $('files-view').hidden = system; $('system-view').hidden = !system;
   $('files-tab').setAttribute('aria-pressed', String(!system)); $('system-tab').setAttribute('aria-pressed', String(system));
+  if (changed) reveal($(system ? 'system-view' : 'files-view'));
 }
 
 function startTask(id, restore = false) {
@@ -430,6 +451,7 @@ function startTask(id, restore = false) {
   focusGoalDirectory();
   setWorldTab(['system', 'network', 'services'].includes(lesson.chapter));
   renderTask(); renderChapters(); renderTranscript(); renderWorld(); persist();
+  reveal($('mission-window'));
 }
 function focusGoalDirectory() {
   const goal = lesson.goals.find(goal => goal.path && ['file','dir','absent','mode','owner','link','archive'].includes(goal.type));
