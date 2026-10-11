@@ -49,7 +49,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         if not preview:
             card.set('target', '_blank')
             card.set('rel', 'noopener noreferrer')
-        card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else 'news-cover'))
+        card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else ('news-cover news-cover-contain' if item.get('image_fit') == 'contain' else 'news-cover')))
         copy = node('div', class_='news-copy')
         credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
         copy.append(node('span', credit, class_='news-image-credit'))

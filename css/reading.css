@@ -61,7 +61,7 @@ a:focus-visible, summary:focus-visible {
 .news-card:hover { color: var(--text-color); border-color: var(--primary-color); box-shadow: 0 6px 22px rgb(0 0 0 / 8%); }
 .news-card:hover h3 { color: var(--primary-color); }
 .news-card > img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--secondary-color); }
-.news-card > img.news-file-photo { object-fit: contain; }
+.news-card > img.news-file-photo, .news-card > img.news-cover-contain { object-fit: contain; }
 .news-copy { display: flex; flex: 1; flex-direction: column; padding: 1rem; }
 .news-image-credit { margin-bottom: .7rem; color: var(--text-secondary-color); font-size: .6rem; line-height: 1.5; }
 .news-category { align-self: start; margin-bottom: .6rem; color: var(--primary-color); font-size: .72rem; font-weight: 650; }
