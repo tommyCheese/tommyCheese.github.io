@@ -20,7 +20,8 @@
     user: ['M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z', 'M4 21v-2a8 8 0 0 1 16 0v2'],
     compass: ['M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', 'm16 8-2.5 5.5L8 16l2.5-5.5L16 8Z'],
     article: ['M14 3H5v18h14V8l-5-5Z', 'M14 3v5h5', 'M8 12h8', 'M8 16h6'],
-    news: ['M4 4h16v16H4V4Z', 'M7 7h4v4H7V7Z', 'M14 7h3', 'M14 10h3', 'M7 14h10', 'M7 17h7']
+    news: ['M4 4h16v16H4V4Z', 'M7 7h4v4H7V7Z', 'M14 7h3', 'M14 10h3', 'M7 14h10', 'M7 17h7'],
+    terminal: ['M3 4h18v16H3V4Z', 'm7 9 3 3-3 3', 'M13 15h4']
   };
   const destinations = [
     { title: 'page.home', path: '/', icon: 'home', aliases: ['首页', '主页', '首頁', '主頁', 'home'] },
@@ -29,7 +30,8 @@
     { title: 'nav.tags', path: '/tags/', icon: 'tag', aliases: ['标签', '標籤', 'tags'] },
     { title: 'nav.about', path: '/#about', icon: 'user', aliases: ['关于', '關於', 'about'] },
     { title: 'nav.gallery', path: '/gallery/', icon: 'compass', aliases: ['探索', '相册', '相簿', 'explore', 'gallery'] },
-    { title: 'nav.news', path: '/news/', icon: 'news', suggested: false, aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] }
+    { title: 'nav.news', path: '/news/', icon: 'news', suggested: false, aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] },
+    { title: 'nav.linuxLab', path: '/linux-lab/', icon: 'terminal', shared: true, suggested: false, aliases: ['Linux', '命令', '终端', '終端', '命令实验室', '命令實驗室', 'shell', 'bash', 'linux lab'] }
   ];
 
   function createIcon(name) {
@@ -94,7 +96,7 @@
       const option = document.createElement('a');
       option.id = `search-option-${offset + index}`;
       option.className = navigation ? 'spotlight-navigation' : 'spotlight-post';
-      option.href = link(item.path || item.permalink);
+      option.href = item.shared ? item.path : link(item.path || item.permalink);
       option.setAttribute('role', 'option');
       option.setAttribute('aria-selected', 'false');
       option.tabIndex = -1;

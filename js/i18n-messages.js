@@ -204,7 +204,8 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.title": "Anthropic 暂停内部评测实时联网",
     "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露内部测试中的预期外操作，将暂停实时联网扩大到全部内部评测，并加强工具约束与监控。措施针对内部评测环境。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "格罗方德公布面向物理 AI 的 FDX Fusion 路线图",
-    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台预期提供 7 纳米级数字性能，面向边缘推理、机器人等应用；计划 2027 年启动客户验证，2028 年在德累斯顿制造。"
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台预期提供 7 纳米级数字性能，面向边缘推理、机器人等应用；计划 2027 年启动客户验证，2028 年在德累斯顿制造。",
+    "nav.linuxLab": "Learn Linux Command"
   },
   "en": {
     "nav.about": "About",
@@ -410,7 +411,8 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.title": "Anthropic pauses live internet access in internal evaluations",
     "news.anthropic-evaluation-internet-safety.summary": "After reporting unintended actions in internal testing, Anthropic extends its live internet pause to all internal evaluations and strengthens tool restrictions and monitoring. The measure applies to internal evaluation environments.",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries unveils FDX Fusion roadmap for physical AI",
-    "news.globalfoundries-fdx-fusion-roadmap.summary": "The planned FD-SOI platform targets 7nm-class digital performance for edge inference and robotics. Customer validation is planned for 2027, followed by Dresden manufacturing in 2028."
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "The planned FD-SOI platform targets 7nm-class digital performance for edge inference and robotics. Customer validation is planned for 2027, followed by Dresden manufacturing in 2028.",
+    "nav.linuxLab": "Learn Linux Command"
   },
   "ja": {
     "nav.about": "私について",
@@ -616,7 +618,8 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.title": "Anthropic、社内評価のリアルタイム接続を停止",
     "news.anthropic-evaluation-internet-safety.summary": "社内テストで意図しない操作が報告されたことを受け、Anthropicはリアルタイムのインターネット接続停止を全社内評価へ拡大。ツール制限と監視も強化します。対象は社内評価環境です。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries、物理AI向けFDX Fusionの計画を公開",
-    "news.globalfoundries-fdx-fusion-roadmap.summary": "計画中のFD-SOIプラットフォームは、エッジ推論やロボット向けに7nm級のデジタル性能を目指します。2027年に顧客検証、2028年にドレスデンでの製造を予定しています。"
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "計画中のFD-SOIプラットフォームは、エッジ推論やロボット向けに7nm級のデジタル性能を目指します。2027年に顧客検証、2028年にドレスデンでの製造を予定しています。",
+    "nav.linuxLab": "Learn Linux Command"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -822,7 +825,8 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.title": "Anthropic приостанавливает доступ к сети во внутренних оценках",
     "news.anthropic-evaluation-internet-safety.summary": "После выявления непредусмотренных действий во внутренних тестах Anthropic распространила приостановку доступа к интернету на все внутренние оценки, усилив ограничения инструментов и мониторинг. Мера касается внутренних оценочных сред.",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries представила планы FDX Fusion для физического ИИ",
-    "news.globalfoundries-fdx-fusion-roadmap.summary": "Планируемая платформа FD-SOI нацелена на цифровую производительность уровня 7 нм для периферийного ИИ и робототехники. Проверка с заказчиками намечена на 2027 год, производство в Дрездене — на 2028 год."
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "Планируемая платформа FD-SOI нацелена на цифровую производительность уровня 7 нм для периферийного ИИ и робототехники. Проверка с заказчиками намечена на 2027 год, производство в Дрездене — на 2028 год.",
+    "nav.linuxLab": "Learn Linux Command"
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -1028,6 +1032,7 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.title": "Anthropic 暫停內部評測即時連網",
     "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露內部測試中的非預期操作，將暫停即時連網擴大至全部內部評測，並加強工具限制與監控。措施針對內部評測環境。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "格羅方德公布面向實體 AI 的 FDX Fusion 路線圖",
-    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台預期提供 7 奈米級數位效能，面向邊緣推論、機器人等應用；計畫 2027 年啟動客戶驗證，2028 年在德勒斯登製造。"
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台預期提供 7 奈米級數位效能，面向邊緣推論、機器人等應用；計畫 2027 年啟動客戶驗證，2028 年在德勒斯登製造。",
+    "nav.linuxLab": "Learn Linux Command"
   }
 };

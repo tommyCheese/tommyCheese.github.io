@@ -1,0 +1,580 @@
+import { validHistory, validSnapshot, validateBackup } from './backup.mjs';
+import { PracticeHistory } from './history.mjs';
+import { Shell, HOME, seedState, evaluate, resolve } from './shell.mjs';
+import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
+
+const $ = id => document.getElementById(id);
+const element = (tag, text, className) => { const node = document.createElement(tag); if (text !== undefined) node.textContent = text; if (className) node.className = className; return node; };
+const KEY = 'tommy-cheese-linux-lab-v1';
+const supportedNames = new Set(manuals.map(item => item.name));
+const ids = new Set(lessons.map(item => item.id));
+let storageAvailable = true;
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch { saved = {}; }
+if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+const completed = new Set(Array.isArray(saved.completed) ? saved.completed.filter(id => ids.has(id)) : []);
+const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites.filter(name => supportedNames.has(name)) : []);
+let currentId = ids.has(saved.current) ? saved.current : lessons[0].id;
+let lesson = lessons.find(item => item.id === currentId);
+let mode = 'learn'; let shell; let transcript = []; let hint = 0; let goalChecks = [];
+let browsePath = HOME; let previewPath; let lastResult = { stdout: '', code: 1 };
+let historyCursor = 0; let draft = ''; let onlyFavorites = false; let changes = new Set();
+let selectedLevel = lesson.level;
+let sandboxSession;
+const practiceHistory = new PracticeHistory();
+
+function announce(text) { $('announcement').textContent = text; }
+function persist() {
+  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId,
+    session: mode === 'learn' && shell ? { revision: 2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+    sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
+  try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
+  catch { storageAvailable = false; }
+  $('save-status').textContent = storageAvailable ? '已保存' : '未保存 · 可导出';
+}
+function validSession(session) {
+  return session && session.revision === 2 && session.lesson === currentId && session.state?.fs?.[HOME]?.type === 'dir'
+    && typeof session.state.cwd === 'string' && session.state.fs[session.state.cwd]?.type === 'dir'
+    && session.state.env && Array.isArray(session.state.processes) && session.state.services
+    && Array.isArray(session.state.packages) && session.state.archives && session.state.network && Array.isArray(session.state.history);
+}
+for (const level of levels) {
+  const button = element('button', level.title); button.dataset.level = level.id;
+  button.setAttribute('aria-pressed', String(level.id === selectedLevel));
+  button.addEventListener('click', () => { selectedLevel = level.id; renderChapters(); });
+  $('level-tabs').append(button);
+}
+$('course-progress').max = lessons.length;
+function renderChapters() {
+  const open = new Set([...$('chapters').querySelectorAll('details[open]')].map(node => node.dataset.chapter));
+  const query = $('course-search').value.trim().toLowerCase();
+  $('chapters').replaceChildren();
+  for (const chapter of chapters) {
+    const items = lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
+    const matches = items.filter(item => !query || `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`.toLowerCase().includes(query));
+    if (!matches.length) continue;
+    const group = element('details', undefined, 'chapter'); group.dataset.chapter = chapter.id;
+    group.open = true;
+    const summary = element('summary'); summary.append(element('span', chapter.number, 'chapter-number'), element('span', chapter.title));
+    summary.title = `${chapter.description} ${items.filter(item => completed.has(item.id)).length}/${items.length} 已完成`;
+    const list = element('ol');
+    for (const item of matches) {
+      const row = element('li'); const link = element('a', undefined, 'lesson-link' + (completed.has(item.id) ? ' done' : ''));
+      link.href = '#task/' + item.id;
+      if (item.id === currentId && mode === 'learn') link.setAttribute('aria-current', 'step');
+      link.append(element('span', completed.has(item.id) ? '✓' : String(items.indexOf(item) + 1).padStart(2, '0'), 'lesson-marker'), element('span', item.title));
+      const commandHint = element('span', item.command, 'lesson-command-tooltip');
+      commandHint.setAttribute('aria-hidden', 'true'); link.append(commandHint);
+      link.setAttribute('aria-label', item.title + '，本关练习 ' + item.command + (completed.has(item.id) ? '，已完成' : ''));
+      row.append(link); list.append(row);
+    }
+    group.append(summary, list); $('chapters').append(group);
+  }
+  if (!$('chapters').childElementCount) $('chapters').append(element('p', '没有找到任务，试试命令名称。', 'empty-directory'));
+  const tierLessons = lessons.filter(item => item.level === selectedLevel);
+  $('progress-text').textContent = `${tierLessons.filter(item => completed.has(item.id)).length} / ${tierLessons.length}`;
+  for (const button of $('level-tabs').children) button.setAttribute('aria-pressed', String(button.dataset.level === selectedLevel));
+  $('course-progress').max = tierLessons.length;
+  $('course-progress').value = tierLessons.filter(item => completed.has(item.id)).length;
+  document.querySelector('[data-mode="learn"]').href = '#task/' + currentId;
+}
+
+function renderTask() {
+  const sandbox = mode === 'sandbox'; const chapter = chapters.find(item => item.id === lesson.chapter);
+  const items = lessons.filter(item => item.chapter === lesson.chapter && item.level === lesson.level);
+  $('task-category').textContent = sandbox ? 'SANDBOX' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
+  $('console-command').textContent = sandbox ? 'sandbox' : lesson.command;
+  $('task-position').textContent = sandbox ? '' : `${items.indexOf(lesson) + 1} / ${items.length}`;
+  $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
+  $('task-context').textContent = sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
+  $('task-theory').textContent = sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
+  $('goals').replaceChildren();
+  document.querySelector('.mission-target').hidden = sandbox;
+  if (!sandbox) for (const goal of goalChecks) {
+    const item = element('li', undefined, goal.done ? 'done' : '');
+    const check = element('span', goal.done ? '✓' : '', 'goal-check'); check.setAttribute('aria-hidden', 'true');
+    const label = element('span', goal.label); if (goal.done) label.append(element('span', '（已达成）', 'sr-only'));
+    if (goal.path && !goal.label.includes(goal.path)) label.append(element('code', goal.path, 'goal-path'));
+    item.append(check, label); $('goals').append(item);
+  }
+  const allDone = !sandbox && goalChecks.length && goalChecks.every(goal => goal.done);
+  $('victory-stamp').hidden = !allDone;
+  $('task-badge').hidden = allDone || sandbox || !completed.has(currentId);
+  $('task-badge').textContent = '已通关';
+  $('task-badge').classList.toggle('complete', !!allDone);
+  $('next-button').hidden = !allDone;
+  $('next-button').textContent = lessons.indexOf(lesson) === lessons.length - 1 ? '回到关卡地图 ↗' : '下一关 →';
+  $('hint-button').hidden = sandbox;
+  $('hint-button').disabled = hint >= 3;
+  $('hint-button').textContent = hint >= 3 ? '解法' : hint ? `提示 ${hint}/3` : '💡 提示';
+  $('hint-box').hidden = sandbox || !hint;
+  if (hint) { $('hint-title').textContent = hint === 3 ? '参考解法' : `提示 ${hint} / 3`; $('hint-content').textContent = lesson.hints[hint - 1]; }
+  $('related-commands').replaceChildren();
+  for (const command of sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
+    const button = element('button', command + ' 手册', 'command-chip');
+    button.addEventListener('click', () => { location.hash = 'manual/' + command; });
+    $('related-commands').append(button);
+  }
+}
+
+function appendTranscript(entry) {
+  const row = element('div', undefined, 'terminal-entry');
+  if (entry.command) row.append(element('pre', entry.path.replace(HOME, '~') + ' $ ' + entry.command, 'terminal-command'));
+  if (entry.stdout) row.append(element('pre', entry.stdout));
+  if (entry.stderr) row.append(element('pre', entry.stderr, 'terminal-error'));
+  if (entry.message) row.append(element('pre', entry.message, 'terminal-welcome'));
+  $('transcript').append(row); while ($('transcript').childElementCount > 60) $('transcript').firstChild.remove();
+  $('transcript').scrollTop = $('transcript').scrollHeight;
+}
+function renderTranscript() {
+  $('transcript').replaceChildren();
+  for (const entry of transcript) if (entry && typeof entry === 'object') appendTranscript(entry);
+  updatePrompt();
+}
+function updatePrompt() { $('prompt').textContent = shell.state.cwd.replace(HOME, '~') + ' $'; historyCursor = shell.state.history.length; }
+
+const expandedDirectories = new Set(['/', '/home', HOME]);
+function renderDirectoryTree() {
+  const tree = $('file-tree'); tree.replaceChildren();
+  const appendDirectory = (path, parent) => {
+    const children = shell.children(path).filter(child => shell.state.fs[child].type === 'dir').sort();
+    const row = element('button', path === '/' ? '/' : path === HOME ? '~' : path.split('/').pop(), 'directory-link');
+    row.title = path;
+    if (path === browsePath) row.setAttribute('aria-current', 'location');
+    if (path === shell.state.cwd) row.classList.add('working-directory');
+    row.addEventListener('click', event => {
+      event.preventDefault(); browsePath = path; previewPath = undefined; renderWorld();
+    });
+    if (children.length) {
+      const branch = element('details', undefined, 'directory-branch');
+      branch.open = expandedDirectories.has(path) || browsePath === path || browsePath.startsWith(path === '/' ? '/' : path + '/');
+      const summary = element('summary'); summary.append(row); branch.append(summary);
+      const descendants = element('div', undefined, 'directory-children');
+      for (const child of children) appendDirectory(child, descendants);
+      branch.append(descendants);
+      branch.addEventListener('toggle', () => { if (branch.open) expandedDirectories.add(path); else expandedDirectories.delete(path); });
+      parent.append(branch);
+    } else {
+      const leaf = element('div', undefined, 'directory-leaf'); leaf.append(row); parent.append(leaf);
+    }
+  };
+  appendDirectory('/', tree);
+}
+function renderWorld() {
+  const s = shell.state;
+  if (s.fs[browsePath]?.type !== 'dir') browsePath = s.fs[s.cwd]?.type === 'dir' ? s.cwd : HOME;
+  renderDirectoryTree();
+  $('file-location').textContent = browsePath.replace(HOME, '~'); $('file-up').disabled = browsePath === '/';
+  $('file-list').replaceChildren();
+  const children = shell.children(browsePath).sort((a, b) => Number(s.fs[b].type === 'dir') - Number(s.fs[a].type === 'dir') || a.localeCompare(b));
+  $('file-count').textContent = `${children.length} 项`;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  for (const path of children) {
+    const node = s.fs[path];
+    const button = element('button', undefined, 'finder-item' + (changes.has(path) ? ' changed' : '') + (previewPath === path ? ' selected' : ''));
+    button.title = path + ' · 权限 ' + node.mode;
+    const icon = document.createElementNS(svgNS, 'svg');
+    icon.setAttribute('viewBox', '0 0 80 70'); icon.setAttribute('aria-hidden', 'true'); icon.setAttribute('class', 'finder-icon');
+    const shape = (d, fill, stroke) => {
+      const part = document.createElementNS(svgNS, 'path'); part.setAttribute('d', d); part.setAttribute('fill', fill);
+      if (stroke) part.setAttribute('stroke', stroke);
+      icon.append(part);
+    };
+    if (node.type === 'dir') {
+      shape('M5 19 Q5 15 9 15 H28 L35 22 H71 Q75 22 75 26 V59 Q75 63 71 63 H9 Q5 63 5 59 Z', '#50b8ec', '#3999cc');
+      shape('M7 25 H73 V58 Q73 61 70 61 H10 Q7 61 7 58 Z', '#8ad6f6');
+      shape('M7 25 H73 V30 H7 Z', '#a3e3fb');
+      shape('M11 59 H69', 'none', '#67bce5');
+    } else {
+      shape('M20 5 H47 L62 20 V62 Q62 65 59 65 H20 Q17 65 17 62 V8 Q17 5 20 5 Z', '#fff', '#c6cbd1');
+      shape('M47 5 V18 Q47 21 50 21 H62 Z', '#e8edf2', '#c6cbd1');
+      for (const y of [31, 37, 43]) shape(`M25 ${y} H54`, 'none', '#dce2e7');
+      const suffix = path.split('.').pop().toLowerCase();
+      const tag = element('span', node.type === 'link' ? '↗' : ({sh:'SH',csv:'CSV',tar:'TAR',gz:'GZ'}[suffix] || 'TXT'), 'finder-file-tag');
+      button.append(tag);
+    }
+    button.append(icon, element('span', path.split('/').pop(), 'finder-name'));
+    if (path === s.cwd) button.append(element('span', '当前位置', 'finder-current'));
+    button.addEventListener('click', () => {
+      if (node.type === 'dir') { browsePath = path; previewPath = undefined; }
+      else previewPath = path;
+      renderWorld();
+    });
+    $('file-list').append(button);
+  }
+  if (!children.length) $('file-list').append(element('p', '空文件夹', 'finder-empty'));
+  $('file-preview').hidden = !previewPath || !s.fs[previewPath];
+  if (previewPath && s.fs[previewPath]) {
+    const node = s.fs[previewPath]; $('preview-name').textContent = previewPath.split('/').pop();
+    $('preview-meta').textContent = `权限 ${node.mode} · ${node.owner} · ${node.type === 'link' ? '符号链接' : '文本文件'}`;
+    try { $('preview-text').textContent = node.type === 'link' ? '→ ' + node.target + '\n\n' + shell.read(previewPath) : node.text; }
+    catch (error) { $('preview-text').textContent = error.message; }
+  }
+  $('system-view').replaceChildren();
+  const section = (heading, rows) => {
+    const block = element('div', undefined, 'system-section'); block.append(element('h3', heading));
+    for (const [key, value] of rows) { const row = element('div', undefined, 'system-row'); row.append(element('span', key), element('span', String(value))); block.append(row); }
+    $('system-view').append(block);
+  };
+  section('进程 / PID', s.processes.map(item => [item.name, item.pid]));
+  section('服务', Object.entries(s.services).map(([name, service]) => [name, `${service.active ? '运行中' : '未运行'} · ${service.enabled ? '开机启动' : '手动启动'}`]));
+  section('网络', [['hostname', s.network.host], ['eth0', s.network.ip], ['example.com', s.network.dns['example.com']]]);
+  section('已安装软件包', s.packages.map(name => [name, '已安装']));
+  section('环境变量', Object.entries(s.env));
+}
+function setWorldTab(system) {
+  $('files-view').hidden = system; $('system-view').hidden = !system;
+  $('files-tab').setAttribute('aria-pressed', String(!system)); $('system-tab').setAttribute('aria-pressed', String(system));
+}
+
+function startTask(id, restore = false) {
+  practiceHistory.clear(); updatePracticeActions();
+  currentId = id; lesson = lessons.find(item => item.id === id);
+  shell = createLessonShell(Shell, seedState, lesson); transcript = []; hint = 0; lastResult = { stdout: '', code: 1 };
+  if (restore && validSession(saved.session)) {
+    try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); }
+    catch { shell = createLessonShell(Shell, seedState, lesson); transcript = []; }
+  }
+  goalChecks = evaluate(lesson.goals, shell.state);
+  if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index]) goal.done = true; });
+  if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) { practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future); }
+  updatePracticeActions();
+  shell.allowedCommand = lesson.command;
+  browsePath = shell.state.cwd; previewPath = undefined; changes = new Set(); $('command-input').value = '';
+  focusGoalDirectory();
+  setWorldTab(['system', 'network', 'services'].includes(lesson.chapter));
+  renderTask(); renderChapters(); renderTranscript(); renderWorld(); persist();
+}
+function focusGoalDirectory() {
+  const goal = lesson.goals.find(goal => goal.path && ['file','dir','absent','mode','owner','link','archive'].includes(goal.type));
+  if (!goal) return;
+  let directory = resolve('..', resolve(goal.path));
+  while (directory !== '/' && shell.state.fs[directory]?.type !== 'dir') directory = resolve('..', directory);
+  browsePath = directory;
+}
+
+function updatePracticeActions() {
+  $('undo-button').disabled = !practiceHistory.past.length;
+  $('redo-button').disabled = !practiceHistory.future.length;
+}
+function practiceSnapshot() {
+  return { state: shell.state, transcript, hint, goalChecks, lastResult, browsePath, previewPath, changes: [...changes] };
+}
+function restorePractice(snapshot) {
+  shell = new Shell(snapshot.state, manuals);
+  if (mode === 'learn') shell.allowedCommand = lesson.command;
+  ({ transcript, hint, goalChecks, lastResult, browsePath, previewPath } = snapshot);
+  changes = new Set(snapshot.changes);
+}
+function practiceAction(action) {
+  if (action === 'reset') {
+    practiceHistory.record(practiceSnapshot());
+    shell = mode === 'learn' ? createLessonShell(Shell, seedState, lesson) : new Shell(seedState(), manuals);
+    if (mode === 'learn') shell.allowedCommand = lesson.command;
+    transcript = []; hint = 0; lastResult = { stdout: '', code: 1 }; changes = new Set();
+    goalChecks = mode === 'learn' ? evaluate(lesson.goals, shell.state) : [];
+    browsePath = shell.state.cwd; previewPath = undefined;
+    if (mode === 'learn') focusGoalDirectory();
+    announce('已重置');
+  } else {
+    const snapshot = practiceHistory[action](practiceSnapshot());
+    if (!snapshot) { announce(action === 'undo' ? '没有可撤销的操作' : '没有可重做的操作'); return; }
+    restorePractice(snapshot); announce(action === 'undo' ? '已撤销' : '已重做');
+  }
+  $('exit-code').textContent = ''; $('command-input').value = ''; draft = '';
+  renderTask(); renderTranscript(); renderWorld(); updatePracticeActions(); persist();
+}
+function executeCommand(command) {
+  if (['reset', 'undo', 'redo'].includes(command)) { practiceAction(command); return; }
+  practiceHistory.record(practiceSnapshot());
+  const path = shell.state.cwd; const before = JSON.stringify(shell.state.fs);
+  const oldFiles = JSON.parse(before); lastResult = shell.execute(command);
+  changes = new Set(Object.keys(shell.state.fs).filter(key => JSON.stringify(oldFiles[key]) !== JSON.stringify(shell.state.fs[key])));
+  if (path !== shell.state.cwd) browsePath = shell.state.cwd;
+  else if (mode === 'learn' && changes.size) focusGoalDirectory();
+  if (lastResult.clear) { transcript = []; $('transcript').replaceChildren(); }
+  const entry = { path, command, stdout: lastResult.stdout, stderr: lastResult.stderr };
+  transcript.push(entry); transcript = transcript.slice(-60); appendTranscript(entry);
+  $('exit-code').textContent = `退出码 ${lastResult.code}`;
+  if (mode === 'learn') {
+    const previous = goalChecks; goalChecks = evaluate(lesson.goals, shell.state, lastResult);
+    goalChecks.forEach((goal, index) => { if (goal.type === 'output' && previous[index]?.done) goal.done = true; });
+    if (goalChecks.every(goal => goal.done)) {
+      const first = !completed.has(currentId); completed.add(currentId); renderChapters();
+      announce(first ? `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。` : '目标再次达成，可以继续下一关。');
+    } else announce(lastResult.code ? '命令已结束，目标尚未全部达成。查看终端反馈或提示。' : '环境已更新，继续观察目标。');
+  }
+  renderTask(); updatePrompt(); renderWorld(); updatePracticeActions(); persist();
+}
+$('practice-area').addEventListener('click', event => {
+  if (event.target.closest('button, a, input, select, textarea')) return;
+  const selection = window.getSelection();
+  if (selection && !selection.isCollapsed && $('practice-area').contains(selection.anchorNode)) return;
+  $('command-input').focus({ preventScroll: true });
+});
+$('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; $('command-input').focus(); });
+$('command-input').addEventListener('keydown', event => {
+  if (event.isComposing) return;
+  if (event.ctrlKey && event.key.toLowerCase() === 'l') { event.preventDefault(); transcript = []; renderTranscript(); persist(); return; }
+  if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+    event.preventDefault(); if (historyCursor === shell.state.history.length) draft = event.target.value;
+    historyCursor = Math.max(0, Math.min(shell.state.history.length, historyCursor + (event.key === 'ArrowUp' ? -1 : 1)));
+    event.target.value = shell.state.history[historyCursor] ?? draft; return;
+  }
+  if (event.key === 'Tab' && !event.shiftKey) {
+    event.preventDefault(); const values = shell.complete(event.target.value);
+    if (values.length === 1) event.target.value = event.target.value.replace(/[^\s]*$/, values[0].replace(/\s/g, '\\ ') + (values[0].endsWith('/') ? '' : ' '));
+    else if (values.length) { appendTranscript({ message: values.join('   ') }); }
+    else announce('没有匹配的补全项。');
+  }
+});
+$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); renderTask(); persist(); });
+for (const action of ['reset', 'undo', 'redo']) {
+  $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
+}
+$('next-button').addEventListener('click', () => {
+  const next = lessons[lessons.indexOf(lesson) + 1] || lessons.find(item => !completed.has(item.id)) || lessons[0];
+  location.hash = 'task/' + next.id;
+});
+$('course-search').addEventListener('input', renderChapters);
+$('files-tab').addEventListener('click', () => setWorldTab(false));
+$('system-tab').addEventListener('click', () => setWorldTab(true));
+$('file-up').addEventListener('click', () => { browsePath = resolve('..', browsePath); previewPath = undefined; renderWorld(); });
+$('preview-close').addEventListener('click', () => { previewPath = undefined; renderWorld(); });
+
+for (const chapter of chapters.filter(item => item.id !== 'missions')) { const option = element('option', chapter.title); option.value = chapter.id; $('manual-category').append(option); }
+let selectedManual = 'pwd';
+function renderManual(selected) {
+  if (supportedNames.has(selected)) selectedManual = selected;
+  const query = $('manual-search').value.trim().toLowerCase(); const category = $('manual-category').value; const level = $('manual-level').value;
+  const items = manuals.filter(item => (!onlyFavorites || favorites.has(item.name)) && (!category || item.category === category) && (!level || item.level === level)
+    && `${item.name} ${item.summary} ${item.syntax} ${item.options.flat().join(' ')} ${item.note}`.toLowerCase().includes(query));
+  $('manual-list').replaceChildren();
+  $('manual-results').textContent = `${items.length} 个条目`;
+  const index = element('div',undefined,'manual-index'); const detail = element('article',undefined,'manual-detail');
+  const item = items.find(item=>item.name===selectedManual) || items[0];
+  for(const entry of items){
+    const button=element('button'); button.append(element('strong',entry.name),element('span',entry.summary));
+    button.setAttribute('aria-pressed',String(entry===item));
+    button.addEventListener('click',()=>renderManual(entry.name)); index.append(button);
+  }
+  $('manual-list').append(index,detail);
+  if(!item){detail.append(element('p','没有匹配的命令。换个关键词试试。','manual-empty'));return;}
+  selectedManual=item.name; detail.id='command-'+item.name;
+  const header=element('div',undefined,'manual-card-header');
+  const star=element('button',favorites.has(item.name)?'★':'☆','star-button'); star.setAttribute('aria-pressed',String(favorites.has(item.name)));star.setAttribute('aria-label','收藏 '+item.name);
+  star.addEventListener('click',()=>{if(favorites.has(item.name))favorites.delete(item.name);else favorites.add(item.name);persist();renderManual(item.name);});
+  header.append(element('h3',item.name),star);
+  detail.append(header,element('p',item.summary,'summary'),element('span',levels.find(level=>level.id===item.level).title+' · '+(item.practice?'可练习':'仅供复习'),'practice-badge'+(item.practice?'':' reference-only')),element('pre',item.syntax));
+  if(item.options.length){const list=element('dl');for(const [flag,meaning]of item.options)list.append(element('dt',flag),element('dd',meaning));detail.append(list);}
+  detail.append(element('p',item.note,'note'),element('span','示例','example-label'),element('pre',item.example));
+  const links=element('div',undefined,'manual-links');
+  const relatedLesson=lessons.find(task=>task.command===item.name);
+  if(relatedLesson){const link=element('a','去练这一关 →');link.href='#task/'+relatedLesson.id;links.append(link);}
+  if(item.practice){const tryButton=element('button','放入自由练习');tryButton.addEventListener('click',()=>{navigate('sandbox');$('command-input').value=item.example;$('command-input').focus();});links.append(tryButton);}
+  const staticManual=element('a','独立手册页 ↗');staticManual.href='./commands/'+encodeURIComponent(item.name)+'/';links.append(staticManual);
+  const source=element('a','完整文档 ↗');source.href=item.source;source.target='_blank';source.rel='noopener noreferrer';links.append(source);detail.append(links);
+}
+$('manual-search').addEventListener('input', () => renderManual());
+$('manual-category').addEventListener('change', () => renderManual());
+$('manual-level').addEventListener('change', () => renderManual());
+$('favorites-button').addEventListener('click', () => { onlyFavorites = !onlyFavorites; $('favorites-button').setAttribute('aria-pressed', String(onlyFavorites)); renderManual(); });
+$('back-to-task').addEventListener('click', () => { location.hash = 'task/' + currentId; });
+
+function navigate(hash, initial = false) {
+  if ($('levels-dialog').open) $('levels-dialog').close();
+  if ($('restart-dialog').open) $('restart-dialog').close();
+  if ($('help-dialog').open) $('help-dialog').close();
+  const [view, id] = hash.replace(/^#/, '').split('/'); const previousMode = mode;
+  if (previousMode === 'sandbox' && shell) sandboxSession = { state: shell.state, transcript, undoRedo: { past: practiceHistory.past, future: practiceHistory.future } };
+  if (previousMode === 'learn' && shell) persist();
+  mode = view === 'manual' ? 'manual' : view === 'sandbox' ? 'sandbox' : 'learn';
+  $('practice-actions').hidden = mode === 'manual';
+  $('levels-button').hidden = mode !== 'learn';
+  $('workspace').classList.toggle('manual-mode', mode === 'manual');
+  $('practice-area').hidden = mode === 'manual'; $('world-area').hidden = mode === 'manual'; $('manual-area').hidden = mode !== 'manual';
+  for (const link of document.querySelectorAll('[data-mode]')) { if (link.dataset.mode === mode) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); }
+  if (mode === 'learn') startTask(ids.has(id) ? id : currentId, initial || id === currentId);
+  else if (mode === 'sandbox') {
+    practiceHistory.clear(); updatePracticeActions();
+    shell = sandboxSession ? new Shell(sandboxSession.state, manuals) : new Shell(seedState(), manuals);
+    transcript = sandboxSession?.transcript || []; browsePath = shell.state.cwd; previewPath = undefined; changes = new Set();
+    if (sandboxSession && validHistory(sandboxSession.undoRedo)) { practiceHistory.past = structuredClone(sandboxSession.undoRedo.past); practiceHistory.future = structuredClone(sandboxSession.undoRedo.future); }
+    if (!sandboxSession && validSnapshot(saved.sandbox?.snapshot) && validHistory(saved.sandbox.undoRedo)) {
+      restorePractice(structuredClone(saved.sandbox.snapshot)); practiceHistory.past = structuredClone(saved.sandbox.undoRedo.past); practiceHistory.future = structuredClone(saved.sandbox.undoRedo.future);
+    }
+    updatePracticeActions();
+    $('command-input').value = ''; setWorldTab(false); renderTask(); renderChapters(); renderTranscript(); renderWorld();
+  } else {
+    if (supportedNames.has(id)) { $('manual-search').value = ''; $('manual-category').value = ''; $('manual-level').value = ''; onlyFavorites = false; $('favorites-button').setAttribute('aria-pressed', 'false'); }
+    renderManual(id); renderChapters();
+  }
+  $('exit-code').textContent = '';
+  const expected = mode === 'learn' ? 'task/' + currentId : mode === 'sandbox' ? 'sandbox' : 'manual' + (supportedNames.has(id) ? '/' + id : '');
+  if (location.hash !== '#' + expected) history.replaceState(null, '', '#' + expected);
+}
+window.addEventListener('hashchange', () => navigate(location.hash));
+
+function exportBackup() {
+  persist();
+  const data = { ...saved, version: 2, format: 'learn-linux-backup', mode, exportedAt: new Date().toISOString() };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
+  const link = element('a'); link.href = url; link.download = 'learn-linux-backup.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  $('backup-status').textContent = '备份已导出'; announce('练习备份已导出。');
+}
+async function importBackup(event) {
+  const file = event.target.files[0]; if (!file) return;
+  try {
+    if (file.size > 30000000) throw new Error('文件超过 30 MB');
+    const data = validateBackup(JSON.parse(await file.text()), ids, supportedNames);
+    if (data.version === 1) {
+      for (const id of data.completed) completed.add(id);
+      for (const name of data.favorites) favorites.add(name);
+      persist(); renderChapters(); if (mode === 'manual') renderManual();
+    } else {
+      completed.clear(); for (const id of data.completed) completed.add(id);
+      favorites.clear(); for (const name of data.favorites) favorites.add(name);
+      // Retire the current workspace before routing so navigate cannot overwrite the imported data.
+      shell = undefined; sandboxSession = undefined; saved = data; currentId = data.current;
+      lesson = lessons.find(item => item.id === currentId); selectedLevel = lesson.level;
+      navigate(data.mode === 'sandbox' ? 'sandbox' : data.mode === 'manual' ? 'manual' : 'task/' + currentId, true);
+      persist(); renderChapters();
+    }
+    $('backup-status').textContent = data.version === 1 ? '旧版进度已合并' : '练习备份已恢复'; announce($('backup-status').textContent);
+  } catch (error) { $('backup-status').textContent = '导入失败：' + error.message; announce($('backup-status').textContent); }
+  event.target.value = '';
+}
+for (const id of ['export-progress', 'export-backup']) $(id).addEventListener('click', exportBackup);
+for (const id of ['import-progress', 'import-backup']) $(id).addEventListener('change', importBackup);
+$('restart-practice').addEventListener('click', () => { $('restart-status').textContent = ''; $('restart-dialog').showModal(); });
+for (const id of ['restart-cancel', 'restart-close']) $(id).addEventListener('click', () => $('restart-dialog').close());
+$('restart-export').addEventListener('click', () => { exportBackup(); $('restart-status').textContent = '备份已导出'; });
+$('restart-confirm').addEventListener('click', () => {
+  try { localStorage.removeItem(KEY); }
+  catch { $('restart-status').textContent = '无法清除本地记录，请检查浏览器存储权限。'; return; }
+  completed.clear(); favorites.clear(); practiceHistory.clear(); saved = {}; sandboxSession = undefined; shell = undefined;
+  currentId = lessons[0].id; lesson = lessons[0]; selectedLevel = lesson.level;
+  transcript = []; hint = 0; draft = ''; historyCursor = 0; previewPath = undefined; changes = new Set(); onlyFavorites = false;
+  expandedDirectories.clear(); for (const path of ['/', '/home', HOME]) expandedDirectories.add(path);
+  $('course-search').value = ''; $('manual-search').value = ''; $('manual-category').value = ''; $('manual-level').value = '';
+  $('favorites-button').setAttribute('aria-pressed', 'false'); $('backup-status').textContent = '';
+  navigate('task/' + currentId); announce('练习记录已清空，从第一关重新开始。');
+  $('command-input').focus({ preventScroll: true });
+});
+$('help-button').addEventListener('click', () => $('help-dialog').showModal());
+$('help-close').addEventListener('click', () => $('help-dialog').close());
+$('help-dialog').addEventListener('click', event => {
+  if (event.target !== $('help-dialog')) return;
+  const bounds = $('help-dialog').getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) $('help-dialog').close();
+});
+$('levels-button').addEventListener('click', () => { selectedLevel = lesson.level; renderChapters(); $('levels-dialog').showModal(); });
+$('levels-close').addEventListener('click', () => $('levels-dialog').close());
+$('levels-dialog').addEventListener('click', event => { if (event.target === $('levels-dialog')) { const bounds = $('levels-dialog').getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) $('levels-dialog').close(); } });
+
+const terminalResize = $('terminal-resize');
+const workspace = $('workspace');
+let terminalDrag;
+function terminalBounds() {
+  const style = getComputedStyle(workspace);
+  const available = workspace.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  const max = available / 2;
+  return { available, min: Math.min(240, max), max };
+}
+function updateTerminalResize() {
+  if (mode === 'manual' || window.matchMedia('(max-width:780px)').matches) return;
+  const { available, min, max } = terminalBounds();
+  const width = $('practice-area').getBoundingClientRect().width;
+  if (width > max) workspace.style.setProperty('--terminal-width', max + 'px');
+  terminalResize.setAttribute('aria-valuemin', String(Math.round(min / available * 100)));
+  terminalResize.setAttribute('aria-valuenow', String(Math.min(50, Math.round(width / available * 100))));
+  terminalResize.setAttribute('aria-valuetext', `${Math.round(Math.min(width, max))} 像素`);
+}
+function resizeTerminal(width) {
+  const { min, max } = terminalBounds();
+  workspace.style.setProperty('--terminal-width', Math.max(min, Math.min(max, width)) + 'px');
+  updateTerminalResize();
+}
+terminalResize.addEventListener('pointerdown', event => {
+  if (event.button !== 0) return;
+  event.preventDefault();
+  terminalResize.focus();
+  terminalDrag = { pointerId: event.pointerId, x: event.clientX, width: $('practice-area').getBoundingClientRect().width };
+  terminalResize.setPointerCapture(event.pointerId);
+  document.body.classList.add('terminal-resizing');
+});
+terminalResize.addEventListener('pointermove', event => {
+  if (terminalDrag?.pointerId === event.pointerId) resizeTerminal(terminalDrag.width + terminalDrag.x - event.clientX);
+});
+const endTerminalDrag = () => { terminalDrag = undefined; document.body.classList.remove('terminal-resizing'); };
+terminalResize.addEventListener('pointerup', endTerminalDrag);
+terminalResize.addEventListener('pointercancel', endTerminalDrag);
+terminalResize.addEventListener('lostpointercapture', endTerminalDrag);
+terminalResize.addEventListener('keydown', event => {
+  const { min, max } = terminalBounds();
+  const width = $('practice-area').getBoundingClientRect().width;
+  const target = { ArrowLeft: width + 24, ArrowRight: width - 24, Home: min, End: max }[event.key];
+  if (target === undefined) return;
+  event.preventDefault(); resizeTerminal(target);
+});
+terminalResize.addEventListener('dblclick', () => { workspace.style.removeProperty('--terminal-width'); updateTerminalResize(); });
+new ResizeObserver(updateTerminalResize).observe(workspace);
+function wireFileResize(id, axis, measure, bounds, apply, reset, direction = 1) {
+  const handle = $(id); let drag;
+  const className = axis === 'x' ? 'directory-resizing' : 'files-resizing';
+  const update = () => {
+    if ($('files-view').hidden || $('world-area').hidden) return;
+    const { min, max } = bounds();
+    const size = Math.max(min, Math.min(max, measure()));
+    handle.setAttribute('aria-valuemin', String(Math.round(min)));
+    handle.setAttribute('aria-valuemax', String(Math.round(max)));
+    handle.setAttribute('aria-valuenow', String(Math.round(size)));
+    handle.setAttribute('aria-valuetext', `${Math.round(size)} 像素`);
+  };
+  const resize = value => { const { min, max } = bounds(); apply(Math.max(min, Math.min(max, value))); update(); };
+  handle.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    event.preventDefault(); handle.focus({ preventScroll: true });
+    drag = { id: event.pointerId, start: axis === 'x' ? event.clientX : event.clientY, size: measure() };
+    handle.setPointerCapture(event.pointerId); handle.classList.add('dragging'); document.body.classList.add(className);
+  });
+  handle.addEventListener('pointermove', event => {
+    if (drag?.id === event.pointerId) resize(drag.size + direction * ((axis === 'x' ? event.clientX : event.clientY) - drag.start));
+  });
+  const end = () => { drag = undefined; handle.classList.remove('dragging'); document.body.classList.remove(className); };
+  for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) handle.addEventListener(event, end);
+  handle.addEventListener('keydown', event => {
+    const { min, max } = bounds(); const size = measure();
+    const value = { Home: min, End: max, [axis === 'x' ? 'ArrowLeft' : 'ArrowUp']: size - 24, [axis === 'x' ? 'ArrowRight' : 'ArrowDown']: size + 24 }[event.key];
+    if (value !== undefined) { event.preventDefault(); resize(value); }
+  });
+  handle.addEventListener('dblclick', () => { reset(); update(); });
+  new ResizeObserver(update).observe($('files-view'));
+}
+wireFileResize('directory-resize', 'x', () => $('file-tree').getBoundingClientRect().width,
+  () => ({ min: 90, max: Math.max(90, $('files-view').clientWidth / 2) }),
+  size => $('files-view').style.setProperty('--directory-width', size + 'px'),
+  () => $('files-view').style.removeProperty('--directory-width'));
+wireFileResize('files-resize', 'y', () => $('files-view').getBoundingClientRect().height,
+  () => ({ min: 220, max: Math.max(260, window.innerHeight - 180) }),
+  size => { $('files-view').style.setProperty('--files-height', size + 'px'); $('files-view').classList.add('user-sized'); },
+  () => { $('files-view').style.removeProperty('--files-height'); $('files-view').classList.remove('user-sized'); });
+wireFileResize('preview-resize', 'y', () => $('file-preview').getBoundingClientRect().height,
+  () => ({ min: 85, max: Math.max(85, Math.min(600, $('file-preview').parentElement.clientHeight - 55)) }),
+  size => { $('file-preview').style.setProperty('--preview-height', size + 'px'); $('file-preview').classList.add('user-sized-preview'); },
+  () => { $('file-preview').style.removeProperty('--preview-height'); $('file-preview').classList.remove('user-sized-preview'); }, -1);
+navigate(location.hash || '#task/' + currentId, true);
+updateTerminalResize();
+
+const WELCOME_KEY = 'tommy-cheese-linux-lab-welcome-v1';
+$('welcome-start').addEventListener('click', () => {
+  $('welcome-dialog').close();
+  if (mode !== 'learn') navigate('task/' + currentId);
+  $('command-input').focus();
+});
+$('welcome-dialog').addEventListener('close', () => {
+  try { localStorage.setItem(WELCOME_KEY, 'seen'); } catch { /* Still allow practice when storage is unavailable. */ }
+});
+let showWelcome = true;
+try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
+if (showWelcome) $('welcome-dialog').showModal();

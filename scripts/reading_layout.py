@@ -113,13 +113,17 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         for item in list(menu):
             if item.xpath('.//a[contains(@class,"nav-link")]'):
                 menu.remove(item)
-        start = 1 if len(menu) and menu[0].xpath('.//input') else 0
+        mobile_search = menu.xpath('./li[.//*[@data-search-open]]')
+        if mobile_search:
+            menu.remove(mobile_search[0])
+            menu.insert(0, mobile_search[0])
+        start = 1 if mobile_search else 0
         for offset, (key, href) in enumerate([
-            ('nav.news', '/news/'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
+            ('nav.linuxLab', '/linux-lab/'), ('nav.news', '/news/'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
             ('nav.tags', '/tags/'), ('nav.about', '/#about'), ('nav.gallery', '/gallery/'),
         ]):
-            item = node('li', class_='nav-item navbar-text')
-            anchor = label('a', key, href=href, class_='nav-link')
+            item = node('li', class_='nav-item navbar-text' + (' linux-lab-nav-item' if key == 'nav.linuxLab' else ''))
+            anchor = label('a', key, href=href, class_='nav-link linux-lab-nav' if key == 'nav.linuxLab' else 'nav-link')
             if path == href:
                 anchor.set('aria-current', 'page')
             item.append(anchor)

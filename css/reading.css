@@ -181,3 +181,41 @@ a:focus-visible, summary:focus-visible {
   .topic-links a { padding: .85rem 1rem; }
   #single .featured-image img { max-height: 180px; }
 }
+/* A quiet terracotta accent for the shared command course. */
+@media (min-width: 1200px) {
+  #profileHeader .navbar-nav { width: 100%; }
+  #profileHeader .linux-lab-nav-item { margin-right: auto; }
+}
+#profileHeader .navbar-nav a.nav-link.linux-lab-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #a04432 !important;
+  background: #f4e7e2;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+#profileHeader .navbar-nav a.linux-lab-nav::before {
+  content: ">_";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .8em;
+  font-weight: 700;
+  line-height: 1;
+}
+body.dark #profileHeader .navbar-nav a.linux-lab-nav {
+  color: #efb4a2 !important;
+  background: #3b2c29;
+}
+#profileHeader .navbar-nav a.nav-link.linux-lab-nav:is(:hover, :focus-visible) {
+  color: #fff !important;
+  background: #ad4c38 !important;
+}
+#profileHeader .navbar-nav a.linux-lab-nav:focus-visible {
+  outline-color: #ad4c38 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  #profileHeader .navbar-nav a.linux-lab-nav { transition: none; }
+}

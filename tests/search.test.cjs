@@ -174,6 +174,13 @@ test('navigation and posts have distinct accessible groups and type labels', asy
   assert.equal(ui.options()[0].clicked, true);
 });
 
+test('Linux lab search goes to the shared Chinese route in every language', async () => {
+  for (const locale of ['zh-CN', 'en', 'ja', 'ru', 'zh-TW']) {
+    const ui = searchUI({ locale }); await ui.open(); ui.input.value = 'Linux'; await ui.input.emit('input');
+    assert.equal(ui.options()[0].href, '/linux-lab/');
+  }
+});
+
 test('each language uses its translated page name and keeps its language prefix', async () => {
   for (const locale of Object.keys(dictionaries)) {
     const ui = searchUI({ locale, fetchIndex: async () => [] });
