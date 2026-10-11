@@ -52,3 +52,7 @@ node --test tests/linux-lab.test.mjs tests/linux-history.test.mjs tests/linux-ex
 独立部署时可设置 `LEARN_LINUX_URL=https://example.com/` 后重新生成，更新所有 canonical 与 Open Graph 地址。图标、CSS、导航均使用相对地址。`robots.txt` 必须位于部署站点根目录，其 Sitemap 地址也应改为实际部署地址。
 
 发布后在 Google Search Console 验证实际公开 URL，提交项目 sitemap，并通过 URL 检查核对抓取与收录状态。其他搜索引擎可在各自站长平台提交；仅生成静态页不能保证收录。
+
+## 访问统计
+
+练习入口与全部静态页共用 `analytics.js`，接入 GA4 测量 ID `G-RPQTR1FJGV`。生成静态页时自动保留统计入口；localhost、回环地址和 file 协议不加载统计。数据与博客进入同一 GA4 资源，可按 `/linux-lab/` 页面路径筛选本项目。这里只接入访问统计，不上报用户输入的命令、练习文件或备份内容。
