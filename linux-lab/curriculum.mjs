@@ -1,3 +1,4 @@
+import { clarifyTask } from './task-copy.mjs';
 import { strengthenLessons } from './difficulty.mjs';
 import { extraEntries, levels, commandLevel } from './catalogue.mjs';
 import { addExtraLessons } from './extra-lessons.mjs';
@@ -261,7 +262,7 @@ single('missions','developer-sort','名单挑战 ③ 整理顺序','names-unsort
 single('missions','delivery-start','交付挑战 ② 启动服务','配置已经准备好。用 systemctl 启动教学 nginx。','start 负责当前运行状态。','systemctl',[G.service('nginx 正在运行','active',true)],'systemctl start nginx','start 启动服务。');
 single('missions','delivery-enable','交付挑战 ③ 开机启动','nginx 已经运行。用 systemctl 设置它随机器启动。','enable 管理开机启动，不代替 start。','systemctl',[G.service('nginx 开机启动','enabled',true)],'systemctl enable nginx','使用 enable 动作。',{services:{nginx:{active:true,enabled:false}}});
 single('missions','delivery-archive','交付挑战 ④ 备份配置','config.json 已经下载。只用 tar 制作 config.tar.gz。','最后一个小关只负责配置归档。','tar',[{type:'archive',label:'归档包含 config.json',path:'config.tar.gz',entries:['config.json']}],'tar -czf config.tar.gz config.json','c 创建，z 压缩标记，f 后写归档名。',{files:{'config.json':'{"port":8080}\n'}});
-single('navigation','lookup-copy','不知道参数？先问手册','查阅 cp 的手册，在输出里找到递归复制参数。','man 可以随时使用。这一关专门练习查询用法。','man',[G.includes('手册包含 -r / -R','-r / -R','man')],'man cp','给 man 一个要查询的命令名。');
+single('navigation','lookup-copy','查阅复制目录的参数','要复制整个项目目录，但忘记了参数。请在终端查询 cp 手册，找到目录复制选项；输出对应说明即可通关。','man 命令名 用于查询用法。本关练习查手册。','man',[G.includes('在终端查看 cp 手册中的“递归复制目录”说明','递归复制目录','man')],'man cp','把 cp 作为 man 的查询对象。');
 single('navigation','available-tools','你的工具箱里有什么','用 help 查看沙盒支持的命令列表。','教学环境的 help 展示工具箱，真实 Bash 的 help 主要查询内建命令。','help',[G.includes('输出可用命令列表','可用命令：','help')],'help','直接输入 help 即可。');
 single('files','identify-file','这是什么文件？','查看 deploy.sh 的文件类型。','file 可以辨别类型；教学环境按虚拟文件模型判断。','file',[G.includes('输出 UTF-8 文本类型','UTF-8 text','file')],'file deploy.sh','命令后跟需要识别的文件。');
 single('files','parent-path','只取路径中的目录','从 /var/log/app.log 中取得父目录路径。','dirname 是 basename 的搭档，不需要路径真实存在。','dirname',[G.output('只输出 /var/log','/var/log','dirname')],'dirname /var/log/app.log','这一关不进入目录，只处理路径文本。');
@@ -290,6 +291,7 @@ for (const lesson of lessons) {
   if (['hidden-config','copy-project','move-download','archive-preview','restore-archive','preserve-original','developer-names','save-errors','remove-variable','home-value','listen-port','dns-lookup','fetch-config','enable-service'].includes(lesson.id)) lesson.level = 'advanced';
 }
 strengthenLessons(lessons);
+lessons.forEach(clarifyTask);
 // Group steps by level and chapter, keeping stable IDs for saved progress.
 lessons.sort((a,b) => levels.findIndex(item => item.id === a.level) - levels.findIndex(item => item.id === b.level) || chapters.findIndex(item => item.id === a.chapter) - chapters.findIndex(item => item.id === b.chapter));
 export { lessons };

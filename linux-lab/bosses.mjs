@@ -13,7 +13,7 @@ export function createBossLesson(boss, id) {
   let title, context;
   switch (boss.chapter) {
     case 'navigation':
-      title='迷路的交接包'; context='先查看目录和交接说明。所有操作以路径为准，完成后停留在交付目录。';
+      title='迷路的交接包'; context='将 projects/交接 包/draft/notes.txt 复制到同项目的 release 目录，保留原件；完成后停留在 release。';
       files['projects/交接 包/.route']='目标：/home/learner/projects/交接 包/release\n';
       files['projects/交接 包/draft/notes.txt']='approved\n'; dirs.push('projects/交接 包/release');
       file('projects/交接 包/release/notes.txt','approved\n'); keep('projects/交接 包/draft/notes.txt','approved\n');
@@ -23,7 +23,7 @@ export function createBossLesson(boss, id) {
       if(master) { goals.push({type:'link',path:'current-release',target:'projects/交接 包/release',label:'current-release 是指向交付目录的链接'}); solution.push('ln -s "projects/交接 包/release" current-release'); file('projects/交接 包/release/manifest.txt','approved\n');solution.push('cat "projects/交接 包/draft/notes.txt" > "projects/交接 包/release/manifest.txt"'); }
       solution.push('cd "projects/交接 包/release"');break;
     case 'files':
-      title='清理而不误删';context='归档两份正式材料，清理暂存区。深层备份和名字相似的正式文件必须保留。';
+      title='清理而不误删';context='将 staging/spec.txt 和 staging/meeting notes.txt 复制到 release/docs；删除 staging 下两层以内的普通 .tmp 文件，保留原件、深层文件与相似后缀文件。';
       Object.assign(files,{'staging/spec.txt':'spec v2\n','staging/meeting notes.txt':'approved\n','staging/a.tmp':'discard\n','staging/sub/b.tmp':'discard\n','staging/sub/deep/c.tmp':'keep\n','staging/main.tmp.txt':'keep\n'});
       file('release/docs/spec.txt','spec v2\n');file('release/docs/meeting notes.txt','approved\n');
       absent('staging/a.tmp');absent('staging/sub/b.tmp');keep('staging/sub/deep/c.tmp','keep\n');keep('staging/main.tmp.txt','keep\n');keep('staging/spec.txt','spec v2\n');
@@ -32,7 +32,7 @@ export function createBossLesson(boss, id) {
       if(master) { file('release/docs/spec.txt','spec v3\n');goals.splice(0,1);solution.push('sed -i "s/v2/v3/" release/docs/spec.txt');mode('release/previous/spec.txt','444');solution.push('chmod 444 release/previous/spec.txt'); }
       break;
     case 'text':
-      title='噪声中的错误报告';context='日志混有大小写不同的状态和重复记录。只提交 ERROR 记录中的组件名，按字母排序、去重；原日志不得改动。';
+      title='噪声中的错误报告';context='从 logs/incident.csv 筛选第 1 列为 ERROR 的记录（忽略大小写），将第 2 列组件名按字母排序、去重，保存到 reports/components.txt；原日志不变。';
       files['logs/incident.csv']='INFO,web,ready\nERROR,db,timeout\nerror,api,timeout\nWARN,db,slow\nERROR,db,timeout\nERROR,web,unavailable\n';
       file('reports/components.txt','api\ndb\nweb\n');keep('logs/incident.csv',files['logs/incident.csv']);
       solution.push('mkdir -p reports','grep -i "^ERROR," logs/incident.csv | cut -d , -f 2 | sort -u > reports/components.txt');
@@ -40,7 +40,7 @@ export function createBossLesson(boss, id) {
       if(master) { files['data/oncall.txt']='api\ncache\nweb\n';file('reports/oncall-errors.txt','api\nweb\n');keep('data/oncall.txt',files['data/oncall.txt']);solution.push('comm -12 reports/components.txt data/oncall.txt > reports/oncall-errors.txt'); }
       break;
     case 'shell':
-      title='可重复的报告流程';context='生成降序的唯一数量报告；同时保留处理输入。交接文件已有标题，追加结果，不能覆盖标题。';
+      title='可重复的报告流程';context='将 data/quantities.txt 按数值降序排列、去重，保存到 reports/quantities.txt，并追加到 handoff.txt；保留交接标题和原始数据。';
       files['data/quantities.txt']='12\n2\n30\n12\n7\n';files['handoff.txt']='release quantities\n';
       file('reports/quantities.txt','30\n12\n7\n2\n');file('handoff.txt','release quantities\n30\n12\n7\n2\n');keep('data/quantities.txt',files['data/quantities.txt']);
       solution.push('mkdir -p reports','sort -nru data/quantities.txt | tee reports/quantities.txt >> handoff.txt');
@@ -48,7 +48,7 @@ export function createBossLesson(boss, id) {
       if(master) { files['data/targets.txt']='reports/audit.txt reports/checks.txt\n';file('reports/audit.txt','');file('reports/checks.txt','');solution.push('xargs touch < data/targets.txt');file('reports/status.txt','ready\n');solution.push('grep 30 reports/quantities.txt > /tmp/quantity-check && printf "ready\\n" > reports/status.txt'); }
       break;
     case 'permissions':
-      title='发布权限审计';context='脚本需可执行，密钥只允许所有者读取和写入。不能修改正式脚本内容。';
+      title='发布权限审计';context='将 release/bin/deploy.sh 权限设为 755、release/.secret 设为 600，保留两份文件的原内容。';
       files['release/bin/deploy.sh']='#!/bin/sh\necho release\n';files['release/.secret']='TOKEN=private\n';
       mode('release/bin/deploy.sh','755');mode('release/.secret','600');keep('release/bin/deploy.sh',files['release/bin/deploy.sh']);keep('release/.secret',files['release/.secret']);
       solution.push('chmod 755 release/bin/deploy.sh','chmod 600 release/.secret');
@@ -56,7 +56,7 @@ export function createBossLesson(boss, id) {
       if(master) { files['shared/docs/note.txt']='public\n';setup.push('chmod 777 shared shared/docs','chmod 666 shared/docs/note.txt');mode('shared','775');mode('shared/docs','775');mode('shared/docs/note.txt','664');keep('shared/docs/note.txt','public\n');solution.push('chmod -R o-w shared'); }
       break;
     case 'archives':
-      title='安全交付与恢复';context='交付包只包含配置和说明，包内路径不得带 bundle 前缀。密钥和临时文件不能进入归档；将交付包恢复到独立目录并验证内容。';
+      title='安全交付与恢复';context='将 bundle/config/app.conf 和 bundle/README.txt 打包为 delivery.tar.gz，包内路径不带 bundle/ 前缀；仅包含这两份文件，再解包到 restored。';
       files['bundle/config/app.conf']='PORT=8080\nDEBUG=false\n';files['bundle/README.txt']='release v2\n';files['bundle/.secret']='private\n';files['bundle/cache.tmp']='discard\n';
       archive('delivery.tar.gz',{'config/app.conf':files['bundle/config/app.conf'],'README.txt':files['bundle/README.txt']});
       file('restored/config/app.conf',files['bundle/config/app.conf']);file('restored/README.txt',files['bundle/README.txt']);keep('bundle/.secret','private\n');
@@ -65,28 +65,28 @@ export function createBossLesson(boss, id) {
       if(master) { archive('patched.tar.gz',{'config/app.conf':'PORT=9090\nDEBUG=false\n','README.txt':'release v2\n'});file('verified/config/app.conf','PORT=9090\nDEBUG=false\n');solution.push('tar -czf patched.tar.gz -C restored config/app.conf README.txt','mkdir verified','tar -xf patched.tar.gz -C verified'); }
       break;
     case 'system':
-      title='故障现场留证';context='先保存系统与进程快照，再结束 worker；systemd 和 bash 必须继续运行。报告保存在 reports 中。';
+      title='故障现场留证';context='先将进程列表保存到 reports/processes.txt、磁盘空间保存到 reports/disk.txt，再结束 worker；保留 systemd 和 bash 进程。';
       report('reports/processes.txt','314 worker');report('reports/disk.txt','16G');goals.push({type:'processAbsent',name:'worker',label:'worker 已结束'}, {type:'processPresent',name:'systemd',label:'systemd 仍运行'}, {type:'processPresent',name:'bash',label:'bash 仍运行'});
       solution.push('mkdir reports','ps aux > reports/processes.txt','df -h > reports/disk.txt','pkill worker');
       if(advanced) { report('reports/memory.txt','Mem:');file('reports/kernel.txt','6.8.0\n');solution.push('free -m > reports/memory.txt','uname -r > reports/kernel.txt'); }
       if(master) { report('reports/mounts.txt','/dev/sda1');report('reports/pressure.txt','si so bi bo');solution.push('findmnt > reports/mounts.txt','vmstat > reports/pressure.txt');mode('reports','700');solution.push('chmod 700 reports'); }
       break;
     case 'network':
-      title='网络排查证据链';context='保存网卡、默认路由和域名查询的证据，下载健康响应。各项结果必须保存在独立报告中。';
+      title='网络排查证据链';context='将网卡地址、默认路由、example.com 的 DNS 查询分别保存到 reports/address.txt、route.txt、dns.txt；下载 https://example.com/health 到 reports/health.txt。';
       report('reports/address.txt','192.0.2.10/24');report('reports/route.txt','default via 192.0.2.1');report('reports/dns.txt','192.0.2.20');file('reports/health.txt','ok\n');
       solution.push('mkdir reports','ip addr > reports/address.txt','ip route > reports/route.txt','dig example.com > reports/dns.txt','curl -o reports/health.txt https://example.com/health');
       if(advanced) { report('reports/headers.txt','200 OK');file('reports/config.json','{"port":8080}\n');solution.push('curl -I https://example.com/health > reports/headers.txt','curl -sSfL -o reports/config.json https://example.com/config.json'); }
       if(master) { file('reports/ports.txt','8080\n');solution.push('ss -tlnp | grep worker | awk \'{print $3}\' | cut -d : -f 2 > reports/ports.txt');archive('network-evidence.tar',{'health.txt':'ok\n','config.json':'{"port":8080}\n','ports.txt':'8080\n'});solution.push('tar -cf network-evidence.tar -C reports health.txt config.json ports.txt'); }
       break;
     case 'services':
-      title='从停机到可交付';context='nginx 停机且未启用开机启动。恢复服务，设置开机启动，并将服务日志中的错误记录保存为排查报告。';
+      title='从停机到可交付';context='启动 nginx 并设置开机启动；提取 nginx 服务日志中的 ERROR 行，保存到 reports/errors.txt。';
       service('active',true);service('enabled',true);file('reports/errors.txt','ERROR upstream timeout\n');
       solution.push('systemctl start nginx','systemctl enable nginx','mkdir reports','journalctl -u nginx | grep ERROR > reports/errors.txt');
       if(advanced) { goals.push({type:'package',name:'nginx',label:'nginx 软件包已安装'});report('reports/listener.txt','0.0.0.0:80 nginx');solution.push('apt install nginx','ss -tlnp | grep nginx > reports/listener.txt'); }
       if(master) { file('/etc/app.conf','PORT=8080\nDEBUG=false\n');file('reports/config.before','PORT=3000\nDEBUG=true\n');solution.push('cp /etc/app.conf reports/config.before','sed -i "s/3000/8080/" /etc/app.conf','sed -i "s/DEBUG=true/DEBUG=false/" /etc/app.conf','systemctl restart nginx');archive('service-evidence.tar',{'config.before':'PORT=3000\nDEBUG=true\n','errors.txt':'ERROR upstream timeout\n'});solution.push('tar -cf service-evidence.tar -C reports config.before errors.txt'); }
       break;
     case 'missions':
-      title='发布前最后一公里';context='从原始名单生成去重排序后的 developer 姓名清单，准备交付目录、脚本和配置。源数据与私密文件不能被改动。';
+      title='发布前最后一公里';context='从 data/team.csv 提取角色为 developer 的姓名，排序、去重后保存到 release/developers.txt；复制 deploy.sh 到 release 并设为 755。保留源数据和密钥。';
       files['data/team.csv']='name,role\ncarol,developer\nbob,admin\nalice,developer\ncarol,developer\n';files['release-secret.txt']='TOKEN=private\n';
       file('release/developers.txt','alice\ncarol\n');file('release/deploy.sh','#!/bin/sh\necho deploy\n');mode('release/deploy.sh','755');keep('data/team.csv',files['data/team.csv']);keep('release-secret.txt',files['release-secret.txt']);
       solution.push('mkdir release','grep ",developer$" data/team.csv | cut -d , -f 1 | sort -u > release/developers.txt','cp deploy.sh release/','chmod 755 release/deploy.sh');
@@ -95,6 +95,20 @@ export function createBossLesson(boss, id) {
       break;
     default: throw new Error('未知 Boss 专题：' + boss.chapter);
   }
+  const extensions = {
+    navigation:['另将 release 的完整路径写入 release/route.txt。','创建 current-release 目录链接，并将笔记内容保存到 release/manifest.txt。'],
+    files:['删除 staging/obsolete.txt，并保留 spec.txt 的副本于 release/previous。','只将 release/docs/spec.txt 更新为 spec v3，将 previous 中的副本设为 444。'],
+    text:['将 ERROR 记录的总行数保存到 reports/error-count.txt（重复行也计数）。','将错误组件与 data/oncall.txt 的交集保存到 reports/oncall-errors.txt。'],
+    shell:['设置 RELEASE=cheese-2026，并将其值保存到 reports/release.txt。','按 data/targets.txt 创建空文件；报告就绪后，将一行 ready 写入 reports/status.txt。'],
+    permissions:['将密钥所有者设为 root，设置默认掩码 077，再创建权限为 600 的空文件 release/audit.txt。','从 shared 整棵目录移除其他用户写权限，保留其余权限位。'],
+    archives:['仅将 restored 中配置的 PORT 改为 9090；保留 bundle 中原配置和原始交付包。','将修改后的配置和说明打包为 patched.tar.gz，再恢复到 verified 验证。'],
+    system:['将内存信息保存到 reports/memory.txt、内核版本保存到 reports/kernel.txt。','保存挂载信息到 reports/mounts.txt、虚拟内存统计到 reports/pressure.txt，并将 reports 权限设为 700。'],
+    network:['保存健康接口响应头到 reports/headers.txt，下载 https://example.com/config.json 到 reports/config.json。','仅将 worker 的监听端口号写入 reports/ports.txt；将 health.txt、config.json、ports.txt 打包为 network-evidence.tar，包内不带 reports/。'],
+    services:['安装 nginx 软件包，将 nginx 监听信息保存到 reports/listener.txt。','修改 /etc/app.conf 前备份到 reports/config.before，再设 PORT=8080、DEBUG=false；将原配置和错误报告打包为 service-evidence.tar，包内不带 reports/。'],
+    missions:['下载 https://example.com/config.json 到 release/config.json，并启动 nginx、启用开机启动。','仅将交付名单、脚本和配置打包为 release.tar.gz，包内不带 release/；解包到 verified 验证，脚本权限仍为 755。']
+  };
+  if(advanced) context += extensions[boss.chapter][0];
+  if(master) context += extensions[boss.chapter][1];
   return {id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
     hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')]};
 }

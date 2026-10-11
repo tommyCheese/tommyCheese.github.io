@@ -1,3 +1,4 @@
+import { goalReference } from './task-copy.mjs';
 import { createBossLesson } from './bosses.mjs';
 import { terminalLabs } from './terminal-labs.mjs';
 import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
@@ -209,15 +210,21 @@ function renderTask() {
   $('console-command').textContent = sandbox ? 'sandbox' : training ? '选择合适的命令' : lesson.command;
   $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
-  $('task-context').textContent = training?.challengeVersion === 1 ? lesson.context : training ? '根据目标选择工具，先试着独立完成。' : sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
+  $('task-context').textContent = sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
   $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册，系统会记录辅助情况。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
   if (!sandbox) for (const goal of goalChecks) {
     const item = element('li', undefined, goal.done ? 'done' : '');
     const check = element('span', goal.done ? '✓' : '', 'goal-check'); check.setAttribute('aria-hidden', 'true');
-    const label = element('span', goal.label); if (goal.done) label.append(element('span', '（已达成）', 'sr-only'));
+    const label = element('div', goal.label, 'goal-copy'); if (goal.done) label.append(element('span', '（已达成）', 'sr-only'));
     if (goal.path && !goal.label.includes(goal.path)) label.append(element('code', goal.path, 'goal-path'));
+    const reference = goalReference(goal);
+    if (reference) {
+      const details = element('details', undefined, 'goal-reference');
+      details.append(element('summary', reference.title), element('pre', reference.text));
+      label.append(details);
+    }
     item.append(check, label); $('goals').append(item);
   }
   const allDone = !sandbox && goalChecks.length && goalChecks.every(goal => goal.done);
@@ -600,8 +607,8 @@ async function importBackup(event) {
   } catch (error) { $('backup-status').textContent = '导入失败：' + error.message; announce($('backup-status').textContent); }
   event.target.value = '';
 }
-for (const id of ['export-progress', 'export-backup']) $(id).addEventListener('click', exportBackup);
-for (const id of ['import-progress', 'import-backup']) $(id).addEventListener('change', importBackup);
+$('export-backup').addEventListener('click', exportBackup);
+$('import-backup').addEventListener('change', importBackup);
 $('restart-practice').addEventListener('click', () => { $('restart-status').textContent = ''; $('restart-dialog').showModal(); });
 for (const id of ['restart-cancel', 'restart-close']) $(id).addEventListener('click', () => $('restart-dialog').close());
 $('restart-export').addEventListener('click', () => { exportBackup(); $('restart-status').textContent = '备份已导出'; });
