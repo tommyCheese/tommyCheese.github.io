@@ -140,6 +140,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/gallery/"/>
   </url>
   <url>
+    <loc>https://tommycheese.github.io/news/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/news/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/news/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/news/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/news/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/news/"/>
+  </url>
+  <url>
     <loc>https://tommycheese.github.io/tags/</loc>
     <lastmod>2026-09-13T00:00:00+08:00</lastmod>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/tags/"/>
@@ -370,6 +379,15 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/gallery/"/>
     <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/gallery/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/gallery/"/>
+  </url>
+  <url>
+    <loc>https://tommycheese.github.io/en/news/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/news/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/news/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/news/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/news/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/news/"/>
   </url>
   <url>
     <loc>https://tommycheese.github.io/en/tags/</loc>
@@ -604,6 +622,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/gallery/"/>
   </url>
   <url>
+    <loc>https://tommycheese.github.io/ja/news/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/news/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/news/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/news/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/news/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/news/"/>
+  </url>
+  <url>
     <loc>https://tommycheese.github.io/ja/tags/</loc>
     <lastmod>2026-09-13T00:00:00+08:00</lastmod>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/tags/"/>
@@ -836,6 +863,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/gallery/"/>
   </url>
   <url>
+    <loc>https://tommycheese.github.io/ru/news/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/news/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/news/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/news/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/news/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/news/"/>
+  </url>
+  <url>
     <loc>https://tommycheese.github.io/ru/tags/</loc>
     <lastmod>2026-09-13T00:00:00+08:00</lastmod>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/tags/"/>
@@ -1066,6 +1102,15 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/gallery/"/>
     <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/gallery/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/gallery/"/>
+  </url>
+  <url>
+    <loc>https://tommycheese.github.io/zh-TW/news/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://tommycheese.github.io/news/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tommycheese.github.io/en/news/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tommycheese.github.io/ja/news/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tommycheese.github.io/ru/news/"/>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://tommycheese.github.io/zh-TW/news/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tommycheese.github.io/news/"/>
   </url>
   <url>
     <loc>https://tommycheese.github.io/zh-TW/tags/</loc>

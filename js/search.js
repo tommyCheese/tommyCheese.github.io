@@ -29,7 +29,7 @@
     { title: 'nav.tags', path: '/tags/', icon: 'tag', aliases: ['标签', '標籤', 'tags'] },
     { title: 'nav.about', path: '/#about', icon: 'user', aliases: ['关于', '關於', 'about'] },
     { title: 'nav.gallery', path: '/gallery/', icon: 'compass', aliases: ['探索', '相册', '相簿', 'explore', 'gallery'] },
-    { title: 'nav.news', path: '/#today-news', icon: 'news', suggested: false, aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] }
+    { title: 'nav.news', path: '/news/', icon: 'news', suggested: false, aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] }
   ];
 
   function createIcon(name) {
