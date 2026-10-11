@@ -1,6 +1,43 @@
 {
-  "updated_at": "2026-10-10",
+  "updated_at": "2026-10-11",
   "items": [
+    {
+      "id": "oneplus16-800hz-gyroscope",
+      "category": "devices",
+      "published_at": "2026-10-11",
+      "source": "IT之家",
+      "url": "https://www.ithome.com/1/011/598.htm",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/10/922da7ff-983d-45bf-84a2-a14a12daacc5.jpg",
+      "image_credit": "OnePlus · IT之家",
+      "image_fit": "contain"
+    },
+    {
+      "id": "li-auto-i6-showroom-preview",
+      "category": "cars",
+      "published_at": "2026-10-11",
+      "source": "汽车之家",
+      "url": "https://www.autohome.com.cn/news/202610/1317684.html",
+      "image": "https://g.autoimg.cn/@img/car3/cardfs/product/g33/M01/71/DC/1200x0_1_autohomecar__ChxpVWrItU-AMTXRAFjiDkdOvB8075.jpg",
+      "image_credit": "汽车之家"
+    },
+    {
+      "id": "anthropic-evaluation-internet-safety",
+      "category": "ai",
+      "published_at": "2026-10-09",
+      "source": "Anthropic",
+      "url": "https://www.anthropic.com/news/investigating-unintended-model-actions",
+      "image": "https://www-cdn.anthropic.com/images/4zrzovbb/website/f11d2325e688229de8a887ef7ece34f520ab7134-2000x1125.jpg",
+      "image_credit": "Anthropic"
+    },
+    {
+      "id": "globalfoundries-fdx-fusion-roadmap",
+      "category": "semiconductors",
+      "published_at": "2026-10-09",
+      "source": "GlobalFoundries",
+      "url": "https://gf.com/news-and-events/news/gf-unveils-roadmap-to-deliver-worlds-most-advanced-platform-for-physical-ai/",
+      "image": "https://assets.gf.com/image/328833518282/image_4ee35772ot5879lie0o53bl61h/-C1350x900%2C225%2C0-S1920x1280-FWEBP",
+      "image_credit": "GlobalFoundries"
+    },
     {
       "id": "openai-gpt6-intelligent-ui",
       "category": "ai",

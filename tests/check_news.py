@@ -22,6 +22,7 @@ for item in items:
         url = urlsplit(item[field])
         assert url.scheme == 'https' and url.netloc
     assert item['source'].strip()
+    assert item.get('image_fit', 'cover') in {'cover', 'contain'}
 
 for locale in LOCALES:
     prefix = PREFIX[locale]
@@ -64,6 +65,7 @@ for locale in LOCALES:
         assert set(card.get('rel').split()) == {'noopener', 'noreferrer'}
         assert card.xpath('.//img/@src') == [item['image']]
         assert card.xpath('.//img/@loading') == ['lazy']
+        assert ('news-cover-contain' in card.xpath('.//img/@class')[0].split()) == (item.get('image_fit') == 'contain' and not item.get('file_photo'))
         assert card.xpath('.//h3')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.title']
         assert card.xpath('.//p')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.summary']
         assert item['source'] in card.text_content()

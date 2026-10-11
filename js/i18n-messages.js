@@ -196,7 +196,15 @@ window.SITE_MESSAGES = {
     "news.original": "阅读原文 ↗",
     "news.timelineIntro": "按原文发布日期归档，串起 AI、半导体、数码与汽车的每日动态。最新新闻在前，点击卡片阅读原文。",
     "news.dates": "跳转日期",
-    "news.count": "{count} 条新闻"
+    "news.count": "{count} 条新闻",
+    "news.oneplus16-800hz-gyroscope.title": "一加 16 预热：陀螺仪采样率最高 800Hz",
+    "news.oneplus16-800hz-gyroscope.summary": "一加公布新机的高精度陀螺仪，最高采样率 800Hz，瞄准射击游戏操控；一加 16 定于 10 月 12 日 19:00 发布。",
+    "news.li-auto-i6-showroom-preview.title": "2026 款理想 i6 展车到店，10 月 28 日发布",
+    "news.li-auto-i6-showroom-preview.summary": "理想 i6 年度改款展车于 10 月 11 日进店，计划 10 月 28 日发布。官方披露 ADB 矩阵大灯、29 英寸 6K 前排屏幕和 96kWh 电池等升级。",
+    "news.anthropic-evaluation-internet-safety.title": "Anthropic 暂停内部评测实时联网",
+    "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露内部测试中的预期外操作，将暂停实时联网扩大到全部内部评测，并加强工具约束与监控。措施针对内部评测环境。",
+    "news.globalfoundries-fdx-fusion-roadmap.title": "格罗方德公布面向物理 AI 的 FDX Fusion 路线图",
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台预期提供 7 纳米级数字性能，面向边缘推理、机器人等应用；计划 2027 年启动客户验证，2028 年在德累斯顿制造。"
   },
   "en": {
     "nav.about": "About",
@@ -394,7 +402,15 @@ window.SITE_MESSAGES = {
     "news.original": "Read original ↗",
     "news.timelineIntro": "A daily timeline of AI, semiconductors, devices and cars, grouped by source publication date. Newest first; open a card to read the original.",
     "news.dates": "Jump to date",
-    "news.count": "{count} stories"
+    "news.count": "{count} stories",
+    "news.oneplus16-800hz-gyroscope.title": "OnePlus 16 preview: gyroscope sampling up to 800Hz",
+    "news.oneplus16-800hz-gyroscope.summary": "OnePlus previews a precision gyroscope with sampling up to 800Hz for shooter controls. The OnePlus 16 launch is scheduled for October 12 at 19:00 China time.",
+    "news.li-auto-i6-showroom-preview.title": "2026 Li i6 reaches showrooms ahead of October 28 launch",
+    "news.li-auto-i6-showroom-preview.summary": "Updated Li i6 display cars reach showrooms on October 11, ahead of the planned October 28 launch. Announced upgrades include ADB headlights, a 29-inch 6K front display and a 96kWh battery.",
+    "news.anthropic-evaluation-internet-safety.title": "Anthropic pauses live internet access in internal evaluations",
+    "news.anthropic-evaluation-internet-safety.summary": "After reporting unintended actions in internal testing, Anthropic extends its live internet pause to all internal evaluations and strengthens tool restrictions and monitoring. The measure applies to internal evaluation environments.",
+    "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries unveils FDX Fusion roadmap for physical AI",
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "The planned FD-SOI platform targets 7nm-class digital performance for edge inference and robotics. Customer validation is planned for 2027, followed by Dresden manufacturing in 2028."
   },
   "ja": {
     "nav.about": "私について",
@@ -592,7 +608,15 @@ window.SITE_MESSAGES = {
     "news.original": "原文を読む ↗",
     "news.timelineIntro": "AI・半導体・デジタル機器・自動車のニュースを原文の公開日ごとにまとめています。新しい順に表示し、カードから原文を開けます。",
     "news.dates": "日付へ移動",
-    "news.count": "{count} 件のニュース"
+    "news.count": "{count} 件のニュース",
+    "news.oneplus16-800hz-gyroscope.title": "OnePlus 16予告：ジャイロのサンプリングは最大800Hz",
+    "news.oneplus16-800hz-gyroscope.summary": "OnePlusはシューティングゲームの操作を想定した、最大800Hzの高精度ジャイロを予告。OnePlus 16は10月12日19時（中国時間）に発表予定です。",
+    "news.li-auto-i6-showroom-preview.title": "2026年型Li i6の展示車が到着、10月28日に発表予定",
+    "news.li-auto-i6-showroom-preview.summary": "改良型Li i6の展示車が10月11日に店舗へ到着。10月28日の発表を予定し、ADBヘッドライト、29インチ6K前席ディスプレイ、96kWhバッテリーなどを予告しています。",
+    "news.anthropic-evaluation-internet-safety.title": "Anthropic、社内評価のリアルタイム接続を停止",
+    "news.anthropic-evaluation-internet-safety.summary": "社内テストで意図しない操作が報告されたことを受け、Anthropicはリアルタイムのインターネット接続停止を全社内評価へ拡大。ツール制限と監視も強化します。対象は社内評価環境です。",
+    "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries、物理AI向けFDX Fusionの計画を公開",
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "計画中のFD-SOIプラットフォームは、エッジ推論やロボット向けに7nm級のデジタル性能を目指します。2027年に顧客検証、2028年にドレスデンでの製造を予定しています。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -790,7 +814,15 @@ window.SITE_MESSAGES = {
     "news.original": "Читать источник ↗",
     "news.timelineIntro": "Ежедневная хроника ИИ, полупроводников, устройств и автомобилей по датам публикации источников. Новые события первыми; карточки открывают оригинал.",
     "news.dates": "Перейти к дате",
-    "news.count": "Новостей: {count}"
+    "news.count": "Новостей: {count}",
+    "news.oneplus16-800hz-gyroscope.title": "OnePlus 16: гироскоп с частотой опроса до 800 Гц",
+    "news.oneplus16-800hz-gyroscope.summary": "OnePlus анонсировала точный гироскоп с частотой опроса до 800 Гц для управления в шутерах. Презентация OnePlus 16 назначена на 12 октября, 19:00 по китайскому времени.",
+    "news.li-auto-i6-showroom-preview.title": "Обновлённый Li i6 в салонах перед презентацией 28 октября",
+    "news.li-auto-i6-showroom-preview.summary": "Демонстрационные Li i6 2026 года поступают в салоны 11 октября. Презентация запланирована на 28 октября; заявлены фары ADB, передний экран 29 дюймов с разрешением 6K и батарея 96 кВт·ч.",
+    "news.anthropic-evaluation-internet-safety.title": "Anthropic приостанавливает доступ к сети во внутренних оценках",
+    "news.anthropic-evaluation-internet-safety.summary": "После выявления непредусмотренных действий во внутренних тестах Anthropic распространила приостановку доступа к интернету на все внутренние оценки, усилив ограничения инструментов и мониторинг. Мера касается внутренних оценочных сред.",
+    "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries представила планы FDX Fusion для физического ИИ",
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "Планируемая платформа FD-SOI нацелена на цифровую производительность уровня 7 нм для периферийного ИИ и робототехники. Проверка с заказчиками намечена на 2027 год, производство в Дрездене — на 2028 год."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -988,6 +1020,14 @@ window.SITE_MESSAGES = {
     "news.original": "閱讀原文 ↗",
     "news.timelineIntro": "按原文發布日期歸檔，串起 AI、半導體、數碼與汽車的每日動態。最新新聞在前，點擊卡片閱讀原文。",
     "news.dates": "跳轉日期",
-    "news.count": "{count} 則新聞"
+    "news.count": "{count} 則新聞",
+    "news.oneplus16-800hz-gyroscope.title": "一加 16 預告：陀螺儀取樣率最高 800Hz",
+    "news.oneplus16-800hz-gyroscope.summary": "一加公布新機的高精度陀螺儀，最高取樣率 800Hz，瞄準射擊遊戲操控；一加 16 定於 10 月 12 日 19:00 發表。",
+    "news.li-auto-i6-showroom-preview.title": "2026 年式理想 i6 展示車到店，10 月 28 日發表",
+    "news.li-auto-i6-showroom-preview.summary": "理想 i6 年度改款展示車於 10 月 11 日進店，計畫 10 月 28 日發表。官方披露 ADB 矩陣頭燈、29 吋 6K 前排螢幕與 96kWh 電池等升級。",
+    "news.anthropic-evaluation-internet-safety.title": "Anthropic 暫停內部評測即時連網",
+    "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露內部測試中的非預期操作，將暫停即時連網擴大至全部內部評測，並加強工具限制與監控。措施針對內部評測環境。",
+    "news.globalfoundries-fdx-fusion-roadmap.title": "格羅方德公布面向實體 AI 的 FDX Fusion 路線圖",
+    "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台預期提供 7 奈米級數位效能，面向邊緣推論、機器人等應用；計畫 2027 年啟動客戶驗證，2028 年在德勒斯登製造。"
   }
 };
