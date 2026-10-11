@@ -14,7 +14,7 @@
 <a class="skip-link" href="#command-input">跳到命令输入</a>
 <header class="game-header"><div class="brand">🧀 <strong>Learn Linux</strong></div><nav aria-label="学习模式"><a href="#task/where-am-i" data-mode="learn" aria-current="page">闯关</a><a href="#sandbox" data-mode="sandbox">自由练习</a><a href="./commands/" target="_blank" rel="noopener noreferrer">查手册</a></nav></header>
 <main id="workspace" class="game-world">
-<section id="review-area" class="review-screen" hidden aria-labelledby="review-title" tabindex="-1"><div class="review-heading"><div><p class="review-eyebrow">RECALL &amp; REMEMBER</p><h1 id="review-title">今日复习</h1><p id="learning-summary"></p></div><a id="review-return" href="#task/where-am-i">返回练习 →</a></div><div class="review-entry"><div><h2>待复习</h2><p id="review-status" role="status"></p></div><button id="review-start">开始复习 →</button></div><div id="review-list" class="review-list"></div><details class="mastery-records"><summary>掌握记录</summary><p class="help-note">跨日独立完成，并通过复习或 Boss 挑战后标记「已掌握」。</p><ul id="mastery-list"></ul></details></section>
+<section id="review-area" class="review-screen" hidden aria-labelledby="review-title" tabindex="-1"><div class="review-heading"><div><p class="review-eyebrow">RECALL &amp; REMEMBER</p><h1 id="review-title">今日复习</h1><p id="learning-summary"></p></div><a id="review-return" href="#task/where-am-i">返回练习 →</a></div><div class="review-entry"><div><h2>待复习</h2><p id="review-status" role="status"></p></div><button id="review-start">开始复习 →</button></div><div id="review-list" class="review-list"></div><details class="mastery-records"><summary>掌握记录</summary><p class="help-note">跨日完成练习与复习后标记「已掌握」。</p><ul id="mastery-list"></ul></details></section>
 <section id="world-area" class="scene" aria-label="可视化练习场景">
 <div class="scene-label"><button id="levels-button" aria-haspopup="dialog" aria-controls="levels-dialog">⚑ 选择一关</button><span id="save-status" title="进度保存在此浏览器">已保存</span></div>
 <div class="mission-window" id="mission-window">
@@ -39,10 +39,10 @@
 <div class="console-level"><span id="console-command">pwd</span></div>
 <div id="transcript" class="transcript" role="log" aria-label="终端输出" aria-live="polite" aria-relevant="additions text"></div>
 <form id="command-form" class="command-form" autocomplete="off"><span id="prompt" aria-hidden="true">~ $</span><label for="command-input" class="sr-only">输入 Linux 命令</label><input id="command-input" name="command" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="输入命令…" maxlength="4096"><button type="submit" aria-label="执行命令">↵</button></form>
-<div class="console-footer"><span>↑ ↓ 历史 · Tab 补全</span><span id="exit-code"></span></div>
+<div class="console-footer"><span>↑ ↓ 历史 · Tab 补全 · Ctrl / ⌘ + Enter 下一关</span><span id="exit-code"></span></div>
 </section>
 
-<div id="practice-actions" class="practice-actions" aria-label="练习操作"><div id="lesson-navigation" class="lesson-navigation" role="group" aria-label="关卡切换"><button id="previous-lesson" aria-label="上一关">← 上一关</button><button id="next-lesson" aria-label="下一关">下一关 →</button></div><button id="reset-button" title="reset">↻ 重置</button><button id="review-button" aria-controls="review-area">✦ 复习 <span id="review-count"></span></button><button id="undo-button" title="undo" disabled>↶ 撤销</button><button id="redo-button" title="redo" disabled>↷ 重做</button><button id="help-button" aria-haspopup="dialog" aria-controls="help-dialog">? 帮助</button></div>
+<div id="practice-actions" class="practice-actions" aria-label="练习操作"><div id="lesson-navigation" class="lesson-navigation" role="group" aria-label="关卡切换"><button id="previous-lesson" aria-label="上一关">← 上一关</button><button id="next-lesson" aria-label="下一关" aria-keyshortcuts="Control+Enter Meta+Enter">下一关 →</button></div><button id="reset-button" title="reset">↻ 重置</button><button id="review-button" aria-controls="review-area">✦ 复习 <span id="review-count"></span></button><button id="undo-button" title="undo" disabled>↶ 撤销</button><button id="redo-button" title="redo" disabled>↷ 重做</button><button id="help-button" aria-haspopup="dialog" aria-controls="help-dialog">? 帮助</button></div>
 <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
 <noscript><p class="noscript">启用 JavaScript 即可开始模拟终端练习。也可直接阅读<a href="./courses/">课程目录</a>和<a href="./commands/">中文命令手册</a>。</p></noscript>
 </main>
