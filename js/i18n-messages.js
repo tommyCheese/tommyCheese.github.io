@@ -189,7 +189,14 @@ window.SITE_MESSAGES = {
     "news.samsung-smartthings-now.summary": "三星以首页卡片推荐适时的信息与操作，增强本地设备控制，并加入 Matter 1.6 支持。",
     "news.bmw-ix3-m60-xdrive.title": "BMW 发布纯电 iX3 M60 xDrive",
     "news.bmw-ix3-m60-xdrive.summary": "Neue Klasse 迎来双电机性能版，计划 2027 年春投产。暂定百公里加速为 3.9 秒，最高直流充电功率 400 kW。",
-    "news.filePhoto": "资料图"
+    "news.filePhoto": "资料图",
+    "news.previewIntro": "按时间记录 AI、半导体、数码与汽车的新动向。",
+    "news.viewAll": "查看完整时间流 →",
+    "news.viewDay": "查看当天新闻 →",
+    "news.original": "阅读原文 ↗",
+    "news.timelineIntro": "按原文发布日期归档，串起 AI、半导体、数码与汽车的每日动态。最新新闻在前，点击卡片阅读原文。",
+    "news.dates": "跳转日期",
+    "news.count": "{count} 条新闻"
   },
   "en": {
     "nav.about": "About",
@@ -380,7 +387,14 @@ window.SITE_MESSAGES = {
     "news.samsung-smartthings-now.summary": "Samsung introduces timely information and actions on the Home screen, improves local device control and adds Matter 1.6 support.",
     "news.bmw-ix3-m60-xdrive.title": "BMW unveils the electric iX3 M60 xDrive",
     "news.bmw-ix3-m60-xdrive.summary": "The dual-motor Neue Klasse performance model is planned for production in spring 2027, with provisional 0–100 km/h in 3.9 seconds and DC charging up to 400 kW.",
-    "news.filePhoto": "File photo"
+    "news.filePhoto": "File photo",
+    "news.previewIntro": "Follow the latest in AI, semiconductors, devices and cars.",
+    "news.viewAll": "View full timeline →",
+    "news.viewDay": "View this day →",
+    "news.original": "Read original ↗",
+    "news.timelineIntro": "A daily timeline of AI, semiconductors, devices and cars, grouped by source publication date. Newest first; open a card to read the original.",
+    "news.dates": "Jump to date",
+    "news.count": "{count} stories"
   },
   "ja": {
     "nav.about": "私について",
@@ -571,7 +585,14 @@ window.SITE_MESSAGES = {
     "news.samsung-smartthings-now.summary": "Samsung がホーム画面で適切な情報と操作を提案。ローカルでの機器制御を強化し、Matter 1.6 に対応します。",
     "news.bmw-ix3-m60-xdrive.title": "BMW、電動 iX3 M60 xDrive を発表",
     "news.bmw-ix3-m60-xdrive.summary": "Neue Klasse の高性能ツインモーターモデルは2027年春に生産予定。暫定値で0〜100km/h加速3.9秒、最大400kWの急速充電に対応します。",
-    "news.filePhoto": "資料写真"
+    "news.filePhoto": "資料写真",
+    "news.previewIntro": "AI・半導体・デジタル機器・自動車の動きを時系列で。",
+    "news.viewAll": "すべてのニュース →",
+    "news.viewDay": "この日のニュース →",
+    "news.original": "原文を読む ↗",
+    "news.timelineIntro": "AI・半導体・デジタル機器・自動車のニュースを原文の公開日ごとにまとめています。新しい順に表示し、カードから原文を開けます。",
+    "news.dates": "日付へ移動",
+    "news.count": "{count} 件のニュース"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -762,7 +783,14 @@ window.SITE_MESSAGES = {
     "news.samsung-smartthings-now.summary": "Samsung добавляет актуальные подсказки и действия на главный экран, улучшает локальное управление и поддерживает Matter 1.6.",
     "news.bmw-ix3-m60-xdrive.title": "BMW представила электрический iX3 M60 xDrive",
     "news.bmw-ix3-m60-xdrive.summary": "Двухмоторная версия Neue Klasse планируется к выпуску весной 2027 года. Предварительные параметры: 0–100 км/ч за 3,9 с и зарядка до 400 кВт.",
-    "news.filePhoto": "Архивное фото"
+    "news.filePhoto": "Архивное фото",
+    "news.previewIntro": "Хроника событий в ИИ, полупроводниках, устройствах и автомобилях.",
+    "news.viewAll": "Вся хроника →",
+    "news.viewDay": "Новости за этот день →",
+    "news.original": "Читать источник ↗",
+    "news.timelineIntro": "Ежедневная хроника ИИ, полупроводников, устройств и автомобилей по датам публикации источников. Новые события первыми; карточки открывают оригинал.",
+    "news.dates": "Перейти к дате",
+    "news.count": "Новостей: {count}"
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -953,6 +981,13 @@ window.SITE_MESSAGES = {
     "news.samsung-smartthings-now.summary": "三星透過首頁卡片推薦適時的資訊與操作，強化本機裝置控制，並加入 Matter 1.6 支援。",
     "news.bmw-ix3-m60-xdrive.title": "BMW 發表純電 iX3 M60 xDrive",
     "news.bmw-ix3-m60-xdrive.summary": "Neue Klasse 迎來雙馬達性能版，預計 2027 年春投產。暫定百公里加速為 3.9 秒，最高直流充電功率 400 kW。",
-    "news.filePhoto": "資料圖"
+    "news.filePhoto": "資料圖",
+    "news.previewIntro": "按時間記錄 AI、半導體、數碼與汽車的新動向。",
+    "news.viewAll": "查看完整時間流 →",
+    "news.viewDay": "查看當天新聞 →",
+    "news.original": "閱讀原文 ↗",
+    "news.timelineIntro": "按原文發布日期歸檔，串起 AI、半導體、數碼與汽車的每日動態。最新新聞在前，點擊卡片閱讀原文。",
+    "news.dates": "跳轉日期",
+    "news.count": "{count} 則新聞"
   }
 };

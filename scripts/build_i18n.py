@@ -299,9 +299,16 @@ def build_diagrams():
 
 def build():
     files = [ROOT/'index.html', ROOT/'404.html']
-    for folder in ['blogs','tags','categories','gallery','topics']:
+    for folder in ['blogs','tags','categories','gallery','topics','news']:
         files.extend(sorted((ROOT/folder).rglob('*.html')))
     sources = {file: file.read_text() for file in files}
+    if ROOT/'news/index.html' not in sources:
+        news_doc = html.document_fromstring(sources[ROOT/'topics/index.html'])
+        content = news_doc.get_element_by_id('content')
+        content.clear()
+        content.set('id', 'content')
+        content.append(html.Element('main', id='news-page'))
+        sources[ROOT/'news/index.html'] = serialize_page(news_doc)
     index_source = json.loads((ROOT/'index.json').read_text())
     articles = {}
     for entry in index_source:
@@ -402,8 +409,10 @@ def build():
                 tag = canonical_tag_path(path).split('/')[2]
                 title=t('tag.'+tag,locale);description=t('tag.'+tag+'.description',locale)
             else:
-                page_key={'/':'page.home','/blogs/':'page.blogs','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
+                page_key={'/':'page.home','/blogs/':'page.blogs','/news/':'nav.news','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
                 title='Tommy Cheese' if path=='/' else t(page_key,locale);description=t('site.description',locale)
+                if path == '/news/':
+                    description = t('news.timelineIntro', locale)
             if not alias:
                 enhance_layout(doc,path,locale,articles,MESSAGES[locale],UI_REVISION)
                 render_tags(doc,path,articles,MESSAGES[locale])

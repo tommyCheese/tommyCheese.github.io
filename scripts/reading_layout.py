@@ -41,6 +41,30 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         link.append(copy)
         return link
 
+    news_items = sorted(NEWS['items'], key=lambda item: item['published_at'], reverse=True)
+
+    def news_card(item, preview=False):
+        href = '/news/#news-' + item['published_at'] if preview else item['url']
+        card = node('a', href=href, class_='news-card ' + ('news-preview' if preview else 'news-entry'), data_news_id=item['id'])
+        if not preview:
+            card.set('target', '_blank')
+            card.set('rel', 'noopener noreferrer')
+        card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else 'news-cover'))
+        copy = node('div', class_='news-copy')
+        credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
+        copy.append(node('span', credit, class_='news-image-credit'))
+        copy.append(label('span', 'news.category.' + item['category'], class_='news-category'))
+        copy.append(label('h3', 'news.' + item['id'] + '.title'))
+        copy.append(label('p', 'news.' + item['id'] + '.summary'))
+        metadata = node('div', class_='news-meta')
+        metadata.append(node('span', item['source']))
+        if preview:
+            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
+        metadata.append(label('span', 'news.viewDay' if preview else 'news.original', class_='news-card-action'))
+        copy.append(metadata)
+        card.append(copy)
+        return card
+
     # Rebuild owned fragments on every run; the Chinese output is also a source.
     for old in doc.xpath('//*[@data-reading-layout]'):
         old.getparent().remove(old)
@@ -91,7 +115,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
                 menu.remove(item)
         start = 1 if len(menu) and menu[0].xpath('.//input') else 0
         for offset, (key, href) in enumerate([
-            ('nav.news', '/#today-news'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
+            ('nav.news', '/news/'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
             ('nav.tags', '/tags/'), ('nav.about', '/#about'), ('nav.gallery', '/gallery/'),
         ]):
             item = node('li', class_='nav-item navbar-text')
@@ -163,26 +187,12 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         news = node('section', id='today-news', class_='home-section container', data_reading_layout='news', aria_labelledby='news-heading')
         heading = node('div', class_='section-heading news-heading')
         heading.append(label('h2', 'nav.news', id='news-heading'))
-        heading.append(node('span', messages['news.updated'].replace('{date}', NEWS['updated_at']), class_='news-updated'))
+        heading.append(label('a', 'news.viewAll', href='/news/', class_='news-view-all'))
         news.append(heading)
-        news.append(label('p', 'news.intro', class_='news-intro'))
+        news.append(label('p', 'news.previewIntro', class_='news-intro'))
         grid = node('div', class_='news-grid')
-        for item in NEWS['items']:
-            card = node('a', href=item['url'], class_='news-card', target='_blank', rel='noopener noreferrer', data_news_id=item['id'])
-            card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else 'news-cover'))
-            copy = node('div', class_='news-copy')
-            credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
-            copy.append(node('span', credit, class_='news-image-credit'))
-            copy.append(label('span', 'news.category.' + item['category'], class_='news-category'))
-            copy.append(label('h3', 'news.' + item['id'] + '.title'))
-            copy.append(label('p', 'news.' + item['id'] + '.summary'))
-            metadata = node('div', class_='news-meta')
-            metadata.append(node('span', item['source']))
-            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
-            metadata.append(node('span', '↗', aria_hidden='true'))
-            copy.append(metadata)
-            card.append(copy)
-            grid.append(card)
+        for item in news_items[:3]:
+            grid.append(news_card(item, preview=True))
         news.append(grid)
         sections.append(news)
         featured = node('section', id='featured-posts', class_='home-section container', data_reading_layout='featured', aria_labelledby='featured-heading')
@@ -208,6 +218,46 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         sections.append(recent)
         for offset, section in enumerate(sections, start=1):
             content.insert(content.index(hero) + offset, section)
+
+    if path == '/news/':
+        directory = doc.get_element_by_id('news-page')
+        directory.clear()
+        directory.set('id', 'news-page')
+        directory.set('class', 'news-directory container')
+        header = node('header', class_='news-page-heading')
+        header.append(node('p', 'TECH DAILY', class_='eyebrow'))
+        header.append(label('h1', 'nav.news'))
+        header.append(label('p', 'news.timelineIntro', class_='directory-intro'))
+        header.append(node('p', messages['news.updated'].replace('{date}', NEWS['updated_at']), class_='news-updated'))
+        categories = node('div', class_='news-categories')
+        for category in ['ai', 'semiconductors', 'devices', 'cars']:
+            categories.append(label('span', 'news.category.' + category))
+        header.append(categories)
+        directory.append(header)
+        dates = list(dict.fromkeys(item['published_at'] for item in news_items))
+        jumps = node('nav', class_='news-date-nav', aria_label=messages['news.dates'], data_i18n_aria_label='news.dates')
+        jumps.append(label('span', 'news.dates'))
+        for date in dates:
+            anchor = node('a', href='#news-' + date)
+            anchor.append(node('time', date, datetime=date))
+            jumps.append(anchor)
+        directory.append(jumps)
+        timeline = node('div', class_='news-timeline')
+        for date in dates:
+            daily_items = [item for item in news_items if item['published_at'] == date]
+            day = node('section', id='news-' + date, class_='news-day', aria_labelledby='heading-' + date)
+            heading = node('div', class_='news-day-heading')
+            title = node('h2', id='heading-' + date)
+            title.append(node('time', date, datetime=date))
+            heading.append(title)
+            heading.append(node('span', messages['news.count'].replace('{count}', str(len(daily_items))), class_='news-day-count'))
+            day.append(heading)
+            entries = node('div', class_='news-day-entries')
+            for item in daily_items:
+                entries.append(news_card(item))
+            day.append(entries)
+            timeline.append(day)
+        directory.append(timeline)
 
     if path == '/topics/':
         directory = doc.get_element_by_id('topics-page')
