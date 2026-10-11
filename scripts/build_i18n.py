@@ -530,6 +530,14 @@ def build_feeds(paths, articles, bodies):
             out=ROOT/PREFIX[locale].lstrip('/')/relative
             out.parent.mkdir(parents=True,exist_ok=True)
             tree.write(str(out),encoding='utf-8',xml_declaration=True,pretty_print=True)
+    # Include the independently generated Linux course and reference pages.
+    lab_sitemap = ROOT/'linux-lab/sitemap.xml'
+    if lab_sitemap.exists():
+        for lab_url in etree.parse(str(lab_sitemap)).getroot():
+            sitemap.append(lab_url)
+    elif (ROOT/'linux-lab/index.html').exists():
+        entry = etree.SubElement(sitemap, '{'+ns+'}url')
+        etree.SubElement(entry, '{'+ns+'}loc').text = BASE + '/linux-lab/'
     (ROOT/'sitemap.xml').write_bytes(etree.tostring(sitemap,encoding='utf-8',xml_declaration=True,pretty_print=True))
 
 

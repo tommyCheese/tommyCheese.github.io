@@ -1,0 +1,37 @@
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { manuals, lessons, chapters, levels } from '../linux-lab/curriculum.mjs';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const output = join(root, 'linux-lab');
+const base = new URL(process.env.LEARN_LINUX_URL || 'https://tommycheese.github.io/linux-lab/');
+if (!/^https?:$/.test(base.protocol) || !base.pathname.endsWith('/')) throw new Error('LEARN_LINUX_URL must be an HTTP(S) URL ending in /');
+const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const commandPath = name => `commands/${encodeURIComponent(name)}/`;
+const urls = [base.href];
+function page(path, title, description, content) {
+  const prefix = '../'.repeat(path.split('/').filter(Boolean).length);
+  const href = target => prefix + target;
+  const canonical = new URL(path, base).href;
+  urls.push(canonical);
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)} · Learn Linux Command</title><meta name="description" content="${escape(description)}"><link rel="canonical" href="${escape(canonical)}"><meta property="og:type" content="website"><meta property="og:title" content="${escape(title)} · Learn Linux Command"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${escape(canonical)}"><link rel="icon" href="${href('favicon.png')}"><link rel="stylesheet" href="${href('reference.css')}"></head><body><a class="skip" href="#content">跳到正文</a><header><a class="brand" href="${href('guide/')}">🧀 Learn Linux</a><nav aria-label="项目导航"><a href="${href('courses/')}">课程目录</a><a href="${href('commands/')}">命令手册</a><a href="${href('')}#task/where-am-i">开始练习</a></nav></header><main id="content">${content(href)}</main><footer>Learn Linux · 中文命令学习与练习</footer></body></html>\n`;
+}
+async function save(path, title, description, content) {
+  await mkdir(join(output, path), {recursive:true});
+  await writeFile(join(output, path, 'index.html'), page(path, title, description, content));
+}
+const commandLinks = (items, href) => `<ul class="command-list">${items.map(item=>`<li><a href="${href(commandPath(item.name))}"><code>${escape(item.name)}</code><span>${escape(item.summary)}</span></a></li>`).join('')}</ul>`;
+await save('guide/', 'Linux 命令在线学习与练习', '中文 Linux 命令学习网站：任务驱动的在线模拟终端、常用到大师课程与命令参考手册，无需安装。', href=>`<p class="eyebrow">LEARN BY DOING</p><h1>在任务中学会 Linux 命令</h1><p class="lead">一个命令，一个目标。在模拟终端中练习，观察文件与系统的变化。</p><a class="action" href="${href('')}#task/where-am-i">开始练习！</a><h2>从日常操作到系统管理</h2><p>${lessons.length} 个任务，${manuals.length} 个手册条目。课程按常用、进阶、大师三个等级组织，覆盖目录导航、文件整理、文本处理、权限、归档、系统、网络和服务。</p><div class="cards">${levels.map(level=>`<a href="${href('courses/')}#${level.id}"><h3>${escape(level.title)}</h3><p>${escape(level.description)}</p></a>`).join('')}</div><h2>随时查阅，随手练习</h2><p>每条命令提供用途、语法、参数、示例及完整文档链接；有对应关卡的命令可以直接进入练习。</p>${commandLinks(manuals.filter(item=>['pwd','ls','cd','cp','grep','df'].includes(item.name)),href)}<h2>练习环境</h2><p>所有练习在浏览器内的模拟环境中完成，进度保存在本地，支持导出备份。教学终端实现命令的练习子集；手册标明支持范围与真实 Linux 的差异。</p>`);
+await save('courses/', 'Linux 命令课程目录：常用、进阶、大师', '按难度和专题浏览 Linux 命令练习课程，每个任务专注一个命令，直接进入在线练习。', href=>`<h1>课程目录</h1><p class="lead">选择一个任务，练习一个命令。</p><nav class="level-links">${levels.map(level=>`<a href="#${level.id}">${escape(level.title)}</a>`).join('')}</nav>${levels.map(level=>`<section id="${level.id}"><h2>${escape(level.title)}</h2>${chapters.map(chapter=>{const tasks=lessons.filter(lesson=>lesson.level===level.id&&lesson.chapter===chapter.id);return `<h3>${escape(chapter.title)}</h3><ul class="task-list">${tasks.map(task=>`<li><a href="${href('')}#task/${escape(task.id)}">${escape(task.title)}</a><a class="command" href="${href(commandPath(task.command))}"><code>${escape(task.command)}</code></a></li>`).join('')}</ul>`;}).join('')}</section>`).join('')}`);
+await save('commands/', 'Linux 命令中文参考手册', '查阅 Linux 日常命令、进阶工具与系统管理命令的中文用途、语法、参数和示例。', href=>`<h1>命令参考手册</h1><p class="lead">按专题查阅 ${manuals.length} 条命令。</p>${chapters.filter(chapter=>manuals.some(item=>item.category===chapter.id)).map(chapter=>`<section><h2>${escape(chapter.title)}</h2>${commandLinks(manuals.filter(item=>item.category===chapter.id),href)}</section>`).join('')}`);
+for (const item of manuals) {
+  const tasks = lessons.filter(lesson=>lesson.command===item.name);
+  await save(commandPath(item.name), `${item.name} 命令：${item.summary}`, `${item.name} 中文手册：${item.summary}。查看命令语法、常用参数、使用示例与教学支持范围。`, href=>`<nav class="breadcrumb" aria-label="面包屑"><a href="${href('commands/')}">命令手册</a> / ${escape(item.name)}</nav><p class="eyebrow">${escape(levels.find(level=>level.id===item.level).title)} · ${escape(chapters.find(chapter=>chapter.id===item.category)?.title||'命令参考')}</p><h1><code>${escape(item.name)}</code>：${escape(item.summary)}</h1><h2>语法</h2><pre><code>${escape(item.syntax)}</code></pre>${item.options.length?`<h2>参数</h2><dl>${item.options.map(([flag,meaning])=>`<dt><code>${escape(flag)}</code></dt><dd>${escape(meaning)}</dd>`).join('')}</dl>`:''}<h2>示例</h2><pre><code>${escape(item.example)}</code></pre><h2>使用说明与支持范围</h2><p>${escape(item.note)}</p>${tasks.length?`<h2>动手练习</h2><ul class="task-list">${tasks.map(task=>`<li><a href="${href('')}#task/${escape(task.id)}">${escape(task.title)}</a><span>${escape(levels.find(level=>level.id===task.level).title)}</span></li>`).join('')}</ul>`:'<p>此命令供查阅复习，模拟终端暂未提供对应练习。</p>'}<p><a href="${escape(item.source)}" rel="noopener noreferrer">完整文档 ↗</a></p><h2>同专题命令</h2>${commandLinks(manuals.filter(other=>other.category===item.category&&other.name!==item.name),href)}`);
+}
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url=>`  <url><loc>${escape(url)}</loc></url>`).join('\n')}\n</urlset>\n`;
+await writeFile(join(output, 'sitemap.xml'), sitemap);
+// Keep the interactive entry metadata in sync when deploying at a new address.
+const entry = join(output, 'index.html');
+await writeFile(entry, (await readFile(entry,'utf8')).replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${escape(base.href)}$2`).replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${escape(base.href)}$2`));
+console.log(`Generated ${urls.length-1} static pages and ${urls.length} sitemap URLs.`);

@@ -103,5 +103,8 @@ for locale in LOCALES:
 sitemap=etree.parse(str(ROOT/'sitemap.xml'))
 ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','x':'http://www.w3.org/1999/xhtml'}
 for url in sitemap.xpath('//s:url',namespaces=ns):
-    require(len(url.xpath('./x:link',namespaces=ns))==6,'sitemap alternates')
+    if url.findtext('s:loc', namespaces=ns).startswith(BASE + '/linux-lab/'):
+        require(not url.xpath('./x:link', namespaces=ns), 'Chinese-only lab must not advertise translated editions')
+    else:
+        require(len(url.xpath('./x:link',namespaces=ns))==6,'sitemap alternates')
 print(f'Passed {checks} checks: {len(pages)*len(LOCALES)} pages and {len(articles)*len(LOCALES)} full article editions.')
