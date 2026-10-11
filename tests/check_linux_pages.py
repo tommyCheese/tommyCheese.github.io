@@ -17,12 +17,14 @@ for url in urls:
     doc = html.parse(str(path))
     assert doc.xpath('//link[@rel="canonical"]/@href') == [url], path
     assert len(doc.xpath('//title')) == 1, path
+    assert doc.xpath('//meta[@name="google-site-verification"]/@content') == ['FhZOCWP05JMExYmal-76Ljqmg_0pqKjVu4QuqmwX8cQ'], path
     assert doc.xpath('//meta[@name="description"]/@content'), path
     if url != base:
         assert len(doc.xpath('//h1')) == 1, path
-        assert not doc.xpath('//script'), path  # Reference content works without JS.
+        assert len(doc.xpath('//script')) == 1, path  # Only analytics; reference content is static.
+        assert doc.xpath('//script/@src') == ['../' * len(url[len(base):].strip('/').split('/')) + 'analytics.js'], path
         assert doc.xpath('//meta[@property="og:url"]/@content') == [url], path
-    for href in doc.xpath('//a/@href | //link[@rel="stylesheet"]/@href | //link[@rel="icon"]/@href'):
+    for href in doc.xpath('//a/@href | //link[@rel="stylesheet"]/@href | //link[@rel="icon"]/@href | //script[@src]/@src'):
         parsed = urlsplit(href)
         if parsed.scheme or parsed.netloc or not parsed.path:
             continue
