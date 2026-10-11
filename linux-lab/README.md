@@ -35,7 +35,7 @@
 ```sh
 python3 -m http.server 8873 --bind 127.0.0.1
 # 打开 http://127.0.0.1:8873/linux-lab/
-node --test tests/linux-lab.test.mjs tests/linux-history.test.mjs tests/linux-expansion.test.mjs tests/linux-backup.test.mjs tests/search.test.cjs
+node --test tests/linux-lab.test.mjs tests/linux-history.test.mjs tests/linux-expansion.test.mjs tests/linux-backup.test.mjs tests/linux-learning.test.mjs tests/search.test.cjs
 .venv/bin/python scripts/build_i18n.py
 .venv/bin/python tests/check_linux_lab.py
 .venv/bin/python tests/check_i18n.py
@@ -56,3 +56,13 @@ node --test tests/linux-lab.test.mjs tests/linux-history.test.mjs tests/linux-ex
 ## 访问统计
 
 练习入口与全部静态页共用 `analytics.js`，接入 GA4 测量 ID `G-RPQTR1FJGV`。生成静态页时自动保留统计入口；localhost、回环地址和 file 协议不加载统计。数据与博客进入同一 GA4 资源，可按 `/linux-lab/` 页面路径筛选本项目。这里只接入访问统计，不上报用户输入的命令、练习文件或备份内容。
+
+手册入口统一使用独立静态页面；旧的 #manual/命令 路由跳转到对应手册网址。reference.mjs 提供搜索、等级与专题筛选、收藏和返回最近练习；未启用 JavaScript 时仍能阅读全部静态内容。收藏与练习备份共用原有存储，跨标签页同步。示例可放入自由练习输入框，不会自动执行。
+
+## 复习与掌握
+
+`learning.mjs` 管理复习队列、随机专题小测、场景变换和掌握记录。旧版通关数据保留，先作为待复习记录；不会直接折算掌握。今日复习每轮最多 5 题，优先旧进度、辅助完成和到期任务；独立完成的跨日复习按 1、3、7、14、30 天递增，提示、解法或未达成后回到 1 天。同日重复完成不会增加间隔阶段。复习入口位于底部重置按钮旁，打开独立的 #review 页面。每个等级／专题在关卡地图中有独立 Boss 挑战，完成该等级专题的全部普通关卡后解锁。解锁条件可展开，卡片显示未解锁进度、可挑战、已击败；普通关卡完成时提示新 Boss 解锁。Boss 使用 bosses.mjs 中独立的综合任务：30 个等级／专题场景，在同一工作区同时检查多项目标。常用级完成基本交付，进阶增加证据与保留条件，大师增加恢复验证、精确归档或权限审计；隐藏命令提示，开放沙盒支持的所有命令。difficulty.mjs 加强 37 个普通关卡的参数选择、空格路径、边界记录、递归范围、输出格式与安全约束。新 Boss 不借用普通关卡的掌握记录。旧版在途小测可继续完成。击败记录保存在本地并包含在备份中。
+
+任务与初始化状态同步变换文件／路径和教学 PID，参考解法也同步变换；所有关卡、复习和 Boss 挑战均不限制命令，命令补全展示全部可练习命令；通关按输出或状态目标判断，允许替代解法。复制题必须保留原文件。仅在跨日独立完成、且有一次独立复习／小测后标记已掌握。提示最高层级和本次错误不随 undo 或 reset 清除；新一轮训练重新记录。刷新恢复本轮队列、变体、提示与撤销历史，导入导出包含掌握记录与本地任务自评。
+
+`terminal-labs.mjs` 为 10 个专题提供可选 Linux/WSL 本地任务、准备、验收、参考操作和沙盒差异。文件任务在用户主动创建的临时目录内进行；系统、网络与服务任务以观察为主。本地完成只能自评，不计为自动验证的掌握。网站不执行本地脚本，也不上报学习记录。

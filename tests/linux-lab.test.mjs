@@ -32,15 +32,16 @@ test('judges filesystem outcomes instead of requiring a specific command string'
   shell.state.fs[HOME + '/projects/notes.bak'].text = 'wrong';
   assert.ok(!evaluate(lesson.goals, shell.state).every(item => item.done));
 });
-test('every practice command has a dedicated level and wrong commands cannot mutate a level', () => {
+test('every practice command has a dedicated level and lessons allow other commands', () => {
   for (const manual of manuals.filter(item => item.practice)) assert.ok(lessons.some(item => item.command === manual.name), manual.name);
   const shell = createLessonShell(Shell, seedState, lessons[0]);
-  assert.notEqual(shell.execute('touch wrong.txt').code, 0); assert.ok(!shell.state.fs[HOME + '/wrong.txt']);
+  assert.equal(shell.execute('touch creative.txt').code, 0); assert.ok(shell.state.fs[HOME + '/creative.txt']);
   assert.equal(shell.execute('man pwd').code, 0);
 });
-test('output goals cannot be solved by just echoing the expected answer', () => {
+test('output goals accept equivalent results from alternative commands', () => {
   const lesson = lessons[0]; const shell = fresh();
-  assert.ok(!evaluate(lesson.goals, shell.state, shell.execute('echo /home/learner')).every(item => item.done));
+  assert.ok(evaluate(lesson.goals, shell.state, shell.execute('printenv PWD')).every(item => item.done));
+  assert.ok(!evaluate(lesson.goals, shell.state, shell.execute('echo /wrong')).every(item => item.done));
 });
 test('a fresh task cannot inherit a previous task filesystem', () => {
   const a = createLessonShell(Shell, seedState, lessons[0]); a.execute('touch leaked.txt');

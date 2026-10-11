@@ -1,3 +1,4 @@
+import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs';
 const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 100000;
 export function validState(state) {
@@ -22,7 +23,12 @@ export function validHistory(history) {
 }
 export function validateBackup(data, ids, names) {
   if (!object(data) || ![1,2].includes(data.version) || !Array.isArray(data.completed) || !Array.isArray(data.favorites)) throw new Error('备份格式不匹配');
+  if (data.bossCompleted !== undefined && (!Array.isArray(data.bossCompleted) || data.bossCompleted.length > 30 || !data.bossCompleted.every(validBossId))) throw new Error('Boss 挑战记录无效');
+  if (data.learning !== undefined && !validLearning(data.learning, ids)) throw new Error('掌握记录无效');
+  if (data.transfer !== undefined && (!object(data.transfer) || Object.keys(data.transfer).length > 10 || !Object.values(data.transfer).every(item => object(item) && typeof item.done === 'boolean' && Number.isSafeInteger(item.at) && item.at >= 0))) throw new Error('本地练习记录无效');
   if (data.version === 2) {
+    if (data.session?.exercise !== undefined && (!validExercise(data.session.exercise, ids) || data.session.exercise && data.session.exercise.queue[data.session.exercise.index] !== data.session.lesson)) throw new Error('复习或小测数据无效');
+    if (data.session?.attempt !== undefined && !validAttempt(data.session.attempt)) throw new Error('本次训练记录无效');
     if (data.format !== 'learn-linux-backup' || !ids.has(data.current) || !['learn','sandbox','manual'].includes(data.mode)) throw new Error('备份信息不完整');
     if (data.session && (!ids.has(data.session.lesson) || data.session.revision !== 2 || !validState(data.session.state) || !validTranscript(data.session.transcript) || !Number.isInteger(data.session.hint) || data.session.hint < 0 || data.session.hint > 3 || !Array.isArray(data.session.outputs) || !data.session.outputs.every(value => typeof value === 'boolean') || !validHistory(data.session.undoRedo))) throw new Error('关卡数据无效');
     if (data.sandbox && (!validSnapshot(data.sandbox.snapshot) || !validHistory(data.sandbox.undoRedo))) throw new Error('自由练习数据无效');

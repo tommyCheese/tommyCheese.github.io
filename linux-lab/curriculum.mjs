@@ -1,3 +1,4 @@
+import { strengthenLessons } from './difficulty.mjs';
 import { extraEntries, levels, commandLevel } from './catalogue.mjs';
 import { addExtraLessons } from './extra-lessons.mjs';
 export { levels };
@@ -135,8 +136,8 @@ export const manuals = entries.map(([name, category, summary, syntax, options, n
 }));
 
 const goals = {
-  output: (label, exact, via, code = 0) => ({ type: 'output', label, exact, via: via.split(' '), code }),
-  includes: (label, includes, via, code = 0) => ({ type: 'output', label, includes, via: via.split(' '), code }),
+  output: (label, exact, _recommendedCommand, code = 0) => ({ type: 'output', label, exact, code }),
+  includes: (label, includes, _recommendedCommand, code = 0) => ({ type: 'output', label, includes, code }),
   file: (label, path, text) => ({ type: 'file', label, path, ...(text === undefined ? {} : { text }) }),
   dir: (label, path) => ({ type: 'dir', label, path }),
   absent: (label, path) => ({ type: 'absent', label, path }),
@@ -231,7 +232,7 @@ function revise(id, changes) { Object.assign(lessons.find(item => item.id === id
 revise('unique-names', { solution: ['sort -u data/names.txt'], theory: 'sort -u 一次完成排序与去重。uniq 的相邻去重会在单独的关卡中练习。' });
 revise('uppercase', { commands: ['tr'], context: 'greeting.txt 中写着 hello linux。只用 tr 把内容转换为大写输出。', solution: ['tr a-z A-Z < greeting.txt'], seed: { files: { 'greeting.txt': 'hello linux\n' } }, theory: 'tr 从标准输入读取字符。< greeting.txt 把文件送入标准输入，不需要额外命令。' });
 revise('success-chain', { title: '进入发布目录', commands: ['cd'], context: '同事已经准备好 projects/release。进入这个目录，开始下一项工作。', theory: '当前目录会影响后续相对路径。只需切换位置，不必重新创建目录。', goals: [G.cwd('进入 ~/projects/release', 'projects/release')], solution: ['cd projects/release'], seed: { dirs: ['projects/release'] } });
-revise('batch-files', { commands: ['xargs'], context: 'file-list.txt 中有 a.txt 和 b.txt 两个名称。用 xargs 把它们作为 touch 的参数，批量创建文件。', solution: ['xargs touch < file-list.txt'], seed: { files: { 'file-list.txt': 'a.txt b.txt\n' } }, theory: '本关只练 xargs：它把输入变成命令参数。touch 是它调用的动作，< 负责读取名单。' });
+revise('batch-files', { commands: ['xargs'], context: 'file-list.txt 中有 a.txt 和 b.txt 两个名称。用 xargs 把它们作为 touch 的参数，批量创建文件。', solution: ['xargs touch < file-list.txt'], seed: { files: { 'file-list.txt': 'a.txt b.txt\n' } }, theory: 'xargs 把输入变成命令参数。touch 是它调用的动作，< 负责读取名单。' });
 revise('save-errors', { commands: ['grep'], solution: ['grep ERROR logs/app.log > errors.txt'] });
 revise('clean-workspace', { commands: ['rm'] });
 revise('private-default', { commands: ['umask'], title: '先设置默认权限', context: '接下来要保存私密文件。先把新文件权限掩码设置为 077。', goals: [{ type: 'setting', name: 'umask', value: '077', label: '新文件权限掩码为 077' }], solution: ['umask 077'] });
@@ -257,7 +258,7 @@ single('shell','tee-report','一边显示，一边保存','errors-source.txt 是
 single('permissions','sudo-directory','试用管理员命令入口','在教学 /srv 下创建 web 目录。这一关练习 sudo 的调用形式。','sudo 是命令前缀，后面跟要执行的动作。沙盒不模拟密码和真实权限拦截。','sudo',[G.dir('/srv/web 已创建','/srv/web')],'sudo mkdir /srv/web','sudo 后面使用目录创建动作。');
 single('missions','developer-column','名单挑战 ② 提取姓名','上一阶段筛好的数据放在 developer-rows.csv。用 cut 提取第一列，保存为 names-unsorted.txt。','本关只负责字段提取，不再筛选记录。','cut',[G.file('保存姓名列','names-unsorted.txt','carol\nalice\n')],'cut -d , -f 1 developer-rows.csv > names-unsorted.txt','分隔符是逗号。',{files:{'developer-rows.csv':'carol,developer\nalice,developer\n'}});
 single('missions','developer-sort','名单挑战 ③ 整理顺序','names-unsorted.txt 已保存姓名。用 sort 排序，写入最终的 developers.txt。','一次只完成一项动作，三个小关就组成了名单处理流程。','sort',[G.file('最终名单排序正确','developers.txt','alice\ncarol\n')],'sort names-unsorted.txt > developers.txt','使用输出重定向保存排序结果。',{files:{'names-unsorted.txt':'carol\nalice\n'}});
-single('missions','delivery-start','交付挑战 ② 启动服务','配置已经准备好。用 systemctl 启动教学 nginx。','start 负责当前运行状态。','systemctl',[G.service('nginx 正在运行','active',true)],'systemctl start nginx','本关只练 start。');
+single('missions','delivery-start','交付挑战 ② 启动服务','配置已经准备好。用 systemctl 启动教学 nginx。','start 负责当前运行状态。','systemctl',[G.service('nginx 正在运行','active',true)],'systemctl start nginx','start 启动服务。');
 single('missions','delivery-enable','交付挑战 ③ 开机启动','nginx 已经运行。用 systemctl 设置它随机器启动。','enable 管理开机启动，不代替 start。','systemctl',[G.service('nginx 开机启动','enabled',true)],'systemctl enable nginx','使用 enable 动作。',{services:{nginx:{active:true,enabled:false}}});
 single('missions','delivery-archive','交付挑战 ④ 备份配置','config.json 已经下载。只用 tar 制作 config.tar.gz。','最后一个小关只负责配置归档。','tar',[{type:'archive',label:'归档包含 config.json',path:'config.tar.gz',entries:['config.json']}],'tar -czf config.tar.gz config.json','c 创建，z 压缩标记，f 后写归档名。',{files:{'config.json':'{"port":8080}\n'}});
 single('navigation','lookup-copy','不知道参数？先问手册','查阅 cp 的手册，在输出里找到递归复制参数。','man 可以随时使用。这一关专门练习查询用法。','man',[G.includes('手册包含 -r / -R','-r / -R','man')],'man cp','给 man 一个要查询的命令名。');
@@ -281,13 +282,14 @@ single('system','user-groups','除了用户名，还属于哪些组','用 id 查
 single('system','machine-name','给机器记个名字','用 hostname 查询教学主机名。','主机名是机器的名称，不等同于 IP 地址。','hostname',[G.output('只输出 lab','lab','hostname')],'hostname','本关只读取，不修改。');
 single('system','calendar-date','记录今天的教学日期','用 date 输出 YYYY-MM-DD 格式的教学日期。','+%F 指定 ISO 风格日期格式，沙盒日期固定以便重复练习。','date',[G.output('输出 2026-10-11','2026-10-11','date')],'date +%F','使用格式参数 +%F。');
 single('system','running-time','机器运行多久了','用 uptime 查看运行时间。','uptime 也会显示平均负载。','uptime',[G.includes('运行时间为 2 days','up 2 days','uptime')],'uptime','直接输入 uptime。');
-single('network','lookup-host','用另一个工具查域名','用 nslookup 查询 example.com 的教学地址。','nslookup 与 dig 都能查询 DNS，本关只练前者。','nslookup',[G.includes('输出 192.0.2.20','192.0.2.20','nslookup')],'nslookup example.com','把主机名作为参数。');
+single('network','lookup-host','用另一个工具查域名','用 nslookup 查询 example.com 的教学地址。','nslookup 与 dig 都能查询 DNS。','nslookup',[G.includes('输出 192.0.2.20','192.0.2.20','nslookup')],'nslookup example.com','把主机名作为参数。');
 single('network','wget-download','下载一份健康报告','用 wget 下载健康接口的内容，保存为 health.txt。','wget -O 指定输出文件名，这里的 O 必须大写。','wget',[G.file('health.txt 内容为 ok','health.txt','ok\n')],'wget -O health.txt https://example.com/health','使用 -O 选择保存名称。');
 addExtraLessons(single, G, lessons);
 for (const lesson of lessons) {
   lesson.level ||= lesson.chapter === 'missions' ? 'advanced' : commandLevel(lesson.command);
   if (['hidden-config','copy-project','move-download','archive-preview','restore-archive','preserve-original','developer-names','save-errors','remove-variable','home-value','listen-port','dns-lookup','fetch-config','enable-service'].includes(lesson.id)) lesson.level = 'advanced';
 }
+strengthenLessons(lessons);
 // Group steps by level and chapter, keeping stable IDs for saved progress.
 lessons.sort((a,b) => levels.findIndex(item => item.id === a.level) - levels.findIndex(item => item.id === b.level) || chapters.findIndex(item => item.id === a.chapter) - chapters.findIndex(item => item.id === b.chapter));
 export { lessons };
@@ -297,6 +299,5 @@ export function createLessonShell(Shell, seedState, lesson) {
   for (const [name, target] of Object.entries(links)) shell.run(['ln','-s',target,name]);
   for (const line of setup) { const result = shell.execute(line); if (result.code) throw new Error('关卡初始化失败：' + result.stderr); }
   shell.state.history = extra.history || [];
-  shell.allowedCommand = lesson?.command;
   return shell;
 }
