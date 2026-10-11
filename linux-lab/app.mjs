@@ -1,4 +1,5 @@
 import { goalReference } from './task-copy.mjs';
+import { starterRoute, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
 import { terminalLabs } from './terminal-labs.mjs';
 import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
@@ -31,6 +32,11 @@ const bosses = bossChallenges(lessons);
 const bossIds = new Set(bosses.map(item => item.id));
 let bossCompleted = new Set(Array.isArray(saved.bossCompleted) ? saved.bossCompleted.filter(id => bossIds.has(id)) : []);
 let training = null;
+let starterMode = false;
+let solutionCache;
+let exerciseInitialState;
+const navigationLessons = () => starterMode ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons;
+const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
 let attempt = { maxHint:0, errors:0, graded:false };
 function makeExercise() {
@@ -47,7 +53,7 @@ function renderLearning() {
   $('learning-summary').textContent = `已完成 ${completed.size} · 已掌握 ${Object.values(learning).filter(record => mastery(record) === '已掌握').length}`;
   $('review-start').disabled = !due.length;
   $('review-status').textContent = due.length ? `今日 ${due.length} 题` : completed.size ? '今天没有待复习任务' : '完成关卡后解锁复习';
-  $('review-return').href = '#' + (saved.session?.exercise?.kind || 'task') + '/' + currentId;
+  $('review-return').href = '#' + (saved.session?.exercise?.kind || (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task')) + '/' + currentId;
   $('review-button').setAttribute('aria-current', mode === 'review' ? 'page' : 'false');
   $('review-list').replaceChildren();
   for (const id of due) {
@@ -101,8 +107,9 @@ function advanceLesson() {
     }
     return;
   }
-  const next = lessons[lessons.indexOf(lessons.find(item => item.id === currentId)) + 1] || lessons.find(item => !completed.has(item.id)) || lessons[0];
-  location.hash = 'task/' + next.id;
+  const items = navigationLessons(); const next = items[items.findIndex(item => item.id === currentId) + 1];
+  if (next) location.hash = taskRoute(next.id);
+  else { selectedLevel = starterMode ? 'common' : lesson.level; renderChapters(); $('levels-dialog').showModal(); }
 }
 
 
@@ -121,7 +128,7 @@ function showTaskFeedback(kind, title, detail) {
 }
 
 function persist() {
-  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted],
+  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
     session: mode === 'learn' && shell ? { revision: 2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
@@ -134,7 +141,7 @@ function validSession(session) {
     && session.state.env && Array.isArray(session.state.processes) && session.state.services
     && Array.isArray(session.state.packages) && session.state.archives && session.state.network && Array.isArray(session.state.history);
 }
-for (const level of levels) {
+for (const level of [{id:'starter', title:'入门路线'}, ...levels]) {
   const button = element('button', level.title); button.dataset.level = level.id;
   button.setAttribute('aria-pressed', String(level.id === selectedLevel));
   button.addEventListener('click', () => { selectedLevel = level.id; renderChapters(); });
@@ -145,8 +152,9 @@ function renderChapters() {
   const open = new Set([...$('chapters').querySelectorAll('details[open]')].map(node => node.dataset.chapter));
   const query = $('course-search').value.trim().toLowerCase();
   $('chapters').replaceChildren();
-  for (const chapter of chapters) {
-    const items = lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
+  const starter = selectedLevel === 'starter';
+  for (const chapter of starter ? [{id:'starter', number:'→', title:'从零开始', description:'15 个小任务，认识路径、文件、文本和重定向。'}] : chapters) {
+    const items = starter ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
     const matches = items.filter(item => !query || `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`.toLowerCase().includes(query));
     const boss = bosses.find(item => item.level === selectedLevel && item.chapter === chapter.id);
     const showBoss = boss && (!query || `${chapter.title} boss 挑战 专题小测 ${items.map(item => item.command).join(' ')}`.toLowerCase().includes(query));
@@ -158,7 +166,7 @@ function renderChapters() {
     const list = element('ol');
     for (const item of matches) {
       const row = element('li'); const link = element('a', undefined, 'lesson-link' + (completed.has(item.id) ? ' done' : ''));
-      link.href = '#task/' + item.id;
+      link.href = '#' + (starter ? 'starter/' : 'task/') + item.id;
       if (item.id === currentId && mode === 'learn') link.setAttribute('aria-current', 'step');
       link.append(element('span', completed.has(item.id) ? '✓' : String(items.indexOf(item) + 1).padStart(2, '0'), 'lesson-marker'), element('span', item.title));
       const commandHint = element('span', item.command, 'lesson-command-tooltip');
@@ -189,24 +197,24 @@ function renderChapters() {
     group.append(summary, list); $('chapters').append(group);
   }
   if (!$('chapters').childElementCount) $('chapters').append(element('p', '没有找到任务，试试命令名称。', 'empty-directory'));
-  const tierLessons = lessons.filter(item => item.level === selectedLevel);
+  const tierLessons = starter ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons.filter(item => item.level === selectedLevel);
   $('progress-text').textContent = `${tierLessons.filter(item => completed.has(item.id)).length} / ${tierLessons.length}`;
   for (const button of $('level-tabs').children) button.setAttribute('aria-pressed', String(button.dataset.level === selectedLevel));
   $('course-progress').max = tierLessons.length;
   $('course-progress').value = tierLessons.filter(item => completed.has(item.id)).length;
-  document.querySelector('[data-mode="learn"]').href = '#task/' + currentId;
+  document.querySelector('[data-mode="learn"]').href = '#' + taskRoute(currentId);
   renderLearning();
 }
 
 function renderTask() {
   const sandbox = mode === 'sandbox'; const chapter = chapters.find(item => item.id === lesson.chapter);
   const items = lessons.filter(item => item.chapter === lesson.chapter && item.level === lesson.level);
-  $('task-category').textContent = training ? (training.kind === 'review' ? '今日复习' : '👾 Boss 挑战') : sandbox ? 'SANDBOX' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
+  $('task-category').textContent = training ? (training.kind === 'review' ? '今日复习' : '👾 Boss 挑战') : sandbox ? 'SANDBOX' : starterMode ? '入门路线' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
   $('console-command').textContent = sandbox ? 'sandbox' : training ? '选择合适的命令' : lesson.command;
-  $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : `${items.indexOf(lesson) + 1} / ${items.length}`;
+  $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : starterMode ? `${starterRoute.indexOf(currentId) + 1} / ${starterRoute.length}` : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
   $('task-context').textContent = sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
-  $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册，系统会记录辅助情况。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
+  $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
   if (!sandbox) for (const goal of goalChecks) {
@@ -220,6 +228,16 @@ function renderTask() {
       details.append(element('summary', reference.title), element('pre', reference.text));
       label.append(details);
     }
+    const difference = !sandbox && lastResult.commands?.length ? goalDifference(goal, shell.state, lastResult) : null;
+    if (difference) {
+      const details = element('details', undefined, 'goal-difference');
+      details.append(element('summary', difference.summary));
+      const comparison = element('div', undefined, 'goal-comparison');
+      for (const [title, value] of [['目标',difference.expected],['当前',difference.actual]]) {
+        const block = element('div'); block.append(element('strong',title), element('pre',value.slice(0,4000) + (value.length > 4000 ? '\n…' : ''))); comparison.append(block);
+      }
+      details.append(comparison); label.append(details);
+    }
     item.append(check, label); $('goals').append(item);
   }
   const allDone = !sandbox && goalChecks.length && goalChecks.every(goal => goal.done);
@@ -228,14 +246,17 @@ function renderTask() {
   $('task-badge').textContent = '已通关';
   $('task-badge').classList.toggle('complete', !!allDone);
   $('lesson-navigation').hidden = mode !== 'learn';
-  const lessonIndex = lessons.findIndex(item => item.id === currentId);
+  const sequence = navigationLessons(); const lessonIndex = sequence.findIndex(item => item.id === currentId);
   $('previous-lesson').disabled = !!training || lessonIndex <= 0;
-  $('next-lesson').disabled = training ? !allDone : lessonIndex >= lessons.length - 1;
-  $('previous-lesson').title = lessons[lessonIndex - 1]?.title || '已是第一关';
-  $('next-lesson').title = training ? training.index + 1 < training.queue.length ? '完成当前题后继续' : '完成本轮训练' : lessons[lessonIndex + 1]?.title || '已是最后一关';
+  $('next-lesson').disabled = training ? !allDone : lessonIndex >= sequence.length - 1;
+  $('previous-lesson').title = sequence[lessonIndex - 1]?.title || '已是第一关';
+  $('next-lesson').title = training ? training.index + 1 < training.queue.length ? '完成当前题后继续' : '完成本轮训练' : sequence[lessonIndex + 1]?.title || '已是最后一关';
   $('next-button').hidden = !allDone;
-  $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === lessons.length - 1 ? '回到关卡地图 ↗' : '下一关 →';
+  $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === sequence.length - 1 ? starterMode ? starterRoute.every(id => completed.has(id)) ? '路线完成 · 选择专题 →' : '选择专题继续 →' : '回到关卡地图 ↗' : '下一关 →';
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
+  $('solution-review').hidden = !allDone;
+  if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
+  else if ($('solution-review').open) renderSolutionReview();
   $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId);
   $('mastery-badge').textContent = mastery(learning[currentId]);
   $('hint-button').hidden = sandbox;
@@ -252,6 +273,32 @@ function renderTask() {
     $('related-commands').append(button);
   }
 }
+
+function renderSolutionReview() {
+  const content = $('solution-review-content'); content.replaceChildren();
+  const entry = transcript.findLast(item => item.command);
+  if (entry) {
+    content.append(element('h3', '你的命令'), element('pre', entry.command, 'review-command'));
+    const list = element('dl', undefined, 'command-parts');
+    const before = practiceHistory.past.at(-1)?.state || shell.state;
+    for (const part of explainCommand(entry.command, before)) {
+      const term = element('dt');
+      if (part.command && supportedNames.has(part.command)) {
+        const link = element('a', part.token); link.href = './commands/' + encodeURIComponent(part.command) + '/'; link.target = '_blank'; link.rel = 'noopener noreferrer'; term.append(link);
+      } else term.append(element('code', part.token));
+      list.append(term, element('dd',part.description));
+    }
+    content.append(list);
+  }
+  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState);
+  const alternatives = solutionCache.filter(candidate => candidate.command.trim() !== entry?.command.trim());
+  if (alternatives.length) content.append(element('h3', '其他解法'));
+  for (const candidate of alternatives) {
+    const block = element('div', undefined, 'solution-example');
+    block.append(element('p',candidate.note), element('pre',candidate.command)); content.append(block);
+  }
+}
+$('solution-review').addEventListener('toggle', () => { if ($('solution-review').open && !$('solution-review').hidden) renderSolutionReview(); });
 
 function appendTranscript(entry) {
   const row = element('div', undefined, 'terminal-entry');
@@ -364,12 +411,13 @@ function setWorldTab(system) {
 }
 
 function startTask(id, restore = false) {
+  solutionCache = undefined; $('solution-review').open = false;
   practiceHistory.clear(); updatePracticeActions();
   currentId = id; lesson = lessons.find(item => item.id === id);
   const restoring = restore && validSession(saved.session) && (saved.session.exercise?.kind || null) === (training?.kind || null) && (!training || saved.session.exercise?.variant === training.variant);
   restore = restoring;
   attempt = restore && validAttempt(saved.session.attempt) ? { ...saved.session.attempt } : { maxHint:0, errors:0, graded:false };
-  shell = makeExercise(); transcript = []; hint = 0; lastResult = { stdout: '', code: 1 };
+  shell = makeExercise(); exerciseInitialState = structuredClone(shell.state); transcript = []; hint = 0; lastResult = { stdout: '', code: 1 };
   if (restore && validSession(saved.session)) {
     try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); attempt.maxHint = Math.max(attempt.maxHint, hint); }
     catch { shell = makeExercise(); transcript = []; }
@@ -496,8 +544,8 @@ for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
   $(id).addEventListener('click', () => {
     if (mode !== 'learn') return;
     if (training) { if (offset === 1 && goalChecks.every(goal => goal.done)) advanceLesson(); return; }
-    const target = lessons[lessons.findIndex(item => item.id === currentId) + offset];
-    if (target) location.hash = 'task/' + target.id;
+    const sequence = navigationLessons(); const target = sequence[sequence.findIndex(item => item.id === currentId) + offset];
+    if (target) location.hash = taskRoute(target.id);
   });
 }
 for (const link of document.querySelectorAll('a[href="./commands/"]')) link.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
@@ -544,6 +592,9 @@ function navigate(hash, initial = false) {
     if ((!training || training.kind !== view || training.queue[training.index] !== id) && saved.session?.exercise?.kind === view && validExercise(saved.session.exercise, ids) && saved.session.exercise.queue[saved.session.exercise.index] === id) training = structuredClone(saved.session.exercise);
     if (!training || training.kind !== view || training.queue[training.index] !== id) training = { kind:view, queue:[id], index:0, variant:Date.now() % 997 + 1 };
   } else training = null;
+  starterMode = view === 'starter' && starterRoute.includes(id);
+  if (starterMode) selectedLevel = 'starter';
+  else if (selectedLevel === 'starter' && mode === 'learn') selectedLevel = lesson.level;
   mode = view === 'review' && !id ? 'review' : view === 'sandbox' ? 'sandbox' : 'learn';
   const overview = mode === 'review';
   $('workspace').classList.toggle('review-mode', overview);
@@ -566,7 +617,7 @@ function navigate(hash, initial = false) {
     $('command-input').value = ''; setWorldTab(false); renderTask(); renderChapters(); renderTranscript(); renderWorld();
   }
   $('exit-code').textContent = '';
-  const expected = mode === 'learn' ? (training?.kind || 'task') + '/' + currentId : mode === 'review' ? 'review' : 'sandbox';
+  const expected = mode === 'learn' ? (training?.kind || (starterMode ? 'starter' : 'task')) + '/' + currentId : mode === 'review' ? 'review' : 'sandbox';
   if (location.hash !== '#' + expected) history.replaceState(null, '', '#' + expected);
   try { localStorage.setItem('learn-linux-last-route', expected); } catch {}
 }
@@ -599,7 +650,7 @@ async function importBackup(event) {
       // Retire the current workspace before routing so navigate cannot overwrite the imported data.
       shell = undefined; sandboxSession = undefined; training = null; learning = data.learning || {}; transfer = data.transfer || {}; bossCompleted = new Set(data.bossCompleted || []); saved = data; currentId = data.current;
       lesson = lessons.find(item => item.id === currentId); selectedLevel = lesson.level;
-      navigate(data.mode === 'sandbox' ? 'sandbox' : (data.session?.exercise?.kind || 'task') + '/' + currentId, true);
+      navigate(data.mode === 'sandbox' ? 'sandbox' : (data.session?.exercise?.kind || (data.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task')) + '/' + currentId, true);
       persist(); renderChapters();
     }
     $('backup-status').textContent = data.version === 1 ? '旧版进度已合并' : '练习备份已恢复'; announce($('backup-status').textContent);
@@ -630,7 +681,7 @@ $('help-dialog').addEventListener('click', event => {
   const bounds = $('help-dialog').getBoundingClientRect();
   if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) $('help-dialog').close();
 });
-$('levels-button').addEventListener('click', () => { selectedLevel = lesson.level; renderChapters(); $('levels-dialog').showModal(); });
+$('levels-button').addEventListener('click', () => { selectedLevel = starterMode ? 'starter' : lesson.level; renderChapters(); $('levels-dialog').showModal(); });
 $('levels-close').addEventListener('click', () => $('levels-dialog').close());
 $('levels-dialog').addEventListener('click', event => { if (event.target === $('levels-dialog')) { const bounds = $('levels-dialog').getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) $('levels-dialog').close(); } });
 
@@ -725,7 +776,7 @@ wireFileResize('preview-resize', 'y', () => $('file-preview').getBoundingClientR
   () => ({ min: 85, max: Math.max(85, Math.min(600, $('file-preview').parentElement.clientHeight - 55)) }),
   size => { $('file-preview').style.setProperty('--preview-height', size + 'px'); $('file-preview').classList.add('user-sized-preview'); },
   () => { $('file-preview').style.removeProperty('--preview-height'); $('file-preview').classList.remove('user-sized-preview'); }, -1);
-navigate(location.hash || '#task/' + currentId, true);
+navigate(location.hash || (saved.current ? '#' + (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter/' : 'task/') + currentId : '#starter/' + starterRoute[0]), true);
 updateTerminalResize();
 
 const WELCOME_KEY = 'tommy-cheese-linux-lab-welcome-v1';

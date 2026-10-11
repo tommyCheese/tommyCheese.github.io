@@ -9,7 +9,7 @@ const root = new URL('./', import.meta.url);
 function updateReturnLink() {
   let route;
   try { route = localStorage.getItem('learn-linux-last-route'); } catch {}
-  if (route !== 'sandbox' && route !== 'review' && !(/^(task|review|quiz)\//.test(route || '') && lessonIds.has(route.split('/')[1]))) {
+  if (route !== 'sandbox' && route !== 'review' && !(/^(task|starter|review|quiz)\//.test(route || '') && lessonIds.has(route.split('/')[1]))) {
     const current = readSaved().current;
     route = 'task/' + (lessonIds.has(current) ? current : lessons[0].id);
   }
