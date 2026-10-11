@@ -147,16 +147,6 @@ export class Shell {
     try {
       const initial = tokenize(input, this.state.env);
       if (!initial.length) return result;
-      if (this.allowedCommand) {
-        let commandStart = true;
-        for (const token of initial) {
-          if (token.operator && [';', '&&', '||', '|'].includes(token.value)) { commandStart = true; continue; }
-          if (commandStart && !token.operator) {
-            if (token.value !== this.allowedCommand && !basicCommands.has(token.value)) fail(`本关练习 ${this.allowedCommand}，也可使用基础查看和导航命令。其他命令请在自由练习中使用。`);
-            commandStart = false;
-          }
-        }
-      }
       const groups = []; let group = []; let connector = ';';
       for (const token of initial) {
         if (token.operator && [';', '&&', '||'].includes(token.value)) {
@@ -188,7 +178,6 @@ export class Shell {
             else argv.push(...this.expand(tokenize(token.raw, this.state.env)[0] || { value: '' }));
           }
           if (!argv.length) fail('缺少命令。');
-          if (this.allowedCommand && redirect && argv[0] !== this.allowedCommand) fail('基础辅助命令仅用于查看和导航；写入文件请使用本关练习命令。');
           // Like a shell, output redirection creates/truncates its target before execution.
           if (redirect) this.write(redirect.path, '', redirect.append);
           let response;
@@ -545,31 +534,38 @@ export class Shell {
   modeText(mode) { return mode.split('').map(digit => [4, 2, 1].map((bit, index) => Number(digit) & bit ? 'rwx'[index] : '-').join('')).join(''); }
   complete(input) {
     const words = input.split(/\s+/); const partial = words.at(-1); const first = words.length === 1;
-    if (first) return this.manuals.filter(item => item.practice && (!this.allowedCommand || (item.name === this.allowedCommand || basicCommands.has(item.name))) && item.name.startsWith(partial)).map(item => item.name);
+    if (first) return this.manuals.filter(item => item.practice && item.name.startsWith(partial)).map(item => item.name);
     const base = partial.includes('/') ? partial.slice(0, partial.lastIndexOf('/') + 1) : '';
     try { return this.children(base || '.').filter(path => basename(path).startsWith(partial.slice(base.length))).map(path => base + basename(path) + (this.state.fs[path].type === 'dir' ? '/' : '')); } catch { return []; }
   }
 }
 
-export function evaluate(goals, state, result = { stdout: '', code: 1 }) {
+export function evaluate(goals, state, result = { stdout: '', code: null }) {
   return goals.map(goal => {
     const path = goal.path && resolve(goal.path); const node = state.fs[path]; let done = false;
     switch (goal.type) {
       case 'cwd': done = state.cwd === path; break;
-      case 'file': done = node?.type === 'file' && (goal.text === undefined || node.text === goal.text); break;
+      case 'file': done = node?.type === 'file' && (goal.text === undefined || node.text === goal.text) && (goal.includes === undefined || node.text.includes(goal.includes)); break;
       case 'dir': done = node?.type === 'dir'; break;
       case 'absent': done = !node; break;
       case 'mode': done = node?.mode === goal.value; break;
       case 'owner': done = node?.owner === goal.value; break;
       case 'link': done = node?.type === 'link' && resolve(node.target, parent(path)) === resolve(goal.target); break;
-      case 'output': done = result.code === (goal.code ?? 0) && (!goal.via || goal.via.some(command => result.commands?.includes(command))) && (goal.exact !== undefined ? result.stdout.trim() === goal.exact : result.stdout.includes(goal.includes)); break;
+      case 'output': done = result.code === (goal.code ?? 0) && (goal.exact !== undefined ? result.stdout.trim() === goal.exact : result.stdout.includes(goal.includes)); break;
       case 'env': done = state.env[goal.name] === goal.value; break;
       case 'setting': done = state[goal.name] === goal.value; break;
       case 'clear': done = !!result.clear; break;
       case 'processAbsent': done = !state.processes.some(item => item.name === goal.name); break;
+      case 'processPresent': done = state.processes.some(item => item.name === goal.name); break;
       case 'service': done = state.services[goal.name]?.[goal.property] === goal.value; break;
       case 'package': done = state.packages.includes(goal.name) === (goal.present ?? true); break;
-      case 'archive': done = !!state.archives[path] && (goal.entries || []).every(name => name in state.archives[path]); break;
+      case 'archive': {
+        const entries = state.archives[path];
+        done = !!entries && (goal.entries || []).every(name => name in entries)
+          && (!goal.exact || Object.keys(entries).length === goal.entries.length)
+          && Object.entries(goal.contents || {}).every(([name,text]) => entries?.[name]?.type === 'file' && entries[name].text === text);
+        break;
+      }
     }
     return { ...goal, done };
   });

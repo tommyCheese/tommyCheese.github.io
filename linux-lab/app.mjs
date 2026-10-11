@@ -1,6 +1,9 @@
+import { createBossLesson } from './bosses.mjs';
+import { terminalLabs } from './terminal-labs.mjs';
+import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs';
 import { PracticeHistory } from './history.mjs';
-import { Shell, HOME, seedState, evaluate, resolve } from './shell.mjs';
+import { Shell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
 
 const $ = id => document.getElementById(id);
@@ -18,15 +21,112 @@ let currentId = ids.has(saved.current) ? saved.current : lessons[0].id;
 let lesson = lessons.find(item => item.id === currentId);
 let mode = 'learn'; let shell; let transcript = []; let hint = 0; let goalChecks = [];
 let browsePath = HOME; let previewPath; let lastResult = { stdout: '', code: 1 };
-let historyCursor = 0; let draft = ''; let onlyFavorites = false; let changes = new Set();
+let historyCursor = 0; let draft = ''; let changes = new Set();
 let selectedLevel = lesson.level;
 let sandboxSession;
 const practiceHistory = new PracticeHistory();
+let learning = validLearning(saved.learning, ids) ? saved.learning : {};
+const bosses = bossChallenges(lessons);
+const bossIds = new Set(bosses.map(item => item.id));
+let bossCompleted = new Set(Array.isArray(saved.bossCompleted) ? saved.bossCompleted.filter(id => bossIds.has(id)) : []);
+let training = null;
+let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
+let attempt = { maxHint:0, errors:0, graded:false };
+function makeExercise() {
+  const source = training?.challengeVersion === 1 ? createBossLesson(bosses.find(item => item.id === training.boss), currentId) : lessons.find(item => item.id === currentId);
+  const seeded = createLessonShell(Shell, seedState, source);
+  if (!training) { lesson = source; return seeded; }
+  const varied = varyExercise(source, seeded.state, training.variant);
+  lesson = varied.lesson;
+  return new Shell(varied.state, manuals);
+}
+function renderLearning() {
+  const due = reviewQueue(lessons, completed, learning);
+  $('review-count').textContent = due.length ? String(due.length) : '';
+  $('learning-summary').textContent = `已完成 ${completed.size} · 已掌握 ${Object.values(learning).filter(record => mastery(record) === '已掌握').length}`;
+  $('review-start').disabled = !due.length;
+  $('review-status').textContent = due.length ? `今日 ${due.length} 题` : completed.size ? '今天没有待复习任务' : '完成关卡后解锁复习';
+  $('review-return').href = '#' + (saved.session?.exercise?.kind || 'task') + '/' + currentId;
+  $('review-button').setAttribute('aria-current', mode === 'review' ? 'page' : 'false');
+  $('review-list').replaceChildren();
+  for (const id of due) {
+    const item = lessons.find(entry => entry.id === id); const card = element('article', undefined, 'review-card');
+    const content = element('div'); content.append(element('h2', item.title), element('span', mastery(learning[id]), 'mastery-state'));
+    const button = element('button', '复习 →'); button.setAttribute('aria-label', '复习：' + item.title);
+    button.addEventListener('click', () => beginTraining('review', [id]));
+    card.append(content, button); $('review-list').append(card);
+  }
+  $('mastery-list').replaceChildren();
+  for (const item of lessons.filter(item => completed.has(item.id))) {
+    const record = learning[item.id]; const row = element('li');
+    const link = element('a', item.title); link.href = '#task/' + item.id;
+    row.append(link, element('span', mastery(record), 'mastery-state'));
+    if (record) row.title = `${record.passes} 次完成 · ${record.errors} 次未达成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString('zh-CN')}`;
+    $('mastery-list').append(row);
+  }
+}
+function finishAttempt() {
+  if (mode !== 'learn' || training?.challengeVersion === 1 || attempt.graded || !(attempt.errors || attempt.maxHint)) return;
+  recordPractice(learning, currentId, attempt, training?.kind || 'lesson', Date.now(), false);
+  attempt.graded = true;
+}
+function beginTraining(kind, queue, boss) {
+  if (!queue.length) return;
+  if (shell) { finishAttempt(); persist(); }
+  saved.session = undefined; shell = undefined;
+  training = { kind, queue, index:0, variant:Date.now() % 997 + 1, ...(boss ? {boss,challengeVersion:1} : {}) };
+  const route = kind + '/' + queue[0];
+  history.pushState(null, '', '#' + route); navigate('#' + route);
+}
+function startBoss(boss) {
+  if (!bossUnlocked(boss, completed)) return;
+  beginTraining('quiz', [boss.prerequisites[0]], boss.id);
+}
+function advanceLesson() {
+  if (training) {
+    if (training.index + 1 < training.queue.length) {
+      persist(); shell = undefined; saved.session = undefined;
+      training.index++; training.variant++;
+      location.hash = training.kind + '/' + training.queue[training.index];
+    } else {
+      const kind = training.kind;
+      const boss = training.boss;
+      if (boss) bossCompleted.add(boss);
+      persist();
+      history.replaceState(null, '', '#task/' + currentId);
+      navigate('#task/' + currentId);
+      if (kind === 'review') {
+        history.replaceState(null, '', '#review'); navigate('#review');
+        $('review-status').textContent = '本轮复习完成！';
+      } else {
+        selectedLevel = lesson.level; renderChapters(); $('levels-dialog').showModal();
+        announce(boss ? 'Boss 挑战完成！' : '专题小测完成！');
+      }
+    }
+    return;
+  }
+  const next = lessons[lessons.indexOf(lessons.find(item => item.id === currentId)) + 1] || lessons.find(item => !completed.has(item.id)) || lessons[0];
+  location.hash = 'task/' + next.id;
+}
+
 
 function announce(text) { $('announcement').textContent = text; }
+function showTaskFeedback(kind, title, detail) {
+  const banner = $('task-feedback');
+  banner.className = 'task-feedback ' + kind;
+  $('feedback-icon').textContent = kind === 'success' ? '★' : '↺';
+  $('feedback-title').textContent = title;
+  $('feedback-detail').textContent = detail;
+  banner.hidden = false;
+  // Replay a short entrance effect without moving focus away from the terminal.
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    banner.animate([{ opacity: 0, transform: 'translateY(6px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 280, easing: 'ease-out' });
+  }
+}
+
 function persist() {
-  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId,
-    session: mode === 'learn' && shell ? { revision: 2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted],
+    session: mode === 'learn' && shell ? { revision: 2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
   catch { storageAvailable = false; }
@@ -52,7 +152,9 @@ function renderChapters() {
   for (const chapter of chapters) {
     const items = lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
     const matches = items.filter(item => !query || `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`.toLowerCase().includes(query));
-    if (!matches.length) continue;
+    const boss = bosses.find(item => item.level === selectedLevel && item.chapter === chapter.id);
+    const showBoss = boss && (!query || `${chapter.title} boss 挑战 专题小测 ${items.map(item => item.command).join(' ')}`.toLowerCase().includes(query));
+    if (!matches.length && !showBoss) continue;
     const group = element('details', undefined, 'chapter'); group.dataset.chapter = chapter.id;
     group.open = true;
     const summary = element('summary'); summary.append(element('span', chapter.number, 'chapter-number'), element('span', chapter.title));
@@ -66,7 +168,27 @@ function renderChapters() {
       const commandHint = element('span', item.command, 'lesson-command-tooltip');
       commandHint.setAttribute('aria-hidden', 'true'); link.append(commandHint);
       link.setAttribute('aria-label', item.title + '，本关练习 ' + item.command + (completed.has(item.id) ? '，已完成' : ''));
+      if (completed.has(item.id)) link.title = mastery(learning[item.id]);
       row.append(link); list.append(row);
+    }
+    if (showBoss) {
+      const unlocked = bossUnlocked(boss, completed);
+      const done = bossCompleted.has(boss.id);
+      const count = boss.prerequisites.filter(id => completed.has(id)).length;
+      const row = element('li', undefined, 'boss-level');
+      const button = element('button', undefined, 'lesson-link boss-link' + (unlocked ? ' available' : ' locked') + (done ? ' beaten' : ''));
+      button.disabled = !unlocked; button.dataset.boss = boss.id;
+      button.append(element('span', '👾', 'boss-marker'), element('strong', 'Boss 挑战'), element('span', done ? '已击败 · 再挑战' : unlocked ? '可挑战' : `未解锁 · ${count}/${boss.prerequisites.length}`, 'boss-status'));
+      button.setAttribute('aria-label', `${chapter.title} Boss 挑战，${done ? '已击败，可再次挑战' : unlocked ? '可挑战' : '未解锁'}`);
+      button.addEventListener('click', () => startBoss(boss));
+      const requirements = element('details', undefined, 'boss-requirements');
+      requirements.append(element('summary', '解锁关卡'));
+      const requiredList = element('ul');
+      for (const id of boss.prerequisites) {
+        const item = lessons.find(entry => entry.id === id); const entry = element('li'); const link = element('a', (completed.has(id) ? '✓ ' : '○ ') + item.title);
+        link.href = '#task/' + id; entry.append(link); requiredList.append(entry);
+      }
+      requirements.append(requiredList); row.append(button, requirements); list.append(row);
     }
     group.append(summary, list); $('chapters').append(group);
   }
@@ -77,17 +199,18 @@ function renderChapters() {
   $('course-progress').max = tierLessons.length;
   $('course-progress').value = tierLessons.filter(item => completed.has(item.id)).length;
   document.querySelector('[data-mode="learn"]').href = '#task/' + currentId;
+  renderLearning();
 }
 
 function renderTask() {
   const sandbox = mode === 'sandbox'; const chapter = chapters.find(item => item.id === lesson.chapter);
   const items = lessons.filter(item => item.chapter === lesson.chapter && item.level === lesson.level);
-  $('task-category').textContent = sandbox ? 'SANDBOX' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
-  $('console-command').textContent = sandbox ? 'sandbox' : lesson.command;
-  $('task-position').textContent = sandbox ? '' : `${items.indexOf(lesson) + 1} / ${items.length}`;
+  $('task-category').textContent = training ? (training.kind === 'review' ? '今日复习' : '👾 Boss 挑战') : sandbox ? 'SANDBOX' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
+  $('console-command').textContent = sandbox ? 'sandbox' : training ? '选择合适的命令' : lesson.command;
+  $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
-  $('task-context').textContent = sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
-  $('task-theory').textContent = sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
+  $('task-context').textContent = training?.challengeVersion === 1 ? lesson.context : training ? '根据目标选择工具，先试着独立完成。' : sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
+  $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册，系统会记录辅助情况。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
   if (!sandbox) for (const goal of goalChecks) {
@@ -99,20 +222,31 @@ function renderTask() {
   }
   const allDone = !sandbox && goalChecks.length && goalChecks.every(goal => goal.done);
   $('victory-stamp').hidden = !allDone;
-  $('task-badge').hidden = allDone || sandbox || !completed.has(currentId);
+  $('task-badge').hidden = allDone || sandbox || !!training || !completed.has(currentId);
   $('task-badge').textContent = '已通关';
   $('task-badge').classList.toggle('complete', !!allDone);
+  $('lesson-navigation').hidden = mode !== 'learn';
+  const lessonIndex = lessons.findIndex(item => item.id === currentId);
+  $('previous-lesson').disabled = !!training || lessonIndex <= 0;
+  $('next-lesson').disabled = training ? !allDone : lessonIndex >= lessons.length - 1;
+  $('previous-lesson').title = lessons[lessonIndex - 1]?.title || '已是第一关';
+  $('next-lesson').title = training ? training.index + 1 < training.queue.length ? '完成当前题后继续' : '完成本轮训练' : lessons[lessonIndex + 1]?.title || '已是最后一关';
   $('next-button').hidden = !allDone;
-  $('next-button').textContent = lessons.indexOf(lesson) === lessons.length - 1 ? '回到关卡地图 ↗' : '下一关 →';
+  $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === lessons.length - 1 ? '回到关卡地图 ↗' : '下一关 →';
+  $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
+  $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId);
+  $('mastery-badge').textContent = mastery(learning[currentId]);
   $('hint-button').hidden = sandbox;
   $('hint-button').disabled = hint >= 3;
   $('hint-button').textContent = hint >= 3 ? '解法' : hint ? `提示 ${hint}/3` : '💡 提示';
   $('hint-box').hidden = sandbox || !hint;
   if (hint) { $('hint-title').textContent = hint === 3 ? '参考解法' : `提示 ${hint} / 3`; $('hint-content').textContent = lesson.hints[hint - 1]; }
   $('related-commands').replaceChildren();
-  for (const command of sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
-    const button = element('button', command + ' 手册', 'command-chip');
-    button.addEventListener('click', () => { location.hash = 'manual/' + command; });
+  for (const command of training && !hint ? [] : sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
+    const button = element('a', command + ' 手册', 'command-chip');
+    button.href = './commands/' + encodeURIComponent(command) + '/';
+    button.target = '_blank'; button.rel = 'noopener noreferrer';
+    button.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
     $('related-commands').append(button);
   }
 }
@@ -230,16 +364,18 @@ function setWorldTab(system) {
 function startTask(id, restore = false) {
   practiceHistory.clear(); updatePracticeActions();
   currentId = id; lesson = lessons.find(item => item.id === id);
-  shell = createLessonShell(Shell, seedState, lesson); transcript = []; hint = 0; lastResult = { stdout: '', code: 1 };
+  const restoring = restore && validSession(saved.session) && (saved.session.exercise?.kind || null) === (training?.kind || null) && (!training || saved.session.exercise?.variant === training.variant);
+  restore = restoring;
+  attempt = restore && validAttempt(saved.session.attempt) ? { ...saved.session.attempt } : { maxHint:0, errors:0, graded:false };
+  shell = makeExercise(); transcript = []; hint = 0; lastResult = { stdout: '', code: 1 };
   if (restore && validSession(saved.session)) {
-    try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); }
-    catch { shell = createLessonShell(Shell, seedState, lesson); transcript = []; }
+    try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); attempt.maxHint = Math.max(attempt.maxHint, hint); }
+    catch { shell = makeExercise(); transcript = []; }
   }
   goalChecks = evaluate(lesson.goals, shell.state);
   if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index]) goal.done = true; });
   if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) { practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future); }
   updatePracticeActions();
-  shell.allowedCommand = lesson.command;
   browsePath = shell.state.cwd; previewPath = undefined; changes = new Set(); $('command-input').value = '';
   focusGoalDirectory();
   setWorldTab(['system', 'network', 'services'].includes(lesson.chapter));
@@ -262,15 +398,15 @@ function practiceSnapshot() {
 }
 function restorePractice(snapshot) {
   shell = new Shell(snapshot.state, manuals);
-  if (mode === 'learn') shell.allowedCommand = lesson.command;
   ({ transcript, hint, goalChecks, lastResult, browsePath, previewPath } = snapshot);
   changes = new Set(snapshot.changes);
 }
 function practiceAction(action) {
+  $('task-feedback').hidden = true;
   if (action === 'reset') {
     practiceHistory.record(practiceSnapshot());
-    shell = mode === 'learn' ? createLessonShell(Shell, seedState, lesson) : new Shell(seedState(), manuals);
-    if (mode === 'learn') shell.allowedCommand = lesson.command;
+    shell = mode === 'learn' ? makeExercise() : new Shell(seedState(), manuals);
+    if (attempt.graded) attempt = { maxHint:0, errors:0, graded:false };
     transcript = []; hint = 0; lastResult = { stdout: '', code: 1 }; changes = new Set();
     goalChecks = mode === 'learn' ? evaluate(lesson.goals, shell.state) : [];
     browsePath = shell.state.cwd; previewPath = undefined;
@@ -297,12 +433,28 @@ function executeCommand(command) {
   transcript.push(entry); transcript = transcript.slice(-60); appendTranscript(entry);
   $('exit-code').textContent = `退出码 ${lastResult.code}`;
   if (mode === 'learn') {
-    const previous = goalChecks; goalChecks = evaluate(lesson.goals, shell.state, lastResult);
+    if (!attempt.graded && lastResult.commands?.some(name => ['man','help'].includes(name))) attempt.maxHint = Math.max(1, attempt.maxHint);
+    const previous = goalChecks; const wasDone = previous.length > 0 && previous.every(goal => goal.done); goalChecks = evaluate(lesson.goals, shell.state, lastResult);
     goalChecks.forEach((goal, index) => { if (goal.type === 'output' && previous[index]?.done) goal.done = true; });
     if (goalChecks.every(goal => goal.done)) {
-      const first = !completed.has(currentId); completed.add(currentId); renderChapters();
-      announce(first ? `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。` : '目标再次达成，可以继续下一关。');
-    } else announce(lastResult.code ? '命令已结束，目标尚未全部达成。查看终端反馈或提示。' : '环境已更新，继续观察目标。');
+      const unlockedBefore = new Set(bosses.filter(item => bossUnlocked(item, completed)).map(item => item.id));
+      const isBoss = training?.challengeVersion === 1;
+      const first = isBoss ? !bossCompleted.has(training.boss) : !completed.has(currentId);
+      if (!isBoss) completed.add(currentId);
+      const newBoss = bosses.find(item => !unlockedBefore.has(item.id) && bossUnlocked(item, completed));
+      if (!wasDone && !attempt.graded) { if (!isBoss) recordPractice(learning, currentId, attempt, training?.kind || 'lesson'); attempt.graded = true; }
+      renderChapters();
+      announce(isBoss ? `击败「${lesson.title}」！` : first ? `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。` : '目标再次达成，可以继续下一关。');
+      if (!wasDone) showTaskFeedback('success', isBoss ? '👾 Boss 已击败！' : first ? '挑战完成！' : '再次挑战成功！', isBoss ? '全部实战目标达成！' : `${mastery(learning[currentId])} · 已完成 ${completed.size} / ${lessons.length} 关${newBoss ? ' · 👾 Boss 挑战已解锁，可挑战！' : ''}`);
+      else if (lastResult.code) showTaskFeedback('retry', '这次没成功，再试一次', lastResult.stderr.trim().split('\n')[0] || '检查命令和路径。');
+      else if ($('task-feedback').classList.contains('retry')) $('task-feedback').hidden = true;
+    } else {
+      if (!attempt.graded && (lastResult.code || (!training?.challengeVersion && lastResult.commands.some(name => name === lesson.command || !basicCommands.has(name))))) attempt.errors++;
+      announce(lastResult.code ? '命令已结束，目标尚未全部达成。查看终端反馈或提示。' : '环境已更新，继续观察目标。');
+      if (lastResult.code) showTaskFeedback('retry', '这次没成功，再试一次', lastResult.stderr.trim().split('\n')[0] || '目标尚未达成，可以查看提示。');
+      else if (lastResult.commands.includes(lesson.command)) showTaskFeedback('retry', '还差一点', goalChecks.find(goal => !goal.done)?.label || '对照目标，再调整一下命令。');
+      else $('task-feedback').hidden = true;
+    }
   }
   renderTask(); updatePrompt(); renderWorld(); updatePracticeActions(); persist();
 }
@@ -328,71 +480,72 @@ $('command-input').addEventListener('keydown', event => {
     else announce('没有匹配的补全项。');
   }
 });
-$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); renderTask(); persist(); });
+$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); attempt.maxHint = Math.max(attempt.maxHint, hint); renderTask(); persist(); });
 for (const action of ['reset', 'undo', 'redo']) {
   $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
 }
-$('next-button').addEventListener('click', () => {
-  const next = lessons[lessons.indexOf(lesson) + 1] || lessons.find(item => !completed.has(item.id)) || lessons[0];
-  location.hash = 'task/' + next.id;
-});
+$('next-button').addEventListener('click', advanceLesson);
+for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
+  $(id).addEventListener('click', () => {
+    if (mode !== 'learn') return;
+    if (training) { if (offset === 1 && goalChecks.every(goal => goal.done)) advanceLesson(); return; }
+    const target = lessons[lessons.findIndex(item => item.id === currentId) + offset];
+    if (target) location.hash = 'task/' + target.id;
+  });
+}
+for (const link of document.querySelectorAll('a[href="./commands/"]')) link.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
+$('review-button').addEventListener('click', () => { if (mode !== 'review') location.hash = 'review'; });
+$('review-start').addEventListener('click', () => beginTraining('review', reviewQueue(lessons, completed, learning)));
+for (const chapter of chapters) { const option = element('option', chapter.title); option.value = chapter.id; $('transfer-topic').append(option); }
+function renderTransfer(choose = true) {
+  if (choose) $('transfer-topic').value = lesson.chapter;
+  const chapter = $('transfer-topic').value; const lab = terminalLabs[chapter];
+  $('transfer-setup').textContent = 'LAB_DIR=$(mktemp -d)\ncd "$LAB_DIR"\n' + lab.setup;
+  $('transfer-goal').textContent = lab.goal; $('transfer-check').textContent = lab.check;
+  $('transfer-difference').textContent = lab.difference; $('transfer-solution').textContent = lab.solution;
+  $('transfer-done').checked = !!transfer[chapter]?.done;
+  $('transfer-status').textContent = transfer[chapter]?.done ? '已保存自评，不计入沙盒掌握判定' : '';
+  $('transfer-solution').parentElement.open = false;
+}
+$('transfer-topic').addEventListener('change', () => renderTransfer(false));
+$('transfer-done').addEventListener('change', () => { transfer[$('transfer-topic').value] = { done:$('transfer-done').checked, at:Date.now() }; persist(); renderTransfer(false); });
+$('transfer-button').addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } renderTransfer(); $('transfer-dialog').showModal(); });
+$('transfer-close').addEventListener('click', () => $('transfer-dialog').close());
 $('course-search').addEventListener('input', renderChapters);
 $('files-tab').addEventListener('click', () => setWorldTab(false));
 $('system-tab').addEventListener('click', () => setWorldTab(true));
 $('file-up').addEventListener('click', () => { browsePath = resolve('..', browsePath); previewPath = undefined; renderWorld(); });
 $('preview-close').addEventListener('click', () => { previewPath = undefined; renderWorld(); });
 
-for (const chapter of chapters.filter(item => item.id !== 'missions')) { const option = element('option', chapter.title); option.value = chapter.id; $('manual-category').append(option); }
-let selectedManual = 'pwd';
-function renderManual(selected) {
-  if (supportedNames.has(selected)) selectedManual = selected;
-  const query = $('manual-search').value.trim().toLowerCase(); const category = $('manual-category').value; const level = $('manual-level').value;
-  const items = manuals.filter(item => (!onlyFavorites || favorites.has(item.name)) && (!category || item.category === category) && (!level || item.level === level)
-    && `${item.name} ${item.summary} ${item.syntax} ${item.options.flat().join(' ')} ${item.note}`.toLowerCase().includes(query));
-  $('manual-list').replaceChildren();
-  $('manual-results').textContent = `${items.length} 个条目`;
-  const index = element('div',undefined,'manual-index'); const detail = element('article',undefined,'manual-detail');
-  const item = items.find(item=>item.name===selectedManual) || items[0];
-  for(const entry of items){
-    const button=element('button'); button.append(element('strong',entry.name),element('span',entry.summary));
-    button.setAttribute('aria-pressed',String(entry===item));
-    button.addEventListener('click',()=>renderManual(entry.name)); index.append(button);
-  }
-  $('manual-list').append(index,detail);
-  if(!item){detail.append(element('p','没有匹配的命令。换个关键词试试。','manual-empty'));return;}
-  selectedManual=item.name; detail.id='command-'+item.name;
-  const header=element('div',undefined,'manual-card-header');
-  const star=element('button',favorites.has(item.name)?'★':'☆','star-button'); star.setAttribute('aria-pressed',String(favorites.has(item.name)));star.setAttribute('aria-label','收藏 '+item.name);
-  star.addEventListener('click',()=>{if(favorites.has(item.name))favorites.delete(item.name);else favorites.add(item.name);persist();renderManual(item.name);});
-  header.append(element('h3',item.name),star);
-  detail.append(header,element('p',item.summary,'summary'),element('span',levels.find(level=>level.id===item.level).title+' · '+(item.practice?'可练习':'仅供复习'),'practice-badge'+(item.practice?'':' reference-only')),element('pre',item.syntax));
-  if(item.options.length){const list=element('dl');for(const [flag,meaning]of item.options)list.append(element('dt',flag),element('dd',meaning));detail.append(list);}
-  detail.append(element('p',item.note,'note'),element('span','示例','example-label'),element('pre',item.example));
-  const links=element('div',undefined,'manual-links');
-  const relatedLesson=lessons.find(task=>task.command===item.name);
-  if(relatedLesson){const link=element('a','去练这一关 →');link.href='#task/'+relatedLesson.id;links.append(link);}
-  if(item.practice){const tryButton=element('button','放入自由练习');tryButton.addEventListener('click',()=>{navigate('sandbox');$('command-input').value=item.example;$('command-input').focus();});links.append(tryButton);}
-  const staticManual=element('a','独立手册页 ↗');staticManual.href='./commands/'+encodeURIComponent(item.name)+'/';links.append(staticManual);
-  const source=element('a','完整文档 ↗');source.href=item.source;source.target='_blank';source.rel='noopener noreferrer';links.append(source);detail.append(links);
-}
-$('manual-search').addEventListener('input', () => renderManual());
-$('manual-category').addEventListener('change', () => renderManual());
-$('manual-level').addEventListener('change', () => renderManual());
-$('favorites-button').addEventListener('click', () => { onlyFavorites = !onlyFavorites; $('favorites-button').setAttribute('aria-pressed', String(onlyFavorites)); renderManual(); });
-$('back-to-task').addEventListener('click', () => { location.hash = 'task/' + currentId; });
-
 function navigate(hash, initial = false) {
+  $('task-feedback').hidden = true;
   if ($('levels-dialog').open) $('levels-dialog').close();
   if ($('restart-dialog').open) $('restart-dialog').close();
   if ($('help-dialog').open) $('help-dialog').close();
+  if ($('transfer-dialog').open) $('transfer-dialog').close();
   const [view, id] = hash.replace(/^#/, '').split('/'); const previousMode = mode;
+  if (view === 'manual') {
+    if (shell) persist();
+    location.replace('./commands/' + (supportedNames.has(id) ? encodeURIComponent(id) + '/' : ''));
+    return;
+  }
   if (previousMode === 'sandbox' && shell) sandboxSession = { state: shell.state, transcript, undoRedo: { past: practiceHistory.past, future: practiceHistory.future } };
-  if (previousMode === 'learn' && shell) persist();
-  mode = view === 'manual' ? 'manual' : view === 'sandbox' ? 'sandbox' : 'learn';
-  $('practice-actions').hidden = mode === 'manual';
+  if (previousMode === 'learn' && shell) {
+    if (!initial && !(view === 'review' && !id) && (id !== currentId || view !== (training?.kind || 'task'))) finishAttempt();
+    persist();
+  }
+  if (['review','quiz'].includes(view) && ids.has(id) && completed.has(id)) {
+    if ((!training || training.kind !== view || training.queue[training.index] !== id) && saved.session?.exercise?.kind === view && validExercise(saved.session.exercise, ids) && saved.session.exercise.queue[saved.session.exercise.index] === id) training = structuredClone(saved.session.exercise);
+    if (!training || training.kind !== view || training.queue[training.index] !== id) training = { kind:view, queue:[id], index:0, variant:Date.now() % 997 + 1 };
+  } else training = null;
+  mode = view === 'review' && !id ? 'review' : view === 'sandbox' ? 'sandbox' : 'learn';
+  const overview = mode === 'review';
+  $('workspace').classList.toggle('review-mode', overview);
+  $('review-area').hidden = !overview;
+  for (const id of ['world-area','practice-area','terminal-resize']) $(id).hidden = overview;
+  for (const id of ['reset-button','undo-button','redo-button','lesson-navigation']) $(id).hidden = overview;
+  if (overview) { renderLearning(); $('review-area').focus({preventScroll:true}); }
   $('levels-button').hidden = mode !== 'learn';
-  $('workspace').classList.toggle('manual-mode', mode === 'manual');
-  $('practice-area').hidden = mode === 'manual'; $('world-area').hidden = mode === 'manual'; $('manual-area').hidden = mode !== 'manual';
   for (const link of document.querySelectorAll('[data-mode]')) { if (link.dataset.mode === mode) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); }
   if (mode === 'learn') startTask(ids.has(id) ? id : currentId, initial || id === currentId);
   else if (mode === 'sandbox') {
@@ -405,19 +558,22 @@ function navigate(hash, initial = false) {
     }
     updatePracticeActions();
     $('command-input').value = ''; setWorldTab(false); renderTask(); renderChapters(); renderTranscript(); renderWorld();
-  } else {
-    if (supportedNames.has(id)) { $('manual-search').value = ''; $('manual-category').value = ''; $('manual-level').value = ''; onlyFavorites = false; $('favorites-button').setAttribute('aria-pressed', 'false'); }
-    renderManual(id); renderChapters();
   }
   $('exit-code').textContent = '';
-  const expected = mode === 'learn' ? 'task/' + currentId : mode === 'sandbox' ? 'sandbox' : 'manual' + (supportedNames.has(id) ? '/' + id : '');
+  const expected = mode === 'learn' ? (training?.kind || 'task') + '/' + currentId : mode === 'review' ? 'review' : 'sandbox';
   if (location.hash !== '#' + expected) history.replaceState(null, '', '#' + expected);
+  try { localStorage.setItem('learn-linux-last-route', expected); } catch {}
 }
 window.addEventListener('hashchange', () => navigate(location.hash));
 
 function exportBackup() {
+  if (mode === 'review' && !saved.session) {
+    const source = lessons.find(item => item.id === currentId);
+    const initial = createLessonShell(Shell, seedState, source);
+    saved.session = { revision:2, lesson:currentId, state:initial.state, transcript:[], hint:0, exercise:null, attempt:{maxHint:0, errors:0, graded:false}, outputs:source.goals.map(() => false), undoRedo:{past:[],future:[]} };
+  }
   persist();
-  const data = { ...saved, version: 2, format: 'learn-linux-backup', mode, exportedAt: new Date().toISOString() };
+  const data = { ...saved, version: 2, format: 'learn-linux-backup', mode:mode === 'review' ? 'learn' : mode, exportedAt: new Date().toISOString() };
   const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
   const link = element('a'); link.href = url; link.download = 'learn-linux-backup.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   $('backup-status').textContent = '备份已导出'; announce('练习备份已导出。');
@@ -430,14 +586,14 @@ async function importBackup(event) {
     if (data.version === 1) {
       for (const id of data.completed) completed.add(id);
       for (const name of data.favorites) favorites.add(name);
-      persist(); renderChapters(); if (mode === 'manual') renderManual();
+      persist(); renderChapters();
     } else {
       completed.clear(); for (const id of data.completed) completed.add(id);
       favorites.clear(); for (const name of data.favorites) favorites.add(name);
       // Retire the current workspace before routing so navigate cannot overwrite the imported data.
-      shell = undefined; sandboxSession = undefined; saved = data; currentId = data.current;
+      shell = undefined; sandboxSession = undefined; training = null; learning = data.learning || {}; transfer = data.transfer || {}; bossCompleted = new Set(data.bossCompleted || []); saved = data; currentId = data.current;
       lesson = lessons.find(item => item.id === currentId); selectedLevel = lesson.level;
-      navigate(data.mode === 'sandbox' ? 'sandbox' : data.mode === 'manual' ? 'manual' : 'task/' + currentId, true);
+      navigate(data.mode === 'sandbox' ? 'sandbox' : (data.session?.exercise?.kind || 'task') + '/' + currentId, true);
       persist(); renderChapters();
     }
     $('backup-status').textContent = data.version === 1 ? '旧版进度已合并' : '练习备份已恢复'; announce($('backup-status').textContent);
@@ -452,12 +608,12 @@ $('restart-export').addEventListener('click', () => { exportBackup(); $('restart
 $('restart-confirm').addEventListener('click', () => {
   try { localStorage.removeItem(KEY); }
   catch { $('restart-status').textContent = '无法清除本地记录，请检查浏览器存储权限。'; return; }
-  completed.clear(); favorites.clear(); practiceHistory.clear(); saved = {}; sandboxSession = undefined; shell = undefined;
+  completed.clear(); favorites.clear(); learning = {}; transfer = {}; bossCompleted.clear(); training = null; practiceHistory.clear(); saved = {}; sandboxSession = undefined; shell = undefined;
   currentId = lessons[0].id; lesson = lessons[0]; selectedLevel = lesson.level;
-  transcript = []; hint = 0; draft = ''; historyCursor = 0; previewPath = undefined; changes = new Set(); onlyFavorites = false;
+  transcript = []; hint = 0; draft = ''; historyCursor = 0; previewPath = undefined; changes = new Set();
   expandedDirectories.clear(); for (const path of ['/', '/home', HOME]) expandedDirectories.add(path);
-  $('course-search').value = ''; $('manual-search').value = ''; $('manual-category').value = ''; $('manual-level').value = '';
-  $('favorites-button').setAttribute('aria-pressed', 'false'); $('backup-status').textContent = '';
+  $('course-search').value = '';
+  $('backup-status').textContent = '';
   navigate('task/' + currentId); announce('练习记录已清空，从第一关重新开始。');
   $('command-input').focus({ preventScroll: true });
 });
@@ -482,7 +638,7 @@ function terminalBounds() {
   return { available, min: Math.min(240, max), max };
 }
 function updateTerminalResize() {
-  if (mode === 'manual' || window.matchMedia('(max-width:780px)').matches) return;
+  if (mode === 'review' || window.matchMedia('(max-width:780px)').matches) return;
   const { available, min, max } = terminalBounds();
   const width = $('practice-area').getBoundingClientRect().width;
   if (width > max) workspace.style.setProperty('--terminal-width', max + 'px');
@@ -569,7 +725,7 @@ updateTerminalResize();
 const WELCOME_KEY = 'tommy-cheese-linux-lab-welcome-v1';
 $('welcome-start').addEventListener('click', () => {
   $('welcome-dialog').close();
-  if (mode !== 'learn') navigate('task/' + currentId);
+  if (mode === 'sandbox') navigate('task/' + currentId);
   $('command-input').focus();
 });
 $('welcome-dialog').addEventListener('close', () => {
@@ -578,3 +734,19 @@ $('welcome-dialog').addEventListener('close', () => {
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
 if (showWelcome) $('welcome-dialog').showModal();
+
+// Keep favorites in sync when a standalone reference page changes them.
+window.addEventListener('storage', event => {
+  if (event.key !== KEY) return;
+  try {
+    const data = JSON.parse(event.newValue || '{}');
+    favorites.clear();
+    for (const name of Array.isArray(data.favorites) ? data.favorites : []) if (supportedNames.has(name)) favorites.add(name);
+  } catch {}
+});
+const exampleName = new URLSearchParams(location.search).get('example');
+if (mode === 'sandbox' && exampleName) {
+  const item = manuals.find(entry => entry.name === exampleName && entry.practice);
+  if (item) { $('command-input').value = item.example; $('command-input').focus(); }
+  const url = new URL(location.href); url.searchParams.delete('example'); history.replaceState(null, '', url);
+}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Shell, seedState } from '../linux-lab/shell.mjs';
+import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
 import { lessons, manuals, levels, chapters, createLessonShell } from '../linux-lab/curriculum.mjs';
 const fresh = extra => new Shell(seedState(extra), manuals);
 test('each tier contains all ten topics with unique documented assignments', () => {
@@ -51,7 +51,7 @@ test('selective archive task omits private data', () => {
   const lesson=lessons.find(item=>item.id==='selective-archive');
   const shell=createLessonShell(Shell,seedState,lesson);
   assert.equal(shell.execute(lesson.solution[0]).code,0);
-  assert.deepEqual(Object.keys(shell.state.archives['/home/learner/delivery.tar']).sort(),['README.txt','config/app.conf']);
+  assert.deepEqual(Object.keys(shell.state.archives['/home/learner/delivery.tar']).sort(),['README.txt','config/app.conf','docs/guide.txt']);
 });
 test('reference-only tools cannot silently report success', () => {
   const shell=fresh();
@@ -63,20 +63,20 @@ test('basic inspection and navigation work in every lesson', () => {
     for (const command of ['pwd','ls -la','cd ~','tree projects','cat /etc/app.conf','head -n 1 /etc/app.conf','stat /etc/app.conf','history']) assert.equal(shell.execute(command).code,0,`${lesson.id}: ${command}`);
   }
 });
-test('auxiliary commands cannot create goal files through redirection', () => {
+test('lessons accept file goals created through alternative commands and redirection', () => {
   const lesson=lessons.find(item=>item.id==='new-readme');
   const shell=createLessonShell(Shell,seedState,lesson);
-  assert.equal(shell.execute('ls > projects/README.md').code,1);
-  assert.equal(shell.state.fs['/home/learner/projects/README.md'],undefined);
-  assert.equal(shell.execute('touch projects/README.md').code,0);
+  const result=shell.execute('printf "" > projects/README.md; printf "" > "projects/交接 包/README.md"');
+  assert.equal(result.code,0);
+  assert.ok(evaluate(lesson.goals,shell.state,result).every(item=>item.done));
 });
 
-test('lesson completion suggests basic commands while retaining target restrictions', () => {
+test('lesson completion suggests all supported commands', () => {
   const lesson=lessons.find(item=>item.id==='new-readme');
   const shell=createLessonShell(Shell,seedState,lesson);
   assert.ok(shell.complete('p').includes('pwd'));
   assert.ok(shell.complete('l').includes('ls'));
   assert.ok(shell.complete('t').includes('touch'));
-  assert.ok(!shell.complete('m').includes('mkdir'));
-  assert.equal(shell.execute('mkdir other').code,1);
+  assert.ok(shell.complete('m').includes('mkdir'));
+  assert.equal(shell.execute('mkdir other').code,0);
 });
