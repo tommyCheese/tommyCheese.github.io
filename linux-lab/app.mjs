@@ -62,18 +62,13 @@ function renderLearning() {
     const record = learning[item.id]; const row = element('li');
     const link = element('a', item.title); link.href = '#task/' + item.id;
     row.append(link, element('span', mastery(record), 'mastery-state'));
-    if (record) row.title = `${record.passes} 次完成 · ${record.errors} 次未达成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString('zh-CN')}`;
+    if (record) row.title = `${record.passes} 次完成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString('zh-CN')}`;
     $('mastery-list').append(row);
   }
 }
-function finishAttempt() {
-  if (mode !== 'learn' || training?.challengeVersion === 1 || attempt.graded || !(attempt.errors || attempt.maxHint)) return;
-  recordPractice(learning, currentId, attempt, training?.kind || 'lesson', Date.now(), false);
-  attempt.graded = true;
-}
 function beginTraining(kind, queue, boss) {
   if (!queue.length) return;
-  if (shell) { finishAttempt(); persist(); }
+  if (shell) persist();
   saved.session = undefined; shell = undefined;
   training = { kind, queue, index:0, variant:Date.now() % 997 + 1, ...(boss ? {boss,challengeVersion:1} : {}) };
   const route = kind + '/' + queue[0];
@@ -446,13 +441,12 @@ function executeCommand(command) {
     if (goalChecks.every(goal => goal.done)) {
       const unlockedBefore = new Set(bosses.filter(item => bossUnlocked(item, completed)).map(item => item.id));
       const isBoss = training?.challengeVersion === 1;
-      const first = isBoss ? !bossCompleted.has(training.boss) : !completed.has(currentId);
       if (!isBoss) completed.add(currentId);
       const newBoss = bosses.find(item => !unlockedBefore.has(item.id) && bossUnlocked(item, completed));
       if (!wasDone && !attempt.graded) { if (!isBoss) recordPractice(learning, currentId, attempt, training?.kind || 'lesson'); attempt.graded = true; }
       renderChapters();
-      announce(isBoss ? `击败「${lesson.title}」！` : first ? `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。` : '目标再次达成，可以继续下一关。');
-      if (!wasDone) showTaskFeedback('success', isBoss ? '👾 Boss 已击败！' : first ? '挑战完成！' : '再次挑战成功！', isBoss ? '全部实战目标达成！' : `${mastery(learning[currentId])} · 已完成 ${completed.size} / ${lessons.length} 关${newBoss ? ' · 👾 Boss 挑战已解锁，可挑战！' : ''}`);
+      announce(isBoss ? `击败「${lesson.title}」！` : `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。`);
+      if (!wasDone) showTaskFeedback('success', isBoss ? '👾 Boss 已击败！' : '挑战完成！', isBoss ? '全部实战目标达成！' : `已完成 ${completed.size} / ${lessons.length} 关${newBoss ? ' · 👾 Boss 挑战已解锁，可挑战！' : ''}`);
       else if (lastResult.code) showTaskFeedback('retry', '这次没成功，再试一次', lastResult.stderr.trim().split('\n')[0] || '检查命令和路径。');
       else if ($('task-feedback').classList.contains('retry')) $('task-feedback').hidden = true;
     } else {
@@ -492,6 +486,12 @@ for (const action of ['reset', 'undo', 'redo']) {
   $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
 }
 $('next-button').addEventListener('click', advanceLesson);
+document.addEventListener('keydown', event => {
+  if (event.isComposing || event.key !== 'Enter' || !(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey) return;
+  event.preventDefault();
+  if (event.repeat || mode !== 'learn' || document.querySelector('dialog[open]') || $('next-lesson').disabled) return;
+  $('next-lesson').click();
+});
 for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
   $(id).addEventListener('click', () => {
     if (mode !== 'learn') return;
@@ -538,7 +538,6 @@ function navigate(hash, initial = false) {
   }
   if (previousMode === 'sandbox' && shell) sandboxSession = { state: shell.state, transcript, undoRedo: { past: practiceHistory.past, future: practiceHistory.future } };
   if (previousMode === 'learn' && shell) {
-    if (!initial && !(view === 'review' && !id) && (id !== currentId || view !== (training?.kind || 'task'))) finishAttempt();
     persist();
   }
   if (['review','quiz'].includes(view) && ids.has(id) && completed.has(id)) {

@@ -6,22 +6,35 @@ import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
 import { validateBackup, validState } from '../linux-lab/backup.mjs';
 const clean = {maxHint:0, errors:0, graded:false};
 const DAY=86400000, now=20*DAY;
-test('mastery needs independent recall on a later day, not repeated same-day answers',()=>{
+test('mastery follows successful goals across days regardless of hints and retries',()=>{
   const records={}; recordPractice(records,'a',clean,'lesson',now);
-  assert.equal(mastery(records.a),'独立完成');
+  assert.equal(mastery(records.a),'已完成');
   recordPractice(records,'a',clean,'review',now+1000);
-  assert.equal(mastery(records.a),'独立完成');
+  assert.equal(mastery(records.a),'已完成');
   recordPractice(records,'a',clean,'review',now+DAY);
   assert.equal(mastery(records.a),'已掌握');
   assert.equal(records.a.dueAt,now+4*DAY);
   recordPractice(records,'a',{maxHint:3,errors:1},'review',now+5*DAY);
-  assert.equal(mastery(records.a),'解法后完成'); assert.equal(records.a.stage,0);
+  assert.equal(mastery(records.a),'已掌握'); assert.equal(records.a.stage,3);
+  assert.equal(records.a.lastOutcome,'passed');
+  assert.equal(records.a.dueAt,now+12*DAY);
 });
-test('due queue prioritizes old unmeasured progress and assisted answers, excludes unfinished/future lessons',()=>{
+test('due queue prioritizes unmeasured progress without penalizing assisted answers',()=>{
   const records={}; recordPractice(records,'a',clean,'lesson',now); recordPractice(records,'b',{maxHint:1,errors:0},'lesson',now);
   const course=['a','b','c','d'].map(id=>({id})), done=new Set(['a','b','c']);
   assert.deepEqual(reviewQueue(course,done,records,now),['c']);
-  assert.deepEqual(reviewQueue(course,done,records,now+DAY),['c','b','a']);
+  assert.deepEqual(reviewQueue(course,done,records,now+DAY),['c','a','b']);
+});
+test('success has the same assessment after hints or retries and legacy backups remain valid',()=>{
+  const records={};
+  recordPractice(records,'a',clean,'lesson',now);
+  recordPractice(records,'b',{maxHint:3,errors:5},'lesson',now);
+  assert.deepEqual(records.a,records.b);
+  for (const outcome of ['independent','hinted','solution','retry']) {
+    const legacy={...records.a,lastOutcome:outcome};
+    assert.ok(validLearning({a:legacy},new Set(['a'])));
+    assert.equal(mastery(legacy),'已完成');
+  }
 });
 test('quiz picks only completed lessons in selected topic without duplication',()=>{
   const queue=quizQueue(lessons,new Set(lessons.slice(0,8).map(item=>item.id)),'navigation',()=>.1);

@@ -4,34 +4,32 @@ export function validLearning(data, ids) {
   return object(data) && Object.entries(data).every(([id, item]) => ids.has(id) && object(item)
     && ['attempts','passes','independent','retrievals','stage','errors','hints','solutions','lastAt','dueAt'].every(key => Number.isSafeInteger(item[key]) && item[key] >= 0)
     && (item.lastPassed === undefined || typeof item.lastPassed === 'boolean') && item.stage <= 5 && Array.isArray(item.days) && item.days.length <= 60 && item.days.every(day => Number.isSafeInteger(day) && day >= 0)
-    && ['independent','hinted','solution','retry'].includes(item.lastOutcome));
+    && ['passed','failed','independent','hinted','solution','retry'].includes(item.lastOutcome));
 }
 export function recordPractice(records, id, attempt, kind = 'lesson', now = Date.now(), passed = true) {
   const old = records[id] || { attempts:0, passes:0, independent:0, retrievals:0, stage:0, errors:0, hints:0, solutions:0, days:[] };
-  const independent = passed && attempt.maxHint === 0 && attempt.errors === 0;
   const date = new Date(now);
   const day = Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY);
   const newDay = !old.days.includes(day);
-  const stage = independent && newDay ? Math.min(5, old.stage + 1) : independent ? old.stage : 0;
-  const outcome = attempt.maxHint >= 3 ? 'solution' : attempt.maxHint ? 'hinted' : independent ? 'independent' : 'retry';
+  const stage = passed && newDay ? Math.min(5, old.stage + 1) : passed ? old.stage : 0;
   records[id] = { ...old, attempts: old.attempts + 1, passes:old.passes + Number(passed),
-    independent:old.independent + Number(independent), retrievals:old.retrievals + Number(independent && kind !== 'lesson' && newDay),
-    errors:old.errors + attempt.errors, hints:old.hints + Number(attempt.maxHint > 0), solutions:old.solutions + Number(attempt.maxHint >= 3),
-    days:independent ? [...new Set([...old.days, day])].slice(-60) : old.days,
-    stage, lastPassed:passed, lastOutcome:outcome, lastAt:now, dueAt:now + (independent ? [1,1,3,7,14,30][stage] : 1) * DAY };
+    retrievals:old.retrievals + Number(passed && kind !== 'lesson' && newDay),
+    // Keep legacy counters for backup compatibility; hints and retries no longer affect assessment.
+    days:passed ? [...new Set([...old.days, day])].slice(-60) : old.days,
+    stage, lastPassed:passed, lastOutcome:passed ? 'passed' : 'failed', lastAt:now, dueAt:now + (passed ? [1,1,3,7,14,30][stage] : 1) * DAY };
   return records[id];
 }
 export function mastery(record) {
   if (!record) return '待复习';
   if (record.lastPassed === false) return '待巩固';
-  if (record.days.length >= 2 && record.retrievals >= 1 && record.lastOutcome === 'independent') return '已掌握';
-  return { independent:'独立完成', hinted:'提示后完成', solution:'解法后完成', retry:'重试后完成' }[record.lastOutcome];
+  if (record.days.length >= 2 && record.retrievals >= 1) return '已掌握';
+  return '已完成';
 }
 export function reviewQueue(lessons, completed, records, now = Date.now()) {
   return lessons.filter(item => completed.has(item.id) && (!records[item.id] || records[item.id].dueAt <= now))
     .sort((a,b) => {
       const x = records[a.id], y = records[b.id];
-      const priority = item => !item ? 0 : item.lastOutcome !== 'independent' ? 1 : 2;
+      const priority = item => !item ? 0 : item.lastPassed === false ? 1 : 2;
       return priority(x) - priority(y) || (x?.dueAt || 0) - (y?.dueAt || 0);
     }).slice(0, 5).map(item => item.id);
 }
