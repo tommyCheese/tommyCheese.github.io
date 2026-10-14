@@ -205,7 +205,15 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露内部测试中的预期外操作，将暂停实时联网扩大到全部内部评测，并加强工具约束与监控。措施针对内部评测环境。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "格罗方德公布面向物理 AI 的 FDX Fusion 路线图",
     "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台预期提供 7 纳米级数字性能，面向边缘推理、机器人等应用；计划 2027 年启动客户验证，2028 年在德累斯顿制造。",
-    "nav.linuxLab": "Learn Linux Command"
+    "nav.linuxLab": "Learn Linux Command",
+    "news.google-gemini4-argon-cloud.title": "Gemini 4 Argon 上线 Google Cloud",
+    "news.google-gemini4-argon-cloud.summary": "Google 将 Gemini 4 Argon 引入 Google Cloud，面向复杂编程、长文档分析和多步骤企业任务，开发者可通过 API 调用。",
+    "news.sk-hynix-3d-fenand-compute-research.title": "SK 海力士详解 3D FeNAND 存算一体研究",
+    "news.sk-hynix-3d-fenand-compute-research.summary": "SK 海力士解读 IEDM 2025 论文，介绍 3D FeNAND 存储单元、互连与页面方案的协同优化，探索降低 AI 计算的数据搬运开销。",
+    "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：三天数据即可启动睡眠指导",
+    "news.samsung-health-sleep-coaching-update.summary": "睡眠指导将启动门槛降至三天数据，并按周调整建议；跑步训练由 10 级扩展至 12 级。更新自 10 月起逐步推出，支持情况因地区和设备而异。",
+    "news.saic-ciif-ai-cockpit-lineup.title": "上汽亮相 2026 工博会，展示 AI 座舱与全线控纯电 SUV",
+    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博会上，上汽展出荣威家越 07、MG 07 等车型，以及智己全线控 AI 概念舱；智己 LS8 NEO 纯电首次公开亮相。"
   },
   "en": {
     "nav.about": "About",
@@ -412,7 +420,15 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.summary": "After reporting unintended actions in internal testing, Anthropic extends its live internet pause to all internal evaluations and strengthens tool restrictions and monitoring. The measure applies to internal evaluation environments.",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries unveils FDX Fusion roadmap for physical AI",
     "news.globalfoundries-fdx-fusion-roadmap.summary": "The planned FD-SOI platform targets 7nm-class digital performance for edge inference and robotics. Customer validation is planned for 2027, followed by Dresden manufacturing in 2028.",
-    "nav.linuxLab": "Learn Linux Command"
+    "nav.linuxLab": "Learn Linux Command",
+    "news.google-gemini4-argon-cloud.title": "Gemini 4 Argon arrives on Google Cloud",
+    "news.google-gemini4-argon-cloud.summary": "Google brings Gemini 4 Argon to Google Cloud for complex coding, long-document analysis, and multi-step enterprise tasks, with API access for developers.",
+    "news.sk-hynix-3d-fenand-compute-research.title": "SK hynix explains its 3D FeNAND compute-in-memory research",
+    "news.sk-hynix-3d-fenand-compute-research.summary": "SK hynix reviews its IEDM 2025 paper on jointly optimizing 3D FeNAND memory cells, interconnects, and page schemes to explore ways to reduce data-movement overhead in AI computing.",
+    "news.samsung-health-sleep-coaching-update.title": "Samsung Health update: start Sleep Coaching with three days of data",
+    "news.samsung-health-sleep-coaching-update.summary": "Sleep Coaching now needs just three days of data to begin and adjusts its guidance weekly; running training expands from 10 to 12 levels. The update rolls out gradually from October, with availability varying by region and device.",
+    "news.saic-ciif-ai-cockpit-lineup.title": "SAIC showcases an AI cockpit and a fully drive-by-wire electric SUV at CIIF 2026",
+    "news.saic-ciif-ai-cockpit-lineup.summary": "At the October 12–16 industrial fair in Shanghai, SAIC exhibits models including the Roewe Jiayue 07 and MG 07, alongside IM Motors’ fully drive-by-wire AI concept cockpit. The all-electric IM LS8 NEO makes its first public appearance."
   },
   "ja": {
     "nav.about": "私について",
@@ -619,7 +635,15 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.summary": "社内テストで意図しない操作が報告されたことを受け、Anthropicはリアルタイムのインターネット接続停止を全社内評価へ拡大。ツール制限と監視も強化します。対象は社内評価環境です。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries、物理AI向けFDX Fusionの計画を公開",
     "news.globalfoundries-fdx-fusion-roadmap.summary": "計画中のFD-SOIプラットフォームは、エッジ推論やロボット向けに7nm級のデジタル性能を目指します。2027年に顧客検証、2028年にドレスデンでの製造を予定しています。",
-    "nav.linuxLab": "Learn Linux Command"
+    "nav.linuxLab": "Learn Linux Command",
+    "news.google-gemini4-argon-cloud.title": "Gemini 4 Argon が Google Cloud に登場",
+    "news.google-gemini4-argon-cloud.summary": "Google は、複雑なコーディング、長文書の分析、複数ステップの企業向けタスクを対象に Gemini 4 Argon を Google Cloud に導入。開発者は API 経由で利用できます。",
+    "news.sk-hynix-3d-fenand-compute-research.title": "SK hynix、3D FeNAND のメモリ内演算研究を解説",
+    "news.sk-hynix-3d-fenand-compute-research.summary": "SK hynix が IEDM 2025 の論文を解説。3D FeNAND のメモリセル、配線、ページ構成を協調最適化し、AI 演算に伴うデータ移動の負荷軽減を探る研究を紹介しています。",
+    "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：3 日分のデータで睡眠コーチングを開始可能に",
+    "news.samsung-health-sleep-coaching-update.summary": "睡眠コーチングの開始に必要なデータが 3 日分に減り、アドバイスは毎週調整される。ランニングのトレーニング段階は 10 から 12 に拡大。更新は 10 月から順次提供され、対応状況は地域やデバイスによって異なる。",
+    "news.saic-ciif-ai-cockpit-lineup.title": "上汽、2026 年中国国際工業博覧会で AI コックピットとフルバイワイヤの電動 SUV を展示",
+    "news.saic-ciif-ai-cockpit-lineup.summary": "10 月 12～16 日に上海で開催される工業博覧会で、上汽は栄威・家越 07、MG 07 などの車両と、智己のフルバイワイヤ AI コンセプトコックピットを展示。智己 LS8 NEO の純電動モデルも初めて一般公開された。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -826,7 +850,15 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.summary": "После выявления непредусмотренных действий во внутренних тестах Anthropic распространила приостановку доступа к интернету на все внутренние оценки, усилив ограничения инструментов и мониторинг. Мера касается внутренних оценочных сред.",
     "news.globalfoundries-fdx-fusion-roadmap.title": "GlobalFoundries представила планы FDX Fusion для физического ИИ",
     "news.globalfoundries-fdx-fusion-roadmap.summary": "Планируемая платформа FD-SOI нацелена на цифровую производительность уровня 7 нм для периферийного ИИ и робототехники. Проверка с заказчиками намечена на 2027 год, производство в Дрездене — на 2028 год.",
-    "nav.linuxLab": "Learn Linux Command"
+    "nav.linuxLab": "Learn Linux Command",
+    "news.google-gemini4-argon-cloud.title": "Gemini 4 Argon появилась в Google Cloud",
+    "news.google-gemini4-argon-cloud.summary": "Google добавила Gemini 4 Argon в Google Cloud для сложного программирования, анализа длинных документов и многоэтапных корпоративных задач. Разработчикам доступен API.",
+    "news.sk-hynix-3d-fenand-compute-research.title": "SK hynix рассказывает об исследованиях вычислений в памяти 3D FeNAND",
+    "news.sk-hynix-3d-fenand-compute-research.summary": "SK hynix рассказывает о своей работе с IEDM 2025: совместной оптимизации ячеек памяти 3D FeNAND, межсоединений и схем работы со страницами для снижения затрат на перемещение данных при ИИ-вычислениях.",
+    "news.samsung-health-sleep-coaching-update.title": "Обновление Samsung Health: для запуска рекомендаций по сну достаточно данных за три дня",
+    "news.samsung-health-sleep-coaching-update.summary": "Для запуска Sleep Coaching теперь достаточно данных за три дня, а рекомендации корректируются еженедельно. Число уровней беговых тренировок увеличено с 10 до 12. Обновление распространяется постепенно с октября; доступность зависит от региона и устройства.",
+    "news.saic-ciif-ai-cockpit-lineup.title": "SAIC показывает ИИ-кокпит и электрокроссовер с полностью электронным управлением на CIIF 2026",
+    "news.saic-ciif-ai-cockpit-lineup.summary": "На промышленной выставке в Шанхае 12–16 октября SAIC демонстрирует Roewe Jiayue 07, MG 07 и другие модели, а также концептуальный ИИ-кокпит IM Motors с полностью электронным управлением. Электрический IM LS8 NEO впервые представлен публике."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -1033,6 +1065,14 @@ window.SITE_MESSAGES = {
     "news.anthropic-evaluation-internet-safety.summary": "Anthropic 披露內部測試中的非預期操作，將暫停即時連網擴大至全部內部評測，並加強工具限制與監控。措施針對內部評測環境。",
     "news.globalfoundries-fdx-fusion-roadmap.title": "格羅方德公布面向實體 AI 的 FDX Fusion 路線圖",
     "news.globalfoundries-fdx-fusion-roadmap.summary": "新 FD-SOI 平台預期提供 7 奈米級數位效能，面向邊緣推論、機器人等應用；計畫 2027 年啟動客戶驗證，2028 年在德勒斯登製造。",
-    "nav.linuxLab": "Learn Linux Command"
+    "nav.linuxLab": "Learn Linux Command",
+    "news.google-gemini4-argon-cloud.title": "Gemini 4 Argon 上線 Google Cloud",
+    "news.google-gemini4-argon-cloud.summary": "Google 將 Gemini 4 Argon 引入 Google Cloud，面向複雜程式開發、長文件分析和多步驟企業任務，開發者可透過 API 呼叫。",
+    "news.sk-hynix-3d-fenand-compute-research.title": "SK 海力士詳解 3D FeNAND 記憶體內運算研究",
+    "news.sk-hynix-3d-fenand-compute-research.summary": "SK 海力士解讀 IEDM 2025 論文，介紹 3D FeNAND 記憶體單元、互連與頁面配置的協同最佳化，探索降低 AI 運算的資料搬移負擔。",
+    "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：三天資料即可啟動睡眠指導",
+    "news.samsung-health-sleep-coaching-update.summary": "睡眠指導將啟動門檻降至三天資料，並按週調整建議；跑步訓練由 10 級擴展至 12 級。更新自 10 月起逐步推出，支援情況因地區和裝置而異。",
+    "news.saic-ciif-ai-cockpit-lineup.title": "上汽亮相 2026 工博會，展示 AI 座艙與全線控純電 SUV",
+    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博會上，上汽展出榮威家越 07、MG 07 等車款，以及智己全線控 AI 概念艙；智己 LS8 NEO 純電首次公開亮相。"
   }
 };
