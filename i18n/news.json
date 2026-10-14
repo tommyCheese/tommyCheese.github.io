@@ -1,6 +1,43 @@
 {
-  "updated_at": "2026-10-11",
+  "updated_at": "2026-10-15",
   "items": [
+    {
+      "id": "sk-hynix-3d-fenand-compute-research",
+      "category": "semiconductors",
+      "published_at": "2026-10-14",
+      "source": "SK hynix",
+      "url": "https://news.skhynix.com/en/research-inside-ep2/",
+      "image": "https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/10/08132621/research-inside-ep2-Thumb.jpg",
+      "image_credit": "SK hynix"
+    },
+    {
+      "id": "samsung-health-sleep-coaching-update",
+      "category": "devices",
+      "published_at": "2026-10-14",
+      "source": "Samsung Newsroom",
+      "url": "https://news.samsung.com/global/samsung-health-makes-sleep-coaching-easier-to-start-and-tailors-weekly-guidance",
+      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/13095013/Samsung-Mobile-Samsung-Health-Sleep-Coaching_Main1.jpg",
+      "image_credit": "Samsung Electronics",
+      "image_fit": "contain"
+    },
+    {
+      "id": "google-gemini4-argon-cloud",
+      "category": "ai",
+      "published_at": "2026-10-13",
+      "source": "Google Cloud",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud",
+      "image": "https://storage.googleapis.com/gweb-cloudblog-publish/images/Gemini_4_argon.max-2500x2500.jpg",
+      "image_credit": "Google Cloud"
+    },
+    {
+      "id": "saic-ciif-ai-cockpit-lineup",
+      "category": "cars",
+      "published_at": "2026-10-13",
+      "source": "上汽集团",
+      "url": "https://www.saicmotor.com/chinese/xwzx/xwk/2026/65558.shtml",
+      "image": "https://www.saicmotor.com/chinese/images/xwzx/xwk/2026/2026/10/13/A2D552EC9E8B4C32A79CA6F3230822F8.jpg",
+      "image_credit": "上汽集团"
+    },
     {
       "id": "oneplus16-800hz-gyroscope",
       "category": "devices",
