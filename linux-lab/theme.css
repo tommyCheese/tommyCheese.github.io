@@ -1,0 +1,61 @@
+/* Shared appearance for the lab and its standalone reference pages. */
+#theme-toggle{font:inherit;font-size:18px;line-height:1;display:inline-grid;place-items:center;width:32px;height:32px;flex-shrink:0;cursor:pointer;padding:0;border:0;border-radius:6px;background:transparent;color:inherit;opacity:.85}
+#theme-toggle:hover{opacity:1}
+#theme-toggle:focus-visible{outline:2px solid #be9b42;outline-offset:3px}
+:root[data-theme=light]{color-scheme:light;background:#edf1eb}
+[data-theme=light] .mission-window{box-shadow:0 3px 12px #354b3812}
+[data-theme=light] body:has(.game-world){background-color:#edf1eb;color:#39483f;background-image:url('./linux-penguin-light.svg'),url('./linux-background-light.svg'),radial-gradient(ellipse at 75% 20%,#fafbf6,transparent 70%);background-position:36px calc(100% - 80px),center 64px,center;background-size:180px auto,cover,cover;background-attachment:fixed;background-repeat:no-repeat}
+[data-theme=light] .game-header,[data-theme=light] .game-footer{background:#e2e8de;color:#42534a;border-color:#cbd5c8}
+[data-theme=light] .game-header nav [aria-current]{background:#ffffff9c}
+[data-theme=light] .scene-label,[data-theme=light] .scene-label>span:last-child,[data-theme=light] .scene-controls{color:#64766a}
+[data-theme=light] .scene-label #levels-button{color:#756023;border-color:#c9b36f;background:#fff9e7}
+[data-theme=light] .scene-controls button[aria-pressed=true]{color:#715b22;border-color:#a88c3b}
+[data-theme=light] .practice-actions button{background:#f8faf4;border-color:#bfcbbc;color:#485e4d}
+[data-theme=light] .practice-actions #review-button{color:#587034;border-color:#b5c49e}
+[data-theme=light] #terminal-resize::after{background:#8d9f8a}
+[data-theme=light] .system-section{background:#f8faf4;border-color:#cbd6c5;color:#435747}
+[data-theme=light] .system-section h3,[data-theme=light] .system-caption{color:#6e8068}
+[data-theme=light] .system-row span:last-child{color:#527744}
+:root[data-theme=dark]{color-scheme:dark;--paper:#2c322e;--ink:#e0e7df;--line:#465047;--accent:#afcea1;background:#252a28}
+[data-theme=dark] body{background-color:#252a28;color:#e0e7df}
+[data-theme=dark] .game-header,[data-theme=dark] .game-footer{background:#202622;color:#c4d1c1}
+[data-theme=dark] .mission-window,[data-theme=dark] .levels-dialog,[data-theme=dark] .help-dialog,[data-theme=dark] .review-screen{border-color:#4a5449;box-shadow:0 8px 28px #0003}
+[data-theme=dark] .mission-window{box-shadow:0 3px 12px #0002}
+[data-theme=dark] .window-bar,[data-theme=dark] .mission-bar{background:#353d36;color:#b8c5b2;border-color:#4b574a}
+[data-theme=dark] .mission-dialogue h1,[data-theme=dark] .welcome-content h2{color:#e5ecdf}
+[data-theme=dark] .task-context,[data-theme=dark] .command-explanation p,[data-theme=dark] .help-content dd,[data-theme=dark] .welcome-content p{color:#b7c3b5}
+[data-theme=dark] .mission-target{background:#313e2b;border-color:#56694c}
+[data-theme=dark] .goal-path,[data-theme=dark] .command-explanation,[data-theme=dark] .help-content .help-note{color:#a4b39b}
+[data-theme=dark] .hint-box{background:#493f25;color:#ecdcaf}
+[data-theme=dark] .goal-reference pre,[data-theme=dark] .goal-comparison pre,[data-theme=dark] .solution-review pre{background:#222923;border-color:#465244;color:#d3dfcb}
+[data-theme=dark] .solution-review,[data-theme=dark] .solution-review>summary{color:#b8d4a4}
+[data-theme=dark] .goal-difference{color:#e5bd84}
+[data-theme=dark] .task-feedback.success{background:#304528;border-color:#607e4d;color:#dcf0cd}
+[data-theme=dark] .task-feedback.retry{background:#493e29;border-color:#8c7447;color:#f0d8aa}
+[data-theme=dark] .files-world,[data-theme=dark] .finder-content{background:#282e2b;border-color:#465149;color:#c4d2c7}
+[data-theme=dark] .finder-toolbar,[data-theme=dark] .finder-status,[data-theme=dark] .file-resize.vertical,[data-theme=dark] .file-resize.horizontal{background:#303831;border-color:#465149}
+[data-theme=dark] .finder-toolbar code,[data-theme=dark] .file-preview strong,[data-theme=dark] .file-preview pre{color:#c3d5c9}
+[data-theme=dark] .finder-toolbar button{background:#3d4840;color:#c5d5c8}
+[data-theme=dark] .finder-tree{background:#2e3730}
+[data-theme=dark] .directory-link,[data-theme=dark] .finder-item{color:#c0cec4}
+[data-theme=dark] .directory-link:hover,[data-theme=dark] .finder-item:hover{background:#35473b}
+[data-theme=dark] .directory-link[aria-current],[data-theme=dark] .finder-item.selected,[data-theme=dark] .finder-item.selected.changed{background:#384e40;color:#d5e9d8;box-shadow:none}
+[data-theme=dark] .finder-item.selected .finder-name{background:#4d6a55;color:#edf6ea}
+[data-theme=dark] .finder-item.changed{background:#364934}
+[data-theme=dark] .files-world .file-preview{background:#2d362f;border-color:#465149}
+[data-theme=dark] .level-tabs,[data-theme=dark] .search-box{background:#242c25;border-color:#495646}
+[data-theme=dark] .level-tabs button[aria-pressed=true]{background:#44543e;color:#e3efd9}
+[data-theme=dark] .search-box input,[data-theme=dark] .lesson-link,[data-theme=dark] .help-content p{color:#bfccba}
+[data-theme=dark] .chapter,[data-theme=dark] .mastery-records{border-color:#465244}
+[data-theme=dark] .review-card,[data-theme=dark] .cards>a,[data-theme=dark] .command-list a,[data-theme=dark] .reference-filters,[data-theme=dark] .reference-actions button{background:#303830;border-color:#465244}
+[data-theme=dark] .review-screen button,[data-theme=dark] .backup-actions button,[data-theme=dark] .backup-actions .import-label,[data-theme=dark] .restart-actions button{background:#3c4936;border-color:#5d6b51;color:#d3e1c6}
+[data-theme=dark] .backup-actions #restart-practice,[data-theme=dark] .help-content .restart-backup-note{background:#493c2d;color:#e6c6a1;border-color:#745d46}
+[data-theme=dark] .restart-actions .restart-danger{background:#9d5e4d;color:#fff}
+[data-theme=dark] .lead,[data-theme=dark] .eyebrow,[data-theme=dark] .breadcrumb,[data-theme=dark] .command-list span,[data-theme=dark] .task-list span,[data-theme=dark] .reference-results,[data-theme=dark] .reference-actions span{color:#aab9a4}
+[data-theme=dark] .reference-filters input[type=search],[data-theme=dark] .reference-filters select{background:#242c25;color:#e0e7df;border-color:#465244}
+[data-theme=dark] .reference-actions button[aria-pressed=true]{background:#554a28;color:#efd58a}
+[data-theme=dark] button:disabled{filter:none}
+[data-theme=dark] .system-section{background:#2d3730e6;border-color:#46584b}
+[data-theme=dark] .system-section h3{color:#b5c7b3}
+[data-theme=dark] .command-chip,[data-theme=dark] .command-parts a,[data-theme=dark] .help-content dt{color:#91bfda}
+[data-theme=dark] .mission-actions>button:first-child,[data-theme=dark] .solution-example p,[data-theme=dark] .goal-comparison strong{color:#b8c5ad}

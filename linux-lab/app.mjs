@@ -1,5 +1,7 @@
 import { goalReference } from './task-copy.mjs';
-import { starterRoute, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
+import { completionMessage, compareSolutions } from './guidance.mjs';
+import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
+import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
 import { terminalLabs } from './terminal-labs.mjs';
 import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
@@ -52,6 +54,39 @@ let training = null;
 let starterMode = false;
 let solutionCache;
 let exerciseInitialState;
+let onboardingReady = false;
+function showTaskIntro() {
+  if (mode !== 'learn') return;
+  $('task-intro-title').textContent = lesson.title;
+  $('task-intro-lead').textContent = training?.challengeVersion === 1 ? '工具已经在手，试着把它们配合起来吧。' : training ? '换个场景，再试试还记得多少。需要时，提示就在手边。' : '这次，试着完成下面的小任务。边操作，边看看发生了什么。';
+  $('task-intro-steps').replaceChildren();
+  for (const text of lesson.steps || [lesson.context]) $('task-intro-steps').append(element('li',text));
+  $('task-intro-commands').replaceChildren();
+  $('task-intro-tools').open = !training && lesson.level === 'common' && (!starterMode || ['orientation','workspace'].includes(starterPhase(currentId)?.id));
+  const names = training?.challengeVersion === 1 ? [] : [...new Set([lesson.command,...(lesson.reviewCommands || [])])];
+  if (!names.length) $('task-intro-commands').append(element('p','综合运用已学命令，完成以上目标。'));
+  for (const name of names) {
+    const manual = manuals.find(item=>item.name === name); if (!manual) continue;
+    const row = element('div',undefined,'intro-command');
+    row.append(element('code',name),element('span',manual.summary));
+    if ($('task-intro-tools').open) {
+      const usage = element('code',manual.syntax,'intro-syntax');
+      row.append(usage);
+    }
+    $('task-intro-commands').append(row);
+  }
+  if ($('task-intro-tools').open) {
+    const manual = manuals.find(item=>item.name === lesson.command);
+    if (manual?.example) {
+      const example = element('details',undefined,'intro-example');
+      example.append(element('summary','看一个例子'),element('pre',manual.example));
+      $('task-intro-commands').append(example);
+    }
+  }
+  $('task-intro-dialog').showModal();
+}
+for (const id of ['task-intro-start','task-intro-close']) $(id).addEventListener('click',()=> $('task-intro-dialog').close());
+$('task-intro-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
 const navigationLessons = () => starterMode ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons;
 const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
@@ -102,6 +137,7 @@ function startBoss(boss) {
   beginTraining('quiz', [boss.prerequisites[0]], boss.id);
 }
 function advanceLesson() {
+  if ($('completion-dialog').open) $('completion-dialog').close();
   if (training) {
     if (training.index + 1 < training.queue.length) {
       persist(); shell = undefined; saved.session = undefined;
@@ -134,16 +170,56 @@ function announce(text) { $('announcement').textContent = text; }
 function showTaskFeedback(kind, title, detail) {
   const banner = $('task-feedback');
   banner.className = 'task-feedback ' + kind;
-  $('feedback-icon').textContent = kind === 'success' ? '★' : '↺';
+  $('feedback-icon').textContent = kind === 'success' ? '★' : kind === 'progress' ? '✓' : '↺';
   $('feedback-title').textContent = title;
   $('feedback-detail').textContent = detail;
   banner.hidden = false;
   reveal(banner);
 }
 
+function showCompletion(newBoss) {
+  const copy = completionMessage(lesson,{boss:training?.challengeVersion === 1,review:training?.kind === 'review'});
+  $('completion-title').textContent = copy.title;
+  $('completion-detail').textContent = copy.detail;
+  $('completion-lesson').textContent = lesson.title;
+  const sequence = training ? training.queue.map(id=>lessons.find(item=>item.id === id)) : navigationLessons();
+  const position = training ? training.index : sequence.findIndex(item=>item.id === currentId);
+  const next = sequence[position+1];
+  const count = training ? position+1 : sequence.filter(item=>completed.has(item.id)).length;
+  $('completion-progress').max = sequence.length; $('completion-progress').value = count;
+  $('completion-count').textContent = `${training ? '本轮训练' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
+  $('completion-next-preview').textContent = next ? `接下来，试试「${next.title}」？` : training ? '这一轮收工！让刚才的收获沉淀一下。' : '这一段走完了，去地图上挑个新挑战吧。';
+  $('completion-next').textContent = next ? '继续挑战 →' : training ? '完成本轮 ✓' : '去关卡地图 →';
+  $('completion-unlock').hidden = !newBoss;
+  if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战解锁了，随时来试试！';
+  $('completion-comparison').open = false;
+  renderComparison($('completion-comparison-content'));
+  $('completion-dialog').showModal();
+}
+function renderComparison(container) {
+  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState);
+  const comparison = compareSolutions(shell.state.history, solutionCache);
+  container.replaceChildren(element('p',comparison.message,'comparison-note'));
+  const columns = element('div',undefined,'solution-columns');
+  for (const [title,lines] of [[`你的操作 · ${comparison.yours.length} 行${shell.state.history.length >= 200 ? '（最近记录）' : ''}`,comparison.yours],['参考解法'+(comparison.reference ? ` · ${comparison.reference.lines.length} 行` : ''),comparison.reference?.lines || []]]) {
+    const block = element('section'); block.append(element('h3',title));
+    const list = element('ol',undefined,'solution-lines');
+    const other = title.startsWith('你的') ? comparison.reference?.lines || [] : comparison.yours;
+    for (const line of lines) {
+      const item = element('li'); item.classList.toggle('different',!other.includes(line));
+      item.append(element('code',line)); list.append(item);
+    }
+    block.append(list); columns.append(block);
+  }
+  container.append(columns,element('p','浅色标出不同写法。参考解法已验证可通关，并非唯一最优解；观察和查手册也有价值。','comparison-note'));
+}
+for (const id of ['completion-close','completion-stay']) $(id).addEventListener('click',()=> $('completion-dialog').close());
+$('completion-next').addEventListener('click',advanceLesson);
+$('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
+
 function persist() {
   const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
-    session: mode === 'learn' && shell ? { revision: 2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+    session: mode === 'learn' && shell ? { revision: 2, flowVersion:1, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
   catch { storageAvailable = false; }
@@ -167,8 +243,8 @@ function renderChapters() {
   const query = $('course-search').value.trim().toLowerCase();
   $('chapters').replaceChildren();
   const starter = selectedLevel === 'starter';
-  for (const chapter of starter ? [{id:'starter', number:'→', title:'从零开始', description:'15 个小任务，认识路径、文件、文本和重定向。'}] : chapters) {
-    const items = starter ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
+  for (const chapter of starter ? starterPhases : chapters) {
+    const items = starter ? chapter.lessons.map(id => lessons.find(item => item.id === id)) : lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
     const matches = items.filter(item => !query || `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`.toLowerCase().includes(query));
     const boss = bosses.find(item => item.level === selectedLevel && item.chapter === chapter.id);
     const showBoss = boss && (!query || `${chapter.title} boss 挑战 专题小测 ${items.map(item => item.command).join(' ')}`.toLowerCase().includes(query));
@@ -223,7 +299,7 @@ function renderChapters() {
 function renderTask() {
   const sandbox = mode === 'sandbox'; const chapter = chapters.find(item => item.id === lesson.chapter);
   const items = lessons.filter(item => item.chapter === lesson.chapter && item.level === lesson.level);
-  $('task-category').textContent = training ? (training.kind === 'review' ? '今日复习' : '👾 Boss 挑战') : sandbox ? 'SANDBOX' : starterMode ? '入门路线' : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
+  $('task-category').textContent = training ? (training.kind === 'review' ? '今日复习' : '👾 Boss 挑战') : sandbox ? 'SANDBOX' : starterMode ? starterPhase(currentId).title : `${levels.find(item => item.id === lesson.level).title} · ${chapter.title}`;
   $('console-command').textContent = sandbox ? 'sandbox' : training ? '选择合适的命令' : lesson.command;
   $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : starterMode ? `${starterRoute.indexOf(currentId) + 1} / ${starterRoute.length}` : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
@@ -275,9 +351,9 @@ function renderTask() {
   $('mastery-badge').textContent = mastery(learning[currentId]);
   $('hint-button').hidden = sandbox;
   $('hint-button').disabled = hint >= 3;
-  $('hint-button').textContent = hint >= 3 ? '解法' : hint ? `提示 ${hint}/3` : '💡 提示';
+  $('hint-button').textContent = hint >= 3 ? '解法已展开' : hint ? '再给点线索' : '💡 给点提示';
   $('hint-box').hidden = sandbox || !hint;
-  if (hint) { $('hint-title').textContent = hint === 3 ? '参考解法' : `提示 ${hint} / 3`; $('hint-content').textContent = lesson.hints[hint - 1]; }
+  if (hint) { $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1]; $('hint-content').textContent = lesson.hints[hint - 1]; }
   $('related-commands').replaceChildren();
   for (const command of training && !hint ? [] : sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
     const button = element('a', command + ' 手册', 'command-chip');
@@ -290,9 +366,10 @@ function renderTask() {
 
 function renderSolutionReview() {
   const content = $('solution-review-content'); content.replaceChildren();
+  const comparison = element('div'); renderComparison(comparison); content.append(comparison);
   const entry = transcript.findLast(item => item.command);
   if (entry) {
-    content.append(element('h3', '你的命令'), element('pre', entry.command, 'review-command'));
+    content.append(element('h3','最后一步的参数'));
     const list = element('dl', undefined, 'command-parts');
     const before = practiceHistory.past.at(-1)?.state || shell.state;
     for (const part of explainCommand(entry.command, before)) {
@@ -442,16 +519,23 @@ function startTask(id, restore = false) {
   if (restore && validSession(saved.session)) {
     try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); attempt.maxHint = Math.max(attempt.maxHint, hint); }
     catch { shell = makeExercise(); transcript = []; }
+    if (saved.session.flowVersion !== 1) {
+      restoreFlowAssets(shell.state,exerciseInitialState,lesson);
+    }
   }
   goalChecks = evaluate(lesson.goals, shell.state);
   if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index]) goal.done = true; });
-  if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) { practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future); }
+  if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) {
+    practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future);
+    if (saved.session.flowVersion !== 1) for (const snapshot of [...practiceHistory.past,...practiceHistory.future]) restoreFlowSnapshot(snapshot,exerciseInitialState,lesson);
+  }
   updatePracticeActions();
   browsePath = shell.state.cwd; previewPath = undefined; changes = new Set(); $('command-input').value = '';
   focusGoalDirectory();
   setWorldTab(['system', 'network', 'services'].includes(lesson.chapter));
   renderTask(); renderChapters(); renderTranscript(); renderWorld(); persist();
   reveal($('mission-window'));
+  if (onboardingReady && (!restore || !transcript.some(item=>item.command))) showTaskIntro();
 }
 function focusGoalDirectory() {
   const goal = lesson.goals.find(goal => goal.path && ['file','dir','absent','mode','owner','link','archive'].includes(goal.type));
@@ -493,6 +577,7 @@ function practiceAction(action) {
   renderTask(); renderTranscript(); renderWorld(); updatePracticeActions(); persist();
 }
 function executeCommand(command) {
+  let celebrate = false; let unlockedBoss;
   if (['reset', 'undo', 'redo'].includes(command)) { practiceAction(command); return; }
   practiceHistory.record(practiceSnapshot());
   const path = shell.state.cwd; const before = JSON.stringify(shell.state.fs);
@@ -516,18 +601,25 @@ function executeCommand(command) {
       if (!wasDone && !attempt.graded) { if (!isBoss) recordPractice(learning, currentId, attempt, training?.kind || 'lesson'); attempt.graded = true; }
       renderChapters();
       announce(isBoss ? `击败「${lesson.title}」！` : `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。`);
-      if (!wasDone) showTaskFeedback('success', isBoss ? '👾 Boss 已击败！' : '挑战完成！', isBoss ? '全部实战目标达成！' : `已完成 ${completed.size} / ${lessons.length} 关${newBoss ? ' · 👾 Boss 挑战已解锁，可挑战！' : ''}`);
+      if (!wasDone) {
+        const copy = completionMessage(lesson,{boss:isBoss,review:training?.kind === 'review'});
+        showTaskFeedback('success',copy.title,copy.detail); celebrate = true; unlockedBoss = newBoss;
+      }
       else if (lastResult.code) showTaskFeedback('retry', '这次没成功，再试一次', lastResult.stderr.trim().split('\n')[0] || '检查命令和路径。');
       else if ($('task-feedback').classList.contains('retry')) $('task-feedback').hidden = true;
     } else {
       if (!attempt.graded && (lastResult.code || (!training?.challengeVersion && lastResult.commands.some(name => name === lesson.command || !basicCommands.has(name))))) attempt.errors++;
       announce(lastResult.code ? '命令已结束，目标尚未全部达成。查看终端反馈或提示。' : '环境已更新，继续观察目标。');
-      if (lastResult.code) showTaskFeedback('retry', '这次没成功，再试一次', lastResult.stderr.trim().split('\n')[0] || '目标尚未达成，可以查看提示。');
-      else if (lastResult.commands.includes(lesson.command)) showTaskFeedback('retry', '还差一点', goalChecks.find(goal => !goal.done)?.label || '对照目标，再调整一下命令。');
+      const achieved = goalChecks.filter(goal=>goal.done).length;
+      const improved = goalChecks.some((goal,index)=>goal.done && !previous[index]?.done);
+      if (improved && !lastResult.stderr) showTaskFeedback('progress', '对，就是这样！', `已完成 ${achieved} / ${goalChecks.length} 个目标。接着试试：` + goalChecks.find(goal=>!goal.done).label);
+      else if (lastResult.code) showTaskFeedback('retry', '这一步卡住了？看看这里', lastResult.stderr.trim().split('\n')[0] || '对照一下目标；需要线索时，点「给点提示」。');
+      else if (lastResult.commands.includes(lesson.command)) showTaskFeedback('progress', '继续试试，目标就在前面', '接下来：' + (goalChecks.find(goal => !goal.done)?.label || '对照目标，再调整一下命令。'));
       else $('task-feedback').hidden = true;
     }
   }
   renderTask(); updatePrompt(); renderWorld(); updatePracticeActions(); persist();
+  if (celebrate) showCompletion(unlockedBoss);
 }
 $('practice-area').addEventListener('click', event => {
   if (event.target.closest('button, a, input, select, textarea')) return;
@@ -535,7 +627,7 @@ $('practice-area').addEventListener('click', event => {
   if (selection && !selection.isCollapsed && $('practice-area').contains(selection.anchorNode)) return;
   $('command-input').focus({ preventScroll: true });
 });
-$('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; $('command-input').focus(); });
+$('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; if (!document.querySelector('dialog[open]')) $('command-input').focus(); });
 $('command-input').addEventListener('keydown', event => {
   if (event.isComposing) return;
   if (event.ctrlKey && event.key.toLowerCase() === 'l') { event.preventDefault(); transcript = []; renderTranscript(); persist(); return; }
@@ -559,6 +651,7 @@ $('next-button').addEventListener('click', advanceLesson);
 document.addEventListener('keydown', event => {
   if (event.isComposing || event.key !== 'Enter' || !(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey) return;
   event.preventDefault();
+  if (!event.repeat && $('completion-dialog').open) { $('completion-next').click(); return; }
   if (event.repeat || mode !== 'learn' || document.querySelector('dialog[open]') || $('next-lesson').disabled) return;
   $('next-lesson').click();
 });
@@ -595,6 +688,8 @@ $('file-up').addEventListener('click', () => { browsePath = resolve('..', browse
 $('preview-close').addEventListener('click', () => { previewPath = undefined; renderWorld(); });
 
 function navigate(hash, initial = false) {
+  if ($('completion-dialog').open) $('completion-dialog').close();
+  if ($('task-intro-dialog').open) $('task-intro-dialog').close();
   $('task-feedback').hidden = true;
   if ($('levels-dialog').open) $('levels-dialog').close();
   if ($('restart-dialog').open) $('restart-dialog').close();
@@ -809,10 +904,13 @@ $('welcome-start').addEventListener('click', () => {
 });
 $('welcome-dialog').addEventListener('close', () => {
   try { localStorage.setItem(WELCOME_KEY, 'seen'); } catch { /* Still allow practice when storage is unavailable. */ }
+  if (onboardingReady) showTaskIntro();
 });
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
+onboardingReady = true;
 if (showWelcome) $('welcome-dialog').showModal();
+else if (mode === 'learn' && !transcript.some(item=>item.command)) showTaskIntro();
 
 // Keep favorites in sync when a standalone reference page changes them.
 window.addEventListener('storage', event => {

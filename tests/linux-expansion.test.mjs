@@ -50,7 +50,7 @@ test('seq rejects unbounded or invalid values and supports descending sequences'
 test('selective archive task omits private data', () => {
   const lesson=lessons.find(item=>item.id==='selective-archive');
   const shell=createLessonShell(Shell,seedState,lesson);
-  assert.equal(shell.execute(lesson.solution[0]).code,0);
+  for (const line of lesson.coreSolution) assert.equal(shell.execute(line).code,0);
   assert.deepEqual(Object.keys(shell.state.archives['/home/learner/delivery.tar']).sort(),['README.txt','config/app.conf','docs/guide.txt']);
 });
 test('reference-only tools cannot silently report success', () => {
@@ -66,8 +66,10 @@ test('basic inspection and navigation work in every lesson', () => {
 test('lessons accept file goals created through alternative commands and redirection', () => {
   const lesson=lessons.find(item=>item.id==='new-readme');
   const shell=createLessonShell(Shell,seedState,lesson);
+  for (const line of lesson.flowBefore) shell.execute(line);
   const result=shell.execute('printf "" > projects/README.md; printf "" > "projects/交接 包/README.md"');
   assert.equal(result.code,0);
+  for (const line of lesson.flowAfter) shell.execute(line);
   assert.ok(evaluate(lesson.goals,shell.state,result).every(item=>item.done));
 });
 

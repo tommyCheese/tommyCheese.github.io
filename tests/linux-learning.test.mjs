@@ -46,10 +46,14 @@ for(const source of lessons) test('varied exercise remains solvable: '+source.id
   const varied=varyExercise(source,original.state,23);
   assert.ok(validState(varied.state));
   const shell=new Shell(varied.state,manuals);
-  let result;
-  for(const line of varied.lesson.hints[2].split('\n')) result=shell.execute(line);
+  let result; const outputs = new Set();
+  for(const line of varied.lesson.solution) {
+    result=shell.execute(line);
+    assert.equal(result.stderr,'',source.id+': '+line);
+    evaluate(varied.lesson.goals,shell.state,result).forEach((goal,index)=>{if(goal.type==='output'&&goal.done) outputs.add(index);});
+  }
   const checks=evaluate(varied.lesson.goals,shell.state,result);
-  assert.ok(checks.every(item=>item.done),JSON.stringify({solution:varied.lesson.hints[2],result,checks}));
+  assert.ok(checks.every((item,index)=>item.done || item.type==='output'&&outputs.has(index)),JSON.stringify({solution:varied.lesson.hints[2],result,checks}));
 });
 test('assessment allows all supported commands and pipelines',()=>{
   const shell=new Shell(seedState(),manuals);
@@ -72,10 +76,10 @@ test('abandoned assisted attempts affect review but never count as a pass',()=>{
   assert.equal(records.a.passes,0); assert.equal(records.a.attempts,1); assert.equal(records.a.retrievals,0); assert.equal(records.a.dueAt,now+DAY);
 });
 test('copy assessments require retaining the source',()=>{
-  const source=lessons.find(item=>item.command==='cp'&&item.solution[0].includes('projects/notes.txt'));
+  const source=lessons.find(item=>item.id==='copy-note');
   const varied=varyExercise(source,createLessonShell(Shell,seedState,source).state,23);
   const shell=new Shell(varied.state,manuals);
-  const result=shell.execute(varied.lesson.solution[0].replace(/^cp /,'mv '));
+  const result=shell.execute(varied.lesson.coreSolution[0].replace(/^cp /,'mv '));
   assert.ok(evaluate(varied.lesson.goals,shell.state,result).some(item=>!item.done));
 });
 test('local terminal exercise scripts have valid Bash syntax',async()=>{

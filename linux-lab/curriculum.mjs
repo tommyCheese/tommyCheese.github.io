@@ -1,4 +1,6 @@
 import { clarifyTask } from './task-copy.mjs';
+import { extendLessonFlows } from './lesson-flow.mjs';
+import { Shell, seedState } from './shell.mjs';
 import { strengthenLessons } from './difficulty.mjs';
 import { extraEntries, levels, commandLevel } from './catalogue.mjs';
 import { addExtraLessons } from './extra-lessons.mjs';
@@ -6,14 +8,14 @@ export { levels };
 export const chapters = [
   ['navigation', '01', '认识工作区', '从目录和路径开始，建立终端里的方向感。'],
   ['files', '02', '整理文件', '搭建项目、备份资料、清理临时文件。'],
-  ['text', '03', '读懂与处理文本', '从日志和表格里提取真正需要的信息。'],
-  ['shell', '04', '让命令协作', '连接管道、保存结果，理解环境变量。'],
+  ['shell', '03', '让命令协作', '先掌握输出保存与命令连接，再处理日志和表格。'],
+  ['text', '04', '读懂与处理文本', '从日志和表格里提取真正需要的信息。'],
   ['permissions', '05', '权限与链接', '让文件拥有合适的权限和访问入口。'],
   ['archives', '06', '打包与压缩', '准备交付包，备份与恢复项目文件。'],
   ['system', '07', '观察系统', '定位进程、查看资源，认识当前机器。'],
   ['network', '08', '排查网络', '理解地址、端口、DNS 和 HTTP 请求。'],
   ['services', '09', '管理服务', '查询日志、启动服务，维护软件包。'],
-  ['missions', '10', '任务挑战', '一个命令一个目标，逐步完成真实场景。']
+  ['missions', '10', '任务挑战', '组合已学命令，完成真实场景中的交付目标。']
 ].map(([id, number, title, description]) => ({ id, number, title, description }));
 
 const sources = {
@@ -294,6 +296,7 @@ strengthenLessons(lessons);
 lessons.forEach(clarifyTask);
 // Group steps by level and chapter, keeping stable IDs for saved progress.
 lessons.sort((a,b) => levels.findIndex(item => item.id === a.level) - levels.findIndex(item => item.id === b.level) || chapters.findIndex(item => item.id === a.chapter) - chapters.findIndex(item => item.id === b.chapter));
+extendLessonFlows(lessons, lesson => createLessonShell(Shell, seedState, lesson));
 export { lessons };
 export function createLessonShell(Shell, seedState, lesson) {
   const { setup = [], links = {}, ...extra } = lesson?.seed || {};
