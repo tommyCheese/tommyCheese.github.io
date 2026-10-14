@@ -7,11 +7,13 @@ import { varyExercise, bossChallenges } from '../linux-lab/learning.mjs';
 import { createBossLesson } from '../linux-lab/bosses.mjs';
 import { validateBackup } from '../linux-lab/backup.mjs';
 
-test('starter route reuses 15 unique lessons with basic navigation before file and text work', () => {
-  assert.equal(starterRoute.length,15); assert.equal(new Set(starterRoute).size,15);
+test('starter route reuses 24 unique lessons with foundations before combined tasks', () => {
+  assert.equal(starterRoute.length,24); assert.equal(new Set(starterRoute).size,24);
   assert.ok(starterRoute.every(id => lessons.some(item => item.id === id)));
   assert.ok(starterRoute.indexOf('read-welcome') < starterRoute.indexOf('filter-errors'));
   assert.ok(starterRoute.indexOf('write-note') < starterRoute.indexOf('append-note'));
+  assert.ok(starterRoute.indexOf('lookup-copy') < starterRoute.indexOf('copy-note'));
+  assert.ok(starterRoute.indexOf('preview-log') < starterRoute.indexOf('numeric-sort'));
 });
 test('differences explain missing files, incorrect content, permissions and output length', () => {
   const state = seedState();

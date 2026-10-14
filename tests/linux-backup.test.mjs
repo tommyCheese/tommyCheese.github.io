@@ -28,6 +28,14 @@ test('sandbox snapshots preserve environment and history through JSON',()=>{
 test('legacy progress remains compatible and unknown entries are filtered',()=>{
   assert.deepEqual(validateBackup({version:1,completed:['new-readme','unknown'],favorites:['touch','unknown']},ids,names).completed,['new-readme']);
 });
+test('lesson flow backups accept legacy and current versions but reject unknown versions',()=>{
+  const data=makeBackup();
+  assert.doesNotThrow(()=>validateBackup(data,ids,names));
+  data.session.flowVersion=1;
+  assert.doesNotThrow(()=>validateBackup(data,ids,names));
+  data.session.flowVersion=2;
+  assert.throws(()=>validateBackup(data,ids,names),/版本/);
+});
 test('malformed backup data is rejected before workspace replacement',()=>{
   for(const mutate of [data=>data.session.state.cwd='/missing',data=>data.current='missing',data=>data.session.undoRedo.past[0].goalChecks[0].label={},data=>data.session.transcript=[{command:'ls',path:1}],data=>data.session.undoRedo.past=Array(41).fill(data.session.undoRedo.past[0])]){
     const data=makeBackup();mutate(data);assert.throws(()=>validateBackup(data,ids,names));

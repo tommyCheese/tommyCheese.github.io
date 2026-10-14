@@ -26,12 +26,20 @@ export function mastery(record) {
   return '已完成';
 }
 export function reviewQueue(lessons, completed, records, now = Date.now()) {
-  return lessons.filter(item => completed.has(item.id) && (!records[item.id] || records[item.id].dueAt <= now))
+  const pool = lessons.filter(item => completed.has(item.id) && (!records[item.id] || records[item.id].dueAt <= now))
     .sort((a,b) => {
       const x = records[a.id], y = records[b.id];
       const priority = item => !item ? 0 : item.lastPassed === false ? 1 : 2;
       return priority(x) - priority(y) || (x?.dueAt || 0) - (y?.dueAt || 0);
-    }).slice(0, 5).map(item => item.id);
+    });
+  const queue = [], chapters = new Set();
+  // Start with the most urgent task, then retrieve another topic before repeating one.
+  while (pool.length && queue.length < 5) {
+    let index = pool.findIndex(item=>!chapters.has(item.chapter));
+    if (index < 0) { chapters.clear(); index = 0; }
+    const [item] = pool.splice(index,1); queue.push(item.id); chapters.add(item.chapter);
+  }
+  return queue;
 }
 export function quizQueue(lessons, completed, chapter, random = Math.random) {
   const pool = lessons.filter(item => item.chapter === chapter && completed.has(item.id));
@@ -47,7 +55,7 @@ export function varyExercise(source, state, variant) {
   const paths = source.goals.flatMap(goal => [goal.path, goal.target]).filter(Boolean);
   for (const path of new Set(paths)) {
     const name = path.split('/').pop();
-    if (name.includes('.') && source.solution.join(' ').includes(name) && !replacements.some(([from]) => name.includes(from))) replacements.push([name, 'practice-'+suffix+'-'+name]);
+    if (name.includes('.') && !/\.0+\d+$/.test(name) && source.solution.join(' ').includes(name) && !replacements.some(([from]) => name.includes(from))) replacements.push([name, 'practice-'+suffix+'-'+name]);
   }
   const replace = text => replacements.reduce((value,[from,to]) => value.split(from).join(to), text);
   const transform = value => typeof value === 'string' ? replace(value) : Array.isArray(value) ? value.map(transform)

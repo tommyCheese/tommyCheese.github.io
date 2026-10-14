@@ -21,8 +21,8 @@ for url in urls:
     assert doc.xpath('//meta[@name="description"]/@content'), path
     if url != base:
         assert len(doc.xpath('//h1')) == 1, path
-        assert len(doc.xpath('//script')) == 2, path  # Optional controls and analytics; content stays static.
-        assert doc.xpath('//script/@src') == ['../' * len(url[len(base):].strip('/').split('/')) + name for name in ['analytics.js', 'reference.mjs']], path
+        assert len(doc.xpath('//script')) == 3, path  # Appearance, optional controls and analytics; content stays static.
+        assert doc.xpath('//script/@src') == ['../' * len(url[len(base):].strip('/').split('/')) + name for name in ['theme.js', 'analytics.js', 'reference.mjs']], path
         assert doc.xpath('//meta[@property="og:url"]/@content') == [url], path
     for href in doc.xpath('//a/@href | //link[@rel="stylesheet"]/@href | //link[@rel="icon"]/@href | //script[@src]/@src'):
         parsed = urlsplit(href)

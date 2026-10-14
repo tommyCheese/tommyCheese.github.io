@@ -2,7 +2,14 @@ import { Shell, seedState, resolve, tokenize, evaluate } from './shell.mjs';
 import { createLessonShell, manuals } from './curriculum.mjs';
 
 // A route through existing lessons, with the same goals and completion records.
-export const starterRoute = ['where-am-i', 'look-around', 'hidden-profile', 'enter-projects', 'parent-directory', 'read-welcome', 'new-readme', 'create-workspace', 'copy-note', 'rename-note', 'cleanup-temp', 'filter-errors', 'write-note', 'append-note', 'lookup-copy'];
+export const starterPhases = [
+  {id:'orientation',number:'01',title:'建立方向感',description:'先观察，再核对；认识路径与手册。',lessons:['where-am-i','look-around','enter-projects','parent-directory','read-welcome','lookup-copy']},
+  {id:'workspace',number:'02',title:'整理与交付',description:'搭建目录、保留原件，在文件任务中复用导航。',lessons:['create-workspace','new-readme','copy-note','hidden-profile','rename-note','cleanup-temp']},
+  {id:'information',number:'03',title:'保存与筛选',description:'先掌握输出保存，再从日志中提取信息。',lessons:['write-note','append-note','preview-log','latest-error','filter-errors','count-lines']},
+  {id:'transfer',number:'04',title:'组合与迁移',description:'穿插文本、权限、归档和系统任务，选择合适的工具。',lessons:['numeric-sort','unique-names','csv-column','make-executable','create-archive','process-list']}
+];
+export const starterRoute = starterPhases.flatMap(phase=>phase.lessons);
+export const starterPhase = id => starterPhases.find(phase=>phase.lessons.includes(id));
 const typeNames = { file:'文件', dir:'目录', link:'符号链接' };
 const text = value => value === '' ? '（空）' : String(value ?? '（未设置）');
 const lineCount = value => value ? value.replace(/\n$/, '').split('\n').length : 0;
@@ -130,7 +137,7 @@ export function alternativeSolutions(lesson, initialState) {
     for (const line of candidate.command.split('\n')) {
       result = shell.execute(line);
       evaluate(lesson.goals, shell.state, result).forEach((goal, index) => { if (goal.type === 'output' && goal.done) outputs.add(index); });
-      if (result.code && result.code !== 1) break;
+      if (result.code && result.code !== 1 && !lesson.goals.some(goal=>goal.type === 'output' && goal.code === result.code)) break;
     }
     if (evaluate(lesson.goals, shell.state, result).every((goal,index) => goal.done || goal.type === 'output' && outputs.has(index))) accepted.push(candidate);
     if (accepted.length === 3) break;

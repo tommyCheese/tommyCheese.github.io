@@ -467,7 +467,7 @@ export class Shell {
       case 'clear': return { ...output(''), clear: true };
       case 'true': return output(''); case 'false': return { stdout: '', code: 1 };
       case 'ip': if (!['addr', 'a', 'address', 'route', 'r'].includes(args.join(' '))) fail('ip：沙盒支持 ip addr 或 ip route'); return output(['route', 'r'].includes(args[0]) ? 'default via 192.0.2.1 dev eth0\n' : `2: eth0: <UP>\n    inet ${s.network.ip}/24\n`);
-      case 'ss': parseOptions(args, 'tulpna'); return output('Netid State Local Address Process\ntcp LISTEN 0.0.0.0:8080 worker(pid=314)\n' + (s.services.nginx.active ? 'tcp LISTEN 0.0.0.0:80 nginx\n' : ''));
+      case 'ss': parseOptions(args, 'tulpna'); return output('Netid State Local Address Process\n' + (s.processes.some(item=>item.name==='worker') ? `tcp LISTEN 0.0.0.0:8080 worker(pid=${s.processes.find(item=>item.name==='worker').pid})\n` : '') + (s.services.nginx.active ? 'tcp LISTEN 0.0.0.0:80 nginx\n' : ''));
       case 'ping': {
         const { options: o, operands } = parseOptions(args, '', 'c'); if (!operands.length) fail('ping：缺少主机'); const ip = s.network.dns[operands[0]] || (operands[0] === s.network.ip ? operands[0] : undefined);
         if (!ip) fail('ping：模拟环境无法解析主机'); const count = Math.min(Number(o.c || 4), 10); if (!Number.isInteger(count) || count < 1) fail('ping：次数需要正整数');

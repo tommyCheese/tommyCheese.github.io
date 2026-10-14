@@ -18,16 +18,20 @@ test('curriculum has unique IDs, documented commands and isolated unsolved initi
   }
 });
 for (const lesson of lessons) test('complete scenario: ' + lesson.id, () => {
-  const shell = createLessonShell(Shell, seedState, lesson); let result;
+  const shell = createLessonShell(Shell, seedState, lesson); let result; const outputs = new Set();
   for (const command of lesson.solution) {
     result = shell.execute(command); assert.equal(result.stderr, '', `${lesson.id}: ${result.stderr}`);
     assert.ok(result.code === 0 || lesson.goals.some(goal => goal.code === result.code), lesson.id);
+    evaluate(lesson.goals,shell.state,result).forEach((goal,index)=>{ if(goal.type === 'output' && goal.done) outputs.add(index); });
   }
-  assert.ok(evaluate(lesson.goals, shell.state, result).every(goal => goal.done), lesson.id);
+  assert.ok(evaluate(lesson.goals, shell.state, result).every((goal,index) => goal.done || goal.type === 'output' && outputs.has(index)), lesson.id);
 });
 test('judges filesystem outcomes instead of requiring a specific command string', () => {
   const lesson = lessons.find(item => item.id === 'copy-note'); const shell = createLessonShell(Shell, seedState, lesson);
+  for (const line of lesson.flowBefore) shell.execute(line);
   const result = shell.execute('cp ./projects/notes.txt ./projects/notes.bak');
+  assert.ok(!evaluate(lesson.goals, shell.state, result).every(item => item.done));
+  for (const line of lesson.flowAfter) shell.execute(line);
   assert.ok(evaluate(lesson.goals, shell.state, result).every(item => item.done));
   shell.state.fs[HOME + '/projects/notes.bak'].text = 'wrong';
   assert.ok(!evaluate(lesson.goals, shell.state).every(item => item.done));
@@ -39,8 +43,10 @@ test('every practice command has a dedicated level and lessons allow other comma
   assert.equal(shell.execute('man pwd').code, 0);
 });
 test('output goals accept equivalent results from alternative commands', () => {
-  const lesson = lessons[0]; const shell = fresh();
-  assert.ok(evaluate(lesson.goals, shell.state, shell.execute('printenv PWD')).every(item => item.done));
+  const lesson = lessons[0]; const shell = createLessonShell(Shell,seedState,lesson);
+  assert.ok(evaluate(lesson.goals,shell.state,shell.execute('printenv PWD'))[0].done);
+  shell.execute('cd projects');
+  assert.ok(evaluate(lesson.goals, shell.state, shell.execute('printenv PWD')).every((item,index) => index === 0 || item.done));
   assert.ok(!evaluate(lesson.goals, shell.state, shell.execute('echo /wrong')).every(item => item.done));
 });
 test('a fresh task cannot inherit a previous task filesystem', () => {
