@@ -1,11 +1,13 @@
 import { lessons } from './curriculum.mjs';
+import { setupI18n, localeRoot } from './i18n.mjs';
+setupI18n();
 const KEY = 'tommy-cheese-linux-lab-v1';
 function readSaved() {
   try { const data = JSON.parse(localStorage.getItem(KEY) || '{}'); return data && typeof data === 'object' && !Array.isArray(data) ? data : {}; }
   catch { return {}; }
 }
 const lessonIds = new Set(lessons.map(item => item.id));
-const root = new URL('./', import.meta.url);
+const root = localeRoot;
 function updateReturnLink() {
   let route;
   try { route = localStorage.getItem('learn-linux-last-route'); } catch {}

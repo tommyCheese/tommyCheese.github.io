@@ -117,6 +117,9 @@ def localized_url(value, locale, current_path, known_paths):
             return current_path + 'article.md'
         return value
     path = re.sub(r'^/(en|ja|ru|zh-TW)(?=/|$)', '', path) or '/'
+    if path.startswith('/linux-lab/'):
+        relative = re.sub(r'^(en|ja|ru|zh-TW)/', '', path[len('/linux-lab/'):])
+        return urlunsplit((parsed.scheme, parsed.netloc, '/linux-lab/' + (locale + '/' if locale != 'zh-CN' else '') + relative, parsed.query, parsed.fragment))
     canonical_path = canonical_tag_path(path.removesuffix('index.html'))
     if not canonical_path.endswith('/') and canonical_path + '/' in known_paths:
         canonical_path += '/'

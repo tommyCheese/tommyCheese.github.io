@@ -5,7 +5,7 @@ from lxml import html, etree
 ROOT = Path(__file__).resolve().parents[1]
 for prefix in ['', 'en', 'ja', 'ru', 'zh-TW']:
     home = html.document_fromstring((ROOT / prefix / 'index.html').read_text())
-    assert home.xpath('//*[@data-i18n="nav.linuxLab"]/@href') == ['/linux-lab/'], prefix
+    assert home.xpath('//*[@data-i18n="nav.linuxLab"]/@href') == ['/linux-lab/' + (prefix + '/' if prefix else '')], prefix
     assert not home.xpath('//*[@data-reading-layout="linux-lab"]'), prefix
     assert home.xpath('//*[@data-i18n="nav.linuxLab"]/text()') == ['Learn Linux Command'], prefix
     assert home.xpath('//*[@data-i18n="nav.linuxLab"][contains(@class,"linux-lab-nav")]'), prefix

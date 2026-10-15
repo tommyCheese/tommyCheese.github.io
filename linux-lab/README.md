@@ -92,3 +92,22 @@ node --test tests/linux-lab.test.mjs tests/linux-history.test.mjs tests/linux-ex
 入门路线按工具依赖重排为四组各 6 关；专题仍按常用、进阶、大师提供自由选择。到期复习先选最早的知识缺口，再交错不同专题；同一专题不足时顺序补足，不提前拉入尚未到期的任务。间隔维持 1、3、7、14、30 天的产品默认值，并非声称这些天数适合所有学习者。
 
 设计依据：[Dunlosky 等学习技术综述](https://www.psychologicalscience.org/publications/journals/pspi/learning-techniques.html) 与 [EEF 认知科学证据综述](https://educationendowmentfoundation.org.uk/news/new-what-do-we-really-know-about-cognitive-science-in-the-classroom-eef-publishes-new-review-of-the-evidence)。主动回忆、间隔练习、示例与支架渐退、按目标给差异反馈用于指导编排；交错练习在基础建立后使用。它们为设计提供依据，网站本身的学习效果尚未通过用户实验验证。
+
+## 多语言
+
+与博客一致提供 `zh-CN`、`en`、`ja`、`ru`、`zh-TW` 五种语言。简体中文入口为 `/linux-lab/`，其他语言使用 `/linux-lab/en/` 等路径；语言选择保留当前关卡、查询参数和练习记录，并共享博客的 `site-language` 偏好。
+
+`locales/*.json` 保存界面、课程、提示和手册的翻译；`locales/source.json` 是覆盖检查清单。新增文案时同步补齐四个翻译词表。命令、示例文件名、文件正文、真实路径和判题数据保持不变，翻译只应用于呈现层。所有词表随站点发布，访客浏览时不调用外部翻译服务。
+
+更新课程后依次运行：
+
+```sh
+node scripts/build_linux_pages.mjs
+.venv/bin/python scripts/build_linux_i18n.py
+.venv/bin/python scripts/build_i18n.py
+node --test tests/linux-*.test.mjs
+.venv/bin/python tests/check_linux_pages.py
+.venv/bin/python tests/check_i18n.py
+```
+
+多语言构建生成静态手册、课程目录和独立入口，为每页设置 canonical、五语言 `hreflang` 与 `x-default`，并更新 Linux Lab 和全站 sitemap。博客不同语言版本的 Linux Lab 导航分别指向对应语言。

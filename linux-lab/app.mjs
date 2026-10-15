@@ -1,4 +1,5 @@
 import { goalReference } from './task-copy.mjs';
+import { setupI18n, translate, locale } from './i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
@@ -12,6 +13,7 @@ import { Shell, HOME, seedState, evaluate, resolve, basicCommands } from './shel
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
 
 const $ = id => document.getElementById(id);
+setupI18n();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const activeMotions = new Map();
 function reveal(node, distance = 6) {
@@ -206,7 +208,7 @@ function renderLearning() {
     const record = learning[item.id]; const row = element('li');
     const link = element('a', item.title); link.href = '#task/' + item.id;
     row.append(link, element('span', mastery(record), 'mastery-state'));
-    if (record) row.title = `${record.passes} 次完成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString('zh-CN')}`;
+    if (record) row.title = `${record.passes} 次完成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString(locale)}`;
     $('mastery-list').append(row);
   }
 }
@@ -325,9 +327,13 @@ function renderChapters() {
   const starter = selectedLevel === 'starter';
   for (const chapter of starter ? starterPhases : chapters) {
     const items = starter ? chapter.lessons.map(id => lessons.find(item => item.id === id)) : lessons.filter(item => item.chapter === chapter.id && item.level === selectedLevel);
-    const matches = items.filter(item => !query || `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`.toLowerCase().includes(query));
+    const matches = items.filter(item => {
+      const text = `${chapter.title} ${item.title} ${item.context} ${item.commands.join(' ')}`;
+      return !query || text.toLowerCase().includes(query) || translate(text).toLowerCase().includes(query);
+    });
     const boss = bosses.find(item => item.level === selectedLevel && item.chapter === chapter.id);
-    const showBoss = boss && (!query || `${chapter.title} boss 挑战 专题小测 ${items.map(item => item.command).join(' ')}`.toLowerCase().includes(query));
+    const bossSearch = `${chapter.title} boss 挑战 专题小测 ${items.map(item => item.command).join(' ')}`;
+    const showBoss = boss && (!query || bossSearch.toLowerCase().includes(query) || translate(bossSearch).toLowerCase().includes(query));
     if (!matches.length && !showBoss) continue;
     const group = element('details', undefined, 'chapter'); group.dataset.chapter = chapter.id;
     const expansionKey = selectedLevel + '/' + chapter.id;
@@ -495,7 +501,7 @@ $('solution-review').addEventListener('toggle', () => { if ($('solution-review')
 function appendTranscript(entry) {
   const row = element('div', undefined, 'terminal-entry');
   if (entry.command) row.append(element('pre', entry.path.replace(HOME, '~') + ' $ ' + entry.command, 'terminal-command'));
-  if (entry.stdout) row.append(element('pre', entry.stdout));
+  if (entry.stdout) row.append(element('pre', /^(?:man|help)(?:\s|$)/.test(entry.command || '') ? translate(entry.stdout) : entry.stdout));
   if (entry.stderr) row.append(element('pre', entry.stderr, 'terminal-error'));
   if (entry.message) row.append(element('pre', entry.message, 'terminal-welcome'));
   $('transcript').append(row); while ($('transcript').childElementCount > 60) $('transcript').firstChild.remove();
