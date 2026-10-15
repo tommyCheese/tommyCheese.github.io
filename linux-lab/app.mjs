@@ -694,7 +694,7 @@ function practiceAction(action) {
   }
   $('exit-code').textContent = ''; $('command-input').value = ''; draft = '';
   renderTask(); renderTranscript(); renderWorld(); updatePracticeActions(); persist();
-  if (action === 'reset') showLessonIntro();
+  if (action === 'reset' && mode === 'learn') showWelcomeIntro();
 }
 function executeCommand(command) {
   let celebrate = false; let unlockedBoss; let achievedGoals = [];
@@ -1073,6 +1073,12 @@ function renderWelcome() {
   $('welcome-start').hidden = !last;
   $('welcome-title').focus({preventScroll:true});
 }
+function showWelcomeIntro() {
+  welcomePage = 0;
+  renderWelcome();
+  $('welcome-dialog').showModal();
+  $('welcome-next').focus({preventScroll:true});
+}
 $('welcome-next').addEventListener('click', () => { welcomePage = Math.min(welcomePage + 1, welcomePages.length - 1); renderWelcome(); });
 $('welcome-previous').addEventListener('click', () => { welcomePage = Math.max(0, welcomePage - 1); renderWelcome(); });
 $('welcome-close').addEventListener('click', () => $('welcome-dialog').close());
@@ -1088,7 +1094,7 @@ $('welcome-dialog').addEventListener('close', () => {
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
 onboardingReady = true;
-if (showWelcome) $('welcome-dialog').showModal();
+if (showWelcome) showWelcomeIntro();
 else if (mode === 'learn' && !transcript.some(item=>item.command)) { showTaskGuide(); showLessonIntro(); }
 
 // Keep favorites in sync when a standalone reference page changes them.
