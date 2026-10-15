@@ -19,7 +19,15 @@ for url in urls:
     assert len(doc.xpath('//title')) == 1, path
     assert doc.xpath('//meta[@name="google-site-verification"]/@content') == ['FhZOCWP05JMExYmal-76Ljqmg_0pqKjVu4QuqmwX8cQ'], path
     assert doc.xpath('//meta[@name="description"]/@content'), path
-    if url != base:
+    relative = url[len(base):]
+    locale = relative.split('/')[0] if relative.split('/')[0] in ['en','ja','ru','zh-TW'] else 'zh-CN'
+    assert doc.getroot().get('lang') == locale, path
+    assert len(doc.xpath('//link[@rel="alternate"][@hreflang]')) == 6, path
+    assert set(doc.xpath('//link[@rel="alternate"]/@hreflang')) == {'zh-CN','en','ja','ru','zh-TW','x-default'}, path
+    if locale != 'zh-CN' and '/commands/' in url and relative.count('/') >= 3:
+        original = html.parse(str(LAB / relative.split('/',1)[1] / 'index.html'))
+        assert doc.xpath('//pre/code/text()')[1:] == original.xpath('//pre/code/text()')[1:], path
+    if relative not in ['', 'en/', 'ja/', 'ru/', 'zh-TW/']:
         assert len(doc.xpath('//h1')) == 1, path
         assert len(doc.xpath('//script')) == 3, path  # Appearance, optional controls and analytics; content stays static.
         assert doc.xpath('//script/@src') == ['../' * len(url[len(base):].strip('/').split('/')) + name for name in ['theme.js', 'analytics.js', 'reference.mjs']], path

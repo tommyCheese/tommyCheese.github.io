@@ -1,4 +1,9 @@
 /* Shared appearance for the lab and its standalone reference pages. */
+.lab-language{max-width:110px;padding:6px 8px;border:1px solid #8d9f8a50;border-radius:6px;font:inherit;font-size:11px;background:transparent;color:inherit;cursor:pointer}
+.lab-language option{background:#edf1eb;color:#39483f}
+.welcome-bar .lab-language{margin-left:auto;margin-right:10px}
+.game-header nav{flex-wrap:wrap;justify-content:flex-end;min-width:0}
+[data-theme=dark] .lab-language option{background:#303831;color:#e5ecdf}
 #theme-toggle{font:inherit;font-size:18px;line-height:1;display:inline-grid;place-items:center;width:32px;height:32px;flex-shrink:0;cursor:pointer;padding:0;border:0;border-radius:6px;background:transparent;color:inherit;opacity:.85}
 #theme-toggle:hover{opacity:1}
 #theme-toggle:focus-visible{outline:2px solid #be9b42;outline-offset:3px}
