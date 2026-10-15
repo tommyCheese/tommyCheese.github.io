@@ -80,3 +80,33 @@
 - [封面](https://images.prismic.io/zero-cms-disco/HnRNb43hB7wzr1hV_zero-team-guinness-certificate-v5_YouTube.jpg?auto=format,compress&rect=0,39,2062,1083&w=1200&h=630) 来自官方原文 `og:image`，署名 Zero Motorcycles。HEAD 返回 200、`image/jpeg`、112404 字节。
 
 补充后共十七条历史新闻；新增 10 月 15 日分组，首页仍按原文日期展示最近三条。未下载远程媒体，保留官方图片外链与署名。
+
+## 10 月 15 日补充：扩展厂商与领域
+
+核验时间：上海时区 2026-10-15 13:22。按用户要求增加三星以外的选题，四个分类各补充一条，保留既有十七条历史。日期仍采用链接原文的发布日期；14 日的官方发布不改写成 15 日。首页同日条目优先排列吉利、华为，再展示三星，保持三条预览且覆盖不同厂商。
+
+### 汽车：吉利控股前三季度销量
+
+- ID：`geely-holding-q3-2026-sales`。
+- [IT之家原文](https://www.ithome.com/1/013/246.htm)，页面时间 **2026/10/15 10:31:10**，HTTPS GET 返回 200。报道引述吉利控股当日上午公布的数据，摘要明确归因 IT之家；集团口径不混同于吉利汽车上市公司口径。
+- [正文首张销量配图](https://img.ithome.com/newsuploadfiles/2026/10/78ac68e4-ebcc-404d-a930-a046f9a095b5.png)，署名“吉利控股集团 · IT之家”，使用 `contain`。HEAD 返回 200、`image/png`、1316653 字节。
+
+### 数码：华为自带线移动电源预售
+
+- ID：`huawei-20000mah-100w-power-bank`。
+- [IT之家原文](https://www.ithome.com/1/013/186.htm)，页面时间 **2026/10/15 9:25:13**，HTTPS GET 返回 200。报道预售于当日 10:08 开始，摘要使用预售状态与发布价格，不加入促销购买链接。
+- [正文首张产品图](https://img.ithome.com/newsuploadfiles/2026/10/3e896851-4038-44ae-94e3-8095107c3c23.jpg)，署名“Huawei · IT之家”，使用 `contain`。HEAD 返回 200、`image/jpeg`、258640 字节。
+
+### AI：Google Deep Review 公开发布
+
+- ID：`google-deep-review-public-release`。
+- [Google Research 官方原文](https://research.google/blog/analyzing-technical-documents-with-deep-review/)，日期 **2026-10-14**，HTTPS GET 返回 200。摘要按初期实际输入格式描述，不将后续多文件计划写成已上线，也不把辅助审阅写成准确性保证。
+- [正文题图](https://storage.googleapis.com/gweb-research2023-media/original_images/DeepReview2.jpg)，署名 Google Research，使用 `contain`；未采用页面通用 `og:image`。HEAD 返回 200、`image/jpeg`、79482 字节。
+
+### 半导体：NVIDIA cuPotential 与制造工具
+
+- ID：`nvidia-cupotential-ai-defined-fabs`。
+- [NVIDIA 官方原文](https://nvidianews.nvidia.com/news/nvidia-and-semiconductor-leaders-advance-ai-across-chip-design-and-manufacturing-for-ai-defined-labs)，日期 **2026-10-14**，HTTPS GET 返回 200。保留 cuPotential 的早期访问状态；省略厂商特定测试的加速倍数与对产能、良率的预测。
+- [原文 `og:image`](https://iprsoftwaremedia.com/219/files/202610/91e4671418fd42dd611fce974f821286/6aceab1a3d6332051d5dc521_nvidia-and-semiconductor-leaders/nvidia-and-semiconductor-leaders_5ac54765-981c-4c26-b6c2-cdd8daa42e94-prv.jpg?v=5ac54765-981c-4c26-b6c2-cdd8daa42e94)，署名 NVIDIA。HEAD 返回 200、`image/jpeg`、746316 字节。
+
+补充后共二十一条历史新闻；15 日分组四条，14 日分组六条。五种语言同步标题与摘要，沿用现有构建及预览逻辑。
