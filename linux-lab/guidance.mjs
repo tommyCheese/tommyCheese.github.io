@@ -22,6 +22,21 @@ export function completionMessage(lesson, { boss=false, review=false } = {}) {
   };
 }
 
+// Match lines in order, so repeated inputs and reordered steps remain visible.
+function lineDifferences(yours, reference) {
+  const lengths = Array.from({length:yours.length+1},()=>Array(reference.length+1).fill(0));
+  for (let i=yours.length-1;i>=0;i--) for (let j=reference.length-1;j>=0;j--)
+    lengths[i][j] = yours[i] === reference[j] ? 1+lengths[i+1][j+1] : Math.max(lengths[i+1][j],lengths[i][j+1]);
+  const yoursDifferent=yours.map(()=>true), referenceDifferent=reference.map(()=>true);
+  let i=0,j=0;
+  while (i<yours.length && j<reference.length) {
+    if (yours[i] === reference[j]) { yoursDifferent[i++]=false; referenceDifferent[j++]=false; }
+    else if (lengths[i+1][j] >= lengths[i][j+1]) i++;
+    else j++;
+  }
+  return {yoursDifferent, referenceDifferent};
+}
+
 // Compare recorded input lines, not shell commands: a pipeline may contain several commands.
 export function compareSolutions(history, candidates) {
   const lines = text => text.split('\n').map(line=>line.trim()).filter(Boolean);
@@ -37,24 +52,11 @@ export function compareSolutions(history, candidates) {
     : delta > 0 ? `你多用了 ${delta} 行输入。看看哪些是在观察、查阅，哪些可以合并。`
     : delta < 0 ? `你少用了 ${-delta} 行输入，也达成了全部目标。看看命令是怎样组合起来的！`
     : '行数相同，写法不同。对照一下路径、参数和命令组合吧。';
-  return { yours, reference, message };
+  return { yours, reference, message, ...lineDifferences(yours, reference.lines) };
 }
 
 export function nextTransition(lesson, next) {
-  const bridges = {
-    ls:'找到方向以后，看看目录里有什么。', cd:'看清目录了，下一步亲自进去看看。',
-    cat:'位置找到了，打开文件读读里面的内容。', man:'遇到陌生参数，试着从手册里找线索。',
-    mkdir:'工具在手，开始搭建自己的工作区。', touch:'目录准备好了，为项目添上需要的文件。',
-    cp:'文件就位，试着留下一个可靠的备份。', mv:'备份有了，再练练整理位置和名字。',
-    rm:'整理完以后，练习留下备份再清理。', echo:'现在试着把自己的文字写进文件。',
-    head:'会保存文字了，再从一段日志里寻找线索。', tail:'看过开头，去结尾找最新的消息。',
-    grep:'先看清信息，再挑出真正需要的记录。', wc:'找到目标记录了，再数数它们有多少。',
-    sort:'筛选和统计之外，还可以把信息排出顺序。', cut:'顺序理清了，再从表格里挑出需要的列。',
-    chmod:'文件整理好了，下一步决定谁能怎样使用它。', tar:'准备好文件以后，把它们打包，再验证能否恢复。',
-    ps:'文件之外，看看系统里正在忙碌的进程。'
-  };
-  // The bridge describes the upcoming activity; the exact task title remains authoritative.
-  return next ? `${bridges[next.command] || '带上刚才的工具，换个场景试试。'} 下一关：${next.title}` : '';
+  return next ? `下一关：${next.title}` : '';
 }
 
 export function stateHint(lesson, state, checks, tier=1, result={}) {
@@ -115,7 +117,6 @@ export function methodInsights(history, reference, env={}) {
   if (yours.pipe !== other.pipe) notes.push('管道把前一步的输出直接交给下一步；分开执行则更方便逐步观察中间结果。');
   if (yours.names.has('tee') !== other.names.has('tee')) notes.push('tee 可以一边显示一边保存；重定向保存后，也能再读回文件核对。');
   if ([...yours.names].some(name=>['man','help','ls','pwd'].includes(name) && !other.names.has(name))) notes.push('你的操作包含额外观察或查阅。它们帮助确认环境，不影响通关。');
-  if (!notes.length && reference?.length) notes.push('可以沿着“目标路径 → 参数 → 保留条件”对照两份操作，理解每一步为什么有效。');
   return notes.slice(0,3);
 }
 
