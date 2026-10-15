@@ -25,6 +25,18 @@ test('sandbox snapshots preserve environment and history through JSON',()=>{
   const restored=validateBackup(JSON.parse(JSON.stringify(data)),ids,names);
   assert.equal(restored.sandbox.snapshot.state.env.NAME,'cheese');assert.equal(restored.sandbox.snapshot.state.history[0],'export NAME=cheese');
 });
+test('hint visibility round-trips independently from the revealed hint level and accepts legacy backups',()=>{
+  const data=makeBackup();
+  assert.doesNotThrow(()=>validateBackup(data,ids,names));
+  for (const visible of [true,false]) {
+    data.session.hint=3;data.session.hintVisible=visible;
+    data.session.undoRedo.past[0].hintVisible=visible;
+    const restored=validateBackup(JSON.parse(JSON.stringify(data)),ids,names);
+    assert.equal(restored.session.hint,3);assert.equal(restored.session.hintVisible,visible);
+    assert.equal(restored.session.undoRedo.past[0].hintVisible,visible);
+  }
+  data.session.hintVisible='false';assert.throws(()=>validateBackup(data,ids,names),/提示显示状态/);
+});
 test('legacy progress remains compatible and unknown entries are filtered',()=>{
   assert.deepEqual(validateBackup({version:1,completed:['new-readme','unknown'],favorites:['touch','unknown']},ids,names).completed,['new-readme']);
 });

@@ -58,8 +58,11 @@ let exerciseInitialState;
 let onboardingReady = false;
 let demonstration;
 let latestChanges = [];
+let introLesson;
+let hintVisible = false;
 function showTaskIntro() {
   if (mode !== 'learn') return;
+  if (introLesson === lesson) { $('task-intro-dialog').showModal(); return; }
   $('task-intro-title').textContent = lesson.title;
   $('task-intro-lead').textContent = training?.challengeVersion === 1 ? '工具已经在手，试着把它们配合起来吧。' : training ? '换个场景，再试试还记得多少。需要时，提示就在手边。' : '这次，试着完成下面的小任务。边操作，边看看发生了什么。';
   $('task-intro-steps').replaceChildren();
@@ -93,6 +96,7 @@ function showTaskIntro() {
     $('demo-title').textContent = demonstration.title;
     renderDemo();
   }
+  introLesson = lesson;
   $('task-intro-dialog').showModal();
 }
 function renderDemo() {
@@ -120,6 +124,7 @@ $('demo-next').addEventListener('click',()=> { advanceDemo(demonstration); rende
 $('demo-reset').addEventListener('click',()=> { demonstration=createDemo(lesson.command); renderDemo(); });
 for (const id of ['task-intro-start','task-intro-close']) $(id).addEventListener('click',()=> $('task-intro-dialog').close());
 $('task-intro-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
+$('task-goal-button').addEventListener('click',showTaskIntro);
 const navigationLessons = () => starterMode ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons;
 const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
@@ -258,7 +263,7 @@ $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !
 
 function persist() {
   const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
-    session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+    session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
   catch { storageAvailable = false; }
@@ -342,7 +347,7 @@ function renderTask() {
   $('console-command').textContent = sandbox ? 'sandbox' : training ? '选择合适的命令' : lesson.command;
   $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : starterMode ? `${starterRoute.indexOf(currentId) + 1} / ${starterRoute.length}` : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
-  $('task-context').textContent = sandbox ? '这是独立于课程的工作区。任意组合已支持的命令，观察文件和系统状态的变化。' : lesson.context;
+  $('task-goal-button').hidden = sandbox;
   $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
@@ -389,10 +394,16 @@ function renderTask() {
   $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId);
   $('mastery-badge').textContent = mastery(learning[currentId]);
   $('hint-button').hidden = sandbox;
-  $('hint-button').disabled = hint >= 3;
-  $('hint-button').textContent = hint >= 3 ? '解法已展开' : hint ? '再给点线索' : '💡 给点提示';
-  $('hint-box').hidden = sandbox || !hint;
-  if (hint) { $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1]; $('hint-content').textContent = stateHint(lesson,shell.state,goalChecks,hint,lastResult); }
+  $('hint-button').textContent = hintVisible ? '隐藏提示' : hint ? '显示提示' : '💡 给点提示';
+  $('hint-button').setAttribute('aria-expanded',String(!sandbox && hintVisible));
+  $('hint-box').hidden = sandbox || !hint || !hintVisible;
+  $('hint-previous').disabled = hint <= 1;
+  $('hint-next').disabled = hint >= 3;
+  $('hint-position').textContent = `${hint || 1} / 3`;
+  if (hint) {
+    $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1];
+    $('hint-content').textContent = hint === 1 && !transcript.some(item=>item.command) ? (lesson.steps || [lesson.context]).join('\n') : stateHint(lesson,shell.state,goalChecks,hint,lastResult);
+  }
   $('related-commands').replaceChildren();
   for (const command of training && !hint ? [] : sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
     const button = element('a', command + ' 手册', 'command-chip');
@@ -561,6 +572,7 @@ function setWorldTab(system) {
 }
 
 function startTask(id, restore = false) {
+  introLesson=undefined; hintVisible=false;
   latestChanges=[]; $('pipeline-flow').hidden=true;
   solutionCache = undefined; $('solution-review').open = false;
   practiceHistory.clear(); updatePracticeActions();
@@ -575,6 +587,7 @@ function startTask(id, restore = false) {
     if (saved.session.flowVersion !== 2) {
       restoreFlowAssets(shell.state,exerciseInitialState,lesson);
     }
+    hintVisible = hint > 0 && saved.session.hintVisible !== false;
   }
   goalChecks = evaluate(lesson.goals, shell.state);
   if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index] && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) goal.done = true; });
@@ -603,11 +616,12 @@ function updatePracticeActions() {
   $('redo-button').disabled = !practiceHistory.future.length;
 }
 function practiceSnapshot() {
-  return { state: shell.state, transcript, hint, goalChecks, lastResult, browsePath, previewPath, changes: [...changes] };
+  return { state: shell.state, transcript, hint, hintVisible, goalChecks, lastResult, browsePath, previewPath, changes: [...changes] };
 }
 function restorePractice(snapshot) {
   shell = new Shell(snapshot.state, manuals);
   ({ transcript, hint, goalChecks, lastResult, browsePath, previewPath } = snapshot);
+  hintVisible = hint > 0 && snapshot.hintVisible !== false;
   changes = new Set(snapshot.changes);
 }
 function practiceAction(action) {
@@ -617,7 +631,7 @@ function practiceAction(action) {
     practiceHistory.record(practiceSnapshot());
     shell = mode === 'learn' ? makeExercise() : new Shell(seedState(), manuals);
     if (attempt.graded) attempt = { maxHint:0, errors:0, graded:false };
-    transcript = []; hint = 0; lastResult = { stdout: '', code: 1 }; changes = new Set();
+    transcript = []; hint = 0; hintVisible=false; lastResult = { stdout: '', code: 1 }; changes = new Set();
     goalChecks = mode === 'learn' ? evaluate(lesson.goals, shell.state) : [];
     browsePath = shell.state.cwd; previewPath = undefined;
     if (mode === 'learn') focusGoalDirectory();
@@ -709,7 +723,18 @@ $('command-input').addEventListener('keydown', event => {
     else announce('没有匹配的补全项。');
   }
 });
-$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); attempt.maxHint = Math.max(attempt.maxHint, hint); if ($('task-feedback').classList.contains('progress')) $('task-feedback').hidden=true; renderTask(); persist(); });
+function updateHint(direction = 0) {
+  if (direction || !hint) hint = Math.max(1,Math.min(3,hint+(direction || 1)));
+  hintVisible = !!direction || !hintVisible;
+  attempt.maxHint = Math.max(attempt.maxHint,hint);
+  if ($('task-feedback').classList.contains('progress')) $('task-feedback').hidden=true;
+  renderTask(); persist();
+}
+$('hint-button').addEventListener('click',()=>updateHint());
+for (const [id,direction] of [['hint-previous',-1],['hint-next',1]]) $(id).addEventListener('click',()=> {
+  updateHint(direction);
+  if ($(id).disabled) $(direction === 1 ? 'hint-previous' : 'hint-next').focus({preventScroll:true});
+});
 for (const action of ['reset', 'undo', 'redo']) {
   $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
 }

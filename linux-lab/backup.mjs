@@ -13,6 +13,7 @@ export function validState(state) {
 const validTranscript = value => Array.isArray(value) && value.length <= 60 && value.every(item => object(item) && ['path','command','stdout','stderr','message'].every(key => item[key] === undefined || text(item[key])) && (!item.command || text(item.path)));
 export function validSnapshot(snapshot) {
   return object(snapshot) && validState(snapshot.state) && validTranscript(snapshot.transcript)
+    && (snapshot.hintVisible === undefined || typeof snapshot.hintVisible === 'boolean')
     && Number.isInteger(snapshot.hint) && snapshot.hint >= 0 && snapshot.hint <= 3 && Array.isArray(snapshot.goalChecks)
     && snapshot.goalChecks.every(goal => object(goal) && typeof goal.type === 'string' && text(goal.label) && (goal.path === undefined || text(goal.path)) && typeof goal.done === 'boolean')
     && object(snapshot.lastResult) && Number.isInteger(snapshot.lastResult.code) && text(snapshot.browsePath) && (snapshot.previewPath === undefined || text(snapshot.previewPath))
@@ -28,6 +29,7 @@ export function validateBackup(data, ids, names) {
   if (data.learning !== undefined && !validLearning(data.learning, ids)) throw new Error('掌握记录无效');
   if (data.transfer !== undefined && (!object(data.transfer) || Object.keys(data.transfer).length > 10 || !Object.values(data.transfer).every(item => object(item) && typeof item.done === 'boolean' && Number.isSafeInteger(item.at) && item.at >= 0))) throw new Error('本地练习记录无效');
   if (data.version === 2) {
+    if (data.session?.hintVisible !== undefined && typeof data.session.hintVisible !== 'boolean') throw new Error('提示显示状态无效');
     if (data.session?.flowVersion !== undefined && ![1,2].includes(data.session.flowVersion)) throw new Error('关卡版本不支持');
     if (data.session?.exercise !== undefined && (!validExercise(data.session.exercise, ids) || data.session.exercise && data.session.exercise.queue[data.session.exercise.index] !== data.session.lesson)) throw new Error('复习或小测数据无效');
     if (data.session?.attempt !== undefined && !validAttempt(data.session.attempt)) throw new Error('本次训练记录无效');
