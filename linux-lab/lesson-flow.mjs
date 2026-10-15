@@ -14,6 +14,15 @@ const orientationTasks = {
   'locate-command': { steps:['查找 ls 的可执行文件路径。','再查找 cp 的路径，比较它们所在的目录。'], solution:['which ls','which cp'], goals:[{type:'output',includes:'/usr/bin/cp',code:0,label:'查到 cp 的可执行文件路径'}], tools:[] },
   'read-welcome': { steps:['读取 README.txt，了解工作区说明。','再读取 projects/notes.txt，确认其中写着 draft。'], solution:['cat README.txt','cat projects/notes.txt'], goals:[{type:'output',exact:'draft',code:0,label:'读取 notes.txt 中的 draft'}], tools:[] }
 };
+const investigations = {
+  'copy-note': { before:['cat projects/notes.txt'], after:['cat projects/notes.bak'], steps:['先确认 projects/notes.txt 的内容是 draft，辨认需要备份的原件。','备份为 projects/notes.bak，读回备份核对内容，并保留原件。'], goals:[{type:'output',exact:'draft',code:0,requiresPath:'projects/notes.bak',label:'备份就位后，读回并核对 draft'}], tools:['cat'] },
+  'rename-note': { before:['cat "projects/meeting notes.txt"'], after:['ls projects'], steps:['目录里有两个名字相近的会议文件。先找到内容为 approved 的那份。','将它改名为 meeting-final.txt，查看目录确认新名字；保留另一份会议文件。'], goals:[{type:'output',exact:'approved',code:0,label:'识别内容为 approved 的会议文件'},{type:'output',includes:'meeting-final.txt',code:0,label:'在目录列表中确认新文件名'}], tools:['cat','ls'] },
+  'new-readme': { before:[], after:['ls projects "projects/交接 包"'], steps:['为项目和“交接 包”各准备一个空 README.md，想一想带空格的路径该怎么写。','查看这两个目录，确认 README.md 就位；原来的 notes.txt 内容保持不变。'], goals:[{type:'output',includes:'README.md',code:0,label:'在目录列表中确认 README.md'}], tools:['ls'] },
+  'write-note': { before:[], after:['cat hello.txt'], steps:['把 hello Linux 写入 hello.txt，想一想如何让输出进入文件。','读回 hello.txt，核对大小写、空格和内容。'], goals:[{type:'output',exact:'hello Linux',code:0,label:'读回并核对 hello.txt'}], tools:['cat'] },
+  'append-note': { before:['cat notes.txt'], after:['cat notes.txt'], steps:['先读 notes.txt，确认已有 first；选择能保留原内容的写入方式。','追加 second 后再读回文件，确认 first、second 各占一行，顺序正确。'], goals:[{type:'output',exact:'first',code:0,label:'读取追加前的 first'},{type:'output',exact:'first\nsecond',code:0,label:'读回并核对追加后的两行'}], tools:['cat'] },
+  'preview-log': { before:[], after:['head -n 1 logs/app.log'], steps:['只查看日志前两行，找出启动后最早出现的问题。','再单独输出第一行，确认启动信息；注意选择查看范围的参数。'], goals:[{type:'output',exact:'INFO server started',code:0,label:'单独核对第一行的启动信息'}], tools:[] },
+  'filter-errors': { before:[], after:['grep -ic "^ERROR " logs/app.log'], steps:['日志里有正文提到 ERROR 的普通记录，也有大小写不同的错误记录。只筛选以 ERROR 开头的记录。','再统计这些错误有多少条，使用相同的匹配条件，核对数量为 2。'], goals:[{type:'output',exact:'2',code:0,label:'统计符合条件的两条错误记录'}], tools:[] }
+};
 const reportTasks = {
   'latest-error':['tail -n 2 logs/app.log','另将最后两行保存到报告，保留原顺序'],
   'count-lines':['grep "^ERROR " logs/app.log | wc -l','另统计以 ERROR 开头的记录数，保存到报告'],
@@ -44,6 +53,15 @@ export function extendLessonFlows(lessons, makeShell) {
       lesson.reviewCommands = orientation.tools;
       if (orientation.files) { lesson.seed = {...lesson.seed,files:{...lesson.seed?.files,...orientation.files}}; lesson.flowAssets = Object.keys(orientation.files).map(path=>resolve(path)); }
       lesson.hints = ['先看看眼前有什么，再换个位置核对一下。','试着把 '+[lesson.command,...orientation.tools].join('、')+' 配合起来；相对路径和绝对路径都可以。','试试这条路径，再想想有没有别的做法：\n'+lesson.solution.join('\n')];
+      continue;
+    }
+    const investigation = investigations[lesson.id];
+    if (investigation) {
+      lesson.coreSolution = [...lesson.solution]; lesson.flowBefore = investigation.before; lesson.flowAfter = investigation.after;
+      lesson.steps = investigation.steps; lesson.context = lesson.steps.join('\n');
+      lesson.solution = [...investigation.before,...lesson.coreSolution,...investigation.after];
+      lesson.goals.push(...investigation.goals); lesson.reviewCommands = investigation.tools;
+      lesson.hints = ['先观察文件或输出中的线索，想一想需要保留什么、排除什么。','可结合 '+[lesson.command,...investigation.tools].join('、')+'，核对路径、参数和结果。','一种可行的路径：\n'+lesson.solution.join('\n')];
       continue;
     }
     const initial = makeShell(lesson), final = makeShell(lesson);
@@ -95,11 +113,13 @@ export function extendLessonFlows(lessons, makeShell) {
     }
     if (!instruction && goal && ['file','link'].includes(goal.type)) {
       const path = resolve(goal.path), node = final.state.fs[path];
-      if (node && !final.state.archives[path]) {
-        const target = base + '/delivery.txt'; const content = final.read(path);
-        after.push((goal.type === 'link' ? 'cat ' + quote(path) + ' > ' + quote(target) : 'cp ' + quote(path) + ' ' + quote(target))); reuse.add(goal.type === 'link' ? 'cat' : 'cp');
-        added.push(fileGoal(target,content,'将完成后的内容交付到 ' + target.replace(HOME,'~')));
-        instruction = '将完成后的 ' + goal.path + ' 复制到 ' + target.replace(HOME,'~') + '，保留原结果。';
+      if (node) {
+        before.length = 0; reuse.delete('mkdir');
+        const command = goal.type === 'link' ? 'readlink ' + quote(path) : 'stat ' + quote(path);
+        const check = final.execute(command);
+        after.push(command); reuse.add(command.split(' ')[0]);
+        added.push({type:'output',exact:check.stdout.trim(),code:check.code,normalizeFilePath:goal.type !== 'link',label:goal.type === 'link' ? '查看并核对链接指向' : '核对结果文件的路径、大小和权限'});
+        instruction = goal.type === 'link' ? '查看 '+goal.path+' 的链接指向，确认它连接到了目标文件。' : '查看 '+goal.path+' 的文件信息，核对路径、大小和权限；原结果要保留。';
       }
     }
     if (!instruction) {
@@ -117,8 +137,13 @@ export function extendLessonFlows(lessons, makeShell) {
       const reportTask = reportTasks[lesson.id];
       if (reportTask) command = reportTask[0];
       const check = final.execute(command);
+      if (!reportTask && !lesson.goals.some(goal=>['output','clear'].includes(goal.type)) && lesson.command !== 'sleep') {
+        before.length = 0; reuse.delete('mkdir'); after.push(command); reuse.add(command.split(' ')[0]);
+        added.push({type:'output',exact:check.stdout.trim(),code:check.code,normalizeFilePath:command.startsWith('stat '),label:'查看并核对操作后的实际状态'});
+        instruction = '操作后用 '+command.split(' ')[0]+' 查看实际状态，核对是否达成目标。';
+      }
       // true/false demonstrate control flow, not a fabricated report of their exit status.
-      if (lesson.command === 'true' || lesson.command === 'false') {
+      else if (lesson.command === 'true' || lesson.command === 'false') {
         const text = lesson.command === 'true' ? 'ready\n' : 'recovered\n';
         command = lesson.command + (lesson.command === 'true' ? ' && ' : ' || ') + 'printf ' + quote(text.replaceAll('\n','\\n')) + ' > ' + quote(report);
         after.push(command); reuse.add('printf');
@@ -135,7 +160,7 @@ export function extendLessonFlows(lessons, makeShell) {
         // History includes the learner's own commands, so require the relevant entry rather than a reference transcript.
         if (lesson.command === 'history' || lesson.command === 'clear') { delete reportGoal.text; reportGoal.includes = lesson.command === 'history' ? 'history' : 'clear'; }
         added.push(reportGoal);
-        if (reportTask) added.push({type:'output',exact:check.stdout.trim(),code:0,label:'读回报告，核对筛选或统计结果'});
+        if (reportTask) added.push({type:'output',exact:check.stdout.trim(),code:0,requiresPath:report,label:'报告就位后，读回核对筛选或统计结果'});
         instruction = (reportTask ? reportTask[1] + '。报告路径：' : '用 ' + name + ' 核对结果，将输出保存到 ') + report.replace(HOME,'~') + (lesson.goals.some(goal=>goal.type==='output' && (goal.code??0)===0) ? '；读回报告核对内容。' : '。');
       }
     }
@@ -168,6 +193,6 @@ export function restoreFlowSnapshot(snapshot, initial, lesson) {
   snapshot.goalChecks = evaluate(lesson.goals, snapshot.state, { stdout:'', ...snapshot.lastResult });
   snapshot.goalChecks.forEach((goal, index) => {
     const old = previous[index];
-    if (goal.type === 'output' && old?.done && ['type','exact','includes','code'].every(key => goal[key] === old[key])) goal.done = true;
+    if (goal.type === 'output' && old?.done && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key])) goal.done = true;
   });
 }

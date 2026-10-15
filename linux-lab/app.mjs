@@ -1,5 +1,6 @@
 import { goalReference } from './task-copy.mjs';
-import { completionMessage, compareSolutions } from './guidance.mjs';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages } from './guidance.mjs';
+import { createDemo, advanceDemo, demoFiles } from './demonstrations.mjs';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
@@ -55,6 +56,8 @@ let starterMode = false;
 let solutionCache;
 let exerciseInitialState;
 let onboardingReady = false;
+let demonstration;
+let latestChanges = [];
 function showTaskIntro() {
   if (mode !== 'learn') return;
   $('task-intro-title').textContent = lesson.title;
@@ -83,8 +86,38 @@ function showTaskIntro() {
       $('task-intro-commands').append(example);
     }
   }
+  demonstration = !training ? createDemo(lesson.command) : null;
+  $('intro-demo').hidden = !demonstration; $('intro-demo').open = false;
+  if (demonstration) {
+    $('intro-demo').open = !completed.has(currentId) && !lessons.some(item=>item.command === lesson.command && completed.has(item.id));
+    $('demo-title').textContent = demonstration.title;
+    renderDemo();
+  }
   $('task-intro-dialog').showModal();
 }
+function renderDemo() {
+  const {browse,files} = demoFiles(demonstration);
+  $('demo-path').textContent = browse.replace(HOME,'~');
+  $('demo-files').replaceChildren();
+  for (const file of files) {
+    const chip=element('span',undefined,'demo-file');
+    chip.append(element('span',file.type === 'dir' ? '📁' : '▤'),element('code',file.path.split('/').pop()));
+    if (file.path.endsWith('deploy.sh')) chip.append(element('small',file.mode));
+    if (demonstration.events.some(event=>event.path === file.path)) chip.classList.add('demo-changed');
+    $('demo-files').append(chip);
+  }
+  $('demo-caption').textContent = demonstration.caption;
+  const line = demonstration.steps[Math.min(demonstration.index,demonstration.steps.length-1)][0];
+  $('demo-command').textContent = demonstration.index ? demonstration.steps[demonstration.index-1][0] : line;
+  $('demo-output').hidden = !demonstration.result?.stdout;
+  $('demo-output').textContent = demonstration.result?.stdout || '';
+  $('demo-next').hidden = demonstration.index >= demonstration.steps.length;
+  $('demo-next').textContent = demonstration.index ? '再试一步 →' : '试一下 →';
+  $('demo-reset').hidden = !demonstration.index;
+  if (demonstration.index) reveal($('demo-files'),3);
+}
+$('demo-next').addEventListener('click',()=> { advanceDemo(demonstration); renderDemo(); if ($('demo-next').hidden) $('demo-reset').focus({preventScroll:true}); });
+$('demo-reset').addEventListener('click',()=> { demonstration=createDemo(lesson.command); renderDemo(); });
 for (const id of ['task-intro-start','task-intro-close']) $(id).addEventListener('click',()=> $('task-intro-dialog').close());
 $('task-intro-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
 const navigationLessons = () => starterMode ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons;
@@ -188,7 +221,7 @@ function showCompletion(newBoss) {
   const count = training ? position+1 : sequence.filter(item=>completed.has(item.id)).length;
   $('completion-progress').max = sequence.length; $('completion-progress').value = count;
   $('completion-count').textContent = `${training ? '本轮训练' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
-  $('completion-next-preview').textContent = next ? `接下来，试试「${next.title}」？` : training ? '这一轮收工！让刚才的收获沉淀一下。' : '这一段走完了，去地图上挑个新挑战吧。';
+  $('completion-next-preview').textContent = next ? nextTransition(lesson,next) : training ? '这一轮收工！让刚才的收获沉淀一下。' : '这一段走完了，去地图上挑个新挑战吧。';
   $('completion-next').textContent = next ? '继续挑战 →' : training ? '完成本轮 ✓' : '去关卡地图 →';
   $('completion-unlock').hidden = !newBoss;
   if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战解锁了，随时来试试！';
@@ -212,6 +245,12 @@ function renderComparison(container) {
     block.append(list); columns.append(block);
   }
   container.append(columns,element('p','浅色标出不同写法。参考解法已验证可通关，并非唯一最优解；观察和查手册也有价值。','comparison-note'));
+  const insights = methodInsights(shell.state.history,comparison.reference?.lines,shell.state.env);
+  if (insights.length) {
+    const list=element('ul',undefined,'method-insights');
+    for (const text of insights) list.append(element('li',text));
+    container.append(list);
+  }
 }
 for (const id of ['completion-close','completion-stay']) $(id).addEventListener('click',()=> $('completion-dialog').close());
 $('completion-next').addEventListener('click',advanceLesson);
@@ -219,7 +258,7 @@ $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !
 
 function persist() {
   const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
-    session: mode === 'learn' && shell ? { revision: 2, flowVersion:1, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+    session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
   catch { storageAvailable = false; }
@@ -353,7 +392,7 @@ function renderTask() {
   $('hint-button').disabled = hint >= 3;
   $('hint-button').textContent = hint >= 3 ? '解法已展开' : hint ? '再给点线索' : '💡 给点提示';
   $('hint-box').hidden = sandbox || !hint;
-  if (hint) { $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1]; $('hint-content').textContent = lesson.hints[hint - 1]; }
+  if (hint) { $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1]; $('hint-content').textContent = stateHint(lesson,shell.state,goalChecks,hint,lastResult); }
   $('related-commands').replaceChildren();
   for (const command of training && !hint ? [] : sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
     const button = element('a', command + ' 手册', 'command-chip');
@@ -436,7 +475,7 @@ function renderDirectoryTree() {
 }
 let displayedDirectory;
 let displayedPreview;
-function renderWorld() {
+function renderWorld(animateChanges = false) {
   const s = shell.state;
   if (s.fs[browsePath]?.type !== 'dir') browsePath = s.fs[s.cwd]?.type === 'dir' ? s.cwd : HOME;
   renderDirectoryTree();
@@ -477,6 +516,7 @@ function renderWorld() {
       renderWorld();
     });
     $('file-list').append(button);
+    if (animateChanges && changes.has(path)) reveal(button,5);
   }
   if (!children.length) $('file-list').append(element('p', '空文件夹', 'finder-empty'));
   $('file-preview').hidden = !previewPath || !s.fs[previewPath];
@@ -489,7 +529,10 @@ function renderWorld() {
   $('system-view').replaceChildren();
   const section = (heading, rows) => {
     const block = element('div', undefined, 'system-section'); block.append(element('h3', heading));
-    for (const [key, value] of rows) { const row = element('div', undefined, 'system-row'); row.append(element('span', key), element('span', String(value))); block.append(row); }
+    for (const [key, value] of rows) {
+      const row = element('div', undefined, 'system-row'); row.append(element('span', key), element('span', String(value))); block.append(row);
+      if (latestChanges.some(event=>event.name === key || event.kind === 'process' && key === event.name)) { row.classList.add('state-changed'); if (animateChanges) reveal(row,3); }
+    }
     $('system-view').append(block);
   };
   section('进程 / PID', s.processes.map(item => [item.name, item.pid]));
@@ -500,6 +543,15 @@ function renderWorld() {
   if (displayedDirectory !== browsePath) reveal($('file-list'), 4);
   if (displayedPreview !== previewPath && previewPath) reveal($('file-preview'), 4);
   displayedDirectory = browsePath; displayedPreview = previewPath;
+  $('world-changes').replaceChildren();
+  const names={created:'新增',moved:'移动',removed:'移除',updated:'内容更新',permission:'权限',owner:'所有者',directory:'当前位置',service:'服务更新',package:'软件包更新',env:'变量更新',process:'进程结束'};
+  for (const event of latestChanges.slice(0,4)) {
+    const label=event.path ? event.path.replace(HOME,'~') : event.name;
+    const text = event.kind === 'permission' || event.kind === 'owner' ? `${label} · ${event.from} → ${event.to}` : event.kind === 'moved' ? `${event.from.replace(HOME,'~')} → ${label}` : `${names[event.kind]} · ${label}`;
+    $('world-changes').append(element('span',text,'world-change '+event.kind));
+  }
+  $('world-changes').hidden = !latestChanges.length;
+  if (animateChanges && latestChanges.some(event=>event.kind === 'directory')) reveal($('file-location'),3);
 }
 function setWorldTab(system) {
   const changed = $('files-view').hidden !== system;
@@ -509,6 +561,7 @@ function setWorldTab(system) {
 }
 
 function startTask(id, restore = false) {
+  latestChanges=[]; $('pipeline-flow').hidden=true;
   solutionCache = undefined; $('solution-review').open = false;
   practiceHistory.clear(); updatePracticeActions();
   currentId = id; lesson = lessons.find(item => item.id === id);
@@ -519,15 +572,15 @@ function startTask(id, restore = false) {
   if (restore && validSession(saved.session)) {
     try { shell = new Shell(saved.session.state, manuals); transcript = Array.isArray(saved.session.transcript) ? saved.session.transcript.slice(-60) : []; hint = Math.min(3, Math.max(0, Number(saved.session.hint) || 0)); attempt.maxHint = Math.max(attempt.maxHint, hint); }
     catch { shell = makeExercise(); transcript = []; }
-    if (saved.session.flowVersion !== 1) {
+    if (saved.session.flowVersion !== 2) {
       restoreFlowAssets(shell.state,exerciseInitialState,lesson);
     }
   }
   goalChecks = evaluate(lesson.goals, shell.state);
-  if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index]) goal.done = true; });
+  if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index] && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) goal.done = true; });
   if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) {
     practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future);
-    if (saved.session.flowVersion !== 1) for (const snapshot of [...practiceHistory.past,...practiceHistory.future]) restoreFlowSnapshot(snapshot,exerciseInitialState,lesson);
+    if (saved.session.flowVersion !== 2) for (const snapshot of [...practiceHistory.past,...practiceHistory.future]) restoreFlowSnapshot(snapshot,exerciseInitialState,lesson);
   }
   updatePracticeActions();
   browsePath = shell.state.cwd; previewPath = undefined; changes = new Set(); $('command-input').value = '';
@@ -558,6 +611,7 @@ function restorePractice(snapshot) {
   changes = new Set(snapshot.changes);
 }
 function practiceAction(action) {
+  latestChanges=[]; $('pipeline-flow').hidden=true;
   $('task-feedback').hidden = true;
   if (action === 'reset') {
     practiceHistory.record(practiceSnapshot());
@@ -580,11 +634,15 @@ function executeCommand(command) {
   let celebrate = false; let unlockedBoss;
   if (['reset', 'undo', 'redo'].includes(command)) { practiceAction(command); return; }
   practiceHistory.record(practiceSnapshot());
-  const path = shell.state.cwd; const before = JSON.stringify(shell.state.fs);
-  const oldFiles = JSON.parse(before); lastResult = shell.execute(command);
+  const beforeState=structuredClone(shell.state), path = shell.state.cwd;
+  const oldFiles = beforeState.fs; lastResult = shell.execute(command);
+  latestChanges=describeChanges(beforeState,shell.state,lastResult.commands);
   changes = new Set(Object.keys(shell.state.fs).filter(key => JSON.stringify(oldFiles[key]) !== JSON.stringify(shell.state.fs[key])));
   if (path !== shell.state.cwd) browsePath = shell.state.cwd;
-  else if (mode === 'learn' && changes.size) focusGoalDirectory();
+  else if (changes.size) {
+    const effect=latestChanges.find(event=>event.path && shell.state.fs[event.path]?.type !== 'dir' && shell.state.fs[event.path]) || latestChanges.findLast(event=>event.path && shell.state.fs[event.path]);
+    if (effect) browsePath=resolve('..',effect.path); else if (mode === 'learn') focusGoalDirectory();
+  }
   if (lastResult.clear) { transcript = []; $('transcript').replaceChildren(); }
   const entry = { path, command, stdout: lastResult.stdout, stderr: lastResult.stderr };
   transcript.push(entry); transcript = transcript.slice(-60); appendTranscript(entry);
@@ -612,13 +670,21 @@ function executeCommand(command) {
       announce(lastResult.code ? '命令已结束，目标尚未全部达成。查看终端反馈或提示。' : '环境已更新，继续观察目标。');
       const achieved = goalChecks.filter(goal=>goal.done).length;
       const improved = goalChecks.some((goal,index)=>goal.done && !previous[index]?.done);
-      if (improved && !lastResult.stderr) showTaskFeedback('progress', '对，就是这样！', `已完成 ${achieved} / ${goalChecks.length} 个目标。接着试试：` + goalChecks.find(goal=>!goal.done).label);
+      if (improved && !lastResult.stderr) showTaskFeedback('progress', '对，就是这样！', `已完成 ${achieved} / ${goalChecks.length} 个目标。` + (hint ? '下面的线索已经更新，接着试试。' : stateHint(lesson,shell.state,goalChecks,1,lastResult)));
       else if (lastResult.code) showTaskFeedback('retry', '这一步卡住了？看看这里', lastResult.stderr.trim().split('\n')[0] || '对照一下目标；需要线索时，点「给点提示」。');
-      else if (lastResult.commands.includes(lesson.command)) showTaskFeedback('progress', '继续试试，目标就在前面', '接下来：' + (goalChecks.find(goal => !goal.done)?.label || '对照目标，再调整一下命令。'));
+      else if (lastResult.commands.includes(lesson.command)) showTaskFeedback('progress', '继续试试，目标就在前面', hint ? '下面的线索已经更新，接着试试。' : stateHint(lesson,shell.state,goalChecks,1,lastResult));
       else $('task-feedback').hidden = true;
     }
   }
-  renderTask(); updatePrompt(); renderWorld(); updatePracticeActions(); persist();
+  renderTask(); updatePrompt(); renderWorld(true); updatePracticeActions(); persist();
+  const stages=pipelineStages(command,beforeState,manuals);
+  $('pipeline-flow').hidden=!stages.length; $('pipeline-flow').open=false; $('pipeline-stages').replaceChildren();
+  if (stages.length) {
+    $('pipeline-summary').textContent=stages.map(stage=>stage.name).join(' → ');
+    for (const stage of stages) {
+      const block=element('section'); block.append(element('code',stage.command),element('pre',stage.stdout.slice(0,500) || '（无输出）')); $('pipeline-stages').append(block);
+    }
+  }
   if (celebrate) showCompletion(unlockedBoss);
 }
 $('practice-area').addEventListener('click', event => {
@@ -643,7 +709,7 @@ $('command-input').addEventListener('keydown', event => {
     else announce('没有匹配的补全项。');
   }
 });
-$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); attempt.maxHint = Math.max(attempt.maxHint, hint); renderTask(); persist(); });
+$('hint-button').addEventListener('click', () => { hint = Math.min(3, hint + 1); attempt.maxHint = Math.max(attempt.maxHint, hint); if ($('task-feedback').classList.contains('progress')) $('task-feedback').hidden=true; renderTask(); persist(); });
 for (const action of ['reset', 'undo', 'redo']) {
   $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
 }
@@ -688,6 +754,7 @@ $('file-up').addEventListener('click', () => { browsePath = resolve('..', browse
 $('preview-close').addEventListener('click', () => { previewPath = undefined; renderWorld(); });
 
 function navigate(hash, initial = false) {
+  latestChanges=[]; $('pipeline-flow').hidden=true;
   if ($('completion-dialog').open) $('completion-dialog').close();
   if ($('task-intro-dialog').open) $('task-intro-dialog').close();
   $('task-feedback').hidden = true;
