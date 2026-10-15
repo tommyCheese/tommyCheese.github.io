@@ -29,9 +29,9 @@ for (const lesson of lessons) test('complete scenario: ' + lesson.id, () => {
 test('judges filesystem outcomes instead of requiring a specific command string', () => {
   const lesson = lessons.find(item => item.id === 'copy-note'); const shell = createLessonShell(Shell, seedState, lesson);
   for (const line of lesson.flowBefore) shell.execute(line);
-  const result = shell.execute('cp ./projects/notes.txt ./projects/notes.bak');
+  let result = shell.execute('cp ./projects/notes.txt ./projects/notes.bak');
   assert.ok(!evaluate(lesson.goals, shell.state, result).every(item => item.done));
-  for (const line of lesson.flowAfter) shell.execute(line);
+  for (const line of lesson.flowAfter) result = shell.execute(line);
   assert.ok(evaluate(lesson.goals, shell.state, result).every(item => item.done));
   shell.state.fs[HOME + '/projects/notes.bak'].text = 'wrong';
   assert.ok(!evaluate(lesson.goals, shell.state).every(item => item.done));

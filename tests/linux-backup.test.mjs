@@ -34,6 +34,8 @@ test('lesson flow backups accept legacy and current versions but reject unknown 
   data.session.flowVersion=1;
   assert.doesNotThrow(()=>validateBackup(data,ids,names));
   data.session.flowVersion=2;
+  assert.doesNotThrow(()=>validateBackup(data,ids,names));
+  data.session.flowVersion=3;
   assert.throws(()=>validateBackup(data,ids,names),/版本/);
 });
 test('malformed backup data is rejected before workspace replacement',()=>{

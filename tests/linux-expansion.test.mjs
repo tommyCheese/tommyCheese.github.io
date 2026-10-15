@@ -67,9 +67,9 @@ test('lessons accept file goals created through alternative commands and redirec
   const lesson=lessons.find(item=>item.id==='new-readme');
   const shell=createLessonShell(Shell,seedState,lesson);
   for (const line of lesson.flowBefore) shell.execute(line);
-  const result=shell.execute('printf "" > projects/README.md; printf "" > "projects/交接 包/README.md"');
+  let result=shell.execute('printf "" > projects/README.md; printf "" > "projects/交接 包/README.md"');
   assert.equal(result.code,0);
-  for (const line of lesson.flowAfter) shell.execute(line);
+  for (const line of lesson.flowAfter) result = shell.execute(line);
   assert.ok(evaluate(lesson.goals,shell.state,result).every(item=>item.done));
 });
 

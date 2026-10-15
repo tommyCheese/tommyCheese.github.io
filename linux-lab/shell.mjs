@@ -551,7 +551,10 @@ export function evaluate(goals, state, result = { stdout: '', code: null }) {
       case 'mode': done = node?.mode === goal.value; break;
       case 'owner': done = node?.owner === goal.value; break;
       case 'link': done = node?.type === 'link' && resolve(node.target, parent(path)) === resolve(goal.target); break;
-      case 'output': done = result.code === (goal.code ?? 0) && (goal.exact !== undefined ? result.stdout.trim() === goal.exact : result.stdout.includes(goal.includes)); break;
+      case 'output': {
+        const stdout=goal.normalizeFilePath ? result.stdout.replace(/^File: (.+)$/m,(_,path)=>'File: '+resolve(path,state.cwd)) : result.stdout;
+        done = (!goal.requiresPath || !!state.fs[resolve(goal.requiresPath)]) && result.code === (goal.code ?? 0) && (goal.exact !== undefined ? stdout.trim() === goal.exact : stdout.includes(goal.includes)); break;
+      }
       case 'env': done = state.env[goal.name] === goal.value; break;
       case 'setting': done = state[goal.name] === goal.value; break;
       case 'clear': done = !!result.clear; break;
