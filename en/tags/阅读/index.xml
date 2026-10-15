@@ -412,9 +412,6 @@ The author considers architectural value more important than behavioral value, b
 &lt;/ul&gt;
 &lt;p&gt;A common mistake shared by business and development teams is failing to distinguish genuinely urgent and important features from urgent but unimportant ones. As a result, important architectural concerns give way to unimportant behavioral features.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Balancing the importance of system architecture against the urgency of features is the responsibility of software developers themselves&lt;/strong&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Author’s note: Similar problems arise even between development teams. For example, some front-end teams assume that the back end merely needs to expose a set of interfaces and that this is easy, overlooking the importance of good design.&lt;/p&gt;
-&lt;/blockquote&gt;
 &lt;h3 id="为好的软件架构持续斗争"&gt;Keep Fighting for Good Software Architecture ✊&lt;/h3&gt;
 &lt;p&gt;If architectural value is ignored, a system becomes increasingly difficult to maintain until eventually it can no longer be changed at all. If that happens, the development team has failed to push back sufficiently against requirements and has not fulfilled its responsibility.&lt;/p&gt;
 </description>
