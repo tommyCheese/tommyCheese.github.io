@@ -81,14 +81,6 @@ function showTaskIntro() {
     }
     $('task-intro-commands').append(row);
   }
-  if ($('task-intro-tools').open) {
-    const manual = manuals.find(item=>item.name === lesson.command);
-    if (manual?.example) {
-      const example = element('details',undefined,'intro-example');
-      example.append(element('summary','看一个例子'),element('pre',manual.example));
-      $('task-intro-commands').append(example);
-    }
-  }
   demonstration = !training ? createDemo(lesson.command) : null;
   $('intro-demo').hidden = !demonstration; $('intro-demo').open = false;
   if (demonstration) {
