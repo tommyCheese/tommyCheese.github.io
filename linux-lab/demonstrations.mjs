@@ -26,7 +26,7 @@ export function createDemo(command) {
   const definition=demos[command === 'wc' ? 'grep' : command];
   if (!definition) return null;
   // A separate shell: demonstration never mutates the learner's task or history.
-  return { ...definition, shell:new Shell(seedState(definition.seed),manuals), index:0, result:null, events:[],caption:definition.prediction };
+  return { ...definition, command, shell:new Shell(seedState(definition.seed),manuals), index:0, result:null, events:[],caption:definition.prediction };
 }
 export function advanceDemo(demo) {
   if (!demo || demo.index >= demo.steps.length) return false;
@@ -40,5 +40,8 @@ export function demoFiles(demo) {
   const directory=demo.events.find(event=>event.path && !['directory','removed'].includes(event.kind));
   const parent=directory?.path.slice(0,directory.path.lastIndexOf('/'));
   const browse=demo.focus || (demo.shell.state.cwd !== HOME ? demo.shell.state.cwd : parent || HOME);
-  return {browse,files:demo.shell.children(browse).map(path=>({path,...state.fs[path]}))};
+  const showHidden = demo.command !== 'ls' || demo.index >= 2;
+  const files = demo.shell.children(browse).filter(path => showHidden || !path.split('/').pop().startsWith('.')).map(path=>({path,...state.fs[path],revealed:demo.command === 'ls' && demo.index >= 2 && path.split('/').pop().startsWith('.')}));
+  const preview = demo.command === 'echo' ? {name:'/tmp/demo.txt', text:demo.shell.read('/tmp/demo.txt')} : null;
+  return {browse,files,preview};
 }

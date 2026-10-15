@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { compareSolutions, completionMessage, stateHint, methodInsights, describeChanges, pipelineStages, nextTransition } from '../linux-lab/guidance.mjs';
 import { Shell, seedState, HOME, evaluate } from '../linux-lab/shell.mjs';
 import { lessons, manuals, createLessonShell } from '../linux-lab/curriculum.mjs';
-import { createDemo, advanceDemo } from '../linux-lab/demonstrations.mjs';
+import { createDemo, advanceDemo, demoFiles } from '../linux-lab/demonstrations.mjs';
 
 test('comparison uses the shortest supplied verified reference and counts input lines, not pipeline commands',()=>{
   const choices=[{command:'pwd\ncd projects\npwd'},{command:'pwd\ncd projects && pwd'}];
@@ -71,4 +71,31 @@ test('celebration distinguishes lesson, review and boss without grading retries 
   assert.match(completionMessage(lesson,{review:true}).title,/手感/);
   assert.match(completionMessage(lesson,{boss:true}).title,/Boss/);
   assert.equal(completionMessage(lesson,{errors:5,maxHint:3}).title,completionMessage(lesson).title);
+});
+
+test('ls demonstrations reveal hidden files only after requesting them',()=>{
+  const demo=createDemo('ls');
+  const names=()=>demoFiles(demo).files.map(file=>file.path.split('/').pop());
+  assert.ok(!names().includes('.profile'));
+  advanceDemo(demo);assert.ok(!names().includes('.profile'));
+  advanceDemo(demo);assert.ok(names().includes('.profile'));
+});
+test('redirection demonstrations show actual file content after append and overwrite',()=>{
+  const demo=createDemo('echo');
+  assert.equal(demoFiles(demo).preview.text,'first\n');
+  advanceDemo(demo);assert.equal(demoFiles(demo).preview.text,'first\nsecond\n');
+  advanceDemo(demo);assert.equal(demoFiles(demo).preview.text,'replaced\n');
+});
+test('matching methods need no generic advice and transitions never assume prior tasks',()=>{
+  assert.deepEqual(methodInsights(['pwd'],['pwd']),[]);
+  assert.equal(nextTransition({command:'rm'},{command:'mv',title:'给笔记改名'}),'下一关：给笔记改名');
+});
+
+test('comparison highlights extra repetitions and reordered inputs',()=>{
+  const repeated=compareSolutions(['pwd','pwd','cd projects'],[{command:'pwd\ncd projects'}]);
+  assert.deepEqual(repeated.yoursDifferent,[false,true,false]);
+  assert.deepEqual(repeated.referenceDifferent,[false,false]);
+  const reordered=compareSolutions(['ls','pwd'],[{command:'pwd\nls'}]);
+  assert.equal(reordered.yoursDifferent.filter(Boolean).length,1);
+  assert.equal(reordered.referenceDifferent.filter(Boolean).length,1);
 });

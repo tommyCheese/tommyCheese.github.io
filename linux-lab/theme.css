@@ -30,8 +30,6 @@
 [data-theme=dark] .goal-reference pre,[data-theme=dark] .goal-comparison pre,[data-theme=dark] .solution-review pre{background:#222923;border-color:#465244;color:#d3dfcb}
 [data-theme=dark] .solution-review,[data-theme=dark] .solution-review>summary{color:#b8d4a4}
 [data-theme=dark] .goal-difference{color:#e5bd84}
-[data-theme=dark] .task-feedback.success{background:#304528;border-color:#607e4d;color:#dcf0cd}
-[data-theme=dark] .task-feedback.retry{background:#493e29;border-color:#8c7447;color:#f0d8aa}
 [data-theme=dark] .files-world,[data-theme=dark] .finder-content{background:#282e2b;border-color:#465149;color:#c4d2c7}
 [data-theme=dark] .finder-toolbar,[data-theme=dark] .finder-status,[data-theme=dark] .file-resize.vertical,[data-theme=dark] .file-resize.horizontal{background:#303831;border-color:#465149}
 [data-theme=dark] .finder-toolbar code,[data-theme=dark] .file-preview strong,[data-theme=dark] .file-preview pre{color:#c3d5c9}
