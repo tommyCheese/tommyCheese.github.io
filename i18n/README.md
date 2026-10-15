@@ -49,6 +49,8 @@ Ctrl+K（Mac 为 ⌘K）打开搜索与跳转，默认以两列紧凑布局显�
 
 `scripts/build_i18n.py` 创建五种语言的新闻页、导航与站点地图；`scripts/reading_layout.py` 生成预览和时间流。修改后运行构建及 `python tests/check_news.py`，检查完整历史、日期排序与分组、首页预览、各语言入口与原文链接。搜索“今日要闻”“新闻”或 “news” 可跳转到新闻页，默认推荐保持六个紧凑入口。
 
+新闻页的日期筛选由 `js/reading.js` 渐进增强，支持全部、今天、近七天与“选择日期”；“今天”按上海时区计算。“选择日期”统一支持单日及含首尾的日期范围：起止日期相同查看单日，不同则查看范围，点击“查看新闻”应用。无结果时显示提示，可点击“全部”恢复。禁用 JavaScript 时保留完整静态时间流，首页日期锚点仍可访问。运行 `node --test tests/news-filter.test.cjs` 检查日期边界、范围校验与锚点恢复。
+
 ## 博客标签
 
 `scripts/tag_taxonomy.py` 是标签的唯一配置来源：`GROUPS` 定义技术方向和细分主题，`POST_TAGS` 为每篇文章指定一个方向和一个主题，`ALIASES` 保存旧标签与新标签的对应关系。新增文章时必须补充 `POST_TAGS`；新增标签时在五语言字典中添加 `tag.<slug>` 和 `tag.<slug>.description`。

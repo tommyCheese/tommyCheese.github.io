@@ -239,17 +239,28 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         header.append(categories)
         directory.append(header)
         dates = list(dict.fromkeys(item['published_at'] for item in news_items))
-        jumps = node('nav', class_='news-date-nav', aria_label=messages['news.dates'], data_i18n_aria_label='news.dates')
-        jumps.append(label('span', 'news.dates'))
-        for date in dates:
-            anchor = node('a', href='#news-' + date)
-            anchor.append(node('time', date, datetime=date))
-            jumps.append(anchor)
-        directory.append(jumps)
-        timeline = node('div', class_='news-timeline')
+        filters = node('form', id='news-date-filter', class_='news-date-filter', hidden='hidden',
+                       aria_label=messages['news.dates'], data_i18n_aria_label='news.dates')
+        filters.append(label('span', 'news.dates', class_='news-filter-label', id='news-filter-label'))
+        modes = node('div', class_='news-filter-modes', role='group', aria_labelledby='news-filter-label')
+        for mode in ['all', 'today', 'week', 'range']:
+            modes.append(label('button', 'news.filter.' + mode, type='button', data_news_period=mode,
+                               aria_pressed='true' if mode == 'all' else 'false', aria_controls='news-timeline'))
+        filters.append(modes)
+        custom = node('div', id='news-custom-dates', class_='news-custom-dates', hidden='hidden')
+        for field in ['start', 'end']:
+            wrapper = node('label', class_='news-date-field', id='news-' + field + '-field')
+            wrapper.append(label('span', 'news.filter.' + field))
+            wrapper.append(node('input', type='date', id='news-' + field, name=field, required='required'))
+            custom.append(wrapper)
+        custom.append(label('button', 'news.filter.apply', type='submit', class_='news-filter-apply'))
+        filters.append(custom)
+        filters.append(node('p', id='news-filter-status', class_='news-filter-status', role='status', aria_live='polite', aria_atomic='true'))
+        directory.append(filters)
+        timeline = node('div', id='news-timeline', class_='news-timeline')
         for date in dates:
             daily_items = [item for item in news_items if item['published_at'] == date]
-            day = node('section', id='news-' + date, class_='news-day', aria_labelledby='heading-' + date)
+            day = node('section', id='news-' + date, class_='news-day', data_news_date=date, aria_labelledby='heading-' + date)
             heading = node('div', class_='news-day-heading')
             title = node('h2', id='heading-' + date)
             title.append(node('time', date, datetime=date))
@@ -262,6 +273,8 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
             day.append(entries)
             timeline.append(day)
         directory.append(timeline)
+        directory.append(label('p', 'news.filter.empty', id='news-filter-empty', class_='news-filter-empty', hidden='hidden'))
+        doc.find('body').append(node('script', src='/js/reading.js?v=' + revision, defer='defer', data_reading_layout='runtime'))
 
     if path == '/topics/':
         directory = doc.get_element_by_id('topics-page')

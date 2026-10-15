@@ -2,6 +2,45 @@
   "updated_at": "2026-10-15",
   "items": [
     {
+      "id": "geely-holding-q3-2026-sales",
+      "category": "cars",
+      "published_at": "2026-10-15",
+      "source": "IT之家",
+      "url": "https://www.ithome.com/1/013/246.htm",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/10/78ac68e4-ebcc-404d-a930-a046f9a095b5.png",
+      "image_credit": "吉利控股集团 · IT之家",
+      "image_fit": "contain"
+    },
+    {
+      "id": "huawei-20000mah-100w-power-bank",
+      "category": "devices",
+      "published_at": "2026-10-15",
+      "source": "IT之家",
+      "url": "https://www.ithome.com/1/013/186.htm",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/10/3e896851-4038-44ae-94e3-8095107c3c23.jpg",
+      "image_credit": "Huawei · IT之家",
+      "image_fit": "contain"
+    },
+    {
+      "id": "google-deep-review-public-release",
+      "category": "ai",
+      "published_at": "2026-10-14",
+      "source": "Google Research",
+      "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
+      "image": "https://storage.googleapis.com/gweb-research2023-media/original_images/DeepReview2.jpg",
+      "image_credit": "Google Research",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nvidia-cupotential-ai-defined-fabs",
+      "category": "semiconductors",
+      "published_at": "2026-10-14",
+      "source": "NVIDIA Newsroom",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-and-semiconductor-leaders-advance-ai-across-chip-design-and-manufacturing-for-ai-defined-labs",
+      "image": "https://iprsoftwaremedia.com/219/files/202610/91e4671418fd42dd611fce974f821286/6aceab1a3d6332051d5dc521_nvidia-and-semiconductor-leaders/nvidia-and-semiconductor-leaders_5ac54765-981c-4c26-b6c2-cdd8daa42e94-prv.jpg?v=5ac54765-981c-4c26-b6c2-cdd8daa42e94",
+      "image_credit": "NVIDIA"
+    },
+    {
       "id": "samsung-future-wireless-summit-2026",
       "category": "ai",
       "published_at": "2026-10-15",

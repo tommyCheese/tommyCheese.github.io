@@ -49,10 +49,17 @@ for locale in LOCALES:
     assert archive.xpath('//*[@id="profileHeader"]//a[@data-i18n="nav.news"]/@aria-current') == ['page']
     groups = archive.xpath('//*[@class="news-day"]')
     assert [group.get('id') for group in groups] == ['news-' + value for value in dates]
-    jump_targets = archive.xpath('//nav[@class="news-date-nav"]/a/@href')
-    assert jump_targets == ['#news-' + value for value in dates]
+    assert not archive.xpath('//nav[@class="news-date-nav"]')
+    filters = archive.xpath('//form[@id="news-date-filter"]')
+    assert len(filters) == 1 and 'hidden' in filters[0].attrib
+    assert filters[0].get('aria-label') == MESSAGES[locale]['news.dates']
+    assert filters[0].xpath('.//button/@data-news-period') == ['all', 'today', 'week', 'range']
+    assert filters[0].xpath('.//input[@type="date"]/@name') == ['start', 'end']
+    assert archive.xpath('//*[@id="news-filter-status"]/@role') == ['status']
+    assert archive.xpath('//script[@data-reading-layout="runtime"]/@src')[0].startswith('/js/reading.js?')
     for value, group in zip(dates, groups):
         assert group.xpath('.//h2/time/@datetime') == [value]
+        assert group.get('data-news-date') == value and 'hidden' not in group.attrib
         daily_items = [item for item in items if item['published_at'] == value]
         expected_count = MESSAGES[locale]['news.count'].replace('{count}', str(len(daily_items)))
         assert group.xpath('.//*[@class="news-day-count"]')[0].text_content() == expected_count
