@@ -694,6 +694,7 @@ function practiceAction(action) {
   }
   $('exit-code').textContent = ''; $('command-input').value = ''; draft = '';
   renderTask(); renderTranscript(); renderWorld(); updatePracticeActions(); persist();
+  if (action === 'reset') showLessonIntro();
 }
 function executeCommand(command) {
   let celebrate = false; let unlockedBoss; let achievedGoals = [];
@@ -779,7 +780,7 @@ for (const [id,direction] of [['hint-previous',-1],['hint-next',1]]) $(id).addEv
   if ($(id).disabled) $(direction === 1 ? 'hint-previous' : 'hint-next').focus({preventScroll:true});
 });
 for (const action of ['reset', 'undo', 'redo']) {
-  $(action + '-button').addEventListener('click', () => { practiceAction(action); $('command-input').focus({ preventScroll: true }); });
+  $(action + '-button').addEventListener('click', () => { practiceAction(action); if (!document.querySelector('dialog:modal')) $('command-input').focus({ preventScroll: true }); });
 }
 $('next-button').addEventListener('click', advanceLesson);
 document.addEventListener('keydown', event => {
@@ -1052,7 +1053,29 @@ wireFileResize('preview-resize', 'y', () => $('file-preview').getBoundingClientR
 navigate(location.hash || (saved.current ? '#' + (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter/' : 'task/') + currentId : '#starter/' + starterRoute[0]), true);
 updateTerminalResize();
 
-const WELCOME_KEY = 'tommy-cheese-linux-lab-welcome-v1';
+const WELCOME_KEY = 'tommy-cheese-linux-lab-welcome-v2';
+const welcomePages = [
+  {title:'欢迎来到 Learn Linux Command',description:'不用先背一长串命令。来终端里动手，把一个个小任务变成你的新本领！',detail:'不用安装 Linux，也不用担心弄坏电脑；所有操作都在模拟环境里。'},
+  {title:'先认识你的练习台',description:'左边看变化，中间敲命令，右边核对目标。三个窗格，一起陪你把任务做完。',detail:'拖动窗格之间的小竖条可以调整宽度，目标栏也能随时收起。'},
+  {title:'轮到你来试试了！',description:'每关先认识一个工具，再用它解决问题。目标完成后，一起看看你的做法和参考解法。',detail:'卡住时点“给点提示”；操作错了也没关系，撤销或重置就能再来。'}
+];
+let welcomePage = 0;
+function renderWelcome() {
+  const page = welcomePages[welcomePage], last = welcomePage === welcomePages.length - 1;
+  $('welcome-title').textContent = page.title;
+  $('welcome-description').textContent = page.description;
+  $('welcome-detail').textContent = page.detail;
+  $('welcome-position').textContent = `${welcomePage + 1} / ${welcomePages.length}`;
+  $('welcome-layout').hidden = welcomePage !== 1;
+  $('welcome-previous').hidden = welcomePage === 0;
+  $('welcome-next').hidden = last;
+  $('welcome-next').textContent = welcomePage === 0 ? '认识界面 →' : '继续 →';
+  $('welcome-start').hidden = !last;
+  $('welcome-title').focus({preventScroll:true});
+}
+$('welcome-next').addEventListener('click', () => { welcomePage = Math.min(welcomePage + 1, welcomePages.length - 1); renderWelcome(); });
+$('welcome-previous').addEventListener('click', () => { welcomePage = Math.max(0, welcomePage - 1); renderWelcome(); });
+$('welcome-close').addEventListener('click', () => $('welcome-dialog').close());
 $('welcome-start').addEventListener('click', () => {
   $('welcome-dialog').close();
   if (mode === 'sandbox') navigate('task/' + currentId);
