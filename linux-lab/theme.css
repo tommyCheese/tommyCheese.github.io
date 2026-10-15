@@ -4,7 +4,7 @@
 #theme-toggle:focus-visible{outline:2px solid #be9b42;outline-offset:3px}
 :root[data-theme=light]{color-scheme:light;background:#edf1eb}
 [data-theme=light] .mission-window{box-shadow:0 3px 12px #354b3812}
-[data-theme=light] body:has(.game-world){background-color:#edf1eb;color:#39483f;background-image:url('./linux-penguin-light.svg'),url('./linux-background-light.svg'),radial-gradient(ellipse at 75% 20%,#fafbf6,transparent 70%);background-position:20px calc(100% - 43px),center 64px,center;background-size:52px auto,cover,cover;background-attachment:fixed;background-repeat:no-repeat}
+[data-theme=light] body:has(.game-world){background-color:#edf1eb;color:#39483f;background-image:url('./linux-background-light.svg'),radial-gradient(ellipse at 75% 20%,#fafbf6,transparent 70%);background-position:center 64px,center;background-size:cover,cover;background-attachment:fixed;background-repeat:no-repeat}
 [data-theme=light] .game-header,[data-theme=light] .game-footer{background:#e2e8de;color:#42534a;border-color:#cbd5c8}
 [data-theme=light] .game-header nav [aria-current]{background:#ffffff9c}
 [data-theme=light] .scene-label,[data-theme=light] .scene-label>span:last-child,[data-theme=light] .scene-controls{color:#64766a}
@@ -57,6 +57,3 @@
 [data-theme=dark] .system-section h3{color:#b5c7b3}
 [data-theme=dark] .command-chip,[data-theme=dark] .command-parts a,[data-theme=dark] .help-content dt{color:#91bfda}
 [data-theme=dark] .mission-actions>button:first-child,[data-theme=dark] .solution-example p,[data-theme=dark] .goal-comparison strong{color:#b8c5ad}
-
-/* Narrow layouts scroll past the watermark; keep only the quiet backdrop there. */
-@media(max-width:900px){body:has(.game-world),[data-theme=light] body:has(.game-world){background-size:0 0,cover,cover}}

@@ -66,7 +66,11 @@
 /* Linux workspace backdrop. */
 :root{background:#1e3443}body{background:#1e3443 url('./linux-background.svg') center 64px / cover fixed no-repeat}.game-world{background:transparent}.scene{background-image:none}.game-header{background:#203747;border-bottom-color:#adc9d51a}.game-footer{background:#203747;color:#93adbd}
 
-body{background-image:url('./linux-penguin.svg'),url('./linux-background.svg');background-position:20px calc(100% - 43px),center 64px;background-size:52px auto,cover;background-attachment:fixed,fixed;background-repeat:no-repeat,no-repeat}
+body{background-image:url('./linux-background.svg');background-position:center 64px;background-size:cover;background-attachment:fixed;background-repeat:no-repeat}
+
+/* Keep Tux visible on the terminal's quiet canvas, above the page backdrop. */
+.transcript{background:url('./linux-penguin.svg') right 24px bottom 22px / clamp(130px,14vw,200px) auto no-repeat}
+@media(max-width:780px){.transcript{background-size:110px auto;background-position:right 16px bottom 16px}}
 
 /* Warm graphite palette. */
 :root{background:#343632}body{background-color:#343632}.game-header,.game-footer{background:#2c2f2b}.game-header{border-bottom-color:#d6dece1a}
