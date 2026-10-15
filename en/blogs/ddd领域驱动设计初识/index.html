@@ -247,24 +247,29 @@
 <section id="single">
   <div class="container">
     <div class="mobile-toc" data-reading-layout="toc"><details><summary data-i18n="article.toc">Contents</summary><nav id="mobileTableOfContents" aria-label="Contents">
-  <ul>
-    <li><a href="#%E6%88%98%E7%95%A5%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Strategic Design</a>
-      <ul>
-        <li><a href="#%E9%A2%86%E5%9F%9F">Domain</a></li>
-        <li><a href="#%E5%AD%90%E5%9F%9F">Subdomain</a></li>
-        <li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87">Bounded Context</a></li>
-      </ul>
-    </li>
-    <li><a href="#%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Tactical Design</a>
-      <ul>
-        <li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%AE%9E%E4%BD%93">Value Objects and Entities</a></li>
-        <li><a href="#%E8%81%9A%E5%90%88%E4%B8%8E%E8%81%9A%E5%90%88%E6%A0%B9">Aggregates and Aggregate Roots</a></li>
-        <li><a href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6domain-events">Domain Events</a></li>
-        <li><a href="#%E9%A2%86%E5%9F%9F%E6%9C%8D%E5%8A%A1domain-service">Domain Service</a></li>
-      </ul>
-    </li>
-    <li><a href="#ddd%E9%A2%86%E5%9F%9F%E5%BB%BA%E6%A8%A1%E8%AE%BE%E8%AE%A1%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B">Domain Modeling in DDD</a></li>
-  </ul>
+<ul>
+<li><a href="#%E6%88%98%E7%95%A5%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Strategic Design</a>
+<ul>
+<li><a href="#%E9%A2%86%E5%9F%9F">Domain</a></li>
+<li><a href="#%E5%AD%90%E5%9F%9F">Subdomains</a></li>
+<li><a href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80">Ubiquitous Language</a></li>
+<li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87">Bounded Contexts</a></li>
+</ul>
+</li>
+<li><a href="#%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Tactical Design</a>
+<ul>
+<li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%AE%9E%E4%BD%93">Value Objects and Entities</a></li>
+<li><a href="#%E8%B5%84%E6%BA%90%E5%BA%93repository">Repository</a></li>
+<li><a href="#%E8%81%9A%E5%90%88%E4%B8%8E%E8%81%9A%E5%90%88%E6%A0%B9">Aggregates and Aggregate Roots</a></li>
+<li><a href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6domain-events">Domain Events</a></li>
+<li><a href="#%E9%A2%86%E5%9F%9F%E6%9C%8D%E5%8A%A1domain-service">Domain Services</a></li>
+</ul>
+</li>
+<li><a href="#ddd%E9%A2%86%E5%9F%9F%E5%BB%BA%E6%A8%A1%E8%AE%BE%E8%AE%A1%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B">Domain Modeling in DDD</a>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">References</a>
+</li>
+</ul>
 </nav>
               </details></div><div class="row justify-content-center">
       <div class="col-sm-12 col-md-12 col-lg-9">
@@ -279,91 +284,91 @@
               <time datetime="2024-07-26" data-date="2024-07-26">Jul 26, 2024</time>
 
 
-              <span id="readingTime"> · Reading time: 7 min</span>
+              <span id="readingTime"> · Reading time: 8 min</span>
 
             </div>
           </div>
 
           <div class="featured-image">
-            <img class="img-fluid mx-auto d-block" src="/blogimages/DDD1.png" alt="An Introduction to Domain-Driven Design" data-i18n-alt="post.ddd领域驱动设计初识.title">
+            <img class="img-fluid mx-auto d-block" src="/blogimages/ddd-model-boundaries.svg" alt="An Introduction to Domain-Driven Design" data-i18n-alt="post.ddd领域驱动设计初识.title">
           </div>
 
           <article class="page-content  p-2"><h1 id="领域驱动设计概述">Overview of Domain-Driven Design</h1>
-<p>Domain-Driven Design (DDD) is a model-driven approach that captures domain knowledge in a domain model and uses that model to build <strong>more maintainable</strong> software.</p>
-<p>DDD divides the design process into strategic and tactical design. Strategic design addresses domains, subdomains, and bounded contexts, while tactical design addresses entities, value objects, domain events, and related concepts. Their relationship is shown below:</p>
-<p><img src="/blogimages/DDD1.png" alt="img"></p>
+<p>Domain-Driven Design (DDD) is an approach to building software around a business domain. Developers and domain experts explore business knowledge together, develop a domain model, and express its concepts, rules, and language in code to help teams understand and maintain complex business behavior.</p>
+<p>DDD combines two interacting levels of design. Strategic design addresses subdomains, bounded contexts, and their relationships. Tactical design addresses entities, value objects, aggregates, domain services, and domain events within a context. Both evolve through practice.</p>
+<figure><img src="/blogimages/en/ddd-model-boundaries.svg" alt="E-commerce example: business subdomains correspond to bounded contexts; the ordering context contains an order aggregate whose root is an entity." loading="lazy"><figcaption>This is one possible design. The mapping between subdomains and bounded contexts requires modeling decisions; aggregates belong within a specific context.</figcaption></figure>
 <h2 id="战略设计阶段相关概念">Concepts in Strategic Design</h2>
 <h3 id="领域">Domain</h3>
-<p>A domain is the problem area that a system addresses. Product information management, for example, can be a system’s domain.</p>
-<h3 id="子域">Subdomain</h3>
-<p>A domain can be divided into subdomains based on differences in the language used:</p>
+<p>A domain is the area of business knowledge and activity that software addresses. An e-commerce system might involve product sales, payment settlement, and order fulfillment. Understanding the domain requires discussing business goals, processes, and rules, rather than only listing system features.</p>
+<h3 id="子域">Subdomains</h3>
+<p>Identify subdomains by business capability, then classify them by their contribution to competitive advantage and the availability of established solutions:</p>
 <ul>
-<li>Core domain: the subdomain that determines a product’s competitive advantage. It contains the most important, distinctive, and central business functionality.</li>
-<li>Generic subdomain: general-purpose functionality shared by multiple subdomains, such as authentication and authorization. These systems are not constrained by company-specific characteristics and need little customization.</li>
-<li>Supporting subdomain: a subdomain containing neither core nor generic functionality. It is specific to the business but is not broadly reusable, such as a data dictionary for reference codes.</li>
+<li>Core subdomains: capabilities that provide business differentiation and competitive advantage, and merit greater investment in modeling and development.</li>
+<li>Supporting subdomains: capabilities needed to run the business that have company-specific requirements but do not directly provide its core competitive advantage.</li>
+<li>Generic subdomains: capabilities for which the industry already offers established solutions that can usually be purchased or reused.</li>
 </ul>
-<h3 id="限界上下文">Bounded Context</h3>
-<p>A bounded context defines a boundary within which a particular model is used to solve a particular problem.</p>
-<p><strong>A bounded context is a subdomain or a collection of subdomains</strong>, <strong>Ensure that a bounded context supports a complete business process</strong>, <strong>Ensure that the domains involved in that process belong to the same bounded context</strong>. Bounded contexts provide a basis for dividing microservices, with each bounded context corresponding to a microservice.</p>
-<p>Why do we need bounded contexts? Because <strong>context</strong> can make coding difficult. Consider an example:</p>
-<p>In recruitment, “platform” might describe the school or organization someone comes from. In diving, it means the structure from which an athlete dives. In rail transport, it means the area where passengers board trains. Imagine that a diver, an HR specialist, and a train attendant meet without knowing one another’s professions. The HR specialist asks the diver, “Which platform are you from?”…</p>
-<p>All three use the same word, “platform,” but <strong>without an agreed context</strong> they may interpret it differently. The solution is to separate the diving, recruitment, and transport domains and define terminology within each. Discussion within one domain then avoids as much ambiguity as possible. This is the agreement that a context establishes, and it explains why it is useful to define the domains involved in a business process within a bounded context: to reduce ambiguity.</p>
-<p>Software design encounters the same problem. Suppose you design a large product covering diving, recruitment, and passenger transport without separating these services. You use a platform data structure for diving platforms, another platform for recruitment organizations, and yet another platform for railway platforms. When the three business areas inevitably meet, disaster follows: the screen fills with almost identically named variables that mean different things. What can we do?</p>
-<p>By defining the precise meaning of a term within a particular domain, we can use that term freely within it. This is the essential role of a bounded context.</p>
+<p>The classification depends on the business. Authentication might be generic for an online retailer but core for an identity-service provider. Being used by several modules does not, by itself, make a capability a generic subdomain.</p>
+<h3 id="通用语言">Ubiquitous Language</h3>
+<p>Domain experts and developers should establish and continually use a shared language within each bounded context, keeping terminology consistent across conversations, documentation, and code. For example, they need a shared understanding of whether “order paid” requires full payment and when cancellation is allowed. Ubiquitous language is consistent within its context; it does not require a single model for the entire enterprise.</p>
+<h3 id="限界上下文">Bounded Contexts</h3>
+<p><strong>A bounded context defines the scope within which a particular domain model and its language remain consistent and valid.</strong> Subdomains partition business problems; bounded contexts delimit models. They should not be defined as a fixed containment hierarchy. A clear mapping is desirable, but existing systems and organizational constraints also affect the design.</p>
+<p>For example, a “product” in a sales context might focus on pricing and discounts, while a warehouse context focuses on stock locations and inventory movements. The models can be linked by product identity without sharing one product class containing every attribute and behavior.</p>
+<p>An end-to-end business process can span contexts: ordering, payment, and fulfillment contexts can collaborate to place, pay for, and ship an order. A context map makes those relationships and integration contracts explicit. An anti-corruption layer can translate external models to protect a context’s own model when needed.</p>
+<p>Bounded contexts help identify service boundaries, but are not deployment units. DDD can be used in modular monoliths and microservices. One context can be implemented by multiple modules or physical services; “one context, one microservice” is not a mandatory rule.</p>
 <h2 id="战术设计阶段相关概念">Concepts in Tactical Design</h2>
 <h3 id="值对象和实体">Value Objects and Entities</h3>
-<p>Let us begin with value objects and entities.</p>
+<p>Distinguish entities from value objects by whether the business needs to track their identity over time:</p>
 <ul>
-<li>A value object is identified by its attribute values. If all the values inside two value objects are equal, we consider the objects equal. The attributes of a value object are therefore immutable.</li>
-<li>An entity is a business object with a unique identity, state, and a lifecycle. Its attributes may change. Two entities with identical attributes are not necessarily the same entity; only identical identities, such as IDs, make them the same.</li>
+<li>Entity: a domain object identified by its identity. An order remains the same order when its amount or status changes, provided its identity is the same. Two orders with different identities are distinct even when their amounts match.</li>
+<li>Value object: an object with no independent identity that needs tracking, compared by its business-significant values. Two monetary amounts with the same amount and currency are interchangeable; amounts in different currencies are not equal.</li>
 </ul>
-<p>An example helps distinguish value objects from entities:</p>
-<p>Suppose we have a white value object Color white{R:255, G:255, B:255} and a tire entity tire{Air:<em>,Size:</em>}:</p>
-<ul>
-<li>Mutability: every attribute of white is immutable, because changing any of them means the object no longer represents white. A tire’s pressure, size, and other values may change, because it remains a tire even when these parameters change.</li>
-<li>Equality: the immutability of a value object gives it its equality rule. Two white objects must have the same values, so two value objects are equal when all their internal values are equal. An entity does not have this property because its attributes are mutable.</li>
-</ul>
-<p>Entities generally take one of four forms:</p>
-<ul>
-<li>Bloodless model: the model contains only data definitions and getter/setter methods. Business and application logic reside in the service layer. Such a class is called a POJO in Java.</li>
-<li>Anemic model: the model contains some business logic, but excludes logic that depends on the persistence layer. Persistence-dependent business logic resides in the service layer.</li>
-<li>Rich domain model: the model contains all business logic, including logic that depends on the persistence layer.</li>
-<li>Overloaded domain model: application logic unrelated to the business, such as authorization and transactions, is also placed in the domain model.</li>
-</ul>
-<p><strong>Repository (Repo)</strong></p>
-<p>A repository provides storage operations for entities. Its operations should be as low-level as possible, have short names, and remain limited in number. A MyBatis Mapper in Java can be viewed as one implementation of a repository.</p>
+<p>Value objects are usually immutable: replace an old value with a new one to avoid unintended changes through shared references. Entities can also have immutable implementations. <strong>Equality follows identity or value semantics, not mutability.</strong> The same concept can be modeled differently in different contexts.</p>
+<p>In complex domains, entities, value objects, and aggregate roots should encapsulate the business rules that belong to them. An order’s “cancel” behavior can check whether cancellation is allowed, rather than letting callers change its status arbitrarily. The application layer orchestrates use cases, while infrastructure handles database access and other technical details. Rich domain behavior does not require entities to access a database directly.</p>
+<p>Objects containing only data and getters/setters, with all business rules moved elsewhere, are commonly associated with an anemic domain model. This is not a general recommendation for complex domain modeling, although simple CRUD scenarios can use simpler data models. A POJO is an ordinary Java object; the term does not restrict whether it contains business logic.</p>
+<h3 id="资源库repository">Repository</h3>
+<p>A repository offers collection-like access to domain objects while hiding query, mapping, and storage details. In DDD, repositories are usually designed around aggregate roots that require persistence and direct access, rather than around every table or internal entity.</p>
+<p>Interfaces should express clear domain intent, such as loading an order by its identity or saving an order aggregate. Short method names are not a design criterion. Avoid exposing database fields and arbitrary single-table updates directly to the domain layer.</p>
+<p>MyBatis can implement a repository. Whether a Mapper can directly fulfill the repository interface depends on its ability to load, save, and encapsulate aggregates. An ordinary single-table CRUD Mapper is not automatically a DDD repository merely because it provides storage operations.</p>
 <h3 id="聚合与聚合根">Aggregates and Aggregate Roots</h3>
-<p>An aggregate is a larger unit of encapsulation that groups entities and value objects sharing a lifecycle and inseparable business meaning. Only the aggregate root exposes references outside the aggregate. Aggregates also express cohesion. Aggregate roots may call one another, and their names are generally nouns.</p>
-<p>Aggregate roots provide encapsulation in the following ways:</p>
+<p><strong>An aggregate is a transactional consistency boundary that protects business invariants.</strong> Invariants are rules that must hold whenever a business update commits. An aggregate can contain several entities and value objects, or only a root entity. The aggregate root is itself an entity, serving as the entry point and protecting the rules inside the aggregate.</p>
+<p>Suppose an order model requires the total amount always to equal the sum of its line amounts. The order and its lines can form one aggregate, with the order root controlling changes to lines. The boundary follows consistency requirements, rather than the assumption that every related object belongs together.</p>
 <ul>
-<li>All operations on an aggregate must go through its root; external code must not directly manipulate its elements. For example, purple paintwork + tires + a steel frame + … = a car. When driving, we do not independently operate the tires, steering wheel, or paintwork as separate objects. We operate the car as an aggregate root, indirectly affecting its other entities and value objects.</li>
-<li>An aggregate defines a <strong>boundary</strong> within which every component must remain valid with respect to the business logic.</li>
-<li>An aggregate must be operated on within an atomic transaction, or inconsistencies may arise. It is the unit of operation: retrieving it from the repository, modifying it, and putting it back form one atomic operation. For example, if a car aggregate contains wheel entities and a steel, aluminum, or carbon frame entity, removing a wheel for maintenance without reinstalling it cannot count as a completed operation.</li>
+<li>External code should change aggregate state through the root’s behavior, avoiding direct changes to internal entities that bypass business rules. Immutable value objects can safely be returned to callers.</li>
+<li>When a business update commits, the aggregate must satisfy the rules requiring immediate consistency, such as positive line quantities and a correctly calculated total. Persistence also requires appropriate transactions and concurrency control.</li>
+<li>Prefer identity-based references between aggregates. Domain events and eventual consistency can coordinate them. Business requirements determine whether stronger consistency is necessary; association alone is not a reason to combine all related objects.</li>
 </ul>
+<p>“Load, modify, save” can describe a use case, but does not mean every read must occur inside a database transaction covering the entire process. Aggregate boundaries express consistency requirements; transaction and concurrency strategies remain implementation decisions.</p>
 <h3 id="领域事件domain-events">Domain Events</h3>
-<p>Changes to an entity’s attributes produce domain events. A domain event represents something a domain expert considers important: a noteworthy occurrence within the domain. It usually indicates a change in a domain object’s state.<strong>Domain events carry messages and trigger further actions in a system, making them an important way to decouple domain models</strong>. We often use a <strong>message queue</strong> to deliver domain events, so that every subscribing subdomain can perform its own response.</p>
-<blockquote>
-<p>A message bus is another implementation option 👋.</p>
-</blockquote>
-<p>For example, a change in a tire entity’s pressure may emit a leaked event. This conveys that the tire has leaked and triggers other responses, such as changes in the power system or steering feel. Domain events are generally named in the past tense to indicate that they have already happened and cannot be undone.</p>
-<h3 id="领域服务domain-service">Domain Service</h3>
-<p>Some actions in a domain appear <strong>not to belong to any object</strong>. They represent important domain behavior that cannot be ignored or simply attached to an entity or value object. When such behavior is identified, the recommended approach is to declare a service for it: a domain service.</p>
-<p>A domain service is not the same as a service in microservices. Services and aggregate roots seem similar because both may operate on multiple entities, but their purposes differ: <strong>an aggregate root groups entities, while a service synchronizes the states of multiple entities—for example, adding an item entity to a list entity</strong> (such as delivering mail to an inbox). Service abstractions are therefore generally named with verbs.</p>
+<p>A domain event expresses <strong>a business-significant fact that has already occurred in the domain</strong>, such as “order canceled.” Business meaning and rules determine events; arbitrary changes to entity attributes do not automatically produce them. Names commonly use the past tense, and the facts carried by events are usually immutable.</p>
+<p>Internal domain events can be dispatched synchronously or asynchronously within a process. For cross-context communication, facts from successfully committed operations are typically translated into integration events and delivered to other services through messaging infrastructure. A message queue is an implementation choice, not part of the definition of a domain event.</p>
+<p>For example, cancellation can notify the inventory context to release reserved stock. The recorded fact that cancellation occurred cannot be rewritten as though it never happened, but the business may perform later actions or compensation. Event immutability does not mean every business outcome is impossible to adjust.</p>
+<h3 id="领域服务domain-service">Domain Services</h3>
+<p>An important domain operation that does not naturally belong to an entity or value object can be modeled as a domain service. In a model that combines destination, shipping method, and carrier quotations, shipping-cost calculation might be such a service. The decision depends on where behavior belongs, not on how many objects it involves.</p>
+<p>Domain services are usually stateless, and their names and operations should use the ubiquitous language. If “add a line to an order” naturally belongs to the order aggregate, it can be an order behavior without an additional service to synchronize entity state.</p>
+<p>Application services receive use-case requests, load aggregates, invoke domain behavior, and coordinate persistence and transactions. Domain services implement business rules that do not belong to other domain objects. Neither concept is equivalent to an independently deployed microservice.</p>
 <h2 id="ddd领域建模设计领域模型">Domain Modeling in DDD</h2>
-<p>The usual steps in DDD domain modeling are:</p>
+<p>The following sequence offers a starting point. Return to earlier steps as new knowledge and implementation feedback emerge:</p>
 <ol>
-<li>Identify initial subdomains and bounded contexts from the requirements, along with the relationships between contexts.</li>
-<li>Analyze each context to identify entities and value objects, and decide which model style each entity needs: bloodless, anemic, rich, or overloaded.</li>
-<li>Associate entities and value objects, organize them into aggregates, and define aggregate boundaries and roots.</li>
-<li>Design repositories for aggregate roots and consider how entities and value objects should be created.</li>
-<li>Implement the domain model in the project, evaluate its suitability in practice, and use the results to identify shortcomings and refactor.</li>
+<li>Discuss representative business scenarios, rules, and goals with domain experts; develop the ubiquitous language and identify initial subdomains.</li>
+<li>Determine where each model remains consistent, define bounded contexts, and describe their collaboration and integration contracts.</li>
+<li>Identify entities, value objects, and business invariants within each context; use them to design aggregate boundaries, roots, and behavior.</li>
+<li>Design domain services, events, repositories, and object creation mechanisms as needed; clarify the responsibilities of the application layer and infrastructure.</li>
+<li>Check the model against concrete scenarios and verify key rules. As business understanding changes, revise code, language, and model boundaries together.</li>
 </ol>
-<p>This is DDD’s two-stage design approach: strategic design first, followed by tactical design.</p>
-<p>In practice, I suggest using bloodless entities, whose methods consist only of setters and getters, or anemic entities containing simple logic without database operations, such as attribute validation.</p>
-<blockquote>
-<p>This is one approach to DDD modeling: top-down design. A bottom-up approach is also possible, starting with domain objects such as entities and value objects before identifying subdomains and bounded contexts.</p>
-</blockquote>
-<p>(End of section)</p>
+<p>Starting with an initial strategic partition and then refining tactical models is practical, but these are not two irreversible phases. DDD uses ongoing collaboration and feedback to make software models express the business accurately. Choose patterns according to business complexity, rather than adding structure simply to include every concept.</p>
+<h2 id="参考资料">References</h2>
+<ul>
+<li><a href="https://www.domainlanguage.com/ddd/reference/">Eric Evans：DDD Reference</a></li>
+<li><a href="https://martinfowler.com/bliki/BoundedContext.html">Martin Fowler：Bounded Context</a></li>
+<li><a href="https://martinfowler.com/bliki/ValueObject.html">Martin Fowler：Value Object</a></li>
+<li><a href="https://martinfowler.com/bliki/AnemicDomainModel.html">Martin Fowler：Anemic Domain Model</a></li>
+<li><a href="https://martinfowler.com/bliki/POJO.html">Martin Fowler：POJO</a></li>
+<li><a href="https://martinfowler.com/eaaCatalog/repository.html">Martin Fowler：Repository</a></li>
+<li><a href="https://www.dddcommunity.org/library/vernon_2011/">Vaughn Vernon：Effective Aggregate Design</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis">Microsoft：Domain Analysis</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-domain-model">Microsoft：Microservice Domain Model</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/domain-events-design-implementation">Microsoft：Domain Events</a></li>
+</ul>
 </article>
         <nav class="reading-trail" aria-label="Continue reading" data-reading-layout="trail"><h2 data-i18n="article.continue">Continue reading</h2><a data-i18n="topics.architecture.title" href="/en/topics/?v=59e9ca818aa9#architecture" class="topic-backlink">Software architecture</a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%B8%80/?v=59e9ca818aa9" class="post-row"><div class="post-copy"><h3 data-i18n="post.再读整洁架构之道一.title">Rereading Clean Architecture (1)</h3><p data-i18n="post.再读整洁架构之道一.description">Revisiting Clean Architecture through project experience, with reading notes on software architecture.</p><time datetime="2024-07-03" data-date="2024-07-03">Jul 3, 2024</time></div></a><a href="/en/blogs/%E5%86%8D%E8%AF%BB%E6%95%B4%E6%B4%81%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%81%93%E4%BA%8C/?v=59e9ca818aa9" class="post-row"><div class="post-copy"><h3 data-i18n="post.再读整洁架构之道二.title">Rereading Clean Architecture (2): Programming Paradigms</h3><p data-i18n="post.再读整洁架构之道二.description">A review of structured, object-oriented, and functional programming, and how these paradigms constrain code structure and design.</p><time datetime="2024-07-05" data-date="2024-07-05">Jul 5, 2024</time></div></a></nav><section id="comments" class="comments-section" data-comments-layout="section" aria-labelledby="comments-heading"><h2 data-i18n="comments.title" id="comments-heading">Comments</h2><p data-i18n="comments.intro" class="comments-intro">Join the conversation with your GitHub account. All language editions share this discussion.</p><div class="giscus" data-repo="tommyCheese/tommyCheese.github.io" data-repo-id="R_kgDOMRkVTw" data-category="Announcements" data-category-id="DIC_kwDOMRkVT84DFgwq" data-term="/blogs/ddd领域驱动设计初识/" data-lang="en"></div><p class="comments-links"><a data-i18n="comments.onGitHub" href="https://github.com/tommyCheese/tommyCheese.github.io/discussions?discussions_q=%22%2Fblogs%2Fddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E5%88%9D%E8%AF%86%2F%22" target="_blank" rel="noopener noreferrer">View discussion on GitHub</a></p><noscript data-i18n="comments.enableJavaScript">Enable JavaScript to load comments, or use the link above to join the discussion on GitHub.</noscript></section></div>
       </div>
@@ -374,24 +379,29 @@
               <h5 data-i18n="article.toc">Contents</h5>
               <div class="toc-content">
                 <nav id="TableOfContents">
-  <ul>
-    <li><a href="#%E6%88%98%E7%95%A5%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Strategic Design</a>
-      <ul>
-        <li><a href="#%E9%A2%86%E5%9F%9F">Domain</a></li>
-        <li><a href="#%E5%AD%90%E5%9F%9F">Subdomain</a></li>
-        <li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87">Bounded Context</a></li>
-      </ul>
-    </li>
-    <li><a href="#%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Tactical Design</a>
-      <ul>
-        <li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%AE%9E%E4%BD%93">Value Objects and Entities</a></li>
-        <li><a href="#%E8%81%9A%E5%90%88%E4%B8%8E%E8%81%9A%E5%90%88%E6%A0%B9">Aggregates and Aggregate Roots</a></li>
-        <li><a href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6domain-events">Domain Events</a></li>
-        <li><a href="#%E9%A2%86%E5%9F%9F%E6%9C%8D%E5%8A%A1domain-service">Domain Service</a></li>
-      </ul>
-    </li>
-    <li><a href="#ddd%E9%A2%86%E5%9F%9F%E5%BB%BA%E6%A8%A1%E8%AE%BE%E8%AE%A1%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B">Domain Modeling in DDD</a></li>
-  </ul>
+<ul>
+<li><a href="#%E6%88%98%E7%95%A5%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Strategic Design</a>
+<ul>
+<li><a href="#%E9%A2%86%E5%9F%9F">Domain</a></li>
+<li><a href="#%E5%AD%90%E5%9F%9F">Subdomains</a></li>
+<li><a href="#%E9%80%9A%E7%94%A8%E8%AF%AD%E8%A8%80">Ubiquitous Language</a></li>
+<li><a href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87">Bounded Contexts</a></li>
+</ul>
+</li>
+<li><a href="#%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1%E9%98%B6%E6%AE%B5%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">Concepts in Tactical Design</a>
+<ul>
+<li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%AE%9E%E4%BD%93">Value Objects and Entities</a></li>
+<li><a href="#%E8%B5%84%E6%BA%90%E5%BA%93repository">Repository</a></li>
+<li><a href="#%E8%81%9A%E5%90%88%E4%B8%8E%E8%81%9A%E5%90%88%E6%A0%B9">Aggregates and Aggregate Roots</a></li>
+<li><a href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6domain-events">Domain Events</a></li>
+<li><a href="#%E9%A2%86%E5%9F%9F%E6%9C%8D%E5%8A%A1domain-service">Domain Services</a></li>
+</ul>
+</li>
+<li><a href="#ddd%E9%A2%86%E5%9F%9F%E5%BB%BA%E6%A8%A1%E8%AE%BE%E8%AE%A1%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B">Domain Modeling in DDD</a>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">References</a>
+</li>
+</ul>
 </nav>
               </div>
           </aside>

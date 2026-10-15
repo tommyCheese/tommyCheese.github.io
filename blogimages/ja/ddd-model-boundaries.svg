@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1000" width="960" height="1000" role="img" aria-labelledby="title desc">
+<title id="title">DDD のモデル境界：EC の例</title>
+<desc id="desc">この例では業務サブドメインとコンテキストを一対一に対応づける。注文コンテキスト内に注文集約があり、注文エンティティがルート、明細が内部エンティティ、金額が値オブジェクトとなる。コンテキスト間は契約で連携する。</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 1 L8 5 L0 9" fill="none" stroke="#416585" stroke-width="2"/></marker></defs>
+<rect width="960" height="1000" rx="24" fill="#f6f8fc"/>
+<g font-family="system-ui, -apple-system, 'PingFang SC', sans-serif" fill="#17324d" text-anchor="middle">
+<text x="480" y="56" font-size="32" font-weight="700" textLength="395.68" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">DDD のモデル境界：EC の例</text>
+<text x="480" y="105" font-size="25" textLength="179.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">業務上の問題：サブドメイン</text>
+<g fill="#e6edf8" stroke="#9ab0ca" stroke-width="2">
+<rect x="44" y="132" width="264" height="78" rx="12"/><rect x="348" y="132" width="264" height="78" rx="12"/><rect x="652" y="132" width="264" height="78" rx="12"/>
+</g>
+<text x="176" y="181" font-size="27" font-family="system-ui, sans-serif">注文</text><text x="480" y="181" font-size="27" font-family="system-ui, sans-serif">決済</text><text x="784" y="181" font-size="27" font-family="system-ui, sans-serif">履行</text>
+<g fill="none" stroke="#416585" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow)"><path d="M176 212 V296"/><path d="M480 212 V296"/><path d="M784 212 V296"/></g>
+<rect x="290" y="225" width="380" height="38" rx="8" fill="#f6f8fc"/>
+<text x="480" y="252" font-size="23" fill="#52677d" textLength="211.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">対応関係はモデリングで決める</text>
+<text x="480" y="333" font-size="25" textLength="254.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">モデル境界：コンテキスト</text>
+<g fill="#ffffff" stroke="#7793b5" stroke-width="2">
+<rect x="44" y="358" width="264" height="88" rx="12"/><rect x="348" y="358" width="264" height="88" rx="12"/><rect x="652" y="358" width="264" height="88" rx="12"/>
+</g>
+<text x="176" y="412" font-size="25" textLength="129.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">注文コンテキスト</text><text x="480" y="412" font-size="25" textLength="129.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">決済コンテキスト</text><text x="784" y="412" font-size="25" textLength="129.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">履行コンテキスト</text>
+<g fill="none" stroke="#416585" stroke-width="2.5" marker-end="url(#arrow)"><path d="M310 402 H340"/><path d="M614 402 H644"/></g>
+<text x="480" y="487" font-size="23" fill="#52677d" font-family="system-ui, sans-serif">モデルを分け、契約で連携</text>
+<path d="M176 448 V519 H480 V540" fill="none" stroke="#416585" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="76" y="552" width="808" height="340" rx="18" fill="#eef5f0" stroke="#5b9575" stroke-width="2.5"/>
+<text x="480" y="597" font-size="27" font-weight="700" textLength="193.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">注文コンテキストの内部</text>
+<rect x="116" y="622" width="728" height="230" rx="14" fill="#ffffff" stroke="#5b9575" stroke-width="2.5"/>
+<text x="480" y="662" font-size="27" font-weight="700" font-family="system-ui, sans-serif">注文集約</text>
+<text x="480" y="710" font-size="26" textLength="212.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">ルート：注文エンティティ</text>
+<text x="480" y="753" font-size="26" textLength="238.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">内部エンティティ：明細</text>
+<text x="480" y="796" font-size="26" textLength="160.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">値オブジェクト：金額</text>
+<text x="480" y="835" font-size="23" fill="#3e7655" textLength="234.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">境界の基準：業務の不変条件</text>
+<text x="480" y="936" font-size="24" textLength="364.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">ルートはエンティティ、集約は整合性の境界</text>
+<text x="480" y="975" font-size="22" fill="#52677d" textLength="400.0" lengthAdjust="spacingAndGlyphs" font-family="system-ui, sans-serif">固定的な包含やデプロイの関係を示す図ではない</text>
+</g>
+</svg>

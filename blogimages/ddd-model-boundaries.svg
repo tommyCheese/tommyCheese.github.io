@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1000" width="960" height="1000" role="img" aria-labelledby="title desc">
+<title id="title">DDD 的模型边界：电商示例</title>
+<desc id="desc">业务子域与限界上下文在这个示例中一一对应。订单上下文包含订单聚合，订单实体是聚合根，订单明细是内部实体，金额是值对象。上下文之间通过契约协作。</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 1 L8 5 L0 9" fill="none" stroke="#416585" stroke-width="2"/></marker></defs>
+<rect width="960" height="1000" rx="24" fill="#f6f8fc"/>
+<g font-family="system-ui, -apple-system, 'PingFang SC', sans-serif" fill="#17324d" text-anchor="middle">
+<text x="480" y="56" font-size="32" font-weight="700">DDD 的模型边界：电商示例</text>
+<text x="480" y="105" font-size="25">业务问题：子域</text>
+<g fill="#e6edf8" stroke="#9ab0ca" stroke-width="2">
+<rect x="44" y="132" width="264" height="78" rx="12"/><rect x="348" y="132" width="264" height="78" rx="12"/><rect x="652" y="132" width="264" height="78" rx="12"/>
+</g>
+<text x="176" y="181" font-size="27">订单</text><text x="480" y="181" font-size="27">支付</text><text x="784" y="181" font-size="27">履约</text>
+<g fill="none" stroke="#416585" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow)"><path d="M176 212 V296"/><path d="M480 212 V296"/><path d="M784 212 V296"/></g>
+<rect x="290" y="225" width="380" height="38" rx="8" fill="#f6f8fc"/>
+<text x="480" y="252" font-size="23" fill="#52677d">对应关系由建模决定</text>
+<text x="480" y="333" font-size="25">模型边界：限界上下文</text>
+<g fill="#ffffff" stroke="#7793b5" stroke-width="2">
+<rect x="44" y="358" width="264" height="88" rx="12"/><rect x="348" y="358" width="264" height="88" rx="12"/><rect x="652" y="358" width="264" height="88" rx="12"/>
+</g>
+<text x="176" y="412" font-size="25">订单上下文</text><text x="480" y="412" font-size="25">支付上下文</text><text x="784" y="412" font-size="25">履约上下文</text>
+<g fill="none" stroke="#416585" stroke-width="2.5" marker-end="url(#arrow)"><path d="M310 402 H340"/><path d="M614 402 H644"/></g>
+<text x="480" y="487" font-size="23" fill="#52677d">通过契约协作，模型分别维护</text>
+<path d="M176 448 V519 H480 V540" fill="none" stroke="#416585" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="76" y="552" width="808" height="340" rx="18" fill="#eef5f0" stroke="#5b9575" stroke-width="2.5"/>
+<text x="480" y="597" font-size="27" font-weight="700">订单上下文内部</text>
+<rect x="116" y="622" width="728" height="230" rx="14" fill="#ffffff" stroke="#5b9575" stroke-width="2.5"/>
+<text x="480" y="662" font-size="27" font-weight="700">订单聚合</text>
+<text x="480" y="710" font-size="26">聚合根：订单实体</text>
+<text x="480" y="753" font-size="26">内部实体：订单明细</text>
+<text x="480" y="796" font-size="26">值对象：金额</text>
+<text x="480" y="835" font-size="23" fill="#3e7655">边界依据：业务不变量</text>
+<text x="480" y="936" font-size="24">聚合根是实体；聚合是一致性边界</text>
+<text x="480" y="975" font-size="22" fill="#52677d">示例设计，不代表固定的包含或部署关系</text>
+</g>
+</svg>
