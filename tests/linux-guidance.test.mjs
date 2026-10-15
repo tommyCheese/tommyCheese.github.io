@@ -1,9 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { compareSolutions, completionMessage, stateHint, methodInsights, describeChanges, pipelineStages, nextTransition } from '../linux-lab/guidance.mjs';
+import { compareSolutions, completionMessage, stateHint, methodInsights, describeChanges, pipelineStages, nextTransition, lessonIntroduction } from '../linux-lab/guidance.mjs';
 import { Shell, seedState, HOME, evaluate } from '../linux-lab/shell.mjs';
 import { lessons, manuals, createLessonShell } from '../linux-lab/curriculum.mjs';
-import { createDemo, advanceDemo, demoFiles } from '../linux-lab/demonstrations.mjs';
 
 test('comparison uses the shortest supplied verified reference and counts input lines, not pipeline commands',()=>{
   const choices=[{command:'pwd\ncd projects\npwd'},{command:'pwd\ncd projects && pwd'}];
@@ -23,17 +22,6 @@ test('hints identify misplaced files, remaining content and permissions from act
   assert.match(stateHint(lesson,state,[{type:'mode',path:'deploy.sh',value:'744',done:false}],2),/644.*744.*chmod/);
   assert.match(stateHint(lesson,state,[{type:'file',path:'projects/notes.txt',text:'draft\nsecond\n',done:false}],2),/追加/);
   assert.equal(stateHint(lesson,state,[],3),'solution');
-});
-test('all demonstrations run in isolated shells and can be restarted without changing a task',()=>{
-  const learner=new Shell(seedState(),manuals), initial=structuredClone(learner.state);
-  for (const command of ['pwd','cat','man','cd','ls','cp','mv','mkdir','grep','wc','chmod','echo','rm','head','tail','sort','cut','tar']) {
-    const demo=createDemo(command);while(advanceDemo(demo)) assert.equal(demo.result.code,0,command);
-    assert.equal(advanceDemo(demo),false);
-    assert.equal(createDemo(command).index,0);
-  }
-  assert.deepEqual(learner.state,initial);
-  const demo=createDemo('grep');advanceDemo(demo);advanceDemo(demo);assert.equal(demo.result.stdout,'2\n');
-  assert.equal(createDemo('not-a-demo'),null);
 });
 test('change summaries show rename and permissions, and pipelines expose safe intermediate outputs',()=>{
   const shell=new Shell(seedState(),manuals), before=structuredClone(shell.state);
@@ -73,19 +61,6 @@ test('celebration distinguishes lesson, review and boss without grading retries 
   assert.equal(completionMessage(lesson,{errors:5,maxHint:3}).title,completionMessage(lesson).title);
 });
 
-test('ls demonstrations reveal hidden files only after requesting them',()=>{
-  const demo=createDemo('ls');
-  const names=()=>demoFiles(demo).files.map(file=>file.path.split('/').pop());
-  assert.ok(!names().includes('.profile'));
-  advanceDemo(demo);assert.ok(!names().includes('.profile'));
-  advanceDemo(demo);assert.ok(names().includes('.profile'));
-});
-test('redirection demonstrations show actual file content after append and overwrite',()=>{
-  const demo=createDemo('echo');
-  assert.equal(demoFiles(demo).preview.text,'first\n');
-  advanceDemo(demo);assert.equal(demoFiles(demo).preview.text,'first\nsecond\n');
-  advanceDemo(demo);assert.equal(demoFiles(demo).preview.text,'replaced\n');
-});
 test('matching methods need no generic advice and transitions never assume prior tasks',()=>{
   assert.deepEqual(methodInsights(['pwd'],['pwd']),[]);
   assert.equal(nextTransition({command:'rm'},{command:'mv',title:'给笔记改名'}),'下一关：给笔记改名');
@@ -98,4 +73,21 @@ test('comparison highlights extra repetitions and reordered inputs',()=>{
   const reordered=compareSolutions(['ls','pwd'],[{command:'pwd\nls'}]);
   assert.equal(reordered.yoursDifferent.filter(Boolean).length,1);
   assert.equal(reordered.referenceDifferent.filter(Boolean).length,1);
+});
+
+test('every lesson introduction keeps its knowledge without copying goals or solutions',()=>{
+  for (const lesson of lessons) {
+    const intro=lessonIntroduction(lesson);
+    assert.ok(intro.lead.length > 10,lesson.id);
+    assert.equal(intro.knowledge,lesson.theory,lesson.id);
+    assert.equal(intro.showTool,true);
+    assert.equal(intro.goals,undefined);
+    assert.equal(intro.solution,undefined);
+  }
+  const first=lessons.find(lesson=>lesson.id==='where-am-i');
+  assert.match(lessonIntroduction(first).lead,/定位器/);
+  assert.match(lessonIntroduction(first,{review:true}).lead,/回忆/);
+  const boss=lessonIntroduction({chapter:'files',theory:'检查交付结果。'},{boss:true});
+  assert.equal(boss.showTool,false);
+  assert.match(boss.lead,/组合/);
 });

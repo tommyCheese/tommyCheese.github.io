@@ -14,6 +14,17 @@ assert lab.get('lang') == 'zh-CN'
 assert lab.xpath('//link[@rel="canonical"]/@href') == ['https://tommycheese.github.io/linux-lab/']
 assert lab.xpath('//script[@type="module"]/@src') == ['./app.mjs']
 assert lab.xpath('//*[@id="command-input"][@maxlength="4096"]')
+# The practice workspace has one goal guide, separate from the file and terminal panels.
+assert lab.xpath('count(//*[@id="goals"])') == 1
+assert lab.xpath('//aside[@id="mission-window"]//*[@id="goals"]')
+assert not lab.xpath('//*[@id="world-area"]//*[@id="goals"] | //dialog//*[@id="goals"]')
+assert not lab.xpath('//*[@id="task-intro-dialog"] | //*[@id="task-intro-steps"]')
+assert lab.xpath('//*[@id="task-goal-button"]/@aria-controls') == ['mission-window']
+assert not lab.xpath('//*[@id="task-theory"]')
+assert lab.xpath('//dialog[@id="lesson-intro-dialog"]//*[@id="lesson-intro-knowledge"]')
+assert lab.xpath('//*[@id="lesson-intro-button"]/@aria-controls') == ['lesson-intro-dialog']
+assert lab.xpath('//*[@id="workspace"]/*[@id="world-area" or @id="practice-area" or @id="mission-window"]/@id') == ['world-area', 'practice-area', 'mission-window']
+
 for path in ['app.mjs', 'shell.mjs', 'curriculum.mjs', 'catalogue.mjs', 'extra-commands.mjs', 'extra-lessons.mjs', 'history.mjs', 'lab.css']:
     assert (ROOT / 'linux-lab' / path).exists()
 ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}

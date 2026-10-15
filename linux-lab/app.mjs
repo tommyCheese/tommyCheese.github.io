@@ -1,6 +1,5 @@
 import { goalReference } from './task-copy.mjs';
-import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages } from './guidance.mjs';
-import { createDemo, advanceDemo, demoFiles } from './demonstrations.mjs';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
@@ -56,73 +55,123 @@ let starterMode = false;
 let solutionCache;
 let exerciseInitialState;
 let onboardingReady = false;
-let demonstration;
 let latestChanges = [];
-let introLesson;
+let guideLesson;
 let hintVisible = false;
 const chapterExpansion = new Map();
 const goalExpansion = new Map();
-function openTaskIntro() {
-  $('task-intro-dialog').showModal();
-  $('task-intro-dialog').scrollTop = 0;
-  $('task-intro-title').focus({preventScroll:true});
+let guideVisible = true;
+const guideLayoutIds = ['world-area','practice-area','terminal-resize'];
+let guideLayoutMotion;
+function finishGuideLayout() {
+  const panel = $('mission-window');
+  $('workspace').classList.remove('guide-moving');
+  for (const property of ['position','left','top','width','height','grid-column','grid-row','overflow','--guide-content-width']) panel.style.removeProperty(property);
+  panel.hidden = !(guideVisible && mode === 'learn');
 }
-function showTaskIntro() {
+function cancelGuideLayout() {
+  for (const id of [...guideLayoutIds,'mission-window']) activeMotions.get($(id))?.cancel();
+  guideLayoutMotion = undefined;
+  finishGuideLayout();
+}
+// Animate actual widths, keeping terminal text and file icons unscaled.
+function animateGuideLayout(before, shown) {
+  const animations = [];
+  $('workspace').classList.add('guide-moving');
+  const panel = $('mission-window');
+  panel.style.setProperty('--guide-content-width', panel.clientWidth + 'px');
+  panel.style.overflow = 'hidden';
+  for (const id of [...guideLayoutIds,'mission-window']) {
+    const node = $(id), after = node.getBoundingClientRect(), previous = before.get(id);
+    const guideFrames = [
+      {width:'0px',borderWidth:'0px',translate:after.width+'px 0'},
+      {width:after.width+'px',borderWidth:'1px',translate:'0 0'}
+    ];
+    const frames = id === 'mission-window' ? (shown ? guideFrames : guideFrames.reverse()) : [
+      {width:previous.width+'px',translate:`${previous.x-after.x}px ${previous.y-after.y}px`},
+      {width:after.width+'px',translate:'0 0'}
+    ];
+    // One shared edge: the guide gains exactly the space the workspace releases.
+    const animation = node.animate(frames,{duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
+    activeMotions.set(node,animation); animations.push(animation.finished);
+    animation.finished.finally(()=> { if (activeMotions.get(node) === animation) activeMotions.delete(node); }).catch(()=> {});
+  }
+  const pending = Promise.allSettled(animations);
+  guideLayoutMotion = pending;
+  pending.then(()=> { if (guideLayoutMotion === pending) { guideLayoutMotion = undefined; finishGuideLayout(); updateTerminalResize(); } });
+}
+function setGuideVisible(visible) {
+  const panel = $('mission-window'), terminal = $('practice-area');
+  const shown = visible && mode === 'learn', wasShown = !panel.hidden;
+  const animate = !reducedMotion.matches && mode === 'learn' && !terminal.hidden && wasShown !== shown && window.matchMedia('(min-width:901px)').matches;
+  const before = animate ? new Map([...guideLayoutIds,'mission-window'].map(id=>[id,$(id).getBoundingClientRect()])) : null;
+  cancelGuideLayout();
+  const oldGuideWidth = panel.hidden ? 0 : panel.getBoundingClientRect().width;
+  const oldTerminalWidth = terminal.getBoundingClientRect().width;
+  const customWidth = $('workspace').style.getPropertyValue('--terminal-width');
+  guideVisible = visible;
+  panel.hidden = !shown;
+  if (animate && !shown) {
+    const previous = before.get('mission-window'), workspace = $('workspace').getBoundingClientRect();
+    Object.assign(panel.style,{position:'absolute',gridColumn:'auto',gridRow:'auto',left:previous.x-workspace.x+'px',top:previous.y-workspace.y+'px',width:previous.width+'px',height:previous.height+'px'});
+    panel.hidden = false;
+  }
+  $('workspace').classList.toggle('guide-hidden', !shown);
+  $('task-goal-button').setAttribute('aria-expanded', String(shown));
+  $('task-goal-label').textContent = shown ? '隐藏目标' : '显示目标';
+  const newGuideWidth = shown ? panel.getBoundingClientRect().width : 0;
+  if (mode === 'learn' && customWidth && oldTerminalWidth > 0 && oldGuideWidth !== newGuideWidth && window.matchMedia('(min-width:901px)').matches) {
+    resizeTerminal(oldTerminalWidth + (oldGuideWidth - newGuideWidth) / 2);
+  } else updateTerminalResize();
+  if (animate) animateGuideLayout(before,shown);
+}
+function showTaskGuide() {
   if (mode !== 'learn') return;
-  if (introLesson === lesson) { openTaskIntro(); return; }
-  $('task-intro-title').textContent = lesson.title;
-  $('task-intro-steps').replaceChildren();
-  for (const text of lesson.steps || [lesson.context]) $('task-intro-steps').append(element('li',text));
-  $('task-intro-commands').replaceChildren();
-  $('task-intro-tools').open = !training && lesson.level === 'common' && (!starterMode || ['orientation','workspace'].includes(starterPhase(currentId)?.id));
+  setGuideVisible(true);
+  $('task-title').focus({preventScroll:true});
+  $('mission-window').scrollTop = 0;
+}
+function showLessonIntro() {
+  if (mode !== 'learn' || document.querySelector('dialog:modal')) return;
+  const intro = lessonIntroduction(lesson, {review:training?.kind === 'review',boss:training?.challengeVersion === 1});
+  $('lesson-intro-title').textContent = lesson.title;
+  $('lesson-intro-category').textContent = $('task-category').textContent;
+  $('lesson-intro-lead').textContent = intro.lead;
+  $('lesson-intro-knowledge').textContent = intro.knowledge;
+  const manual = intro.showTool && manuals.find(item => item.name === lesson.command);
+  $('lesson-intro-tool').hidden = !manual;
+  $('lesson-intro-syntax').textContent = manual?.syntax || '';
+  $('lesson-intro-dialog').showModal();
+}
+$('lesson-intro-button').addEventListener('click', showLessonIntro);
+for (const id of ['lesson-intro-start','lesson-intro-close']) $(id).addEventListener('click', () => $('lesson-intro-dialog').close());
+$('lesson-intro-dialog').addEventListener('close', () => {
+  if (mode === 'learn' && !document.querySelector('dialog:modal')) $('command-input').focus({preventScroll:true});
+});
+function prepareTaskGuide() {
+  if (mode !== 'learn' || guideLesson === lesson) return;
+  $('task-commands').replaceChildren();
+  $('task-tools').open = !training && lesson.level === 'common' && (!starterMode || ['orientation','workspace'].includes(starterPhase(currentId)?.id));
   const names = training?.challengeVersion === 1 ? [] : [...new Set([lesson.command,...(lesson.reviewCommands || [])])];
-  $('task-intro-tools').hidden = !names.length;
+  $('task-tools').hidden = !names.length;
   for (const name of names) {
     const manual = manuals.find(item=>item.name === name); if (!manual) continue;
     const row = element('div',undefined,'intro-command');
     row.append(element('code',name),element('span',manual.summary));
     if (manual.syntax !== name) row.append(element('code',manual.syntax,'intro-syntax'));
-    $('task-intro-commands').append(row);
+    $('task-commands').append(row);
   }
-  demonstration = !training ? createDemo(lesson.command) : null;
-  $('intro-demo').hidden = !demonstration; $('intro-demo').open = false;
-  if (demonstration) {
-    $('intro-demo').open = !completed.has(currentId) && !lessons.some(item=>item.command === lesson.command && completed.has(item.id));
-    $('demo-title').textContent = demonstration.title;
-    renderDemo();
-  }
-  introLesson = lesson;
-  openTaskIntro();
+  guideLesson = lesson;
 }
-function renderDemo() {
-  const {browse,files,preview} = demoFiles(demonstration);
-  $('demo-path').textContent = browse.replace(HOME,'~');
-  $('demo-files').replaceChildren();
-  for (const file of files) {
-    const chip=element('span',undefined,'demo-file');
-    chip.append(element('span',file.type === 'dir' ? '📁' : '▤'),element('code',file.path.split('/').pop()));
-    if (file.path.endsWith('deploy.sh')) chip.append(element('small',file.mode));
-    if (file.revealed || demonstration.events.some(event=>event.path === file.path)) chip.classList.add('demo-changed');
-    $('demo-files').append(chip);
+$('task-goal-button').addEventListener('click',()=> {
+  if (guideVisible) { setGuideVisible(false); $('command-input').focus({preventScroll:true}); }
+  else showTaskGuide();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !event.isComposing && mode === 'learn' && guideVisible && !document.querySelector('dialog:modal')) {
+    event.preventDefault(); setGuideVisible(false); $('command-input').focus({preventScroll:true});
   }
-  $('demo-preview').hidden = !preview;
-  $('demo-preview-name').textContent = preview?.name || '';
-  $('demo-preview-text').textContent = preview?.text || '';
-  $('demo-caption').textContent = demonstration.caption;
-  const line = demonstration.steps[Math.min(demonstration.index,demonstration.steps.length-1)][0];
-  $('demo-command').textContent = demonstration.index ? demonstration.steps[demonstration.index-1][0] : line;
-  $('demo-output').hidden = !demonstration.result?.stdout;
-  $('demo-output').textContent = demonstration.result?.stdout || '';
-  $('demo-next').hidden = demonstration.index >= demonstration.steps.length;
-  $('demo-next').textContent = demonstration.index ? '再试一步 →' : '试一下 →';
-  $('demo-reset').hidden = !demonstration.index;
-  if (demonstration.index) reveal($('demo-files'),3);
-}
-$('demo-next').addEventListener('click',()=> { advanceDemo(demonstration); renderDemo(); if ($('demo-next').hidden) $('demo-reset').focus({preventScroll:true}); });
-$('demo-reset').addEventListener('click',()=> { demonstration=createDemo(lesson.command); renderDemo(); });
-for (const id of ['task-intro-start','task-intro-close']) $(id).addEventListener('click',()=> $('task-intro-dialog').close());
-$('task-intro-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
-$('task-goal-button').addEventListener('click',showTaskIntro);
+});
 const navigationLessons = () => starterMode ? starterRoute.map(id => lessons.find(item => item.id === id)) : lessons;
 const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
@@ -188,7 +237,7 @@ function advanceLesson() {
         $('review-status').textContent = '本轮复习完成！';
       } else {
         history.replaceState(null, '', '#task/' + currentId);
-        navigate('#task/' + currentId, false, {showIntro:false});
+        navigate('#task/' + currentId, false, {showGuide:false});
         selectedLevel = lesson.level; renderChapters(); $('levels-dialog').showModal();
         announce(boss ? 'Boss 挑战完成！' : '专题小测完成！');
       }
@@ -218,7 +267,7 @@ function showCompletion(newBoss) {
   $('completion-next').textContent = next ? '继续挑战 →' : training ? '完成本轮 ✓' : '去关卡地图 →';
   $('completion-unlock').hidden = !newBoss;
   if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战已解锁';
-  $('completion-comparison').open = false;
+  $('completion-comparison').open = true;
   renderComparison($('completion-comparison-content'));
   $('completion-dialog').showModal();
 }
@@ -246,7 +295,7 @@ function renderComparison(container) {
 }
 for (const id of ['completion-close','completion-stay']) $(id).addEventListener('click',()=> $('completion-dialog').close());
 $('completion-next').addEventListener('click',advanceLesson);
-$('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog[open]')) $('command-input').focus({preventScroll:true}); });
+$('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog:modal')) $('command-input').focus({preventScroll:true}); });
 
 function persist() {
   const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
@@ -340,8 +389,8 @@ function renderTask() {
   $('console-command').textContent = sandbox ? 'sandbox' : training ? training.challengeVersion === 1 ? 'Boss' : '复习' : lesson.command;
   $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : starterMode ? `${starterRoute.indexOf(currentId) + 1} / ${starterRoute.length}` : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
+  prepareTaskGuide();
   $('task-goal-button').hidden = sandbox;
-  $('task-theory').textContent = training?.challengeVersion === 1 ? lesson.theory : training ? '需要时可使用提示或查手册。' : sandbox ? '输入 help 查看支持范围，man 命令名 查看中文手册。这里支持基础管道、重定向、引号、环境变量、通配符、;、&& 和 ||。' : lesson.theory;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
   if (!sandbox) for (const [index, goal] of goalChecks.entries()) {
@@ -388,7 +437,7 @@ function renderTask() {
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
   $('solution-review').hidden = !allDone;
   if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
-  else if ($('solution-review').open) renderSolutionReview();
+  else { $('solution-review').open = true; renderSolutionReview(); }
   $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId) || mastery(learning[currentId]) !== '已掌握';
   $('mastery-badge').textContent = mastery(learning[currentId]);
   $('hint-button').hidden = sandbox;
@@ -400,7 +449,7 @@ function renderTask() {
   $('hint-position').textContent = `${hint || 1} / 3`;
   if (hint) {
     $('hint-title').textContent = ['给你一点线索','再往前想一步','一起看看一种做法'][hint-1];
-    $('hint-content').textContent = hint === 1 && !transcript.some(item=>item.command) ? (lesson.steps || [lesson.context]).join('\n') : stateHint(lesson,shell.state,goalChecks,hint,lastResult);
+    $('hint-content').textContent = stateHint(lesson,shell.state,goalChecks,hint,lastResult);
   }
   $('related-commands').replaceChildren();
   for (const command of training && !hint ? [] : sandbox ? ['help', 'ls', 'grep', 'man'] : lesson.commands) {
@@ -572,9 +621,9 @@ function setWorldTab(system) {
   if (changed) reveal($(system ? 'system-view' : 'files-view'));
 }
 
-function startTask(id, restore = false, showIntro = true) {
+function startTask(id, restore = false, showGuide = true) {
   goalExpansion.clear();
-  introLesson=undefined; hintVisible=false;
+  guideLesson=undefined; hintVisible=false;
   latestChanges=[]; $('pipeline-flow').hidden=true;
   solutionCache = undefined; $('solution-review').open = false;
   practiceHistory.clear(); updatePracticeActions();
@@ -604,7 +653,7 @@ function startTask(id, restore = false, showIntro = true) {
   renderTask(); renderChapters(); renderTranscript(); renderWorld(); persist();
   reveal($('mission-window'));
   if (!restore) $('world-area').scrollTop = 0;
-  if (showIntro && onboardingReady && (!restore || !transcript.some(item=>item.command))) showTaskIntro();
+  if (showGuide && onboardingReady && (!restore || !transcript.some(item=>item.command))) { showTaskGuide(); showLessonIntro(); }
 }
 function focusGoalDirectory() {
   const goal = lesson.goals.find(goal => goal.path && ['file','dir','absent','mode','owner','link','archive'].includes(goal.type));
@@ -702,7 +751,7 @@ $('practice-area').addEventListener('click', event => {
   if (selection && !selection.isCollapsed && $('practice-area').contains(selection.anchorNode)) return;
   $('command-input').focus({ preventScroll: true });
 });
-$('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; if (!document.querySelector('dialog[open]')) $('command-input').focus(); });
+$('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; if (!document.querySelector('dialog:modal')) $('command-input').focus(); });
 $('command-input').addEventListener('keydown', event => {
   if (event.isComposing) return;
   if (event.ctrlKey && event.key.toLowerCase() === 'l') { event.preventDefault(); transcript = []; renderTranscript(); persist(); return; }
@@ -737,7 +786,7 @@ document.addEventListener('keydown', event => {
   if (event.isComposing || event.key !== 'Enter' || !(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey) return;
   event.preventDefault();
   if (!event.repeat && $('completion-dialog').open) { $('completion-next').click(); return; }
-  if (event.repeat || mode !== 'learn' || document.querySelector('dialog[open]') || $('next-lesson').disabled) return;
+  if (event.repeat || mode !== 'learn' || document.querySelector('dialog:modal') || $('next-lesson').disabled) return;
   $('next-lesson').click();
 });
 for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
@@ -772,10 +821,10 @@ $('system-tab').addEventListener('click', () => setWorldTab(true));
 $('file-up').addEventListener('click', () => { browsePath = resolve('..', browsePath); previewPath = undefined; renderWorld(); });
 $('preview-close').addEventListener('click', () => { previewPath = undefined; renderWorld(); });
 
-function navigate(hash, initial = false, {showIntro = true} = {}) {
+function navigate(hash, initial = false, {showGuide = true} = {}) {
+  if ($('lesson-intro-dialog').open) $('lesson-intro-dialog').close();
   latestChanges=[]; $('pipeline-flow').hidden=true;
   if ($('completion-dialog').open) $('completion-dialog').close();
-  if ($('task-intro-dialog').open) $('task-intro-dialog').close();
   if ($('levels-dialog').open) $('levels-dialog').close();
   if ($('restart-dialog').open) $('restart-dialog').close();
   if ($('help-dialog').open) $('help-dialog').close();
@@ -801,12 +850,15 @@ function navigate(hash, initial = false, {showIntro = true} = {}) {
   const overview = mode === 'review';
   $('workspace').classList.toggle('review-mode', overview);
   $('review-area').hidden = !overview;
+  $('save-status').hidden = overview;
+  $('task-goal-button').hidden = mode !== 'learn';
+  setGuideVisible(guideVisible);
   for (const id of ['world-area','practice-area','terminal-resize']) $(id).hidden = overview;
   for (const id of ['reset-button','undo-button','redo-button','lesson-navigation']) $(id).hidden = overview;
   if (overview) { renderLearning(); $('review-area').focus({preventScroll:true}); }
   $('levels-button').hidden = mode !== 'learn';
   for (const link of document.querySelectorAll('[data-mode]')) { if (link.dataset.mode === mode) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current'); }
-  if (mode === 'learn') startTask(ids.has(id) ? id : currentId, initial || id === currentId, showIntro);
+  if (mode === 'learn') startTask(ids.has(id) ? id : currentId, initial || id === currentId, showGuide);
   else if (mode === 'sandbox') {
     practiceHistory.clear(); updatePracticeActions();
     shell = sandboxSession ? new Shell(sandboxSession.state, manuals) : new Shell(seedState(), manuals);
@@ -893,11 +945,13 @@ let terminalDrag;
 function terminalBounds() {
   const style = getComputedStyle(workspace);
   const available = workspace.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-  const max = available / 2;
+  const sidebar = $('mission-window').hidden || window.matchMedia('(max-width:900px)').matches ? 0 : $('mission-window').getBoundingClientRect().width;
+  const gap = parseFloat(style.columnGap) || 0;
+  const max = Math.min(available / 2, available - sidebar - gap * (sidebar ? 4 : 2) - (sidebar ? 16 : 8) - 230);
   return { available, min: Math.min(240, max), max };
 }
 function updateTerminalResize() {
-  if (mode === 'review' || window.matchMedia('(max-width:780px)').matches) return;
+  if (guideLayoutMotion || mode === 'review' || window.matchMedia('(max-width:780px)').matches) return;
   const { available, min, max } = terminalBounds();
   const width = $('practice-area').getBoundingClientRect().width;
   if (width > max) workspace.style.setProperty('--terminal-width', max + 'px');
@@ -912,6 +966,7 @@ function resizeTerminal(width) {
 }
 terminalResize.addEventListener('pointerdown', event => {
   if (event.button !== 0) return;
+  cancelGuideLayout();
   event.preventDefault();
   terminalResize.focus();
   terminalDrag = { pointerId: event.pointerId, x: event.clientX, width: $('practice-area').getBoundingClientRect().width };
@@ -926,19 +981,22 @@ terminalResize.addEventListener('pointerup', endTerminalDrag);
 terminalResize.addEventListener('pointercancel', endTerminalDrag);
 terminalResize.addEventListener('lostpointercapture', endTerminalDrag);
 terminalResize.addEventListener('keydown', event => {
+  cancelGuideLayout();
   const { min, max } = terminalBounds();
   const width = $('practice-area').getBoundingClientRect().width;
   const target = { ArrowLeft: width + 24, ArrowRight: width - 24, Home: min, End: max }[event.key];
   if (target === undefined) return;
   event.preventDefault(); resizeTerminal(target);
 });
-terminalResize.addEventListener('dblclick', () => { workspace.style.removeProperty('--terminal-width'); updateTerminalResize(); });
+window.addEventListener('resize',cancelGuideLayout);
+terminalResize.addEventListener('dblclick', () => { cancelGuideLayout(); workspace.style.removeProperty('--terminal-width'); updateTerminalResize(); });
 new ResizeObserver(updateTerminalResize).observe(workspace);
+new ResizeObserver(updateTerminalResize).observe($('mission-window'));
 function wireFileResize(id, axis, measure, bounds, apply, reset, direction = 1) {
   const handle = $(id); let drag;
   const className = axis === 'x' ? 'directory-resizing' : 'files-resizing';
   const update = () => {
-    if ($('files-view').hidden || $('world-area').hidden) return;
+    if (!handle.getClientRects().length) return;
     const { min, max } = bounds();
     const size = Math.max(min, Math.min(max, measure()));
     handle.setAttribute('aria-valuemin', String(Math.round(min)));
@@ -960,12 +1018,25 @@ function wireFileResize(id, axis, measure, bounds, apply, reset, direction = 1) 
   for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) handle.addEventListener(event, end);
   handle.addEventListener('keydown', event => {
     const { min, max } = bounds(); const size = measure();
-    const value = { Home: min, End: max, [axis === 'x' ? 'ArrowLeft' : 'ArrowUp']: size - 24, [axis === 'x' ? 'ArrowRight' : 'ArrowDown']: size + 24 }[event.key];
+    const value = { Home: min, End: max, [axis === 'x' ? 'ArrowLeft' : 'ArrowUp']: size - 24 * direction, [axis === 'x' ? 'ArrowRight' : 'ArrowDown']: size + 24 * direction }[event.key];
     if (value !== undefined) { event.preventDefault(); resize(value); }
   });
   handle.addEventListener('dblclick', () => { reset(); update(); });
   new ResizeObserver(update).observe($('files-view'));
 }
+const guideResize = $('guide-resize');
+for (const event of ['pointerdown','keydown','dblclick']) guideResize.addEventListener(event, cancelGuideLayout);
+const guideWidth = () => $('mission-window').getBoundingClientRect().width;
+function resizeGuide(size) {
+  const terminalWidth = $('practice-area').getBoundingClientRect().width;
+  const difference = size - guideWidth();
+  workspace.style.setProperty('--guide-width', size + 'px');
+  resizeTerminal(terminalWidth - difference);
+}
+wireFileResize('guide-resize', 'x', guideWidth,
+  () => ({ min:260, max:Math.max(260, Math.min(terminalBounds().available / 2, guideWidth() + $('practice-area').getBoundingClientRect().width - 240)) }),
+  resizeGuide,
+  () => resizeGuide(window.matchMedia('(max-width:1100px)').matches ? 300 : 350), -1);
 wireFileResize('directory-resize', 'x', () => $('file-tree').getBoundingClientRect().width,
   () => ({ min: 90, max: Math.max(90, $('files-view').clientWidth / 2) }),
   size => $('files-view').style.setProperty('--directory-width', size + 'px'),
@@ -989,13 +1060,13 @@ $('welcome-start').addEventListener('click', () => {
 });
 $('welcome-dialog').addEventListener('close', () => {
   try { localStorage.setItem(WELCOME_KEY, 'seen'); } catch { /* Still allow practice when storage is unavailable. */ }
-  if (onboardingReady) showTaskIntro();
+  if (onboardingReady) { showTaskGuide(); showLessonIntro(); }
 });
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
 onboardingReady = true;
 if (showWelcome) $('welcome-dialog').showModal();
-else if (mode === 'learn' && !transcript.some(item=>item.command)) showTaskIntro();
+else if (mode === 'learn' && !transcript.some(item=>item.command)) { showTaskGuide(); showLessonIntro(); }
 
 // Keep favorites in sync when a standalone reference page changes them.
 window.addEventListener('storage', event => {
