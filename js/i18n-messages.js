@@ -213,7 +213,17 @@ window.SITE_MESSAGES = {
     "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：三天数据即可启动睡眠指导",
     "news.samsung-health-sleep-coaching-update.summary": "睡眠指导将启动门槛降至三天数据，并按周调整建议；跑步训练由 10 级扩展至 12 级。更新自 10 月起逐步推出，支持情况因地区和设备而异。",
     "news.saic-ciif-ai-cockpit-lineup.title": "上汽亮相 2026 工博会，展示 AI 座舱与全线控纯电 SUV",
-    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博会上，上汽展出荣威家越 07、MG 07 等车型，以及智己全线控 AI 概念舱；智己 LS8 NEO 纯电首次公开亮相。"
+    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博会上，上汽展出荣威家越 07、MG 07 等车型，以及智己全线控 AI 概念舱；智己 LS8 NEO 纯电首次公开亮相。",
+    "news.samsung-future-wireless-summit-2026.title": "三星预告硅谷无线峰会，聚焦 AI 原生 6G",
+    "news.samsung-future-wireless-summit-2026.summary": "三星宣布将在美国当地时间 10 月 15 日举行未来无线峰会，议题涵盖 AI 原生 6G、卫星通信和通感一体化，并展示 AI-RAN 等研究成果。",
+    "news.samsung-the-wall-control-rooms.title": "三星介绍 The Wall 城市与赛事控制室案例",
+    "news.samsung-the-wall-control-rooms.summary": "三星展示 The Wall 在马来西亚城市指挥中心和 NASCAR 远程赛事控制中心的应用，将多路视频与数据汇集到大屏，支持协同监控和事件回看。",
+    "news.grok-voice-3-api.title": "Grok Voice 3.0 上线语音 API",
+    "news.grok-voice-3-api.summary": "Grok Voice 3.0 已接入 Voice Agent API，支持实时语音对话；grok-voice-latest 自动切换至新版，官方定价维持每分钟 0.08 美元。",
+    "news.globalfoundries-us-japan-new-york-fabs.title": "格罗方德获选运营纽约两座新晶圆厂",
+    "news.globalfoundries-us-japan-new-york-fabs.summary": "美日合作计划拟提供最高 210 亿美元资金，由格罗方德提供技术并运营纽约马耳他两座新厂；首座 300 毫米晶圆厂预计 2029 年投运。",
+    "news.zero-ds-single-charge-record.title": "Zero DS 单次充电行驶 436.5 公里，创续航纪录",
+    "news.zero-ds-single-charge-record.summary": "Zero 公布电动摩托单次充电吉尼斯世界纪录：骑手驾驶配备选装 Power Tank、总电量 19.2kWh 的 DS 行驶 436.5 公里。成绩来自特定路线与骑行条件。"
   },
   "en": {
     "nav.about": "About",
@@ -428,7 +438,17 @@ window.SITE_MESSAGES = {
     "news.samsung-health-sleep-coaching-update.title": "Samsung Health update: start Sleep Coaching with three days of data",
     "news.samsung-health-sleep-coaching-update.summary": "Sleep Coaching now needs just three days of data to begin and adjusts its guidance weekly; running training expands from 10 to 12 levels. The update rolls out gradually from October, with availability varying by region and device.",
     "news.saic-ciif-ai-cockpit-lineup.title": "SAIC showcases an AI cockpit and a fully drive-by-wire electric SUV at CIIF 2026",
-    "news.saic-ciif-ai-cockpit-lineup.summary": "At the October 12–16 industrial fair in Shanghai, SAIC exhibits models including the Roewe Jiayue 07 and MG 07, alongside IM Motors’ fully drive-by-wire AI concept cockpit. The all-electric IM LS8 NEO makes its first public appearance."
+    "news.saic-ciif-ai-cockpit-lineup.summary": "At the October 12–16 industrial fair in Shanghai, SAIC exhibits models including the Roewe Jiayue 07 and MG 07, alongside IM Motors’ fully drive-by-wire AI concept cockpit. The all-electric IM LS8 NEO makes its first public appearance.",
+    "news.samsung-future-wireless-summit-2026.title": "Samsung previews wireless summit focused on AI-native 6G",
+    "news.samsung-future-wireless-summit-2026.summary": "Samsung announced its Future Wireless Summit for October 15 local time in California, covering AI-native 6G, satellite connectivity, and integrated sensing and communications, with demonstrations of research including AI-RAN.",
+    "news.samsung-the-wall-control-rooms.title": "Samsung showcases The Wall in city and race control rooms",
+    "news.samsung-the-wall-control-rooms.summary": "Samsung highlights The Wall at a Malaysian city command center and NASCAR’s Remote Race Control center, bringing multiple video feeds and data streams onto shared displays for collaborative monitoring and incident review.",
+    "news.grok-voice-3-api.title": "Grok Voice 3.0 launches in the Voice Agent API",
+    "news.grok-voice-3-api.summary": "Grok Voice 3.0 is available in the Voice Agent API for real-time voice conversations. The grok-voice-latest alias switches automatically to the new version, with official pricing unchanged at $0.08 per minute.",
+    "news.globalfoundries-us-japan-new-york-fabs.title": "GlobalFoundries selected to operate two new New York fabs",
+    "news.globalfoundries-us-japan-new-york-fabs.summary": "A U.S.-Japan initiative plans up to $21 billion in funding for two new fabs in Malta, New York, with GlobalFoundries providing technology and operations. The first 300mm fab is expected to come online in 2029.",
+    "news.zero-ds-single-charge-record.title": "Zero DS sets a 436.5 km single-charge range record",
+    "news.zero-ds-single-charge-record.summary": "Zero announced a Guinness World Records title for an electric motorcycle’s single-charge journey: a DS with the optional Power Tank and 19.2 kWh total capacity covered 436.5 km under specific route and riding conditions."
   },
   "ja": {
     "nav.about": "私について",
@@ -643,7 +663,17 @@ window.SITE_MESSAGES = {
     "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：3 日分のデータで睡眠コーチングを開始可能に",
     "news.samsung-health-sleep-coaching-update.summary": "睡眠コーチングの開始に必要なデータが 3 日分に減り、アドバイスは毎週調整される。ランニングのトレーニング段階は 10 から 12 に拡大。更新は 10 月から順次提供され、対応状況は地域やデバイスによって異なる。",
     "news.saic-ciif-ai-cockpit-lineup.title": "上汽、2026 年中国国際工業博覧会で AI コックピットとフルバイワイヤの電動 SUV を展示",
-    "news.saic-ciif-ai-cockpit-lineup.summary": "10 月 12～16 日に上海で開催される工業博覧会で、上汽は栄威・家越 07、MG 07 などの車両と、智己のフルバイワイヤ AI コンセプトコックピットを展示。智己 LS8 NEO の純電動モデルも初めて一般公開された。"
+    "news.saic-ciif-ai-cockpit-lineup.summary": "10 月 12～16 日に上海で開催される工業博覧会で、上汽は栄威・家越 07、MG 07 などの車両と、智己のフルバイワイヤ AI コンセプトコックピットを展示。智己 LS8 NEO の純電動モデルも初めて一般公開された。",
+    "news.samsung-future-wireless-summit-2026.title": "Samsung、AI ネイティブ 6G をテーマに無線通信サミットを予告",
+    "news.samsung-future-wireless-summit-2026.summary": "Samsung は米国現地時間 10 月 15 日に開催する Future Wireless Summit を発表。AI ネイティブ 6G、衛星通信、通信とセンシングの統合を議論し、AI-RAN などの研究成果を展示します。",
+    "news.samsung-the-wall-control-rooms.title": "Samsung、都市とレースの管制室における The Wall の活用を紹介",
+    "news.samsung-the-wall-control-rooms.summary": "Samsung はマレーシアの都市指令センターと NASCAR の遠隔レース管制センターでの The Wall 活用事例を紹介。複数の映像とデータを大型画面に集約し、共同監視や事象の振り返りを支援します。",
+    "news.grok-voice-3-api.title": "Grok Voice 3.0、音声 API で提供開始",
+    "news.grok-voice-3-api.summary": "リアルタイム音声対話に対応する Grok Voice 3.0 が Voice Agent API に登場。grok-voice-latest は自動的に新版へ切り替わり、公式料金は従来と同じ 1 分 0.08 ドルです。",
+    "news.globalfoundries-us-japan-new-york-fabs.title": "GlobalFoundries、ニューヨークの新工場 2 棟の運営企業に選定",
+    "news.globalfoundries-us-japan-new-york-fabs.summary": "日米の協力枠組みは最大 210 億ドルの資金提供を計画。GlobalFoundries がニューヨーク州マルタの新工場 2 棟に技術を提供し運営します。最初の 300mm 工場は 2029 年の稼働を予定しています。",
+    "news.zero-ds-single-charge-record.title": "Zero DS、1 回の充電で 436.5km の走行記録",
+    "news.zero-ds-single-charge-record.summary": "Zero は電動バイクの 1 回の充電による走行距離でギネス世界記録を発表。オプションの Power Tank を装備し、総容量 19.2kWh の DS が特定のルートと走行条件で 436.5km を走りました。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -858,7 +888,17 @@ window.SITE_MESSAGES = {
     "news.samsung-health-sleep-coaching-update.title": "Обновление Samsung Health: для запуска рекомендаций по сну достаточно данных за три дня",
     "news.samsung-health-sleep-coaching-update.summary": "Для запуска Sleep Coaching теперь достаточно данных за три дня, а рекомендации корректируются еженедельно. Число уровней беговых тренировок увеличено с 10 до 12. Обновление распространяется постепенно с октября; доступность зависит от региона и устройства.",
     "news.saic-ciif-ai-cockpit-lineup.title": "SAIC показывает ИИ-кокпит и электрокроссовер с полностью электронным управлением на CIIF 2026",
-    "news.saic-ciif-ai-cockpit-lineup.summary": "На промышленной выставке в Шанхае 12–16 октября SAIC демонстрирует Roewe Jiayue 07, MG 07 и другие модели, а также концептуальный ИИ-кокпит IM Motors с полностью электронным управлением. Электрический IM LS8 NEO впервые представлен публике."
+    "news.saic-ciif-ai-cockpit-lineup.summary": "На промышленной выставке в Шанхае 12–16 октября SAIC демонстрирует Roewe Jiayue 07, MG 07 и другие модели, а также концептуальный ИИ-кокпит IM Motors с полностью электронным управлением. Электрический IM LS8 NEO впервые представлен публике.",
+    "news.samsung-future-wireless-summit-2026.title": "Samsung анонсирует саммит по беспроводным сетям и AI-native 6G",
+    "news.samsung-future-wireless-summit-2026.summary": "Samsung объявила о Future Wireless Summit, который пройдет 15 октября по местному времени в Калифорнии. Темы включают AI-native 6G, спутниковую связь и совместное использование связи и зондирования; запланированы демонстрации исследований, включая AI-RAN.",
+    "news.samsung-the-wall-control-rooms.title": "Samsung показывает The Wall в городских и гоночных диспетчерских",
+    "news.samsung-the-wall-control-rooms.summary": "Samsung рассказала о применении The Wall в городском командном центре Малайзии и центре дистанционного управления гонками NASCAR. Общие экраны объединяют видео и данные для совместного мониторинга и разбора инцидентов.",
+    "news.grok-voice-3-api.title": "Grok Voice 3.0 доступна через голосовой API",
+    "news.grok-voice-3-api.summary": "Grok Voice 3.0 появилась в Voice Agent API для голосовых диалогов в реальном времени. Псевдоним grok-voice-latest автоматически переключается на новую версию; официальная цена остается прежней — 0,08 доллара за минуту.",
+    "news.globalfoundries-us-japan-new-york-fabs.title": "GlobalFoundries выбрана оператором двух новых фабрик в Нью-Йорке",
+    "news.globalfoundries-us-japan-new-york-fabs.summary": "Американо-японская инициатива предусматривает финансирование до 21 млрд долларов для двух новых фабрик в городе Мальта, штат Нью-Йорк. GlobalFoundries предоставит технологии и будет управлять производством. Запуск первой фабрики 300-мм пластин ожидается в 2029 году.",
+    "news.zero-ds-single-charge-record.title": "Zero DS установил рекорд: 436,5 км на одном заряде",
+    "news.zero-ds-single-charge-record.summary": "Zero объявила о рекорде Гиннесса по дальности поездки электромотоцикла на одном заряде. DS с опциональным Power Tank и общей емкостью 19,2 кВт·ч проехал 436,5 км на определенном маршруте и при специальных условиях поездки."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -1073,6 +1113,16 @@ window.SITE_MESSAGES = {
     "news.samsung-health-sleep-coaching-update.title": "Samsung Health 更新：三天資料即可啟動睡眠指導",
     "news.samsung-health-sleep-coaching-update.summary": "睡眠指導將啟動門檻降至三天資料，並按週調整建議；跑步訓練由 10 級擴展至 12 級。更新自 10 月起逐步推出，支援情況因地區和裝置而異。",
     "news.saic-ciif-ai-cockpit-lineup.title": "上汽亮相 2026 工博會，展示 AI 座艙與全線控純電 SUV",
-    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博會上，上汽展出榮威家越 07、MG 07 等車款，以及智己全線控 AI 概念艙；智己 LS8 NEO 純電首次公開亮相。"
+    "news.saic-ciif-ai-cockpit-lineup.summary": "在 10 月 12 日至 16 日的上海工博會上，上汽展出榮威家越 07、MG 07 等車款，以及智己全線控 AI 概念艙；智己 LS8 NEO 純電首次公開亮相。",
+    "news.samsung-future-wireless-summit-2026.title": "三星預告矽谷無線峰會，聚焦 AI 原生 6G",
+    "news.samsung-future-wireless-summit-2026.summary": "三星宣布將在美國當地時間 10 月 15 日舉行未來無線峰會，議題涵蓋 AI 原生 6G、衛星通訊和通訊感測整合，並展示 AI-RAN 等研究成果。",
+    "news.samsung-the-wall-control-rooms.title": "三星介紹 The Wall 城市與賽事控制室案例",
+    "news.samsung-the-wall-control-rooms.summary": "三星展示 The Wall 在馬來西亞城市指揮中心和 NASCAR 遠端賽事控制中心的應用，將多路影像與資料彙整到大型螢幕，支援協同監控和事件回看。",
+    "news.grok-voice-3-api.title": "Grok Voice 3.0 上線語音 API",
+    "news.grok-voice-3-api.summary": "Grok Voice 3.0 已接入 Voice Agent API，支援即時語音對話；grok-voice-latest 自動切換至新版，官方定價維持每分鐘 0.08 美元。",
+    "news.globalfoundries-us-japan-new-york-fabs.title": "格羅方德獲選營運紐約兩座新晶圓廠",
+    "news.globalfoundries-us-japan-new-york-fabs.summary": "美日合作計畫擬提供最高 210 億美元資金，由格羅方德提供技術並營運紐約馬爾他兩座新廠；首座 300 毫米晶圓廠預計 2029 年投運。",
+    "news.zero-ds-single-charge-record.title": "Zero DS 單次充電行駛 436.5 公里，創續航紀錄",
+    "news.zero-ds-single-charge-record.summary": "Zero 公布電動機車單次充電金氏世界紀錄：騎士駕駛配備選購 Power Tank、總電量 19.2kWh 的 DS 行駛 436.5 公里。成績來自特定路線與騎乘條件。"
   }
 };

@@ -39,3 +39,44 @@
 ## 本轮更新
 
 四个分类各追加一条，保留此前八条新闻。五种语言同步标题和摘要；首页仍展示按来源日期排序的最近三条，完整时间流保留全部十二条。整理日期为 2026-10-15，新增新闻按 10 月 13 日、14 日原文日期归档。
+
+## 10 月 15 日早间补充更新
+
+核验时间：上海时区 2026-10-15 早间。以下五条追加到已有十二条之后的完整历史中；其中两条原文发布于 15 日，两条发布于 14 日，一条发布于 13 日。日期以官方页面正文为准，不采用中文转载日期。五种语言均同步标题和摘要。
+
+### AI：三星预告硅谷未来无线峰会
+
+- ID：`samsung-future-wireless-summit-2026`。
+- [三星官方原文](https://news.samsung.com/global/samsung-hosts-silicon-valley-future-wireless-summit-2026)，正文标注 **2026-10-15**，HTTPS GET 返回 200。
+- 峰会定于美国当地时间 10 月 15 日在加州山景城举行，Partner Day 为当地时间 14 日。正文列出的主题包括 AI 原生 6G、非地面网络、通感一体化，展示项目包括 AI-RAN。上海早间整理时使用“预告”“将举行”，不写成峰会已结束，也不把 6G 研究展示表述为商用部署。
+- [封面](https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/15072626/Samsung-Corporate-Silicon-Valley-Future-Wireless-Summit-2026_Thumb932F.jpg) 来自官方原文 `og:image`，署名 Samsung Electronics。HEAD 返回 200、`image/jpeg`、115515 字节；相关照片包含 14 日 Partner Day，不声称是 15 日峰会结束后的现场照。
+
+### 数码：The Wall 城市与赛事控制室案例
+
+- ID：`samsung-the-wall-control-rooms`。
+- [三星官方原文](https://news.samsung.com/global/from-smart-city-to-race-circuit-samsungs-the-wall-in-control-rooms)，正文标注 **2026-10-15**，HTTPS GET 返回 200。
+- 介绍马来西亚依斯干达公主城市政指挥中心与 NASCAR 远程赛事控制中心如何使用 The Wall 汇集视频和数据。这是应用案例解读，NASCAR 中心于 2025 年启用，不写成 2026 年 10 月 15 日首次安装或新品发布；摘要不采用厂商最高级用语或可靠性承诺。
+- [封面](https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/14151656/Samsung-TVs-and-Displays-Samsung-The-Wall-Control-Rooms_Thumb932.jpg) 来自原文 `og:image`，署名 Samsung Electronics。HEAD 返回 200、`image/jpeg`、149112 字节。
+
+### AI：Grok Voice 3.0 上线 API
+
+- ID：`grok-voice-3-api`。
+- [官方发布](https://x.ai/news/grok-voice-3)，页面 `time` 与正文日期为 **2026-10-14**，HTTPS GET 返回 200。[官方开发者更新记录](https://docs.x.ai/developers/release-notes?release=2026-10-9b9dfeba) 同样列在 10 月 14 日。
+- Voice Agent API 已提供 Grok Voice 3.0，`grok-voice-latest` 自动指向 `grok-voice-3.0`；官方宣布价格维持每分钟 0.08 美元。未将中文媒体 15 日报道日期用作发布日，不直接复述“全球最智能”等营销结论，未将厂商列出的评测表当作自行复测结果。
+- 原文页面品牌为 SpaceXSI，署名采用该名称。[封面](https://media.x.ai/v1/website/og-grok-voice-3-0-b281361b.webp) 来自原文 `og:image`，HEAD 返回 200、`image/webp`、70740 字节。采用 `contain` 完整展示发布配图。
+
+### 半导体：格罗方德纽约新晶圆厂计划
+
+- ID：`globalfoundries-us-japan-new-york-fabs`。
+- [官方投资者关系原文](https://investors.gf.com/news-releases/news-release-details/globalfoundries-selected-operate-two-new-semiconductor-fabs-new)，日期 **2026-10-14**；与[公司新闻稿](https://gf.com/news-and-events/news/globalfoundries-selected-to-operate-two-new-semiconductor-fabs-in-new-york-under-landmark-us-japan-initiative/)交叉核对。公司主站直接请求返回 403，因此卡片链接采用可访问的官方投资者关系版本。
+- 美日合作计划拟提供最高 210 亿美元资金，GF 为纽约州马耳他两座新厂的技术提供者和运营商，首座 300 毫米晶圆厂预计 2029 年投运。投资额、建设及投运时间均为计划，不能写成资金全部到账或两座工厂已经量产；摘要不推断市场或股价影响。
+- 使用已核验的 [GF 官方资料配图](https://assets.gf.com/image/328833518282/image_4ee35772ot5879lie0o53bl61h/-C1350x900%2C225%2C0-S1920x1280-FWEBP)，来源为[10 月 9 日 FDX Fusion 官方稿](https://gf.com/news-and-events/news/gf-unveils-roadmap-to-deliver-worlds-most-advanced-platform-for-physical-ai/)，详见本仓库 `news-sources-2026-10-11.md` 的图片核验。明确设置 `file_photo: true`、署名 GlobalFoundries，不将其描述为新厂、施工现场或本次发布照片。HEAD 复核返回 200、`image/webp`、1577186 字节。
+
+### 汽车：Zero DS 单次充电续航纪录
+
+- ID：`zero-ds-single-charge-record`。
+- [Zero Motorcycles 官方原文](https://zeromotorcycles.com/stories/guinness-world-records-title)，正文标注 **2026-10-13**，HTTPS GET 返回 200。
+- 公司公布电动摩托单次充电行驶的吉尼斯世界纪录：Jelle Verstaen 驾驶 Zero DS，搭配可购买的选装 Power Tank，总电量为 19.2kWh，行驶 436.5 公里。路线从阿尔卑斯地区前往地中海，包含有利于续航的路线规划和骑行条件；不将此纪录表述为标准工况、日常或高速续航。
+- [封面](https://images.prismic.io/zero-cms-disco/HnRNb43hB7wzr1hV_zero-team-guinness-certificate-v5_YouTube.jpg?auto=format,compress&rect=0,39,2062,1083&w=1200&h=630) 来自官方原文 `og:image`，署名 Zero Motorcycles。HEAD 返回 200、`image/jpeg`、112404 字节。
+
+补充后共十七条历史新闻；新增 10 月 15 日分组，首页仍按原文日期展示最近三条。未下载远程媒体，保留官方图片外链与署名。

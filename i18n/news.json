@@ -2,6 +2,53 @@
   "updated_at": "2026-10-15",
   "items": [
     {
+      "id": "samsung-future-wireless-summit-2026",
+      "category": "ai",
+      "published_at": "2026-10-15",
+      "source": "Samsung Newsroom",
+      "url": "https://news.samsung.com/global/samsung-hosts-silicon-valley-future-wireless-summit-2026",
+      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/15072626/Samsung-Corporate-Silicon-Valley-Future-Wireless-Summit-2026_Thumb932F.jpg",
+      "image_credit": "Samsung Electronics"
+    },
+    {
+      "id": "samsung-the-wall-control-rooms",
+      "category": "devices",
+      "published_at": "2026-10-15",
+      "source": "Samsung Newsroom",
+      "url": "https://news.samsung.com/global/from-smart-city-to-race-circuit-samsungs-the-wall-in-control-rooms",
+      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/14151656/Samsung-TVs-and-Displays-Samsung-The-Wall-Control-Rooms_Thumb932.jpg",
+      "image_credit": "Samsung Electronics"
+    },
+    {
+      "id": "grok-voice-3-api",
+      "category": "ai",
+      "published_at": "2026-10-14",
+      "source": "SpaceXSI",
+      "url": "https://x.ai/news/grok-voice-3",
+      "image": "https://media.x.ai/v1/website/og-grok-voice-3-0-b281361b.webp",
+      "image_credit": "SpaceXSI",
+      "image_fit": "contain"
+    },
+    {
+      "id": "globalfoundries-us-japan-new-york-fabs",
+      "category": "semiconductors",
+      "published_at": "2026-10-14",
+      "source": "GlobalFoundries",
+      "url": "https://investors.gf.com/news-releases/news-release-details/globalfoundries-selected-operate-two-new-semiconductor-fabs-new",
+      "image": "https://assets.gf.com/image/328833518282/image_4ee35772ot5879lie0o53bl61h/-C1350x900%2C225%2C0-S1920x1280-FWEBP",
+      "image_credit": "GlobalFoundries",
+      "file_photo": true
+    },
+    {
+      "id": "zero-ds-single-charge-record",
+      "category": "cars",
+      "published_at": "2026-10-13",
+      "source": "Zero Motorcycles",
+      "url": "https://zeromotorcycles.com/stories/guinness-world-records-title",
+      "image": "https://images.prismic.io/zero-cms-disco/HnRNb43hB7wzr1hV_zero-team-guinness-certificate-v5_YouTube.jpg?auto=format,compress&rect=0,39,2062,1083&w=1200&h=630",
+      "image_credit": "Zero Motorcycles"
+    },
+    {
       "id": "sk-hynix-3d-fenand-compute-research",
       "category": "semiconductors",
       "published_at": "2026-10-14",
