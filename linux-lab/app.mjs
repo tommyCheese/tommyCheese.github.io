@@ -694,7 +694,6 @@ function practiceAction(action) {
   }
   $('exit-code').textContent = ''; $('command-input').value = ''; draft = '';
   renderTask(); renderTranscript(); renderWorld(); updatePracticeActions(); persist();
-  if (action === 'reset' && mode === 'learn') showWelcomeIntro();
 }
 function executeCommand(command) {
   let celebrate = false; let unlockedBoss; let achievedGoals = [];
@@ -926,8 +925,8 @@ $('restart-confirm').addEventListener('click', () => {
   expandedDirectories.clear(); for (const path of ['/', '/home', HOME]) expandedDirectories.add(path);
   $('course-search').value = '';
   $('backup-status').textContent = '';
-  navigate('task/' + currentId); announce('练习记录已清空，从第一关重新开始。');
-  $('command-input').focus({ preventScroll: true });
+  navigate('task/' + currentId, false, {showGuide:false}); announce('练习记录已清空，从第一关重新开始。');
+  showWelcomeIntro();
 });
 $('help-button').addEventListener('click', () => $('help-dialog').showModal());
 $('help-close').addEventListener('click', () => $('help-dialog').close());
