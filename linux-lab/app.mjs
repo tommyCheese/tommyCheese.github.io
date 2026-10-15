@@ -1,4 +1,5 @@
 import { goalReference } from './task-copy.mjs';
+import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
@@ -752,15 +753,43 @@ $('practice-area').addEventListener('click', event => {
   $('command-input').focus({ preventScroll: true });
 });
 $('command-form').addEventListener('submit', event => { event.preventDefault(); const command = $('command-input').value.trim(); if (!command) return; executeCommand(command); $('command-input').value = ''; draft = ''; if (!document.querySelector('dialog:modal')) $('command-input').focus(); });
+let killBuffer = '', lastKeyWasKill = false;
+$('command-input').addEventListener('input', () => { lastKeyWasKill = false; });
+$('command-input').addEventListener('pointerdown', () => { lastKeyWasKill = false; });
 $('command-input').addEventListener('keydown', event => {
   if (event.isComposing) return;
-  if (event.ctrlKey && event.key.toLowerCase() === 'l') { event.preventDefault(); transcript = []; renderTranscript(); persist(); return; }
-  if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
-    event.preventDefault(); if (historyCursor === shell.state.history.length) draft = event.target.value;
-    historyCursor = Math.max(0, Math.min(shell.state.history.length, historyCursor + (event.key === 'ArrowUp' ? -1 : 1)));
-    event.target.value = shell.state.history[historyCursor] ?? draft; return;
+  if (['Control','Alt','Meta','Shift'].includes(event.key)) return;
+  const consecutiveKill = lastKeyWasKill;
+  lastKeyWasKill = false;
+  const control = event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey;
+  const key = control ? event.key.toLowerCase() : '';
+  if (key === 'l') { event.preventDefault(); transcript = []; renderTranscript(); persist(); return; }
+  if (key === 'c') {
+    event.preventDefault();
+    const entry = {message:shell.state.cwd.replace(HOME,'~') + ' $ ' + event.target.value + '^C'};
+    transcript.push(entry); transcript = transcript.slice(-60); appendTranscript(entry);
+    event.target.value = ''; draft = ''; historyCursor = shell.state.history.length;
+    persist(); return;
   }
-  if (event.key === 'Tab' && !event.shiftKey) {
+  const edited = control && editTerminalLine(event.target.value,event.target.selectionStart,event.target.selectionEnd,key,killBuffer);
+  if (edited) {
+    event.preventDefault();
+    if (edited.killed) {
+      killBuffer = consecutiveKill ? (edited.backward ? edited.killed + killBuffer : killBuffer + edited.killed) : edited.killed;
+      lastKeyWasKill = true;
+    }
+    event.target.value = edited.value;
+    event.target.setSelectionRange(edited.start,edited.end);
+    return;
+  }
+  const historyDirection = key === 'p' ? -1 : key === 'n' ? 1 : !event.ctrlKey && !event.altKey && !event.metaKey && event.key === 'ArrowUp' ? -1 : !event.ctrlKey && !event.altKey && !event.metaKey && event.key === 'ArrowDown' ? 1 : 0;
+  if (historyDirection) {
+    event.preventDefault(); if (historyCursor === shell.state.history.length) draft = event.target.value;
+    historyCursor = Math.max(0, Math.min(shell.state.history.length, historyCursor + historyDirection));
+    event.target.value = shell.state.history[historyCursor] ?? draft;
+    event.target.setSelectionRange(event.target.value.length,event.target.value.length); return;
+  }
+  if (event.key === 'Tab' && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
     event.preventDefault(); const values = shell.complete(event.target.value);
     if (values.length === 1) event.target.value = event.target.value.replace(/[^\s]*$/, values[0].replace(/\s/g, '\\ ') + (values[0].endsWith('/') ? '' : ' '));
     else if (values.length) { appendTranscript({ message: values.join('   ') }); }
