@@ -1,5 +1,5 @@
 import { goalReference } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261016-adaptive-review-3';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
@@ -7,8 +7,9 @@ import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
 import { terminalLabs } from './terminal-labs.mjs';
-import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
-import { validHistory, validSnapshot, validateBackup } from './backup.mjs';
+import { createReviewLesson, skillLabel } from './review-exercises.mjs';
+import { migrateLearning, reviewPlan, reviewTimeReached, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261016-adaptive-review-3';
+import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261016-adaptive-review-3';
 import { PracticeHistory } from './history.mjs';
 import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
@@ -53,6 +54,7 @@ let storageAvailable = true;
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch { saved = {}; }
 if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+$('review-budget').value = String([180,300,600].includes(saved.reviewBudget) ? saved.reviewBudget : 300);
 saved = await localizeSaved(saved);
 const completed = new Set(Array.isArray(saved.completed) ? saved.completed.filter(id => ids.has(id)) : []);
 const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites.filter(name => supportedNames.has(name)) : []);
@@ -64,7 +66,7 @@ let historyCursor = 0; let draft = ''; let changes = new Set();
 let selectedLevel = lesson.level;
 let sandboxSession;
 const practiceHistory = new PracticeHistory();
-let learning = validLearning(saved.learning, ids) ? saved.learning : {};
+let learning = validLearning(saved.learning, ids) ? migrateLearning(saved.learning) : {};
 const bosses = bossChallenges(lessons);
 const bossIds = new Set(bosses.map(item => item.id));
 let bossCompleted = new Set(Array.isArray(saved.bossCompleted) ? saved.bossCompleted.filter(id => bossIds.has(id)) : []);
@@ -76,6 +78,19 @@ let onboardingReady = false;
 let latestChanges = [];
 let guideLesson;
 let hintVisible = false;
+let reviewSummary = null;
+let practiceTick = performance.now(), practiceActivity = practiceTick;
+for (const type of ['keydown','pointerdown']) document.addEventListener(type,()=> { practiceActivity=performance.now(); },{passive:true});
+function tickPractice() {
+  const now = performance.now();
+  if (mode === 'learn' && shell && (!attempt.graded || attempt.relearning) && !document.hidden && document.hasFocus() && !document.querySelector('dialog:modal') && now-practiceActivity<60000) {
+    attempt.activeSeconds = Math.min(1800,(attempt.activeSeconds || 0) + Math.min(2,(now-practiceTick)/1000));
+  }
+  practiceTick = now;
+}
+setInterval(tickPractice,1000);
+document.addEventListener('visibilitychange',()=> { if (document.hidden) persist(); practiceTick=performance.now(); });
+window.addEventListener('pagehide',()=> { if (shell) persist(); });
 const chapterExpansion = new Map();
 const goalExpansion = new Map();
 let guideVisible = true;
@@ -160,6 +175,7 @@ function showLessonIntro() {
   $('lesson-intro-tool').hidden = !manual;
   $('lesson-intro-syntax').textContent = manual?.syntax || '';
   $('lesson-intro-dialog').showModal();
+  practiceTick=performance.now();
 }
 $('lesson-intro-button').addEventListener('click', showLessonIntro);
 for (const id of ['lesson-intro-start','lesson-intro-close']) $(id).addEventListener('click', () => $('lesson-intro-dialog').close());
@@ -195,7 +211,9 @@ const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
 let attempt = { maxHint:0, errors:0, graded:false };
 function makeExercise() {
-  const source = localizeContent(training?.challengeVersion === 1 ? createBossLesson(bosses.find(item => item.id === training.boss), currentId) : lessons.find(item => item.id === currentId));
+  let source = training?.challengeVersion === 1 ? createBossLesson(bosses.find(item => item.id === training.boss), currentId) : lessons.find(item => item.id === currentId);
+  if (training?.kind === 'review' && training.reviewVersion === 1) source = createReviewLesson(source,training.variant);
+  source = localizeContent(source);
   const seeded = createLessonShell(Shell, seedState, source);
   if (!training) { lesson = source; return seeded; }
   const varied = varyExercise(source, seeded.state, training.variant);
@@ -203,37 +221,59 @@ function makeExercise() {
   return new Shell(varied.state, manuals);
 }
 function renderLearning() {
-  const due = reviewQueue(lessons, completed, learning);
-  $('review-count').textContent = due.length ? String(due.length) : '';
-  $('learning-summary').textContent = `已完成 ${completed.size} · 已掌握 ${Object.values(learning).filter(record => mastery(record) === '已掌握').length}`;
-  $('review-start').disabled = !due.length;
-  $('review-status').textContent = due.length ? `今日 ${due.length} 题` : completed.size ? '今天没有待复习任务' : '完成关卡后解锁复习';
-  $('review-return').href = '#' + (saved.session?.exercise?.kind || (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task')) + '/' + currentId;
+  const plan = reviewPlan(lessons, completed, learning, Date.now(), Number($('review-budget').value));
+  $('review-count').textContent = plan.due.length ? String(plan.due.length) : '';
+  $('learning-summary').textContent = `已完成 ${completed.size}`;
+  $('review-due-title').textContent = '待复习 ' + plan.due.length;
+  $('review-start').disabled = !plan.queue.length;
+  $('review-start').textContent = reviewSummary ? '再练一轮 →' : '开始复习 →';
+  $('review-status').textContent = plan.queue.length ? `本轮 ${plan.queue.length} 项 · 预计 ${Math.max(1,Math.ceil(plan.seconds/60))} 分钟` : completed.size ? '今天没有待复习任务' : '完成关卡后解锁复习';
+  const resume = saved.session?.exercise;
+  $('review-resume').hidden = !(resume?.kind === 'review' && validExercise(resume,ids));
+  $('review-round-summary').hidden = !reviewSummary;
+  if (reviewSummary) $('review-round-summary').textContent = reviewSummary.passed || reviewSummary.relearn
+    ? `本轮完成 ${reviewSummary.passed} 项` + (reviewSummary.relearn ? ` · 再练 ${reviewSummary.relearn} 项` : '') + '。后续复习已安排。' : '本轮已结束。';
+  $('review-return').href = '#' + (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task') + '/' + currentId;
   $('review-button').setAttribute('aria-current', mode === 'review' ? 'page' : 'false');
   $('review-list').replaceChildren();
-  for (const id of due) {
+  for (const id of plan.queue) {
     const item = lessons.find(entry => entry.id === id); const card = element('article', undefined, 'review-card');
-    const content = element('div'); content.append(element('h2', item.title), element('span', mastery(learning[id]), 'mastery-state'));
-    const button = element('button', '复习 →'); button.setAttribute('aria-label', '复习：' + item.title);
-    button.addEventListener('click', () => beginTraining('review', [id]));
-    card.append(content, button); $('review-list').append(card);
+    const content = element('div'); content.append(element('h2',skillLabel(item)),element('span',mastery(learning[id]),'mastery-state'));
+    const button = element('button','复习 →'); button.setAttribute('aria-label','复习：'+skillLabel(item));
+    button.addEventListener('click',()=>beginTraining('review',[id]));
+    card.append(content,button); $('review-list').append(card);
   }
   $('mastery-list').replaceChildren();
-  for (const item of lessons.filter(item => completed.has(item.id))) {
-    const record = learning[item.id]; const row = element('li');
-    const link = element('a', item.title); link.href = '#task/' + item.id;
-    row.append(link, element('span', mastery(record), 'mastery-state'));
-    if (record) row.title = `${record.passes} 次完成 · 下次复习 ${new Date(record.dueAt).toLocaleDateString(locale)}`;
-    $('mastery-list').append(row);
+  for (const item of lessons.filter(item=>completed.has(item.id))) {
+    const record = learning[item.id], row = element('li'), content = element('div');
+    const link = element('a',skillLabel(item)); link.href='#review/'+item.id;
+    content.append(link);
+    if (record) content.append(element('small','下次复习 '+new Date(record.dueAt).toLocaleDateString(locale)));
+    row.append(content,element('span',mastery(record),'mastery-state')); $('mastery-list').append(row);
   }
 }
 function beginTraining(kind, queue, boss) {
   if (!queue.length) return;
   if (shell) persist();
-  saved.session = undefined; shell = undefined;
-  training = { kind, queue, index:0, variant:Date.now() % 997 + 1, ...(boss ? {boss,challengeVersion:1} : {}) };
-  const route = kind + '/' + queue[0];
-  history.pushState(null, '', '#' + route); navigate('#' + route);
+  saved.session=undefined; shell=undefined; reviewSummary=null;
+  training={kind,queue,index:0,variant:Date.now()%997+1,...(kind==='review' ? {reviewVersion:1,budget:Number($('review-budget').value),spentSeconds:0,results:[]} : {}),...(boss ? {boss,challengeVersion:1} : {})};
+  const route=kind+'/'+queue[0];
+  history.pushState(null,'','#'+route); navigate('#'+route);
+}
+function recordReviewResult(outcome) {
+  if (training?.kind !== 'review') return;
+  training.results ||= [];
+  const previous=training.results.find(item=>item.id===currentId);
+  if (!previous) training.results.push({id:currentId,outcome});
+  else if (outcome==='passed') previous.outcome='passed';
+}
+function finishReview() {
+  if (training?.kind !== 'review') return;
+  const results=training.results || [];
+  reviewSummary={passed:results.filter(item=>item.outcome==='passed').length,relearn:results.filter(item=>item.outcome==='relearn').length};
+  for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
+  saved.session=undefined; shell=undefined; training=null;
+  history.replaceState(null,'','#review'); navigate('#review'); persist();
 }
 function startBoss(boss) {
   if (!bossUnlocked(boss, completed)) return;
@@ -242,7 +282,9 @@ function startBoss(boss) {
 function advanceLesson() {
   if ($('completion-dialog').open) $('completion-dialog').close();
   if (training) {
-    if (training.index + 1 < training.queue.length) {
+    tickPractice();
+    if (training.kind === 'review') training.spentSeconds = (training.spentSeconds || 0) + (attempt.activeSeconds || 0);
+    if (training.index + 1 < training.queue.length && !reviewTimeReached(training)) {
       persist(); shell = undefined; saved.session = undefined;
       training.index++; training.variant++;
       location.hash = training.kind + '/' + training.queue[training.index];
@@ -251,8 +293,7 @@ function advanceLesson() {
       const boss = training.boss;
       persist();
       if (kind === 'review') {
-        history.replaceState(null, '', '#review'); navigate('#review');
-        $('review-status').textContent = '本轮复习完成！';
+        finishReview();
       } else {
         history.replaceState(null, '', '#task/' + currentId);
         navigate('#task/' + currentId, false, {showGuide:false});
@@ -277,11 +318,12 @@ function showCompletion(newBoss) {
   $('completion-lesson').textContent = lesson.title;
   const sequence = training ? training.queue.map(id=>lessons.find(item=>item.id === id)) : navigationLessons();
   const position = training ? training.index : sequence.findIndex(item=>item.id === currentId);
-  const next = sequence[position+1];
+  const timeReached=reviewTimeReached(training,attempt.activeSeconds || 0);
+  const next = timeReached ? null : sequence[position+1];
   const count = training ? position+1 : sequence.filter(item=>completed.has(item.id)).length;
   $('completion-progress').max = sequence.length; $('completion-progress').value = count;
   $('completion-count').textContent = `${training ? '本轮训练' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
-  $('completion-next-preview').textContent = next ? nextTransition(lesson,next) : training ? '本轮目标已全部完成。' : '路线完成，可以选择新的专题了。';
+  $('completion-next-preview').textContent = timeReached ? '这题完成了，本轮先到这里。' : next ? nextTransition(lesson,next) : training ? '本轮目标已全部完成。' : '路线完成，可以选择新的专题了。';
   $('completion-next').textContent = next ? '继续挑战 →' : training ? '完成本轮 ✓' : '去关卡地图 →';
   $('completion-unlock').hidden = !newBoss;
   if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战已解锁';
@@ -316,7 +358,8 @@ $('completion-next').addEventListener('click',advanceLesson);
 $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog:modal')) $('command-input').focus({preventScroll:true}); });
 
 function persist() {
-  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
+  tickPractice();
+  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, reviewBudget:Number($('review-budget').value), transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
     session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
@@ -411,6 +454,8 @@ function renderTask() {
   $('console-command').textContent = sandbox ? 'sandbox' : training ? training.challengeVersion === 1 ? 'Boss' : '复习' : lesson.command;
   $('task-position').textContent = training ? `${training.index + 1} / ${training.queue.length}` : sandbox ? '' : starterMode ? `${starterRoute.indexOf(currentId) + 1} / ${starterRoute.length}` : `${items.indexOf(lesson) + 1} / ${items.length}`;
   $('task-title').textContent = sandbox ? '自由练习' : lesson.title;
+  $('review-context').hidden = training?.kind !== 'review';
+  if (training?.kind === 'review') $('review-context').textContent=lesson.context;
   prepareTaskGuide();
   $('task-goal-button').hidden = sandbox;
   $('goals').replaceChildren();
@@ -460,8 +505,12 @@ function renderTask() {
   $('solution-review').hidden = !allDone;
   if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
   else { $('solution-review').open = true; renderSolutionReview(); }
-  $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId) || mastery(learning[currentId]) !== '已掌握';
+  $('mastery-badge').hidden = sandbox || training?.challengeVersion === 1 || !completed.has(currentId) || mastery(learning[currentId]) !== '保持良好';
   $('mastery-badge').textContent = mastery(learning[currentId]);
+  $('review-task-actions').hidden = training?.kind !== 'review';
+  $('review-relearn').disabled = attempt.graded || !!allDone;
+  $('review-skip').disabled = !!allDone;
+  $('review-relearn-note').hidden = training?.kind !== 'review' || !attempt.relearning;
   $('hint-button').hidden = sandbox;
   $('hint-button').textContent = hintVisible ? '隐藏提示' : hint ? '显示提示' : '💡 给点提示';
   $('hint-button').setAttribute('aria-expanded',String(!sandbox && hintVisible));
@@ -674,8 +723,9 @@ function startTask(id, restore = false, showGuide = true) {
   setWorldTab(['system', 'network', 'services'].includes(lesson.chapter));
   renderTask(); renderChapters(); renderTranscript(); renderWorld(); persist();
   reveal($('mission-window'));
+  practiceTick=performance.now(); practiceActivity=practiceTick;
   if (!restore) $('world-area').scrollTop = 0;
-  if (showGuide && onboardingReady && (!restore || !transcript.some(item=>item.command))) { showTaskGuide(); showLessonIntro(); }
+  if (showGuide && onboardingReady && (!restore || !transcript.some(item=>item.command))) { showTaskGuide(); if (training?.kind !== 'review') showLessonIntro(); }
 }
 function focusGoalDirectory() {
   const goal = lesson.goals.find(goal => goal.path && ['file','dir','absent','mode','owner','link','archive'].includes(goal.type));
@@ -746,7 +796,8 @@ function executeCommand(command) {
       if (isBoss) bossCompleted.add(training.boss);
       else completed.add(currentId);
       const newBoss = bosses.find(item => !unlockedBefore.has(item.id) && bossUnlocked(item, completed));
-      if (!wasDone && !attempt.graded) { if (!isBoss) recordPractice(learning, currentId, attempt, training?.kind || 'lesson'); attempt.graded = true; }
+      if (!wasDone && (!attempt.graded || attempt.relearning)) { tickPractice(); if (!isBoss) recordPractice(learning,currentId,attempt,training?.kind || 'lesson'); attempt.graded=true; attempt.relearning=false; }
+      if (!wasDone) recordReviewResult('passed');
       renderChapters();
       announce(isBoss ? `击败「${lesson.title}」！` : `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。`);
       if (!wasDone) { celebrate = true; unlockedBoss = newBoss; }
@@ -849,7 +900,17 @@ for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
 }
 for (const link of document.querySelectorAll('a[href="./commands/"]')) link.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
 $('review-button').addEventListener('click', () => { if (mode !== 'review') location.hash = 'review'; });
-$('review-start').addEventListener('click', () => beginTraining('review', reviewQueue(lessons, completed, learning)));
+$('review-budget').addEventListener('change',()=> { renderLearning(); persist(); });
+$('review-start').addEventListener('click',()=>beginTraining('review',reviewPlan(lessons,completed,learning,Date.now(),Number($('review-budget').value)).queue));
+$('review-resume').addEventListener('click',()=> { const exercise=saved.session?.exercise; if (exercise?.kind==='review') location.hash='review/'+exercise.queue[exercise.index]; });
+$('review-relearn').addEventListener('click',()=> {
+  if (training?.kind!=='review' || attempt.graded) return;
+  tickPractice(); recordPractice(learning,currentId,attempt,'review',Date.now(),false);
+  attempt.graded=true; attempt.relearning=true; recordReviewResult('relearn');
+  hint=3; hintVisible=true; renderTask(); persist(); renderLearning(); $('hint-box').scrollIntoView({block:'nearest',behavior:reducedMotion.matches?'instant':'smooth'});
+});
+$('review-skip').addEventListener('click',()=> { if (training?.kind==='review') { recordReviewResult(attempt.relearning?'relearn':'skipped'); advanceLesson(); } });
+$('review-finish').addEventListener('click',finishReview);
 for (const chapter of chapters) { const option = element('option', chapter.title); option.value = chapter.id; $('transfer-topic').append(option); }
 function renderTransfer(choose = true) {
   if (choose) $('transfer-topic').value = lesson.chapter;
@@ -891,7 +952,7 @@ function navigate(hash, initial = false, {showGuide = true} = {}) {
   }
   if (['review','quiz'].includes(view) && ids.has(id) && completed.has(id)) {
     if ((!training || training.kind !== view || training.queue[training.index] !== id) && saved.session?.exercise?.kind === view && validExercise(saved.session.exercise, ids) && saved.session.exercise.queue[saved.session.exercise.index] === id) training = structuredClone(saved.session.exercise);
-    if (!training || training.kind !== view || training.queue[training.index] !== id) training = { kind:view, queue:[id], index:0, variant:Date.now() % 997 + 1 };
+    if (!training || training.kind !== view || training.queue[training.index] !== id) training = {kind:view,queue:[id],index:0,variant:Date.now()%997+1,...(view==='review' ? {reviewVersion:1,budget:300,results:[]} : {})};
   } else training = null;
   starterMode = view === 'starter' && starterRoute.includes(id);
   if (starterMode) selectedLevel = 'starter';
@@ -920,6 +981,7 @@ function navigate(hash, initial = false, {showGuide = true} = {}) {
     updatePracticeActions();
     $('command-input').value = ''; setWorldTab(false); renderTask(); renderChapters(); renderTranscript(); renderWorld();
   }
+  if (overview) shell=undefined;
   $('exit-code').textContent = '';
   const expected = mode === 'learn' ? (training?.kind || (starterMode ? 'starter' : 'task')) + '/' + currentId : mode === 'review' ? 'review' : 'sandbox';
   if (location.hash !== '#' + expected) history.replaceState(null, '', '#' + expected);
@@ -947,13 +1009,15 @@ async function importBackup(event) {
     if (data.version === 1) {
       for (const id of data.completed) completed.add(id);
       for (const name of data.favorites) favorites.add(name);
+      for (const [id,record] of Object.entries(migrateLearning(data.learning || {}))) if (!learning[id] || record.lastAt > learning[id].lastAt) learning[id]=record;
       persist(); renderChapters();
     } else {
       completed.clear(); for (const id of data.completed) completed.add(id);
       favorites.clear(); for (const name of data.favorites) favorites.add(name);
       // Retire the current workspace before routing so navigate cannot overwrite the imported data.
-      shell = undefined; sandboxSession = undefined; training = null; learning = data.learning || {}; transfer = data.transfer || {}; bossCompleted = new Set(data.bossCompleted || []); saved = data; currentId = data.current;
+      shell = undefined; sandboxSession = undefined; training = null; learning = migrateLearning(data.learning || {}); transfer = data.transfer || {}; bossCompleted = new Set(data.bossCompleted || []); saved = data; currentId = data.current;
       lesson = lessons.find(item => item.id === currentId); selectedLevel = lesson.level;
+      $('review-budget').value=String(data.reviewBudget || 300);
       navigate(data.mode === 'sandbox' ? 'sandbox' : (data.session?.exercise?.kind || (data.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task')) + '/' + currentId, true);
       persist(); renderChapters();
     }
@@ -970,6 +1034,7 @@ $('restart-confirm').addEventListener('click', () => {
   try { localStorage.removeItem(KEY); }
   catch { $('restart-status').textContent = '无法清除本地记录，请检查浏览器存储权限。'; return; }
   completed.clear(); favorites.clear(); learning = {}; transfer = {}; bossCompleted.clear(); training = null; practiceHistory.clear(); saved = {}; sandboxSession = undefined; shell = undefined;
+  $('review-budget').value='300'; reviewSummary=null;
   currentId = lessons[0].id; lesson = lessons[0]; selectedLevel = lesson.level;
   transcript = []; hint = 0; draft = ''; historyCursor = 0; previewPath = undefined; changes = new Set();
   expandedDirectories.clear(); for (const path of ['/', '/home', HOME]) expandedDirectories.add(path);
@@ -1138,13 +1203,13 @@ $('welcome-start').addEventListener('click', () => {
 });
 $('welcome-dialog').addEventListener('close', () => {
   try { localStorage.setItem(WELCOME_KEY, 'seen'); } catch { /* Still allow practice when storage is unavailable. */ }
-  if (onboardingReady) { showTaskGuide(); showLessonIntro(); }
+  if (onboardingReady) { showTaskGuide(); if (training?.kind !== 'review') showLessonIntro(); }
 });
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
 onboardingReady = true;
 if (showWelcome) showWelcomeIntro();
-else if (mode === 'learn' && !transcript.some(item=>item.command)) { showTaskGuide(); showLessonIntro(); }
+else if (mode === 'learn' && !transcript.some(item=>item.command)) { showTaskGuide(); if (training?.kind !== 'review') showLessonIntro(); }
 
 // Keep favorites in sync when a standalone reference page changes them.
 window.addEventListener('storage', event => {

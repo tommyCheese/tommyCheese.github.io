@@ -6,13 +6,13 @@ export const localePrefix = code => code === 'zh-CN' ? '' : languages.some(item=
 const han = /[\u3400-\u9fff]/;
 const escape = text => text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 function countLabel(locale, number, unit) {
-  const n=Number(number), index=unit==='项'?0:unit==='行'?1:2;
-  if (locale==='en') return number+' '+['item','line','command'][index]+(n===1?'':'s');
+  const n=Number(number), index=unit==='项'?0:unit==='行'?1:unit==='分钟'?3:2;
+  if (locale==='en') return number+' '+['item','line','command','minute'][index]+(n===1?'':'s');
   if (locale==='ru') {
-    const forms=[['объект','объекта','объектов'],['строка','строки','строк'],['команда','команды','команд']][index];
+    const forms=[['объект','объекта','объектов'],['строка','строки','строк'],['команда','команды','команд'],['минута','минуты','минут']][index];
     return number+' '+forms[n%100>=11 && n%100<=14?2:n%10===1?0:n%10>=2 && n%10<=4?1:2];
   }
-  return number+' '+(locale==='ja'?['項目','行','コマンド'][index]:locale==='zh-TW'?['項','行','個指令'][index]:unit);
+  return number+' '+(locale==='ja'?['項目','行','コマンド','分'][index]:locale==='zh-TW'?['項','行','個指令','分鐘'][index]:unit);
 }
 export function createTranslator(catalog = {}, locale = 'zh-CN') {
   const keys = Object.keys(catalog).filter(key=>han.test(key) && catalog[key] !== key).sort((a,b)=>b.length-a.length);
@@ -28,7 +28,7 @@ export function createTranslator(catalog = {}, locale = 'zh-CN') {
     const trimmed = text.trim();
     if (Object.hasOwn(catalog,trimmed)) return text.replace(trimmed,catalog[trimmed]);
     const counts=[];
-    const input=text.replace(/(\d+) (项|行|条命令)/g,(_,number,unit)=>{counts.push(countLabel(locale,number,unit));return '\uE000'+(counts.length-1)+'\uE001';});
+    const input=text.replace(/(\d+) (项|行|条命令|分钟)/g,(_,number,unit)=>{counts.push(countLabel(locale,number,unit));return '\uE000'+(counts.length-1)+'\uE001';});
     return (pattern ? input.replace(pattern,source=>catalog[source]) : input).replace(/\uE000(\d+)\uE001/g,(_,index)=>counts[index]);
   };
 }

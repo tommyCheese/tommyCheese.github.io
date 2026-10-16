@@ -1,11 +1,11 @@
-import { languages, localePrefix, createTranslator, languageURL } from './i18n-core.mjs';
+import { languages, localePrefix, createTranslator, languageURL } from './i18n-core.mjs?v=20261016-adaptive-review-3';
 export const locale = languages.some(item=>item.code === document.documentElement.lang) ? document.documentElement.lang : 'zh-CN';
 const root = new URL('./',import.meta.url);
 export const localeRoot = new URL(localePrefix(locale),root);
 const catalogs = new Map([['zh-CN',Promise.resolve({})]]);
 export function loadCatalog(code) {
   if (!languages.some(item=>item.code === code)) code='zh-CN';
-  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json',root)).then(response=>{
+  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json?v=20261016-adaptive-review-3',root)).then(response=>{
     if (!response.ok) throw new Error('Unable to load language: ' + code);
     return response.json();
   }));
