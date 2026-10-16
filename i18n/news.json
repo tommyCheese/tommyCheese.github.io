@@ -1,6 +1,45 @@
 {
-  "updated_at": "2026-10-15",
+  "updated_at": "2026-10-16",
   "items": [
+    {
+      "id": "byd-tang-third-generation-cockpit-preview",
+      "category": "cars",
+      "published_at": "2026-10-16",
+      "source": "IT之家",
+      "url": "https://www.ithome.com/1/013/844.htm",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/10/60c62fb4-7506-4f11-afc1-05497a195a81.jpg",
+      "image_credit": "比亚迪 · IT之家"
+    },
+    {
+      "id": "lenovo-legion-r9-keyboard-sale",
+      "category": "devices",
+      "published_at": "2026-10-16",
+      "source": "IT之家",
+      "url": "https://www.ithome.com/1/013/740.htm",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/9/2a8572c8-5722-4d7c-b373-1491cdb0f3fb.jpg",
+      "image_credit": "Lenovo · IT之家",
+      "image_fit": "contain"
+    },
+    {
+      "id": "prismml-ternary-bonsai2-small-models",
+      "category": "ai",
+      "published_at": "2026-10-15",
+      "source": "PrismML",
+      "url": "https://prismml.com/news/bonsai-2-family",
+      "image": "https://cdn.prod.website-files.com/699604cc2b9dd89bdbda0608/6a6d0e0bc0d5f9a97a5164c0_69cc089669ab0df26e921aac_prism-og-img%2520(2).png",
+      "image_credit": "PrismML",
+      "image_fit": "contain"
+    },
+    {
+      "id": "tsmc-2026-third-quarter-results",
+      "category": "semiconductors",
+      "published_at": "2026-10-15",
+      "source": "TSMC",
+      "url": "https://pr.tsmc.com/english/news/3346",
+      "image": "https://img.ithome.com/newsuploadfiles/2026/10/39f62375-b431-48bf-80b3-751ad3ddd8bc.png",
+      "image_credit": "TSMC · IT之家",
+      "image_fit": "contain"
+    },
     {
       "id": "geely-holding-q3-2026-sales",
       "category": "cars",

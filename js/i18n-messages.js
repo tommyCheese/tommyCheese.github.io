@@ -241,7 +241,15 @@ window.SITE_MESSAGES = {
     "news.filter.apply": "查看新闻",
     "news.filter.results": "共 {count} 条新闻 · {days} 天",
     "news.filter.empty": "所选日期暂无新闻，可切换日期或查看全部。",
-    "news.filter.invalidRange": "结束日期不能早于开始日期。"
+    "news.filter.invalidRange": "结束日期不能早于开始日期。",
+    "news.byd-tang-third-generation-cockpit-preview.title": "比亚迪预告第三代唐座舱：巨幕 UI 与 AI 萌宠桌面",
+    "news.byd-tang-third-generation-cockpit-preview.summary": "比亚迪预告第三代唐将搭载全新巨幕 UI，支持功能窗口自由组合，并加入 AI 萌宠桌面“小面包”。新车计划第四季度上市。",
+    "news.lenovo-legion-r9-keyboard-sale.title": "联想拯救者 R9 磁轴键盘开售，售价 999 元",
+    "news.lenovo-legion-r9-keyboard-sale.summary": "拯救者 R9 于 10 月 16 日开售，采用 68 键布局、铝合金外壳和 8000Hz 轮询率，提供两种磁轴与四档预设配置。",
+    "news.prismml-ternary-bonsai2-small-models.title": "PrismML 发布 Ternary Bonsai 2 小型端侧模型",
+    "news.prismml-ternary-bonsai2-small-models.summary": "PrismML 推出基于 Qwen3.5 的 2B、4B、9B 三元权重模型，面向本地推理、视觉理解与工具调用；权重以 Apache 2.0 许可证开放。",
+    "news.tsmc-2026-third-quarter-results.title": "台积电公布三季报：营收同比增长 50.9%",
+    "news.tsmc-2026-third-quarter-results.summary": "台积电第三季度营收为新台币 1.49424 万亿元，净利润为 7630.6 亿元，稀释每股收益为 29.43 元；2 纳米占晶圆收入的 8%。"
   },
   "en": {
     "nav.about": "About",
@@ -484,7 +492,15 @@ window.SITE_MESSAGES = {
     "news.filter.apply": "Show news",
     "news.filter.results": "{count} stories · {days} days",
     "news.filter.empty": "No news for these dates. Choose another date or view all.",
-    "news.filter.invalidRange": "The end date must be on or after the start date."
+    "news.filter.invalidRange": "The end date must be on or after the start date.",
+    "news.byd-tang-third-generation-cockpit-preview.title": "BYD previews third-generation Tang cockpit with giant-screen UI",
+    "news.byd-tang-third-generation-cockpit-preview.summary": "BYD previewed a new giant-screen interface with rearrangeable function windows and an AI pet desktop named Xiaomianbao. The third-generation Tang is planned for a fourth-quarter launch.",
+    "news.lenovo-legion-r9-keyboard-sale.title": "Lenovo Legion R9 magnetic-switch keyboard goes on sale for RMB 999",
+    "news.lenovo-legion-r9-keyboard-sale.summary": "The Legion R9 went on sale on October 16 with 68 keys, an aluminum-alloy case, 8,000Hz polling, two magnetic-switch options, and four preset profiles.",
+    "news.prismml-ternary-bonsai2-small-models.title": "PrismML releases compact Ternary Bonsai 2 models for local AI",
+    "news.prismml-ternary-bonsai2-small-models.summary": "PrismML introduced Qwen3.5-based 2B, 4B, and 9B ternary models for local reasoning, visual understanding, and tool use. Weights are available under Apache 2.0.",
+    "news.tsmc-2026-third-quarter-results.title": "TSMC reports third-quarter revenue growth of 50.9%",
+    "news.tsmc-2026-third-quarter-results.summary": "TSMC reported NT$1,494.24 billion in revenue, NT$763.06 billion in net income, and diluted EPS of NT$29.43. Its 2nm technology accounted for 8% of wafer revenue."
   },
   "ja": {
     "nav.about": "私について",
@@ -727,7 +743,15 @@ window.SITE_MESSAGES = {
     "news.filter.apply": "ニュースを表示",
     "news.filter.results": "{count}件のニュース · {days}日分",
     "news.filter.empty": "選択した日付のニュースはありません。別の日付を選ぶか、すべて表示してください。",
-    "news.filter.invalidRange": "終了日は開始日以降にしてください。"
+    "news.filter.invalidRange": "終了日は開始日以降にしてください。",
+    "news.byd-tang-third-generation-cockpit-preview.title": "BYD、第3世代Tangの大型画面UIとAIペットを予告",
+    "news.byd-tang-third-generation-cockpit-preview.summary": "BYDは機能ウィンドウを自由に組み合わせられる大型画面UIと、AIペット「小面包」のデスクトップを予告した。第3世代Tangは第4四半期に発売予定。",
+    "news.lenovo-legion-r9-keyboard-sale.title": "Lenovo Legion R9磁気スイッチキーボード、999元で発売",
+    "news.lenovo-legion-r9-keyboard-sale.summary": "Legion R9は10月16日に発売。68キー、アルミ合金筐体、8,000Hzのポーリングレートを採用し、2種類の磁気スイッチと4つのプリセットを用意する。",
+    "news.prismml-ternary-bonsai2-small-models.title": "PrismML、端末上で動く小型Ternary Bonsai 2モデルを公開",
+    "news.prismml-ternary-bonsai2-small-models.summary": "PrismMLはQwen3.5を基にした2B・4B・9Bの三値重みモデルを公開。ローカル推論、画像理解、ツール利用を想定し、重みはApache 2.0で提供する。",
+    "news.tsmc-2026-third-quarter-results.title": "TSMC、第3四半期の売上高が前年同期比50.9%増",
+    "news.tsmc-2026-third-quarter-results.summary": "TSMCの売上高は1兆4,942.4億台湾ドル、純利益は7,630.6億台湾ドル、希薄化後EPSは29.43台湾ドル。2nmはウエハー売上高の8%を占めた。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -970,7 +994,15 @@ window.SITE_MESSAGES = {
     "news.filter.apply": "Показать новости",
     "news.filter.results": "Новостей: {count} · Дней: {days}",
     "news.filter.empty": "За выбранные даты новостей нет. Выберите другие даты или покажите все новости.",
-    "news.filter.invalidRange": "Конечная дата не может быть раньше начальной."
+    "news.filter.invalidRange": "Конечная дата не может быть раньше начальной.",
+    "news.byd-tang-third-generation-cockpit-preview.title": "BYD показала интерфейс третьего поколения Tang с ИИ-питомцем",
+    "news.byd-tang-third-generation-cockpit-preview.summary": "BYD анонсировала интерфейс большого экрана с переставляемыми окнами функций и ИИ-питомцем «Сяомяньбао». Выход третьего поколения Tang запланирован на четвёртый квартал.",
+    "news.lenovo-legion-r9-keyboard-sale.title": "Клавиатура Lenovo Legion R9 с магнитными переключателями поступила в продажу за 999 юаней",
+    "news.lenovo-legion-r9-keyboard-sale.summary": "Продажи Legion R9 начались 16 октября. Клавиатура получила 68 клавиш, алюминиевый корпус, опрос 8000 Гц, два варианта магнитных переключателей и четыре готовых профиля.",
+    "news.prismml-ternary-bonsai2-small-models.title": "PrismML выпустила компактные модели Ternary Bonsai 2 для локального ИИ",
+    "news.prismml-ternary-bonsai2-small-models.summary": "Модели на базе Qwen3.5 с 2, 4 и 9 млрд параметров используют троичные веса и предназначены для локального вывода, понимания изображений и вызова инструментов. Веса доступны по Apache 2.0.",
+    "news.tsmc-2026-third-quarter-results.title": "Выручка TSMC за третий квартал выросла на 50,9%",
+    "news.tsmc-2026-third-quarter-results.summary": "TSMC сообщила о выручке 1494,24 млрд и чистой прибыли 763,06 млрд тайваньских долларов. Разводнённая прибыль на акцию — 29,43 тайваньского доллара; доля 2-нм технологии в выручке от пластин — 8%."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -1213,6 +1245,14 @@ window.SITE_MESSAGES = {
     "news.filter.apply": "查看新聞",
     "news.filter.results": "共 {count} 則新聞 · {days} 天",
     "news.filter.empty": "所選日期暫無新聞，可切換日期或查看全部。",
-    "news.filter.invalidRange": "結束日期不能早於開始日期。"
+    "news.filter.invalidRange": "結束日期不能早於開始日期。",
+    "news.byd-tang-third-generation-cockpit-preview.title": "比亞迪預告第三代唐座艙：巨幕 UI 與 AI 萌寵桌面",
+    "news.byd-tang-third-generation-cockpit-preview.summary": "比亞迪預告第三代唐將搭載全新巨幕 UI，支援功能視窗自由組合，並加入 AI 萌寵桌面「小麵包」。新車計畫於第四季上市。",
+    "news.lenovo-legion-r9-keyboard-sale.title": "聯想 Legion R9 磁軸鍵盤開賣，售價人民幣 999 元",
+    "news.lenovo-legion-r9-keyboard-sale.summary": "Legion R9 於 10 月 16 日開賣，採用 68 鍵配置、鋁合金外殼和 8000Hz 輪詢率，提供兩種磁軸與四組預設設定。",
+    "news.prismml-ternary-bonsai2-small-models.title": "PrismML 發表 Ternary Bonsai 2 小型端側模型",
+    "news.prismml-ternary-bonsai2-small-models.summary": "PrismML 推出以 Qwen3.5 為基礎的 2B、4B、9B 三元權重模型，供本機推論、影像理解與工具呼叫使用；權重以 Apache 2.0 授權開放。",
+    "news.tsmc-2026-third-quarter-results.title": "台積電公布第三季財報：營收年增 50.9%",
+    "news.tsmc-2026-third-quarter-results.summary": "台積電第三季營收為新台幣 1.49424 兆元，淨利為 7630.6 億元，稀釋每股盈餘為 29.43 元；2 奈米占晶圓營收的 8%。"
   }
 };

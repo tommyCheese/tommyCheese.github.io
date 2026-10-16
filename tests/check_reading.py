@@ -70,7 +70,7 @@ for locale in LOCALES:
                 target /= 'index.html'
             assert target.is_file(), str(target)
             if not anchor.get('data-language'):
-                assert url.path == '/linux-lab/' or url.path.startswith(prefix + '/'), (locale, url.path)
+                assert url.path == '/linux-lab' + prefix + '/' or url.path.startswith(prefix + '/'), (locale, url.path)
             if url.fragment and target.suffix == '.html':
                 assert read(target).get_element_by_id(unquote(url.fragment), None) is not None
 print('Passed reading checks: 5 homepages, 5 topic directories, 50 articles, series order, bodies and links.')
