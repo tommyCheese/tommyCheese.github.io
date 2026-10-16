@@ -113,7 +113,7 @@ function parseOptions(args, short = '', valued = '', long = {}) {
 }
 
 export class Shell {
-  constructor(state = seedState(), manuals = []) { this.state = clone(state); this.manuals = manuals; }
+  constructor(state = seedState(), manuals = [], localizeContent = value => value) { this.state = clone(state); this.manuals = manuals; this.localizeContent = localizeContent; }
   path(value) { return resolve(value, this.state.cwd); }
   node(value, follow = true, seen = new Set()) {
     const path = this.path(value); const node = this.state.fs[path];
@@ -513,7 +513,7 @@ export class Shell {
         if (o.c) {
           if (!operands.length) fail('tar：缺少要归档的文件'); const entries = {};
           for (const operand of operands) for (const key of this.paths(resolve(operand, root))) if (key !== path) entries[key.slice(root.length + 1)] = clone(s.fs[key]);
-          this.write(path, '[教学归档：' + Object.keys(entries).length + ' 个条目]\n'); s.archives[path] = entries; return output(o.v ? outLines(Object.keys(entries)) : '');
+          this.write(path, this.localizeContent('[教学归档：' + Object.keys(entries).length + ' 个条目]\n')); s.archives[path] = entries; return output(o.v ? outLines(Object.keys(entries)) : '');
         }
         const entries = s.archives[path]; if (!entries) fail('tar：不是沙盒创建的教学归档');
         if (o.t) return output(outLines(Object.keys(entries)));
@@ -523,7 +523,7 @@ export class Shell {
         const { options: o, operands } = parseOptions(args, 'k'); if (!operands.length) fail('压缩命令缺少文件');
         for (const file of operands) {
           const path = this.path(file);
-          if (command === 'gzip') { const text = this.read(path); this.write(path + '.gz', '[教学 gzip]\n'); s.archives[path + '.gz'] = { text }; if (!o.k) delete s.fs[path]; }
+          if (command === 'gzip') { const text = this.read(path); this.write(path + '.gz', this.localizeContent('[教学 gzip]\n')); s.archives[path + '.gz'] = { text }; if (!o.k) delete s.fs[path]; }
           else { const entry = s.archives[path]; if (!path.endsWith('.gz') || typeof entry?.text !== 'string') fail('gunzip：不是教学 gzip 文件'); this.write(path.slice(0, -3), entry.text); if (!o.k) { delete s.fs[path]; delete s.archives[path]; } }
         } return output('');
       }

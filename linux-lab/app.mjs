@@ -1,5 +1,6 @@
 import { goalReference } from './task-copy.mjs';
-import { setupI18n, translate, locale } from './i18n.mjs';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs';
+import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
@@ -9,8 +10,21 @@ import { terminalLabs } from './terminal-labs.mjs';
 import { validLearning, recordPractice, mastery, reviewQueue, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs';
 import { PracticeHistory } from './history.mjs';
-import { Shell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs';
+import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
+
+const contentSources = [
+  ...Object.values(seedState().fs).map(node=>node.text || ''),
+  ...lessons.flatMap(lesson=>Object.values(lesson.seed?.files || {}))
+];
+const localizeContent = createContentLocalizer(catalog,contentSources);
+class Shell extends TeachingShell {
+  constructor(state,manuals) { super(localizeContent(state),manuals,localizeContent); }
+}
+async function localizeSaved(data) {
+  const previous = await loadCatalog(data.contentLocale || 'zh-CN');
+  return createContentLocalizer(catalog,contentSources,previous)(data);
+}
 
 const $ = id => document.getElementById(id);
 setupI18n();
@@ -39,6 +53,7 @@ let storageAvailable = true;
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch { saved = {}; }
 if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+saved = await localizeSaved(saved);
 const completed = new Set(Array.isArray(saved.completed) ? saved.completed.filter(id => ids.has(id)) : []);
 const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites.filter(name => supportedNames.has(name)) : []);
 let currentId = ids.has(saved.current) ? saved.current : lessons[0].id;
@@ -180,7 +195,7 @@ const taskRoute = id => (starterMode ? 'starter/' : 'task/') + id;
 let transfer = saved.transfer && typeof saved.transfer === 'object' ? saved.transfer : {};
 let attempt = { maxHint:0, errors:0, graded:false };
 function makeExercise() {
-  const source = training?.challengeVersion === 1 ? createBossLesson(bosses.find(item => item.id === training.boss), currentId) : lessons.find(item => item.id === currentId);
+  const source = localizeContent(training?.challengeVersion === 1 ? createBossLesson(bosses.find(item => item.id === training.boss), currentId) : lessons.find(item => item.id === currentId));
   const seeded = createLessonShell(Shell, seedState, source);
   if (!training) { lesson = source; return seeded; }
   const varied = varyExercise(source, seeded.state, training.variant);
@@ -275,7 +290,7 @@ function showCompletion(newBoss) {
   $('completion-dialog').showModal();
 }
 function renderComparison(container) {
-  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState);
+  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState, localizeContent);
   const comparison = compareSolutions(shell.state.history, solutionCache);
   container.replaceChildren(element('p',comparison.message,'comparison-note'));
   const columns = element('div',undefined,'solution-columns');
@@ -301,7 +316,7 @@ $('completion-next').addEventListener('click',advanceLesson);
 $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !document.querySelector('dialog:modal')) $('command-input').focus({preventScroll:true}); });
 
 function persist() {
-  const payload = { version: 1, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
+  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
     session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
@@ -485,7 +500,7 @@ function renderSolutionReview() {
     }
     content.append(list);
   }
-  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState);
+  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState, localizeContent);
   const reference = compareSolutions(shell.state.history, solutionCache).reference;
   const normalize = text => text.split('\n').map(line => line.trim()).filter(Boolean).join('\n');
   const used = new Set([normalize(reference?.command || ''), normalize(shell.state.history.join('\n'))]);
@@ -928,7 +943,7 @@ async function importBackup(event) {
   const file = event.target.files[0]; if (!file) return;
   try {
     if (file.size > 30000000) throw new Error('文件超过 30 MB');
-    const data = validateBackup(JSON.parse(await file.text()), ids, supportedNames);
+    const data = await localizeSaved(validateBackup(JSON.parse(await file.text()), ids, supportedNames));
     if (data.version === 1) {
       for (const id of data.completed) completed.add(id);
       for (const name of data.favorites) favorites.add(name);

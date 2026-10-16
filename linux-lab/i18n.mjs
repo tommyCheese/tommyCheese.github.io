@@ -2,10 +2,16 @@ import { languages, localePrefix, createTranslator, languageURL } from './i18n-c
 export const locale = languages.some(item=>item.code === document.documentElement.lang) ? document.documentElement.lang : 'zh-CN';
 const root = new URL('./',import.meta.url);
 export const localeRoot = new URL(localePrefix(locale),root);
-const catalog = locale === 'zh-CN' ? {} : await fetch(new URL('locales/' + locale + '.json',root)).then(response=>{
-  if (!response.ok) throw new Error('Unable to load language: ' + locale);
-  return response.json();
-});
+const catalogs = new Map([['zh-CN',Promise.resolve({})]]);
+export function loadCatalog(code) {
+  if (!languages.some(item=>item.code === code)) code='zh-CN';
+  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json',root)).then(response=>{
+    if (!response.ok) throw new Error('Unable to load language: ' + code);
+    return response.json();
+  }));
+  return catalogs.get(code);
+}
+export const catalog = await loadCatalog(locale);
 export const translate = createTranslator(catalog,locale);
 let initialized = false;
 export function setupI18n() {

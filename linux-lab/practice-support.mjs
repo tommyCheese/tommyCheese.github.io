@@ -128,12 +128,12 @@ function candidates(lesson, initial) {
   if (mode && lesson.command === 'chmod') result.push({command:'chmod ' + mode.value + ' ' + quote(mode.path), note:'使用数字明确设置最终权限'});
   return result;
 }
-export function alternativeSolutions(lesson, initialState) {
+export function alternativeSolutions(lesson, initialState, localizeContent = value => value) {
   const initial = initialState || createLessonShell(Shell, seedState, lesson).state;
   const seen = new Set(); const accepted = [];
   for (const candidate of candidates(lesson, initial)) {
     if (seen.has(candidate.command)) continue; seen.add(candidate.command);
-    const shell = new Shell(initial, manuals); const outputs = new Set(); let result;
+    const shell = new Shell(initial, manuals, localizeContent); const outputs = new Set(); let result;
     for (const line of candidate.command.split('\n')) {
       result = shell.execute(line);
       evaluate(lesson.goals, shell.state, result).forEach((goal, index) => { if (goal.type === 'output' && goal.done) outputs.add(index); });
