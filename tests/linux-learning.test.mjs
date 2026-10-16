@@ -6,18 +6,20 @@ import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
 import { validateBackup, validState } from '../linux-lab/backup.mjs';
 const clean = {maxHint:0, errors:0, graded:false};
 const DAY=86400000, now=20*DAY;
-test('mastery follows successful goals across days regardless of hints and retries',()=>{
+test('cross-day outcomes update memory without prematurely declaring permanent mastery',()=>{
   const records={}; recordPractice(records,'a',clean,'lesson',now);
-  assert.equal(mastery(records.a),'已完成');
+  assert.equal(mastery(records.a,now),'已完成');
+  const due=records.a.dueAt;
   recordPractice(records,'a',clean,'review',now+1000);
-  assert.equal(mastery(records.a),'已完成');
+  assert.equal(records.a.dueAt,due);
   recordPractice(records,'a',clean,'review',now+DAY);
-  assert.equal(mastery(records.a),'已掌握');
-  assert.equal(records.a.dueAt,now+4*DAY);
+  assert.equal(mastery(records.a,now+DAY),'已完成');
+  assert.equal(records.a.retrievals,1);
+  const previous=records.a.memory.halfLife;
   recordPractice(records,'a',{maxHint:3,errors:1},'review',now+5*DAY);
-  assert.equal(mastery(records.a),'已掌握'); assert.equal(records.a.stage,3);
-  assert.equal(records.a.lastOutcome,'passed');
-  assert.equal(records.a.dueAt,now+12*DAY);
+  assert.ok(records.a.memory.halfLife>previous);
+  assert.equal(records.a.stage,2);assert.equal(records.a.lastOutcome,'passed');
+  assert.ok(records.a.dueAt>now+5*DAY);
 });
 test('due queue prioritizes unmeasured progress without penalizing assisted answers',()=>{
   const records={}; recordPractice(records,'a',clean,'lesson',now); recordPractice(records,'b',{maxHint:1,errors:0},'lesson',now);
@@ -33,7 +35,7 @@ test('success has the same assessment after hints or retries and legacy backups 
   for (const outcome of ['independent','hinted','solution','retry']) {
     const legacy={...records.a,lastOutcome:outcome};
     assert.ok(validLearning({a:legacy},new Set(['a'])));
-    assert.equal(mastery(legacy),'已完成');
+    assert.equal(mastery(legacy,now),'已完成');
   }
 });
 test('quiz picks only completed lessons in selected topic without duplication',()=>{
@@ -71,7 +73,7 @@ test('learning and active review survive backup, malformed metadata is rejected'
   assert.throws(()=>validateBackup({...data,learning:{bad:{}}},ids,names));
   assert.throws(()=>validateBackup({...data,session:{...data.session,exercise:{...data.session.exercise,index:3}}},ids,names));
 });
-test('abandoned assisted attempts affect review but never count as a pass',()=>{
+test('explicit relearning affects review but never counts as a pass',()=>{
   const records={}; recordPractice(records,'a',{maxHint:3,errors:2},'review',now,false);
   assert.equal(records.a.passes,0); assert.equal(records.a.attempts,1); assert.equal(records.a.retrievals,0); assert.equal(records.a.dueAt,now+DAY);
 });

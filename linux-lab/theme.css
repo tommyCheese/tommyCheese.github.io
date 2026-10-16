@@ -62,3 +62,6 @@
 [data-theme=dark] .system-section h3{color:#b5c7b3}
 [data-theme=dark] .command-chip,[data-theme=dark] .command-parts a,[data-theme=dark] .help-content dt{color:#91bfda}
 [data-theme=dark] .mission-actions>button:first-child,[data-theme=dark] .solution-example p,[data-theme=dark] .goal-comparison strong{color:#b8c5ad}
+[data-theme=dark] .review-controls select{background:#242c25;border-color:#5d6b51;color:#e0e7df}[data-theme=dark] .review-round-summary{background:#303e2c;border-color:#5d6b51;color:#d3e1c6}[data-theme=dark] .review-controls label,[data-theme=dark] .review-task-actions p,[data-theme=dark] .mastery-records small{color:#acbba4}[data-theme=dark] .review-task-actions button{border-color:#5d6b51;color:#d3e1c6}
+[data-theme=dark] .review-entry{background:#35402f}[data-theme=dark] .review-entry h2{color:#e0e7df}[data-theme=dark] .review-entry p,[data-theme=dark] .review-heading p,[data-theme=dark] .mastery-state{color:#b3c2a8}[data-theme=dark] .review-heading>a{color:#accbce}
+[data-theme=dark] #learning-summary,[data-theme=dark] #review-status{color:#b3c2a8}[data-theme=dark] .mastery-records li,[data-theme=dark] .review-screen .mastery-records{border-color:#465244}

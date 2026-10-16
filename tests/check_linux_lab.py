@@ -12,7 +12,7 @@ for prefix in ['', 'en', 'ja', 'ru', 'zh-TW']:
 lab = html.document_fromstring((ROOT / 'linux-lab/index.html').read_text())
 assert lab.get('lang') == 'zh-CN'
 assert lab.xpath('//link[@rel="canonical"]/@href') == ['https://tommycheese.github.io/linux-lab/']
-assert lab.xpath('//script[@type="module"]/@src') == ['./app.mjs']
+assert [src.split('?')[0] for src in lab.xpath('//script[@type="module"]/@src')] == ['./app.mjs']
 assert lab.xpath('//*[@id="command-input"][@maxlength="4096"]')
 # The practice workspace has one goal guide, separate from the file and terminal panels.
 assert lab.xpath('count(//*[@id="goals"])') == 1

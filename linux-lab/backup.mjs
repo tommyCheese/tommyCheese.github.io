@@ -1,4 +1,4 @@
-import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs';
+import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs?v=20261016-adaptive-review-3';
 const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 100000;
 export function validState(state) {
@@ -24,6 +24,7 @@ export function validHistory(history) {
 }
 export function validateBackup(data, ids, names) {
   if (!object(data) || ![1,2].includes(data.version) || !Array.isArray(data.completed) || !Array.isArray(data.favorites)) throw new Error('备份格式不匹配');
+  if (data.reviewBudget !== undefined && ![180,300,600].includes(data.reviewBudget)) throw new Error('复习时长无效');
   if (data.courseRoute !== undefined && !['starter','full'].includes(data.courseRoute)) throw new Error('学习路线无效');
   if (data.bossCompleted !== undefined && (!Array.isArray(data.bossCompleted) || data.bossCompleted.length > 30 || !data.bossCompleted.every(validBossId))) throw new Error('Boss 挑战记录无效');
   if (data.learning !== undefined && !validLearning(data.learning, ids)) throw new Error('掌握记录无效');
