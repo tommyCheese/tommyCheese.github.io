@@ -118,7 +118,7 @@ export function extendLessonFlows(lessons, makeShell) {
         const command = goal.type === 'link' ? 'readlink ' + quote(path) : 'stat ' + quote(path);
         const check = final.execute(command);
         after.push(command); reuse.add(command.split(' ')[0]);
-        added.push({type:'output',exact:check.stdout.trim(),code:check.code,normalizeFilePath:goal.type !== 'link',label:goal.type === 'link' ? '查看并核对链接指向' : '核对结果文件的路径、大小和权限'});
+        added.push({type:'output',exact:check.stdout.trim(),code:check.code,normalizeFilePath:goal.type !== 'link',statText:node.text,label:goal.type === 'link' ? '查看并核对链接指向' : '核对结果文件的路径、大小和权限'});
         instruction = goal.type === 'link' ? '查看 '+goal.path+' 的链接指向，确认它连接到了目标文件。' : '查看 '+goal.path+' 的文件信息，核对路径、大小和权限；原结果要保留。';
       }
     }
