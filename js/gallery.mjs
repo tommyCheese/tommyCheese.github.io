@@ -75,7 +75,11 @@ if (wall) {
     const groups = narrow ? [1,1,1,1,1,1,1,1,1] : medium ? [2,2,2,2,1] : [3,2,4];
     const patterns = {1:[.49],2:[.26,.74],3:[.15,.49,.84],4:[.12,.37,.64,.88]};
     const slotWidth = width * (narrow ? .85 : medium ? .44 : .26);
-    ropes.replaceChildren(); ropeRows.length = 0; let cursor = 0, rowY = 8, rowIndex = 0, bottom = 0;
+    const maxAspect = Math.max(...[...slots.values()].map(slot => {
+      const image = slot.querySelector('img');
+      return Number(image.getAttribute('height'))/Number(image.getAttribute('width'));
+    }));
+    ropes.replaceChildren(); ropeRows.length = 0; let cursor = 0, rowY = 8, bottom = 0;
     for (const count of groups) {
       const group = ids.slice(cursor,cursor+count); cursor += count;
       if (!group.length) break;
@@ -91,14 +95,14 @@ if (wall) {
         const slot = slots.get(src);
         const center = narrow ? [.46,.54,.48][(cursor-group.length+index)%3] : centers[index];
         const t = (center*width-10)/(width-20), ropeY = 24+2*(1-t)*t*sag;
-        Object.assign(slot.style,{left:center*width-slotWidth/2+'px',top:rowY+ropeY-42.5+'px',width:slotWidth+'px'});
+        Object.assign(slot.style,{left:center*width-slotWidth/2+'px',top:rowY+ropeY-24.5+'px',width:slotWidth+'px'});
         const image = slot.querySelector('img');
         // Reserve the last print's full size, including its rotated corners.
         bottom = Math.max(bottom,rowY+ropeY+slotWidth*(Number(image.height)/Number(image.width)) + 60);
       });
-      // Fixed, closer anchors allow prints to overlap without shifting
-      // the other strings when a photograph is resized.
-      rowY += slotWidth*(rowIndex++ % 2 ? 1 : 1.1)+35;
+      // Leave room for a full-size portrait and its tilted corners, so no
+      // frame crosses the next rope even after resizing or reordering.
+      rowY += slotWidth*maxAspect+100;
     }
     grid.style.height = bottom+'px'; ropes.setAttribute('viewBox',`0 0 ${width} ${bottom}`);
     for (const charm of grid.querySelectorAll('.photo-charm')) updateCharmHook(charm);
@@ -279,7 +283,15 @@ if (wall) {
     const x = parseFloat(charm.style.left)/100*grid.clientWidth;
     const top = parseFloat(charm.style.top)/100*grid.clientHeight-charm.offsetHeight/2;
     // A little hysteresis keeps the hook from flickering at the edge.
-    const offset = charmHook(x,top,grid.clientWidth,ropeRows,charm.classList.contains('is-hooked') ? 22 : 18);
+    let offset = charmHook(x,top,grid.clientWidth,ropeRows,charm.classList.contains('is-hooked') ? 22 : 18);
+    if (offset !== null) {
+      const bounds = grid.getBoundingClientRect(), hookX = bounds.left+x, hookY = bounds.top+top+offset;
+      const covered = [...grid.querySelectorAll('.photo-print')].some(print => {
+        const rect = print.getBoundingClientRect();
+        return hookX >= rect.left-3 && hookX <= rect.right+3 && hookY >= rect.top-3 && hookY <= rect.bottom+3;
+      });
+      if (covered) offset = null;
+    }
     charm.classList.toggle('is-hooked',offset !== null);
     if (offset !== null) {
       charm.style.setProperty('--hook-top',offset-4+'px');
