@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { photoSize, wallLayout, movePhoto, createFlightImage, frameEdges, charmPosition, charmHook, hangingCharmPosition } from '../js/gallery.mjs';
+import { photoSize, wallLayout, movePhoto, createFlightImage, frameEdges, charmPosition, charmHook, hangingCharmPosition, printBounds } from '../js/gallery.mjs';
 
 test('restoring a wall preserves every known photo once despite stale or malformed storage', () => {
   const originals = [{src:'one.jpg',size:82},{src:'two.jpg',size:88},{src:'three.jpg',size:80}];
@@ -68,5 +68,15 @@ test('bear and GPU defaults hang from their rope on wide and narrow walls', () =
       const top = position.y/100*height-charmHeight/2;
       assert.ok(Math.abs(charmHook(x/100*width,top,width,[row])+6) < .001);
     }
+  }
+});
+
+test('rope clearance follows actual print size and includes rotated corners', () => {
+  const compact = printBounds(210,4/3,-3), enlarged = printBounds(260,4/3,-3);
+  assert.ok(compact.bottom < enlarged.bottom-60);
+  for (const angle of [-3.5,0,3.5]) {
+    const bounds = printBounds(260,4/3,angle), h = (260-16)*4/3+34, a = angle*Math.PI/180;
+    const corners = [-130,130].flatMap(x => [0,h].map(y => ({x:x*Math.cos(a)-(y+18)*Math.sin(a),y:x*Math.sin(a)+(y+18)*Math.cos(a)-18})));
+    assert.ok(corners.every(c => c.x >= bounds.left-.001 && c.x <= bounds.right+.001 && c.y <= bounds.bottom+.001));
   }
 });
