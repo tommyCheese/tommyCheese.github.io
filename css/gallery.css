@@ -1,3 +1,91 @@
-.viewer-enabled-image {
-    cursor: zoom-in;
+html:has(.photo-wall) { scrollbar-gutter: stable; }
+.photo-wall.card-group {
+  position: relative; isolation: isolate; display: block; margin: 1.5rem; padding: clamp(16px, 3vw, 32px);
+  border: 1px solid #dcd3c4; border-radius: 22px; color: #584e41;
+  background: radial-gradient(ellipse at 30% 0%, #fffaf1aa, transparent 65%), repeating-linear-gradient(0deg, #00000002 0 1px, transparent 1px 4px), #ece5d8;
+  box-shadow: inset 0 2px 12px #8f806213, 0 12px 40px #40321d08;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+.photo-wall-title {
+  position: absolute; z-index: 0; top: 50%; left: 50%; translate: -50% -50%;
+  width: calc(100% - 32px); margin: 0; padding: 0; text-align: center;
+  font: 700 clamp(1.65rem, 4.5vw, 3.5rem)/1.3 Georgia, "Times New Roman", serif;
+  letter-spacing: .035em; color: #aa874a; opacity: .35;
+  text-shadow: 0 2px 3px #79602b35, 0 -1px 0 #fffaf0;
+  pointer-events: none; user-select: none;
+}
+.photo-wall-toolbar { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 18px; }
+.photo-wall-reset, .photo-rehang { border: 1px solid #a99a8050; border-radius: 99px; padding: .55rem 1rem; color: inherit; background: #ffffff60; font: inherit; font-size: .8rem; cursor: pointer; }
+.photo-grid { position: relative; z-index: 1; }
+.photo-ropes { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.photo-rope { fill: none; stroke: #ad9064; stroke-width: 2.5; filter: drop-shadow(0 2px 1px #58401d35); }
+.photo-ropes circle { fill: #8e7656; filter: drop-shadow(1px 1px 1px #49371c40); }
+.photo-slot { position: absolute; display: flex; justify-content: center; align-items: flex-start; min-width: 0; padding-top: 46px; }
+.photo-tile { position: relative; z-index: 2; flex: 0 0 var(--photo-size,84%); width: var(--photo-size,84%); margin: 0; padding: 0; rotate: var(--photo-tilt,0deg); transform-origin: 50% -18px; transition: width .28s ease, flex-basis .28s ease; }
+[data-photo-frame="ivory"] { --frame-color: #fffdf7; --frame-texture: linear-gradient(#fff3, #fff0); }
+[data-photo-frame="linen"] { --frame-color: #e7dfcf; --frame-texture: repeating-linear-gradient(45deg, #fff3 0 1px, transparent 1px 3px); }
+[data-photo-frame="slate"] { --frame-color: #59626b; --frame-texture: linear-gradient(110deg, #fff2, transparent 45%, #0001); }
+[data-photo-frame="sage"] { --frame-color: #c8cdbb; --frame-texture: linear-gradient(#fff3, #00000008); }
+[data-photo-frame="sand"] { --frame-color: #d7bd98; --frame-texture: repeating-linear-gradient(90deg, #fff2 0 1px, transparent 1px 4px); }
+[data-photo-frame="rose"] { --frame-color: #dfc9c2; --frame-texture: linear-gradient(130deg, #fff4, transparent); }
+[data-photo-frame="silver"] { --frame-color: #bec4c7; --frame-texture: linear-gradient(100deg, #fff5, #0001 45%, #fff3); }
+[data-photo-frame="cream"] { --frame-color: #eee5c9; --frame-texture: repeating-linear-gradient(0deg, #fff2 0 1px, transparent 1px 3px); }
+[data-photo-frame="ink"] { --frame-color: #494846; --frame-texture: linear-gradient(120deg, #fff2, transparent 60%); }
+.photo-print { padding: 8px 8px 26px; border-radius: 3px; background: var(--frame-texture), var(--frame-color, #fffdf7); box-shadow: 1px 4px 7px #392a1830, 0 14px 24px #392a1812; transition: box-shadow .25s ease, opacity .2s; }
+.photo-open { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; touch-action: pan-y; }
+.photo-open img { display: block; width: 100%; height: auto; border-radius: 1px; pointer-events: none; user-select: none; }
+.photo-number { position: absolute; bottom: 7px; left: 12px; color: #b3a99b; font: .62rem ui-monospace, monospace; letter-spacing: .12em; pointer-events: none; }
+.photo-clip { position: absolute; z-index: 3; top: -26px; left: calc(50% - 9px); width: 18px; height: 45px; padding: 0; border: 1px solid #aa8059; border-radius: 3px 3px 5px 5px; background: linear-gradient(90deg,#ca9c68,#efd4a8 40%,#d4af7d 48%,#b18a5b 52%,#e3c28f 65%,#c59c6c); box-shadow: 2px 3px 3px #3a291c38; cursor: grab; touch-action: none; }
+.photo-clip::after { content: ''; position: absolute; left: -2px; top: 20px; width: 20px; height: 4px; border: 1px solid #8f826f; border-radius: 2px; background: #b5aa95; }
+.photo-clip::before { content: ''; position: absolute; inset: -4px -14px; }
+.photo-resize { position: absolute; z-index: 4; bottom: -9px; right: -9px; width: 36px; height: 36px; border: 1px solid #b8a58750; border-radius: 50%; background: #fffdf7e8; color: #8c7b62; cursor: nwse-resize; touch-action: none; font-size: 1.1rem; opacity: .65; transition: opacity .2s; }
+.photo-tile:hover .photo-resize, .photo-resize:focus-visible, .is-resizing .photo-resize { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .photo-resize { opacity: 0; pointer-events: none; }
+  .photo-tile:hover .photo-resize, .photo-resize:focus-visible, .is-resizing .photo-resize { opacity: 1; pointer-events: auto; }
+}
+.photo-slot:hover .photo-print { box-shadow: 1px 6px 10px #392a1835, 0 18px 30px #392a1820; }
+.is-lifted .photo-tile { visibility: hidden; }
+.is-lifted::after { content: ''; position: absolute; top: 46px; bottom: 0; width: var(--photo-size); border: 1px dashed #a28d6e70; rotate: var(--photo-tilt); border-radius: 3px; }
+.is-taken .photo-print, .is-taken .photo-resize, .is-taken .photo-number { visibility: hidden; }
+.is-taken .photo-clip { transform: rotate(-5deg); }
+.is-resizing .photo-tile { transition: none; }
+.photo-drag-ghost { position: fixed; z-index: 3000; pointer-events: none; transition: none; opacity: .97; }
+.photo-flight { position: fixed; z-index: 4; margin: 0; max-width: none !important; max-height: none !important; object-fit: contain; transform-origin: 50% 50%; pointer-events: none; }
+.photo-flight-frame { position: absolute; border-radius: 3px; background: var(--frame-texture), var(--frame-color, #fffdf7); box-shadow: 1px 4px 7px #392a1830, 0 14px 24px #392a1812; }
+.photo-flight > img { position: relative; display: block; width: 100%; height: 100%; max-width: none !important; max-height: none !important; border: 0; border-radius: 1px; }
+.photo-lightbox { width: fit-content; max-width: 94vw; max-height: 94dvh; padding: 12px; border: 0; overflow: visible; background: transparent; color: #fff; }
+body > .photo-lightbox, body > .photo-drag-ghost, body > .photo-flight { background-color: transparent !important; }
+body > .photo-lightbox { color: #fff !important; }
+.photo-lightbox::backdrop { background: #17130e00; backdrop-filter: blur(0); transition: background .4s ease, backdrop-filter .4s ease; }
+.photo-lightbox.is-open::backdrop { background: #17130ed9; backdrop-filter: blur(12px); }
+.photo-large { display: block; width: auto; height: auto; max-width: min(86vw,1100px); max-height: 76dvh; margin: auto; border: 8px solid transparent; background: var(--frame-texture), var(--frame-color, #fffdf7); border-radius: 3px; box-shadow: 0 25px 100px #0008; object-fit: contain; }
+.photo-lightbox-controls { text-align: center; padding-top: 20px; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .3s ease; }
+.photo-lightbox.is-open .photo-lightbox-controls { opacity: 1; transform: translateY(0); }
+.photo-rehang { background: #fff2; border-color: #fff4; color: #fff; font-size: .9rem; padding: .7rem 1.5rem; }
+.photo-rehang:disabled { cursor: default; }
+.photo-clip:focus-visible, .photo-resize:focus-visible, .photo-open:focus-visible { outline: 3px solid #5a89a5; outline-offset: 5px; }
+body.dark .photo-wall { background: radial-gradient(ellipse at 30% 0%,#695d4833,transparent 65%),#302d27; border-color: #655945; color: #ded3bf; }
+body.dark .photo-wall-title { color: #e5c784; text-shadow: 0 2px 4px #0005, 0 -1px 0 #ffefc218; }
+body.dark .photo-wall-reset { background: #ffffff09; }
+@media (max-width: 575px) { .photo-wall.card-group { margin: 1.5rem 1rem; } }
+@media (prefers-reduced-motion: reduce) { .photo-wall *, .photo-lightbox *, .photo-lightbox::backdrop { transition: none !important; } }
+
+.photo-charm {
+  position: absolute; z-index: 3; width: 90px; height: 102px; padding: 0;
+  translate: -50% -50%; rotate: var(--charm-tilt, 0deg); transform-origin: 50% 0;
+  border: 0; background: transparent; cursor: grab; touch-action: none; user-select: none;
+  filter: drop-shadow(2px 5px 3px #392a1830); transition: filter .2s, rotate .25s;
+}
+.photo-charm svg { display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.photo-charm:hover { filter: drop-shadow(3px 8px 5px #392a1840); }
+.photo-charm.is-moving { z-index: 5; rotate: 0deg; cursor: grabbing; transition: none; }
+.photo-charm:focus-visible { outline: 2px solid #5a89a5; outline-offset: 4px; border-radius: 12px; }
+@media (max-width: 575px) { .photo-charm { width: 64px; height: 76px; } }
+
+.photo-charm::before, .photo-charm::after { content: ''; position: absolute; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .18s ease; }
+.photo-charm::before { top: var(--hook-top, -4px); left: calc(50% - 5px); width: 10px; height: 12px; background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2010%2012%22%3E%3Cpath%20d%3D%22M5%2011V8C5%206%202%206%202%203.8C2%20.8%207.8%20.8%207.8%203.8C7.8%205.4%206.4%206.4%205.5%206.4%22%20fill%3D%22none%22%20stroke%3D%22%23726b5d%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.7%2010.5V8C4.7%205.9%201.7%205.8%201.7%203.8C1.7%201%207.4%201%207.4%203.8%22%20fill%3D%22none%22%20stroke%3D%22%23c8c0ad%22%20stroke-width%3D%22.65%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat; filter: drop-shadow(.5px 1px .5px #392a1830); }
+.photo-charm::after { top: calc(var(--hook-top, -4px) + 11px); left: calc(50% - .75px); width: 1.5px; height: var(--hook-length, 12px); background: linear-gradient(90deg, #726b5d, #b4aa96); border-radius: 1px; }
+.photo-charm.is-hooked { rotate: 0deg; }
+.photo-charm.is-hooked::before, .photo-charm.is-hooked::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .photo-charm::before, .photo-charm::after { transition: none; } }

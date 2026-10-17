@@ -346,6 +346,56 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         images.addprevious(label('h2', 'gallery.photos', id='gallery-photos-heading', class_='gallery-photos-heading px-4', data_reading_layout='photos-heading'))
         images.set('role', 'region')
         images.set('aria-labelledby', 'gallery-photos-heading')
+        photos = list(images.iter('img'))
+        for child in list(images):
+            images.remove(child)
+        images.set('class', 'card-group photo-gallery photo-wall')
+        images.append(node('span', '🧀 Tommy Cheese', class_='photo-wall-title', aria_hidden='true'))
+        toolbar = node('div', class_='photo-wall-toolbar')
+        toolbar.append(label('button', 'gallery.resetWall', type='button', class_='photo-wall-reset'))
+        images.append(toolbar)
+        grid = node('div', class_='photo-grid')
+        images.append(grid)
+        for index, photo in enumerate(photos, 1):
+            size = [82, 88, 80][(index - 1) % 3]
+            tilt = [-3, 2.8, -1.7, 2.2, -3.5, 3, -2, 1.8, -2.7][(index - 1) % 9]
+            slot = node('div', class_='photo-slot', data_photo_frame=['ivory', 'linen', 'slate', 'sage', 'sand', 'rose', 'silver', 'cream', 'ink'][(index - 1) % 9], data_photo_src=photo.get('src'), data_photo_size=str(size), style='--photo-size:' + str(size) + '%;--photo-tilt:' + str(tilt) + 'deg')
+            tile = node('figure', class_='photo-tile')
+            clip = node('button', type='button', class_='photo-clip', aria_label=messages['gallery.movePhoto'].replace('{number}', str(index)))
+            tile.append(clip)
+            print_ = node('div', class_='photo-print')
+            open_ = node('button', type='button', class_='photo-open', aria_label=messages['gallery.openPhoto'].replace('{number}', str(index)))
+            photo.set('class', 'viewer-enabled-image')
+            photo.set('alt', '')
+            photo.set('loading', 'lazy')
+            photo.set('decoding', 'async')
+            open_.append(photo)
+            print_.append(open_)
+            tile.append(print_)
+            tile.append(node('span', str(index).zfill(2), class_='photo-number', aria_hidden='true'))
+            tile.append(node('button', '↘', type='button', class_='photo-resize', role='slider', aria_label=messages['gallery.resizePhoto'].replace('{number}', str(index)), aria_valuemin='52', aria_valuemax='100', aria_valuenow=str(size)))
+            slot.append(tile)
+            grid.append(slot)
+        for charm_id, x, y, tilt in [('bear',40,30,-8), ('racer',67,28,5), ('controller',51,48,-4), ('gpu',10,47,6), ('phone',94,44,-5), ('book',53,63,4)]:
+            charm = node('button', type='button', class_='photo-charm', data_charm=charm_id, data_charm_x=str(x), data_charm_y=str(y), aria_label=messages['gallery.moveCharm'].replace('{name}', messages['gallery.charm.' + charm_id]), style='left:' + str(x) + '%;top:' + str(y) + '%;--charm-tilt:' + str(tilt) + 'deg')
+            icon = node('svg', viewBox='0 0 120 120', aria_hidden='true', focusable='false')
+            icon.append(node('use', href='/images/gallery/charms.svg?v=' + revision + '#' + charm_id))
+            charm.append(icon)
+            grid.append(charm)
+        for script in doc.xpath('//script[not(@src)]'):
+            if 'new Viewer(' in (script.text or ''):
+                script.getparent().remove(script)
+        for stylesheet in doc.xpath('//link[starts-with(@href,"/css/gallery.css")]'):
+            stylesheet.set('href', '/css/gallery.css?v=' + revision)
+        for asset in doc.xpath('//script[contains(@src,"/viewer/")] | //link[contains(@href,"/viewer/")]'):
+            asset.getparent().remove(asset)
+        lightbox = node('dialog', id='photo-lightbox', class_='photo-lightbox', aria_label=messages['gallery.photos'], data_reading_layout='photo-lightbox')
+        lightbox.append(node('img', class_='photo-large', alt=''))
+        controls = node('div', class_='photo-lightbox-controls')
+        controls.append(label('button', 'gallery.rehang', type='button', class_='photo-rehang'))
+        lightbox.append(controls)
+        doc.find('body').append(lightbox)
+        doc.find('body').append(node('script', src='/js/gallery.mjs?v=' + revision, type='module', data_reading_layout='gallery-runtime'))
 
     if path == '/topics/':
         directory = doc.get_element_by_id('topics-page')
