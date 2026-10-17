@@ -1,25 +1,6 @@
 {
-  "updated_at": "2026-10-16",
+  "updated_at": "2026-10-17",
   "items": [
-    {
-      "id": "byd-tang-third-generation-cockpit-preview",
-      "category": "cars",
-      "published_at": "2026-10-16",
-      "source": "IT之家",
-      "url": "https://www.ithome.com/1/013/844.htm",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/10/60c62fb4-7506-4f11-afc1-05497a195a81.jpg",
-      "image_credit": "比亚迪 · IT之家"
-    },
-    {
-      "id": "lenovo-legion-r9-keyboard-sale",
-      "category": "devices",
-      "published_at": "2026-10-16",
-      "source": "IT之家",
-      "url": "https://www.ithome.com/1/013/740.htm",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/9/2a8572c8-5722-4d7c-b373-1491cdb0f3fb.jpg",
-      "image_credit": "Lenovo · IT之家",
-      "image_fit": "contain"
-    },
     {
       "id": "prismml-ternary-bonsai2-small-models",
       "category": "ai",
@@ -51,16 +32,6 @@
       "image_fit": "contain"
     },
     {
-      "id": "huawei-20000mah-100w-power-bank",
-      "category": "devices",
-      "published_at": "2026-10-15",
-      "source": "IT之家",
-      "url": "https://www.ithome.com/1/013/186.htm",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/10/3e896851-4038-44ae-94e3-8095107c3c23.jpg",
-      "image_credit": "Huawei · IT之家",
-      "image_fit": "contain"
-    },
-    {
       "id": "google-deep-review-public-release",
       "category": "ai",
       "published_at": "2026-10-14",
@@ -89,15 +60,6 @@
       "image_credit": "Samsung Electronics"
     },
     {
-      "id": "samsung-the-wall-control-rooms",
-      "category": "devices",
-      "published_at": "2026-10-15",
-      "source": "Samsung Newsroom",
-      "url": "https://news.samsung.com/global/from-smart-city-to-race-circuit-samsungs-the-wall-in-control-rooms",
-      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/14151656/Samsung-TVs-and-Displays-Samsung-The-Wall-Control-Rooms_Thumb932.jpg",
-      "image_credit": "Samsung Electronics"
-    },
-    {
       "id": "grok-voice-3-api",
       "category": "ai",
       "published_at": "2026-10-14",
@@ -116,15 +78,6 @@
       "image": "https://assets.gf.com/image/328833518282/image_4ee35772ot5879lie0o53bl61h/-C1350x900%2C225%2C0-S1920x1280-FWEBP",
       "image_credit": "GlobalFoundries",
       "file_photo": true
-    },
-    {
-      "id": "zero-ds-single-charge-record",
-      "category": "cars",
-      "published_at": "2026-10-13",
-      "source": "Zero Motorcycles",
-      "url": "https://zeromotorcycles.com/stories/guinness-world-records-title",
-      "image": "https://images.prismic.io/zero-cms-disco/HnRNb43hB7wzr1hV_zero-team-guinness-certificate-v5_YouTube.jpg?auto=format,compress&rect=0,39,2062,1083&w=1200&h=630",
-      "image_credit": "Zero Motorcycles"
     },
     {
       "id": "sk-hynix-3d-fenand-compute-research",
@@ -153,34 +106,6 @@
       "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud",
       "image": "https://storage.googleapis.com/gweb-cloudblog-publish/images/Gemini_4_argon.max-2500x2500.jpg",
       "image_credit": "Google Cloud"
-    },
-    {
-      "id": "saic-ciif-ai-cockpit-lineup",
-      "category": "cars",
-      "published_at": "2026-10-13",
-      "source": "上汽集团",
-      "url": "https://www.saicmotor.com/chinese/xwzx/xwk/2026/65558.shtml",
-      "image": "https://www.saicmotor.com/chinese/images/xwzx/xwk/2026/2026/10/13/A2D552EC9E8B4C32A79CA6F3230822F8.jpg",
-      "image_credit": "上汽集团"
-    },
-    {
-      "id": "oneplus16-800hz-gyroscope",
-      "category": "devices",
-      "published_at": "2026-10-11",
-      "source": "IT之家",
-      "url": "https://www.ithome.com/1/011/598.htm",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/10/922da7ff-983d-45bf-84a2-a14a12daacc5.jpg",
-      "image_credit": "OnePlus · IT之家",
-      "image_fit": "contain"
-    },
-    {
-      "id": "li-auto-i6-showroom-preview",
-      "category": "cars",
-      "published_at": "2026-10-11",
-      "source": "汽车之家",
-      "url": "https://www.autohome.com.cn/news/202610/1317684.html",
-      "image": "https://g.autoimg.cn/@img/car3/cardfs/product/g33/M01/71/DC/1200x0_1_autohomecar__ChxpVWrItU-AMTXRAFjiDkdOvB8075.jpg",
-      "image_credit": "汽车之家"
     },
     {
       "id": "anthropic-evaluation-internet-safety",
@@ -227,15 +152,6 @@
       "url": "https://news.samsung.com/global/samsung-introduces-smartthings-now-in-new-platform-update-that-brings-more-intuitive-user-experiences",
       "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/01154339/Samsung-Corporate-SmartThings-Now-New-Platform-Update_Thumb932.jpg",
       "image_credit": "Samsung Electronics"
-    },
-    {
-      "id": "bmw-ix3-m60-xdrive",
-      "category": "cars",
-      "published_at": "2026-10-08",
-      "source": "BMW Group",
-      "url": "https://www.press.bmwgroup.com/global/article/detail/T0461463EN?language=en",
-      "image": "https://mediapool.bmwgroup.com/cache/P9/202610/P90659795/P90659795-the-new-bmw-ix3-m60-xdrive-10-2026-2250px.jpg",
-      "image_credit": "BMW Group"
     }
   ]
 }
