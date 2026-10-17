@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>Blog · Tommy Cheese</title>
+    <title>Essays · Tommy Cheese</title>
     <link>https://tommycheese.github.io/en/blogs/</link>
-    <description>Tommy Cheese’s personal blog on software engineering, artificial intelligence, and learning through practice.</description>
+    <description>Tommy Cheese’s personal essays on software engineering, artificial intelligence, and learning through practice.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>

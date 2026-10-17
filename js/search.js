@@ -25,7 +25,7 @@
   };
   const destinations = [
     { title: 'page.home', path: '/', icon: 'home', aliases: ['首页', '主页', '首頁', '主頁', 'home'] },
-    { title: 'nav.blogs', path: '/blogs/', icon: 'book', aliases: ['博客', '部落格', 'blog', 'posts'] },
+    { title: 'nav.blogs', path: '/blogs/', icon: 'book', aliases: ['随笔', '隨筆', '随筆', 'essays', 'notes', 'заметки', '博客', '部落格', 'blog', 'posts'] },
     { title: 'nav.topics', path: '/topics/', icon: 'layers', aliases: ['专题', '專題', 'topics'] },
     { title: 'nav.tags', path: '/tags/', icon: 'tag', aliases: ['标签', '標籤', 'tags'] },
     { title: 'nav.about', path: '/#about', icon: 'user', aliases: ['关于', '關於', 'about'] },

@@ -325,6 +325,28 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         directory.append(label('p', collection + '.filter.empty', id='news-filter-empty', class_='news-filter-empty', hidden='hidden'))
         doc.find('body').append(node('script', src='/js/reading.js?v=' + revision, defer='defer', data_reading_layout='runtime'))
 
+    if path == '/gallery/':
+        directory = doc.get_element_by_id('list-page')
+        for heading in directory.xpath('./h6'):
+            if heading.text_content().strip() == '🌏':
+                heading.getparent().remove(heading)
+        laboratory = node('section', id='laboratory', class_='laboratory p-4', data_reading_layout='laboratory', aria_labelledby='laboratory-heading')
+        laboratory.append(label('h2', 'lab.title', id='laboratory-heading'))
+        product = node('a', href='/linux-lab/', class_='lab-product')
+        product.append(node('span', '$ _', class_='lab-product-icon', aria_hidden='true'))
+        copy = node('div', class_='lab-product-copy')
+        copy.append(label('span', 'lab.productLabel', class_='lab-product-label'))
+        copy.append(label('h3', 'nav.linuxLab'))
+        copy.append(label('p', 'lab.linuxDescription'))
+        copy.append(label('span', 'lab.open', class_='lab-product-action'))
+        product.append(copy)
+        laboratory.append(product)
+        images = directory.xpath('./div[contains(@class,"card-group")]')[0]
+        images.addprevious(laboratory)
+        images.addprevious(label('h2', 'gallery.photos', id='gallery-photos-heading', class_='gallery-photos-heading px-4', data_reading_layout='photos-heading'))
+        images.set('role', 'region')
+        images.set('aria-labelledby', 'gallery-photos-heading')
+
     if path == '/topics/':
         directory = doc.get_element_by_id('topics-page')
         directory.clear()

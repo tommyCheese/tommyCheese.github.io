@@ -129,7 +129,7 @@ test('deleting a character after IME confirmation triggers matching posts', asyn
 test('opening search shows navigation and clearing a query restores it', async () => {
   const ui = searchUI();
   await ui.open();
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
+  assert.deepEqual(ui.titles(), ['首页', '随笔', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
   await ui.input.emit('keydown', { key: 'ArrowRight' });
   assert.equal(ui.input.attributes['aria-activedescendant'], ui.options()[1].id);
   await ui.input.emit('keydown', { key: 'ArrowDown' });
@@ -141,13 +141,13 @@ test('opening search shows navigation and clearing a query restores it', async (
   await ui.input.emit('input');
   ui.input.value = '';
   await ui.input.emit('input');
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
+  assert.deepEqual(ui.titles(), ['首页', '随笔', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
 });
 
 test('page keywords and aliases return the corresponding destinations', async () => {
   const ui = searchUI();
   await ui.open();
-  for (const [query, href] of [['首页', '/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/'], ['今日要闻', '/news/'], ['news', '/news/'], ['前沿研究', '/research/'], ['AI Agent', '/research/'], ['论文', '/research/'], ['conferences', '/research/']]) {
+  for (const [query, href] of [['首页', '/'], ['随笔', '/blogs/'], ['Essays', '/blogs/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/'], ['今日要闻', '/news/'], ['news', '/news/'], ['前沿研究', '/research/'], ['AI Agent', '/research/'], ['论文', '/research/'], ['conferences', '/research/']]) {
     ui.input.value = query;
     await ui.input.emit('input');
     assert.equal(ui.options()[0].href, href, query);
@@ -219,7 +219,7 @@ test('a stale article response cannot replace the latest query', async () => {
   await ui.input.emit('input');
   resolveIndex([{ title: '博客文章', permalink: '/blogs/example/' }]);
   await pending;
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
+  assert.deepEqual(ui.titles(), ['首页', '随笔', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
 });
 
 test('the gallery index entry is not presented as an article', async () => {
