@@ -36,6 +36,14 @@ export function hangingCharmPosition(x, row, width, height, charmHeight) {
   return {x,y:(row.y+2*(1-t)*t*row.sag+charmHeight/2+6)/height*100};
 }
 
+export function printBounds(width, aspect, angle) {
+  const height = (width-16)*aspect+34, radians = angle*Math.PI/180;
+  const sine = Math.sin(radians), cosine = Math.cos(radians);
+  const halfWidth = (width*cosine+height*Math.abs(sine))/2;
+  const center = -(height/2+18)*sine;
+  return {left:center-halfWidth,right:center+halfWidth,bottom:(height+18)*cosine-18+width/2*Math.abs(sine)};
+}
+
 export const frameEdges = (values, scale = 1) => Object.fromEntries(['top','right','bottom','left'].map((side,i) => [side,-values[i]/scale+'px']));
 
 export function createFlightImage(image) {
@@ -75,15 +83,12 @@ if (wall) {
     const groups = narrow ? [1,1,1,1,1,1,1,1,1] : medium ? [2,2,2,2,1] : [3,2,4];
     const patterns = {1:[.49],2:[.26,.74],3:[.15,.49,.84],4:[.12,.37,.64,.88]};
     const slotWidth = width * (narrow ? .85 : medium ? .44 : .26);
-    const maxAspect = Math.max(...[...slots.values()].map(slot => {
-      const image = slot.querySelector('img');
-      return Number(image.getAttribute('height'))/Number(image.getAttribute('width'));
-    }));
     ropes.replaceChildren(); ropeRows.length = 0; let cursor = 0, rowY = 8, bottom = 0;
     for (const count of groups) {
       const group = ids.slice(cursor,cursor+count); cursor += count;
       if (!group.length) break;
       const centers = patterns[group.length], sag = narrow ? 44 : 64;
+      let nextRowY = rowY;
       ropeRows.push({y:rowY+24,sag});
       const path = document.createElementNS(svgNS,'path');
       path.setAttribute('d',`M 10 ${rowY+24} Q ${width/2} ${rowY+24+sag} ${width-10} ${rowY+24}`);
@@ -97,12 +102,17 @@ if (wall) {
         const t = (center*width-10)/(width-20), ropeY = 24+2*(1-t)*t*sag;
         Object.assign(slot.style,{left:center*width-slotWidth/2+'px',top:rowY+ropeY-24.5+'px',width:slotWidth+'px'});
         const image = slot.querySelector('img');
-        // Reserve the last print's full size, including its rotated corners.
-        bottom = Math.max(bottom,rowY+ropeY+slotWidth*(Number(image.height)/Number(image.width)) + 60);
+        const bounds = printBounds(slotWidth*sizeOf(slot)/100,Number(image.getAttribute('height'))/Number(image.getAttribute('width')),parseFloat(slot.style.getPropertyValue('--photo-tilt')) || 0);
+        const photoBottom = rowY+ropeY+21.5+bounds.bottom;
+        const edgeSag = [bounds.left,bounds.right].map(edge => {
+          const point = Math.max(0,Math.min(1,(center*width+edge-10)/(width-20)));
+          return 2*(1-point)*point*sag;
+        });
+        nextRowY = Math.max(nextRowY,photoBottom+14-24-Math.min(...edgeSag));
+        bottom = Math.max(bottom,photoBottom+24);
       });
-      // Leave room for a full-size portrait and its tilted corners, so no
-      // frame crosses the next rope even after resizing or reordering.
-      rowY += slotWidth*maxAspect+100;
+      // Fit the next curved rope around the actual prints, including tilt.
+      rowY = nextRowY;
     }
     grid.style.height = bottom+'px'; ropes.setAttribute('viewBox',`0 0 ${width} ${bottom}`);
     for (const charm of grid.querySelectorAll('.photo-charm')) updateCharmHook(charm);
@@ -231,7 +241,7 @@ if (wall) {
         g.ghost.inert = true; edgeScroll(g);
       } else g.slot.classList.add('is-resizing');
     }
-    if (g.mode === 'resize') setSize(g.slot, g.size + dx/g.slot.clientWidth*200);
+    if (g.mode === 'resize') { setSize(g.slot, g.size + dx/g.slot.clientWidth*200); layoutWall(); }
     else {
       g.ghost.style.translate = dx+'px '+dy+'px';
       updateDropTarget(g,event.clientX,event.clientY);
@@ -264,7 +274,7 @@ if (wall) {
     if (!handle || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) return;
     event.preventDefault();
     const slot = handle.closest('.photo-slot'), forward = ['ArrowRight','ArrowDown'].includes(event.key);
-    if (handle.classList.contains('photo-resize')) setSize(slot,sizeOf(slot)+(forward?3:-3));
+    if (handle.classList.contains('photo-resize')) { setSize(slot,sizeOf(slot)+(forward?3:-3)); layoutWall(); }
     else {
       const ids = order(), index = ids.indexOf(slot.dataset.photoSrc), columns = grid.clientWidth < 500 ? 1 : grid.clientWidth < 850 ? 2 : 3;
       const offset = ['ArrowUp','ArrowDown'].includes(event.key) ? columns : 1, target = ids[index+(forward?offset:-offset)];
