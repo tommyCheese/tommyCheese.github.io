@@ -1,18 +1,17 @@
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
-import { goalReference } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-welcome-language-1';
+import { goalReference, goalEntries } from './task-copy.mjs';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-goal-order-1';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
-import { terminalLabs } from './terminal-labs.mjs';
 import { createReviewLesson, skillLabel } from './review-exercises.mjs';
 import { migrateLearning, reviewPlan, reviewTimeReached, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261016-adaptive-review-3';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261016-adaptive-review-3';
 import { PracticeHistory } from './history.mjs';
-import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs';
+import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261017-linux-filesystem-1';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
 
 const contentSources = [
@@ -462,16 +461,18 @@ function renderTask() {
   $('task-goal-button').hidden = sandbox;
   $('goals').replaceChildren();
   document.querySelector('.mission-target').hidden = sandbox;
-  if (!sandbox) for (const [index, goal] of goalChecks.entries()) {
+  if (!sandbox) for (const [index, goal] of goalEntries(goalChecks)) {
     const item = element('li', undefined, goal.done ? 'done' : '');
+    item.dataset.goalIndex = index;
     const check = element('span', goal.done ? '✓' : '', 'goal-check'); check.setAttribute('aria-hidden', 'true');
     const label = element('div', goal.label, 'goal-copy'); if (goal.done) label.append(element('span', '（已达成）', 'sr-only'));
-    if (goal.path && !goal.label.includes(goal.path)) label.append(element('code', goal.path, 'goal-path'));
+    if (goal.path && !goal.label.includes(goal.path) && !goal.label.includes(goal.path.replace(HOME,'~'))) label.append(element('code', goal.path, 'goal-path'));
     const reference = goalReference(goal);
     if (reference) {
       const details = element('details', undefined, 'goal-reference');
       rememberGoalExpansion(details, 'reference/' + index);
       details.append(element('summary', reference.title), element('pre', reference.text));
+      if (reference.note) details.append(element('p', reference.note));
       label.append(details);
     }
     const difference = hintVisible && lastResult.commands?.length ? goalDifference(goal, shell.state, lastResult) : null;
@@ -639,7 +640,7 @@ function renderWorld(animateChanges = false) {
       shape('M47 5 V18 Q47 21 50 21 H62 Z', '#e8edf2', '#c6cbd1');
       for (const y of [31, 37, 43]) shape(`M25 ${y} H54`, 'none', '#dce2e7');
       const suffix = path.split('.').pop().toLowerCase();
-      const tag = element('span', node.type === 'link' ? '↗' : ({sh:'SH',csv:'CSV',tar:'TAR',gz:'GZ'}[suffix] || 'TXT'), 'finder-file-tag');
+      const tag = element('span', node.type === 'link' ? '↗' : node.binary ? 'EXE' : node.device ? 'DEV' : ({sh:'SH',csv:'CSV',tar:'TAR',gz:'GZ'}[suffix] || 'TXT'), 'finder-file-tag');
       button.append(tag);
     }
     button.append(icon, element('span', path.split('/').pop(), 'finder-name'));
@@ -656,8 +657,8 @@ function renderWorld(animateChanges = false) {
   $('file-preview').hidden = !previewPath || !s.fs[previewPath];
   if (previewPath && s.fs[previewPath]) {
     const node = s.fs[previewPath]; $('preview-name').textContent = previewPath.split('/').pop();
-    $('preview-meta').textContent = `权限 ${node.mode} · ${node.owner} · ${node.type === 'link' ? '符号链接' : '文本文件'}`;
-    try { $('preview-text').textContent = node.type === 'link' ? '→ ' + node.target + '\n\n' + shell.read(previewPath) : node.text; }
+    $('preview-meta').textContent = `权限 ${node.mode} · ${node.owner} · ${node.type === 'link' ? '符号链接' : node.binary ? 'ELF' : node.device ? 'DEV' : '文本文件'}`;
+    try { $('preview-text').textContent = node.type === 'link' ? '→ ' + node.target + '\n\n' + shell.read(previewPath) : node.binary ? 'ELF 64-bit LSB executable\n' + previewPath : node.text; }
     catch (error) { $('preview-text').textContent = error.message; }
   }
   $('system-view').replaceChildren();
@@ -747,6 +748,13 @@ function practiceSnapshot() {
 function restorePractice(snapshot) {
   shell = new Shell(snapshot.state, manuals);
   ({ transcript, hint, goalChecks, lastResult, browsePath, previewPath } = snapshot);
+  if (mode === 'learn') {
+    const previous = goalChecks;
+    goalChecks = evaluate(lesson.goals, shell.state, lastResult);
+    for (const goal of goalChecks) if (goal.type === 'output' && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) {
+      if (previous.some(old => old.done && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key]))) goal.done = true;
+    }
+  }
   hintVisible = hint > 0 && snapshot.hintVisible !== false;
   changes = new Set(snapshot.changes);
 }
@@ -808,7 +816,7 @@ function executeCommand(command) {
     }
   }
   renderTask();
-  for (const index of achievedGoals) reveal($('goals').children[index].querySelector('.goal-check'), 0);
+  for (const index of achievedGoals) reveal($('goals').querySelector('[data-goal-index="' + index + '"] .goal-check'), 0);
   updatePrompt(); renderWorld(true); updatePracticeActions(); persist();
   const stages=pipelineStages(command,beforeState,manuals);
   $('pipeline-flow').hidden=!stages.length; $('pipeline-flow').open=false; $('pipeline-stages').replaceChildren();
@@ -913,21 +921,6 @@ $('review-relearn').addEventListener('click',()=> {
 });
 $('review-skip').addEventListener('click',()=> { if (training?.kind==='review') { recordReviewResult(attempt.relearning?'relearn':'skipped'); advanceLesson(); } });
 $('review-finish').addEventListener('click',finishReview);
-for (const chapter of chapters) { const option = element('option', chapter.title); option.value = chapter.id; $('transfer-topic').append(option); }
-function renderTransfer(choose = true) {
-  if (choose) $('transfer-topic').value = lesson.chapter;
-  const chapter = $('transfer-topic').value; const lab = terminalLabs[chapter];
-  $('transfer-setup').textContent = 'LAB_DIR=$(mktemp -d)\ncd "$LAB_DIR"\n' + lab.setup;
-  $('transfer-goal').textContent = lab.goal; $('transfer-check').textContent = lab.check;
-  $('transfer-difference').textContent = lab.difference; $('transfer-solution').textContent = lab.solution;
-  $('transfer-done').checked = !!transfer[chapter]?.done;
-  $('transfer-status').textContent = transfer[chapter]?.done ? '已保存自评，不计入沙盒掌握判定' : '';
-  $('transfer-solution').parentElement.open = false;
-}
-$('transfer-topic').addEventListener('change', () => renderTransfer(false));
-$('transfer-done').addEventListener('change', () => { transfer[$('transfer-topic').value] = { done:$('transfer-done').checked, at:Date.now() }; persist(); renderTransfer(false); });
-$('transfer-button').addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } renderTransfer(); $('transfer-dialog').showModal(); });
-$('transfer-close').addEventListener('click', () => $('transfer-dialog').close());
 $('course-search').addEventListener('input', renderChapters);
 $('files-tab').addEventListener('click', () => setWorldTab(false));
 $('system-tab').addEventListener('click', () => setWorldTab(true));
@@ -941,7 +934,6 @@ function navigate(hash, initial = false, {showGuide = true} = {}) {
   if ($('levels-dialog').open) $('levels-dialog').close();
   if ($('restart-dialog').open) $('restart-dialog').close();
   if ($('help-dialog').open) $('help-dialog').close();
-  if ($('transfer-dialog').open) $('transfer-dialog').close();
   const [view, id] = hash.replace(/^#/, '').split('/'); const previousMode = mode;
   if (view === 'manual') {
     if (shell) persist();
@@ -1226,6 +1218,7 @@ window.addEventListener('storage', event => {
   if (event.key !== KEY) return;
   try {
     const data = JSON.parse(event.newValue || '{}');
+    transfer = data.transfer && typeof data.transfer === 'object' ? data.transfer : {};
     favorites.clear();
     for (const name of Array.isArray(data.favorites) ? data.favorites : []) if (supportedNames.has(name)) favorites.add(name);
   } catch {}

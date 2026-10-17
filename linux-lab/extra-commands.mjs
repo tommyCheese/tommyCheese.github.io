@@ -1,3 +1,4 @@
+import { findExecutable, shellBuiltins } from './linux-filesystem.mjs';
 // Small, documented teaching subsets; never invoke the host system.
 const fail = message => { throw new Error(message); };
 const rows = text => text ? text.replace(/\n$/, '').split('\n') : [];
@@ -89,9 +90,12 @@ export function runExtra(shell, command, args, stdin) {
     case 'sleep': if(args.length!==1||!/^\d+(\.\d+)?$/.test(args[0]))fail('sleep：只支持非负秒数');return output('');
     case 'which': case 'type': {
       if(!args.length)fail(command+'：缺少命令名'); plain();
-      const builtins=new Set(['cd','pwd','echo','printf','export','unset','help','history','type','true','false','test','umask']);
-      for(const name of args) if(!shell.manuals.some(item=>item.name===name&&item.practice)||command==='which'&&builtins.has(name))fail(name+'：未找到');
-      return output(args.map(name=>command==='type'?builtins.has(name)?`${name} is a shell builtin`:`${name} is /usr/bin/${name}`:'/usr/bin/'+name));
+      return output(args.map(name=> {
+        if (command === 'type' && shellBuiltins.has(name)) return `${name} is a shell builtin`;
+        const path = findExecutable(shell,name);
+        if (!path) fail(name+'：未找到');
+        return command === 'type' ? `${name} is ${path}` : path;
+      }));
     }
     case 'nproc': if(args.length)fail('nproc：只支持无参数');return output('4\n');
     case 'groups': if(args.length)fail('groups：只支持当前用户');return output('learner sudo\n');

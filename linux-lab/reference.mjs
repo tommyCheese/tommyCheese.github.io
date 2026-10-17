@@ -1,5 +1,5 @@
 import { lessons } from './curriculum.mjs';
-import { setupI18n, localeRoot } from './i18n.mjs';
+import { setupI18n, localeRoot, translate } from './i18n.mjs';
 setupI18n();
 const KEY = 'tommy-cheese-linux-lab-v1';
 function readSaved() {
@@ -31,10 +31,15 @@ function filterCommands() {
     item.hidden = !((!query || item.dataset.search.toLowerCase().includes(query)) && (!level || item.dataset.level === level) && (!category || item.dataset.category === category) && (!onlyFavorites || favorites.has(item.dataset.command)));
     if (!item.hidden) count++;
   }
-  for (const section of document.querySelectorAll('#content > section')) section.hidden = !section.querySelector('[data-command]:not([hidden])');
+  let practiceOnlyVisible = false;
+  for (const section of document.querySelectorAll('#content > section')) {
+    const practiceOnly = !section.querySelector('[data-command]') && (!category || section.dataset.topic === category) && !query && !level && !onlyFavorites;
+    practiceOnlyVisible ||= practiceOnly;
+    section.hidden = !practiceOnly && !section.querySelector('[data-command]:not([hidden])');
+  }
   const result = document.getElementById('reference-results');
   result.hidden = false;
-  result.textContent = count ? count + ' 条命令' : '没有匹配的命令。';
+  result.textContent = count ? count + ' 条命令' : practiceOnlyVisible ? translate('真实终端练习') : '没有匹配的命令。';
 }
 function updateFavoriteButtons() {
   const favorites = favoriteNames();
@@ -65,3 +70,25 @@ window.addEventListener('storage', () => { updateReturnLink(); updateFavoriteBut
 updateReturnLink(); updateFavoriteButtons();
 // Reapply filters after the browser restores form values on Back/Forward.
 window.addEventListener('pageshow', () => { updateReturnLink(); updateFavoriteButtons(); filterCommands(); });
+
+function updateTerminalRecords() {
+  const records = readSaved().transfer || {};
+  for (const checkbox of document.querySelectorAll('[data-terminal-done]')) {
+    checkbox.closest('[data-terminal-record]').hidden = false;
+    checkbox.checked = !!records[checkbox.dataset.terminalDone]?.done;
+  }
+}
+for (const checkbox of document.querySelectorAll('[data-terminal-done]')) checkbox.addEventListener('change', () => {
+  const data = readSaved();
+  const status = checkbox.closest('.terminal-practice').querySelector('[data-terminal-status]');
+  try {
+    localStorage.setItem(KEY, JSON.stringify({...data, transfer:{...data.transfer, [checkbox.dataset.terminalDone]:{done:checkbox.checked,at:Date.now()}}}));
+    status.textContent = checkbox.checked ? translate('已保存自评，不计入沙盒掌握判定') : '';
+  } catch {
+    updateTerminalRecords();
+    status.textContent = translate('无法保存自评，请检查浏览器存储设置。');
+  }
+});
+window.addEventListener('storage', updateTerminalRecords);
+window.addEventListener('pageshow', updateTerminalRecords);
+updateTerminalRecords();

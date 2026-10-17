@@ -1,3 +1,4 @@
+import { goalEntries } from './task-copy.mjs';
 import { Shell, resolve, tokenize } from './shell.mjs';
 
 const introductions = {
@@ -107,7 +108,7 @@ export function nextTransition(lesson, next) {
 
 export function stateHint(lesson, state, checks, tier=1, result={}) {
   if (tier >= 3) return lesson.hints[2];
-  const goal = checks.find(goal=>!goal.done);
+  const goal = goalEntries(checks).map(([,goal])=>goal).find(goal=>!goal.done);
   if (!goal) return '目标都完成了！可以看看自己的解法，再去挑战下一关。';
   const path = goal.path && resolve(goal.path), node = state.fs[path];
   const display = value => value?.replace('/home/learner','~');

@@ -1,14 +1,15 @@
+import { clarifyGoalLabels } from './task-copy.mjs';
 // A Boss is one persistent workspace with simultaneous outcome constraints.
 // The tier adds recovery and safety requirements, rather than a command whitelist.
 export function createBossLesson(boss, id) {
   const advanced = boss.level !== 'common', master = boss.level === 'master';
   const goals = [], solution = [], files = {}, dirs = [], setup = [];
-  const file = (path, text, label = path + (text === '' ? ' 为空文件' : '：' + text.trimEnd().replace(/\n/g, ' ↵ '))) => goals.push({type:'file',path,text,label});
+  const file = (path, text, label = text === '' ? '确保 ' + path + ' 为空文件' : '使文件 ' + path + ' 的内容与目标内容完全一致') => goals.push({type:'file',path,text,label});
   const keep = (path, text) => file(path,text,'保留原件：' + path);
   const mode = (path,value) => goals.push({type:'mode',path,value,label:path + ' 权限为 ' + value});
   const absent = path => goals.push({type:'absent',path,label:'移除 ' + path});
   const archive = (path,contents) => goals.push({type:'archive',path,entries:Object.keys(contents),contents,exact:true,label:path + ' 仅含 ' + Object.keys(contents).join('、')});
-  const report = (path,includes) => goals.push({type:'file',path,includes,label:path + ' 包含 ' + includes});
+  const report = (path,includes,source) => goals.push({type:'file',path,includes,label:'将' + source + '保存到 ' + path});
   const service = (property,value) => goals.push({type:'service',name:'nginx',property,value,label:'nginx ' + (property === 'active' ? '运行中' : '开机启动')});
   let title, context;
   switch (boss.chapter) {
@@ -16,8 +17,8 @@ export function createBossLesson(boss, id) {
       title='迷路的交接包'; context='将 projects/交接 包/draft/notes.txt 复制到同项目的 release 目录，保留原件；完成后停留在 release。';
       files['projects/交接 包/.route']='目标：/home/learner/projects/交接 包/release\n';
       files['projects/交接 包/draft/notes.txt']='approved\n'; dirs.push('projects/交接 包/release');
-      file('projects/交接 包/release/notes.txt','approved\n'); keep('projects/交接 包/draft/notes.txt','approved\n');
-      goals.push({type:'cwd',path:'projects/交接 包/release',label:'最终位置：~/projects/交接 包/release'});
+      file('projects/交接 包/release/notes.txt','approved\n','将 projects/交接 包/draft/notes.txt 复制到同项目的 release 目录，文件内容保持为 approved'); keep('projects/交接 包/draft/notes.txt','approved\n');
+      goals.push({type:'cwd',path:'projects/交接 包/release',label:'最终位置：~/projects/交接 包/release',displayOrder:1});
       solution.push('cp "projects/交接 包/draft/notes.txt" "projects/交接 包/release/"');
       if(advanced) { file('projects/交接 包/release/route.txt','/home/learner/projects/交接 包/release\n'); solution.push('realpath "projects/交接 包/draft/../release" > "projects/交接 包/release/route.txt"'); }
       if(master) { goals.push({type:'link',path:'current-release',target:'projects/交接 包/release',label:'current-release 是指向交付目录的链接'}); solution.push('ln -s "projects/交接 包/release" current-release'); file('projects/交接 包/release/manifest.txt','approved\n');solution.push('cat "projects/交接 包/draft/notes.txt" > "projects/交接 包/release/manifest.txt"'); }
@@ -26,7 +27,7 @@ export function createBossLesson(boss, id) {
       title='清理而不误删';context='将 staging/spec.txt 和 staging/meeting notes.txt 复制到 release/docs；删除 staging 下两层以内的普通 .tmp 文件，保留原件、深层文件与相似后缀文件。';
       Object.assign(files,{'staging/spec.txt':'spec v2\n','staging/meeting notes.txt':'approved\n','staging/a.tmp':'discard\n','staging/sub/b.tmp':'discard\n','staging/sub/deep/c.tmp':'keep\n','staging/main.tmp.txt':'keep\n'});
       file('release/docs/spec.txt','spec v2\n');file('release/docs/meeting notes.txt','approved\n');
-      absent('staging/a.tmp');absent('staging/sub/b.tmp');keep('staging/sub/deep/c.tmp','keep\n');keep('staging/main.tmp.txt','keep\n');keep('staging/spec.txt','spec v2\n');
+      absent('staging/a.tmp');absent('staging/sub/b.tmp');keep('staging/sub/deep/c.tmp','keep\n');keep('staging/main.tmp.txt','keep\n');keep('staging/spec.txt','spec v2\n');keep('staging/meeting notes.txt','approved\n');
       solution.push('mkdir -p release/docs','cp staging/spec.txt "staging/meeting notes.txt" release/docs/','find staging -maxdepth 2 -type f -name "*.tmp" -delete');
       if(advanced) { files['staging/obsolete.txt']='old\n';absent('staging/obsolete.txt'); file('release/previous/spec.txt','spec v2\n');solution.push('mkdir -p release/previous','cp staging/spec.txt release/previous/','rm staging/obsolete.txt'); }
       if(master) { file('release/docs/spec.txt','spec v3\n');goals.splice(0,1);solution.push('sed -i "s/v2/v3/" release/docs/spec.txt');mode('release/previous/spec.txt','444');solution.push('chmod 444 release/previous/spec.txt'); }
@@ -66,24 +67,24 @@ export function createBossLesson(boss, id) {
       break;
     case 'system':
       title='故障现场留证';context='先将进程列表保存到 reports/processes.txt、磁盘空间保存到 reports/disk.txt，再结束 worker；保留 systemd 和 bash 进程。';
-      report('reports/processes.txt','314 worker');report('reports/disk.txt','16G');goals.push({type:'processAbsent',name:'worker',label:'worker 已结束'}, {type:'processPresent',name:'systemd',label:'systemd 仍运行'}, {type:'processPresent',name:'bash',label:'bash 仍运行'});
+      report('reports/processes.txt','314 worker','结束 worker 前的进程列表');report('reports/disk.txt','16G','磁盘空间信息');goals.push({type:'processAbsent',name:'worker',label:'worker 已结束'}, {type:'processPresent',name:'systemd',label:'systemd 仍运行'}, {type:'processPresent',name:'bash',label:'bash 仍运行'});
       solution.push('mkdir reports','ps aux > reports/processes.txt','df -h > reports/disk.txt','pkill worker');
-      if(advanced) { report('reports/memory.txt','Mem:');file('reports/kernel.txt','6.8.0\n');solution.push('free -m > reports/memory.txt','uname -r > reports/kernel.txt'); }
-      if(master) { report('reports/mounts.txt','/dev/sda1');report('reports/pressure.txt','si so bi bo');solution.push('findmnt > reports/mounts.txt','vmstat > reports/pressure.txt');mode('reports','700');solution.push('chmod 700 reports'); }
+      if(advanced) { report('reports/memory.txt','Mem:','内存使用信息');file('reports/kernel.txt','6.8.0\n');solution.push('free -m > reports/memory.txt','uname -r > reports/kernel.txt'); }
+      if(master) { report('reports/mounts.txt','/dev/sda1','挂载信息');report('reports/pressure.txt','si so bi bo','虚拟内存统计');solution.push('findmnt > reports/mounts.txt','vmstat > reports/pressure.txt');mode('reports','700');solution.push('chmod 700 reports'); }
       break;
     case 'network':
       title='网络排查证据链';context='将网卡地址、默认路由、example.com 的 DNS 查询分别保存到 reports/address.txt、route.txt、dns.txt；下载 https://example.com/health 到 reports/health.txt。';
-      report('reports/address.txt','192.0.2.10/24');report('reports/route.txt','default via 192.0.2.1');report('reports/dns.txt','192.0.2.20');file('reports/health.txt','ok\n');
+      report('reports/address.txt','192.0.2.10/24','网卡地址信息');report('reports/route.txt','default via 192.0.2.1','默认路由信息');report('reports/dns.txt','192.0.2.20','example.com 的 DNS 查询结果');file('reports/health.txt','ok\n');
       solution.push('mkdir reports','ip addr > reports/address.txt','ip route > reports/route.txt','dig example.com > reports/dns.txt','curl -o reports/health.txt https://example.com/health');
-      if(advanced) { report('reports/headers.txt','200 OK');file('reports/config.json','{"port":8080}\n');solution.push('curl -I https://example.com/health > reports/headers.txt','curl -sSfL -o reports/config.json https://example.com/config.json'); }
+      if(advanced) { report('reports/headers.txt','200 OK','https://example.com/health 的响应头');file('reports/config.json','{"port":8080}\n');solution.push('curl -I https://example.com/health > reports/headers.txt','curl -sSfL -o reports/config.json https://example.com/config.json'); }
       if(master) { file('reports/ports.txt','8080\n');solution.push('ss -tlnp | grep worker | awk \'{print $3}\' | cut -d : -f 2 > reports/ports.txt');archive('network-evidence.tar',{'health.txt':'ok\n','config.json':'{"port":8080}\n','ports.txt':'8080\n'});solution.push('tar -cf network-evidence.tar -C reports health.txt config.json ports.txt'); }
       break;
     case 'services':
       title='从停机到可交付';context='启动 nginx 并设置开机启动；提取 nginx 服务日志中的 ERROR 行，保存到 reports/errors.txt。';
       service('active',true);service('enabled',true);file('reports/errors.txt','ERROR upstream timeout\n');
       solution.push('systemctl start nginx','systemctl enable nginx','mkdir reports','journalctl -u nginx | grep ERROR > reports/errors.txt');
-      if(advanced) { goals.push({type:'package',name:'nginx',label:'nginx 软件包已安装'});report('reports/listener.txt','0.0.0.0:80 nginx');solution.push('apt install nginx','ss -tlnp | grep nginx > reports/listener.txt'); }
-      if(master) { file('/etc/app.conf','PORT=8080\nDEBUG=false\n');file('reports/config.before','PORT=3000\nDEBUG=true\n');solution.push('cp /etc/app.conf reports/config.before','sed -i "s/3000/8080/" /etc/app.conf','sed -i "s/DEBUG=true/DEBUG=false/" /etc/app.conf','systemctl restart nginx');archive('service-evidence.tar',{'config.before':'PORT=3000\nDEBUG=true\n','errors.txt':'ERROR upstream timeout\n'});solution.push('tar -cf service-evidence.tar -C reports config.before errors.txt'); }
+      if(advanced) { goals.push({type:'package',name:'nginx',label:'nginx 软件包已安装'});report('reports/listener.txt','0.0.0.0:80 nginx','nginx 的监听信息');solution.push('apt install nginx','ss -tlnp | grep nginx > reports/listener.txt'); }
+      if(master) { file('/etc/app.conf','PORT=8080\nDEBUG=false\n');file('reports/config.before','PORT=3000\nDEBUG=true\n','修改配置前，将 /etc/app.conf 备份到 reports/config.before');goals.at(-1).displayOrder=-1;goals.at(-1).sourcePath='/etc/app.conf';solution.push('cp /etc/app.conf reports/config.before','sed -i "s/3000/8080/" /etc/app.conf','sed -i "s/DEBUG=true/DEBUG=false/" /etc/app.conf','systemctl restart nginx');archive('service-evidence.tar',{'config.before':'PORT=3000\nDEBUG=true\n','errors.txt':'ERROR upstream timeout\n'});solution.push('tar -cf service-evidence.tar -C reports config.before errors.txt'); }
       break;
     case 'missions':
       title='发布前最后一公里';context='从 data/team.csv 提取角色为 developer 的姓名，排序、去重后保存到 release/developers.txt；复制 deploy.sh 到 release 并设为 755。保留源数据和密钥。';
@@ -96,7 +97,7 @@ export function createBossLesson(boss, id) {
     default: throw new Error('未知 Boss 专题：' + boss.chapter);
   }
   const extensions = {
-    navigation:['另将 release 的完整路径写入 release/route.txt。','创建 current-release 目录链接，并将笔记内容保存到 release/manifest.txt。'],
+    navigation:['另将 projects/交接 包/release 的完整路径写入该目录下的 route.txt。','创建 current-release 符号链接，指向 projects/交接 包/release；将笔记内容保存到该目录下的 manifest.txt。'],
     files:['删除 staging/obsolete.txt，并保留 spec.txt 的副本于 release/previous。','只将 release/docs/spec.txt 更新为 spec v3，将 previous 中的副本设为 444。'],
     text:['将 ERROR 记录的总行数保存到 reports/error-count.txt（重复行也计数）。','将错误组件与 data/oncall.txt 的交集保存到 reports/oncall-errors.txt。'],
     shell:['设置 RELEASE=cheese-2026，并将其值保存到 reports/release.txt。','按 data/targets.txt 创建空文件；报告就绪后，将一行 ready 写入 reports/status.txt。'],
@@ -109,6 +110,6 @@ export function createBossLesson(boss, id) {
   };
   if(advanced) context += extensions[boss.chapter][0];
   if(master) context += extensions[boss.chapter][1];
-  return {id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
-    hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')]};
+  return clarifyGoalLabels({id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
+    hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')]});
 }
