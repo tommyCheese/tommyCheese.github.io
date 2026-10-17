@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
-    <title>Блог · Tommy Cheese</title>
+    <title>Заметки · Tommy Cheese</title>
     <link>https://tommycheese.github.io/ru/blogs/</link>
-    <description>Личный блог Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
+    <description>Личные заметки Tommy Cheese о программной инженерии, искусственном интеллекте и практическом обучении.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
     <lastBuildDate>Sun, 13 Sep 2026 00:00:00 +0800</lastBuildDate>

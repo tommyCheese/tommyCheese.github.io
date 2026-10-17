@@ -30,6 +30,16 @@ for locale in LOCALES:
     assert len(home.xpath('//*[@id="recent-posts"]//time')) == 5
     assert not home.xpath('//a[@download][@href="#"]')
     assert home.xpath('//a[@data-i18n="action.subscribe"]/@href') == [prefix + '/index.xml']
+    gallery = read(root / 'gallery/index.html')
+    laboratory = gallery.xpath('//*[@id="laboratory"]')
+    assert len(laboratory) == 1
+    assert [urlsplit(href).path for href in laboratory[0].xpath('.//a/@href')] == ['/linux-lab' + prefix + '/']
+    assert len(laboratory[0].xpath('following-sibling::div[contains(@class,"card-group")]//img')) == 9
+    photos_heading = gallery.get_element_by_id('gallery-photos-heading')
+    assert photos_heading.tag == laboratory[0][0].tag == 'h2'
+    assert '🌏' in photos_heading.text_content()
+    assert not gallery.xpath('//*[@id="list-page"]/h6')
+    assert gallery.xpath('//*[@id="profileHeader"]//a[@data-i18n="nav.linuxLab"][contains(@class,"linux-lab-nav")]')
     directory = read(root / 'topics/index.html')
     assert len(directory.xpath('//*[@id="topics-page"]//a[@class="post-row"]')) == len(slugs)
     for topic, members in TOPICS.items():
