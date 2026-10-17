@@ -5,7 +5,7 @@ export const localeRoot = new URL(localePrefix(locale),root);
 const catalogs = new Map([['zh-CN',Promise.resolve({})]]);
 export function loadCatalog(code) {
   if (!languages.some(item=>item.code === code)) code='zh-CN';
-  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json?v=20261016-adaptive-review-3',root)).then(response=>{
+  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json?v=20261017-keyboard-3',root)).then(response=>{
     if (!response.ok) throw new Error('Unable to load language: ' + code);
     return response.json();
   }));
@@ -26,7 +26,12 @@ export function setupI18n() {
   select.value = locale;
   const switchLanguage = event => {
     try { localStorage.setItem('site-language',event.target.value); } catch {}
-    location.assign(languageURL(location.href,event.target.value,root));
+    const destination = new URL(languageURL(location.href,event.target.value,root));
+    const welcome = document.getElementById('welcome-dialog');
+    if (event.target.id === 'welcome-language' && welcome?.open) {
+      destination.searchParams.set('welcome-page', welcome.dataset.page || '0');
+    }
+    location.assign(destination.href);
   };
   select.addEventListener('change',switchLanguage);
   document.querySelector('header nav')?.append(select);
