@@ -129,7 +129,7 @@ test('deleting a character after IME confirmation triggers matching posts', asyn
 test('opening search shows navigation and clearing a query restores it', async () => {
   const ui = searchUI();
   await ui.open();
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索']);
+  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
   await ui.input.emit('keydown', { key: 'ArrowRight' });
   assert.equal(ui.input.attributes['aria-activedescendant'], ui.options()[1].id);
   await ui.input.emit('keydown', { key: 'ArrowDown' });
@@ -141,7 +141,7 @@ test('opening search shows navigation and clearing a query restores it', async (
   await ui.input.emit('input');
   ui.input.value = '';
   await ui.input.emit('input');
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索']);
+  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
 });
 
 test('page keywords and aliases return the corresponding destinations', async () => {
@@ -219,7 +219,7 @@ test('a stale article response cannot replace the latest query', async () => {
   await ui.input.emit('input');
   resolveIndex([{ title: '博客文章', permalink: '/blogs/example/' }]);
   await pending;
-  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索']);
+  assert.deepEqual(ui.titles(), ['首页', '博客', '专题', '标签', '关于', '探索', '今日要闻', '前沿研究']);
 });
 
 test('the gallery index entry is not presented as an article', async () => {
@@ -241,5 +241,26 @@ test('research navigation retains the selected language', async () => {
     const ui = searchUI({ locale }); await ui.open();
     ui.input.value = dictionaries[locale]['nav.research']; await ui.input.emit('input');
     assert.equal(ui.options()[0].href, (locale === 'zh-CN' ? '' : '/' + locale) + '/research/');
+  }
+});
+
+test('news and research are default shortcuts in all languages and open with the keyboard', async () => {
+  for (const locale of Object.keys(dictionaries)) {
+    let fetched = false;
+    const ui = searchUI({ locale, fetchIndex: async () => { fetched = true; return []; } });
+    await ui.open();
+    const prefix = locale === 'zh-CN' ? '' : '/' + locale;
+    assert.equal(ui.options().length, 8);
+    for (const [index, key, route] of [[6, 'nav.news', '/news/'], [7, 'nav.research', '/research/']]) {
+      assert.equal(ui.titles()[index], dictionaries[locale][key]);
+      assert.equal(ui.options()[index].href, prefix + route);
+    }
+    for (let row = 0; row < 3; row++) await ui.input.emit('keydown', { key: 'ArrowDown' });
+    await ui.input.emit('keydown', { key: 'Enter' });
+    assert.equal(ui.options()[6].clicked, true);
+    await ui.input.emit('keydown', { key: 'ArrowRight' });
+    await ui.input.emit('keydown', { key: 'Enter' });
+    assert.equal(ui.options()[7].clicked, true);
+    assert.equal(fetched, false);
   }
 });
