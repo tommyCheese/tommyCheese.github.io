@@ -587,7 +587,7 @@ function renderDirectoryTree() {
   const tree = $('file-tree'); tree.replaceChildren();
   const appendDirectory = (path, parent) => {
     const children = shell.children(path).filter(child => shell.state.fs[child].type === 'dir').sort();
-    const row = element('button', path === '/' ? '/' : path === HOME ? '~' : path.split('/').pop(), 'directory-link');
+    const row = element('button', path === '/' ? '/' : path.split('/').pop(), 'directory-link');
     row.title = path;
     if (path === browsePath) row.setAttribute('aria-current', 'location');
     if (path === shell.state.cwd) row.classList.add('working-directory');
