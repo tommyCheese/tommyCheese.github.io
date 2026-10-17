@@ -1,3 +1,5 @@
+import {readFileSync} from 'node:fs';
+import {createTranslator} from '../linux-lab/i18n-core.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { compareSolutions, completionMessage, stateHint, methodInsights, describeChanges, pipelineStages, nextTransition, lessonIntroduction } from '../linux-lab/guidance.mjs';
@@ -79,15 +81,39 @@ test('every lesson introduction keeps its knowledge without copying goals or sol
   for (const lesson of lessons) {
     const intro=lessonIntroduction(lesson);
     assert.ok(intro.lead.length > 10,lesson.id);
-    assert.equal(intro.knowledge,lesson.theory,lesson.id);
+    if (lesson.theory !== '对照目标选择参数，观察文件或输出的变化。') assert.ok([intro.lead,intro.knowledge].includes(lesson.theory),lesson.id);
+    assert.notEqual(intro.lead,intro.knowledge,lesson.id);
+    assert.ok(![intro.lead,intro.knowledge].includes('对照目标选择参数，观察文件或输出的变化。'),lesson.id);
     assert.equal(intro.showTool,true);
     assert.equal(intro.goals,undefined);
     assert.equal(intro.solution,undefined);
   }
   const first=lessons.find(lesson=>lesson.id==='where-am-i');
-  assert.match(lessonIntroduction(first).lead,/定位器/);
+  assert.match(lessonIntroduction(first).knowledge,/定位器/);
   assert.match(lessonIntroduction(first,{review:true}).lead,/回忆/);
   const boss=lessonIntroduction({chapter:'files',theory:'检查交付结果。'},{boss:true});
   assert.equal(boss.showTool,false);
   assert.match(boss.lead,/组合/);
+});
+
+
+test('normal lessons introduce their own knowledge instead of reusing command or chapter openings',()=>{
+  const leads=lessons.map(lesson=>lessonIntroduction(lesson).lead);
+  assert.equal(new Set(leads).size,lessons.length);
+  const enter=lessonIntroduction(lessons.find(lesson=>lesson.id==='enter-projects'));
+  const parent=lessonIntroduction(lessons.find(lesson=>lesson.id==='parent-directory'));
+  assert.notEqual(enter.lead,parent.lead);
+  assert.match(enter.lead,/相对路径.*子目录/);
+  assert.match(parent.lead,/\.\..*父目录.*projects/);
+  assert.match(parent.knowledge,/\.\. 代表父目录/);
+});
+
+
+test('lesson introductions remain distinct and fully translated in all language editions',()=>{
+  for(const locale of ['en','ja','ru','zh-TW']) {
+    const translate=createTranslator(JSON.parse(readFileSync(new URL('../linux-lab/locales/'+locale+'.json',import.meta.url))),locale);
+    const leads=lessons.map(lesson=>translate(lessonIntroduction(lesson).lead));
+    assert.equal(new Set(leads).size,lessons.length,locale);
+    if(['en','ru'].includes(locale))for(const [index,lead] of leads.entries())assert.doesNotMatch(lead,/[\u3400-\u9fff]/,locale+': '+lessons[index].id);
+  }
 });

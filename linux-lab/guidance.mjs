@@ -25,24 +25,51 @@ const introductions = {
   ps:'后台都在忙什么？ps 会拍一张进程快照，PID 就是每个进程的编号。',
   df:'磁盘还有多少空位？df 看的是文件系统的总量与剩余空间，先别和单个目录的大小混淆。'
 };
-const chapterIntroductions = {
-  navigation:'先认清位置，再迈出下一步。路径有了方向感，终端就没那么神秘了！',
-  files:'把文件整理妥当，后面的工作就顺手多了。先看清路径，再动手吧！',
-  shell:'一条命令忙不过来？让工具接力，留意输入从哪来、输出往哪去。',
-  text:'文字里藏着线索。先想清楚要保留什么，再挑合适的处理方式。',
-  permissions:'文件明明在，却不一定能用。来看看权限和链接背后的门道！',
-  archives:'打包只是开始，能完整恢复才踏实。来认识这次要用的工具！',
-  system:'系统会留下许多线索。读懂输出，才能知道机器正在忙什么。',
-  network:'连接不顺时，先别急着猜。地址、端口和响应里都有线索！',
-  services:'服务也有自己的工作状态。先查清发生了什么，再决定下一步。',
-  missions:'轮到工具配合了！先拆解问题，再把熟悉的命令串起来。'
+// Introductions follow lesson knowledge, rather than a shared command or topic slogan.
+const lessonIntroductions = {
+  "clean-screen": "屏幕清爽一点，练习进度还在。clear 清除终端显示，不会删除文件、命令历史或已经完成的操作。",
+  "enter-projects": "去项目里看看吧！相对路径从脚下出发，进入子目录后，后续操作的起点也就变了。",
+  "parent-directory": "往回走一层！.. 指向当前目录的父目录；这里从 projects 返回，正好就到自己的主目录。",
+  "locate-command": "命令也有住址！which 沿着 PATH 查找程序，返回它的可执行文件路径。",
+  "number-sequence": "一串数字不用逐个敲。seq 默认每次加 1，并把每个数放在单独一行。",
+  "current-groups": "权限也看你属于哪个组。groups 列出当前用户的主组和附加组，组名之间用空格分开。",
+  "available-cpus": "程序能用几颗 CPU？nproc 给出可用处理单元的数量，适合决定并行任务数。",
+  "login-users": "谁正登录着这台机器？who 按会话列出用户和终端，同一个用户也可能出现多次。",
+  "terminal-device": "这个终端也对应一个文件路径。tty 显示当前终端设备；pts 通常表示伪终端。",
+  "list-installed": "安装前，先看看工具是否已经在了。apt list --installed 列出已安装的软件包，和目录里的文件清单不同。",
+  "check-service-state": "只想知道服务在不在运行？is-active 给出简短状态，active 表示正在运行；它不代表已经设置开机启动。",
+  "starter-delivery": "先准备一张空白交接单。touch 遇到不存在的文件会创建它，遇到已有文件则不会清空正文。",
+  "resolve-path": "路径里绕了几个弯？realpath 把 .、.. 等部分解析成完整绝对路径，方便核对真正的位置。",
+  "identify-builtin": "有些命令就住在 Shell 里面。type 能区分内建命令和外部程序，cd 属于前者。",
+  "temporary-workdir": "临时工作也要有独立空间。mktemp -d 创建一个名称不冲突的目录，模板末尾的 X 会被替换。",
+  "empty-log": "清空内容，文件还要留着。truncate 调整文件长度；长度设为 0，就会丢弃原来的正文。",
+  "recursive-backup": "副本里也不能漏掉子目录。cp 的递归选项会沿着目录往下复制，嵌套配置也一起带走。",
+  "number-blank-lines": "空行也算一行！nl 默认跳过空行编号；想连续编号，要明确让所有行都参与。",
+  "reverse-log-lines": "先看最后发生的事。tac 会颠倒行的顺序，每一行内部的文字保持原样。",
+  "reverse-characters": "这次翻转的是文字，不是行序。rev 反转每一行的字符，各行仍待在原来的位置。",
+  "byte-comparison": "看起来一样，还得逐字节核对。cmp 用退出码告诉你是否相同；相同的时候，终端通常什么也不打印。",
+  "expand-tabs": "Tab 不是固定几个空格。expand 按制表位补空格，补多少取决于当前已经走到了哪一列。",
+  "compact-indent": "把长长的缩进收紧一点。unexpand 可以把行首空格换成 Tab，换算时要用同样的制表位宽度。",
+  "wrap-long-line": "一行太长，就分几行读。fold 按指定宽度折行；这里按字符计数，不会替你改写文字。",
+  "recursive-owner": "目录归属改好了，里面的文件呢？chown 的递归选项会把所有者变更应用到整个目录层级。",
+  "session-load": "知道谁在线之后，再看看他们在忙什么。w 把登录会话、正在运行的命令和系统负载放到一起看。",
+  "cpu-topology": "不只问有几颗 CPU，也看看它是什么架构。lscpu 展示处理器架构和拓扑信息，这里使用固定教学快照。",
+  "block-filesystems": "磁盘、分区、文件系统，先分清这几层。lsblk 用层级展示块设备，-f 会补上文件系统和挂载点信息。",
+  "mounted-root": "目录里的内容从哪里来？findmnt 把挂载点、来源设备和文件系统类型对应起来，根目录 / 也是一个挂载点。",
+  "kernel-messages": "系统启动时发生的事，内核会留下记录。dmesg 查看这些消息，硬件识别和文件系统挂载都可能留下线索。",
+  "inspect-http-headers": "先看信封，不急着读正文。curl -I 请求 HTTP 响应头，状态码和内容类型都在这里。",
+  "precise-temp-cleanup": "同样是 .tmp，也不一定都该删。find 的路径深度、文件类型和名称条件会共同决定清理范围，先预览再动手。"
 };
 export function lessonIntroduction(lesson, { review = false, boss = false } = {}) {
+  const genericTheory = lesson.theory === '对照目标选择参数，观察文件或输出的变化。';
+  const lead = lessonIntroductions[lesson.id] || lesson.theory || introductions[lesson.command] || '';
+  const knowledge = lessonIntroductions[lesson.id]
+    ? (genericTheory ? '' : lesson.theory || '')
+    : introductions[lesson.command] || '';
   return {
     lead: boss ? 'Boss 登场！这次没有指定工具，先拆解问题，再把学过的本领组合起来。'
-      : review ? '回来热热手！先试着回忆这把工具怎么用，想不起来时再查介绍或手册。'
-      : introductions[lesson.command] || chapterIntroductions[lesson.chapter] || '认识一下这次的工具，再动手试试！',
-    knowledge: lesson.theory || '',
+      : review ? '回来热热手！先试着回忆这把工具怎么用，想不起来时再查介绍或手册。' : lead,
+    knowledge: boss || review ? (genericTheory ? lead : lesson.theory || '') : knowledge,
     showTool: !boss
   };
 }
