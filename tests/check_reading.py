@@ -35,6 +35,21 @@ for locale in LOCALES:
     assert len(laboratory) == 1
     assert [urlsplit(href).path for href in laboratory[0].xpath('.//a/@href')] == ['/linux-lab' + prefix + '/']
     assert len(laboratory[0].xpath('following-sibling::div[contains(@class,"card-group")]//img')) == 9
+    tiles = gallery.xpath('//*[@id="list-page"]//figure[contains(@class,"photo-tile")]')
+    assert len(tiles) == 9
+    for tile in tiles:
+        assert tile.xpath('.//button[@class="photo-open"]/@aria-label')
+        assert tile.xpath('.//button[@class="photo-clip"]/@aria-label')
+        assert tile.xpath('.//button[@class="photo-resize"][@role="slider"]')
+        image = tile.find('.//img')
+        assert int(image.get('width')) > 0 and int(image.get('height')) > 0
+        assert image.get('loading') == 'lazy'
+    charms = gallery.xpath('//button[@class="photo-charm"]')
+    assert {charm.get('data-charm') for charm in charms} == {'bear','racer','controller','gpu','phone','book'}
+    for charm in charms:
+        assert charm.get('aria-label') and charm.xpath('./svg/use/@href')
+        assert not charm.xpath('.//img | .//*[@role="slider"] | .//button')
+    assert len(gallery.xpath('//script[@data-reading-layout="gallery-runtime"]')) == 1
     photos_heading = gallery.get_element_by_id('gallery-photos-heading')
     assert photos_heading.tag == laboratory[0][0].tag == 'h2'
     assert '🌏' in photos_heading.text_content()

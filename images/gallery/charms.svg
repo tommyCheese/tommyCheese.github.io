@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fur" x2=".7" y2="1"><stop stop-color="#d8ab73"/><stop offset="1" stop-color="#97663e"/></linearGradient>
+    <linearGradient id="red" x2=".8" y2="1"><stop stop-color="#fc735b"/><stop offset="1" stop-color="#a62b31"/></linearGradient>
+    <linearGradient id="metal" x2="1" y2="1"><stop stop-color="#59646b"/><stop offset=".5" stop-color="#242c32"/><stop offset="1" stop-color="#727b7e"/></linearGradient>
+    <linearGradient id="phone-red" x2="1" y2="1"><stop stop-color="#a33d49"/><stop offset=".5" stop-color="#6e182c"/><stop offset="1" stop-color="#47121e"/></linearGradient>
+  </defs>
+  <symbol id="bear" viewBox="0 0 120 120">
+    <g stroke="#805336" stroke-width="1.5">
+      <ellipse cx="60" cy="78" rx="27" ry="31" fill="url(#fur)"/>
+      <ellipse cx="34" cy="77" rx="12" ry="21" fill="url(#fur)" transform="rotate(25 34 77)"/>
+      <ellipse cx="86" cy="77" rx="12" ry="21" fill="url(#fur)" transform="rotate(-25 86 77)"/>
+      <ellipse cx="38" cy="103" rx="17" ry="13" fill="url(#fur)"/><ellipse cx="82" cy="103" rx="17" ry="13" fill="url(#fur)"/>
+      <circle cx="35" cy="27" r="14" fill="url(#fur)"/><circle cx="85" cy="27" r="14" fill="url(#fur)"/>
+      <circle cx="35" cy="27" r="7" fill="#b87d53"/><circle cx="85" cy="27" r="7" fill="#b87d53"/>
+      <ellipse cx="60" cy="42" rx="31" ry="28" fill="url(#fur)"/>
+    </g>
+    <ellipse cx="60" cy="86" rx="16" ry="20" fill="#e8c79a"/><ellipse cx="60" cy="52" rx="18" ry="12" fill="#f0d2a5"/>
+    <g fill="#39271e"><circle cx="47" cy="40" r="3"/><circle cx="73" cy="40" r="3"/><path d="M54 47 Q60 43 66 47 Q64 54 60 54 Q56 54 54 47"/></g>
+    <path d="M60 54v5m-7-1q7 7 14 0" fill="none" stroke="#67432e" stroke-width="1.5"/>
+    <path d="M60 70L44 63v15zm0 0l16-7v15z" fill="#9c4750"/><circle cx="60" cy="70" r="4" fill="#c36c70"/>
+    <g fill="#edcfaa"><ellipse cx="38" cy="104" rx="9" ry="6"/><ellipse cx="82" cy="104" rx="9" ry="6"/></g>
+  </symbol>
+  <symbol id="racer" viewBox="0 0 120 120">
+    <g transform="rotate(-13 60 60)">
+      <ellipse cx="60" cy="90" rx="53" ry="8" fill="#271e1e22"/>
+      <path d="M9 67l15-9 19-24h35l20 23 14 8v17H9z" fill="url(#red)" stroke="#8e3334" stroke-width="2"/>
+      <path d="M30 57l16-19h13v19zm34-19h12l16 19H64z" fill="#273b4b"/>
+      <path d="M35 54l13-13h7" fill="none" stroke="#c2e4e9" stroke-width="2" opacity=".7"/>
+      <path d="M15 64h92v7H15z" fill="#fff3d3"/><path d="M96 49h17v5H97z" fill="#343337"/><path d="M104 51v10" stroke="#343337" stroke-width="3"/>
+      <g fill="#25262a" stroke="#101419" stroke-width="2"><circle cx="31" cy="80" r="14"/><circle cx="91" cy="80" r="14"/></g>
+      <g fill="#b8c0c6" stroke="#63727b" stroke-width="2"><circle cx="31" cy="80" r="7"/><circle cx="91" cy="80" r="7"/></g>
+      <rect x="52" y="63" width="18" height="14" rx="3" fill="#fff7de"/><text x="61" y="74" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#373c42">7</text>
+      <path d="M12 69h9v5h-9m88-5h9v5h-9" fill="#ffe7a7"/>
+    </g>
+  </symbol>
+  <symbol id="controller" viewBox="0 0 120 120">
+    <path d="M28 35q32-9 64 0l15 27q14 42-8 36L79 80H41L21 98Q-1 104 13 62z" fill="url(#metal)" stroke="#30383d" stroke-width="2"/>
+    <path d="M33 35q27-8 54 0" stroke="#a0a9ad" stroke-width="3" fill="none"/>
+    <rect x="45" y="38" width="30" height="20" rx="4" fill="#20272e" stroke="#858d92"/>
+    <path d="M24 51h8v-8h9v8h8v9h-8v8h-9v-8h-8z" fill="#181e23" stroke="#879096"/>
+    <g stroke="#171e25" stroke-width="2"><circle cx="85" cy="48" r="5" fill="#6e9bcb"/><circle cx="96" cy="59" r="5" fill="#cd7581"/><circle cx="85" cy="70" r="5" fill="#91b589"/><circle cx="74" cy="59" r="5" fill="#d4bb6d"/></g>
+    <g fill="#171e25" stroke="#899298" stroke-width="2"><circle cx="47" cy="76" r="9"/><circle cx="68" cy="76" r="9"/></g>
+    <circle cx="60" cy="62" r="3" fill="#b5c9d1"/>
+  </symbol>
+  <symbol id="gpu" viewBox="0 0 120 120">
+    <g transform="rotate(-10 60 60)">
+      <path d="M8 33h101v59H8z" fill="#202828" stroke="#939b91" stroke-width="2"/>
+      <path d="M4 29h8v68H4m8-8h89" stroke="#a8b1aa" stroke-width="4" fill="none"/>
+      <path d="M16 39h86v44H16z" fill="url(#metal)"/>
+      <g fill="#151d20" stroke="#687778" stroke-width="2"><circle cx="37" cy="61" r="18"/><circle cx="80" cy="61" r="18"/></g>
+      <g stroke="#536468" stroke-width="5"><path d="M37 46v30M22 61h30M26 50l22 22m0-22L26 72M80 46v30M65 61h30M69 50l22 22m0-22L69 72"/></g>
+      <g fill="#b7c2b7"><circle cx="37" cy="61" r="5"/><circle cx="80" cy="61" r="5"/></g>
+      <path d="M19 92h71v5H19" fill="#c0a76c"/><path d="M99 38h6v42h-6" fill="#86b94b"/>
+      <rect x="18" y="21" width="82" height="14" rx="2" fill="#303a32"/><text x="59" y="31" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="700" fill="#c9e6b0">RTX 5090</text>
+    </g>
+  </symbol>
+  <symbol id="phone" viewBox="0 0 120 120">
+    <g transform="rotate(12 60 60)">
+      <rect x="32" y="6" width="57" height="108" rx="12" fill="#41111d" stroke="#bc6471" stroke-width="2"/>
+      <rect x="35" y="9" width="51" height="102" rx="10" fill="url(#phone-red)"/>
+      <rect x="38" y="14" width="45" height="35" rx="9" fill="#9f4857" stroke="#ba6a77"/>
+      <g fill="#17202b" stroke="#c9848d" stroke-width="2"><circle cx="49" cy="25" r="7"/><circle cx="70" cy="25" r="7"/><circle cx="49" cy="41" r="7"/></g>
+      <g fill="#7498ac"><circle cx="48" cy="23" r="2"/><circle cx="69" cy="23" r="2"/><circle cx="48" cy="39" r="2"/></g>
+      <circle cx="71" cy="40" r="4" fill="#e6ccba"/><path d="M31 39v15m59-19v20" stroke="#d5969f" stroke-width="2"/>
+      <path d="M45 99h30" stroke="#cc8a97" opacity=".4"/>
+    </g>
+  </symbol>
+  <symbol id="book" viewBox="0 0 120 120">
+    <g transform="rotate(-9 60 60)">
+      <path d="M28 12h65v96H28q-9-3-9-10V22q0-9 9-10" fill="#785632" stroke="#473f35" stroke-width="2"/>
+      <path d="M28 15h59v86H28z" fill="#f3dfae"/><path d="M29 99h61v7H29" fill="#d5bd85"/>
+      <path d="M28 10h66v91H28z" fill="#293d55" stroke="#b29a61" stroke-width="2"/>
+      <path d="M34 16h54v79H34z" fill="none" stroke="#be9f5b"/>
+      <text x="61" y="35" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#e2c879">Harry</text>
+      <text x="61" y="49" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#e2c879">Potter</text>
+      <path d="M65 56L53 74h11l-5 15 14-22H62z" fill="#dfba59"/>
+      <path d="M40 57h5m-2-2v4m34 26h6m-3-3v6" stroke="#e5c875"/>
+      <text x="61" y="92" text-anchor="middle" font-family="Georgia,serif" font-size="4.5" fill="#eddba3">THE PHILOSOPHER'S STONE</text>
+      <path d="M25 13v85" stroke="#b08a48"/>
+    </g>
+  </symbol>
+</svg>
