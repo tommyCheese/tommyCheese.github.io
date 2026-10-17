@@ -120,3 +120,21 @@ test('shell state serializes and restores without sharing mutations', () => {
   const shell = fresh(); shell.execute('export PROJECT=demo; touch keep.txt'); const restored = new Shell(JSON.parse(JSON.stringify(shell.state)), manuals);
   restored.execute('rm keep.txt'); assert.ok(shell.state.fs[HOME + '/keep.txt']); assert.equal(restored.state.env.PROJECT, 'demo');
 });
+
+test('help and command completion list only executable teaching commands, while reference manuals stay accessible',()=>{
+  const s=fresh();
+  const listed=s.execute('help').stdout.split('\n')[1].split(' ');
+  assert.deepEqual(listed,manuals.filter(item=>item.practice).map(item=>item.name));
+  assert.deepEqual(listed,s.complete(''));
+  for(const name of listed)assert.doesNotMatch(fresh().execute(name).stderr||'',/未实现此命令|仅供手册查阅/,name);
+  for(const {name} of manuals.filter(item=>!item.practice)) {
+    assert.ok(!listed.includes(name),name);
+    assert.match(s.execute(name).stderr,/仅供手册查阅/,name);
+    assert.equal(s.execute('man '+name).code,0,name);
+  }
+  for(const name of ['docker','kubectl']) {
+    assert.equal(s.execute(name+' ps').stderr,name+'：仅供手册查阅\n');
+    assert.deepEqual(s.complete(name.slice(0,3)),[]);
+  }
+  assert.match(s.execute('123').stderr,/未实现此命令/);
+});

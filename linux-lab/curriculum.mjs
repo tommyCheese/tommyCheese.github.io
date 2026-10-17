@@ -135,7 +135,7 @@ const entries = [
 entries.push(...extraEntries);
 export const manuals = entries.map(([name, category, summary, syntax, options, note, example, source, practice = true]) => ({
   name, category, summary, syntax, options: options ? options.split(';').map(item => item.split(/:(.*)/s).slice(0, 2)) : [],
-  note, example, source: sources[source] || source, practice, level: commandLevel(name)
+  note: practice ? note : '仅供手册查阅', example, source: sources[source] || source, practice, level: commandLevel(name)
 }));
 
 const goals = {

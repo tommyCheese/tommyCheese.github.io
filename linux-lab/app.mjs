@@ -1,6 +1,6 @@
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-lesson-intro-2';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-command-help-2';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261017-lesson-intro-2';
@@ -11,7 +11,7 @@ import { createReviewLesson, skillLabel } from './review-exercises.mjs';
 import { migrateLearning, reviewPlan, reviewTimeReached, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261016-adaptive-review-3';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261016-adaptive-review-3';
 import { PracticeHistory } from './history.mjs';
-import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261017-linux-filesystem-1';
+import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261017-command-help-2';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
 
 const contentSources = [
