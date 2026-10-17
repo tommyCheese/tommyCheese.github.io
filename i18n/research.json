@@ -68,6 +68,665 @@
       ],
       "source": "ICLR 2027",
       "url": "https://iclr.cc/Conferences/2027/Dates"
+    },
+    {
+      "id": "aistats-2027-review-calendar",
+      "kind": "conference",
+      "verified_at": "2026-10-17",
+      "event_start": "2027-05-03",
+      "event_end": "2027-05-06",
+      "tags": [
+        "ai",
+        "conferences"
+      ],
+      "source": "AISTATS 2027",
+      "url": "https://aistats.org/aistats2027/dates.html"
+    },
+    {
+      "id": "aamas-2027-agent-research-calendar",
+      "kind": "conference",
+      "verified_at": "2026-10-17",
+      "event_start": "2027-05-03",
+      "event_end": "2027-05-07",
+      "tags": [
+        "ai",
+        "agents",
+        "conferences"
+      ],
+      "source": "AAMAS 2027 · University of Warwick",
+      "url": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/"
+    },
+    {
+      "id": "cvpr-2027-submission-calendar",
+      "kind": "conference",
+      "verified_at": "2026-10-17",
+      "event_start": "2027-06-20",
+      "event_end": "2027-06-25",
+      "tags": [
+        "ai",
+        "conferences"
+      ],
+      "source": "CVPR 2027",
+      "url": "https://cvpr.thecvf.com/Conferences/2027/Dates"
+    },
+    {
+      "id": "skillformer-audio-skill-adapters",
+      "kind": "preprint",
+      "published_at": "2026-10-06",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.07533v1",
+      "url": "https://arxiv.org/abs/2610.07533v1"
+    },
+    {
+      "id": "heterogeneous-agent-model-persona-effects",
+      "kind": "preprint",
+      "published_at": "2026-10-06",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.07535v1",
+      "url": "https://arxiv.org/abs/2610.07535v1"
+    },
+    {
+      "id": "jepa-inverse-dynamics-control-representations",
+      "kind": "preprint",
+      "published_at": "2026-10-06",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.07540v1",
+      "url": "https://arxiv.org/abs/2610.07540v1"
+    },
+    {
+      "id": "grade-gradient-admission-small-models",
+      "kind": "preprint",
+      "published_at": "2026-10-06",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.07553v1",
+      "url": "https://arxiv.org/abs/2610.07553v1"
+    },
+    {
+      "id": "checkerbench-static-analysis-agent-evaluation",
+      "kind": "preprint",
+      "published_at": "2026-10-06",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.07557v1",
+      "url": "https://arxiv.org/abs/2610.07557v1"
+    },
+    {
+      "id": "self-improvement-winners-curse",
+      "kind": "preprint",
+      "published_at": "2026-10-07",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.09239v1",
+      "url": "https://arxiv.org/abs/2610.09239v1"
+    },
+    {
+      "id": "best-of-n-sample-only-policy-evaluation",
+      "kind": "preprint",
+      "published_at": "2026-10-07",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.09250v1",
+      "url": "https://arxiv.org/abs/2610.09250v1"
+    },
+    {
+      "id": "lecuration-small-world-model-data",
+      "kind": "preprint",
+      "published_at": "2026-10-07",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.09285v1",
+      "url": "https://arxiv.org/abs/2610.09285v1"
+    },
+    {
+      "id": "rt-safe-real-time-embodied-safety",
+      "kind": "preprint",
+      "published_at": "2026-10-07",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.09294v1",
+      "url": "https://arxiv.org/abs/2610.09294v1"
+    },
+    {
+      "id": "searchworld-spatial-world-model-uav",
+      "kind": "preprint",
+      "published_at": "2026-10-07",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.09335v1",
+      "url": "https://arxiv.org/abs/2610.09335v1"
+    },
+    {
+      "id": "raw-video-language-model-mid-training",
+      "kind": "preprint",
+      "published_at": "2026-10-08",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.11019v1",
+      "url": "https://arxiv.org/abs/2610.11019v1"
+    },
+    {
+      "id": "intent-graph-exploratory-data-analysis",
+      "kind": "preprint",
+      "published_at": "2026-10-08",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.11025v1",
+      "url": "https://arxiv.org/abs/2610.11025v1"
+    },
+    {
+      "id": "nomos-verified-agent-tool-gates",
+      "kind": "preprint",
+      "published_at": "2026-10-08",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.11030v1",
+      "url": "https://arxiv.org/abs/2610.11030v1"
+    },
+    {
+      "id": "agenthorizon-long-horizon-judges",
+      "kind": "preprint",
+      "published_at": "2026-10-08",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.11050v1",
+      "url": "https://arxiv.org/abs/2610.11050v1"
+    },
+    {
+      "id": "openproblembench-theoretical-science-evaluation",
+      "kind": "preprint",
+      "published_at": "2026-10-08",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.11118v1",
+      "url": "https://arxiv.org/abs/2610.11118v1"
+    },
+    {
+      "id": "misvisagentbench-misleading-charts",
+      "kind": "preprint",
+      "published_at": "2026-10-09",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.12823v1",
+      "url": "https://arxiv.org/abs/2610.12823v1"
+    },
+    {
+      "id": "treehca-agent-hindsight-credit",
+      "kind": "preprint",
+      "published_at": "2026-10-09",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.12828v1",
+      "url": "https://arxiv.org/abs/2610.12828v1"
+    },
+    {
+      "id": "agent-pr-code-deployment-integration-study",
+      "kind": "preprint",
+      "published_at": "2026-10-09",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.12849v1",
+      "url": "https://arxiv.org/abs/2610.12849v1"
+    },
+    {
+      "id": "collaborative-theory-of-mind-self-revision",
+      "kind": "preprint",
+      "published_at": "2026-10-09",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.12872v1",
+      "url": "https://arxiv.org/abs/2610.12872v1"
+    },
+    {
+      "id": "t-mem-temporal-evidence-forests",
+      "kind": "preprint",
+      "published_at": "2026-10-09",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.12874v1",
+      "url": "https://arxiv.org/abs/2610.12874v1"
+    },
+    {
+      "id": "portable-skills-agentic-rag",
+      "kind": "preprint",
+      "published_at": "2026-10-10",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.14428v1",
+      "url": "https://arxiv.org/abs/2610.14428v1"
+    },
+    {
+      "id": "sceneforesee-scene-evolution",
+      "kind": "preprint",
+      "published_at": "2026-10-10",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.14439v1",
+      "url": "https://arxiv.org/abs/2610.14439v1"
+    },
+    {
+      "id": "tetpo-effective-sample-size",
+      "kind": "preprint",
+      "published_at": "2026-10-10",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.14440v1",
+      "url": "https://arxiv.org/abs/2610.14440v1"
+    },
+    {
+      "id": "kv4-rl-rollout-quantization",
+      "kind": "preprint",
+      "published_at": "2026-10-10",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.14448v1",
+      "url": "https://arxiv.org/abs/2610.14448v1"
+    },
+    {
+      "id": "executable-task-contracts",
+      "kind": "preprint",
+      "published_at": "2026-10-10",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.14477v1",
+      "url": "https://arxiv.org/abs/2610.14477v1"
+    },
+    {
+      "id": "momatune-numerical-records",
+      "kind": "preprint",
+      "published_at": "2026-10-11",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.15235v1",
+      "url": "https://arxiv.org/abs/2610.15235v1"
+    },
+    {
+      "id": "sequent-prover-verifiable-reasoning",
+      "kind": "preprint",
+      "published_at": "2026-10-11",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.15258v1",
+      "url": "https://arxiv.org/abs/2610.15258v1"
+    },
+    {
+      "id": "recap-history-aware-quantization",
+      "kind": "preprint",
+      "published_at": "2026-10-11",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.15259v1",
+      "url": "https://arxiv.org/abs/2610.15259v1"
+    },
+    {
+      "id": "lehami-symplectic-world-models",
+      "kind": "preprint",
+      "published_at": "2026-10-11",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.15267v1",
+      "url": "https://arxiv.org/abs/2610.15267v1"
+    },
+    {
+      "id": "co-dsl-layout-concepts",
+      "kind": "preprint",
+      "published_at": "2026-10-11",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.15290v1",
+      "url": "https://arxiv.org/abs/2610.15290v1"
+    },
+    {
+      "id": "quantization-compensation-limits",
+      "kind": "preprint",
+      "published_at": "2026-10-12",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.16020v1",
+      "url": "https://arxiv.org/abs/2610.16020v1"
+    },
+    {
+      "id": "echo-agent-credit-assignment",
+      "kind": "preprint",
+      "published_at": "2026-10-12",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.16027v1",
+      "url": "https://arxiv.org/abs/2610.16027v1"
+    },
+    {
+      "id": "recons-multi-agent-privacy",
+      "kind": "preprint",
+      "published_at": "2026-10-12",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.16039v1",
+      "url": "https://arxiv.org/abs/2610.16039v1"
+    },
+    {
+      "id": "agent-benchmark-oracle-integrity",
+      "kind": "preprint",
+      "published_at": "2026-10-12",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.16067v1",
+      "url": "https://arxiv.org/abs/2610.16067v1"
+    },
+    {
+      "id": "dream2discern-runtime-auditor",
+      "kind": "preprint",
+      "published_at": "2026-10-12",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.16071v1",
+      "url": "https://arxiv.org/abs/2610.16071v1"
+    },
+    {
+      "id": "foundation-event-predictor",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.17503v1",
+      "url": "https://arxiv.org/abs/2610.17503v1"
+    },
+    {
+      "id": "yubi-real2sim-policy-evaluation",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.17521v1",
+      "url": "https://arxiv.org/abs/2610.17521v1"
+    },
+    {
+      "id": "box-wam-compact-world-actions",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.17526v1",
+      "url": "https://arxiv.org/abs/2610.17526v1"
+    },
+    {
+      "id": "tacitvla-reasoning-latency",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.17540v1",
+      "url": "https://arxiv.org/abs/2610.17540v1"
+    },
+    {
+      "id": "safe-agent-memory-certification",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.17544v1",
+      "url": "https://arxiv.org/abs/2610.17544v1"
+    },
+    {
+      "id": "wealth-of-agents-multi-developer",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.20518v1",
+      "url": "https://arxiv.org/abs/2610.20518v1"
+    },
+    {
+      "id": "cipr-cross-interface-agent-robustness",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.20576v1",
+      "url": "https://arxiv.org/abs/2610.20576v1"
+    },
+    {
+      "id": "scaling-discovery-requires-forgetting",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.20563v1",
+      "url": "https://arxiv.org/abs/2610.20563v1"
+    },
+    {
+      "id": "physga-physics-grounded-composition",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.20560v1",
+      "url": "https://arxiv.org/abs/2610.20560v1"
+    },
+    {
+      "id": "jetstream-verified-query-accelerators",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.20527v1",
+      "url": "https://arxiv.org/abs/2610.20527v1"
+    },
+    {
+      "id": "agent-approval-effect-binding",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.21063v1",
+      "url": "https://arxiv.org/abs/2610.21063v1"
+    },
+    {
+      "id": "hnsw-rag-topology-poisoning-study",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "arXiv · 2610.21464v1",
+      "url": "https://arxiv.org/abs/2610.21464v1"
+    },
+    {
+      "id": "linguaguardbench-agent-guard-language",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.22244v1",
+      "url": "https://arxiv.org/abs/2610.22244v1"
+    },
+    {
+      "id": "mcp-fsd-filesystem-capability-study",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "arXiv · 2610.22301v1",
+      "url": "https://arxiv.org/abs/2610.22301v1"
+    },
+    {
+      "id": "claude-quantum-circuit-optimization",
+      "kind": "research",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ai",
+        "agents",
+        "results"
+      ],
+      "source": "Anthropic Research",
+      "url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits"
+    },
+    {
+      "id": "ai-expectations-gap-survey",
+      "kind": "research",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ai",
+        "results"
+      ],
+      "source": "Sacher et al. · Anthropic Research",
+      "url": "https://www.anthropic.com/research/ai-expectations-gap"
+    },
+    {
+      "id": "anthropic-employment-agent-work-study",
+      "kind": "research",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ai",
+        "agents",
+        "results"
+      ],
+      "source": "Wilmers et al. · Anthropic Research",
+      "url": "https://www.anthropic.com/research/employment-at-anthropic"
+    },
+    {
+      "id": "google-verid-lab-in-loop-agents",
+      "kind": "research",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ai",
+        "agents",
+        "results"
+      ],
+      "source": "Rao, Sirkovic & Pawlosky · Google Research",
+      "url": "https://research.google/blog/grounding-ai-agents-in-biological-reality-building-blocks-for-autonomous-wet-labs/"
     }
-  ]
+  ],
+  "coverage_start": "2026-10-06",
+  "minimum_per_day": 5
 }
