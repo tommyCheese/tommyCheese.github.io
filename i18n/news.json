@@ -2,6 +2,36 @@
   "updated_at": "2026-10-17",
   "items": [
     {
+      "id": "anthropic-nist-curve-seed-research",
+      "category": "ai",
+      "published_at": "2026-10-16",
+      "source": "Anthropic Research",
+      "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
+      "image": "https://www-cdn.anthropic.com/images/4zrzovbb/website/d0c862c5cabd703c0fcbaad939385133f02b694c-1200x630.jpg",
+      "image_credit": "Anthropic",
+      "image_fit": "contain"
+    },
+    {
+      "id": "windows-11-28120-3272-accessibility-fixes",
+      "category": "devices",
+      "published_at": "2026-10-16",
+      "source": "Microsoft Learn",
+      "url": "https://learn.microsoft.com/en-us/windows-insider/release-notes/experimental-26-h1/preview-build-28120-3272",
+      "image": "https://learn.microsoft.com/en-us/windows-insider/release-notes/images/9d-pointerindicator-settings.png",
+      "image_credit": "Microsoft",
+      "image_fit": "contain"
+    },
+    {
+      "id": "debian-linux-dsa-6568-security-update",
+      "category": "devices",
+      "published_at": "2026-10-16",
+      "source": "Debian Security",
+      "url": "https://lists.debian.org/debian-security-announce/2026/msg00482.html",
+      "image": "https://www.debian.org/logos/openlogo-nd.svg",
+      "image_credit": "Debian",
+      "image_fit": "contain"
+    },
+    {
       "id": "prismml-ternary-bonsai2-small-models",
       "category": "ai",
       "published_at": "2026-10-15",
