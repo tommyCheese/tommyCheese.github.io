@@ -31,6 +31,11 @@ export function charmHook(x, top, width, rows, tolerance = 18) {
   return nearest;
 }
 
+export function hangingCharmPosition(x, row, width, height, charmHeight) {
+  const t = (x/100*width-10)/(width-20);
+  return {x,y:(row.y+2*(1-t)*t*row.sag+charmHeight/2+6)/height*100};
+}
+
 export const frameEdges = (values, scale = 1) => Object.fromEntries(['top','right','bottom','left'].map((side,i) => [side,-values[i]/scale+'px']));
 
 export function createFlightImage(image) {
@@ -265,7 +270,11 @@ if (wall) {
     save();
   });
   const charms = [...grid.querySelectorAll('.photo-charm')], charmStorageKey = 'tommy-cheese-wall-charms-v1';
-  const charmDefaults = charm => ({x:Number(charm.dataset.charmX),y:Number(charm.dataset.charmY)});
+  function charmDefaults(charm) {
+    const position = {x:Number(charm.dataset.charmX),y:Number(charm.dataset.charmY)};
+    const row = charm.hasAttribute('data-charm-rope') && ropeRows[Number(charm.dataset.charmRope)];
+    return row ? hangingCharmPosition(position.x,row,grid.clientWidth,grid.clientHeight,charm.offsetHeight) : position;
+  }
   function updateCharmHook(charm) {
     const x = parseFloat(charm.style.left)/100*grid.clientWidth;
     const top = parseFloat(charm.style.top)/100*grid.clientHeight-charm.offsetHeight/2;

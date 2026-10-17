@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { photoSize, wallLayout, movePhoto, createFlightImage, frameEdges, charmPosition, charmHook } from '../js/gallery.mjs';
+import { photoSize, wallLayout, movePhoto, createFlightImage, frameEdges, charmPosition, charmHook, hangingCharmPosition } from '../js/gallery.mjs';
 
 test('restoring a wall preserves every known photo once despite stale or malformed storage', () => {
   const originals = [{src:'one.jpg',size:82},{src:'two.jpg',size:88},{src:'three.jpg',size:80}];
@@ -58,4 +58,15 @@ test('charm hooks follow the curved rope and detach outside its reach', () => {
   assert.equal(charmHook(0,32,1000,rows),null);
   assert.equal(charmHook(500,84,1000,rows),null);
   assert.equal(charmHook(500,84,1000,rows,22),-20);
+});
+
+test('bear and GPU defaults hang from their rope on wide and narrow walls', () => {
+  for (const width of [280,1002]) {
+    for (const [x,row] of [[32,{y:32,sag:64}],[10,{y:350,sag:64}]]) {
+      const height = 1100, charmHeight = width < 500 ? 76 : 102;
+      const position = hangingCharmPosition(x,row,width,height,charmHeight);
+      const top = position.y/100*height-charmHeight/2;
+      assert.ok(Math.abs(charmHook(x/100*width,top,width,[row])+6) < .001);
+    }
+  }
 });
