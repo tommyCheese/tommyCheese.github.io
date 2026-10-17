@@ -231,7 +231,13 @@ window.SITE_MESSAGES = {
     "news.prismml-ternary-bonsai2-small-models.title": "PrismML 发布 Ternary Bonsai 2 小型端侧模型",
     "news.prismml-ternary-bonsai2-small-models.summary": "PrismML 推出基于 Qwen3.5 的 2B、4B、9B 三元权重模型，面向本地推理、视觉理解与工具调用；权重以 Apache 2.0 许可证开放。",
     "news.tsmc-2026-third-quarter-results.title": "台积电公布三季报：营收同比增长 50.9%",
-    "news.tsmc-2026-third-quarter-results.summary": "台积电第三季度营收为新台币 1.49424 万亿元，净利润为 7630.6 亿元，稀释每股收益为 29.43 元；2 纳米占晶圆收入的 8%。"
+    "news.tsmc-2026-third-quarter-results.summary": "台积电第三季度营收为新台币 1.49424 万亿元，净利润为 7630.6 亿元，稀释每股收益为 29.43 元；2 纳米占晶圆收入的 8%。",
+    "news.anthropic-nist-curve-seed-research.title": "Anthropic 公布 NIST 椭圆曲线种子溯源研究",
+    "news.anthropic-nist-curve-seed-research.summary": "研究公开复现代码，说明五条 NIST 素数曲线的种子可由 lrand48 与历史时间戳生成。这不是破解 ECDSA；部分基点来源和候选筛选规则仍未解释。",
+    "news.windows-11-28120-3272-accessibility-fixes.title": "Windows 11 预览版修复音频组件崩溃，增加光标指示器",
+    "news.windows-11-28120-3272-accessibility-fixes.summary": "Experimental（26H1）Build 28120.3272 修复 msmpeg2ac3dec.dll 导致的部分应用和游戏崩溃，并引入方便低视力用户定位光标的指示器。新功能分批向测试用户开放。",
+    "news.debian-linux-dsa-6568-security-update.title": "Debian 发布 Linux 内核安全更新 DSA-6568-1",
+    "news.debian-linux-dsa-6568-security-update.summary": "公告修复可能造成提权、拒绝服务或信息泄露的多项内核漏洞，包括 CVE-2026-99999。Debian 稳定版 trixie 的修复软件包版本为 6.12.113-1。"
   },
   "en": {
     "nav.about": "About",
@@ -464,7 +470,13 @@ window.SITE_MESSAGES = {
     "news.prismml-ternary-bonsai2-small-models.title": "PrismML releases compact Ternary Bonsai 2 models for local AI",
     "news.prismml-ternary-bonsai2-small-models.summary": "PrismML introduced Qwen3.5-based 2B, 4B, and 9B ternary models for local reasoning, visual understanding, and tool use. Weights are available under Apache 2.0.",
     "news.tsmc-2026-third-quarter-results.title": "TSMC reports third-quarter revenue growth of 50.9%",
-    "news.tsmc-2026-third-quarter-results.summary": "TSMC reported NT$1,494.24 billion in revenue, NT$763.06 billion in net income, and diluted EPS of NT$29.43. Its 2nm technology accounted for 8% of wafer revenue."
+    "news.tsmc-2026-third-quarter-results.summary": "TSMC reported NT$1,494.24 billion in revenue, NT$763.06 billion in net income, and diluted EPS of NT$29.43. Its 2nm technology accounted for 8% of wafer revenue.",
+    "news.anthropic-nist-curve-seed-research.title": "Anthropic publishes research tracing NIST curve seeds",
+    "news.anthropic-nist-curve-seed-research.summary": "Reproduction code links five NIST prime-curve seeds to lrand48 and historical timestamps. This does not break ECDSA; some base-point origins and candidate-selection rules remain unexplained.",
+    "news.windows-11-28120-3272-accessibility-fixes.title": "Windows 11 preview fixes audio crashes and adds a pointer indicator",
+    "news.windows-11-28120-3272-accessibility-fixes.summary": "Experimental (26H1) Build 28120.3272 fixes some app and game crashes caused by msmpeg2ac3dec.dll and introduces a pointer indicator for users with low vision. Features are rolling out gradually to testers.",
+    "news.debian-linux-dsa-6568-security-update.title": "Debian issues Linux kernel security update DSA-6568-1",
+    "news.debian-linux-dsa-6568-security-update.summary": "The advisory fixes kernel vulnerabilities that may allow privilege escalation, denial of service or information leaks, including CVE-2026-99999. The fixed package for Debian stable, trixie, is 6.12.113-1."
   },
   "ja": {
     "nav.about": "私について",
@@ -697,7 +709,13 @@ window.SITE_MESSAGES = {
     "news.prismml-ternary-bonsai2-small-models.title": "PrismML、端末上で動く小型Ternary Bonsai 2モデルを公開",
     "news.prismml-ternary-bonsai2-small-models.summary": "PrismMLはQwen3.5を基にした2B・4B・9Bの三値重みモデルを公開。ローカル推論、画像理解、ツール利用を想定し、重みはApache 2.0で提供する。",
     "news.tsmc-2026-third-quarter-results.title": "TSMC、第3四半期の売上高が前年同期比50.9%増",
-    "news.tsmc-2026-third-quarter-results.summary": "TSMCの売上高は1兆4,942.4億台湾ドル、純利益は7,630.6億台湾ドル、希薄化後EPSは29.43台湾ドル。2nmはウエハー売上高の8%を占めた。"
+    "news.tsmc-2026-third-quarter-results.summary": "TSMCの売上高は1兆4,942.4億台湾ドル、純利益は7,630.6億台湾ドル、希薄化後EPSは29.43台湾ドル。2nmはウエハー売上高の8%を占めた。",
+    "news.anthropic-nist-curve-seed-research.title": "Anthropic、NIST 楕円曲線のシードの由来を追う研究を公開",
+    "news.anthropic-nist-curve-seed-research.summary": "公開された再現コードにより、NIST の素体上の 5 曲線のシードと lrand48・過去のタイムスタンプとの対応が示された。ECDSA の解読ではなく、一部の基点の由来や候補の選別規則は未解明。",
+    "news.windows-11-28120-3272-accessibility-fixes.title": "Windows 11 プレビュー、音声関連のクラッシュを修正しポインター表示を追加",
+    "news.windows-11-28120-3272-accessibility-fixes.summary": "Experimental（26H1）の Build 28120.3272 は msmpeg2ac3dec.dll による一部のアプリやゲームのクラッシュを修正。弱視の利用者がカーソルを見つけやすくするポインター表示もテスター向けに段階的に提供する。",
+    "news.debian-linux-dsa-6568-security-update.title": "Debian、Linux カーネルのセキュリティ更新 DSA-6568-1 を公開",
+    "news.debian-linux-dsa-6568-security-update.summary": "権限昇格、サービス拒否、情報漏えいにつながる可能性のある複数の脆弱性を修正。CVE-2026-99999 も対象で、Debian 安定版 trixie の修正済みパッケージは 6.12.113-1。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -930,7 +948,13 @@ window.SITE_MESSAGES = {
     "news.prismml-ternary-bonsai2-small-models.title": "PrismML выпустила компактные модели Ternary Bonsai 2 для локального ИИ",
     "news.prismml-ternary-bonsai2-small-models.summary": "Модели на базе Qwen3.5 с 2, 4 и 9 млрд параметров используют троичные веса и предназначены для локального вывода, понимания изображений и вызова инструментов. Веса доступны по Apache 2.0.",
     "news.tsmc-2026-third-quarter-results.title": "Выручка TSMC за третий квартал выросла на 50,9%",
-    "news.tsmc-2026-third-quarter-results.summary": "TSMC сообщила о выручке 1494,24 млрд и чистой прибыли 763,06 млрд тайваньских долларов. Разводнённая прибыль на акцию — 29,43 тайваньского доллара; доля 2-нм технологии в выручке от пластин — 8%."
+    "news.tsmc-2026-third-quarter-results.summary": "TSMC сообщила о выручке 1494,24 млрд и чистой прибыли 763,06 млрд тайваньских долларов. Разводнённая прибыль на акцию — 29,43 тайваньского доллара; доля 2-нм технологии в выручке от пластин — 8%.",
+    "news.anthropic-nist-curve-seed-research.title": "Anthropic опубликовала исследование происхождения seed-параметров кривых NIST",
+    "news.anthropic-nist-curve-seed-research.summary": "Код воспроизведения связывает seed-параметры пяти кривых NIST над простыми полями с lrand48 и историческими метками времени. Это не взлом ECDSA; происхождение некоторых базовых точек и правила отбора кандидатов пока не объяснены.",
+    "news.windows-11-28120-3272-accessibility-fixes.title": "Предварительная Windows 11 исправляет сбои аудио и добавляет индикатор указателя",
+    "news.windows-11-28120-3272-accessibility-fixes.summary": "Сборка 28120.3272 канала Experimental (26H1) исправляет сбои некоторых приложений и игр из-за msmpeg2ac3dec.dll. Индикатор указателя помогает людям со слабым зрением находить курсор. Функции постепенно становятся доступны участникам тестирования.",
+    "news.debian-linux-dsa-6568-security-update.title": "Debian выпустил обновление безопасности ядра Linux DSA-6568-1",
+    "news.debian-linux-dsa-6568-security-update.summary": "Исправлены уязвимости ядра, способные привести к повышению привилегий, отказу в обслуживании или утечкам информации, включая CVE-2026-99999. Для стабильного выпуска Debian trixie исправления доступны в пакете 6.12.113-1."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -1163,6 +1187,12 @@ window.SITE_MESSAGES = {
     "news.prismml-ternary-bonsai2-small-models.title": "PrismML 發表 Ternary Bonsai 2 小型端側模型",
     "news.prismml-ternary-bonsai2-small-models.summary": "PrismML 推出以 Qwen3.5 為基礎的 2B、4B、9B 三元權重模型，供本機推論、影像理解與工具呼叫使用；權重以 Apache 2.0 授權開放。",
     "news.tsmc-2026-third-quarter-results.title": "台積電公布第三季財報：營收年增 50.9%",
-    "news.tsmc-2026-third-quarter-results.summary": "台積電第三季營收為新台幣 1.49424 兆元，淨利為 7630.6 億元，稀釋每股盈餘為 29.43 元；2 奈米占晶圓營收的 8%。"
+    "news.tsmc-2026-third-quarter-results.summary": "台積電第三季營收為新台幣 1.49424 兆元，淨利為 7630.6 億元，稀釋每股盈餘為 29.43 元；2 奈米占晶圓營收的 8%。",
+    "news.anthropic-nist-curve-seed-research.title": "Anthropic 公布 NIST 橢圓曲線種子溯源研究",
+    "news.anthropic-nist-curve-seed-research.summary": "研究公開重現程式碼，說明五條 NIST 質數曲線的種子可由 lrand48 與歷史時間戳記產生。這並非破解 ECDSA；部分基點來源與候選篩選規則仍未釐清。",
+    "news.windows-11-28120-3272-accessibility-fixes.title": "Windows 11 預覽版修正音訊元件當機，新增游標指示器",
+    "news.windows-11-28120-3272-accessibility-fixes.summary": "Experimental（26H1）Build 28120.3272 修正 msmpeg2ac3dec.dll 導致的部分應用程式與遊戲當機，並新增方便低視能使用者定位游標的指示器。新功能分批向測試使用者開放。",
+    "news.debian-linux-dsa-6568-security-update.title": "Debian 發布 Linux 核心安全性更新 DSA-6568-1",
+    "news.debian-linux-dsa-6568-security-update.summary": "公告修正可能造成權限提升、阻斷服務或資訊洩漏的多項核心漏洞，包括 CVE-2026-99999。Debian 穩定版 trixie 的修正版套件為 6.12.113-1。"
   }
 };
