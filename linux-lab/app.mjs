@@ -1,5 +1,6 @@
+import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
 import { goalReference } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261016-adaptive-review-3';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-welcome-language-1';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
@@ -403,6 +404,7 @@ function renderChapters() {
     for (const item of matches) {
       const row = element('li'); const link = element('a', undefined, 'lesson-link' + (completed.has(item.id) ? ' done' : ''));
       link.href = '#' + (starter ? 'starter/' : 'task/') + item.id;
+      link.addEventListener('click',event=> { if (link.hash===location.hash) { event.preventDefault(); $('levels-dialog').close('selected'); } });
       if (item.id === currentId && mode === 'learn') link.setAttribute('aria-current', 'step');
       link.append(element('span', completed.has(item.id) ? '✓' : String(items.indexOf(item) + 1).padStart(2, '0'), 'lesson-marker'), element('span', item.title));
       const commandHint = element('span', item.command, 'lesson-command-tooltip');
@@ -1175,6 +1177,7 @@ const welcomePages = [
 ];
 let welcomePage = 0;
 function renderWelcome() {
+  $('welcome-dialog').dataset.page = String(welcomePage);
   const page = welcomePages[welcomePage], last = welcomePage === welcomePages.length - 1;
   $('welcome-title').textContent = page.title;
   $('welcome-description').textContent = page.description;
@@ -1187,11 +1190,11 @@ function renderWelcome() {
   $('welcome-start').hidden = !last;
   $('welcome-title').focus({preventScroll:true});
 }
-function showWelcomeIntro() {
-  welcomePage = 0;
+function showWelcomeIntro(page = 0) {
+  welcomePage = page;
   renderWelcome();
   $('welcome-dialog').showModal();
-  $('welcome-next').focus({preventScroll:true});
+  $(welcomePage === welcomePages.length - 1 ? 'welcome-start' : 'welcome-next').focus({preventScroll:true});
 }
 $('welcome-next').addEventListener('click', () => { welcomePage = Math.min(welcomePage + 1, welcomePages.length - 1); renderWelcome(); });
 $('welcome-previous').addEventListener('click', () => { welcomePage = Math.max(0, welcomePage - 1); renderWelcome(); });
@@ -1207,8 +1210,15 @@ $('welcome-dialog').addEventListener('close', () => {
 });
 let showWelcome = true;
 try { showWelcome = localStorage.getItem(WELCOME_KEY) !== 'seen'; } catch { /* Show the introduction without requiring storage. */ }
+const welcomeURL = new URL(location.href);
+const resumeWelcome = welcomeURL.searchParams.get('welcome-page');
+if (resumeWelcome !== null) {
+  welcomeURL.searchParams.delete('welcome-page');
+  history.replaceState(history.state, '', welcomeURL.href);
+}
 onboardingReady = true;
-if (showWelcome) showWelcomeIntro();
+if (resumeWelcome !== null && /^[0-2]$/.test(resumeWelcome)) showWelcomeIntro(Number(resumeWelcome));
+else if (showWelcome) showWelcomeIntro();
 else if (mode === 'learn' && !transcript.some(item=>item.command)) { showTaskGuide(); if (training?.kind !== 'review') showLessonIntro(); }
 
 // Keep favorites in sync when a standalone reference page changes them.
@@ -1226,3 +1236,5 @@ if (mode === 'sandbox' && exampleName) {
   if (item) { $('command-input').value = item.example; $('command-input').focus(); }
   const url = new URL(location.href); url.searchParams.delete('example'); history.replaceState(null, '', url);
 }
+
+setupKeyboardNavigation(document);
