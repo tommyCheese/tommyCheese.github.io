@@ -376,8 +376,10 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
             tile.append(node('button', '↘', type='button', class_='photo-resize', role='slider', aria_label=messages['gallery.resizePhoto'].replace('{number}', str(index)), aria_valuemin='52', aria_valuemax='100', aria_valuenow=str(size)))
             slot.append(tile)
             grid.append(slot)
-        for charm_id, x, y, tilt in [('bear',40,30,-8), ('racer',67,28,5), ('controller',51,48,-4), ('gpu',10,47,6), ('phone',94,44,-5), ('book',53,63,4)]:
+        for charm_id, x, y, tilt in [('bear',32,30,-8), ('racer',67,28,5), ('controller',51,48,-4), ('gpu',10,47,6), ('phone',94,44,-5), ('book',53,63,4)]:
             charm = node('button', type='button', class_='photo-charm', data_charm=charm_id, data_charm_x=str(x), data_charm_y=str(y), aria_label=messages['gallery.moveCharm'].replace('{name}', messages['gallery.charm.' + charm_id]), style='left:' + str(x) + '%;top:' + str(y) + '%;--charm-tilt:' + str(tilt) + 'deg')
+            if charm_id in ('bear', 'gpu'):
+                charm.set('data-charm-rope', '0' if charm_id == 'bear' else '1')
             icon = node('svg', viewBox='0 0 120 120', aria_hidden='true', focusable='false')
             icon.append(node('use', href='/images/gallery/charms.svg?v=' + revision + '#' + charm_id))
             charm.append(icon)
