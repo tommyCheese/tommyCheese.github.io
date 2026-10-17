@@ -3,6 +3,7 @@ from copy import deepcopy
 from email.utils import parsedate_to_datetime
 from urllib.parse import quote, unquote, urlsplit
 from lxml import html, etree
+from reading_layout import NEWS, NEWS_TAGS, RESEARCH
 
 GROUPS = {
     'directions': ['软件架构', 'agent开发', '机器学习'],
@@ -109,6 +110,20 @@ def render_tags(doc, path, articles, messages):
                 heading.append(node('span', messages['topics.count'].replace('{count}', str(len(members(tag, articles))))))
                 link.append(heading)
                 link.append(label('p', 'tag.' + tag + '.description'))
+                grid.append(link)
+            section.append(grid)
+            directory.append(section)
+        for collection, tags, items in [('news', NEWS_TAGS, NEWS['items']), ('research', RESEARCH['tags'], RESEARCH['items'])]:
+            section = node('section', data_tag_group=collection, aria_labelledby='tags-' + collection)
+            section.append(label('h2', 'tags.' + collection, id='tags-' + collection))
+            grid = node('div', class_='tag-grid')
+            for tag in tags:
+                link = node('a', href='/' + collection + '/?tag=' + tag, class_='tag-card', data_catalog_tag=tag)
+                heading = node('div', class_='section-heading')
+                heading.append(label('h3', ('news.category.' if collection == 'news' else 'research.tag.') + tag))
+                count = sum(tag in (item['tags'] if collection == 'research' else [item['category']]) for item in items)
+                heading.append(node('span', messages[collection + '.count'].replace('{count}', str(count))))
+                link.append(heading)
                 grid.append(link)
             section.append(grid)
             directory.append(section)

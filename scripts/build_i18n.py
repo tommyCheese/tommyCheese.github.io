@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://tommycheese.github.io'
 LOCALES = {'zh-CN': '简体中文', 'en': 'English', 'ja': '日本語', 'ru': 'Русский', 'zh-TW': '繁體中文'}
 PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALES}
-UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','i18n/news.json','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','css/interaction.css','js/interaction.js','js/search.js','js/comments.js'])).hexdigest()[:12]
+UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','js/i18n.js','js/i18n-messages.js','i18n/news.json','i18n/research.json','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','css/interaction.css','js/interaction.js','js/search.js','js/comments.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
@@ -302,16 +302,17 @@ def build_diagrams():
 
 def build():
     files = [ROOT/'index.html', ROOT/'404.html']
-    for folder in ['blogs','tags','categories','gallery','topics','news']:
+    for folder in ['blogs','tags','categories','gallery','topics','news','research']:
         files.extend(sorted((ROOT/folder).rglob('*.html')))
     sources = {file: file.read_text() for file in files}
-    if ROOT/'news/index.html' not in sources:
-        news_doc = html.document_fromstring(sources[ROOT/'topics/index.html'])
-        content = news_doc.get_element_by_id('content')
-        content.clear()
-        content.set('id', 'content')
-        content.append(html.Element('main', id='news-page'))
-        sources[ROOT/'news/index.html'] = serialize_page(news_doc)
+    for collection in ['news', 'research']:
+        if ROOT/collection/'index.html' not in sources:
+            directory_doc = html.document_fromstring(sources[ROOT/'topics/index.html'])
+            content = directory_doc.get_element_by_id('content')
+            content.clear()
+            content.set('id', 'content')
+            content.append(html.Element('main', id=collection + '-page'))
+            sources[ROOT/collection/'index.html'] = serialize_page(directory_doc)
     index_source = json.loads((ROOT/'index.json').read_text())
     articles = {}
     for entry in index_source:
@@ -412,10 +413,10 @@ def build():
                 tag = canonical_tag_path(path).split('/')[2]
                 title=t('tag.'+tag,locale);description=t('tag.'+tag+'.description',locale)
             else:
-                page_key={'/':'page.home','/blogs/':'page.blogs','/news/':'nav.news','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
+                page_key={'/':'page.home','/blogs/':'page.blogs','/news/':'nav.news','/research/':'nav.research','/topics/':'nav.topics','/tags/':'page.tags','/gallery/':'page.gallery','/categories/':'page.categories','/404.html':'page.notFound'}.get(path,'page.home')
                 title='Tommy Cheese' if path=='/' else t(page_key,locale);description=t('site.description',locale)
-                if path == '/news/':
-                    description = t('news.timelineIntro', locale)
+                if path in ['/news/', '/research/']:
+                    description = t(path.strip('/') + '.timelineIntro', locale)
             if not alias:
                 enhance_layout(doc,path,locale,articles,MESSAGES[locale],UI_REVISION)
                 render_tags(doc,path,articles,MESSAGES[locale])

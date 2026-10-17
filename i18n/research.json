@@ -1,0 +1,73 @@
+{
+  "updated_at": "2026-10-17",
+  "tags": [
+    "ai",
+    "agents",
+    "papers",
+    "results",
+    "conferences"
+  ],
+  "items": [
+    {
+      "id": "athanor-autonomous-post-training",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Zhou et al. · arXiv:2610.21055v1",
+      "url": "https://arxiv.org/abs/2610.21055v1"
+    },
+    {
+      "id": "into-the-unknown-agent-benchmark",
+      "kind": "preprint",
+      "published_at": "2026-10-13",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Kim et al. · arXiv:2610.19159v1",
+      "url": "https://arxiv.org/abs/2610.19159v1"
+    },
+    {
+      "id": "nist-curve-seed-origins",
+      "kind": "research",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ai",
+        "results"
+      ],
+      "source": "Anthropic Research",
+      "url": "https://www.anthropic.com/research/ecdsa-curve-origins"
+    },
+    {
+      "id": "neurips-2026-schedule",
+      "kind": "conference",
+      "verified_at": "2026-10-17",
+      "event_start": "2026-12-06",
+      "event_end": "2026-12-12",
+      "tags": [
+        "ai",
+        "conferences"
+      ],
+      "source": "NeurIPS 2026",
+      "url": "https://neurips.cc/Conferences/2026/Dates"
+    },
+    {
+      "id": "iclr-2027-review-calendar",
+      "kind": "conference",
+      "verified_at": "2026-10-17",
+      "event_start": "2027-04-26",
+      "event_end": "2027-04-30",
+      "tags": [
+        "ai",
+        "conferences"
+      ],
+      "source": "ICLR 2027",
+      "url": "https://iclr.cc/Conferences/2027/Dates"
+    }
+  ]
+}

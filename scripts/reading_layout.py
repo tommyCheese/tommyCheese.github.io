@@ -14,6 +14,8 @@ TOPICS = {
 }
 FEATURED = ['opencode-v2-extensions', ARCHITECTURE[0], MODEL_TRANSFER]
 NEWS = json.loads((Path(__file__).resolve().parents[1] / 'i18n/news.json').read_text())
+NEWS_TAGS = ['ai', 'semiconductors', 'devices', 'cars']
+RESEARCH = json.loads((Path(__file__).resolve().parents[1] / 'i18n/research.json').read_text())
 
 
 def enhance_layout(doc, path, locale, articles, messages, revision):
@@ -43,24 +45,51 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
 
     news_items = sorted(NEWS['items'], key=lambda item: item['published_at'], reverse=True)
 
-    def news_card(item, preview=False):
-        href = '/news/#news-' + item['published_at'] if preview else item['url']
-        card = node('a', href=href, class_='news-card ' + ('news-preview' if preview else 'news-entry'), data_news_id=item['id'])
-        if not preview:
-            card.set('target', '_blank')
-            card.set('rel', 'noopener noreferrer')
-        card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else ('news-cover news-cover-contain' if item.get('image_fit') == 'contain' else 'news-cover')))
+    research_items = sorted(RESEARCH['items'], key=lambda item: item.get('published_at', item.get('verified_at')), reverse=True)
+
+    def news_card(item, preview=False, research=False):
+        collection = 'research' if research else 'news'
+        date = item.get('published_at', item.get('verified_at'))
+        href = '/' + collection + '/#' + collection + '-' + date if preview else item['url']
+        tags = item['tags'] if research else [item['category']]
+        card = node('article', class_='news-card ' + ('news-preview' if preview else 'news-entry') + (' research-card' if research else ''),
+                    data_news_tags=' '.join(tags))
+        card.set('data-' + collection + '-id', item['id'])
+        if item.get('image'):
+            card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else ('news-cover news-cover-contain' if item.get('image_fit') == 'contain' else 'news-cover')))
         copy = node('div', class_='news-copy')
-        credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
-        copy.append(node('span', credit, class_='news-image-credit'))
-        copy.append(label('span', 'news.category.' + item['category'], class_='news-category'))
-        copy.append(label('h3', 'news.' + item['id'] + '.title'))
-        copy.append(label('p', 'news.' + item['id'] + '.summary'))
+        if item.get('image_credit'):
+            credit = item['image_credit'] + (' · ' + messages['news.filePhoto'] if item.get('file_photo') else '')
+            copy.append(node('span', credit, class_='news-image-credit'))
+        if research:
+            copy.append(label('span', 'research.kind.' + item['kind'], class_='research-kind'))
+        labels = node('div', class_='news-tags')
+        for tag in tags:
+            labels.append(label('a', ('research.tag.' if research else 'news.category.') + tag,
+                                href='/' + collection + '/?tag=' + tag, class_='news-category', rel='tag', data_news_tag=tag))
+        copy.append(labels)
+        title = node('h3')
+        main_link = label('a', collection + '.' + item['id'] + '.title', href=href, class_='news-main-link')
+        if not preview:
+            main_link.set('target', '_blank')
+            main_link.set('rel', 'noopener noreferrer')
+        title.append(main_link)
+        copy.append(title)
+        copy.append(label('p', collection + '.' + item['id'] + '.summary'))
+        if research and item.get('event_start'):
+            event = node('p', class_='research-event')
+            event.append(label('span', 'research.eventDates'))
+            event.append(node('time', item['event_start'], datetime=item['event_start']))
+            event.append(node('span', ' — '))
+            event.append(node('time', item['event_end'], datetime=item['event_end']))
+            copy.append(event)
         metadata = node('div', class_='news-meta')
         metadata.append(node('span', item['source']))
-        if preview:
-            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
-        metadata.append(label('span', 'news.viewDay' if preview else 'news.original', class_='news-card-action'))
+        if research:
+            metadata.append(label('span', 'research.published' if item.get('published_at') else 'research.verified'))
+        if preview or research:
+            metadata.append(node('time', date, datetime=date))
+        metadata.append(label('span', collection + '.viewDay' if preview else 'news.original', class_='news-card-action', aria_hidden='true'))
         copy.append(metadata)
         card.append(copy)
         return card
@@ -119,7 +148,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
             menu.insert(0, mobile_search[0])
         start = 1 if mobile_search else 0
         for offset, (key, href) in enumerate([
-            ('nav.linuxLab', '/linux-lab/'), ('nav.news', '/news/'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
+            ('nav.linuxLab', '/linux-lab/'), ('nav.news', '/news/'), ('nav.research', '/research/'), ('nav.blogs', '/blogs/'), ('nav.topics', '/topics/'),
             ('nav.tags', '/tags/'), ('nav.about', '/#about'), ('nav.gallery', '/gallery/'),
         ]):
             item = node('li', class_='nav-item navbar-text' + (' linux-lab-nav-item' if key == 'nav.linuxLab' else ''))
@@ -148,6 +177,10 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
             anchor.append(label('strong', 'topics.' + topic + '.title'))
             anchor.append(node('span', messages['topics.count'].replace('{count}', str(len(slugs)))))
             links.append(anchor)
+        anchor = node('a', href='/research/')
+        anchor.append(label('strong', 'nav.research'))
+        anchor.append(node('span', messages['research.count'].replace('{count}', str(len(RESEARCH['items'])))))
+        links.append(anchor)
         return links
 
     if path == '/':
@@ -199,6 +232,20 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
             grid.append(news_card(item, preview=True))
         news.append(grid)
         sections.append(news)
+        research = node('section', id='frontier-research', class_='home-section container', data_reading_layout='research', aria_labelledby='research-heading')
+        heading = node('div', class_='section-heading news-heading')
+        heading.append(label('h2', 'nav.research', id='research-heading'))
+        heading.append(label('a', 'research.viewAll', href='/research/', class_='news-view-all'))
+        research.append(heading)
+        research.append(label('p', 'research.previewIntro', class_='news-intro'))
+        grid = node('div', class_='news-grid')
+        # Preview one recent item of each type so papers and meetings stay discoverable.
+        for kind in ['preprint', 'research', 'conference']:
+            item = next((item for item in research_items if item['kind'] == kind), None)
+            if item:
+                grid.append(news_card(item, preview=True, research=True))
+        research.append(grid)
+        sections.append(research)
         featured = node('section', id='featured-posts', class_='home-section container', data_reading_layout='featured', aria_labelledby='featured-heading')
         featured.append(label('h2', 'section.featured', id='featured-heading'))
         cards = node('div', class_='featured-grid')
@@ -223,25 +270,32 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         for offset, section in enumerate(sections, start=1):
             content.insert(content.index(hero) + offset, section)
 
-    if path == '/news/':
-        directory = doc.get_element_by_id('news-page')
+    if path in ['/news/', '/research/']:
+        is_research = path == '/research/'
+        collection = 'research' if is_research else 'news'
+        data = RESEARCH if is_research else NEWS
+        items = research_items if is_research else news_items
+        directory = doc.get_element_by_id(collection + '-page')
         directory.clear()
-        directory.set('id', 'news-page')
+        directory.set('id', collection + '-page')
+        directory.set('data-catalog', collection)
         directory.set('class', 'news-directory container')
         header = node('header', class_='news-page-heading')
-        header.append(node('p', 'TECH DAILY', class_='eyebrow'))
-        header.append(label('h1', 'nav.news'))
-        header.append(label('p', 'news.timelineIntro', class_='directory-intro'))
-        header.append(node('p', messages['news.updated'].replace('{date}', NEWS['updated_at']), class_='news-updated'))
-        categories = node('div', class_='news-categories')
-        for category in ['ai', 'semiconductors', 'devices', 'cars']:
-            categories.append(label('span', 'news.category.' + category))
+        header.append(node('p', 'RESEARCH FRONTIER' if is_research else 'TECH DAILY', class_='eyebrow'))
+        header.append(label('h1', 'nav.' + collection))
+        header.append(label('p', collection + '.timelineIntro', class_='directory-intro'))
+        header.append(node('p', messages['news.updated'].replace('{date}', data['updated_at']), class_='news-updated'))
+        categories = node('nav', class_='news-categories', aria_label=messages['news.tags'], data_i18n_aria_label='news.tags')
+        for tag in ['all'] + (RESEARCH['tags'] if is_research else NEWS_TAGS):
+            key = 'news.filter.allTags' if tag == 'all' else ('research.tag.' if is_research else 'news.category.') + tag
+            categories.append(label('a', key, href=path + (('?tag=' + tag) if tag != 'all' else ''),
+                                    data_news_tag=tag, aria_current='true' if tag == 'all' else 'false', aria_controls='news-timeline'))
         header.append(categories)
         directory.append(header)
-        dates = list(dict.fromkeys(item['published_at'] for item in news_items))
-        filters = node('form', id='news-date-filter', class_='news-date-filter', hidden='hidden',
-                       aria_label=messages['news.dates'], data_i18n_aria_label='news.dates')
-        filters.append(label('span', 'news.dates', class_='news-filter-label', id='news-filter-label'))
+        dates = list(dict.fromkeys(item.get('published_at', item.get('verified_at')) for item in items))
+        filters = node('form', id='news-date-filter', class_='news-date-filter', hidden='hidden', data_catalog=collection,
+                       aria_label=messages[collection + '.dates'], data_i18n_aria_label=collection + '.dates')
+        filters.append(label('span', collection + '.dates', class_='news-filter-label', id='news-filter-label'))
         modes = node('div', class_='news-filter-modes', role='group', aria_labelledby='news-filter-label')
         for mode in ['all', 'today', 'week', 'range']:
             modes.append(label('button', 'news.filter.' + mode, type='button', data_news_period=mode,
@@ -253,27 +307,27 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
             wrapper.append(label('span', 'news.filter.' + field))
             wrapper.append(node('input', type='date', id='news-' + field, name=field, required='required'))
             custom.append(wrapper)
-        custom.append(label('button', 'news.filter.apply', type='submit', class_='news-filter-apply'))
+        custom.append(label('button', collection + '.filter.apply', type='submit', class_='news-filter-apply'))
         filters.append(custom)
         filters.append(node('p', id='news-filter-status', class_='news-filter-status', role='status', aria_live='polite', aria_atomic='true'))
         directory.append(filters)
         timeline = node('div', id='news-timeline', class_='news-timeline')
         for date in dates:
-            daily_items = [item for item in news_items if item['published_at'] == date]
-            day = node('section', id='news-' + date, class_='news-day', data_news_date=date, aria_labelledby='heading-' + date)
+            daily_items = [item for item in items if item.get('published_at', item.get('verified_at')) == date]
+            day = node('section', id=collection + '-' + date, class_='news-day', data_news_date=date, aria_labelledby='heading-' + date)
             heading = node('div', class_='news-day-heading')
             title = node('h2', id='heading-' + date)
             title.append(node('time', date, datetime=date))
             heading.append(title)
-            heading.append(node('span', messages['news.count'].replace('{count}', str(len(daily_items))), class_='news-day-count'))
+            heading.append(node('span', messages[collection + '.count'].replace('{count}', str(len(daily_items))), class_='news-day-count'))
             day.append(heading)
             entries = node('div', class_='news-day-entries')
             for item in daily_items:
-                entries.append(news_card(item))
+                entries.append(news_card(item, research=is_research))
             day.append(entries)
             timeline.append(day)
         directory.append(timeline)
-        directory.append(label('p', 'news.filter.empty', id='news-filter-empty', class_='news-filter-empty', hidden='hidden'))
+        directory.append(label('p', collection + '.filter.empty', id='news-filter-empty', class_='news-filter-empty', hidden='hidden'))
         doc.find('body').append(node('script', src='/js/reading.js?v=' + revision, defer='defer', data_reading_layout='runtime'))
 
     if path == '/topics/':
