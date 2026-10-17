@@ -30,8 +30,8 @@
     { title: 'nav.tags', path: '/tags/', icon: 'tag', aliases: ['标签', '標籤', 'tags'] },
     { title: 'nav.about', path: '/#about', icon: 'user', aliases: ['关于', '關於', 'about'] },
     { title: 'nav.gallery', path: '/gallery/', icon: 'compass', aliases: ['探索', '相册', '相簿', 'explore', 'gallery'] },
-    { title: 'nav.research', path: '/research/', icon: 'layers', suggested: false, aliases: ['前沿研究', '研究', '论文', '論文', '会议', '會議', 'AI Agent', 'research', 'papers', 'conferences'] },
-    { title: 'nav.news', path: '/news/', icon: 'news', suggested: false, aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] },
+    { title: 'nav.news', path: '/news/', icon: 'news', aliases: ['今日要闻', '今日要聞', '新闻', '新聞', '要闻', '资讯', '資訊', '科技新闻', 'news', 'headlines'] },
+    { title: 'nav.research', path: '/research/', icon: 'layers', aliases: ['前沿研究', '研究', '论文', '論文', '会议', '會議', 'AI Agent', 'research', 'papers', 'conferences'] },
     { title: 'nav.linuxLab', path: '/linux-lab/', icon: 'terminal', shared: true, suggested: false, aliases: ['Linux', '命令', '终端', '終端', '命令实验室', '命令實驗室', 'shell', 'bash', 'linux lab'] }
   ];
 
