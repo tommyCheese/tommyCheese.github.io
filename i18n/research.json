@@ -44,72 +44,6 @@
       "url": "https://www.anthropic.com/research/ecdsa-curve-origins"
     },
     {
-      "id": "neurips-2026-schedule",
-      "kind": "conference",
-      "verified_at": "2026-10-17",
-      "event_start": "2026-12-06",
-      "event_end": "2026-12-12",
-      "tags": [
-        "ai",
-        "conferences"
-      ],
-      "source": "NeurIPS 2026",
-      "url": "https://neurips.cc/Conferences/2026/Dates"
-    },
-    {
-      "id": "iclr-2027-review-calendar",
-      "kind": "conference",
-      "verified_at": "2026-10-17",
-      "event_start": "2027-04-26",
-      "event_end": "2027-04-30",
-      "tags": [
-        "ai",
-        "conferences"
-      ],
-      "source": "ICLR 2027",
-      "url": "https://iclr.cc/Conferences/2027/Dates"
-    },
-    {
-      "id": "aistats-2027-review-calendar",
-      "kind": "conference",
-      "verified_at": "2026-10-17",
-      "event_start": "2027-05-03",
-      "event_end": "2027-05-06",
-      "tags": [
-        "ai",
-        "conferences"
-      ],
-      "source": "AISTATS 2027",
-      "url": "https://aistats.org/aistats2027/dates.html"
-    },
-    {
-      "id": "aamas-2027-agent-research-calendar",
-      "kind": "conference",
-      "verified_at": "2026-10-17",
-      "event_start": "2027-05-03",
-      "event_end": "2027-05-07",
-      "tags": [
-        "ai",
-        "agents",
-        "conferences"
-      ],
-      "source": "AAMAS 2027 · University of Warwick",
-      "url": "https://warwick.ac.uk/fac/sci/dcs/aamas2027/"
-    },
-    {
-      "id": "cvpr-2027-submission-calendar",
-      "kind": "conference",
-      "verified_at": "2026-10-17",
-      "event_start": "2027-06-20",
-      "event_end": "2027-06-25",
-      "tags": [
-        "ai",
-        "conferences"
-      ],
-      "source": "CVPR 2027",
-      "url": "https://cvpr.thecvf.com/Conferences/2027/Dates"
-    },
-    {
       "id": "skillformer-audio-skill-adapters",
       "kind": "preprint",
       "published_at": "2026-10-06",
@@ -122,15 +56,17 @@
     },
     {
       "id": "heterogeneous-agent-model-persona-effects",
-      "kind": "preprint",
+      "kind": "conference-paper",
       "published_at": "2026-10-06",
       "tags": [
         "ai",
         "agents",
-        "papers"
+        "papers",
+        "conferences"
       ],
       "source": "arXiv · 2610.07535v1",
-      "url": "https://arxiv.org/abs/2610.07535v1"
+      "url": "https://arxiv.org/abs/2610.07535v1",
+      "venue": "COLM 2026 · Social Simulation with LLMs Workshop"
     },
     {
       "id": "jepa-inverse-dynamics-control-representations",
@@ -283,15 +219,17 @@
     },
     {
       "id": "misvisagentbench-misleading-charts",
-      "kind": "preprint",
+      "kind": "conference-paper",
       "published_at": "2026-10-09",
       "tags": [
         "ai",
         "agents",
-        "papers"
+        "papers",
+        "conferences"
       ],
       "source": "arXiv · 2610.12823v1",
-      "url": "https://arxiv.org/abs/2610.12823v1"
+      "url": "https://arxiv.org/abs/2610.12823v1",
+      "venue": "EMNLP 2026"
     },
     {
       "id": "treehca-agent-hindsight-credit",
@@ -343,15 +281,17 @@
     },
     {
       "id": "portable-skills-agentic-rag",
-      "kind": "preprint",
+      "kind": "conference-paper",
       "published_at": "2026-10-10",
       "tags": [
         "ai",
         "agents",
-        "papers"
+        "papers",
+        "conferences"
       ],
       "source": "arXiv · 2610.14428v1",
-      "url": "https://arxiv.org/abs/2610.14428v1"
+      "url": "https://arxiv.org/abs/2610.14428v1",
+      "venue": "EMNLP 2026 · Industry Track"
     },
     {
       "id": "sceneforesee-scene-evolution",
@@ -657,15 +597,17 @@
     },
     {
       "id": "linguaguardbench-agent-guard-language",
-      "kind": "preprint",
+      "kind": "conference-paper",
       "published_at": "2026-10-15",
       "tags": [
         "ai",
         "agents",
-        "papers"
+        "papers",
+        "conferences"
       ],
       "source": "arXiv · 2610.22244v1",
-      "url": "https://arxiv.org/abs/2610.22244v1"
+      "url": "https://arxiv.org/abs/2610.22244v1",
+      "venue": "NeurIPS 2026 · AIWILD Workshop"
     },
     {
       "id": "mcp-fsd-filesystem-capability-study",
@@ -725,6 +667,96 @@
       ],
       "source": "Rao, Sirkovic & Pawlosky · Google Research",
       "url": "https://research.google/blog/grounding-ai-agents-in-biological-reality-building-blocks-for-autonomous-wet-labs/"
+    },
+    {
+      "id": "memcode-discrete-agent-memory",
+      "kind": "conference-paper",
+      "published_at": "2026-10-14",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Li et al. · arXiv:2610.19472v1",
+      "url": "https://arxiv.org/abs/2610.19472v1",
+      "venue": "NeurIPS 2026"
+    },
+    {
+      "id": "prod-progress-aware-agent-distillation",
+      "kind": "conference-paper",
+      "published_at": "2026-10-14",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Cao et al. · arXiv:2610.19439v1",
+      "url": "https://arxiv.org/abs/2610.19439v1",
+      "venue": "NeurIPS 2026"
+    },
+    {
+      "id": "agent-safety-shortcut-sensitivity",
+      "kind": "conference-paper",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Demirkiran & Ernstberger · arXiv:2610.22243v1",
+      "url": "https://arxiv.org/abs/2610.22243v1",
+      "venue": "NeurIPS 2026 workshops: TAE / AIWILD"
+    },
+    {
+      "id": "mlexpert-autonomous-ml-engineering",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Du et al. · arXiv:2610.22344v1",
+      "url": "https://arxiv.org/abs/2610.22344v1"
+    },
+    {
+      "id": "librarian-agents-proactive-workspaces",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Singh et al. · arXiv:2610.22273v1",
+      "url": "https://arxiv.org/abs/2610.22273v1"
+    },
+    {
+      "id": "os-helix-hybrid-computer-agents",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-17",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Yang et al. · arXiv:2610.22234v1",
+      "url": "https://arxiv.org/abs/2610.22234v1"
     }
   ],
   "coverage_start": "2026-10-06",

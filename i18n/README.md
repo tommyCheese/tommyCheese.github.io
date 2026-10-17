@@ -57,13 +57,13 @@ Ctrl+K（Mac 为 ⌘K）打开搜索与跳转，默认以两列紧凑布局显�
 
 ## 前沿研究
 
-`/research/` 与今日要闻使用相同的卡片和时间流风格。导航、专题目录、搜索及首页 `#frontier-research` 均提供入口；首页分别预览最近的预印本、研究报告和会议信息。五个语言版本均生成完整静态页面。
+`/research/` 与今日要闻使用相同的卡片和时间流风格。导航、专题目录、搜索及首页 `#frontier-research` 均提供入口；首页分别预览最近的论文／预印本、研究报告和会议论文。五个语言版本均生成完整静态页面。
 
-`i18n/research.json` 是研究元数据与标签的唯一来源：顶层 `tags` 管理标签 ID，每条记录用 `tags` 关联一个或多个标签。`kind` 为 `preprint`、`research` 或 `conference`。论文和报告使用真实 `published_at`，会议日历没有明确发布日期时使用 `verified_at`，在页面标为“核验于”；会议实际会期另存 `event_start`、`event_end`，不得用未来会期代替发布日期。标签及标题、摘要的五语言文案维护在 `research.tag.<tag>`、`research.<ID>.title`、`research.<ID>.summary`。
+`i18n/research.json` 是研究元数据与标签的唯一来源：顶层 `tags` 管理标签 ID，每条记录用 `tags` 关联一个或多个标签。`kind` 仅允许 `preprint`、`research`、`conference-paper`。**“会议”只指会议论文，不是会议日程、会期、时间线、DDL、征稿或报名信息；这些内容不得收录或计入数量。** 会议论文使用 `conferences` 和 `papers` 标签，并用 `venue` 写明主会、行业轨道或工作坊；来源须是论文、论文集、OpenReview 或原文录用注释。只有作者注释时写“作者注明”，不把工作坊录用升级为主会录用。标签及标题、摘要的五语言文案维护在 `research.tag.<tag>`、`research.<ID>.title`、`research.<ID>.summary`。
 
-每日最低收录量为 **5 条，只能多不能少**。`coverage_start` 标明连续归档的起点（当前为 2026-10-06），`minimum_per_day` 不得低于 5；每次更新 `updated_at` 时须补齐起点至整理日期之间的每一个自然日。`tests/check_research.py` 会逐日输出计数、检查缺日和不足，并拒绝以同一来源的不同 ID 或 arXiv 不同版本重复计数。论文、报告按真实发布日期统计，独立会议日历按真实核验日期统计，两者在界面上明确区分。不得伪造日期、倒填核验日期或降低内容过滤标准来满足数量；有缺额就继续核验补齐，不以不足五条的日期作为完成结果发布。
+每日最低收录量为 **5 条真实论文或研究成果，只能多不能少**。`coverage_start` 标明连续归档起点（当前为 2026-10-06），`minimum_per_day` 不得低于 5。每日精选使用真实的上海日期 `collected_at` 归档，`published_at` 始终保留原文真实发表日期，页面分别标注“发布于”“收录于”，不强求五条全是当日首发。历史未记录 `collected_at` 的条目仍按原文日期归档，不倒填虚假收录日期。每次更新 `updated_at` 时核对完整日期范围；`tests/check_research.py` 会逐日输出计数、拒绝缺日或不足，禁止日历类型及 `verified_at`、`event_start`、`event_end` 字段，并拒绝同一来源换 ID 或 arXiv 换版本重复计数。不得伪造日期或降低广告、黄赌毒过滤标准满足数量。
 
-只采用可核验的论文、研究机构原文和会议官网；预印本不写成已录用成果；arXiv 收录也不等于未经同行评审，有明确录用注释时记录具体主会、行业轨道或工作坊，缺少字段时不臆断评审状态。研究结果保留实验范围与限制。来源核验及与新闻相同的广告、黄赌毒过滤结果记录在 `i18n/research-sources-YYYY-MM-DD.md`。首批见 [2026-10-17 研究来源核验](research-sources-2026-10-17.md)。运行构建、`python tests/check_research.py` 及上述筛选测试后发布。
+只采用可核验的论文、研究机构原文和会议官网；预印本不写成已录用成果；arXiv 收录也不等于未经同行评审，有明确录用注释时记录具体主会、行业轨道或工作坊，缺少字段时不臆断评审状态。研究结果保留实验范围与限制。来源核验及与新闻相同的广告、黄赌毒过滤结果记录在 `i18n/research-sources-YYYY-MM-DD.md`。最新口径见 [2026-10-17 研究内容更正](research-correction-2026-10-17.md)，[首批来源记录](research-sources-2026-10-17.md)仅保留为历史。运行构建、`python tests/check_research.py` 及上述筛选测试后发布。
 
 ## 博客标签
 

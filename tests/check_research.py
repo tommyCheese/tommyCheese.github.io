@@ -10,20 +10,21 @@ from lxml import html, etree
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from build_i18n import LOCALES, PREFIX, MESSAGES, BASE
-from reading_layout import NEWS, NEWS_TAGS, RESEARCH
+from reading_layout import NEWS, NEWS_TAGS, RESEARCH, research_archive_date
 
 
 def read(path):
     return html.document_fromstring(path.read_text())
 
 
-items = sorted(RESEARCH['items'], key=lambda item: item.get('published_at', item.get('verified_at')), reverse=True)
+assert all(item['kind'] in {'preprint', 'research', 'conference-paper'} for item in RESEARCH['items']), 'Conference calendars and deadlines are not research content'
+items = sorted(RESEARCH['items'], key=research_archive_date, reverse=True)
 updated = date.fromisoformat(RESEARCH['updated_at'])
 coverage_start = date.fromisoformat(RESEARCH['coverage_start'])
 minimum = RESEARCH['minimum_per_day']
 assert isinstance(minimum, int) and minimum >= 5
 assert coverage_start <= updated
-counts = Counter(item.get('published_at', item.get('verified_at')) for item in items)
+counts = Counter(research_archive_date(item) for item in items)
 expected_dates = [(coverage_start + timedelta(days=offset)).isoformat() for offset in range((updated - coverage_start).days + 1)]
 shortfalls = {day: counts[day] for day in expected_dates if counts[day] < minimum}
 assert not shortfalls, f'Research days below the {minimum}-item minimum: {shortfalls}'
@@ -38,17 +39,19 @@ assert len({item['id'] for item in items}) == len(items)
 assert len(set(RESEARCH['tags'])) == len(RESEARCH['tags'])
 assert set(RESEARCH['tags']) == set(tag for item in items for tag in item['tags'])
 for item in items:
-    assert item['kind'] in {'preprint', 'research', 'conference'}
+    assert item['kind'] in {'preprint', 'research', 'conference-paper'}
     assert item['tags'] and len(set(item['tags'])) == len(item['tags'])
     assert set(item['tags']) <= set(RESEARCH['tags'])
-    assert date.fromisoformat(item.get('published_at', item.get('verified_at'))) <= updated
+    published = date.fromisoformat(item['published_at'])
+    archived = date.fromisoformat(research_archive_date(item))
+    assert published <= archived <= updated
+    assert 'verified_at' not in item and 'event_start' not in item and 'event_end' not in item
     assert urlsplit(item['url']).scheme == 'https' and item['source'].strip()
-    if item['kind'] == 'conference':
-        assert 'published_at' not in item and 'verified_at' in item
-        assert 'conferences' in item['tags']
-        assert date.fromisoformat(item['event_start']) <= date.fromisoformat(item['event_end'])
+    if item['kind'] == 'conference-paper':
+        assert {'conferences', 'papers'} <= set(item['tags'])
+        assert item.get('venue', '').strip()
     else:
-        assert 'published_at' in item and 'verified_at' not in item
+        assert 'conferences' not in item['tags']
 
 for locale in LOCALES:
     prefix = PREFIX[locale]
@@ -71,26 +74,31 @@ for locale in LOCALES:
         assert link.get('href') == item['url'] and link.get('target') == '_blank'
         assert set(link.get('rel').split()) == {'noopener', 'noreferrer'}
         assert messages['research.kind.' + item['kind']] in card.text_content()
-        key = 'research.published' if 'published_at' in item else 'research.verified'
-        assert messages[key] in card.text_content()
+        assert messages['research.published'] in card.text_content()
+        expected_times = [item['published_at']]
+        if item.get('collected_at'):
+            assert messages['research.collected'] in card.text_content()
+            expected_times.append(item['collected_at'])
+        assert card.xpath('.//time/@datetime') == expected_times
         assert not card.xpath('.//a//a')
         for tag in card.xpath('.//a[@rel="tag"]'):
             url = urlsplit(tag.get('href'))
             assert url.path == prefix + '/research/' and parse_qs(url.query)['tag'][0] in item['tags']
-        if item['kind'] == 'conference':
-            assert card.xpath('.//p[@class="research-event"]/time/@datetime') == [item['event_start'], item['event_end']]
-    dates = list(dict.fromkeys(item.get('published_at', item.get('verified_at')) for item in items))
+        if item['kind'] == 'conference-paper':
+            assert item['venue'] in card.text_content()
+        assert not card.xpath('.//p[@class="research-event"]')
+    dates = list(dict.fromkeys(research_archive_date(item) for item in items))
     assert doc.xpath('//*[@data-news-date]/@id') == ['research-' + value for value in dates]
     assert not doc.xpath('//*[@data-news-date][@hidden] | //article[@data-research-id][@hidden]')
     assert doc.xpath('//script[@data-reading-layout="runtime"]/@src')[0].startswith('/js/reading.js?')
     home = read(root / 'index.html')
     previews = home.xpath('//*[@id="frontier-research"]//article[@data-research-id]')
-    expected = [next(item for item in items if item['kind'] == kind) for kind in ['preprint', 'research', 'conference']]
+    expected = [next(item for item in items if item['kind'] == kind) for kind in ['preprint', 'research', 'conference-paper']]
     assert [card.get('data-research-id') for card in previews] == [item['id'] for item in expected]
     for card, item in zip(previews, expected):
         url = urlsplit(card.xpath('.//a[@class="news-main-link"]/@href')[0])
         assert url.path == prefix + '/research/'
-        assert url.fragment == 'research-' + item.get('published_at', item.get('verified_at'))
+        assert url.fragment == 'research-' + research_archive_date(item)
     directory = read(root / 'tags/index.html')
     for collection, tags, entries in [('news', NEWS_TAGS, NEWS['items']), ('research', RESEARCH['tags'], items)]:
         links = directory.xpath('//*[@data-tag-group="' + collection + '"]//a[@data-catalog-tag]')
