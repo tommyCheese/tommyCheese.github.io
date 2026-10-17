@@ -18,6 +18,10 @@ NEWS_TAGS = ['ai', 'semiconductors', 'devices', 'cars']
 RESEARCH = json.loads((Path(__file__).resolve().parents[1] / 'i18n/research.json').read_text())
 
 
+def research_archive_date(item):
+    return item.get('collected_at', item['published_at'])
+
+
 def enhance_layout(doc, path, locale, articles, messages, revision):
     def node(tag, text=None, **attrs):
         element = html.Element(tag, {key.rstrip('_').replace('_', '-'): value for key, value in attrs.items()})
@@ -45,11 +49,11 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
 
     news_items = sorted(NEWS['items'], key=lambda item: item['published_at'], reverse=True)
 
-    research_items = sorted(RESEARCH['items'], key=lambda item: item.get('published_at', item.get('verified_at')), reverse=True)
+    research_items = sorted(RESEARCH['items'], key=research_archive_date, reverse=True)
 
     def news_card(item, preview=False, research=False):
         collection = 'research' if research else 'news'
-        date = item.get('published_at', item.get('verified_at'))
+        date = research_archive_date(item) if research else item['published_at']
         href = '/' + collection + '/#' + collection + '-' + date if preview else item['url']
         tags = item['tags'] if research else [item['category']]
         card = node('article', class_='news-card ' + ('news-preview' if preview else 'news-entry') + (' research-card' if research else ''),
@@ -76,19 +80,17 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         title.append(main_link)
         copy.append(title)
         copy.append(label('p', collection + '.' + item['id'] + '.summary'))
-        if research and item.get('event_start'):
-            event = node('p', class_='research-event')
-            event.append(label('span', 'research.eventDates'))
-            event.append(node('time', item['event_start'], datetime=item['event_start']))
-            event.append(node('span', ' — '))
-            event.append(node('time', item['event_end'], datetime=item['event_end']))
-            copy.append(event)
         metadata = node('div', class_='news-meta')
         metadata.append(node('span', item['source']))
         if research:
-            metadata.append(label('span', 'research.published' if item.get('published_at') else 'research.verified'))
+            if item.get('venue'):
+                metadata.append(node('span', item['venue'], class_='research-venue'))
+            metadata.append(label('span', 'research.published'))
         if preview or research:
-            metadata.append(node('time', date, datetime=date))
+            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
+        if research and item.get('collected_at'):
+            metadata.append(label('span', 'research.collected'))
+            metadata.append(node('time', item['collected_at'], datetime=item['collected_at']))
         metadata.append(label('span', collection + '.viewDay' if preview else 'news.original', class_='news-card-action', aria_hidden='true'))
         copy.append(metadata)
         card.append(copy)
@@ -239,8 +241,8 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         research.append(heading)
         research.append(label('p', 'research.previewIntro', class_='news-intro'))
         grid = node('div', class_='news-grid')
-        # Preview one recent item of each type so papers and meetings stay discoverable.
-        for kind in ['preprint', 'research', 'conference']:
+        # Preview one recent item of each research type.
+        for kind in ['preprint', 'research', 'conference-paper']:
             item = next((item for item in research_items if item['kind'] == kind), None)
             if item:
                 grid.append(news_card(item, preview=True, research=True))
@@ -292,7 +294,7 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
                                     data_news_tag=tag, aria_current='true' if tag == 'all' else 'false', aria_controls='news-timeline'))
         header.append(categories)
         directory.append(header)
-        dates = list(dict.fromkeys(item.get('published_at', item.get('verified_at')) for item in items))
+        dates = list(dict.fromkeys((research_archive_date(item) if is_research else item['published_at']) for item in items))
         filters = node('form', id='news-date-filter', class_='news-date-filter', hidden='hidden', data_catalog=collection,
                        aria_label=messages[collection + '.dates'], data_i18n_aria_label=collection + '.dates')
         filters.append(label('span', collection + '.dates', class_='news-filter-label', id='news-filter-label'))
@@ -313,7 +315,7 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         directory.append(filters)
         timeline = node('div', id='news-timeline', class_='news-timeline')
         for date in dates:
-            daily_items = [item for item in items if item.get('published_at', item.get('verified_at')) == date]
+            daily_items = [item for item in items if (research_archive_date(item) if is_research else item['published_at']) == date]
             day = node('section', id=collection + '-' + date, class_='news-day', data_news_date=date, aria_labelledby='heading-' + date)
             heading = node('div', class_='news-day-heading')
             title = node('h2', id='heading-' + date)
