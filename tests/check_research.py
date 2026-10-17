@@ -1,5 +1,7 @@
 """Check research provenance fields, five editions and shared tag discovery."""
-from datetime import date
+from datetime import date, timedelta
+from collections import Counter
+import re
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 import sys
@@ -17,6 +19,21 @@ def read(path):
 
 items = sorted(RESEARCH['items'], key=lambda item: item.get('published_at', item.get('verified_at')), reverse=True)
 updated = date.fromisoformat(RESEARCH['updated_at'])
+coverage_start = date.fromisoformat(RESEARCH['coverage_start'])
+minimum = RESEARCH['minimum_per_day']
+assert isinstance(minimum, int) and minimum >= 5
+assert coverage_start <= updated
+counts = Counter(item.get('published_at', item.get('verified_at')) for item in items)
+expected_dates = [(coverage_start + timedelta(days=offset)).isoformat() for offset in range((updated - coverage_start).days + 1)]
+shortfalls = {day: counts[day] for day in expected_dates if counts[day] < minimum}
+assert not shortfalls, f'Research days below the {minimum}-item minimum: {shortfalls}'
+# Different IDs or arXiv versions cannot turn one paper into several entries.
+references = []
+for item in items:
+    url = urlsplit(item['url'])
+    path = re.sub(r'v\d+$', '', url.path.rsplit('/', 1)[-1].removesuffix('.pdf')) if url.hostname in {'arxiv.org', 'www.arxiv.org'} else url.path.rstrip('/')
+    references.append((url.hostname.removeprefix('www.'), path))
+assert len(set(references)) == len(references), 'Duplicate research source or arXiv version'
 assert len({item['id'] for item in items}) == len(items)
 assert len(set(RESEARCH['tags'])) == len(RESEARCH['tags'])
 assert set(RESEARCH['tags']) == set(tag for item in items for tag in item['tags'])
@@ -87,4 +104,5 @@ for locale in LOCALES:
 sitemap = etree.parse(str(ROOT / 'sitemap.xml'))
 urls = sitemap.xpath('//*[local-name()="loc"]/text()')
 assert all(BASE + PREFIX[locale] + '/research/' in urls for locale in LOCALES)
+print('Daily research coverage:', ', '.join(day + '=' + str(counts[day]) for day in expected_dates))
 print(f'Passed research checks: {len(items)} sourced entries, {len(RESEARCH["tags"])} tags, previews and discovery × 5 languages.')

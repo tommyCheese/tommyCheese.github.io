@@ -61,7 +61,9 @@ Ctrl+K（Mac 为 ⌘K）打开搜索与跳转，默认以两列紧凑布局显�
 
 `i18n/research.json` 是研究元数据与标签的唯一来源：顶层 `tags` 管理标签 ID，每条记录用 `tags` 关联一个或多个标签。`kind` 为 `preprint`、`research` 或 `conference`。论文和报告使用真实 `published_at`，会议日历没有明确发布日期时使用 `verified_at`，在页面标为“核验于”；会议实际会期另存 `event_start`、`event_end`，不得用未来会期代替发布日期。标签及标题、摘要的五语言文案维护在 `research.tag.<tag>`、`research.<ID>.title`、`research.<ID>.summary`。
 
-只采用可核验的论文、研究机构原文和会议官网；预印本不写成已录用成果，研究结果保留实验范围与限制。来源核验及与新闻相同的广告、黄赌毒过滤结果记录在 `i18n/research-sources-YYYY-MM-DD.md`。首批见 [2026-10-17 研究来源核验](research-sources-2026-10-17.md)。运行构建、`python tests/check_research.py` 及上述筛选测试后发布。
+每日最低收录量为 **5 条，只能多不能少**。`coverage_start` 标明连续归档的起点（当前为 2026-10-06），`minimum_per_day` 不得低于 5；每次更新 `updated_at` 时须补齐起点至整理日期之间的每一个自然日。`tests/check_research.py` 会逐日输出计数、检查缺日和不足，并拒绝以同一来源的不同 ID 或 arXiv 不同版本重复计数。论文、报告按真实发布日期统计，独立会议日历按真实核验日期统计，两者在界面上明确区分。不得伪造日期、倒填核验日期或降低内容过滤标准来满足数量；有缺额就继续核验补齐，不以不足五条的日期作为完成结果发布。
+
+只采用可核验的论文、研究机构原文和会议官网；预印本不写成已录用成果；arXiv 收录也不等于未经同行评审，有明确录用注释时记录具体主会、行业轨道或工作坊，缺少字段时不臆断评审状态。研究结果保留实验范围与限制。来源核验及与新闻相同的广告、黄赌毒过滤结果记录在 `i18n/research-sources-YYYY-MM-DD.md`。首批见 [2026-10-17 研究来源核验](research-sources-2026-10-17.md)。运行构建、`python tests/check_research.py` 及上述筛选测试后发布。
 
 ## 博客标签
 
