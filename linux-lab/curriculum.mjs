@@ -1,4 +1,4 @@
-import { clarifyTask } from './task-copy.mjs';
+import { clarifyTask, clarifyGoalLabels } from './task-copy.mjs';
 import { extendLessonFlows } from './lesson-flow.mjs';
 import { Shell, seedState } from './shell.mjs';
 import { strengthenLessons } from './difficulty.mjs';
@@ -297,6 +297,7 @@ lessons.forEach(clarifyTask);
 // Group steps by level and chapter, keeping stable IDs for saved progress.
 lessons.sort((a,b) => levels.findIndex(item => item.id === a.level) - levels.findIndex(item => item.id === b.level) || chapters.findIndex(item => item.id === a.chapter) - chapters.findIndex(item => item.id === b.chapter));
 extendLessonFlows(lessons, lesson => createLessonShell(Shell, seedState, lesson));
+lessons.forEach(clarifyGoalLabels);
 export { lessons };
 export function createLessonShell(Shell, seedState, lesson) {
   const { setup = [], links = {}, ...extra } = lesson?.seed || {};

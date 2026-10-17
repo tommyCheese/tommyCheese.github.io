@@ -16,10 +16,10 @@ const orientationTasks = {
 };
 const investigations = {
   'copy-note': { before:['cat projects/notes.txt'], after:['cat projects/notes.bak'], steps:['先确认 projects/notes.txt 的内容是 draft，辨认需要备份的原件。','备份为 projects/notes.bak，读回备份核对内容，并保留原件。'], goals:[{type:'output',exact:'draft',code:0,requiresPath:'projects/notes.bak',label:'备份就位后，读回并核对 draft'}], tools:['cat'] },
-  'rename-note': { before:['cat "projects/meeting notes.txt"'], after:['ls projects'], steps:['目录里有两个名字相近的会议文件。先找到内容为 approved 的那份。','将它改名为 meeting-final.txt，查看目录确认新名字；保留另一份会议文件。'], goals:[{type:'output',exact:'approved',code:0,label:'识别内容为 approved 的会议文件'},{type:'output',includes:'meeting-final.txt',code:0,label:'在目录列表中确认新文件名'}], tools:['cat','ls'] },
+  'rename-note': { before:['cat "projects/meeting notes.txt"'], after:['ls projects'], steps:['目录里有两个名字相近的会议文件。先找到内容为 approved 的那份。','将它改名为 meeting-final.txt，查看目录确认新名字；保留另一份会议文件。'], goals:[{type:'output',exact:'approved',code:0,label:'先读取 projects/meeting notes.txt，确认内容为 approved',displayOrder:-1},{type:'output',includes:'meeting-final.txt',code:0,label:'在目录列表中确认新文件名'}], tools:['cat','ls'] },
   'new-readme': { before:[], after:['ls projects "projects/交接 包"'], steps:['为项目和“交接 包”各准备一个空 README.md，想一想带空格的路径该怎么写。','查看这两个目录，确认 README.md 就位；原来的 notes.txt 内容保持不变。'], goals:[{type:'output',includes:'README.md',code:0,label:'在目录列表中确认 README.md'}], tools:['ls'] },
   'write-note': { before:[], after:['cat hello.txt'], steps:['把 hello Linux 写入 hello.txt，想一想如何让输出进入文件。','读回 hello.txt，核对大小写、空格和内容。'], goals:[{type:'output',exact:'hello Linux',code:0,label:'读回并核对 hello.txt'}], tools:['cat'] },
-  'append-note': { before:['cat notes.txt'], after:['cat notes.txt'], steps:['先读 notes.txt，确认已有 first；选择能保留原内容的写入方式。','追加 second 后再读回文件，确认 first、second 各占一行，顺序正确。'], goals:[{type:'output',exact:'first',code:0,label:'读取追加前的 first'},{type:'output',exact:'first\nsecond',code:0,label:'读回并核对追加后的两行'}], tools:['cat'] },
+  'append-note': { before:['cat notes.txt'], after:['cat notes.txt'], steps:['先读 notes.txt，确认已有 first；选择能保留原内容的写入方式。','追加 second 后再读回文件，确认 first、second 各占一行，顺序正确。'], goals:[{type:'output',exact:'first',code:0,label:'先读取 notes.txt，确认追加前的内容为 first',displayOrder:-1},{type:'output',exact:'first\nsecond',code:0,label:'读回并核对追加后的两行'}], tools:['cat'] },
   'preview-log': { before:[], after:['head -n 1 logs/app.log'], steps:['只查看日志前两行，找出启动后最早出现的问题。','再单独输出第一行，确认启动信息；注意选择查看范围的参数。'], goals:[{type:'output',exact:'INFO server started',code:0,label:'单独核对第一行的启动信息'}], tools:[] },
   'filter-errors': { before:[], after:['grep -ic "^ERROR " logs/app.log'], steps:['日志里有正文提到 ERROR 的普通记录，也有大小写不同的错误记录。只筛选以 ERROR 开头的记录。','再统计这些错误有多少条，使用相同的匹配条件，核对数量为 2。'], goals:[{type:'output',exact:'2',code:0,label:'统计符合条件的两条错误记录'}], tools:[] }
 };
@@ -88,7 +88,7 @@ export function extendLessonFlows(lessons, makeShell) {
       } else if (node?.type === 'file') {
         const target = base + '/before.txt';
         before.push('cp ' + quote(path) + ' ' + quote(target)); reuse.add('cp');
-        added.push(fileGoal(target,node.text,'清理前保存原文件到 ' + target.replace(HOME,'~')));
+        added.push({...fileGoal(target,node.text,'删除前，将 ' + goal.path + ' 备份到 ' + target.replace(HOME,'~')),displayOrder:-1,sourcePath:goal.path});
         instruction = '先把 ' + goal.path + ' 的原内容备份到 ' + target.replace(HOME,'~') + '，再完成清理。';
       }
     }
@@ -96,7 +96,7 @@ export function extendLessonFlows(lessons, makeShell) {
       const archive = resolve(goal.path), destination = base + '/restored';
       after.push('mkdir -p ' + quote(destination), 'tar -xf ' + quote(archive) + ' -C ' + quote(destination)); reuse.add('mkdir'); reuse.add('tar');
       for (const [name,node] of Object.entries(final.state.archives[archive] || {})) {
-        if (node.type === 'file') added.push(fileGoal(destination+'/'+name,node.text,'恢复并核对 '+name));
+        if (node.type === 'file') added.push(fileGoal(destination+'/'+name,node.text,'从 ' + goal.path + ' 解包恢复到 ' + (destination+'/'+name).replace(HOME,'~')));
       }
       if (!added.length) added.push({type:'dir',path:destination,label:'创建恢复目录'});
       instruction = '将归档解包到 ' + destination.replace(HOME,'~') + '，核对恢复的文件内容；保留原归档。';
@@ -108,7 +108,7 @@ export function extendLessonFlows(lessons, makeShell) {
       lesson.flowAssets = [base+'/brief.txt'];
       before.length = 0; // The supplied brief already makes its parent directory available.
       after.push('cp ' + quote(base+'/brief.txt') + ' ' + quote(target)); reuse.add('cp');
-      added.push(fileGoal(target,brief,'将 brief.txt 放入新目录，命名为 README.txt'));
+      added.push(fileGoal(target,brief,'将 ' + (base+'/brief.txt').replace(HOME,'~') + ' 复制到 ' + target.replace(HOME,'~')));
       instruction = '把 ' + base.replace(HOME,'~') + '/brief.txt 复制到 ' + target.replace(HOME,'~') + '，作为目录说明。';
     }
     if (!instruction && goal && ['file','link'].includes(goal.type)) {
@@ -155,7 +155,7 @@ export function extendLessonFlows(lessons, makeShell) {
         else if (lesson.goals.some(goal=>goal.type==='output')) { after.push('cat ' + quote(report)); reuse.add('cat'); }
         const name = command.split(' ')[0]; reuse.add(name);
         for (const part of command.split('|')) reuse.add(part.trim().split(' ')[0]);
-        const reportGoal = fileGoal(report,check.stdout,'保存核对结果到 ' + report.replace(HOME,'~'));
+        const reportGoal = fileGoal(report,check.stdout,reportTask ? reportTask[1] + '（保存到 ' + report.replace(HOME,'~') + '）' : '将 ' + command + ' 的输出保存到 ' + report.replace(HOME,'~'));
         if (lesson.command === 'ls') { delete reportGoal.text; reportGoal.includes = lesson.goals.find(goal=>goal.type==='output')?.includes || 'projects'; }
         // History includes the learner's own commands, so require the relevant entry rather than a reference transcript.
         if (lesson.command === 'history' || lesson.command === 'clear') { delete reportGoal.text; reportGoal.includes = lesson.command === 'history' ? 'history' : 'clear'; }
@@ -173,7 +173,7 @@ export function extendLessonFlows(lessons, makeShell) {
     lesson.goals.push(...added);
     const captureOnly = !reportTasks[lesson.id] && lesson.command !== 'history' && lesson.command !== 'sleep' && lesson.goals.slice(0,-added.length).every(goal=>goal.type==='output' && (goal.code??0)===0) && !['true','false'].includes(lesson.command);
     lesson.solution = [...before,...(captureOnly ? [] : original),...after];
-    lesson.hints = ['先把核心操作做出来，再看看结果要放在哪里、哪些文件要留下。', '试着把 ' + [...new Set([lesson.command,...lesson.reviewCommands])].join('、') + ' 配合起来；想留下输出，可以用 > 保存。', '试试这条路径，再想想有没有别的做法：\n'+lesson.solution.join('\n')];
+    lesson.hints = [instruction.startsWith('先把') ? instruction : '先核对输入、目标路径和保留项，再开始操作。', '试着把 ' + [...new Set([lesson.command,...lesson.reviewCommands])].join('、') + ' 配合起来；想留下输出，可以用 > 保存。', '试试这条路径，再想想有没有别的做法：\n'+lesson.solution.join('\n')];
   }
 }
 

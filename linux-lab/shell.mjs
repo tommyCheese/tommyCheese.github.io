@@ -1,3 +1,4 @@
+import { populateLinuxFilesystem } from './linux-filesystem.mjs';
 import { runExtra } from './extra-commands.mjs';
 // A deterministic teaching shell. No host commands, eval, fetch or external I/O.
 export const HOME = '/home/learner';
@@ -34,7 +35,7 @@ export function seedState(extra = {}) {
   function dir(path) {
     if (state.fs[path]) return;
     if (path !== '/') dir(parent(path));
-    state.fs[path] = { type: 'dir', mode: '755', owner: 'learner' };
+    state.fs[path] = { type: 'dir', mode: '755', owner: path === HOME || path.startsWith(HOME + '/') ? 'learner' : 'root' };
   }
   for (const path of [HOME, HOME + '/projects', HOME + '/downloads', HOME + '/logs', HOME + '/data', '/tmp', '/etc', '/var/log', '/srv']) dir(path);
   const defaults = {
@@ -53,7 +54,7 @@ export function seedState(extra = {}) {
   for (const path of extra.dirs || []) dir(resolve(path));
   for (const [key, value] of Object.entries(extra)) if (!['files', 'dirs'].includes(key)) state[key] = clone(value);
   state.env.PWD = state.cwd;
-  return state;
+  return populateLinuxFilesystem(state);
 }
 
 // Operators are tokens, so quoted pipes/redirection remain ordinary file/text data.
@@ -113,8 +114,18 @@ function parseOptions(args, short = '', valued = '', long = {}) {
 }
 
 export class Shell {
-  constructor(state = seedState(), manuals = [], localizeContent = value => value) { this.state = clone(state); this.manuals = manuals; this.localizeContent = localizeContent; }
-  path(value) { return resolve(value, this.state.cwd); }
+  constructor(state = seedState(), manuals = [], localizeContent = value => value) { this.state = populateLinuxFilesystem(clone(state)); this.manuals = manuals; this.localizeContent = localizeContent; }
+  path(value, followLeaf = false, seen = new Set()) {
+    const path = resolve(value, this.state.cwd), parts = path.split('/').filter(Boolean);
+    for (let index = 0; index < parts.length - (followLeaf ? 0 : 1); index++) {
+      const prefix = '/' + parts.slice(0,index + 1).join('/'), node = this.state.fs[prefix];
+      if (node?.type !== 'link') continue;
+      if (seen.has(prefix) || seen.size > 20) fail('符号链接循环');
+      seen.add(prefix);
+      return this.path(resolve(node.target,parent(prefix)) + '/' + parts.slice(index + 1).join('/'),followLeaf,seen);
+    }
+    return path;
+  }
   node(value, follow = true, seen = new Set()) {
     const path = this.path(value); const node = this.state.fs[path];
     if (!node) fail(value + '：没有这个文件或目录');
@@ -124,8 +135,9 @@ export class Shell {
     }
     return node;
   }
-  read(value) { const node = this.node(value); if (node.type !== 'file') fail(value + '：不是普通文件'); return node.text; }
+  read(value) { if (this.path(value,true) === '/dev/null') return ''; const node = this.node(value); if (node.type !== 'file') fail(value + '：不是普通文件'); return node.text; }
   write(value, text, append = false) {
+    if (this.path(value,true) === '/dev/null') return;
     if (text.length > 100000) fail('练习文件超过大小限制。');
     let path = this.path(value); const old = this.state.fs[path];
     if (old?.type === 'link') path = resolve(old.target, parent(path));
@@ -135,7 +147,7 @@ export class Shell {
   }
   defaultMode(mode) { return (parseInt(mode, 8) & ~parseInt(this.state.umask, 8)).toString(8).padStart(3, '0'); }
   paths(value = '.') { const base = this.path(value); return Object.keys(this.state.fs).filter(path => path === base || path.startsWith(base === '/' ? '/' : base + '/')).sort(); }
-  children(value = '.') { const path = this.path(value); this.node(path); return Object.keys(this.state.fs).filter(key => key !== path && parent(key) === path).sort(); }
+  children(value = '.') { const path = this.path(value,true); this.node(path); return Object.keys(this.state.fs).filter(key => key !== path && parent(key) === path).sort(); }
   expand(token) {
     if (token.quoted || !/[*?]/.test(token.value)) return [token.value];
     const pattern = this.path(token.value); const regex = globRE(pattern);
@@ -197,6 +209,12 @@ export class Shell {
   }
   run(argv, stdin = '') {
     let [command, ...args] = argv; const s = this.state;
+    if (command.includes('/')) {
+      const node = this.node(command);
+      if (node.type !== 'file' || !(parseInt(node.mode,8) & 0o111)) fail(command + '：没有执行权限');
+      if (!node.command) fail(command + '：沙盒暂不支持执行此文件');
+      command = node.command;
+    }
     const output = stdout => ({ stdout, code: 0 });
     const textOf = files => files.length ? files.map(file => this.read(file)).join('') : stdin;
     const requireArgs = count => { if (args.length < count) fail(command + '：缺少参数'); };
@@ -213,7 +231,7 @@ export class Shell {
     switch (command) {
       case 'pwd': if (args.length) fail('pwd 在沙盒中不接受参数'); return output(s.cwd + '\n');
       case 'cd': {
-        if (args.length > 1) fail('cd：参数过多'); const path = args[0] === '-' ? s.previous : this.path(args[0] || '~');
+        if (args.length > 1) fail('cd：参数过多'); const path = this.path(args[0] === '-' ? s.previous : args[0] || '~',true);
         if (this.node(path).type !== 'dir') fail('cd：目标不是目录'); s.previous = s.cwd; s.cwd = path; s.env.PWD = path;
         return output(args[0] === '-' ? path + '\n' : '');
       }
@@ -428,7 +446,7 @@ export class Shell {
         return output((o.f ? resolve(node.target, parent(this.path(operands[0]))) : node.target) + '\n');
       }
       case 'stat': requireArgs(1); return output(args.map(file => { const node = this.node(file, false); return `File: ${file}\nSize: ${node.text?.length || 0}\nAccess: (${node.mode})\nOwner: ${node.owner}\n`; }).join(''));
-      case 'file': requireArgs(1); return output(outLines(args.map(file => file + ': ' + ({ dir: 'directory', link: 'symbolic link', file: 'UTF-8 text' })[this.node(file, false).type])));
+      case 'file': requireArgs(1); return output(outLines(args.map(file => { const node=this.node(file,false); return file + ': ' + (node.binary ? 'ELF 64-bit LSB executable (simulated)' : node.device ? 'device (simulated)' : ({dir:'directory',link:'symbolic link',file:'UTF-8 text'})[node.type]); })));
       case 'basename': requireArgs(1); return output(basename(args[0]).replace(args[1] ? new RegExp(args[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$') : /$^/, '') + '\n');
       case 'dirname': requireArgs(1); return output((args[0].includes('/') ? parent(args[0]) : '.') + '\n');
       case 'diff': {

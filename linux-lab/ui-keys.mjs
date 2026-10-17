@@ -6,7 +6,6 @@ const defaults = {
   'help-dialog':['help-close'],
   // Enter on prose never confirms a destructive action.
   'restart-dialog':['restart-cancel'],
-  'transfer-dialog':['transfer-close']
 };
 const visible = node => !!node && !node.disabled && !!node.getClientRects().length && !node.closest('[hidden],dialog:not([open])');
 export function spatialNeighbor(items, current, key) {

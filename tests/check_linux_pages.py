@@ -49,3 +49,18 @@ assert not entry.xpath('//a[@href="/"]')
 assert all('Tommy' not in value for value in entry.xpath('//title/text()'))
 assert 'Sitemap: ' + base + 'sitemap.xml' in (ROOT / 'robots.txt').read_text()
 print(f'Verified {len(urls)} indexable URLs, static content, metadata, assets and internal links.')
+
+for edition in ['', 'en', 'ja', 'ru', 'zh-TW']:
+    folder = LAB / edition
+    entry = html.parse(str(folder / 'index.html'))
+    assert not entry.xpath('//*[@id="transfer-button" or @id="transfer-dialog"]')
+    reference = html.parse(str(folder / 'commands/index.html'))
+    practices = reference.xpath('//section[@data-topic]/details[@class="terminal-practice"]')
+    assert len(practices) == 10, edition
+    for practice in practices:
+        topic = practice.getparent().get('data-topic')
+        assert practice.get('id') == 'terminal-' + topic
+        assert practice.xpath('.//input[@data-terminal-done="' + topic + '"]')
+        assert len(practice.xpath('.//pre/code')) == 2
+        assert 'mktemp -d' in practice.xpath('.//pre/code')[0].text_content()
+print('Verified topic terminal practices in all five manuals and removed lesson entry points.')

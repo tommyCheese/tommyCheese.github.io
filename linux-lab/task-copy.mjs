@@ -63,6 +63,19 @@ const contexts = {
   'name-intersection-report':'将 dev.txt 与 ops.txt 的共同名字保存到 shared-members.txt，将仅在 dev.txt 中出现的名字保存到 dev-only.txt；保留源文件。'
 };
 const labels = {
+  'write-note':['将 hello Linux 写入 hello.txt，末尾换行'],
+  'append-note':['在 notes.txt 原有 first 后追加一行 second，保留 first'],
+  'recursive-backup':['将 bundle/config/app.conf 随 bundle 目录复制到 bundle-backup/config/app.conf'],
+  'restore-archive':['从 project.tar.gz 解包恢复到 restored/projects/src/app.txt'],
+  'common-names':['将 a.txt 与 b.txt 的共同名字保存到 shared.txt，重复次数取较少的一份'],
+  'name-intersection-report':['将 dev.txt 与 ops.txt 的共同名字保存到 shared-members.txt','将仅在 dev.txt 中出现的名字保存到 dev-only.txt'],
+  'robust-config-download':['从 https://example.com/config.json 下载到 release/config.json','从 https://example.com/health 下载到 release/health.txt'],
+  'tee-report':['将 errors-source.txt 的内容保存到 errors-copy.txt，同时显示在终端'],
+  'step-sequence':['将 15,10,5,0,-5 写入 countdown.txt，末尾换行'],
+  'rename-note':['将 projects/meeting notes.txt 重命名为 projects/meeting-final.txt，内容不变','重命名后，旧路径 projects/meeting notes.txt 不再存在'],
+  'copy-note':['将 projects/notes.txt 复制为 projects/notes.bak，内容不变'],
+  'move-download':['将 downloads/users.csv 移动到 projects/imports/users.csv，内容不变','将 downloads/team list.csv 移动到 projects/imports/team list.csv，内容不变'],
+  'copy-project':['将 projects/src/api/app.txt 复制到 projects-backup/src/api/app.txt，内容不变','将 projects/.settings 复制到 projects-backup/.settings，内容不变'],
   'release-ready':['保留 release/deploy.sh 的原内容'],
   'latest-error':['在终端只输出 logs/app.log 的最后一行：ERROR disk full'],
   'preview-log':['在终端只输出 logs/app.log 的前两行'],
@@ -95,11 +108,57 @@ export function clarifyTask(task) {
   }
   return task;
 }
-// Render only values that users may need to check; preservation goals need no second copy of the source.
+// Run after all task steps have been assembled, so added verification goals get the same wording.
+const preservesFile = goal => goal.type === 'file' && (goal.preserve || /^(保留|原.*保留|源.*保留|草稿仍保留)|(?:脚本|凭据)内容保留/.test(goal.label));
+export function clarifyGoalLabels(task) {
+  for (const goal of task.goals) {
+    const label = goal.label || '';
+    switch (goal.type) {
+      case 'file':
+        if (preservesFile(goal)) { goal.preserve = true; goal.label = '保留文件 ' + goal.path + '，内容不变'; }
+        else if (!label || /内容正确|内容与原.*一致|^副本|^交接文件已创建|^两行内容均保留|^日志内容为空|^保存错误副本|^清单恢复成功|^将结果保存到/.test(label)) {
+          goal.label = goal.text === '' ? '确保 ' + goal.path + ' 为空文件' : typeof goal.text === 'string' ? '使文件 ' + goal.path + ' 的内容与目标内容完全一致' : '将结果保存到 ' + goal.path + '，内容须包含指定文本';
+        }
+        break;
+      case 'dir': if (!/保留/.test(label)) goal.label = '创建目录 ' + goal.path; break;
+      case 'absent': if (!/已移走|^重命名后/.test(label)) goal.label = '删除 ' + goal.path + '，使该路径不再存在'; break;
+      case 'cwd': goal.label = '完成后停留在目录 ' + goal.path; break;
+      case 'mode': goal.label = '将 ' + goal.path + ' 的权限设为 ' + goal.value; break;
+      case 'owner': goal.label = /不变|保留/.test(label) ? '保持 ' + goal.path + ' 的所有者为 ' + goal.value : '将 ' + goal.path + ' 的所有者设为 ' + goal.value; break;
+      case 'link': goal.label = '确保符号链接 ' + goal.path + ' 指向 ' + goal.target; break;
+      case 'env': goal.label = goal.value === undefined ? '移除环境变量 ' + goal.name : '将环境变量 ' + goal.name + ' 设为 ' + goal.value; break;
+      case 'setting': goal.label = '将 ' + goal.name + ' 设为 ' + goal.value; break;
+      case 'service': goal.label = (goal.property === 'active' ? (goal.value ? '启动服务 ' : '停止服务 ') : (goal.value ? '启用服务的开机启动：' : '禁用服务的开机启动：')) + goal.name; break;
+      case 'package': goal.label = (goal.present === false ? '卸载软件包 ' : '安装软件包 ') + goal.name; break;
+      case 'processAbsent': goal.label = '结束名为 ' + goal.name + ' 的进程'; break;
+      case 'processPresent': goal.label = '保留名为 ' + goal.name + ' 的运行进程'; break;
+      case 'archive': goal.label = '确保归档 ' + goal.path + (goal.exact ? ' 仅包含指定的包内路径' : ' 包含指定的包内路径') + (goal.contents ? '，文件内容也须一致' : ''); break;
+      case 'output':
+        if (/^查看并核对操作后的实际状态$|^报告就位后，读回核对筛选或统计结果$/.test(label)) {
+          const value = goal.exact ?? goal.includes;
+          goal.label = goal.requiresPath ? '读回 ' + goal.requiresPath + '，在终端输出指定内容' : typeof value === 'string' && value.length <= 60 && !/[\n\t]/.test(value) ? (goal.exact !== undefined ? '在终端只输出「' : '在终端输出结果，须包含「') + value + '」' : '在终端输出以下内容，行序和文本须一致';
+        }
+        if (/^核对结果文件的路径、大小和权限$/.test(label)) goal.label = '在终端显示 ' + (goal.requiresPath || goal.exact?.match(/^File: (.+)$/m)?.[1] || goal.path) + ' 的文件信息（路径、大小和权限）';
+        if (goal.exact === '') goal.label = '执行核对操作，终端不输出内容，退出码为 ' + (goal.code ?? 0);
+        else if ((goal.code ?? 0) !== 0 && !goal.label.includes('退出码')) goal.label += '（退出码为 ' + goal.code + '）';
+        break;
+    }
+  }
+  return task;
+}
+// Requirements reflect exact comparison, including whitespace and the final newline.
 export function goalReference(goal) {
-  if(/保留|原件|原.*仍/.test(goal.label)) return null;
-  if(goal.type==='output' && goal.exact && !goal.label.includes(goal.exact)) return {title:'目标输出',text:goal.exact};
-  if(goal.type==='file' && typeof goal.text==='string' && goal.text && !goal.label.includes(goal.text.trimEnd().replace(/\n/g, ' ↵ '))) return {title:'目标内容',text:goal.text};
-  if(goal.type==='archive' && goal.entries?.length) return {title:goal.exact?'仅限以下包内路径':'必须包含的包内路径',text:goal.entries.join('\n')};
+  if (preservesFile(goal)) return null;
+  if (goal.type === 'output' && goal.exact && !goal.label.includes(goal.exact)) return {title:'目标输出',text:goal.exact};
+  if (goal.type === 'output' && typeof goal.includes === 'string' && !goal.label.includes(goal.includes)) return {title:'输出须包含',text:goal.includes};
+  if (goal.type === 'file' && typeof goal.text === 'string' && goal.text) return {title:'目标内容',text:goal.text,note:goal.text.endsWith('\n') ? '末尾需要换行符；空格和行序也须一致。' : '末尾不要添加换行符；空格和行序也须一致。'};
+  if (goal.type === 'file' && typeof goal.includes === 'string') return {title:'文件内容须包含',text:goal.includes};
+  if (goal.type === 'archive' && goal.entries?.length) {
+    const contents = Object.entries(goal.contents || {}).map(([path,text]) => '包内文件 ' + path + ' 的目标内容：\n' + text).join('\n');
+    return {title:goal.exact?'仅限以下包内路径':'必须包含的包内路径',text:goal.entries.join('\n') + (contents ? '\n\n' + contents : ''),note:goal.contents ? '包内文件的内容须与上方完全一致，包括空格、行序与末尾换行。' : undefined};
+  }
   return null;
 }
+
+// Keep persisted goal indexes stable; only presentation follows dependency order.
+export const goalEntries = goals => [...goals.entries()].sort((a,b) => (a[1].displayOrder ?? 0) - (b[1].displayOrder ?? 0));
