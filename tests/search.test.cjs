@@ -147,7 +147,7 @@ test('opening search shows navigation and clearing a query restores it', async (
 test('page keywords and aliases return the corresponding destinations', async () => {
   const ui = searchUI();
   await ui.open();
-  for (const [query, href] of [['首页', '/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/'], ['今日要闻', '/news/'], ['news', '/news/']]) {
+  for (const [query, href] of [['首页', '/'], ['博客', '/blogs/'], ['标签', '/tags/'], ['专题', '/topics/'], ['关于', '/#about'], ['探索', '/gallery/'], ['HOME', '/'], ['標籤', '/tags/'], ['今日要闻', '/news/'], ['news', '/news/'], ['前沿研究', '/research/'], ['AI Agent', '/research/'], ['论文', '/research/'], ['conferences', '/research/']]) {
     ui.input.value = query;
     await ui.input.emit('input');
     assert.equal(ui.options()[0].href, href, query);
@@ -223,10 +223,23 @@ test('a stale article response cannot replace the latest query', async () => {
 });
 
 test('the gallery index entry is not presented as an article', async () => {
-  const ui = searchUI();
+  const ui = searchUI({ fetchIndex: async () => [
+    { title: '探索', permalink: '/gallery/' },
+    { title: '探索实践', permalink: '/blogs/example/' }
+  ] });
   await ui.open();
   ui.input.value = '探索';
   await ui.input.emit('input');
-  assert.deepEqual(ui.titles(), ['探索']);
+  assert.deepEqual(ui.titles(), ['探索', '探索实践']);
+  assert.equal(ui.options()[1].className, 'spotlight-post');
+  assert.equal(ui.options()[1].href, '/blogs/example/');
   assert.equal(ui.options()[0].className, 'spotlight-navigation');
+});
+
+test('research navigation retains the selected language', async () => {
+  for (const locale of Object.keys(dictionaries)) {
+    const ui = searchUI({ locale }); await ui.open();
+    ui.input.value = dictionaries[locale]['nav.research']; await ui.input.emit('input');
+    assert.equal(ui.options()[0].href, (locale === 'zh-CN' ? '' : '/' + locale) + '/research/');
+  }
 });
