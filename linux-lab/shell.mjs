@@ -221,7 +221,7 @@ export class Shell {
     if (command === 'sudo') { requireArgs(1); if (args[0].startsWith('-')) fail('本沙盒只支持 sudo 命令 参数。'); return this.run(args, stdin); }
     if (args.includes('--help') || command === 'man' || command === 'help') {
       const name = ['man', 'help'].includes(command) ? args[0] : command;
-      if (!name) return output('可用命令：\n' + this.manuals.map(item => item.name).join(' ') + '\n输入 man 命令名 查看中文手册。\n');
+      if (!name) return output('可用命令：\n' + this.manuals.filter(item => item.practice).map(item => item.name).join(' ') + '\n输入 man 命令名 查看中文手册。\n');
       const manual = this.manuals.find(item => item.name === name);
       if (!manual) fail('没有该命令的教学手册：' + name);
       return output(manual.name + ' — ' + manual.summary + '\n用法：' + manual.syntax + '\n' + manual.options.map(item => item.join('  ')).join('\n') + '\n' + manual.note + '\n');
@@ -545,7 +545,9 @@ export class Shell {
           else { const entry = s.archives[path]; if (!path.endsWith('.gz') || typeof entry?.text !== 'string') fail('gunzip：不是教学 gzip 文件'); this.write(path.slice(0, -3), entry.text); if (!o.k) { delete s.fs[path]; delete s.archives[path]; } }
         } return output('');
       }
-      default: fail(command + '：未实现此命令。输入 help 查看支持范围，或打开参考手册。');
+      default:
+        if (this.manuals.some(item => item.name === command && !item.practice)) fail(command + '：仅供手册查阅');
+        fail(command + '：未实现此命令。输入 help 查看支持范围，或打开参考手册。');
     }
   }
   ensureDir(path) { if (this.state.fs[path]) { if (this.state.fs[path].type !== 'dir') fail('路径不是目录'); return; } this.ensureDir(parent(path)); this.state.fs[path] = { type: 'dir', mode: '755', owner: 'learner' }; }
