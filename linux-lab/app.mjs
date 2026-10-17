@@ -1,9 +1,9 @@
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-goal-order-1';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-lesson-intro-2';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
-import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261016-intro';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261017-lesson-intro-2';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
@@ -171,6 +171,7 @@ function showLessonIntro() {
   $('lesson-intro-category').textContent = $('task-category').textContent;
   $('lesson-intro-lead').textContent = intro.lead;
   $('lesson-intro-knowledge').textContent = intro.knowledge;
+  $('lesson-intro-knowledge').hidden = !intro.knowledge;
   const manual = intro.showTool && manuals.find(item => item.name === lesson.command);
   $('lesson-intro-tool').hidden = !manual;
   $('lesson-intro-syntax').textContent = manual?.syntax || '';
