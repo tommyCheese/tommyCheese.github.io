@@ -1,11 +1,14 @@
 {
-  "updated_at": "2026-10-18",
+  "updated_at": "2026-10-19",
   "tags": [
     "ai",
     "agents",
     "papers",
     "results",
-    "conferences"
+    "conferences",
+    "security",
+    "robotics",
+    "systems"
   ],
   "items": [
     {
@@ -827,6 +830,88 @@
       "collected_at": "2026-10-18",
       "source": "arXiv · 2610.22280v1",
       "url": "https://arxiv.org/abs/2610.22280v1"
+    },
+    {
+      "id": "fde-gym-ai-delivery-benchmark",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Yang et al. · arXiv:2610.22350v1",
+      "url": "https://arxiv.org/abs/2610.22350v1"
+    },
+    {
+      "id": "random-projection-private-rag",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "security",
+        "papers",
+        "results"
+      ],
+      "source": "Yao et al. · arXiv:2610.22297v1",
+      "url": "https://arxiv.org/abs/2610.22297v1"
+    },
+    {
+      "id": "langdit-continuous-diffusion-transformer",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "papers",
+        "results"
+      ],
+      "source": "Luo et al. · arXiv:2610.22330v1",
+      "url": "https://arxiv.org/abs/2610.22330v1"
+    },
+    {
+      "id": "realtime-bench-temporal-action",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Tang et al. · arXiv:2610.22155v1",
+      "url": "https://arxiv.org/abs/2610.22155v1"
+    },
+    {
+      "id": "value-as-memory-robot-posttraining",
+      "kind": "preprint",
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "robotics",
+        "papers",
+        "results"
+      ],
+      "source": "Yu et al. · arXiv:2610.22368v1",
+      "url": "https://arxiv.org/abs/2610.22368v1"
+    },
+    {
+      "id": "cyclotron-recurrence-communication-compiler",
+      "kind": "preprint",
+      "published_at": "2026-10-14",
+      "collected_at": "2026-10-19",
+      "tags": [
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Sundram et al. · arXiv:2610.20981v1",
+      "url": "https://arxiv.org/abs/2610.20981v1"
     }
   ],
   "coverage_start": "2026-10-06",
