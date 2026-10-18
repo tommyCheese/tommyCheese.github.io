@@ -20,7 +20,7 @@ function keyboardPage() {
   const doc={activeElement:null,getElementById:id=>nodes.get(id),defaultView:{MutationObserver:class {observe(){}}},
     querySelectorAll:selector=>selector==='dialog:modal'?(activeModal?[activeModal]:[]):[],
     addEventListener(type,callback){listeners[type]=callback;}};
-  for (const id of ['welcome-next','welcome-start','lesson-intro-start','completion-next','restart-cancel','command-input','review-start','review-resume','review-return','review-area','mission-window','file-preview']) node(id,!['welcome-start','review-area','review-resume','file-preview'].includes(id));
+  for (const id of ['welcome-next','welcome-start','lesson-intro-start','completion-next','restart-cancel','command-input','review-start','review-return','review-area','mission-window','file-preview']) node(id,!['welcome-start','review-area','file-preview'].includes(id));
   setupKeyboardNavigation(doc);
   return {node,nodes,doc,modal(id){activeModal=node(id);return activeModal;},press(key,target,extra={}){
     let prevented=false;
@@ -48,9 +48,9 @@ test('terminal Enter and Ctrl/Command+Enter remain with their existing handlers'
   assert.equal(page.press('Enter',input,{ctrlKey:true}),false);
   assert.equal(page.press('Enter',input,{metaKey:true}),false);
 });
-test('review heading Enter resumes a round, while Escape returns without recording failure',()=>{
-  const page=keyboardPage(),heading=page.node('heading');page.nodes.get('review-area').shown=true;page.nodes.get('review-resume').shown=true;
-  page.press('Enter',heading);assert.equal(page.nodes.get('review-resume').clicks,1);assert.equal(page.nodes.get('review-start').clicks,0);
+test('review heading Enter activates its single entry, while Escape returns without recording failure',()=>{
+  const page=keyboardPage(),heading=page.node('heading');page.nodes.get('review-area').shown=true;
+  page.press('Enter',heading);assert.equal(page.nodes.get('review-start').clicks,1);assert.equal(page.nodes.has('review-resume'),false);
   page.press('Escape',heading);assert.equal(page.nodes.get('review-return').clicks,1);
 });
 test('hint arrows advance in their direction and stop at a disabled end',()=>{

@@ -1,7 +1,7 @@
 import { setupCodeCopy } from './code-copy.mjs';
-import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
+import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261018-review-entry-1';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261018-code-copy-1';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261018-review-entry-1';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261017-lesson-intro-2';
@@ -223,34 +223,42 @@ function makeExercise() {
   lesson = varied.lesson;
   return new Shell(varied.state, manuals);
 }
+function resumableReview() {
+  const exercise = saved.session?.exercise;
+  return exercise?.kind === 'review' && validExercise(exercise,ids) ? exercise : null;
+}
 function renderLearning() {
   const plan = reviewPlan(lessons, completed, learning, Date.now(), Number($('review-budget').value));
+  const resume = resumableReview();
+  const queue = resume ? resume.queue.slice(resume.index) : plan.queue;
   $('review-count').textContent = plan.due.length ? String(plan.due.length) : '';
   $('learning-summary').textContent = `已完成 ${completed.size}`;
-  $('review-due-title').textContent = '待复习 ' + plan.due.length;
-  $('review-start').disabled = !plan.queue.length;
-  $('review-start').textContent = reviewSummary ? '再练一轮 →' : '开始复习 →';
-  $('review-status').textContent = plan.queue.length ? `本轮 ${plan.queue.length} 项 · 预计 ${Math.max(1,Math.ceil(plan.seconds/60))} 分钟` : completed.size ? '今天没有待复习任务' : '完成关卡后解锁复习';
-  const resume = saved.session?.exercise;
-  $('review-resume').hidden = !(resume?.kind === 'review' && validExercise(resume,ids));
+  $('review-due-title').textContent = '今天待复习 ' + plan.due.length + ' 项';
+  $('review-start').disabled = !queue.length;
+  $('review-start').textContent = resume ? '继续复习 →' : '开始复习 →';
+  $('review-budget-field').hidden = !!resume;
+  $('review-budget').disabled = !!resume;
+  $('review-status').textContent = resume ? `已保存上次进度 · ${resume.index + 1} / ${resume.queue.length}`
+    : queue.length ? `这次安排 ${queue.length} 项，预计 ${Math.max(1,Math.ceil(plan.seconds/60))} 分钟` : completed.size ? '今天没有待复习任务' : '完成关卡后，这里会安排复习。';
+  $('review-guidance').hidden = !queue.length;
+  $('review-guidance').textContent = resume ? '点击“继续复习”，从上次那题接着做。' : '选好用时后，点击“开始复习”，按顺序做下面的题。';
+  $('review-list-title').hidden = !queue.length;
   $('review-round-summary').hidden = !reviewSummary;
   if (reviewSummary) $('review-round-summary').textContent = reviewSummary.passed || reviewSummary.relearn
-    ? `本轮完成 ${reviewSummary.passed} 项` + (reviewSummary.relearn ? ` · 再练 ${reviewSummary.relearn} 项` : '') + '。后续复习已安排。' : '本轮已结束。';
+    ? `这次完成 ${reviewSummary.passed} 项` + (reviewSummary.relearn ? ` · 还需巩固 ${reviewSummary.relearn} 项` : '') + '。下次复习会在这里提醒你。' : '这次复习已结束，进度已保存。';
   $('review-return').href = '#' + (saved.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task') + '/' + currentId;
   $('review-button').setAttribute('aria-current', mode === 'review' ? 'page' : 'false');
   $('review-list').replaceChildren();
-  for (const id of plan.queue) {
-    const item = lessons.find(entry => entry.id === id); const card = element('article', undefined, 'review-card');
-    const content = element('div'); content.append(element('h2',skillLabel(item)),element('span',mastery(learning[id]),'mastery-state'));
-    const button = element('button','复习 →'); button.setAttribute('aria-label','复习：'+skillLabel(item));
-    button.addEventListener('click',()=>beginTraining('review',[id]));
-    card.append(content,button); $('review-list').append(card);
+  for (const [index,id] of queue.entries()) {
+    const item = lessons.find(entry => entry.id === id); const card = element('li', undefined, 'review-card');
+    const content = element('div'); content.append(element('h3',skillLabel(item)),element('span',mastery(learning[id]),'mastery-state'));
+    const order = element('span',String(index + 1),'review-order'); order.setAttribute('aria-hidden','true');
+    card.append(order,content); $('review-list').append(card);
   }
   $('mastery-list').replaceChildren();
   for (const item of lessons.filter(item=>completed.has(item.id))) {
     const record = learning[item.id], row = element('li'), content = element('div');
-    const link = element('a',skillLabel(item)); link.href='#review/'+item.id;
-    content.append(link);
+    content.append(element('span',skillLabel(item)));
     if (record) content.append(element('small','下次复习 '+new Date(record.dueAt).toLocaleDateString(locale)));
     row.append(content,element('span',mastery(record),'mastery-state')); $('mastery-list').append(row);
   }
@@ -325,9 +333,9 @@ function showCompletion(newBoss) {
   const next = timeReached ? null : sequence[position+1];
   const count = training ? position+1 : sequence.filter(item=>completed.has(item.id)).length;
   $('completion-progress').max = sequence.length; $('completion-progress').value = count;
-  $('completion-count').textContent = `${training ? '本轮训练' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
-  $('completion-next-preview').textContent = timeReached ? '这题完成了，本轮先到这里。' : next ? nextTransition(lesson,next) : training ? '本轮目标已全部完成。' : '路线完成，可以选择新的专题了。';
-  $('completion-next').textContent = next ? '继续挑战 →' : training ? '完成本轮 ✓' : '去关卡地图 →';
+  $('completion-count').textContent = `${training ? training.kind === 'review' ? '这次复习' : '本次挑战' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
+  $('completion-next-preview').textContent = timeReached ? '这题已完成，可以结束这次复习了。' : next ? nextTransition(lesson,next) : training ? '这次的任务已全部完成。' : '路线完成，可以选择新的专题了。';
+  $('completion-next').textContent = next ? training?.kind === 'review' ? '下一题 →' : '继续挑战 →' : training ? '完成练习 ✓' : '去关卡地图 →';
   $('completion-unlock').hidden = !newBoss;
   if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战已解锁';
   $('completion-comparison').open = true;
@@ -504,7 +512,7 @@ function renderTask() {
   $('previous-lesson').disabled = !!training || lessonIndex <= 0;
   $('next-lesson').disabled = training ? !allDone : lessonIndex >= sequence.length - 1;
   $('previous-lesson').title = sequence[lessonIndex - 1]?.title || '已是第一关';
-  $('next-lesson').title = training ? training.index + 1 < training.queue.length ? '完成当前题后继续' : '完成本轮训练' : sequence[lessonIndex + 1]?.title || '已是最后一关';
+  $('next-lesson').title = training ? training.index + 1 < training.queue.length ? '完成当前题后继续' : '完成这次练习' : sequence[lessonIndex + 1]?.title || '已是最后一关';
   $('next-button').hidden = !allDone;
   $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === sequence.length - 1 ? starterMode ? starterRoute.every(id => completed.has(id)) ? '路线完成 · 选择专题 →' : '选择专题继续 →' : '回到关卡地图 ↗' : '下一关 →';
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
@@ -914,8 +922,11 @@ for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
 for (const link of document.querySelectorAll('a[href="./commands/"]')) link.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
 $('review-button').addEventListener('click', () => { if (mode !== 'review') location.hash = 'review'; });
 $('review-budget').addEventListener('change',()=> { renderLearning(); persist(); });
-$('review-start').addEventListener('click',()=>beginTraining('review',reviewPlan(lessons,completed,learning,Date.now(),Number($('review-budget').value)).queue));
-$('review-resume').addEventListener('click',()=> { const exercise=saved.session?.exercise; if (exercise?.kind==='review') location.hash='review/'+exercise.queue[exercise.index]; });
+$('review-start').addEventListener('click',()=> {
+  const resume = resumableReview();
+  if (resume) location.hash='review/'+resume.queue[resume.index];
+  else beginTraining('review',reviewPlan(lessons,completed,learning,Date.now(),Number($('review-budget').value)).queue);
+});
 $('review-relearn').addEventListener('click',()=> {
   if (training?.kind!=='review' || attempt.graded) return;
   tickPractice(); recordPractice(learning,currentId,attempt,'review',Date.now(),false);

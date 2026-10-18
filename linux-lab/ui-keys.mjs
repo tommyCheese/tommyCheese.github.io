@@ -28,7 +28,7 @@ export function setupKeyboardNavigation(doc) {
   doc.addEventListener('pointerdown',remember,true);
   doc.addEventListener('click',remember,true);
   // Keep labels outside dynamic button text, so renderers can update their captions freely.
-  for (const id of ['welcome-next','welcome-start','lesson-intro-start','completion-next','review-start','review-resume']) {
+  for (const id of ['welcome-next','welcome-start','lesson-intro-start','completion-next','review-start']) {
     const button=byId(id); if (button) { button.dataset.key='Enter'; button.setAttribute('aria-keyshortcuts','Enter'); }
   }
   for (const id of ['completion-stay','restart-cancel']) {
@@ -94,7 +94,7 @@ export function setupKeyboardNavigation(doc) {
       }
       if (target.closest(interactive)) return; // Native activation of the focused control wins.
       const action=dialog ? (defaults[dialog.id] || []).map(byId).find(visible)
-        : visible(byId('review-area')) ? [byId('review-resume'),byId('review-start')].find(visible) : null;
+        : visible(byId('review-area')) ? byId('review-start') : null;
       if (action) { consume(); action.click(); }
       return;
     }
