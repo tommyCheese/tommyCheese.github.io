@@ -130,7 +130,9 @@ export function validExercise(exercise, ids) {
   return exercise === null || object(exercise) && ['review','quiz'].includes(exercise.kind)
     && Number.isSafeInteger(exercise.variant) && exercise.variant > 0 && exercise.variant < 10000000000000
     && Array.isArray(exercise.queue) && exercise.queue.length > 0 && exercise.queue.length <= (exercise.kind === 'review' ? ids.size : 12) && exercise.queue.every(id => ids.has(id)) && new Set(exercise.queue).size === exercise.queue.length
-    && (exercise.reviewVersion === undefined || exercise.reviewVersion === 1 && exercise.kind === 'review')
+    && (exercise.reviewVersion === undefined || [1,2].includes(exercise.reviewVersion) && exercise.kind === 'review')
+    && (exercise.reviewVersion !== 2 || object(exercise.rounds) && Object.keys(exercise.rounds).length === exercise.queue.length
+      && exercise.queue.every(id=>Object.hasOwn(exercise.rounds,id) && Number.isSafeInteger(exercise.rounds[id]) && exercise.rounds[id]>=0))
     && (exercise.spentSeconds === undefined || finite(exercise.spentSeconds,0,21600))
     && (exercise.budget === undefined || [180,300,600].includes(exercise.budget))
     && (exercise.results === undefined || Array.isArray(exercise.results) && exercise.results.length <= exercise.queue.length && new Set(exercise.results.map(item=>item?.id)).size === exercise.results.length && exercise.results.every(item=>object(item) && exercise.queue.includes(item.id) && ['passed','relearn','skipped'].includes(item.outcome)))

@@ -3,15 +3,7 @@ import { clarifyGoalLabels } from './task-copy.mjs';
 // Supporting commands are not credited as separate skills without their own assessment.
 const output = (label, exact, requiresPath) => ({type:'output',label,exact,code:0,...(requiresPath ? {requiresPath} : {})});
 const file = (path,text,label) => ({type:'file',path,text,label});
-const skillLabels = {
-  'where-am-i':'确认当前位置', 'look-around':'查看指定目录', 'hidden-profile':'查找隐藏文件',
-  'enter-projects':'切换并核对目录', 'parent-directory':'使用上级路径', 'directory-map':'查看目录结构',
-  'lookup-copy':'查阅命令参数', 'read-welcome':'读取文本内容', 'copy-note':'复制并核对文件',
-  'rename-note':'识别并重命名文件', 'preview-log':'读取文件开头', 'latest-error':'读取文件末尾',
-  'filter-errors':'按条件筛选文本', 'count-lines':'统计文本行数', 'numeric-sort':'按数值排序',
-  'unique-names':'排序并去重', 'csv-column':'提取指定字段', 'make-executable':'设置执行权限'
-};
-export const skillLabel = lesson => skillLabels[lesson.id] || lesson.title;
+export const skillLabel = lesson => lesson.title;
 export function createReviewLesson(source, variant) {
   const n = variant % 7 + 2, token = 'batch-' + (variant % 97 + 1), folder = 'handoff';
   const rows = Array.from({length:n},(_,i)=>`${i%2 ? 'ERROR' : 'INFO'} job-${i+1}`).join('\n')+'\n';
