@@ -16,7 +16,7 @@
 [data-theme=light] .scene-label #levels-button{color:#756023;border-color:#c9b36f;background:#fff9e7}
 [data-theme=light] .scene-controls button[aria-pressed=true]{color:#715b22;border-color:#a88c3b}
 [data-theme=light] .practice-actions button{background:#f8faf4;border-color:#bfcbbc;color:#485e4d}
-[data-theme=light] .practice-actions #review-button{color:#587034;border-color:#b5c49e}
+
 :where([data-theme=light]) :is(#terminal-resize,#guide-resize)::after{background:#8d9f8a}
 [data-theme=light] .system-section{background:#f8faf4;border-color:#cbd6c5;color:#435747}
 [data-theme=light] .system-section h3,[data-theme=light] .system-caption{color:#6e8068}

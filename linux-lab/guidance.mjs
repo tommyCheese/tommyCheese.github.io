@@ -92,7 +92,7 @@ const takeaways = {
 export function completionMessage(lesson, { boss=false, review=false } = {}) {
   return {
     title: boss ? '漂亮，Boss 拿下！' : review ? '又找回这份手感了！' : '漂亮，做到了！',
-    detail: boss ? '你把几个工具配合起来，完成了整场挑战。' : takeaways[lesson.id] || `「${lesson.title}」的目标都达成了，这套操作已经跑通！`
+    detail: boss ? '你把几个工具配合起来，完成了整场挑战。' : !lesson.reviewVariant && takeaways[lesson.id] || `「${lesson.title}」的目标都达成了，这套操作已经跑通！`
   };
 }
 

@@ -1,4 +1,4 @@
-import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs?v=20261019-review-memory-1';
+import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs?v=20261019-review-variants-1';
 const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 100000;
 export function validState(state) {
