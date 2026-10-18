@@ -426,7 +426,15 @@ window.SITE_MESSAGES = {
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 增加 PDF 导出并修复标签操作",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "新增 print_page 工具，按打印样式导出 PDF，支持横向和背景选项；改用 WebDriver BiDi 读取标签列表，避免逐个激活标签，并修复已创建配置文件的复用。",
     "news.category.software": "软件与开源",
-    "news.category.science": "科学与遥感"
+    "news.category.science": "科学与遥感",
+    "news.opencode-console-provider-key-breach.title": "OpenCode 披露 Console 安全事件，部分第三方密钥可能泄露",
+    "news.opencode-console-provider-key-breach.summary": "OpenCode 称事件影响 1.4% 的 Console 用户，涉及关联外部服务的部分账户。Notebookcheck 报道，旧系统遭未授权访问，工作区内的第三方 API 密钥可能泄露；调查仍在进行，影响范围不能扩大到所有本地用户。",
+    "news.esa-juice-janus-africa-flyby-images.title": "ESA 公布 Juice 飞越非洲的 JANUS 相机测试图像",
+    "news.esa-juice-janus-africa-flyby-images.summary": "JANUS 在地球飞掠期间拍摄了 740 张地月图像，使用全部 13 个滤镜。新公布的非洲条带图由约 40 帧合成；这是仪器测试数据，拍摄时间为 9 月，不能写成 10 月的新一次飞掠。",
+    "news.chrome-155-prerender-security-update.title": "Chrome 155 修复 10 项安全问题，含一项严重漏洞",
+    "news.chrome-155-prerender-security-update.summary": "桌面稳定版更新修复 Prerender 的释放后使用漏洞 CVE-2026-110922，另有 9 项修复。Windows、Mac 版本为 155.0.8059.84/.85，Linux 为 .84；Google 未在公告中确认这些漏洞已遭在野利用。",
+    "news.nasa-artemis-ii-heat-shield-assessment.title": "NASA 公布 Artemis II 隔热罩飞行后评估",
+    "news.nasa-artemis-ii-heat-shield-assessment.summary": "NASA 报告称，调整再入轨迹后，Artemis II 隔热罩发现 9 处炭化层脱落，Artemis I 为 103 处，热防护表现符合飞行前预测。材料取样、测试与分析仍在继续，结论不等于后续任务免于验证。"
   },
   "en": {
     "nav.about": "About",
@@ -854,7 +862,15 @@ window.SITE_MESSAGES = {
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 adds PDF export and fixes tab handling",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "The new print_page tool exports PDFs using print CSS, with landscape and background options. Tab listing now uses WebDriver BiDi without bringing each tab forward, and server-created profiles can be reused correctly.",
     "news.category.software": "Software & open source",
-    "news.category.science": "Science & remote sensing"
+    "news.category.science": "Science & remote sensing",
+    "news.opencode-console-provider-key-breach.title": "OpenCode discloses Console breach; some provider keys may be exposed",
+    "news.opencode-console-provider-key-breach.summary": "OpenCode says 1.4% of Console users were affected, a subset with external providers linked. Notebookcheck reports unauthorized access to a legacy system and possible exposure of workspace API keys. The investigation continues; the scope does not extend to all local users.",
+    "news.esa-juice-janus-africa-flyby-images.title": "ESA releases JANUS camera test images from Juice’s Africa flyover",
+    "news.esa-juice-janus-africa-flyby-images.summary": "JANUS captured 740 Earth and Moon images using all 13 filters during the Earth flyby. The newly released Africa strip combines about 40 frames. These are instrument-test observations from September, not a new flyby in October.",
+    "news.chrome-155-prerender-security-update.title": "Chrome 155 patches 10 security issues, including a critical flaw",
+    "news.chrome-155-prerender-security-update.summary": "The desktop Stable update fixes Prerender use-after-free CVE-2026-110922 and nine other issues. Versions are 155.0.8059.84/.85 for Windows and Mac and .84 for Linux. Google’s notice does not confirm exploitation in the wild.",
+    "news.nasa-artemis-ii-heat-shield-assessment.title": "NASA publishes Artemis II heat-shield assessment",
+    "news.nasa-artemis-ii-heat-shield-assessment.summary": "NASA reports nine char-loss spots on the Artemis II heat shield versus 103 on Artemis I after a reentry-trajectory change. Thermal protection matched preflight predictions. Sampling, testing and analysis continue; the findings do not remove the need to validate future missions."
   },
   "ja": {
     "nav.about": "私について",
@@ -1282,7 +1298,15 @@ window.SITE_MESSAGES = {
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6、PDF 出力を追加しタブ操作を修正",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "print_page が印刷用 CSS で PDF を出力し、横向きと背景の指定に対応。タブ一覧を WebDriver BiDi で取得して各タブの前面表示を避け、作成済みプロファイルの再利用も修正した。",
     "news.category.software": "ソフトウェア・オープンソース",
-    "news.category.science": "科学・リモートセンシング"
+    "news.category.science": "科学・リモートセンシング",
+    "news.opencode-console-provider-key-breach.title": "OpenCode、Console の侵害を公表。一部の外部 API キーが流出した可能性",
+    "news.opencode-console-provider-key-breach.summary": "OpenCode によると、外部サービスを連携した一部のアカウントが影響を受け、Console 利用者全体の1.4%に当たる。Notebookcheck は旧システムへの不正アクセスとワークスペース内の API キー流出の可能性を報じた。調査は続いており、すべてのローカル利用者が対象ではない。",
+    "news.esa-juice-janus-africa-flyby-images.title": "ESA、Juice のアフリカ上空通過で得た JANUS の試験画像を公開",
+    "news.esa-juice-janus-africa-flyby-images.summary": "JANUS は地球フライバイ中、13種類すべてのフィルターで地球と月を740枚撮影した。公開されたアフリカの帯状画像は約40フレームを合成したもの。9月に取得した機器試験データであり、10月の新たなフライバイではない。",
+    "news.chrome-155-prerender-security-update.title": "Chrome 155、重大な脆弱性を含む10件を修正",
+    "news.chrome-155-prerender-security-update.summary": "デスクトップ安定版は Prerender の解放後使用 CVE-2026-110922 と、ほか9件を修正した。Windows・Mac は155.0.8059.84/.85、Linux は.84。Google の公告は、これらの脆弱性の実際の悪用を確認したとはしていない。",
+    "news.nasa-artemis-ii-heat-shield-assessment.title": "NASA、Artemis II の耐熱シールド評価を公表",
+    "news.nasa-artemis-ii-heat-shield-assessment.summary": "NASA によると、再突入軌道の変更後、Artemis II の炭化層脱落は9か所で、Artemis I の103か所より減った。熱防護は飛行前の予測に沿ったが、試料採取・試験・解析は継続しており、後続ミッションの検証を不要にする結果ではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1710,7 +1734,15 @@ window.SITE_MESSAGES = {
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 добавляет PDF и исправляет работу с вкладками",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "Инструмент print_page сохраняет PDF с печатными CSS-стилями, поддерживая альбомную ориентацию и фон. Список вкладок читается через WebDriver BiDi без их активации; исправлено повторное использование профилей сервера.",
     "news.category.software": "ПО и открытый код",
-    "news.category.science": "Наука и дистанционное зондирование"
+    "news.category.science": "Наука и дистанционное зондирование",
+    "news.opencode-console-provider-key-breach.title": "OpenCode сообщил о взломе Console и возможной утечке ключей провайдеров",
+    "news.opencode-console-provider-key-breach.summary": "По данным OpenCode, затронуты 1,4% пользователей Console — часть аккаунтов с подключёнными внешними провайдерами. Notebookcheck сообщает о доступе к старой системе и возможной утечке API-ключей рабочих пространств. Расследование продолжается; это не означает взлом всех локальных пользователей.",
+    "news.esa-juice-janus-africa-flyby-images.title": "ESA опубликовало тестовые снимки JANUS при пролёте Juice над Африкой",
+    "news.esa-juice-janus-africa-flyby-images.summary": "Во время пролёта Земли JANUS сделал 740 снимков Земли и Луны с использованием всех 13 фильтров. Новая панорама Африки объединяет около 40 кадров. Это сентябрьские испытания прибора, а не новый октябрьский пролёт.",
+    "news.chrome-155-prerender-security-update.title": "Chrome 155 исправляет 10 уязвимостей, включая критическую",
+    "news.chrome-155-prerender-security-update.summary": "Обновление стабильной настольной версии устраняет use-after-free в Prerender, CVE-2026-110922, и ещё девять проблем. Для Windows и Mac выпущены 155.0.8059.84/.85, для Linux — .84. Google не подтвердил в объявлении эксплуатацию этих уязвимостей в реальных атаках.",
+    "news.nasa-artemis-ii-heat-shield-assessment.title": "NASA опубликовало оценку теплозащиты Artemis II",
+    "news.nasa-artemis-ii-heat-shield-assessment.summary": "NASA сообщает о девяти участках потери обугленного материала на щите Artemis II против 103 у Artemis I после изменения траектории входа. Теплозащита соответствовала прогнозам. Отбор образцов, испытания и анализ продолжаются; будущие миссии по-прежнему требуют проверки."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2138,6 +2170,14 @@ window.SITE_MESSAGES = {
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 增加 PDF 匯出並修正分頁操作",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "新增 print_page 工具，依列印樣式匯出 PDF，支援橫向與背景選項；改用 WebDriver BiDi 讀取分頁清單，避免逐一啟用分頁，並修正既有設定檔的重用。",
     "news.category.software": "軟體與開源",
-    "news.category.science": "科學與遙測"
+    "news.category.science": "科學與遙測",
+    "news.opencode-console-provider-key-breach.title": "OpenCode 揭露 Console 安全事件，部分第三方金鑰可能外洩",
+    "news.opencode-console-provider-key-breach.summary": "OpenCode 表示事件影響1.4%的 Console 使用者，涉及連結外部服務的部分帳號。Notebookcheck 報導，舊系統遭未授權存取，工作區內的第三方 API 金鑰可能外洩；調查仍在進行，不能擴大解讀為所有本機使用者都受影響。",
+    "news.esa-juice-janus-africa-flyby-images.title": "ESA 公布 Juice 飛越非洲的 JANUS 相機測試影像",
+    "news.esa-juice-janus-africa-flyby-images.summary": "JANUS 在地球飛掠期間，使用全部13個濾鏡拍攝740張地月影像。新公布的非洲條帶圖由約40幀合成；這是9月取得的儀器測試資料，不能寫成10月的新一次飛掠。",
+    "news.chrome-155-prerender-security-update.title": "Chrome 155 修補10項安全問題，含一項嚴重漏洞",
+    "news.chrome-155-prerender-security-update.summary": "桌面穩定版修補 Prerender 的釋放後使用漏洞 CVE-2026-110922，另有9項修補。Windows、Mac 版本為155.0.8059.84/.85，Linux 為.84；Google 未在公告中確認這些漏洞已遭實際利用。",
+    "news.nasa-artemis-ii-heat-shield-assessment.title": "NASA 公布 Artemis II 隔熱罩飛行後評估",
+    "news.nasa-artemis-ii-heat-shield-assessment.summary": "NASA 報告指出，調整再入軌跡後，Artemis II 隔熱罩發現9處炭化層脫落，Artemis I 為103處，熱防護表現符合飛行前預測。材料取樣、測試與分析仍在繼續，後續任務仍須驗證。"
   }
 };
