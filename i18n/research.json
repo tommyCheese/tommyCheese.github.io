@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17",
+  "updated_at": "2026-10-18",
   "tags": [
     "ai",
     "agents",
@@ -757,6 +757,76 @@
       ],
       "source": "Yang et al. · arXiv:2610.22234v1",
       "url": "https://arxiv.org/abs/2610.22234v1"
+    },
+    {
+      "id": "mpt-decentralized-agent-self-orchestration",
+      "kind": "preprint",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-18",
+      "source": "arXiv · 2610.22322v1",
+      "url": "https://arxiv.org/abs/2610.22322v1"
+    },
+    {
+      "id": "knowgpo-knowledge-grouped-search",
+      "kind": "preprint",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-18",
+      "source": "arXiv · 2610.22331v1",
+      "url": "https://arxiv.org/abs/2610.22331v1"
+    },
+    {
+      "id": "diverse-scientific-ideas-set-rl",
+      "kind": "preprint",
+      "tags": [
+        "ai",
+        "papers",
+        "results"
+      ],
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-18",
+      "source": "arXiv · 2610.22324v1",
+      "url": "https://arxiv.org/abs/2610.22324v1"
+    },
+    {
+      "id": "omniverifier-graded-world-verification",
+      "kind": "conference-paper",
+      "venue": "NeurIPS 2026",
+      "tags": [
+        "ai",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-18",
+      "source": "arXiv · 2610.22355v1",
+      "url": "https://arxiv.org/abs/2610.22355v1"
+    },
+    {
+      "id": "leash-uncertainty-agent-escalation",
+      "kind": "preprint",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "published_at": "2026-10-15",
+      "collected_at": "2026-10-18",
+      "source": "arXiv · 2610.22280v1",
+      "url": "https://arxiv.org/abs/2610.22280v1"
     }
   ],
   "coverage_start": "2026-10-06",
