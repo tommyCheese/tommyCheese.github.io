@@ -14,7 +14,7 @@ TOPICS = {
 }
 FEATURED = ['opencode-v2-extensions', ARCHITECTURE[0], MODEL_TRANSFER]
 NEWS = json.loads((Path(__file__).resolve().parents[1] / 'i18n/news.json').read_text())
-NEWS_TAGS = ['ai', 'semiconductors', 'devices', 'cars']
+NEWS_TAGS = NEWS['tags']
 RESEARCH = json.loads((Path(__file__).resolve().parents[1] / 'i18n/research.json').read_text())
 
 

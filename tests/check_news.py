@@ -8,16 +8,18 @@ from lxml import html, etree
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from build_i18n import LOCALES, PREFIX, MESSAGES, BASE
-from reading_layout import NEWS, enhance_layout
+from reading_layout import NEWS, NEWS_TAGS, enhance_layout
 
 updated = date.fromisoformat(NEWS['updated_at'])
 items = sorted(NEWS['items'], key=lambda item: item['published_at'], reverse=True)
 dates = list(dict.fromkeys(item['published_at'] for item in items))
 assert items
+assert NEWS_TAGS and len(set(NEWS_TAGS)) == len(NEWS_TAGS)
+assert set(NEWS_TAGS) == {item['category'] for item in items}
 assert len({item['id'] for item in items}) == len(items)
 for item in items:
     assert date.fromisoformat(item['published_at']) <= updated
-    assert item['category'] in {'ai', 'semiconductors', 'devices', 'cars'}
+    assert item['category'] in NEWS_TAGS
     for field in ['url', 'image']:
         url = urlsplit(item[field])
         assert url.scheme == 'https' and url.netloc
@@ -49,7 +51,7 @@ for locale in LOCALES:
     assert archive.xpath('//link[@rel="canonical"]/@href') == [BASE + prefix + '/news/']
     assert archive.xpath('//*[@id="profileHeader"]//a[@data-i18n="nav.news"]/@aria-current') == ['page']
     category_links = archive.xpath('//nav[@class="news-categories"]/a')
-    assert [a.get('data-news-tag') for a in category_links] == ['all', 'ai', 'semiconductors', 'devices', 'cars']
+    assert [a.get('data-news-tag') for a in category_links] == ['all'] + NEWS_TAGS
     assert all(urlsplit(a.get('href')).path == prefix + '/news/' for a in category_links)
     assert not archive.xpath('//nav[@class="news-categories"]/span')
     groups = archive.xpath('//*[@class="news-day"]')

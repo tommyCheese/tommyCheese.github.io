@@ -1,6 +1,46 @@
 {
-  "updated_at": "2026-10-17",
+  "updated_at": "2026-10-18",
   "items": [
+    {
+      "id": "github-license-compliance-ga",
+      "category": "software",
+      "published_at": "2026-10-16",
+      "source": "GitHub Changelog",
+      "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/",
+      "image": "https://github.blog/wp-content/uploads/2026/10/613833573-be40bdee-f6b9-49d6-945d-68ff04006833.jpg?resize=2064%2C1096",
+      "image_credit": "GitHub",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-black-marble-isaias-power-recovery",
+      "category": "science",
+      "published_at": "2026-10-16",
+      "source": "NASA Earth Observatory",
+      "url": "https://science.nasa.gov/earth/earth-observatory/isaias-dims-the-gulf-coast/",
+      "image": "https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/iotd/2026/isaias-dims-the-gulf-coast/isaias_bmhd_20261011.jpg",
+      "image_credit": "NASA Earth Observatory / Lauren Dauphin",
+      "image_fit": "contain"
+    },
+    {
+      "id": "ollama-0406-gguf-windows-fixes",
+      "category": "software",
+      "published_at": "2026-10-16",
+      "source": "Ollama / GitHub",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.40.6",
+      "image": "https://opengraph.githubassets.com/d7fd87977c01d38ac9933547a226df74b34bbd1c8b1ef18d787d8b0aa0e95efc/ollama/ollama/releases/tag/v0.40.6",
+      "image_credit": "Ollama / GitHub",
+      "image_fit": "contain"
+    },
+    {
+      "id": "mozilla-devtools-mcp-0106-pdf-tabs",
+      "category": "software",
+      "published_at": "2026-10-16",
+      "source": "Mozilla Discourse / GitHub",
+      "url": "https://discourse.mozilla.org/t/firefox-devtools-mcp-0-10-6-released/149832",
+      "image": "https://us1.discourse-cdn.com/flex001/uploads/mozilla/original/3X/1/8/180ccfafb4284e125acb62e88c091db07e8a77bb.png",
+      "image_credit": "Mozilla",
+      "image_fit": "contain"
+    },
     {
       "id": "anthropic-nist-curve-seed-research",
       "category": "ai",
@@ -183,5 +223,13 @@
       "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/01154339/Samsung-Corporate-SmartThings-Now-New-Platform-Update_Thumb932.jpg",
       "image_credit": "Samsung Electronics"
     }
+  ],
+  "tags": [
+    "ai",
+    "semiconductors",
+    "devices",
+    "cars",
+    "software",
+    "science"
   ]
 }
