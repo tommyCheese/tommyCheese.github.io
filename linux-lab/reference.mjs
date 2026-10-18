@@ -1,6 +1,8 @@
+import { setupCodeCopy } from './code-copy.mjs';
 import { lessons } from './curriculum.mjs';
 import { setupI18n, localeRoot, translate } from './i18n.mjs';
 setupI18n();
+setupCodeCopy(document, { selector:'#content pre', translate });
 const KEY = 'tommy-cheese-linux-lab-v1';
 function readSaved() {
   try { const data = JSON.parse(localStorage.getItem(KEY) || '{}'); return data && typeof data === 'object' && !Array.isArray(data) ? data : {}; }

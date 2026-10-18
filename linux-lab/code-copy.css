@@ -1,0 +1,7 @@
+.code-copy-block{position:relative;min-width:0}
+.code-copy-block>pre{padding-right:70px}
+.code-copy-button{position:absolute;top:6px;right:6px;border:1px solid light-dark(#d4ddd0,#52604e);border-radius:4px;background:light-dark(#f4f7f0,#344031);color:light-dark(#52634b,#d3dfcb);padding:4px 7px;font:11px/1.4 system-ui,-apple-system,"PingFang SC",sans-serif;cursor:pointer;white-space:nowrap}
+.code-copy-button:hover{background:light-dark(#e7efdf,#45533f)}
+.code-copy-button:focus-visible{outline:2px solid light-dark(#a98530,#e5cd76);outline-offset:2px}
+.code-copy-button:disabled{cursor:wait}
+@media(pointer:coarse){.code-copy-button{min-height:40px;min-width:44px}.code-copy-block>pre{min-height:52px}}

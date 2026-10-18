@@ -2238,7 +2238,7 @@
   "复习 →": "Review →",
   "复习或小测数据无效": "Review or quiz data is invalid",
   "复习：": "Review: ",
-  "复制": "copy",
+  "复制": "Copy",
   "复制为": "Copy as",
   "复制到": "Copy to",
   "复制到同项目的": "Copied to the same project",
@@ -5064,5 +5064,8 @@
   "屏幕清爽一点，练习进度还在。clear 清除终端显示，不会删除文件、命令历史或已经完成的操作。": "Clear the screen, keep your progress. clear clears the terminal display without removing files, command history, or work already done.",
   "：仅供手册查阅，模拟终端暂不支持执行。输入 man ": ": reference only; execution is not supported in this simulated terminal. Use man ",
   " 查看用法。": " to see usage.",
-  "仅供手册查阅": "Manual reference only"
+  "仅供手册查阅": "Manual reference only",
+  "复制代码块": "Copy code block",
+  "已复制": "Copied",
+  "复制失败": "Copy failed"
 }
