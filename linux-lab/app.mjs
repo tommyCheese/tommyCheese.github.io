@@ -1,7 +1,7 @@
 import { setupCodeCopy } from './code-copy.mjs';
-import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261018-review-entry-1';
+import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261019-review-memory-1';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261018-review-entry-1';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261019-review-memory-1';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261017-lesson-intro-2';
@@ -9,8 +9,8 @@ import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs';
 import { createReviewLesson, skillLabel } from './review-exercises.mjs';
-import { migrateLearning, reviewPlan, reviewTimeReached, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261016-adaptive-review-3';
-import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261016-adaptive-review-3';
+import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261019-review-memory-1';
+import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261019-review-memory-1';
 import { PracticeHistory } from './history.mjs';
 import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261017-command-help-2';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
@@ -56,7 +56,6 @@ let storageAvailable = true;
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch { saved = {}; }
 if (typeof saved !== 'object' || Array.isArray(saved)) saved = {};
-$('review-budget').value = String([180,300,600].includes(saved.reviewBudget) ? saved.reviewBudget : 300);
 saved = await localizeSaved(saved);
 const completed = new Set(Array.isArray(saved.completed) ? saved.completed.filter(id => ids.has(id)) : []);
 const favorites = new Set(Array.isArray(saved.favorites) ? saved.favorites.filter(name => supportedNames.has(name)) : []);
@@ -224,11 +223,11 @@ function makeExercise() {
   return new Shell(varied.state, manuals);
 }
 function resumableReview() {
-  const exercise = saved.session?.exercise;
-  return exercise?.kind === 'review' && validExercise(exercise,ids) ? exercise : null;
+  const session = [saved.reviewSession,saved.session].find(session=>session?.exercise?.kind === 'review' && validExercise(session.exercise,ids));
+  return session?.exercise || null;
 }
 function renderLearning() {
-  const plan = reviewPlan(lessons, completed, learning, Date.now(), Number($('review-budget').value));
+  const plan = reviewPlan(lessons, completed, learning);
   const resume = resumableReview();
   const queue = resume ? resume.queue.slice(resume.index) : plan.queue;
   $('review-count').textContent = plan.due.length ? String(plan.due.length) : '';
@@ -236,12 +235,10 @@ function renderLearning() {
   $('review-due-title').textContent = '今天待复习 ' + plan.due.length + ' 项';
   $('review-start').disabled = !queue.length;
   $('review-start').textContent = resume ? '继续复习 →' : '开始复习 →';
-  $('review-budget-field').hidden = !!resume;
-  $('review-budget').disabled = !!resume;
   $('review-status').textContent = resume ? `已保存上次进度 · ${resume.index + 1} / ${resume.queue.length}`
-    : queue.length ? `这次安排 ${queue.length} 项，预计 ${Math.max(1,Math.ceil(plan.seconds/60))} 分钟` : completed.size ? '今天没有待复习任务' : '完成关卡后，这里会安排复习。';
+    : queue.length ? `已安排 ${queue.length} 项` : completed.size ? '今天没有待复习任务' : '完成关卡后，这里会安排复习。';
   $('review-guidance').hidden = !queue.length;
-  $('review-guidance').textContent = resume ? '点击“继续复习”，从上次那题接着做。' : '选好用时后，点击“开始复习”，按顺序做下面的题。';
+  $('review-guidance').textContent = resume ? '点击“继续复习”，从上次那题接着做。' : '点击“开始复习”，按顺序做下面的题。';
   $('review-list-title').hidden = !queue.length;
   $('review-round-summary').hidden = !reviewSummary;
   if (reviewSummary) $('review-round-summary').textContent = reviewSummary.passed || reviewSummary.relearn
@@ -267,7 +264,8 @@ function beginTraining(kind, queue, boss) {
   if (!queue.length) return;
   if (shell) persist();
   saved.session=undefined; shell=undefined; reviewSummary=null;
-  training={kind,queue,index:0,variant:Date.now()%997+1,...(kind==='review' ? {reviewVersion:1,budget:Number($('review-budget').value),spentSeconds:0,results:[]} : {}),...(boss ? {boss,challengeVersion:1} : {})};
+  if (kind === 'review') saved.reviewSession=undefined;
+  training={kind,queue,index:0,variant:Date.now()%997+1,...(kind==='review' ? {reviewVersion:1,results:[]} : {}),...(boss ? {boss,challengeVersion:1} : {})};
   const route=kind+'/'+queue[0];
   history.pushState(null,'','#'+route); navigate('#'+route);
 }
@@ -283,8 +281,13 @@ function finishReview() {
   const results=training.results || [];
   reviewSummary={passed:results.filter(item=>item.outcome==='passed').length,relearn:results.filter(item=>item.outcome==='relearn').length};
   for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
-  saved.session=undefined; shell=undefined; training=null;
+  saved.session=undefined; saved.reviewSession=undefined; shell=undefined; training=null;
   history.replaceState(null,'','#review'); navigate('#review'); persist();
+}
+function pauseReview() {
+  if (training?.kind !== 'review') return;
+  persist();
+  history.pushState(null,'','#review'); navigate('#review');
 }
 function startBoss(boss) {
   if (!bossUnlocked(boss, completed)) return;
@@ -294,8 +297,7 @@ function advanceLesson() {
   if ($('completion-dialog').open) $('completion-dialog').close();
   if (training) {
     tickPractice();
-    if (training.kind === 'review') training.spentSeconds = (training.spentSeconds || 0) + (attempt.activeSeconds || 0);
-    if (training.index + 1 < training.queue.length && !reviewTimeReached(training)) {
+    if (training.index + 1 < training.queue.length) {
       persist(); shell = undefined; saved.session = undefined;
       training.index++; training.variant++;
       location.hash = training.kind + '/' + training.queue[training.index];
@@ -329,12 +331,11 @@ function showCompletion(newBoss) {
   $('completion-lesson').textContent = lesson.title;
   const sequence = training ? training.queue.map(id=>lessons.find(item=>item.id === id)) : navigationLessons();
   const position = training ? training.index : sequence.findIndex(item=>item.id === currentId);
-  const timeReached=reviewTimeReached(training,attempt.activeSeconds || 0);
-  const next = timeReached ? null : sequence[position+1];
+  const next = sequence[position+1];
   const count = training ? position+1 : sequence.filter(item=>completed.has(item.id)).length;
   $('completion-progress').max = sequence.length; $('completion-progress').value = count;
   $('completion-count').textContent = `${training ? training.kind === 'review' ? '这次复习' : '本次挑战' : starterMode ? '入门路线' : '课程进度'} · ${count} / ${sequence.length}`;
-  $('completion-next-preview').textContent = timeReached ? '这题已完成，可以结束这次复习了。' : next ? nextTransition(lesson,next) : training ? '这次的任务已全部完成。' : '路线完成，可以选择新的专题了。';
+  $('completion-next-preview').textContent = next ? nextTransition(lesson,next) : training ? '这次的任务已全部完成。' : '路线完成，可以选择新的专题了。';
   $('completion-next').textContent = next ? training?.kind === 'review' ? '下一题 →' : '继续挑战 →' : training ? '完成练习 ✓' : '去关卡地图 →';
   $('completion-unlock').hidden = !newBoss;
   if (newBoss) $('completion-unlock').textContent = '👾 新的 Boss 挑战已解锁';
@@ -370,9 +371,11 @@ $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !
 
 function persist() {
   tickPractice();
-  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, reviewBudget:Number($('review-budget').value), transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
+  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
     session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
+  payload.reviewSession = mode === 'learn' && shell && training?.kind === 'review' ? payload.session
+    : saved.reviewSession || (saved.session?.exercise?.kind === 'review' ? saved.session : undefined);
   try { localStorage.setItem(KEY, JSON.stringify(payload)); saved = payload; storageAvailable = true; }
   catch { storageAvailable = false; }
   $('save-status').textContent = storageAvailable ? '已保存' : '未保存 · 可导出';
@@ -921,11 +924,13 @@ for (const [id, offset] of [['previous-lesson', -1], ['next-lesson', 1]]) {
 }
 for (const link of document.querySelectorAll('a[href="./commands/"]')) link.addEventListener('click', () => { if (mode === 'learn' && !attempt.graded) { attempt.maxHint = Math.max(1, attempt.maxHint); persist(); } });
 $('review-button').addEventListener('click', () => { if (mode !== 'review') location.hash = 'review'; });
-$('review-budget').addEventListener('change',()=> { renderLearning(); persist(); });
 $('review-start').addEventListener('click',()=> {
   const resume = resumableReview();
-  if (resume) location.hash='review/'+resume.queue[resume.index];
-  else beginTraining('review',reviewPlan(lessons,completed,learning,Date.now(),Number($('review-budget').value)).queue);
+  if (resume) {
+    if (saved.reviewSession?.exercise === resume) saved.session=saved.reviewSession;
+    const route='#review/'+resume.queue[resume.index];
+    history.pushState(null,'',route); navigate(route,true);
+  } else beginTraining('review',reviewPlan(lessons,completed,learning).queue);
 });
 $('review-relearn').addEventListener('click',()=> {
   if (training?.kind!=='review' || attempt.graded) return;
@@ -934,7 +939,7 @@ $('review-relearn').addEventListener('click',()=> {
   hint=3; hintVisible=true; renderTask(); persist(); renderLearning(); $('hint-box').scrollIntoView({block:'nearest',behavior:reducedMotion.matches?'instant':'smooth'});
 });
 $('review-skip').addEventListener('click',()=> { if (training?.kind==='review') { recordReviewResult(attempt.relearning?'relearn':'skipped'); advanceLesson(); } });
-$('review-finish').addEventListener('click',finishReview);
+$('review-finish').addEventListener('click',pauseReview);
 $('course-search').addEventListener('input', renderChapters);
 $('files-tab').addEventListener('click', () => setWorldTab(false));
 $('system-tab').addEventListener('click', () => setWorldTab(true));
@@ -960,7 +965,7 @@ function navigate(hash, initial = false, {showGuide = true} = {}) {
   }
   if (['review','quiz'].includes(view) && ids.has(id) && completed.has(id)) {
     if ((!training || training.kind !== view || training.queue[training.index] !== id) && saved.session?.exercise?.kind === view && validExercise(saved.session.exercise, ids) && saved.session.exercise.queue[saved.session.exercise.index] === id) training = structuredClone(saved.session.exercise);
-    if (!training || training.kind !== view || training.queue[training.index] !== id) training = {kind:view,queue:[id],index:0,variant:Date.now()%997+1,...(view==='review' ? {reviewVersion:1,budget:300,results:[]} : {})};
+    if (!training || training.kind !== view || training.queue[training.index] !== id) training = {kind:view,queue:[id],index:0,variant:Date.now()%997+1,...(view==='review' ? {reviewVersion:1,results:[]} : {})};
   } else training = null;
   starterMode = view === 'starter' && starterRoute.includes(id);
   if (starterMode) selectedLevel = 'starter';
@@ -1025,7 +1030,6 @@ async function importBackup(event) {
       // Retire the current workspace before routing so navigate cannot overwrite the imported data.
       shell = undefined; sandboxSession = undefined; training = null; learning = migrateLearning(data.learning || {}); transfer = data.transfer || {}; bossCompleted = new Set(data.bossCompleted || []); saved = data; currentId = data.current;
       lesson = lessons.find(item => item.id === currentId); selectedLevel = lesson.level;
-      $('review-budget').value=String(data.reviewBudget || 300);
       navigate(data.mode === 'sandbox' ? 'sandbox' : (data.session?.exercise?.kind || (data.courseRoute === 'starter' && starterRoute.includes(currentId) ? 'starter' : 'task')) + '/' + currentId, true);
       persist(); renderChapters();
     }
@@ -1042,7 +1046,7 @@ $('restart-confirm').addEventListener('click', () => {
   try { localStorage.removeItem(KEY); }
   catch { $('restart-status').textContent = '无法清除本地记录，请检查浏览器存储权限。'; return; }
   completed.clear(); favorites.clear(); learning = {}; transfer = {}; bossCompleted.clear(); training = null; practiceHistory.clear(); saved = {}; sandboxSession = undefined; shell = undefined;
-  $('review-budget').value='300'; reviewSummary=null;
+  reviewSummary=null;
   currentId = lessons[0].id; lesson = lessons[0]; selectedLevel = lesson.level;
   transcript = []; hint = 0; draft = ''; historyCursor = 0; previewPath = undefined; changes = new Set();
   expandedDirectories.clear(); for (const path of ['/', '/home', HOME]) expandedDirectories.add(path);

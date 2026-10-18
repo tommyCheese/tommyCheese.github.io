@@ -5089,5 +5089,9 @@
   "这次的任务已全部完成。": "All tasks are complete.",
   "完成练习 ✓": "Finish practice ✓",
   "完成这次练习": "Finish this practice",
-  "结束这次复习": "Finish review"
+  "结束这次复习": "Finish review",
+  "已安排": "Scheduled:",
+  "点击“开始复习”，按顺序做下面的题。": "Click “Start review” to work through the tasks below in order.",
+  "可以随时暂停，进度会自动保存，下次接着做。": "Pause whenever you like. Your progress is saved so you can pick up where you left off.",
+  "暂停复习": "Pause review"
 }
