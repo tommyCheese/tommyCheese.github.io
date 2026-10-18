@@ -406,7 +406,17 @@ window.SITE_MESSAGES = {
     "research.librarian-agents-proactive-workspaces.title": "Librarian Agents：为未来问题预先整理工作区",
     "research.librarian-agents-proactive-workspaces.summary": "构建 Agent 把原始文档整理成分层文件和引用链接，并按下游问答准确率进行强化学习。作者报告两项基准提升；预先整理的成本需由后续多次查询摊销，结论仍属预印本。",
     "research.os-helix-hybrid-computer-agents.title": "OS-Helix：在统一动作空间中结合 GUI 和代码",
-    "research.os-helix-hybrid-computer-agents.summary": "使用可验证的桌面任务及按动作步平衡的强化学习，训练 Agent 在图形操作与代码执行之间协作。作者报告 OSWorld-Verified 成功率提升并测试 Windows 迁移；预印本结果不代表任意桌面任务均可靠。"
+    "research.os-helix-hybrid-computer-agents.summary": "使用可验证的桌面任务及按动作步平衡的强化学习，训练 Agent 在图形操作与代码执行之间协作。作者报告 OSWorld-Verified 成功率提升并测试 Windows 迁移；预印本结果不代表任意桌面任务均可靠。",
+    "research.mpt-decentralized-agent-self-orchestration.title": "MPT：让多 Agent 同时学习行动与自编排",
+    "research.mpt-decentralized-agent-self-orchestration.summary": "以竞价决定 Agent 参与和训练反馈，在无中央协调者的群体中联合学习行动与分工。作者在具身制作、机器人导航和深度研究任务上报告改进；迁移、扩展与掉线鲁棒性结论限于所测设置。",
+    "research.knowgpo-knowledge-grouped-search.title": "KnowGPO：按获得的知识分配搜索 Agent 训练奖励",
+    "research.knowgpo-knowledge-grouped-search.summary": "把回答所需信息拆成原子知识条件，将知识状态相同的轨迹分组比较，并用逐步知识增量作为过程奖励。作者在 Xbench、BrowseComp-ZH 和 GAIA 上报告优于对照方法；效果限于这些基准与训练设置。",
+    "research.diverse-scientific-ideas-set-rl.title": "科研构思多样性：用集合级奖励训练推理模型",
+    "research.diverse-scientific-ideas-set-rl.summary": "模型依据输入论文一次生成一组构思卡片，以质量和相互差异共同计分。作者报告 8B 模型的创意效用改善，并开展四位专家的小规模评估与概念验证实验；不等同于科学发现已获验证，作者注明仍在评审。",
+    "research.omniverifier-graded-world-verification.title": "OmniVerifier-C1：为世界模型提供分解式视觉评分",
+    "research.omniverifier-graded-world-verification.summary": "将提示和规则拆成细项，联合训练局部判断与整体评分。作者报告图像生成和迷宫、数独等结构化任务上的改进；成对验证的优势以有真实参考图像为条件。作者在论文注释中标注 NeurIPS 2026。",
+    "research.leash-uncertainty-agent-escalation.title": "LEASH：按不确定性转交并监督电脑操作 Agent",
+    "research.leash-uncertainty-agent-escalation.summary": "将弱模型隐藏状态与过往成败轨迹比较，用于初始路由、逐步升级和交接后监督，无需专门训练监控器。作者在 OSWorld 的四种模型骨干上报告成功率与成本权衡改善；结果不代表任意桌面任务均可靠。"
   },
   "en": {
     "nav.about": "About",
@@ -814,7 +824,17 @@ window.SITE_MESSAGES = {
     "research.librarian-agents-proactive-workspaces.title": "Librarian Agents: preparing workspaces for future queries",
     "research.librarian-agents-proactive-workspaces.summary": "A builder reorganizes documents into hierarchical files and references, trained through downstream answer accuracy. Authors report gains on two benchmarks; upfront construction costs require repeated queries to amortize. Findings remain preprint results.",
     "research.os-helix-hybrid-computer-agents.title": "OS-Helix: unifying GUI actions and code execution",
-    "research.os-helix-hybrid-computer-agents.summary": "Trains agents with verifiable desktop tasks and action-step-balanced reinforcement learning. Authors report improved OSWorld-Verified success and test Windows transfer. Preprint benchmark results do not establish reliability across arbitrary desktop tasks."
+    "research.os-helix-hybrid-computer-agents.summary": "Trains agents with verifiable desktop tasks and action-step-balanced reinforcement learning. Authors report improved OSWorld-Verified success and test Windows transfer. Preprint benchmark results do not establish reliability across arbitrary desktop tasks.",
+    "research.mpt-decentralized-agent-self-orchestration.title": "MPT: learning actions and self-orchestration together",
+    "research.mpt-decentralized-agent-self-orchestration.summary": "Bids determine participation and training credit, jointly learning actions and coordination without a central agent. Authors report gains in embodied crafting, robot navigation and deep research; transfer, scaling and dropout robustness are limited to the tested settings.",
+    "research.knowgpo-knowledge-grouped-search.title": "KnowGPO: rewarding search agents for acquired knowledge",
+    "research.knowgpo-knowledge-grouped-search.summary": "Required information is split into atomic conditions; trajectories with matching knowledge states are compared, and incremental knowledge supplies process rewards. Authors report gains over baselines on Xbench, BrowseComp-ZH and GAIA, within those benchmarks and training settings.",
+    "research.diverse-scientific-ideas-set-rl.title": "Training reasoning models for diverse scientific ideas",
+    "research.diverse-scientific-ideas-set-rl.summary": "A model generates a set of idea cards grounded in source papers, rewarded jointly for quality and distinctness. Authors report improved creative utility for an 8B model, a four-expert pilot and proof-of-concept experiments. These do not establish scientific discoveries; authors mark the paper under review.",
+    "research.omniverifier-graded-world-verification.title": "OmniVerifier-C1: decomposed visual scoring for world models",
+    "research.omniverifier-graded-world-verification.summary": "Prompts and rules are split into components, jointly training local judgments and overall scores. Authors report gains in image generation and structured tasks such as mazes and Sudoku; the pairwise-verification advantage assumes ground-truth images. Author comments list NeurIPS 2026.",
+    "research.leash-uncertainty-agent-escalation.title": "LEASH: uncertainty-guided escalation for computer-use agents",
+    "research.leash-uncertainty-agent-escalation.summary": "Weak-model hidden states are compared with past successes and failures for initial routing, stepwise escalation and oversight after handoff, without dedicated monitor training. Authors report improved success–cost tradeoffs on OSWorld with four model backbones; this does not establish reliability on arbitrary desktop tasks."
   },
   "ja": {
     "nav.about": "私について",
@@ -1222,7 +1242,17 @@ window.SITE_MESSAGES = {
     "research.librarian-agents-proactive-workspaces.title": "Librarian Agents：将来の質問に備えた文書整理",
     "research.librarian-agents-proactive-workspaces.summary": "構築 Agent が文書を階層ファイルと参照リンクに整理し、後段の回答精度を報酬として学習する。著者は二つのベンチマークで改善を報告。事前構築コストの償却には反復質問が必要で、結果はプレプリント段階。",
     "research.os-helix-hybrid-computer-agents.title": "OS-Helix：GUI 操作とコード実行を統合",
-    "research.os-helix-hybrid-computer-agents.summary": "検証可能なデスクトップ課題と、操作ステップを均衡化する強化学習で Agent を訓練。著者は OSWorld-Verified の成功率改善と Windows への転移を報告。任意の作業での信頼性を保証する結果ではなく、プレプリント段階。"
+    "research.os-helix-hybrid-computer-agents.summary": "検証可能なデスクトップ課題と、操作ステップを均衡化する強化学習で Agent を訓練。著者は OSWorld-Verified の成功率改善と Windows への転移を報告。任意の作業での信頼性を保証する結果ではなく、プレプリント段階。",
+    "research.mpt-decentralized-agent-self-orchestration.title": "MPT：行動と自己編成を同時に学ぶマルチエージェント",
+    "research.mpt-decentralized-agent-self-orchestration.summary": "入札によって参加と学習への貢献度を決め、中央の調整役なしで行動と分担を同時に学習する。著者は身体性を伴う制作、ロボットのナビゲーション、詳細調査で改善を報告。転移、規模拡大、離脱への頑健性は実験条件内の結果。",
+    "research.knowgpo-knowledge-grouped-search.title": "KnowGPO：獲得した知識に応じて検索エージェントを学習",
+    "research.knowgpo-knowledge-grouped-search.summary": "回答に必要な情報を原子的な知識条件に分け、知識状態が同じ軌跡を比較し、各段階の知識増分を過程報酬に使う。著者は Xbench、BrowseComp-ZH、GAIA で比較手法を上回る結果を報告。効果はこれらのベンチマークと学習条件に限られる。",
+    "research.diverse-scientific-ideas-set-rl.title": "研究アイデアの多様性を集合単位の報酬で学習",
+    "research.diverse-scientific-ideas-set-rl.summary": "入力論文に基づくアイデアカードを一組生成し、品質と相互の違いをまとめて評価する。著者は 8B モデルの創造的有用性の改善、専門家四人による予備評価、概念実証実験を報告。科学的発見の検証とは異なり、著者の注記では査読中。",
+    "research.omniverifier-graded-world-verification.title": "OmniVerifier-C1：世界モデルを細分化した視覚評価で検証",
+    "research.omniverifier-graded-world-verification.summary": "指示やルールを細項目に分け、局所判断と全体スコアを同時に学習する。著者は画像生成、迷路、数独などで改善を報告。対比較による検証の優位性は正解画像がある条件での結果。著者注記に NeurIPS 2026 と記載されている。",
+    "research.leash-uncertainty-agent-escalation.title": "LEASH：不確実性で操作を引き継ぎ、エージェントを監督",
+    "research.leash-uncertainty-agent-escalation.summary": "弱いモデルの隠れ状態を過去の成否軌跡と比較し、初期振り分け、段階的な引き継ぎ、その後の監督に使う。専用監視器の学習は不要。著者は OSWorld の四種の基盤モデルで成功率と費用の両立を報告したが、任意のデスクトップ作業の信頼性を保証する結果ではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1630,7 +1660,17 @@ window.SITE_MESSAGES = {
     "research.librarian-agents-proactive-workspaces.title": "Librarian Agents: подготовка документов к будущим запросам",
     "research.librarian-agents-proactive-workspaces.summary": "Агент организует документы в иерархию файлов и ссылок, обучаясь по точности последующих ответов. Авторы сообщают об улучшениях на двух тестах. Затраты подготовки окупаются повторными запросами; результаты опубликованы в препринте.",
     "research.os-helix-hybrid-computer-agents.title": "OS-Helix: объединение GUI и выполнения кода",
-    "research.os-helix-hybrid-computer-agents.summary": "Проверяемые задачи рабочего стола и сбалансированное по действиям обучение объединяют графические операции с кодом. Авторы сообщают об улучшении OSWorld-Verified и проверяют перенос на Windows. Препринт не доказывает надёжность на произвольных задачах."
+    "research.os-helix-hybrid-computer-agents.summary": "Проверяемые задачи рабочего стола и сбалансированное по действиям обучение объединяют графические операции с кодом. Авторы сообщают об улучшении OSWorld-Verified и проверяют перенос на Windows. Препринт не доказывает надёжность на произвольных задачах.",
+    "research.mpt-decentralized-agent-self-orchestration.title": "MPT: совместное обучение действиям и самоорганизации агентов",
+    "research.mpt-decentralized-agent-self-orchestration.summary": "Ставки определяют участие агентов и распределение обучающего сигнала без центрального координатора. Авторы сообщают об улучшениях в задачах создания предметов, навигации роботов и глубокого исследования; выводы о переносе, масштабировании и отказоустойчивости ограничены испытанными условиями.",
+    "research.knowgpo-knowledge-grouped-search.title": "KnowGPO: награда поисковым агентам за полученные знания",
+    "research.knowgpo-knowledge-grouped-search.summary": "Нужная для ответа информация разбивается на атомарные условия. Траектории с одинаковым состоянием знаний сравниваются, а прирост знаний служит промежуточной наградой. Авторы сообщают об улучшениях на Xbench, BrowseComp-ZH и GAIA; выводы ограничены этими тестами и условиями обучения.",
+    "research.diverse-scientific-ideas-set-rl.title": "Обучение моделей рассуждения разнообразным научным идеям",
+    "research.diverse-scientific-ideas-set-rl.summary": "Модель создаёт набор карточек идей по исходным статьям; награда учитывает качество и различия между идеями. Авторы сообщают об улучшении творческой полезности модели 8B, пилотной оценке четырёх экспертов и пробных экспериментах. Это не подтверждённые научные открытия; статья, по отметке авторов, на рецензировании.",
+    "research.omniverifier-graded-world-verification.title": "OmniVerifier-C1: детальная визуальная оценка мировых моделей",
+    "research.omniverifier-graded-world-verification.summary": "Запросы и правила разбиваются на компоненты; локальные суждения и общая оценка обучаются совместно. Авторы сообщают об улучшениях в генерации изображений, лабиринтах и судоку. Преимущество попарной проверки предполагает наличие эталонных изображений; в примечании авторов указана NeurIPS 2026.",
+    "research.leash-uncertainty-agent-escalation.title": "LEASH: передача управления агентам по оценке неопределённости",
+    "research.leash-uncertainty-agent-escalation.summary": "Скрытые состояния слабой модели сравниваются с прошлыми успехами и неудачами для маршрутизации, передачи управления и последующего надзора без отдельного обучения наблюдателя. Авторы сообщают об улучшении соотношения успеха и стоимости на OSWorld с четырьмя моделями; это не гарантия надёжности любых настольных задач."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2038,6 +2078,16 @@ window.SITE_MESSAGES = {
     "research.librarian-agents-proactive-workspaces.title": "Librarian Agents：為未來問題預先整理工作區",
     "research.librarian-agents-proactive-workspaces.summary": "建構 Agent 把原始文件整理成分層檔案和引用連結，並按下游問答準確率進行強化學習。作者報告兩項基準提升；預先整理的成本需由後續多次查詢攤銷，結論仍屬預印本。",
     "research.os-helix-hybrid-computer-agents.title": "OS-Helix：在統一動作空間中結合 GUI 和程式碼",
-    "research.os-helix-hybrid-computer-agents.summary": "使用可驗證的桌面任務及按動作步平衡的強化學習，訓練 Agent 在圖形操作與程式碼執行之間協作。作者報告 OSWorld-Verified 成功率提升並測試 Windows 遷移；預印本結果不代表任意桌面任務均可靠。"
+    "research.os-helix-hybrid-computer-agents.summary": "使用可驗證的桌面任務及按動作步平衡的強化學習，訓練 Agent 在圖形操作與程式碼執行之間協作。作者報告 OSWorld-Verified 成功率提升並測試 Windows 遷移；預印本結果不代表任意桌面任務均可靠。",
+    "research.mpt-decentralized-agent-self-orchestration.title": "MPT：讓多 Agent 同時學習行動與自我編排",
+    "research.mpt-decentralized-agent-self-orchestration.summary": "以競價決定 Agent 參與和訓練回饋，在無中央協調者的群體中聯合學習行動與分工。作者在具身製作、機器人導航和深度研究任務上回報改善；遷移、擴展與離線韌性的結論限於受測設定。",
+    "research.knowgpo-knowledge-grouped-search.title": "KnowGPO：按取得的知識分配搜尋 Agent 訓練獎勵",
+    "research.knowgpo-knowledge-grouped-search.summary": "把回答所需資訊拆成原子知識條件，將知識狀態相同的軌跡分組比較，並以逐步知識增量作為過程獎勵。作者在 Xbench、BrowseComp-ZH 和 GAIA 上回報優於對照方法；效果限於這些基準與訓練設定。",
+    "research.diverse-scientific-ideas-set-rl.title": "科研構思多樣性：以集合層級獎勵訓練推理模型",
+    "research.diverse-scientific-ideas-set-rl.summary": "模型依據輸入論文一次產生一組構思卡片，以品質和彼此差異共同計分。作者回報 8B 模型的創意效用改善，並進行四位專家的小規模評估與概念驗證實驗；不等同於科學發現已獲驗證，作者註明仍在審查。",
+    "research.omniverifier-graded-world-verification.title": "OmniVerifier-C1：為世界模型提供分解式視覺評分",
+    "research.omniverifier-graded-world-verification.summary": "將提示和規則拆成細項，聯合訓練局部判斷與整體評分。作者回報影像生成及迷宮、數獨等結構化任務上的改善；成對驗證的優勢以有真實參考影像為條件。作者在論文註解中標註 NeurIPS 2026。",
+    "research.leash-uncertainty-agent-escalation.title": "LEASH：按不確定性轉交並監督電腦操作 Agent",
+    "research.leash-uncertainty-agent-escalation.summary": "將弱模型隱藏狀態與過往成敗軌跡比較，用於初始路由、逐步升級和交接後監督，無須專門訓練監控器。作者在 OSWorld 的四種模型骨幹上回報成功率與成本取捨改善；結果不代表任意桌面任務皆可靠。"
   }
 };
