@@ -56,13 +56,21 @@ test('hints and command errors do not change the scheduling outcome',()=>{
   const a={},b={};recordPractice(a,'where-am-i',clean,'lesson',now);recordPractice(b,'where-am-i',{...clean,maxHint:3,errors:9},'lesson',now);
   assert.deepEqual(a,b);
 });
-test('full due count is separate from budgeted mixed-topic round; no future tasks added',()=>{
+test('all due skills are queued by memory state with mixed topics and no time limit',()=>{
   const pool=lessons.slice(0,20),done=new Set(pool.map(item=>item.id));
-  const plan=reviewPlan(pool,done,{},now,180);
-  assert.equal(plan.due.length,20);assert.equal(plan.queue.length,2);assert.equal(plan.seconds,150);
+  const plan=reviewPlan(pool,done,{},now);
+  assert.equal(plan.due.length,20);assert.equal(plan.queue.length,20);
+  assert.ok(validExercise({kind:'review',queue:plan.queue,index:0,variant:1},ids));
   const records={};recordPractice(records,pool[0].id,clean,'lesson',now);
   assert.ok(!reviewPlan(pool,done,records,now).queue.includes(pool[0].id));
   assert.equal(reviewPlan(pool,new Set(),records,now).due.length,0);
+});
+test('review puts weaker due memories first and leaves future reviews out',()=>{
+  const pool=lessons.slice(0,3).map(item=>({...item,chapter:'same-topic'})),records={};
+  recordPractice(records,pool[0].id,clean,'lesson',now-2*DAY);
+  recordPractice(records,pool[1].id,clean,'lesson',now-10*DAY);
+  recordPractice(records,pool[2].id,clean,'lesson',now);
+  assert.deepEqual(reviewPlan(pool,new Set(pool.map(item=>item.id)),records,now).queue,[pool[1].id,pool[0].id]);
 });
 test('untrusted new memory, rounds and timing are rejected',()=>{
   const records={};recordPractice(records,'where-am-i',clean,'lesson',now);
@@ -106,11 +114,20 @@ test('round duration respects language plural forms',async()=>{
   assert.equal(createTranslator({},'ja')('5 分钟'),'5 分');
 });
 
-test('time budget ends after the current task and legacy rounds remain resumable',async()=>{
-  const {reviewTimeReached}=await import('../linux-lab/learning.mjs');
+test('legacy review timing remains readable without limiting the queue',()=>{
   const round={kind:'review',reviewVersion:1,budget:180,spentSeconds:120,variant:8,queue:['where-am-i'],index:0};
-  assert.equal(reviewTimeReached(round,59),false);assert.equal(reviewTimeReached(round,60),true);
-  assert.equal(reviewTimeReached({kind:'review',queue:['where-am-i']} ,600),false);
-  assert.equal(reviewTimeReached({kind:'quiz',budget:180},600),false);
   assert.ok(validExercise(round,ids));assert.equal(validExercise({...round,spentSeconds:-1},ids),false);
+});
+
+test('backup keeps a paused review independently of the active lesson and validates its snapshot',async()=>{
+  const {validateBackup}=await import('../linux-lab/backup.mjs');
+  const snapshot=source=>({revision:2,lesson:source.id,state:createLessonShell(Shell,seedState,source).state,
+    transcript:[],hint:0,outputs:[],undoRedo:{past:[],future:[]}});
+  const reviewSession={...snapshot(lessons[0]),exercise:{kind:'review',reviewVersion:1,queue:lessons.map(item=>item.id),index:0,variant:8,results:[]}};
+  const data={version:2,format:'learn-linux-backup',mode:'learn',current:lessons[1].id,completed:lessons.map(item=>item.id),favorites:[],
+    session:snapshot(lessons[1]),reviewSession};
+  assert.deepEqual(validateBackup(JSON.parse(JSON.stringify(data)),ids,new Set()).reviewSession,reviewSession);
+  for (const mutate of [d=>{d.reviewSession.state.fs={};},d=>{d.reviewSession.exercise.index=1;},d=>{d.reviewSession.exercise.kind='quiz';},d=>{d.reviewSession.undoRedo.past=[{}];}]) {
+    const broken=structuredClone(data);mutate(broken);assert.throws(()=>validateBackup(broken,ids,new Set()));
+  }
 });

@@ -68,27 +68,18 @@ export function mastery(record, now = Date.now()) {
   if (record.dueAt <= now) return '待复习';
   return record.retrievals >= 2 && record.memory?.halfLife >= 14 ? '保持良好' : '已完成';
 }
-export function reviewPlan(lessons, completed, records, now = Date.now(), budget = 300) {
+export function reviewPlan(lessons, completed, records, now = Date.now()) {
   const pool = lessons.filter(item => completed.has(item.id) && (!records[item.id] || records[item.id].dueAt <= now))
     .sort((a,b) => recallProbability(records[a.id],now) - recallProbability(records[b.id],now)
       || (records[a.id]?.dueAt || 0) - (records[b.id]?.dueAt || 0));
   const due = pool.map(item=>item.id), queue = [], chapters = new Set();
-  let seconds = 0;
-  while (pool.length && queue.length < 12) {
+  while (pool.length) {
     let index = pool.findIndex(item=>!chapters.has(item.chapter));
     if (index < 0) { chapters.clear(); index = 0; }
     const [item] = pool.splice(index,1);
-    const history = records[item.id]?.memory?.history || [];
-    const samples = history.filter(event=>event.passed && event.seconds >= 15).slice(-5).map(event=>event.seconds).sort((a,b)=>a-b);
-    const cost = samples.length ? clamp(samples[Math.floor(samples.length/2)],30,600) : item.level === 'master' ? 180 : item.level === 'advanced' ? 120 : 75;
-    if (queue.length && seconds+cost > budget) continue;
-    queue.push(item.id); chapters.add(item.chapter); seconds += cost;
-    if (seconds >= budget) break;
+    queue.push(item.id); chapters.add(item.chapter);
   }
-  return {due,queue,seconds};
-}
-export function reviewTimeReached(exercise, seconds = 0) {
-  return exercise?.kind === 'review' && !!exercise.budget && (exercise.spentSeconds || 0) + seconds >= exercise.budget;
+  return {due,queue};
 }
 export function reviewQueue(lessons, completed, records, now = Date.now()) {
   return reviewPlan(lessons,completed,records,now).queue;
@@ -138,7 +129,7 @@ export function validAttempt(attempt) {
 export function validExercise(exercise, ids) {
   return exercise === null || object(exercise) && ['review','quiz'].includes(exercise.kind)
     && Number.isSafeInteger(exercise.variant) && exercise.variant > 0 && exercise.variant < 10000000000000
-    && Array.isArray(exercise.queue) && exercise.queue.length > 0 && exercise.queue.length <= 12 && exercise.queue.every(id => ids.has(id)) && new Set(exercise.queue).size === exercise.queue.length
+    && Array.isArray(exercise.queue) && exercise.queue.length > 0 && exercise.queue.length <= (exercise.kind === 'review' ? ids.size : 12) && exercise.queue.every(id => ids.has(id)) && new Set(exercise.queue).size === exercise.queue.length
     && (exercise.reviewVersion === undefined || exercise.reviewVersion === 1 && exercise.kind === 'review')
     && (exercise.spentSeconds === undefined || finite(exercise.spentSeconds,0,21600))
     && (exercise.budget === undefined || [180,300,600].includes(exercise.budget))

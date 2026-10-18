@@ -5,7 +5,7 @@ export const localeRoot = new URL(localePrefix(locale),root);
 const catalogs = new Map([['zh-CN',Promise.resolve({})]]);
 export function loadCatalog(code) {
   if (!languages.some(item=>item.code === code)) code='zh-CN';
-  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json?v=20261018-review-entry-1',root)).then(response=>{
+  if (!catalogs.has(code)) catalogs.set(code,fetch(new URL('locales/' + code + '.json?v=20261019-review-memory-1',root)).then(response=>{
     if (!response.ok) throw new Error('Unable to load language: ' + code);
     return response.json();
   }));
