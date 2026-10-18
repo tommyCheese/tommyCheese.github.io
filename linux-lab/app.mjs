@@ -1,6 +1,7 @@
+import { setupCodeCopy } from './code-copy.mjs';
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261017-keyboard-4';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261017-command-help-2';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261018-code-copy-1';
 import { createContentLocalizer } from './content-i18n.mjs';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261017-lesson-intro-2';
@@ -29,6 +30,7 @@ async function localizeSaved(data) {
 
 const $ = id => document.getElementById(id);
 setupI18n();
+setupCodeCopy(document, { selector:'#mission-window pre,dialog pre,#pipeline-stages pre', translate });
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const activeMotions = new Map();
 function reveal(node, distance = 6) {
@@ -444,8 +446,8 @@ function renderChapters() {
   renderLearning();
 }
 
-function rememberGoalExpansion(details, key) {
-  details.open = goalExpansion.get(key) === true;
+function rememberGoalExpansion(details, key, defaultOpen = false) {
+  details.open = goalExpansion.get(key) ?? defaultOpen;
   details.addEventListener('toggle', () => { if (details.isConnected) goalExpansion.set(key, details.open); });
 }
 
@@ -471,7 +473,7 @@ function renderTask() {
     const reference = goalReference(goal);
     if (reference) {
       const details = element('details', undefined, 'goal-reference');
-      rememberGoalExpansion(details, 'reference/' + index);
+      rememberGoalExpansion(details, 'reference/' + index, true);
       details.append(element('summary', reference.title), element('pre', reference.text));
       if (reference.note) details.append(element('p', reference.note));
       label.append(details);
