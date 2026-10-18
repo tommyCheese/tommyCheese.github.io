@@ -1,6 +1,46 @@
 {
-  "updated_at": "2026-10-18",
+  "updated_at": "2026-10-19",
   "items": [
+    {
+      "id": "opencode-console-provider-key-breach",
+      "category": "software",
+      "published_at": "2026-10-17",
+      "source": "Notebookcheck / OpenCode",
+      "url": "https://www.notebookcheck.net/OpenCode-hacked-users-urged-to-revoke-their-API-keys.1426957.0.html",
+      "image": "https://opencode.ai/social-share.png",
+      "image_credit": "OpenCode",
+      "image_fit": "contain"
+    },
+    {
+      "id": "esa-juice-janus-africa-flyby-images",
+      "category": "science",
+      "published_at": "2026-10-16",
+      "source": "ESA",
+      "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Fly_over_Africa_with_Juice",
+      "image": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2026/10/fly_over_africa_with_juice/27579386-1-eng-GB/Fly_over_Africa_with_Juice_pillars.png",
+      "image_credit": "ESA/Juice/JANUS · L. Penasa · CC BY-SA 3.0 IGO",
+      "image_fit": "contain"
+    },
+    {
+      "id": "chrome-155-prerender-security-update",
+      "category": "software",
+      "published_at": "2026-10-15",
+      "source": "Google Chrome Releases",
+      "url": "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_01886704284.html",
+      "image": "https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_284x96dp.png",
+      "image_credit": "Google",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-artemis-ii-heat-shield-assessment",
+      "category": "science",
+      "published_at": "2026-10-15",
+      "source": "NASA",
+      "url": "https://www.nasa.gov/missions/artemis/artemis-2/rigorous-analysis-confirms-nasas-artemis-ii-heat-shield-performance/",
+      "image": "https://www.nasa.gov/wp-content/uploads/2026/10/combineda1anda2-heatshield4k.jpg",
+      "image_credit": "NASA",
+      "image_fit": "contain"
+    },
     {
       "id": "github-license-compliance-ga",
       "category": "software",
