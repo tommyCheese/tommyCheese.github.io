@@ -2,6 +2,17 @@
   "updated_at": "2026-10-20",
   "items": [
     {
+      "id": "jaxa-mmx-h3-launch-success",
+      "category": "science",
+      "published_at": "2026-10-20",
+      "collected_at": "2026-10-20",
+      "source": "JAXA",
+      "url": "https://www.jaxa.jp/press/2026/10/20261020-1_j.html",
+      "image": "https://www.jaxa.jp/press/images/jaxa-thumb-240x240-2404.png",
+      "image_credit": "JAXA · logo",
+      "image_fit": "contain"
+    },
+    {
       "id": "rankmath-pro-supply-chain-incident",
       "category": "software",
       "published_at": "2026-10-19",

@@ -467,7 +467,9 @@ window.SITE_MESSAGES = {
     "news.euclid-first-new-comet.title": "Euclid 首次发现此前未知的彗星",
     "news.euclid-first-new-comet.summary": "9 月图像中的移动天体获小行星中心于 10 月 8 日确认为 C/2026 S1（Euclid），ESA 于 19 日公布。它不是 Comet Interceptor 的合适目标。",
     "news.siteguard-statistics-exploitation.title": "SiteGuard 统计功能漏洞已遭实际利用",
-    "news.siteguard-statistics-exploitation.summary": "补录 18 日报道：CVE-2026-106931 在启用统计功能的受影响版本中可导致高权限命令执行。官方已提供修复，并要求更新前保留诊断信息；攻击规模未公布。"
+    "news.siteguard-statistics-exploitation.summary": "补录 18 日报道：CVE-2026-106931 在启用统计功能的受影响版本中可导致高权限命令执行。官方已提供修复，并要求更新前保留诊断信息；攻击规模未公布。",
+    "news.jaxa-mmx-h3-launch-success.title": "JAXA 确认 MMX 发射成功并与火箭正常分离",
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 十号机于 20 日 4:41（日本时间）升空，约 1 小时 11 分钟后正常分离 MMX。公告确认的是发射及轨道投入成功，尚未完成火卫一采样返回。"
   },
   "en": {
     "nav.about": "About",
@@ -936,7 +938,9 @@ window.SITE_MESSAGES = {
     "news.euclid-first-new-comet.title": "Euclid discovers its first previously unknown comet",
     "news.euclid-first-new-comet.summary": "September images revealed C/2026 S1 (Euclid), confirmed on October 8 and announced by ESA on October 19. It is unsuitable for Comet Interceptor.",
     "news.siteguard-statistics-exploitation.title": "SiteGuard statistics flaw exploited in the wild",
-    "news.siteguard-statistics-exploitation.summary": "October 18 report: CVE-2026-106931 permits privileged commands in affected installations with statistics enabled. Fixes exist; preserve diagnostics before patching. Attack scale is undisclosed."
+    "news.siteguard-statistics-exploitation.summary": "October 18 report: CVE-2026-106931 permits privileged commands in affected installations with statistics enabled. Fixes exist; preserve diagnostics before patching. Attack scale is undisclosed.",
+    "news.jaxa-mmx-h3-launch-success.title": "JAXA confirms MMX launch and spacecraft separation",
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 Flight 10 launched on October 20 at 04:41 JST, separating MMX about 71 minutes later. Launch success does not mean the Phobos sample-return mission is complete."
   },
   "ja": {
     "nav.about": "私について",
@@ -1405,7 +1409,9 @@ window.SITE_MESSAGES = {
     "news.euclid-first-new-comet.title": "Euclid、初めて未知の彗星を発見",
     "news.euclid-first-new-comet.summary": "9月の画像で見つかった C/2026 S1（Euclid）を小惑星センターが10月8日に確認し、ESA が19日に発表。Comet Interceptor の適切な対象ではない。",
     "news.siteguard-statistics-exploitation.title": "SiteGuard の統計機能の脆弱性が悪用",
-    "news.siteguard-statistics-exploitation.summary": "18日の報道を追加。統計機能が有効な対象版では CVE-2026-106931 により高権限でコマンド実行が可能。修正済みだが更新前に診断情報の保存が必要。被害規模は不明。"
+    "news.siteguard-statistics-exploitation.summary": "18日の報道を追加。統計機能が有効な対象版では CVE-2026-106931 により高権限でコマンド実行が可能。修正済みだが更新前に診断情報の保存が必要。被害規模は不明。",
+    "news.jaxa-mmx-h3-launch-success.title": "JAXA、MMX の打上げと正常分離を確認",
+    "news.jaxa-mmx-h3-launch-success.summary": "H3ロケット10号機は20日4時41分に打ち上げられ、約1時間11分後にMMXを正常に分離。確認されたのは打上げと軌道投入の成功で、フォボスからの試料帰還は今後の目標。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1874,7 +1880,9 @@ window.SITE_MESSAGES = {
     "news.euclid-first-new-comet.title": "Euclid впервые обнаружил ранее неизвестную комету",
     "news.euclid-first-new-comet.summary": "C/2026 S1 (Euclid) найдена на сентябрьских снимках, подтверждена 8 октября и объявлена ESA 19 октября. Для Comet Interceptor она не подходит.",
     "news.siteguard-statistics-exploitation.title": "Уязвимость статистики SiteGuard эксплуатируется",
-    "news.siteguard-statistics-exploitation.summary": "Сообщение от 18 октября: CVE-2026-106931 позволяет выполнять привилегированные команды в затронутых установках со статистикой. Исправления доступны; перед обновлением нужно сохранить диагностику. Масштаб атак не раскрыт."
+    "news.siteguard-statistics-exploitation.summary": "Сообщение от 18 октября: CVE-2026-106931 позволяет выполнять привилегированные команды в затронутых установках со статистикой. Исправления доступны; перед обновлением нужно сохранить диагностику. Масштаб атак не раскрыт.",
+    "news.jaxa-mmx-h3-launch-success.title": "JAXA подтвердила запуск MMX и отделение аппарата",
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 №10 стартовала 20 октября в 04:41 JST; MMX отделился примерно через 71 минуту. Успех запуска ещё не означает завершения миссии по доставке образцов с Фобоса."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2343,6 +2351,8 @@ window.SITE_MESSAGES = {
     "news.euclid-first-new-comet.title": "Euclid 首次發現先前未知的彗星",
     "news.euclid-first-new-comet.summary": "9 月影像中的移動天體於 10 月 8 日獲小行星中心確認為 C/2026 S1（Euclid），ESA 於 19 日公布。它不是 Comet Interceptor 的合適目標。",
     "news.siteguard-statistics-exploitation.title": "SiteGuard 統計功能漏洞已遭實際利用",
-    "news.siteguard-statistics-exploitation.summary": "補錄 18 日報導：CVE-2026-106931 在啟用統計功能的受影響版本中可導致高權限命令執行。官方已提供修補，並要求更新前保留診斷資訊；攻擊規模未公布。"
+    "news.siteguard-statistics-exploitation.summary": "補錄 18 日報導：CVE-2026-106931 在啟用統計功能的受影響版本中可導致高權限命令執行。官方已提供修補，並要求更新前保留診斷資訊；攻擊規模未公布。",
+    "news.jaxa-mmx-h3-launch-success.title": "JAXA 確認 MMX 發射成功並與火箭正常分離",
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 十號機於 20 日 4:41（日本時間）升空，約 1 小時 11 分鐘後正常分離 MMX。公告確認的是發射及軌道投入成功，尚未完成火衛一採樣返回。"
   }
 };
