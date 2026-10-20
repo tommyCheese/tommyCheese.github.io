@@ -1,6 +1,7 @@
-import { createReviewLesson } from './review-exercises.mjs';
-import { Shell, seedState } from './shell.mjs';
-import { createLessonShell } from './curriculum.mjs';
+import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
+import { createReviewLesson } from './review-exercises.mjs?v=20261020-judging-1';
+import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
+import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
 import { clarifyGoalLabels } from './task-copy.mjs';
 
 const HOME = '/home/learner';
@@ -403,5 +404,6 @@ export function finishReviewVariant(lesson, principle=lesson.variantPrinciple,tr
   lesson.coreSolution=[...lesson.solution];lesson.flowBefore=[];lesson.flowAfter=[];lesson.flowAssets=[];
   lesson.reviewCommands=[];
   lesson.hints=[translate(principle),translate('可以先观察，再处理，最后读回核对结果。'),'一种可行的路径：\n'+lesson.solution.join('\n')];
+  prepareJudging(lesson,createLessonShell(Shell,seedState,lesson));
   return lesson;
 }

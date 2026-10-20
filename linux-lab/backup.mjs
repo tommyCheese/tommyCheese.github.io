@@ -1,14 +1,15 @@
 import { validLearning, validExercise, validAttempt, validBossId } from './learning.mjs?v=20261019-review-variants-1';
 const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 100000;
+const validSources = value => value === undefined || Array.isArray(value) && value.length <= 10000 && value.every(text);
 export function validState(state) {
   if (!object(state) || !object(state.fs) || !text(state.cwd) || state.fs[state.cwd]?.type !== 'dir' || state.fs['/home/learner']?.type !== 'dir') return false;
   if (Object.keys(state.fs).length > 5000) return false;
-  if (!Object.entries(state.fs).every(([path,node]) => path.startsWith('/') && text(path) && object(node) && ['file','dir','link'].includes(node.type) && /^[0-7]{3}$/.test(node.mode) && text(node.owner) && (node.type !== 'file' || text(node.text)) && (node.type !== 'link' || text(node.target)))) return false;
+  if (!Object.entries(state.fs).every(([path,node]) => path.startsWith('/') && text(path) && object(node) && validSources(node.sources) && ['file','dir','link'].includes(node.type) && /^[0-7]{3}$/.test(node.mode) && text(node.owner) && (node.type !== 'file' || text(node.text)) && (node.type !== 'link' || text(node.target)))) return false;
   return object(state.env) && Object.values(state.env).every(text) && Array.isArray(state.history) && state.history.length <= 200 && state.history.every(text)
     && Array.isArray(state.processes) && state.processes.every(item => object(item) && Number.isInteger(item.pid) && text(item.name))
     && object(state.services) && Object.values(state.services).every(item => object(item) && typeof item.active === 'boolean' && typeof item.enabled === 'boolean')
-    && Array.isArray(state.packages) && state.packages.every(text) && object(state.archives) && object(state.network) && text(state.network.host) && text(state.network.ip) && object(state.network.dns) && object(state.network.urls);
+    && Array.isArray(state.packages) && state.packages.every(text) && object(state.archives) && Object.values(state.archives).every(archive => object(archive) && validSources(archive.sources) && Object.values(archive).every(node => !object(node) || validSources(node.sources))) && object(state.network) && text(state.network.host) && text(state.network.ip) && object(state.network.dns) && object(state.network.urls);
 }
 const validTranscript = value => Array.isArray(value) && value.length <= 60 && value.every(item => object(item) && ['path','command','stdout','stderr','message'].every(key => item[key] === undefined || text(item[key])) && (!item.command || text(item.path)));
 export function validSnapshot(snapshot) {
@@ -16,7 +17,7 @@ export function validSnapshot(snapshot) {
     && (snapshot.hintVisible === undefined || typeof snapshot.hintVisible === 'boolean')
     && Number.isInteger(snapshot.hint) && snapshot.hint >= 0 && snapshot.hint <= 3 && Array.isArray(snapshot.goalChecks)
     && snapshot.goalChecks.every(goal => object(goal) && typeof goal.type === 'string' && text(goal.label) && (goal.path === undefined || text(goal.path)) && typeof goal.done === 'boolean')
-    && object(snapshot.lastResult) && Number.isInteger(snapshot.lastResult.code) && text(snapshot.browsePath) && (snapshot.previewPath === undefined || text(snapshot.previewPath))
+    && object(snapshot.lastResult) && Number.isInteger(snapshot.lastResult.code) && (snapshot.lastResult.outputs === undefined || Array.isArray(snapshot.lastResult.outputs) && snapshot.lastResult.outputs.every(output => object(output) && text(output.stdout) && Number.isInteger(output.code) && validSources(output.sources))) && text(snapshot.browsePath) && (snapshot.previewPath === undefined || text(snapshot.previewPath))
     && Array.isArray(snapshot.changes) && snapshot.changes.every(text);
 }
 export function validHistory(history) {
@@ -32,6 +33,7 @@ export function validateBackup(data, ids, names) {
   if (data.version === 2) {
     for (const session of [data.session,data.reviewSession]) {
       if (session?.hintVisible !== undefined && typeof session.hintVisible !== 'boolean') throw new Error('提示显示状态无效');
+      if (session?.judgingVersion !== undefined && session.judgingVersion !== 1) throw new Error('关卡版本不支持');
       if (session?.flowVersion !== undefined && ![1,2].includes(session.flowVersion)) throw new Error('关卡版本不支持');
       if (session?.exercise !== undefined && (!validExercise(session.exercise, ids) || session.exercise && session.exercise.queue[session.exercise.index] !== session.lesson)) throw new Error('复习或小测数据无效');
       if (session?.attempt !== undefined && !validAttempt(session.attempt)) throw new Error('本次训练记录无效');

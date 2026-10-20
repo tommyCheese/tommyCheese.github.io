@@ -1,5 +1,5 @@
 import { createTranslator } from './i18n-core.mjs';
-import { resolve } from './shell.mjs';
+import { resolve } from './shell.mjs?v=20261020-judging-1';
 
 // Translate complete course-supplied lines, preserving paths and learner input.
 export function createContentLocalizer(catalog, sourceTexts, previousCatalog = {}) {
@@ -24,7 +24,7 @@ export function createContentLocalizer(catalog, sourceTexts, previousCatalog = {
       return line;
     }).join('\n');
   }
-  const literal=new Set(['command','commands','history','solution','coreSolution','flowBefore','flowAfter','setup','path','target','cwd','previous','env','changes','entries','flowAssets','browsePath','previewPath']);
+  const literal=new Set(['command','commands','history','solution','coreSolution','flowBefore','flowAfter','setup','path','target','cwd','previous','env','changes','entries','flowAssets','browsePath','previewPath','sources']);
   function localize(value) {
     if (typeof value === 'string') return text(value);
     if (Array.isArray(value)) {

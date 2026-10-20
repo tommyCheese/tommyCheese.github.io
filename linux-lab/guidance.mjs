@@ -1,5 +1,5 @@
 import { goalEntries } from './task-copy.mjs';
-import { Shell, resolve, tokenize } from './shell.mjs';
+import { Shell, resolve, tokenize } from './shell.mjs?v=20261020-judging-1';
 
 const introductions = {
   pwd:'刚进终端，先问一句：“我在哪儿？”pwd 就是你的定位器。',

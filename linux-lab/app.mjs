@@ -2,19 +2,19 @@ import { setupCodeCopy } from './code-copy.mjs';
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261019-review-memory-1';
 import { goalReference, goalEntries } from './task-copy.mjs';
 import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261019-review-variants-1';
-import { createContentLocalizer } from './content-i18n.mjs';
+import { createContentLocalizer } from './content-i18n.mjs?v=20261020-judging-1';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261019-review-variants-1';
-import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs';
+import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs?v=20261020-judging-1';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
-import { createBossLesson } from './bosses.mjs';
-import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261019-review-variants-1';
-import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261019-review-variants-1';
+import { createBossLesson } from './bosses.mjs?v=20261020-judging-1';
+import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261020-judging-1';
+import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261020-judging-1';
 import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261019-review-variants-1';
-import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261019-review-variants-1';
+import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261020-judging-1';
 import { PracticeHistory } from './history.mjs';
-import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261017-command-help-2';
-import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs';
+import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261020-judging-1';
+import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
 
 const contentSources = [
   ...Object.values(seedState().fs).map(node=>node.text || ''),
@@ -373,7 +373,7 @@ $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !
 function persist() {
   tickPractice();
   const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
-    session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
+    session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, judgingVersion:1, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   payload.reviewSession = mode === 'learn' && shell && training?.kind === 'review' ? payload.session
     : saved.reviewSession || (saved.session?.exercise?.kind === 'review' ? saved.session : undefined);
@@ -730,7 +730,7 @@ function startTask(id, restore = false, showGuide = true) {
     hintVisible = hint > 0 && saved.session.hintVisible !== false;
   }
   goalChecks = evaluate(lesson.goals, shell.state);
-  if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.outputs?.[index] && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) goal.done = true; });
+  if (restore && validSession(saved.session)) goalChecks.forEach((goal, index) => { if (goal.type === 'output' && saved.session.judgingVersion === 1 && saved.session.outputs?.[index] && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) goal.done = true; });
   if (restore && validSession(saved.session) && validHistory(saved.session.undoRedo)) {
     practiceHistory.past = structuredClone(saved.session.undoRedo.past); practiceHistory.future = structuredClone(saved.session.undoRedo.future);
     if (saved.session.flowVersion !== 2) for (const snapshot of [...practiceHistory.past,...practiceHistory.future]) restoreFlowSnapshot(snapshot,exerciseInitialState,lesson);
@@ -767,7 +767,7 @@ function restorePractice(snapshot) {
     const previous = goalChecks;
     goalChecks = evaluate(lesson.goals, shell.state, lastResult);
     for (const goal of goalChecks) if (goal.type === 'output' && (!goal.requiresPath || shell.state.fs[resolve(goal.requiresPath)])) {
-      if (previous.some(old => old.done && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key]))) goal.done = true;
+      if (previous.some(old => old.done && JSON.stringify(goal.sources) === JSON.stringify(old.sources) && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key]))) goal.done = true;
     }
   }
   hintVisible = hint > 0 && snapshot.hintVisible !== false;

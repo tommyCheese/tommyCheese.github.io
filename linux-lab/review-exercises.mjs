@@ -1,3 +1,6 @@
+import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
+import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
+import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
 import { clarifyGoalLabels } from './task-copy.mjs';
 // Variants keep the same objective skill ID; filenames, data and deliverables change.
 // Supporting commands are not credited as separate skills without their own assessment.
@@ -70,6 +73,8 @@ export function createReviewLesson(source, variant) {
   };
   const template = templates[source.id];
   if (!template) return source;
-  return clarifyGoalLabels({...source,...template,steps:[template.context],coreSolution:[...template.solution],flowBefore:[],flowAfter:[],flowAssets:[],
+  const lesson = clarifyGoalLabels({...source,...template,steps:[template.context],coreSolution:[...template.solution],flowBefore:[],flowAfter:[],flowAssets:[],
     reviewCommands:[],hints:['先读清目标，确认输入文件、筛选范围和需要保留的内容。','可以先观察，再处理，最后读回核对结果。','一种可行的路径：\n'+template.solution.join('\n')]});
+  prepareJudging(lesson,createLessonShell(Shell,seedState,lesson));
+  return lesson;
 }

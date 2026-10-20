@@ -1,9 +1,21 @@
 import { populateLinuxFilesystem } from './linux-filesystem.mjs';
-import { runExtra } from './extra-commands.mjs';
+import { runExtra } from './extra-commands.mjs?v=20261020-judging-1';
 // A deterministic teaching shell. No host commands, eval, fetch or external I/O.
 export const HOME = '/home/learner';
 export const basicCommands = new Set(['pwd', 'ls', 'cd', 'tree', 'cat', 'less', 'more', 'head', 'tail', 'file', 'stat', 'realpath', 'readlink', 'which', 'type', 'env', 'printenv', 'history', 'man', 'help', 'clear']);
 const clone = value => JSON.parse(JSON.stringify(value));
+const inputCommands = new Set('cat less more head tail grep wc sort uniq cut tr sed awk tee tac rev nl fold paste comm join expand unexpand'.split(' '));
+function sourceCommand(name, args) {
+  if (name === 'man' || name === 'help' || args.includes('--help')) return 'manual';
+  if (name === 'pwd' || name === 'printenv' && args.length === 1 && args[0] === 'PWD') return 'cwd';
+  if (['ls','tree','find'].includes(name)) return 'directory';
+  if (['curl','wget'].includes(name)) return 'download';
+  if (['dig','nslookup','host'].includes(name)) return 'dns';
+  return name;
+}
+const fileSources = (node, path) => node.sources ?? ['file:' + path];
+const matchesSources = (expected, actual = []) => !expected || expected.some(sources => (!actual.includes('literal') || sources.includes('literal')) && sources.every(source => actual.includes(source)));
+
 const fail = message => { throw new Error(message); };
 const lines = text => text ? text.replace(/\n$/, '').split('\n') : [];
 const outLines = values => values.length ? values.join('\n') + '\n' : '';
@@ -114,7 +126,10 @@ function parseOptions(args, short = '', valued = '', long = {}) {
 }
 
 export class Shell {
-  constructor(state = seedState(), manuals = [], localizeContent = value => value) { this.state = populateLinuxFilesystem(clone(state)); this.manuals = manuals; this.localizeContent = localizeContent; }
+  constructor(state = seedState(), manuals = [], localizeContent = value => value) {
+    this.state = populateLinuxFilesystem(clone(state)); this.manuals = manuals; this.localizeContent = localizeContent;
+    for (const [path,node] of Object.entries(this.state.fs)) if (node.type === 'file') node.sources ??= ['file:' + path];
+  }
   path(value, followLeaf = false, seen = new Set()) {
     const path = resolve(value, this.state.cwd), parts = path.split('/').filter(Boolean);
     for (let index = 0; index < parts.length - (followLeaf ? 0 : 1); index++) {
@@ -135,15 +150,25 @@ export class Shell {
     }
     return node;
   }
-  read(value) { if (this.path(value,true) === '/dev/null') return ''; const node = this.node(value); if (node.type !== 'file') fail(value + '：不是普通文件'); return node.text; }
-  write(value, text, append = false) {
+  read(value) {
+    if (this.path(value,true) === '/dev/null') return '';
+    const node = this.node(value);
+    if (node.type !== 'file') fail(value + '：不是普通文件');
+    for (const source of fileSources(node,this.path(value,true))) this.sources?.add(source);
+    return node.text;
+  }
+  readInput(stdin) {
+    for (const source of this.inputSources || []) this.sources?.add(source);
+    return stdin;
+  }
+  write(value, text, append = false, sources = [...(this.sources || [])]) {
     if (this.path(value,true) === '/dev/null') return;
     if (text.length > 100000) fail('练习文件超过大小限制。');
     let path = this.path(value); const old = this.state.fs[path];
     if (old?.type === 'link') path = resolve(old.target, parent(path));
     if (this.node(parent(path)).type !== 'dir') fail('父路径不是目录');
     if (this.state.fs[path]?.type === 'dir') fail('不能向目录写入文本');
-    this.state.fs[path] = { type: 'file', mode: old?.mode || this.defaultMode('666'), owner: old?.owner || 'learner', text: (append ? this.state.fs[path]?.text || '' : '') + text };
+    this.state.fs[path] = { type: 'file', mode: old?.mode || this.defaultMode('666'), owner: old?.owner || 'learner', text: (append ? this.state.fs[path]?.text || '' : '') + text, sources: [...new Set([...(append && this.state.fs[path]?.text ? fileSources(this.state.fs[path],path) : []), ...(text ? sources : [])])] };
   }
   defaultMode(mode) { return (parseInt(mode, 8) & ~parseInt(this.state.umask, 8)).toString(8).padStart(3, '0'); }
   paths(value = '.') { const base = this.path(value); return Object.keys(this.state.fs).filter(path => path === base || path.startsWith(base === '/' ? '/' : base + '/')).sort(); }
@@ -155,7 +180,7 @@ export class Shell {
     return matches.length ? matches : [token.value];
   }
   execute(input) {
-    const result = { stdout: '', stderr: '', code: 0, commands: [], clear: false };
+    const result = { stdout: '', stderr: '', code: 0, commands: [], clear: false, outputs: [] };
     try {
       const initial = tokenize(input, this.state.env);
       if (!initial.length) return result;
@@ -176,7 +201,7 @@ export class Shell {
           else stage.push(token);
         }
         if (!stage.length) fail('管道后缺少命令。'); pipelines.push(stage);
-        let stdin = ''; let code = 0;
+        let stdin = ''; let code = 0; let sources = [];
         for (let index = 0; index < pipelines.length; index++) {
           const stageTokens = pipelines[index]; const argv = []; let redirect; let inputFile;
           for (let i = 0; i < stageTokens.length; i++) {
@@ -193,21 +218,40 @@ export class Shell {
           // Like a shell, output redirection creates/truncates its target before execution.
           if (redirect) this.write(redirect.path, '', redirect.append);
           let response;
-          try { response = this.run(argv, inputFile ? this.read(inputFile) : stdin); }
+          try {
+            const input = inputFile ? this.read(inputFile) : stdin;
+            const inputSources = inputFile ? fileSources(this.node(inputFile),this.path(inputFile,true)) : sources;
+            response = this.run(argv, input, inputSources);
+          }
           catch (error) { response = { stdout: '', stderr: error.message + '\n', code: 1 }; }
           result.commands.push(argv[0] === 'sudo' ? argv[1] : argv[0]);
           result.stderr += response.stderr || ''; code = response.code || 0; stdin = response.stdout || '';
-          result.clear ||= response.clear || false;
-          if (redirect) { this.write(redirect.path, stdin, true); stdin = ''; }
+          result.clear ||= response.clear || false; sources = response.sources || [];
+          if (redirect) { this.write(redirect.path, stdin, true, sources); stdin = ''; }
         }
-        result.stdout += stdin; result.code = code;
+        result.stdout += stdin; result.code = code; result.outputs.push({stdout:stdin,code,sources});
       }
     } catch (error) { result.stderr += error.message + '\n'; result.code = 1; }
     if (input.trim()) this.state.history.push(input);
     this.state.history = this.state.history.slice(-200);
     return result;
   }
-  run(argv, stdin = '') {
+  run(argv, stdin = '', inputSources = []) {
+    const previous = this.sources, previousInput = this.inputSources;
+    this.sources = new Set(); this.inputSources = inputSources;
+    let name = argv[0];
+    try {
+      if (name.includes('/')) name = this.node(name).command || name;
+      if (!inputCommands.has(name) && !['echo','printf','sudo','xargs'].includes(name)) this.sources.add('command:' + sourceCommand(name,argv.slice(1)));
+      if (['echo','printf'].includes(name)) this.sources.add('literal');
+      const result = this.runCommand(argv,stdin);
+      if ((!this.sources.size || this.sources.has('literal')) && inputCommands.has(name) && stdin && result.stdout !== stdin) this.sources.add('operation:' + name);
+      const sources = [...this.sources];
+      for (const source of sources) previous?.add(source);
+      return {...result,sources};
+    } finally { this.sources = previous; this.inputSources = previousInput; }
+  }
+  runCommand(argv, stdin = '') {
     let [command, ...args] = argv; const s = this.state;
     if (command.includes('/')) {
       const node = this.node(command);
@@ -216,9 +260,9 @@ export class Shell {
       command = node.command;
     }
     const output = stdout => ({ stdout, code: 0 });
-    const textOf = files => files.length ? files.map(file => this.read(file)).join('') : stdin;
+    const textOf = files => files.length ? files.map(file => this.read(file)).join('') : this.readInput(stdin);
     const requireArgs = count => { if (args.length < count) fail(command + '：缺少参数'); };
-    if (command === 'sudo') { requireArgs(1); if (args[0].startsWith('-')) fail('本沙盒只支持 sudo 命令 参数。'); return this.run(args, stdin); }
+    if (command === 'sudo') { requireArgs(1); if (args[0].startsWith('-')) fail('本沙盒只支持 sudo 命令 参数。'); return this.run(args, stdin, this.inputSources); }
     if (args.includes('--help') || command === 'man' || command === 'help') {
       const name = ['man', 'help'].includes(command) ? args[0] : command;
       if (!name) return output('可用命令：\n' + this.manuals.filter(item => item.practice).map(item => item.name).join(' ') + '\n输入 man 命令名 查看中文手册。\n');
@@ -283,6 +327,7 @@ export class Shell {
           const entries = this.paths(from);
           for (const key of entries) {
             s.fs[to + key.slice(from.length)] = clone(s.fs[key]);
+            if (s.fs[key].type === 'file') s.fs[to + key.slice(from.length)].sources = fileSources(s.fs[key],key);
             if (s.archives[key]) s.archives[to + key.slice(from.length)] = clone(s.archives[key]);
           }
           if (command === 'mv') {
@@ -327,7 +372,7 @@ export class Shell {
         let regex; try { regex = new RegExp(o.F ? pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : pattern, o.i ? 'i' : ''); } catch { fail('grep：无效正则表达式'); }
         let files = operands;
         if (o.r || o.R) files = (files.length ? files : ['.']).flatMap(file => this.paths(file).filter(path => s.fs[path].type === 'file'));
-        const groups = files.length ? files.map(file => [file, this.read(file)]) : [['', stdin]]; const found = []; let matched = false;
+        const groups = files.length ? files.map(file => [file, this.read(file)]) : [['', this.readInput(stdin)]]; const found = []; let matched = false;
         for (const [file, text] of groups) {
           const hits = lines(text).map((line, index) => ({ line, index })).filter(({ line }) => o.v ? !regex.test(line) : regex.test(line));
           matched ||= hits.length > 0;
@@ -357,7 +402,7 @@ export class Shell {
       case 'wc': {
         const { options: o, operands } = parseOptions(args, 'lwc'); const values = [];
         for (const file of operands.length ? operands : ['']) {
-          const text = file ? this.read(file) : stdin;
+          const text = file ? this.read(file) : this.readInput(stdin);
           const counts = [((text.match(/\n/g) || []).length), text.trim() ? text.trim().split(/\s+/).length : 0, new TextEncoder().encode(text).length];
           const chosen = ['l', 'w', 'c'].filter(key => o[key]); const result = (chosen.length ? chosen.map(key => counts['lwc'.indexOf(key)]) : counts).join(' ');
           values.push(result + (file ? ' ' + file : ''));
@@ -391,7 +436,7 @@ export class Shell {
         const { options: o, operands } = parseOptions(args, 'd'); if (!operands.length || !o.d && operands.length !== 2) fail('tr：需要字符集合');
         const expand = value => value.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/([a-zA-Z0-9])-([a-zA-Z0-9])/g, (_, a, b) => Array.from({ length: Math.max(0, b.charCodeAt(0) - a.charCodeAt(0) + 1) }, (_, i) => String.fromCharCode(a.charCodeAt(0) + i)).join(''));
         const from = expand(operands[0]); const to = expand(operands[1] || '');
-        return output([...stdin].map(char => { const index = from.indexOf(char); return index < 0 ? char : o.d ? '' : to[index] || to.at(-1) || char; }).join(''));
+        return output([...this.readInput(stdin)].map(char => { const index = from.indexOf(char); return index < 0 ? char : o.d ? '' : to[index] || to.at(-1) || char; }).join(''));
       }
       case 'sed': {
         const { options: o, operands } = parseOptions(args, 'in'); const script = operands.shift(); if (!script) fail('sed：缺少表达式');
@@ -412,7 +457,7 @@ export class Shell {
         return output(outLines(lines(textOf(operands)).map(line => match[1] === '0' ? line : (o.F ? line.split(o.F) : line.trim().split(/\s+/))[Number(match[1]) - 1] || '')));
       }
       case 'tee': {
-        const { options: o, operands } = parseOptions(args, 'a'); for (const file of operands) this.write(file, stdin, !!o.a); return output(stdin);
+        const { options: o, operands } = parseOptions(args, 'a'); this.readInput(stdin); for (const file of operands) this.write(file, stdin, !!o.a); return output(stdin);
       }
       case 'xargs': {
         if (args[0]?.startsWith('-')) fail('xargs：本沙盒支持默认空白分隔，请勿用于含空格的文件名');
@@ -530,7 +575,7 @@ export class Shell {
         const path = this.path(o.f); const root = this.path(o.C || '.'); if (this.node(root).type !== 'dir') fail('tar：-C 需要目录');
         if (o.c) {
           if (!operands.length) fail('tar：缺少要归档的文件'); const entries = {};
-          for (const operand of operands) for (const key of this.paths(resolve(operand, root))) if (key !== path) entries[key.slice(root.length + 1)] = clone(s.fs[key]);
+          for (const operand of operands) for (const key of this.paths(resolve(operand, root))) if (key !== path) entries[key.slice(root.length + 1)] = { ...clone(s.fs[key]), ...(s.fs[key].type === 'file' ? {sources:fileSources(s.fs[key],key)} : {}) };
           this.write(path, this.localizeContent('[教学归档：' + Object.keys(entries).length + ' 个条目]\n')); s.archives[path] = entries; return output(o.v ? outLines(Object.keys(entries)) : '');
         }
         const entries = s.archives[path]; if (!entries) fail('tar：不是沙盒创建的教学归档');
@@ -541,8 +586,8 @@ export class Shell {
         const { options: o, operands } = parseOptions(args, 'k'); if (!operands.length) fail('压缩命令缺少文件');
         for (const file of operands) {
           const path = this.path(file);
-          if (command === 'gzip') { const text = this.read(path); this.write(path + '.gz', this.localizeContent('[教学 gzip]\n')); s.archives[path + '.gz'] = { text }; if (!o.k) delete s.fs[path]; }
-          else { const entry = s.archives[path]; if (!path.endsWith('.gz') || typeof entry?.text !== 'string') fail('gunzip：不是教学 gzip 文件'); this.write(path.slice(0, -3), entry.text); if (!o.k) { delete s.fs[path]; delete s.archives[path]; } }
+          if (command === 'gzip') { const text = this.read(path); this.write(path + '.gz', this.localizeContent('[教学 gzip]\n')); s.archives[path + '.gz'] = { text, sources:fileSources(s.fs[path],path) }; if (!o.k) delete s.fs[path]; }
+          else { const entry = s.archives[path]; if (!path.endsWith('.gz') || typeof entry?.text !== 'string') fail('gunzip：不是教学 gzip 文件'); this.write(path.slice(0, -3), entry.text, false, entry.sources || []); if (!o.k) { delete s.fs[path]; delete s.archives[path]; } }
         } return output('');
       }
       default:
@@ -565,15 +610,18 @@ export function evaluate(goals, state, result = { stdout: '', code: null }) {
     const path = goal.path && resolve(goal.path); const node = state.fs[path]; let done = false;
     switch (goal.type) {
       case 'cwd': done = state.cwd === path; break;
-      case 'file': done = node?.type === 'file' && (goal.text === undefined || node.text === goal.text) && (goal.includes === undefined || node.text.includes(goal.includes)); break;
+      case 'file': done = node?.type === 'file' && (goal.text === undefined || node.text === goal.text) && (goal.includes === undefined || node.text.includes(goal.includes)) && matchesSources(goal.sources,fileSources(node,path)); break;
       case 'dir': done = node?.type === 'dir'; break;
       case 'absent': done = !node; break;
       case 'mode': done = node?.mode === goal.value; break;
       case 'owner': done = node?.owner === goal.value; break;
       case 'link': done = node?.type === 'link' && resolve(node.target, parent(path)) === resolve(goal.target); break;
       case 'output': {
-        const stdout=goal.normalizeFilePath ? result.stdout.replace(/^File: (.+)$/m,(_,path)=>'File: '+resolve(path,state.cwd)) : result.stdout;
-        done = (!goal.requiresPath || !!state.fs[resolve(goal.requiresPath)]) && result.code === (goal.code ?? 0) && (goal.exact !== undefined ? stdout.trim() === goal.exact : stdout.includes(goal.includes)); break;
+        done = (!goal.requiresPath || !!state.fs[resolve(goal.requiresPath)]) && (result.outputs || [result]).some(output => {
+          const stdout = goal.normalizeFilePath ? output.stdout.replace(/^File: (.+)$/m,(_,path)=>'File: '+resolve(path,state.cwd)) : output.stdout;
+          return output.code === (goal.code ?? 0) && matchesSources(goal.sources,output.sources)
+            && (goal.exact !== undefined ? stdout.trim() === goal.exact : stdout.includes(goal.includes));
+        }); break;
       }
       case 'env': done = state.env[goal.name] === goal.value; break;
       case 'setting': done = state[goal.name] === goal.value; break;

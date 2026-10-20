@@ -1,3 +1,6 @@
+import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
+import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
+import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
 import { clarifyGoalLabels } from './task-copy.mjs';
 // A Boss is one persistent workspace with simultaneous outcome constraints.
 // The tier adds recovery and safety requirements, rather than a command whitelist.
@@ -110,6 +113,8 @@ export function createBossLesson(boss, id) {
   };
   if(advanced) context += extensions[boss.chapter][0];
   if(master) context += extensions[boss.chapter][1];
-  return clarifyGoalLabels({id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
+  const lesson = clarifyGoalLabels({id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
     hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')]});
+  prepareJudging(lesson,createLessonShell(Shell,seedState,lesson));
+  return lesson;
 }
