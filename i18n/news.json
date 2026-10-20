@@ -1,6 +1,50 @@
 {
-  "updated_at": "2026-10-19",
+  "updated_at": "2026-10-20",
   "items": [
+    {
+      "id": "rankmath-pro-supply-chain-incident",
+      "category": "software",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-20",
+      "source": "BleepingComputer / Rank Math",
+      "url": "https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/06/18/WordPress.jpg",
+      "image_credit": "BleepingComputer · WordPress illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-standardized-shock-vibration-analysis",
+      "category": "science",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-20",
+      "source": "NASA",
+      "url": "https://www.nasa.gov/centers-and-facilities/kennedy/nasa-improves-shock-vibration-analysis/",
+      "image": "https://www.nasa.gov/wp-content/uploads/2026/10/ksc-20260924-ph-rcr01-0036.jpg?w=1200",
+      "image_credit": "NASA / Clayton Rougelot",
+      "image_fit": "contain"
+    },
+    {
+      "id": "euclid-first-new-comet",
+      "category": "science",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-20",
+      "source": "ESA",
+      "url": "https://www.esa.int/Science_Exploration/Space_Science/Euclid/Euclid_discovers_new_comet",
+      "image": "https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2026/10/comet_c_2026_s1_euclid_observations_in_context/27582370-1-eng-GB/Comet_C_2026_S1_Euclid_observations_in_context_pillars.png",
+      "image_credit": "ESA/Euclid/Euclid Consortium/NASA · M. Pöntinen et al. 2026 · CC BY-SA 3.0 IGO",
+      "image_fit": "contain"
+    },
+    {
+      "id": "siteguard-statistics-exploitation",
+      "category": "software",
+      "published_at": "2026-10-18",
+      "collected_at": "2026-10-20",
+      "source": "BleepingComputer / JPCERT/CC",
+      "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/05/05/hacker.jpg",
+      "image_credit": "BleepingComputer · cybersecurity illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "opencode-console-provider-key-breach",
       "category": "software",
