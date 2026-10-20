@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-10-20",
+  "updated_at": "2026-10-21",
   "items": [
+    {
+      "id": "openbsd-80-release",
+      "category": "software",
+      "published_at": "2026-10-20",
+      "collected_at": "2026-10-21",
+      "source": "OpenBSD",
+      "url": "https://www.openbsd.org/80.html",
+      "image": "https://www.openbsd.org/images/puffy80.gif",
+      "image_credit": "OpenBSD · release artwork",
+      "image_fit": "contain"
+    },
+    {
+      "id": "qbittorrent-530-webui-security",
+      "category": "software",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-21",
+      "source": "qBittorrent",
+      "url": "https://www.qbittorrent.org/news",
+      "image": "https://linuxiac.com/wp-content/uploads/2026/10/qbittorent53.jpg",
+      "image_credit": "Linuxiac · qBittorrent illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "quantinuum-helios-color-code-memory",
+      "category": "science",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-21",
+      "source": "Quantinuum",
+      "url": "https://www.quantinuum.com/blog/quantinuum-closes-in-on-one-million-error-free-operations",
+      "image": "https://cdn.prod.website-files.com/669960f53cd73aedb80c8f0e/6ad274e976d3e3d01de0af62_Figure%201%20Logical%20Qubits.png",
+      "image_credit": "Quantinuum · color-code experiment diagram",
+      "image_fit": "contain"
+    },
     {
       "id": "ovhcloud-cli-release-assets-compromise",
       "category": "software",
