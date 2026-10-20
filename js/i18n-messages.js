@@ -469,7 +469,11 @@ window.SITE_MESSAGES = {
     "news.siteguard-statistics-exploitation.title": "SiteGuard 统计功能漏洞已遭实际利用",
     "news.siteguard-statistics-exploitation.summary": "补录 18 日报道：CVE-2026-106931 在启用统计功能的受影响版本中可导致高权限命令执行。官方已提供修复，并要求更新前保留诊断信息；攻击规模未公布。",
     "news.jaxa-mmx-h3-launch-success.title": "JAXA 确认 MMX 发射成功并与火箭正常分离",
-    "news.jaxa-mmx-h3-launch-success.summary": "H3 十号机于 20 日 4:41（日本时间）升空，约 1 小时 11 分钟后正常分离 MMX。公告确认的是发射及轨道投入成功，尚未完成火卫一采样返回。"
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 十号机于 20 日 4:41（日本时间）升空，约 1 小时 11 分钟后正常分离 MMX。公告确认的是发射及轨道投入成功，尚未完成火卫一采样返回。",
+    "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI 发布文件遭篡改，用户需排查凭证泄露",
+    "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud 称，19 日有人替换了 v0.11.0—v0.15.0 的 CLI 下载文件，CI/CD 流程未受影响。运行过受影响安装包的用户需清理系统并撤销相关凭证，不能只靠升级处理。",
+    "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron 为 Trainium 提供原生 PyTorch 后端",
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公开测试版将 Trainium2/3 接入 PyTorch，支持即时执行、torch.compile 和分布式训练。编译图仍需静态形状，部分算子和数据类型支持有限，迁移前须验证兼容性。"
   },
   "en": {
     "nav.about": "About",
@@ -940,7 +944,11 @@ window.SITE_MESSAGES = {
     "news.siteguard-statistics-exploitation.title": "SiteGuard statistics flaw exploited in the wild",
     "news.siteguard-statistics-exploitation.summary": "October 18 report: CVE-2026-106931 permits privileged commands in affected installations with statistics enabled. Fixes exist; preserve diagnostics before patching. Attack scale is undisclosed.",
     "news.jaxa-mmx-h3-launch-success.title": "JAXA confirms MMX launch and spacecraft separation",
-    "news.jaxa-mmx-h3-launch-success.summary": "H3 Flight 10 launched on October 20 at 04:41 JST, separating MMX about 71 minutes later. Launch success does not mean the Phobos sample-return mission is complete."
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 Flight 10 launched on October 20 at 04:41 JST, separating MMX about 71 minutes later. Launch success does not mean the Phobos sample-return mission is complete.",
+    "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI release files tampered with; users urged to check credentials",
+    "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud says CLI downloads for v0.11.0–v0.15.0 were replaced on October 19; its CI/CD pipelines were unaffected. Users who ran affected packages need to clean their systems and revoke credentials. Upgrading alone is insufficient.",
+    "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron brings a native PyTorch backend to Trainium",
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "The TorchNeuron public beta connects Trainium2/3 to PyTorch, with eager execution, torch.compile and distributed training. Compiled graphs still require static shapes; operator and data-type support has gaps, so workloads need compatibility testing."
   },
   "ja": {
     "nav.about": "私について",
@@ -1411,7 +1419,11 @@ window.SITE_MESSAGES = {
     "news.siteguard-statistics-exploitation.title": "SiteGuard の統計機能の脆弱性が悪用",
     "news.siteguard-statistics-exploitation.summary": "18日の報道を追加。統計機能が有効な対象版では CVE-2026-106931 により高権限でコマンド実行が可能。修正済みだが更新前に診断情報の保存が必要。被害規模は不明。",
     "news.jaxa-mmx-h3-launch-success.title": "JAXA、MMX の打上げと正常分離を確認",
-    "news.jaxa-mmx-h3-launch-success.summary": "H3ロケット10号機は20日4時41分に打ち上げられ、約1時間11分後にMMXを正常に分離。確認されたのは打上げと軌道投入の成功で、フォボスからの試料帰還は今後の目標。"
+    "news.jaxa-mmx-h3-launch-success.summary": "H3ロケット10号機は20日4時41分に打ち上げられ、約1時間11分後にMMXを正常に分離。確認されたのは打上げと軌道投入の成功で、フォボスからの試料帰還は今後の目標。",
+    "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI の配布ファイルが改ざん、認証情報の確認を呼びかけ",
+    "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud によると、19日に v0.11.0～v0.15.0 の CLI 配布ファイルが差し替えられた。CI/CD は影響を受けていない。該当ファイルを実行した場合はシステムの駆除と認証情報の無効化が必要で、更新だけでは対処できない。",
+    "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron、Trainium 向け PyTorch ネイティブバックエンドを公開",
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "公開ベータ版は Trainium2/3 で即時実行、torch.compile、分散学習に対応。コンパイルしたグラフには静的形状が必要で、一部の演算子やデータ型には制限がある。移行前の互換性確認は欠かせない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1882,7 +1894,11 @@ window.SITE_MESSAGES = {
     "news.siteguard-statistics-exploitation.title": "Уязвимость статистики SiteGuard эксплуатируется",
     "news.siteguard-statistics-exploitation.summary": "Сообщение от 18 октября: CVE-2026-106931 позволяет выполнять привилегированные команды в затронутых установках со статистикой. Исправления доступны; перед обновлением нужно сохранить диагностику. Масштаб атак не раскрыт.",
     "news.jaxa-mmx-h3-launch-success.title": "JAXA подтвердила запуск MMX и отделение аппарата",
-    "news.jaxa-mmx-h3-launch-success.summary": "H3 №10 стартовала 20 октября в 04:41 JST; MMX отделился примерно через 71 минуту. Успех запуска ещё не означает завершения миссии по доставке образцов с Фобоса."
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 №10 стартовала 20 октября в 04:41 JST; MMX отделился примерно через 71 минуту. Успех запуска ещё не означает завершения миссии по доставке образцов с Фобоса.",
+    "news.ovhcloud-cli-release-assets-compromise.title": "Файлы релизов OVHcloud CLI подменены; пользователям советуют проверить ключи",
+    "news.ovhcloud-cli-release-assets-compromise.summary": "По данным OVHcloud, 19 октября были подменены файлы CLI версий v0.11.0–v0.15.0; CI/CD не пострадали. Запускавшим заражённые пакеты нужно очистить системы и отозвать учётные данные. Одного обновления недостаточно.",
+    "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron добавляет нативный бэкенд PyTorch для Trainium",
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "Публичная бета TorchNeuron поддерживает Trainium2/3, немедленное выполнение, torch.compile и распределённое обучение. Компиляция требует статических форм тензоров; поддержка операторов и типов данных неполная. Перед переносом нужна проверка совместимости."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2353,6 +2369,10 @@ window.SITE_MESSAGES = {
     "news.siteguard-statistics-exploitation.title": "SiteGuard 統計功能漏洞已遭實際利用",
     "news.siteguard-statistics-exploitation.summary": "補錄 18 日報導：CVE-2026-106931 在啟用統計功能的受影響版本中可導致高權限命令執行。官方已提供修補，並要求更新前保留診斷資訊；攻擊規模未公布。",
     "news.jaxa-mmx-h3-launch-success.title": "JAXA 確認 MMX 發射成功並與火箭正常分離",
-    "news.jaxa-mmx-h3-launch-success.summary": "H3 十號機於 20 日 4:41（日本時間）升空，約 1 小時 11 分鐘後正常分離 MMX。公告確認的是發射及軌道投入成功，尚未完成火衛一採樣返回。"
+    "news.jaxa-mmx-h3-launch-success.summary": "H3 十號機於 20 日 4:41（日本時間）升空，約 1 小時 11 分鐘後正常分離 MMX。公告確認的是發射及軌道投入成功，尚未完成火衛一採樣返回。",
+    "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI 發布檔案遭竄改，使用者需檢查憑證外洩",
+    "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud 表示，19 日有人替換了 v0.11.0—v0.15.0 的 CLI 下載檔案，CI/CD 流程未受影響。執行過受影響套件的使用者需清理系統並撤銷相關憑證，不能只靠升級處理。",
+    "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron 為 Trainium 提供原生 PyTorch 後端",
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公開測試版將 Trainium2/3 接入 PyTorch，支援即時執行、torch.compile 和分散式訓練。編譯圖仍需靜態形狀，部分運算子和資料型別支援有限，遷移前須驗證相容性。"
   }
 };

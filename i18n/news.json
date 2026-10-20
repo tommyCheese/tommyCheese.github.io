@@ -2,6 +2,28 @@
   "updated_at": "2026-10-20",
   "items": [
     {
+      "id": "ovhcloud-cli-release-assets-compromise",
+      "category": "software",
+      "published_at": "2026-10-20",
+      "collected_at": "2026-10-20",
+      "source": "BleepingComputer / OVHcloud",
+      "url": "https://www.bleepingcomputer.com/news/security/ovhcloud-cli-releases-backdoored-on-github-to-steal-developer-secrets/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/20/ovhcloud.jpg",
+      "image_credit": "BleepingComputer · illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "torchneuron-native-pytorch-trainium-beta",
+      "category": "software",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-20",
+      "source": "PyTorch / AWS",
+      "url": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/",
+      "image": "https://pytorch.org/wp-content/uploads/2026/10/AWS-TorchNeuron-image-1.png",
+      "image_credit": "AWS / PyTorch · architecture diagram",
+      "image_fit": "contain"
+    },
+    {
       "id": "jaxa-mmx-h3-launch-success",
       "category": "science",
       "published_at": "2026-10-20",
