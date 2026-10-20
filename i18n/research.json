@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20",
+  "updated_at": "2026-10-21",
   "tags": [
     "ai",
     "agents",
@@ -8,7 +8,8 @@
     "conferences",
     "security",
     "robotics",
-    "systems"
+    "systems",
+    "databases"
   ],
   "items": [
     {
@@ -982,6 +983,79 @@
       ],
       "source": "Yuan et al. · arXiv:2610.23044v1",
       "url": "https://arxiv.org/abs/2610.23044v1"
+    },
+    {
+      "id": "memderive-evolving-data-agent-memory",
+      "kind": "preprint",
+      "published_at": "2026-10-18",
+      "collected_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "databases",
+        "papers",
+        "results"
+      ],
+      "source": "Gao et al. · arXiv:2610.25373v1",
+      "url": "https://arxiv.org/abs/2610.25373v1"
+    },
+    {
+      "id": "action-time-reasoning-state-tracking",
+      "kind": "preprint",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Mouseli & Moayedi · arXiv:2610.25760v1",
+      "url": "https://arxiv.org/abs/2610.25760v1"
+    },
+    {
+      "id": "remoteann-object-storage-vector-search",
+      "kind": "preprint",
+      "published_at": "2026-10-18",
+      "collected_at": "2026-10-21",
+      "tags": [
+        "databases",
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Gou et al. · arXiv:2610.25172v1",
+      "url": "https://arxiv.org/abs/2610.25172v1"
+    },
+    {
+      "id": "faaspot-fault-tolerant-serverless-workflows",
+      "kind": "conference-paper",
+      "published_at": "2026-10-19",
+      "collected_at": "2026-10-21",
+      "tags": [
+        "systems",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Patel et al. · arXiv:2610.26709v1",
+      "url": "https://arxiv.org/abs/2610.26709v1",
+      "venue": "Middleware 2026 (author-reported acceptance; track unspecified)"
+    },
+    {
+      "id": "jaro-winkler-scalable-string-joins",
+      "kind": "conference-paper",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-21",
+      "tags": [
+        "databases",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Lankes et al. · arXiv:2610.23652v1",
+      "url": "https://arxiv.org/abs/2610.23652v1",
+      "venue": "PACMMOD / SIGMOD 2027 (official accepted-paper list; track not separately stated)"
     }
   ],
   "coverage_start": "2026-10-06",
