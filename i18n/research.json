@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-19",
+  "updated_at": "2026-10-20",
   "tags": [
     "ai",
     "agents",
@@ -912,6 +912,76 @@
       ],
       "source": "Sundram et al. · arXiv:2610.20981v1",
       "url": "https://arxiv.org/abs/2610.20981v1"
+    },
+    {
+      "id": "seer-repro-analytical-robustness",
+      "kind": "preprint",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Liu et al. · arXiv:2610.23845v1",
+      "url": "https://arxiv.org/abs/2610.23845v1"
+    },
+    {
+      "id": "self-building-labs-automation",
+      "kind": "preprint",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "agents",
+        "robotics",
+        "papers"
+      ],
+      "source": "Bai et al. · arXiv:2610.23826v1",
+      "url": "https://arxiv.org/abs/2610.23826v1"
+    },
+    {
+      "id": "consdl-consistent-concept-discovery",
+      "kind": "preprint",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "papers",
+        "results"
+      ],
+      "source": "Choi et al. · arXiv:2610.23801v1",
+      "url": "https://arxiv.org/abs/2610.23801v1"
+    },
+    {
+      "id": "tider-temporal-agent-memory",
+      "kind": "conference-paper",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Sheng et al. · arXiv:2610.23598v1",
+      "url": "https://arxiv.org/abs/2610.23598v1",
+      "venue": "NeurIPS 2026 (author-reported acceptance; track unspecified)"
+    },
+    {
+      "id": "c-to-rust-performance-recovery",
+      "kind": "preprint",
+      "published_at": "2026-10-16",
+      "collected_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Yuan et al. · arXiv:2610.23044v1",
+      "url": "https://arxiv.org/abs/2610.23044v1"
     }
   ],
   "coverage_start": "2026-10-06",
