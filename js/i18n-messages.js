@@ -479,7 +479,18 @@ window.SITE_MESSAGES = {
     "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 修复 Web UI 认证绕过问题",
     "news.qbittorrent-530-webui-security.summary": "新版本修复伪造 X-Forwarded-For 请求头导致的认证绕过，并加强跨站请求检查、加入 RSS 规则导入导出。默认切换至 libtorrent 2.1，官方同时提醒其读取性能可能影响大量做种时的上传速度。",
     "news.quantinuum-helios-color-code-memory.title": "Quantinuum 报告 Helios 彩色码纠错实验结果",
-    "news.quantinuum-helios-color-code-memory.summary": "团队在 Helios 上测试距离 3、5、7 的彩色码，报告距离 7 时每轮逻辑存储误差约为 5×10⁻⁶。结果采用离线解码，不能等同于完整算法已实现百万次无错运算。"
+    "news.quantinuum-helios-color-code-memory.summary": "团队在 Helios 上测试距离 3、5、7 的彩色码，报告距离 7 时每轮逻辑存储误差约为 5×10⁻⁶。结果采用离线解码，不能等同于完整算法已实现百万次无错运算。",
+    "research.tag.databases": "数据库与数据管理",
+    "research.memderive-evolving-data-agent-memory.title": "MemDerive：追查 Agent 记忆中的推导与更新错误",
+    "research.memderive-evolving-data-agent-memory.summary": "用 Datalog 生成答案和推导链，在10个合成场景、1503个问题中诊断记忆错误。所测四种系统在派生状态问题上均落后于 BM25；结果限于这组任务，不代表所有真实工作流。",
+    "research.action-time-reasoning-state-tracking.title": "Agent 状态追踪：临行动时推理比保留旧推理更有用",
+    "research.action-time-reasoning-state-tracking.summary": "在小型文件锁任务中，对 Qwen3-8B 与 Qwen3.5-9B 分别控制当步推理和历史推理。减少违规操作主要依赖当步推理；保留旧推理作用有限，结论不能直接推广到其他模型或任务。",
+    "research.remoteann-object-storage-vector-search.title": "RemoteANN：面向云对象存储的向量检索",
+    "research.remoteann-object-storage-vector-search.summary": "结合 IVF、RaBitQ 量化、数据重排和请求合并，减少远程读取。在97%目标召回率的实验中，作者报告吞吐最高为基线的5.9倍、请求数最低约为1/16；收益取决于数据与存储条件。",
+    "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：在可抢占实例上运行容错工作流",
+    "research.faaspot-fault-tolerant-serverless-workflows.summary": "按任务图的故障影响选择检查点、扩缩容和重试策略。在轨迹驱动的模拟器中，八种工作流完成率为89.03%；这不等同于生产云保障。作者注明录用于 Middleware 2026，轨道未注明。",
+    "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler 字符串连接：用位图和前缀分组减少比较",
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字符集条件下线性计算相似度，结合自适应位图剪枝和 PUMA 前缀分组。作者在大规模集合上报告最高千倍加速；收益取决于阈值与数据。论文已列入 SIGMOD 2027 官方录用清单。"
   },
   "en": {
     "nav.about": "About",
@@ -960,7 +971,18 @@ window.SITE_MESSAGES = {
     "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 fixes a Web UI authentication bypass",
     "news.qbittorrent-530-webui-security.summary": "The release fixes authentication bypass through spoofed X-Forwarded-For headers, strengthens cross-site checks and adds RSS rule import/export. It defaults to libtorrent 2.1, whose read performance can reduce upload speeds for heavy seeders, the project warns.",
     "news.quantinuum-helios-color-code-memory.title": "Quantinuum reports Helios color-code error-correction results",
-    "news.quantinuum-helios-color-code-memory.summary": "Tests of distance-3, 5 and 7 color codes on Helios report a logical memory error of about 5×10⁻⁶ per round at distance 7. Decoding was offline; this does not demonstrate a complete algorithm performing a million error-free operations."
+    "news.quantinuum-helios-color-code-memory.summary": "Tests of distance-3, 5 and 7 color codes on Helios report a logical memory error of about 5×10⁻⁶ per round at distance 7. Decoding was offline; this does not demonstrate a complete algorithm performing a million error-free operations.",
+    "research.tag.databases": "Databases and data management",
+    "research.memderive-evolving-data-agent-memory.title": "MemDerive diagnoses derived-state errors in agent memory",
+    "research.memderive-evolving-data-agent-memory.summary": "Datalog provides answers and derivation graphs for 1,503 queries across ten synthetic scenarios. All four tested memory systems trail BM25 on derived states. These results concern the benchmark, not every real workflow.",
+    "research.action-time-reasoning-state-tracking.title": "Agent state tracking: reasoning at action time matters more than retaining it",
+    "research.action-time-reasoning-state-tracking.summary": "A small file-lock task separates current-step reasoning from retained reasoning in Qwen3-8B and Qwen3.5-9B. Most reductions in rule violations come from reasoning before each action; broader model and task generalization remains untested.",
+    "research.remoteann-object-storage-vector-search.title": "RemoteANN tailors vector search to cloud object storage",
+    "research.remoteann-object-storage-vector-search.summary": "IVF, RaBitQ, data reordering and merged requests reduce remote reads. At 97% target recall, the authors report up to 5.9× throughput and 16.1× fewer requests. Gains depend on the data and storage conditions.",
+    "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot runs fault-tolerant workflows on spot instances",
+    "research.faaspot-fault-tolerant-serverless-workflows.summary": "DAG failure impact guides checkpointing, scaling and retries. Eight workflows reach 89.03% completion in a trace-driven emulator, not a production-cloud guarantee. The authors report Middleware 2026 acceptance; the track is unspecified.",
+    "research.jaro-winkler-scalable-string-joins.title": "Faster Jaro-Winkler joins with bitmap pruning and prefix groups",
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP computes similarity in linear time for bounded alphabets; adaptive bitmaps and PUMA prefix groups prune comparisons. The authors report up to 1,000× speedups, depending on data and thresholds. The paper appears on SIGMOD 2027’s official acceptance list."
   },
   "ja": {
     "nav.about": "私について",
@@ -1441,7 +1463,18 @@ window.SITE_MESSAGES = {
     "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3、Web UI の認証回避を修正",
     "news.qbittorrent-530-webui-security.summary": "X-Forwarded-Forヘッダーの偽装による認証回避を修正し、クロスサイトリクエストの検査とRSSルールの入出力を追加。標準のlibtorrentは2.1へ移行したが、大量にシードする場合は読み取り性能がアップロード速度に影響しうると開発元は注意している。",
     "news.quantinuum-helios-color-code-memory.title": "Quantinuum、Helios でカラー符号の誤り訂正を実験",
-    "news.quantinuum-helios-color-code-memory.summary": "距離3、5、7のカラー符号を試し、距離7で1ラウンド当たり約5×10⁻⁶の論理メモリー誤り率を報告。復号はオフラインで行われており、完全なアルゴリズムで100万回の無誤り演算を実現したわけではない。"
+    "news.quantinuum-helios-color-code-memory.summary": "距離3、5、7のカラー符号を試し、距離7で1ラウンド当たり約5×10⁻⁶の論理メモリー誤り率を報告。復号はオフラインで行われており、完全なアルゴリズムで100万回の無誤り演算を実現したわけではない。",
+    "research.tag.databases": "データベースとデータ管理",
+    "research.memderive-evolving-data-agent-memory.title": "MemDerive：エージェント記憶の導出と更新の誤りを診断",
+    "research.memderive-evolving-data-agent-memory.summary": "Datalogで正解と導出グラフを作り、10の合成シナリオ、1503問で評価。導出状態の問題では、調べた4種類の記憶システムはいずれもBM25を下回った。実際の全ワークフローに一般化できる結果ではない。",
+    "research.action-time-reasoning-state-tracking.title": "状態追跡では、過去の推論を残すより行動直前の推論が有効",
+    "research.action-time-reasoning-state-tracking.summary": "小規模なファイルロック課題でQwen3-8BとQwen3.5-9Bを評価し、その場の推論と過去の推論保持を分離。規則違反の減少は主に行動直前の推論によるもので、他のモデルや課題への一般化は未確認。",
+    "research.remoteann-object-storage-vector-search.title": "RemoteANN：クラウドオブジェクトストレージ向けベクトル検索",
+    "research.remoteann-object-storage-vector-search.summary": "IVF、RaBitQ、データ再配置、リクエスト統合で遠隔読み出しを削減。目標再現率97%の実験で、著者は最大5.9倍のスループットと最大16.1倍少ないリクエストを報告。効果はデータとストレージ条件に依存する。",
+    "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：中断可能なインスタンスで耐障害ワークフローを実行",
+    "research.faaspot-fault-tolerant-serverless-workflows.summary": "DAGの障害影響に応じてチェックポイント、拡縮、再試行を選択。トレース駆動エミュレーターの8種類のワークフローで完了率89.03%を報告したが、本番クラウドの保証ではない。著者はMiddleware 2026採択を記載し、トラックは未記載。",
+    "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler結合：ビットマップと接頭辞グループで比較を削減",
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMPは有限の文字集合を前提に線形時間で類似度を計算し、適応型ビットマップとPUMAの接頭辞分類で候補を絞る。最大1000倍の高速化はデータと閾値に依存。SIGMOD 2027の公式採択一覧に掲載。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1922,7 +1955,18 @@ window.SITE_MESSAGES = {
     "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 устраняет обход аутентификации Web UI",
     "news.qbittorrent-530-webui-security.summary": "Исправлен обход аутентификации через поддельный X-Forwarded-For, усилены межсайтовые проверки и добавлен импорт/экспорт правил RSS. По умолчанию используется libtorrent 2.1; проект предупреждает, что его скорость чтения может замедлить интенсивную раздачу.",
     "news.quantinuum-helios-color-code-memory.title": "Quantinuum представила результаты цветовых кодов на Helios",
-    "news.quantinuum-helios-color-code-memory.summary": "Испытаны коды расстояний 3, 5 и 7; при расстоянии 7 заявлена ошибка логической памяти около 5×10⁻⁶ за раунд. Декодирование выполнялось офлайн. Это не демонстрация миллиона безошибочных операций полного алгоритма."
+    "news.quantinuum-helios-color-code-memory.summary": "Испытаны коды расстояний 3, 5 и 7; при расстоянии 7 заявлена ошибка логической памяти около 5×10⁻⁶ за раунд. Декодирование выполнялось офлайн. Это не демонстрация миллиона безошибочных операций полного алгоритма.",
+    "research.tag.databases": "Базы данных и управление данными",
+    "research.memderive-evolving-data-agent-memory.title": "MemDerive выявляет ошибки вывода и обновления памяти агентов",
+    "research.memderive-evolving-data-agent-memory.summary": "Datalog задаёт ответы и графы вывода для 1503 запросов в десяти синтетических сценариях. Все четыре проверенные системы памяти уступают BM25 на производных состояниях. Результат ограничен этим набором задач.",
+    "research.action-time-reasoning-state-tracking.title": "Для отслеживания состояния важнее рассуждать перед действием",
+    "research.action-time-reasoning-state-tracking.summary": "В небольшой задаче с блокировками файлов для Qwen3-8B и Qwen3.5-9B разделены текущие и сохранённые рассуждения. Снижение нарушений в основном связано с текущим шагом; перенос вывода на другие модели и задачи не проверен.",
+    "research.remoteann-object-storage-vector-search.title": "RemoteANN: векторный поиск для облачного объектного хранилища",
+    "research.remoteann-object-storage-vector-search.summary": "IVF, RaBitQ, перестановка данных и объединение запросов сокращают удалённое чтение. При целевой полноте 97% авторы сообщают до 5,9× большей пропускной способности и до 16,1× меньшего числа запросов. Выигрыш зависит от данных и хранилища.",
+    "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot: отказоустойчивые процессы на прерываемых инстансах",
+    "research.faaspot-fault-tolerant-serverless-workflows.summary": "Влияние отказа узлов DAG определяет контрольные точки, масштабирование и повторы. В эмуляторе на трассах восемь процессов дают 89,03% завершений; это не гарантия для облака. Авторы указывают принятие на Middleware 2026, трек не назван.",
+    "research.jaro-winkler-scalable-string-joins.title": "Ускорение соединений Jaro-Winkler битовыми картами и префиксами",
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP вычисляет сходство за линейное время для ограниченного алфавита; адаптивные карты и PUMA сокращают сравнения. Ускорение до 1000× зависит от данных и порога. Работа включена в официальный список принятых статей SIGMOD 2027."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2403,6 +2447,17 @@ window.SITE_MESSAGES = {
     "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 修復 Web UI 驗證繞過問題",
     "news.qbittorrent-530-webui-security.summary": "新版本修復偽造 X-Forwarded-For 標頭導致的驗證繞過，並加強跨站請求檢查、加入 RSS 規則匯入匯出。預設改用 libtorrent 2.1，官方同時提醒其讀取效能可能影響大量做種時的上傳速度。",
     "news.quantinuum-helios-color-code-memory.title": "Quantinuum 公布 Helios 彩色碼糾錯實驗結果",
-    "news.quantinuum-helios-color-code-memory.summary": "團隊在 Helios 上測試距離 3、5、7 的彩色碼，報告距離 7 時每輪邏輯記憶體錯誤率約為 5×10⁻⁶。結果採用離線解碼，不能等同於完整演算法已實現百萬次無錯運算。"
+    "news.quantinuum-helios-color-code-memory.summary": "團隊在 Helios 上測試距離 3、5、7 的彩色碼，報告距離 7 時每輪邏輯記憶體錯誤率約為 5×10⁻⁶。結果採用離線解碼，不能等同於完整演算法已實現百萬次無錯運算。",
+    "research.tag.databases": "資料庫與資料管理",
+    "research.memderive-evolving-data-agent-memory.title": "MemDerive：追查 Agent 記憶中的推導與更新錯誤",
+    "research.memderive-evolving-data-agent-memory.summary": "用 Datalog 產生答案和推導鏈，在10個合成情境、1503個問題中診斷記憶錯誤。受測四種系統在衍生狀態問題上均落後於 BM25；結果限於這組任務，不代表所有實際工作流程。",
+    "research.action-time-reasoning-state-tracking.title": "Agent 狀態追蹤：行動前推理比保留舊推理更有用",
+    "research.action-time-reasoning-state-tracking.summary": "在小型檔案鎖定任務中，對 Qwen3-8B 與 Qwen3.5-9B 分別控制當步推理和歷史推理。減少違規操作主要依賴當步推理；保留舊推理作用有限，結論不能直接推廣至其他模型或任務。",
+    "research.remoteann-object-storage-vector-search.title": "RemoteANN：面向雲端物件儲存的向量檢索",
+    "research.remoteann-object-storage-vector-search.summary": "結合 IVF、RaBitQ 量化、資料重排和請求合併，減少遠端讀取。在97%目標召回率的實驗中，作者報告吞吐最高為基線的5.9倍、請求數最低約為1/16；效益取決於資料與儲存條件。",
+    "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：在可搶占執行個體上執行容錯工作流程",
+    "research.faaspot-fault-tolerant-serverless-workflows.summary": "按任務圖的故障影響選擇檢查點、擴縮和重試策略。在軌跡驅動的模擬器中，八種工作流程完成率為89.03%；這不等同於正式環境保障。作者註明錄取於 Middleware 2026，軌道未註明。",
+    "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler 字串連接：用位元圖和前綴分組減少比較",
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字元集條件下線性計算相似度，結合自適應位元圖剪枝和 PUMA 前綴分組。作者在大規模集合上報告最高千倍加速；效益取決於閾值與資料。論文已列入 SIGMOD 2027 官方錄取清單。"
   }
 };
