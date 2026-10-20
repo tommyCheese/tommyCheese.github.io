@@ -473,7 +473,13 @@ window.SITE_MESSAGES = {
     "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI 发布文件遭篡改，用户需排查凭证泄露",
     "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud 称，19 日有人替换了 v0.11.0—v0.15.0 的 CLI 下载文件，CI/CD 流程未受影响。运行过受影响安装包的用户需清理系统并撤销相关凭证，不能只靠升级处理。",
     "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron 为 Trainium 提供原生 PyTorch 后端",
-    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公开测试版将 Trainium2/3 接入 PyTorch，支持即时执行、torch.compile 和分布式训练。编译图仍需静态形状，部分算子和数据类型支持有限，迁移前须验证兼容性。"
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公开测试版将 Trainium2/3 接入 PyTorch，支持即时执行、torch.compile 和分布式训练。编译图仍需静态形状，部分算子和数据类型支持有限，迁移前须验证兼容性。",
+    "news.openbsd-80-release.title": "OpenBSD 8.0 发布：虚拟机支持最多 64 个 vCPU",
+    "news.openbsd-80-release.summary": "OpenBSD 8.0 为客户虚拟机加入多处理器支持，并新增 Intel Arc A 系列显卡、arm64 休眠和 RISC-V 向量扩展支持，同时修复多项安全问题。硬件支持仍需按架构和驱动核对。",
+    "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 修复 Web UI 认证绕过问题",
+    "news.qbittorrent-530-webui-security.summary": "新版本修复伪造 X-Forwarded-For 请求头导致的认证绕过，并加强跨站请求检查、加入 RSS 规则导入导出。默认切换至 libtorrent 2.1，官方同时提醒其读取性能可能影响大量做种时的上传速度。",
+    "news.quantinuum-helios-color-code-memory.title": "Quantinuum 报告 Helios 彩色码纠错实验结果",
+    "news.quantinuum-helios-color-code-memory.summary": "团队在 Helios 上测试距离 3、5、7 的彩色码，报告距离 7 时每轮逻辑存储误差约为 5×10⁻⁶。结果采用离线解码，不能等同于完整算法已实现百万次无错运算。"
   },
   "en": {
     "nav.about": "About",
@@ -948,7 +954,13 @@ window.SITE_MESSAGES = {
     "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI release files tampered with; users urged to check credentials",
     "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud says CLI downloads for v0.11.0–v0.15.0 were replaced on October 19; its CI/CD pipelines were unaffected. Users who ran affected packages need to clean their systems and revoke credentials. Upgrading alone is insufficient.",
     "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron brings a native PyTorch backend to Trainium",
-    "news.torchneuron-native-pytorch-trainium-beta.summary": "The TorchNeuron public beta connects Trainium2/3 to PyTorch, with eager execution, torch.compile and distributed training. Compiled graphs still require static shapes; operator and data-type support has gaps, so workloads need compatibility testing."
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "The TorchNeuron public beta connects Trainium2/3 to PyTorch, with eager execution, torch.compile and distributed training. Compiled graphs still require static shapes; operator and data-type support has gaps, so workloads need compatibility testing.",
+    "news.openbsd-80-release.title": "OpenBSD 8.0 adds support for up to 64 vCPUs per guest",
+    "news.openbsd-80-release.summary": "OpenBSD 8.0 brings multiprocessor guest VMs, Intel Arc A-series graphics, arm64 hibernation and RISC-V vector support, alongside security fixes. Hardware compatibility still depends on the architecture and driver.",
+    "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 fixes a Web UI authentication bypass",
+    "news.qbittorrent-530-webui-security.summary": "The release fixes authentication bypass through spoofed X-Forwarded-For headers, strengthens cross-site checks and adds RSS rule import/export. It defaults to libtorrent 2.1, whose read performance can reduce upload speeds for heavy seeders, the project warns.",
+    "news.quantinuum-helios-color-code-memory.title": "Quantinuum reports Helios color-code error-correction results",
+    "news.quantinuum-helios-color-code-memory.summary": "Tests of distance-3, 5 and 7 color codes on Helios report a logical memory error of about 5×10⁻⁶ per round at distance 7. Decoding was offline; this does not demonstrate a complete algorithm performing a million error-free operations."
   },
   "ja": {
     "nav.about": "私について",
@@ -1423,7 +1435,13 @@ window.SITE_MESSAGES = {
     "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI の配布ファイルが改ざん、認証情報の確認を呼びかけ",
     "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud によると、19日に v0.11.0～v0.15.0 の CLI 配布ファイルが差し替えられた。CI/CD は影響を受けていない。該当ファイルを実行した場合はシステムの駆除と認証情報の無効化が必要で、更新だけでは対処できない。",
     "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron、Trainium 向け PyTorch ネイティブバックエンドを公開",
-    "news.torchneuron-native-pytorch-trainium-beta.summary": "公開ベータ版は Trainium2/3 で即時実行、torch.compile、分散学習に対応。コンパイルしたグラフには静的形状が必要で、一部の演算子やデータ型には制限がある。移行前の互換性確認は欠かせない。"
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "公開ベータ版は Trainium2/3 で即時実行、torch.compile、分散学習に対応。コンパイルしたグラフには静的形状が必要で、一部の演算子やデータ型には制限がある。移行前の互換性確認は欠かせない。",
+    "news.openbsd-80-release.title": "OpenBSD 8.0、仮想マシンで最大64 vCPUに対応",
+    "news.openbsd-80-release.summary": "ゲストVMのマルチプロセッサー対応に加え、Intel Arc Aシリーズ、arm64の休止状態、RISC-Vベクトル拡張をサポートし、複数のセキュリティ問題も修正。対応状況はアーキテクチャーとドライバーごとの確認が必要。",
+    "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3、Web UI の認証回避を修正",
+    "news.qbittorrent-530-webui-security.summary": "X-Forwarded-Forヘッダーの偽装による認証回避を修正し、クロスサイトリクエストの検査とRSSルールの入出力を追加。標準のlibtorrentは2.1へ移行したが、大量にシードする場合は読み取り性能がアップロード速度に影響しうると開発元は注意している。",
+    "news.quantinuum-helios-color-code-memory.title": "Quantinuum、Helios でカラー符号の誤り訂正を実験",
+    "news.quantinuum-helios-color-code-memory.summary": "距離3、5、7のカラー符号を試し、距離7で1ラウンド当たり約5×10⁻⁶の論理メモリー誤り率を報告。復号はオフラインで行われており、完全なアルゴリズムで100万回の無誤り演算を実現したわけではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1898,7 +1916,13 @@ window.SITE_MESSAGES = {
     "news.ovhcloud-cli-release-assets-compromise.title": "Файлы релизов OVHcloud CLI подменены; пользователям советуют проверить ключи",
     "news.ovhcloud-cli-release-assets-compromise.summary": "По данным OVHcloud, 19 октября были подменены файлы CLI версий v0.11.0–v0.15.0; CI/CD не пострадали. Запускавшим заражённые пакеты нужно очистить системы и отозвать учётные данные. Одного обновления недостаточно.",
     "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron добавляет нативный бэкенд PyTorch для Trainium",
-    "news.torchneuron-native-pytorch-trainium-beta.summary": "Публичная бета TorchNeuron поддерживает Trainium2/3, немедленное выполнение, torch.compile и распределённое обучение. Компиляция требует статических форм тензоров; поддержка операторов и типов данных неполная. Перед переносом нужна проверка совместимости."
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "Публичная бета TorchNeuron поддерживает Trainium2/3, немедленное выполнение, torch.compile и распределённое обучение. Компиляция требует статических форм тензоров; поддержка операторов и типов данных неполная. Перед переносом нужна проверка совместимости.",
+    "news.openbsd-80-release.title": "OpenBSD 8.0 поддерживает до 64 vCPU в гостевой машине",
+    "news.openbsd-80-release.summary": "Выпуск добавляет многопроцессорные гостевые ВМ, графику Intel Arc A, гибернацию на arm64 и векторные расширения RISC-V, а также исправления безопасности. Совместимость оборудования зависит от архитектуры и драйвера.",
+    "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 устраняет обход аутентификации Web UI",
+    "news.qbittorrent-530-webui-security.summary": "Исправлен обход аутентификации через поддельный X-Forwarded-For, усилены межсайтовые проверки и добавлен импорт/экспорт правил RSS. По умолчанию используется libtorrent 2.1; проект предупреждает, что его скорость чтения может замедлить интенсивную раздачу.",
+    "news.quantinuum-helios-color-code-memory.title": "Quantinuum представила результаты цветовых кодов на Helios",
+    "news.quantinuum-helios-color-code-memory.summary": "Испытаны коды расстояний 3, 5 и 7; при расстоянии 7 заявлена ошибка логической памяти около 5×10⁻⁶ за раунд. Декодирование выполнялось офлайн. Это не демонстрация миллиона безошибочных операций полного алгоритма."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2373,6 +2397,12 @@ window.SITE_MESSAGES = {
     "news.ovhcloud-cli-release-assets-compromise.title": "OVHcloud CLI 發布檔案遭竄改，使用者需檢查憑證外洩",
     "news.ovhcloud-cli-release-assets-compromise.summary": "OVHcloud 表示，19 日有人替換了 v0.11.0—v0.15.0 的 CLI 下載檔案，CI/CD 流程未受影響。執行過受影響套件的使用者需清理系統並撤銷相關憑證，不能只靠升級處理。",
     "news.torchneuron-native-pytorch-trainium-beta.title": "TorchNeuron 為 Trainium 提供原生 PyTorch 後端",
-    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公開測試版將 Trainium2/3 接入 PyTorch，支援即時執行、torch.compile 和分散式訓練。編譯圖仍需靜態形狀，部分運算子和資料型別支援有限，遷移前須驗證相容性。"
+    "news.torchneuron-native-pytorch-trainium-beta.summary": "TorchNeuron 公開測試版將 Trainium2/3 接入 PyTorch，支援即時執行、torch.compile 和分散式訓練。編譯圖仍需靜態形狀，部分運算子和資料型別支援有限，遷移前須驗證相容性。",
+    "news.openbsd-80-release.title": "OpenBSD 8.0 發布：虛擬機支援最多 64 個 vCPU",
+    "news.openbsd-80-release.summary": "OpenBSD 8.0 為客體虛擬機加入多處理器支援，並新增 Intel Arc A 系列顯示卡、arm64 休眠和 RISC-V 向量擴充支援，同時修復多項安全問題。硬體支援仍需按架構和驅動程式核對。",
+    "news.qbittorrent-530-webui-security.title": "qBittorrent 5.3 修復 Web UI 驗證繞過問題",
+    "news.qbittorrent-530-webui-security.summary": "新版本修復偽造 X-Forwarded-For 標頭導致的驗證繞過，並加強跨站請求檢查、加入 RSS 規則匯入匯出。預設改用 libtorrent 2.1，官方同時提醒其讀取效能可能影響大量做種時的上傳速度。",
+    "news.quantinuum-helios-color-code-memory.title": "Quantinuum 公布 Helios 彩色碼糾錯實驗結果",
+    "news.quantinuum-helios-color-code-memory.summary": "團隊在 Helios 上測試距離 3、5、7 的彩色碼，報告距離 7 時每輪邏輯記憶體錯誤率約為 5×10⁻⁶。結果採用離線解碼，不能等同於完整演算法已實現百萬次無錯運算。"
   }
 };
