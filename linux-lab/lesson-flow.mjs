@@ -1,4 +1,4 @@
-import { HOME, resolve, evaluate } from './shell.mjs';
+import { HOME, resolve, evaluate } from './shell.mjs?v=20261020-judging-1';
 
 const quote = value => '"' + value.replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll('$', '\\$') + '"';
 const fileGoal = (path, text, label) => ({ type:'file', path, text, label });
@@ -193,6 +193,6 @@ export function restoreFlowSnapshot(snapshot, initial, lesson) {
   snapshot.goalChecks = evaluate(lesson.goals, snapshot.state, { stdout:'', ...snapshot.lastResult });
   snapshot.goalChecks.forEach((goal, index) => {
     const old = previous[index];
-    if (goal.type === 'output' && old?.done && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key])) goal.done = true;
+    if (goal.type === 'output' && old?.done && JSON.stringify(goal.sources) === JSON.stringify(old.sources) && ['type','exact','includes','code','requiresPath','normalizeFilePath'].every(key => goal[key] === old[key])) goal.done = true;
   });
 }

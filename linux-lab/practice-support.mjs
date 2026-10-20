@@ -1,5 +1,5 @@
-import { Shell, seedState, resolve, tokenize, evaluate } from './shell.mjs';
-import { createLessonShell, manuals } from './curriculum.mjs';
+import { Shell, seedState, resolve, tokenize, evaluate } from './shell.mjs?v=20261020-judging-1';
+import { createLessonShell, manuals } from './curriculum.mjs?v=20261020-judging-1';
 
 // A route through existing lessons, with the same goals and completion records.
 export const starterPhases = [

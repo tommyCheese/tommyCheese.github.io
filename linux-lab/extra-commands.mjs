@@ -4,7 +4,7 @@ const fail = message => { throw new Error(message); };
 const rows = text => text ? text.replace(/\n$/, '').split('\n') : [];
 const output = values => ({ stdout: Array.isArray(values) ? values.join('\n') + (values.length ? '\n' : '') : values, code: 0 });
 export function runExtra(shell, command, args, stdin) {
-  const text = files => files.length ? files.map(file => shell.read(file)).join('') : stdin;
+  const text = files => files.length ? files.map(file => shell.read(file)).join('') : shell.readInput(stdin);
   const plain = () => { if (args.some(arg => arg.startsWith('-'))) fail(command + '：本沙盒不支持该参数'); };
   switch (command) {
     case 'realpath': plain(); if (!args.length) fail('realpath：缺少路径'); return output(args.map(path => { let resolved = shell.path(path); const seen = new Set();
@@ -29,7 +29,7 @@ export function runExtra(shell, command, args, stdin) {
         shell.write(path, old.slice(0, size).padEnd(size, '\0'));
       } return output('');
     }
-    case 'tac': plain(); return output(args.length ? args.map(file => rows(shell.read(file)).reverse().join('\n') + (shell.read(file) ? '\n' : '')).join('') : rows(stdin).reverse());
+    case 'tac': plain(); return output(args.length ? args.map(file => rows(shell.read(file)).reverse().join('\n') + (shell.read(file) ? '\n' : '')).join('') : rows(shell.readInput(stdin)).reverse());
     case 'rev': plain(); return output(rows(text(args)).map(line => [...line].reverse().join('')));
     case 'nl': {
       const files = [...args]; let all = false;

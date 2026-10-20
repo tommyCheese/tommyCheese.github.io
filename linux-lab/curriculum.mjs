@@ -1,6 +1,7 @@
+import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
 import { clarifyTask, clarifyGoalLabels } from './task-copy.mjs';
-import { extendLessonFlows } from './lesson-flow.mjs';
-import { Shell, seedState } from './shell.mjs';
+import { extendLessonFlows } from './lesson-flow.mjs?v=20261020-judging-1';
+import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
 import { strengthenLessons } from './difficulty.mjs';
 import { extraEntries, levels, commandLevel } from './catalogue.mjs';
 import { addExtraLessons } from './extra-lessons.mjs';
@@ -298,6 +299,7 @@ lessons.forEach(clarifyTask);
 lessons.sort((a,b) => levels.findIndex(item => item.id === a.level) - levels.findIndex(item => item.id === b.level) || chapters.findIndex(item => item.id === a.chapter) - chapters.findIndex(item => item.id === b.chapter));
 extendLessonFlows(lessons, lesson => createLessonShell(Shell, seedState, lesson));
 lessons.forEach(clarifyGoalLabels);
+lessons.forEach(lesson => prepareJudging(lesson,createLessonShell(Shell,seedState,lesson)));
 export { lessons };
 export function createLessonShell(Shell, seedState, lesson) {
   const { setup = [], links = {}, ...extra } = lesson?.seed || {};
