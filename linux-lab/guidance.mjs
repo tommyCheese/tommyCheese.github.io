@@ -1,3 +1,4 @@
+import { lessonTerms } from './terminology.mjs?v=20261020-intro-terms-1';
 import { goalEntries } from './task-copy.mjs';
 import { Shell, resolve, tokenize } from './shell.mjs?v=20261020-judging-1';
 
@@ -70,7 +71,8 @@ export function lessonIntroduction(lesson, { review = false, boss = false } = {}
     lead: boss ? 'Boss 登场！这次没有指定工具，先拆解问题，再把学过的本领组合起来。'
       : review ? '回来热热手！先试着回忆这把工具怎么用，想不起来时再查介绍或手册。' : lead,
     knowledge: boss || review ? (genericTheory ? lead : lesson.theory || '') : knowledge,
-    showTool: !boss
+    showTool: !boss,
+    terms: lessonTerms(lesson,{boss})
   };
 }
 
