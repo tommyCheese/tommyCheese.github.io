@@ -329,3 +329,10 @@ body{background-image:url('./linux-background.svg');background-position:center 6
 .review-context{margin:0 23px 16px;font-size:13px;line-height:1.8;white-space:pre-line;color:var(--ink)}@media(max-width:780px){.review-context{margin:0 16px 16px}}
 
 [data-key]::after{content:attr(data-key);font:10px/1.2 ui-sans-serif,system-ui,sans-serif;font-weight:400;opacity:.6;margin-inline-start:9px;white-space:nowrap}:where(button,a,input,select,summary,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:3px}#task-title:focus-visible{outline-offset:5px;border-radius:3px}
+
+/* Compact definitions stay within the existing lesson introduction. */
+#lesson-intro-terms{margin:18px 0 0;padding-top:14px;border-top:1px solid #82927933}
+#lesson-intro-terms dt{font-size:13px;font-weight:600;color:var(--ink);margin:0 0 3px}
+#lesson-intro-terms dd{font-size:13px;line-height:1.75;color:#64735f;margin:0 0 12px;overflow-wrap:anywhere}
+[data-theme=dark] #lesson-intro-terms dt{color:#e5ecdf}
+[data-theme=dark] #lesson-intro-terms dd{color:#b7c3b5}

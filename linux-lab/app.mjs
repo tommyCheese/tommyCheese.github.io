@@ -1,10 +1,10 @@
 import { setupCodeCopy } from './code-copy.mjs';
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261019-review-memory-1';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261019-review-variants-1';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261020-intro-terms-1';
 import { createContentLocalizer } from './content-i18n.mjs?v=20261020-judging-1';
 import { editTerminalLine } from './terminal-keys.mjs';
-import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261019-review-variants-1';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261020-intro-terms-1';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs?v=20261020-judging-1';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs?v=20261020-judging-1';
@@ -174,10 +174,17 @@ function showLessonIntro() {
   $('lesson-intro-lead').textContent = intro.lead;
   $('lesson-intro-knowledge').textContent = intro.knowledge;
   $('lesson-intro-knowledge').hidden = !intro.knowledge;
+  $('lesson-intro-terms').replaceChildren();
+  for (const term of intro.terms) {
+    $('lesson-intro-terms').append(element('dt',term.label),element('dd',term.description));
+  }
+  $('lesson-intro-terms').hidden = !intro.terms.length;
   const manual = intro.showTool && manuals.find(item => item.name === lesson.command);
   $('lesson-intro-tool').hidden = !manual;
   $('lesson-intro-syntax').textContent = manual?.syntax || '';
   $('lesson-intro-dialog').showModal();
+  $('lesson-intro-title').focus({preventScroll:true});
+  $('lesson-intro-dialog').scrollTop = 0;
   practiceTick=performance.now();
 }
 $('lesson-intro-button').addEventListener('click', showLessonIntro);
