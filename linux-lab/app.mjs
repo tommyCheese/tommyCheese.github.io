@@ -31,7 +31,7 @@ async function localizeSaved(data) {
 
 const $ = id => document.getElementById(id);
 setupI18n();
-setupCodeCopy(document, { selector:'#mission-window pre,dialog pre,#pipeline-stages pre', translate });
+setupCodeCopy(document, { selector:'#goals .goal-reference pre', translate });
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const activeMotions = new Map();
 function reveal(node, distance = 6) {
