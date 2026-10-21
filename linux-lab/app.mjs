@@ -531,7 +531,7 @@ function renderTask() {
   $('next-button').hidden = !allDone;
   $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === sequence.length - 1 ? starterMode ? starterRoute.every(id => completed.has(id)) ? '路线完成 · 选择专题 →' : '选择专题继续 →' : '回到关卡地图 ↗' : '下一关 →';
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
-  $('review-answers').hidden = training?.kind !== 'review';
+  $('review-answers').hidden = sandbox || !(training?.kind === 'review' || !training && completed.has(currentId));
   $('solution-review').hidden = !allDone;
   if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
   else { $('solution-review').open = true; renderSolutionReview(); }

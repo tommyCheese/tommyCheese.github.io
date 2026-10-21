@@ -147,6 +147,19 @@ test('every edition removes time selection and offers a pause action',()=>{
   }
 });
 
+test('revisiting a completed task exposes previous answers outside the dedicated review route',()=>{
+  const visibility=source.match(/^  \$\('review-answers'\)\.hidden = .*;$/m)[0];
+  for(const [sandbox,training,done,visible] of [
+    [false,null,true,true], [false,null,false,false],
+    [false,{kind:'review'},true,true], [true,null,true,false],
+    [false,{kind:'quiz',challengeVersion:1},true,false]
+  ]) {
+    const panel={hidden:true};
+    vm.runInNewContext(visibility,{$:()=>panel,sandbox,training,currentId:'look-around',completed:new Set(done?['look-around']:[])});
+    assert.equal(!panel.hidden,visible,JSON.stringify({sandbox,training,done}));
+  }
+});
+
 test('review answers reveal saved input and a verified solution for the current variant only on expansion',()=>{
   const lesson=createReviewVariant(lessons[0],23,1), initial=createLessonShell(Shell,seedState,lesson).state;
   for (const previousAnswer of [undefined,{title:'你现在在哪里？',commands:['pwd','cd projects','pwd']}]) {
