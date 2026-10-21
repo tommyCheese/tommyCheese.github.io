@@ -1,7 +1,7 @@
 import { setupCodeCopy } from './code-copy.mjs';
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261019-review-memory-1';
 import { goalReference, goalEntries } from './task-copy.mjs';
-import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261020-intro-terms-1';
+import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261021-review-answers-2';
 import { createContentLocalizer } from './content-i18n.mjs?v=20261020-judging-1';
 import { editTerminalLine } from './terminal-keys.mjs';
 import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261021-first-terms-1';
@@ -10,7 +10,7 @@ import { starterRoute, starterPhases, starterPhase, goalDifference, explainComma
 import { createBossLesson } from './bosses.mjs?v=20261020-judging-1';
 import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261020-judging-1';
 import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261020-judging-1';
-import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261019-review-variants-1';
+import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261021-review-answers-1';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261020-judging-1';
 import { PracticeHistory } from './history.mjs';
 import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261020-judging-1';
@@ -75,6 +75,7 @@ let bossCompleted = new Set(Array.isArray(saved.bossCompleted) ? saved.bossCompl
 let training = null;
 let starterMode = false;
 let solutionCache;
+let previousAnswer;
 let exerciseInitialState;
 let onboardingReady = false;
 let latestChanges = [];
@@ -530,6 +531,7 @@ function renderTask() {
   $('next-button').hidden = !allDone;
   $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === sequence.length - 1 ? starterMode ? starterRoute.every(id => completed.has(id)) ? '路线完成 · 选择专题 →' : '选择专题继续 →' : '回到关卡地图 ↗' : '下一关 →';
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
+  $('review-answers').hidden = training?.kind !== 'review';
   $('solution-review').hidden = !allDone;
   if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
   else { $('solution-review').open = true; renderSolutionReview(); }
@@ -559,6 +561,27 @@ function renderTask() {
     $('related-commands').append(button);
   }
 }
+
+function renderReviewAnswers() {
+  if (!solutionCache) solutionCache = alternativeSolutions(lesson, exerciseInitialState, localizeContent);
+  const reference = compareSolutions([], solutionCache).reference;
+  const columns = element('div', undefined, 'solution-columns');
+  for (const [title, commands] of [['上次答案', previousAnswer?.commands], ['标准答案', reference?.lines]]) {
+    const block = element('section'); block.append(element('h3', title));
+    if (commands?.length) {
+      const list = element('ol', undefined, 'solution-lines');
+      for (const command of commands) { const item = element('li'); item.append(element('code', command)); list.append(item); }
+      block.append(list);
+    } else block.append(element('p', title === '上次答案' ? '暂无上次答案记录，之后通关时会自动保存。' : '暂时没有可验证的参考路径。', 'comparison-note'));
+    columns.append(block);
+  }
+  $('review-answers-content').replaceChildren(columns, element('p', '标准答案对应当前题目；上次答案中的路径和参数可能不同。参考解法不是唯一解。', 'comparison-note'));
+}
+$('review-answers').addEventListener('toggle', () => {
+  if (!$('review-answers').open || $('review-answers').hidden) return;
+  renderReviewAnswers();
+  if (!attempt.graded) { attempt.maxHint = 3; persist(); }
+});
 
 function renderSolutionReview() {
   const content = $('solution-review-content'); content.replaceChildren();
@@ -725,6 +748,8 @@ function startTask(id, restore = false, showGuide = true) {
   guideLesson=undefined; hintVisible=false;
   latestChanges=[]; $('pipeline-flow').hidden=true;
   solutionCache = undefined; $('solution-review').open = false;
+  previousAnswer = learning[id]?.lastAnswer;
+  $('review-answers').open = false; $('review-answers-content').replaceChildren();
   practiceHistory.clear(); updatePracticeActions();
   currentId = id; lesson = lessons.find(item => item.id === id);
   const restoring = restore && validSession(saved.session) && (saved.session.exercise?.kind || null) === (training?.kind || null) && (!training || saved.session.exercise?.variant === training.variant);
@@ -832,6 +857,7 @@ function executeCommand(command) {
       else completed.add(currentId);
       const newBoss = bosses.find(item => !unlockedBefore.has(item.id) && bossUnlocked(item, completed));
       if (!wasDone && (!attempt.graded || attempt.relearning)) { tickPractice(); if (!isBoss) recordPractice(learning,currentId,attempt,training?.kind || 'lesson'); attempt.graded=true; attempt.relearning=false; }
+      if (!wasDone && !isBoss && learning[currentId]) learning[currentId].lastAnswer = {title:lesson.title, commands:[...shell.state.history]};
       if (!wasDone) recordReviewResult('passed');
       renderChapters();
       announce(isBoss ? `击败「${lesson.title}」！` : `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。`);

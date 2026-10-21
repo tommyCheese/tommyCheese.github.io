@@ -4,6 +4,7 @@ import { validateBackup, validSnapshot, validHistory } from '../linux-lab/backup
 import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
 import { createLessonShell, lessons, manuals } from '../linux-lab/curriculum.mjs';
 import { PracticeHistory } from '../linux-lab/history.mjs';
+import { recordPractice } from '../linux-lab/learning.mjs';
 const ids=new Set(lessons.map(item=>item.id)), names=new Set(manuals.map(item=>item.name));
 const lesson=lessons.find(item=>item.id==='new-readme');
 function snapshot(shell){return {state:shell.state,transcript:[],hint:0,goalChecks:evaluate(lesson.goals,shell.state),lastResult:{stdout:'',code:0},browsePath:shell.state.cwd,changes:[]};}
@@ -39,6 +40,19 @@ test('hint visibility round-trips independently from the revealed hint level and
 });
 test('legacy progress remains compatible and unknown entries are filtered',()=>{
   assert.deepEqual(validateBackup({version:1,completed:['new-readme','unknown'],favorites:['touch','unknown']},ids,names).completed,['new-readme']);
+});
+test('last completed answers survive later failed reviews and backups; malformed answers are rejected',()=>{
+  const data=makeBackup();data.learning={};
+  const attempt={maxHint:0,errors:0,graded:false};
+  recordPractice(data.learning,lesson.id,attempt);
+  const answer={title:lesson.title,commands:['touch projects/README.md']};
+  data.learning[lesson.id].lastAnswer=answer;
+  recordPractice(data.learning,lesson.id,attempt,'review',Date.now(),false);
+  assert.deepEqual(validateBackup(JSON.parse(JSON.stringify(data)),ids,names).learning[lesson.id].lastAnswer,answer);
+  for(const invalid of [null,{title:1,commands:[]},{title:'x',commands:[{}]}, {title:'x',commands:Array(201).fill('pwd')},{title:'x',commands:['x'.repeat(4097)]}]) {
+    data.learning[lesson.id].lastAnswer=invalid;
+    assert.throws(()=>validateBackup(data,ids,names),/掌握记录无效/);
+  }
 });
 test('lesson flow backups accept legacy and current versions but reject unknown versions',()=>{
   const data=makeBackup();
