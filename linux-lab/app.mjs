@@ -1,21 +1,21 @@
 import { setupCodeCopy } from './code-copy.mjs';
 import { retiredLessons, retireLessonProgress } from './retired-lessons.mjs';
 import { setupKeyboardNavigation } from './ui-keys.mjs?v=20261019-review-memory-1';
-import { goalReference, goalEntries } from './task-copy.mjs?v=20261021-prune-lessons-1';
+import { goalReference, goalEntries } from './task-copy.mjs?v=20261022-sleep-focus-1';
 import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261021-history-copy-1';
 import { createContentLocalizer } from './content-i18n.mjs?v=20261020-judging-1';
 import { editTerminalLine } from './terminal-keys.mjs';
-import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261021-history-copy-1';
-import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs?v=20261021-solution-feedback-1';
-import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs?v=20261021-prune-lessons-1';
-import { createBossLesson } from './bosses.mjs?v=20261021-prune-lessons-1';
-import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261021-prune-lessons-1';
-import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261021-prune-lessons-1';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261022-sleep-focus-1';
+import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs?v=20261022-sleep-focus-1';
+import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs?v=20261022-sleep-focus-1';
+import { createBossLesson } from './bosses.mjs?v=20261022-sleep-focus-1';
+import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261022-sleep-focus-1';
+import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261022-sleep-focus-1';
 import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, validAnswer, bossChallenges, bossUnlocked } from './learning.mjs?v=20261021-prune-lessons-1';
 import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261021-prune-lessons-1';
 import { PracticeHistory } from './history.mjs';
 import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261020-judging-1';
-import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
+import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs?v=20261022-sleep-focus-1';
 
 const contentSources = [
   ...Object.values(seedState().fs).map(node=>node.text || ''),

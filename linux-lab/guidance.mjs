@@ -1,6 +1,6 @@
 import { introductoryTerms } from './terminology.mjs?v=20261021-history-copy-1';
-import { lessons } from './curriculum.mjs?v=20261021-prune-lessons-1';
-import { goalEntries } from './task-copy.mjs?v=20261021-prune-lessons-1';
+import { lessons } from './curriculum.mjs?v=20261022-sleep-focus-1';
+import { goalEntries } from './task-copy.mjs?v=20261022-sleep-focus-1';
 import { Shell, resolve, tokenize } from './shell.mjs?v=20261020-judging-1';
 
 const introductions = {
