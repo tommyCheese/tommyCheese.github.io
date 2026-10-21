@@ -1,7 +1,7 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
+import { createLessonShell } from './curriculum.mjs?v=20261022-sleep-focus-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
+import { clarifyGoalLabels } from './task-copy.mjs?v=20261022-sleep-focus-1';
 // A Boss is one persistent workspace with simultaneous outcome constraints.
 // The tier adds recovery and safety requirements, rather than a command whitelist.
 export function createBossLesson(boss, id) {

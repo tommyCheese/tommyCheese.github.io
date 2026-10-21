@@ -45,6 +45,13 @@ const reportTasks = {
 // Keep the core skill, then require a useful delivery or an independently readable check.
 export function extendLessonFlows(lessons, makeShell) {
   for (const lesson of lessons) {
+    // Waiting has no output to inspect or save; its successful return is enough.
+    if (lesson.command === 'sleep') {
+      lesson.coreSolution = [...lesson.solution];
+      lesson.flowBefore = []; lesson.flowAfter = []; lesson.reviewCommands = [];
+      lesson.steps = [lesson.context];
+      continue;
+    }
     const orientation = orientationTasks[lesson.id];
     if (orientation) {
       lesson.coreSolution = [...lesson.solution]; lesson.flowBefore = []; lesson.flowAfter = [];
@@ -133,12 +140,11 @@ export function extendLessonFlows(lessons, makeShell) {
       else if (lesson.goals.some(goal=>['env','setting'].includes(goal.type))) command = 'env';
       else if (lesson.goals.some(goal=>goal.type==='cwd')) command = 'pwd';
       else if (lesson.goals.some(goal=>goal.type==='clear')) command = 'history';
-      else if (lesson.command === 'sleep') command = 'seq 3';
       else command = original.at(-1);
       const reportTask = reportTasks[lesson.id];
       if (reportTask) command = reportTask[0];
       const check = final.execute(command);
-      if (!reportTask && !lesson.goals.some(goal=>['output','clear'].includes(goal.type)) && lesson.command !== 'sleep') {
+      if (!reportTask && !lesson.goals.some(goal=>['output','clear'].includes(goal.type))) {
         before.length = 0; reuse.delete('mkdir'); after.push(command); reuse.add(command.split(' ')[0]);
         added.push({type:'output',exact:check.stdout.trim(),code:check.code,normalizeFilePath:command.startsWith('stat '),label:'查看并核对操作后的实际状态'});
         instruction = '操作后用 '+command.split(' ')[0]+' 查看实际状态，核对是否达成目标。';
@@ -172,7 +178,7 @@ export function extendLessonFlows(lessons, makeShell) {
     lesson.context = lesson.steps.join('\n');
     lesson.reviewCommands = [...reuse].filter(name=>name !== lesson.command);
     lesson.goals.push(...added);
-    const captureOnly = !reportTasks[lesson.id] && lesson.command !== 'history' && lesson.command !== 'sleep' && lesson.goals.slice(0,-added.length).every(goal=>goal.type==='output' && (goal.code??0)===0) && !['true','false'].includes(lesson.command);
+    const captureOnly = !reportTasks[lesson.id] && lesson.command !== 'history' && lesson.goals.slice(0,-added.length).every(goal=>goal.type==='output' && (goal.code??0)===0) && !['true','false'].includes(lesson.command);
     lesson.solution = [...before,...(captureOnly ? [] : original),...after];
     lesson.hints = [instruction.startsWith('先把') ? instruction : '先核对输入、目标路径和保留项，再开始操作。', '试着把 ' + [...new Set([lesson.command,...lesson.reviewCommands])].join('、') + ' 配合起来；想留下输出，可以用 > 保存。', '试试这条路径，再想想有没有别的做法：\n'+lesson.solution.join('\n')];
   }

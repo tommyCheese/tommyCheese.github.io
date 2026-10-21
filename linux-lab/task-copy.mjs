@@ -127,7 +127,7 @@ export function clarifyGoalLabels(task) {
           goal.label = goal.requiresPath ? '读回 ' + goal.requiresPath + '，在终端输出指定内容' : typeof value === 'string' && value.length <= 60 && !/[\n\t]/.test(value) ? (goal.exact !== undefined ? '在终端只输出「' : '在终端输出结果，须包含「') + value + '」' : '在终端输出以下内容，行序和文本须一致';
         }
         if (/^核对结果文件的路径、大小和权限$/.test(label)) goal.label = '在终端显示 ' + (goal.requiresPath || goal.exact?.match(/^File: (.+)$/m)?.[1] || goal.path) + ' 的文件信息（路径、大小和权限）';
-        if (goal.exact === '') goal.label = '执行核对操作，终端不输出内容，退出码为 ' + (goal.code ?? 0);
+        if (goal.exact === '') goal.label = task.command === 'sleep' ? '等待命令成功结束' : '执行核对操作，终端不输出内容，退出码为 ' + (goal.code ?? 0);
         else if ((goal.code ?? 0) !== 0 && !goal.label.includes('退出码')) goal.label += '（退出码为 ' + goal.code + '）';
         break;
     }

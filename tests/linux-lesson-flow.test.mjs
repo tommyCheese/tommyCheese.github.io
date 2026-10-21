@@ -6,13 +6,14 @@ import { starterPhases, starterRoute } from '../linux-lab/practice-support.mjs';
 import { reviewQueue } from '../linux-lab/learning.mjs';
 import { restoreFlowAssets, restoreFlowSnapshot } from '../linux-lab/lesson-flow.mjs';
 
-test('each task has several purposeful steps and one reference command does not complete it',()=>{
+test('tasks have purposeful steps and multi-step tasks require more than the first command',()=>{
   for (const lesson of lessons) {
-    assert.equal(lesson.steps.length,2,lesson.id);
-    assert.ok(lesson.solution.length >= 2 && lesson.solution.length <= 5,lesson.id);
+    assert.ok(lesson.steps.length >= 1 && lesson.steps.length <= 2,lesson.id);
+    assert.ok(lesson.solution.length >= 1 && lesson.solution.length <= 5,lesson.id);
     assert.ok(lesson.reviewCommands.every(name=>manuals.some(manual=>manual.name===name)),lesson.id);
     const shell = createLessonShell(Shell,seedState,lesson);
-    assert.ok(!evaluate(lesson.goals,shell.state,shell.execute(lesson.solution[0])).every(goal=>goal.done),lesson.id);
+    assert.ok(!evaluate(lesson.goals,shell.state).every(goal=>goal.done),lesson.id);
+    if (lesson.solution.length > 1) assert.ok(!evaluate(lesson.goals,shell.state,shell.execute(lesson.solution[0])).every(goal=>goal.done),lesson.id);
   }
 });
 test('the starter route introduces tools before combining them across four stages',()=>{
@@ -74,4 +75,16 @@ test('legacy undo snapshots gain new goals while retaining already observed outp
   assert.equal(snapshot.goalChecks[0].done,true);
   assert.equal(snapshot.goalChecks.at(-1).done,false);
   assert.ok(!snapshot.goalChecks.every(goal=>goal.done));
+});
+
+test('the waiting lesson focuses on sleep without an unrelated sequence report',()=>{
+  const lesson=lessons.find(item=>item.id==='brief-pause');
+  assert.deepEqual(lesson.solution,['sleep 1']);
+  assert.equal(lesson.goals[0].label,'等待命令成功结束');
+  assert.ok(lesson.goals.every(goal=>goal.type==='output'));
+  assert.doesNotMatch(lesson.context,/seq|reports|check\.txt/);
+  const shell=createLessonShell(Shell,seedState,lesson);
+  assert.ok(!evaluate(lesson.goals,shell.state,shell.execute('true')).every(goal=>goal.done));
+  assert.ok(!evaluate(lesson.goals,shell.state,shell.execute('seq 3')).every(goal=>goal.done));
+  assert.ok(evaluate(lesson.goals,shell.state,shell.execute('sleep 1')).every(goal=>goal.done));
 });

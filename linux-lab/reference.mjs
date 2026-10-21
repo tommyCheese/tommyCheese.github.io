@@ -1,5 +1,5 @@
 import { setupCodeCopy } from './code-copy.mjs';
-import { lessons } from './curriculum.mjs?v=20261021-prune-lessons-1';
+import { lessons } from './curriculum.mjs?v=20261022-sleep-focus-1';
 import { setupI18n, localeRoot, translate } from './i18n.mjs';
 setupI18n();
 setupCodeCopy(document, { selector:'#content pre', translate });

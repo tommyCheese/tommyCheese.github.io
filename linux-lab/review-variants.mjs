@@ -1,8 +1,8 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { createReviewLesson } from './review-exercises.mjs?v=20261021-prune-lessons-1';
+import { createReviewLesson } from './review-exercises.mjs?v=20261022-sleep-focus-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
-import { clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
+import { createLessonShell } from './curriculum.mjs?v=20261022-sleep-focus-1';
+import { clarifyGoalLabels } from './task-copy.mjs?v=20261022-sleep-focus-1';
 
 const HOME = '/home/learner';
 const quote = value => '"' + value.replaceAll('"', '\\"') + '"';
