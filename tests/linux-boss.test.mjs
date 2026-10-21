@@ -6,6 +6,20 @@ import {lessons,manuals,createLessonShell} from '../linux-lab/curriculum.mjs';
 import {Shell,seedState,evaluate,HOME} from '../linux-lab/shell.mjs';
 import {validState,validateBackup} from '../linux-lab/backup.mjs';
 const bosses=bossChallenges(lessons);
+test('Boss answer backups retain separate tiers and reject malformed answer records',()=>{
+  const ids=new Set(lessons.map(item=>item.id)), names=new Set(manuals.map(item=>item.name));
+  const data={version:1,completed:[],favorites:[],bossAnswers:{
+    'common/navigation':{title:'Boss',commands:['cp draft final']},
+    'advanced/navigation':{title:'进阶 Boss',commands:['cp draft final','pwd > route.txt']}
+  }};
+  assert.deepEqual(validateBackup(JSON.parse(JSON.stringify(data)),ids,names).bossAnswers,data.bossAnswers);
+  for(const invalid of [null,[],{'unknown/boss':data.bossAnswers['common/navigation']},
+    {'common/navigation':null},{'common/navigation':{title:'Boss',commands:[{}]}},
+    {'common/navigation':{title:'Boss',commands:Array(201).fill('pwd')}},
+    {'common/navigation':{title:'Boss',commands:['x'.repeat(4097)]}}]) {
+    assert.throws(()=>validateBackup({...data,bossAnswers:invalid},ids,names),/Boss 挑战记录无效/);
+  }
+});
 for(const boss of bosses) test('integrated Boss is solvable in multiple variants: '+boss.id,()=>{
   for(const variant of [23,871]) {
     const source=createBossLesson(boss,boss.prerequisites[0]);

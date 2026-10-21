@@ -10,8 +10,8 @@ import { starterRoute, starterPhases, starterPhase, goalDifference, explainComma
 import { createBossLesson } from './bosses.mjs?v=20261020-judging-1';
 import { createReviewLesson, skillLabel } from './review-exercises.mjs?v=20261020-judging-1';
 import { createReviewVariant, reviewRounds } from './review-variants.mjs?v=20261020-judging-1';
-import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, bossChallenges, bossUnlocked } from './learning.mjs?v=20261021-review-answers-1';
-import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261020-judging-1';
+import { migrateLearning, reviewPlan, validLearning, recordPractice, mastery, varyExercise, validExercise, validAttempt, validAnswer, bossChallenges, bossUnlocked } from './learning.mjs?v=20261021-boss-answers-1';
+import { validHistory, validSnapshot, validateBackup } from './backup.mjs?v=20261021-boss-answers-1';
 import { PracticeHistory } from './history.mjs';
 import { Shell as TeachingShell, HOME, seedState, evaluate, resolve, basicCommands } from './shell.mjs?v=20261020-judging-1';
 import { lessons, chapters, manuals, levels, createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
@@ -71,6 +71,7 @@ const practiceHistory = new PracticeHistory();
 let learning = validLearning(saved.learning, ids) ? migrateLearning(saved.learning) : {};
 const bosses = bossChallenges(lessons);
 const bossIds = new Set(bosses.map(item => item.id));
+saved.bossAnswers = Object.fromEntries(Object.entries(saved.bossAnswers || {}).filter(([id, answer]) => bossIds.has(id) && validAnswer(answer)));
 let bossCompleted = new Set(Array.isArray(saved.bossCompleted) ? saved.bossCompleted.filter(id => bossIds.has(id)) : []);
 let training = null;
 let starterMode = false;
@@ -383,7 +384,7 @@ $('completion-dialog').addEventListener('close',()=> { if (mode === 'learn' && !
 
 function persist() {
   tickPractice();
-  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
+  const payload = { version: 1, contentLocale: locale, completed: [...completed], favorites: [...favorites], current: currentId, learning, transfer, bossCompleted:[...bossCompleted], bossAnswers:saved.bossAnswers, courseRoute:mode === 'learn' && !training ? starterMode ? 'starter' : 'full' : saved.courseRoute || 'full',
     session: mode === 'learn' && shell ? { revision: 2, flowVersion:2, judgingVersion:1, lesson: currentId, state: shell.state, transcript: transcript.slice(-60), hint, hintVisible, exercise:training, attempt, outputs: goalChecks.map(goal => goal.type === 'output' && goal.done), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.session,
     sandbox: mode === 'sandbox' && shell ? { snapshot: practiceSnapshot(), undoRedo: { past: practiceHistory.past, future: practiceHistory.future } } : saved.sandbox };
   payload.reviewSession = mode === 'learn' && shell && training?.kind === 'review' ? payload.session
@@ -531,7 +532,7 @@ function renderTask() {
   $('next-button').hidden = !allDone;
   $('next-button').textContent = training ? (training.index + 1 === training.queue.length ? '完成训练 ✓' : '下一题 →') : lessonIndex === sequence.length - 1 ? starterMode ? starterRoute.every(id => completed.has(id)) ? '路线完成 · 选择专题 →' : '选择专题继续 →' : '回到关卡地图 ↗' : '下一关 →';
   $('next-lesson').textContent = training ? $('next-button').textContent : '下一关 →';
-  $('review-answers').hidden = sandbox || !(training?.kind === 'review' || !training && completed.has(currentId));
+  $('review-answers').hidden = sandbox || !(training?.kind === 'review' || training?.challengeVersion === 1 || !training && completed.has(currentId));
   $('solution-review').hidden = !allDone;
   if (!allDone) { $('solution-review').open = false; $('solution-review-content').replaceChildren(); }
   else { $('solution-review').open = true; renderSolutionReview(); }
@@ -748,7 +749,7 @@ function startTask(id, restore = false, showGuide = true) {
   guideLesson=undefined; hintVisible=false;
   latestChanges=[]; $('pipeline-flow').hidden=true;
   solutionCache = undefined; $('solution-review').open = false;
-  previousAnswer = learning[id]?.lastAnswer;
+  previousAnswer = training?.challengeVersion === 1 ? saved.bossAnswers?.[training.boss] : learning[id]?.lastAnswer;
   $('review-answers').open = false; $('review-answers-content').replaceChildren();
   practiceHistory.clear(); updatePracticeActions();
   currentId = id; lesson = lessons.find(item => item.id === id);
@@ -857,7 +858,11 @@ function executeCommand(command) {
       else completed.add(currentId);
       const newBoss = bosses.find(item => !unlockedBefore.has(item.id) && bossUnlocked(item, completed));
       if (!wasDone && (!attempt.graded || attempt.relearning)) { tickPractice(); if (!isBoss) recordPractice(learning,currentId,attempt,training?.kind || 'lesson'); attempt.graded=true; attempt.relearning=false; }
-      if (!wasDone && !isBoss && learning[currentId]) learning[currentId].lastAnswer = {title:lesson.title, commands:[...shell.state.history]};
+      if (!wasDone) {
+        const answer = {title:lesson.title, commands:[...shell.state.history]};
+        if (isBoss) { saved.bossAnswers ||= {}; saved.bossAnswers[training.boss] = answer; }
+        else if (learning[currentId]) learning[currentId].lastAnswer = answer;
+      }
       if (!wasDone) recordReviewResult('passed');
       renderChapters();
       announce(isBoss ? `击败「${lesson.title}」！` : `完成「${lesson.title}」！已完成 ${completed.size} / ${lessons.length} 关。`);

@@ -152,12 +152,40 @@ test('revisiting a completed task exposes previous answers outside the dedicated
   for(const [sandbox,training,done,visible] of [
     [false,null,true,true], [false,null,false,false],
     [false,{kind:'review'},true,true], [true,null,true,false],
-    [false,{kind:'quiz',challengeVersion:1},true,false]
+    [false,{kind:'quiz',challengeVersion:1},true,true],
+    [false,{kind:'quiz',challengeVersion:1},false,true],
+    [true,{kind:'quiz',challengeVersion:1},true,false]
   ]) {
     const panel={hidden:true};
     vm.runInNewContext(visibility,{$:()=>panel,sandbox,training,currentId:'look-around',completed:new Set(done?['look-around']:[])});
     assert.equal(!panel.hidden,visible,JSON.stringify({sandbox,training,done}));
   }
+});
+
+test('Boss answers persist by Boss ID, restore on retry and never replace an ordinary lesson answer',()=>{
+  const {context:c,writes}=reviewController();
+  const ordinary={title:'普通关卡',commands:['pwd']}, otherBoss={title:'另一个 Boss',commands:['ls']};
+  Object.assign(c,{bosses:[],lessons:[{id:'a'}],lesson:{title:'Boss 交接挑战'},wasDone:false,
+    learning:{a:{lastAnswer:ordinary}},saved:{bossAnswers:{'advanced/navigation':otherBoss}},
+    training:{kind:'quiz',challengeVersion:1,boss:'common/navigation',queue:['a'],index:0,variant:23},
+    shell:{state:{history:['cp draft final','cd release']}},attempt:{graded:false,maxHint:0,errors:0},
+    recordReviewResult(){},renderChapters(){},announce(){},celebrate:false});
+  const start=source.indexOf('      const unlockedBefore =');
+  vm.runInNewContext(source.slice(start,source.indexOf('    } else {\n      if (!attempt.graded',start)),c);
+  assert.deepEqual(c.learning.a.lastAnswer,ordinary);
+  c.persist();
+  const reloaded=JSON.parse(JSON.stringify(writes.at(-1)));
+  assert.deepEqual(reloaded.bossAnswers['common/navigation'],{title:'Boss 交接挑战',commands:['cp draft final','cd release']});
+  assert.deepEqual(reloaded.bossAnswers['advanced/navigation'],otherBoss);
+  c.shell.state.history.push('ls');
+  assert.equal(c.saved.bossAnswers['common/navigation'].commands.length,2,'later input cannot mutate the saved answer');
+  c.saved=reloaded;
+  const select=source.match(/^  previousAnswer = .*;$/m)[0];
+  assert.deepEqual(vm.runInNewContext(select+'\npreviousAnswer;',{...c,id:'a'}),reloaded.bossAnswers['common/navigation']);
+  c.training.boss='advanced/navigation';
+  assert.deepEqual(vm.runInNewContext(select+'\npreviousAnswer;',{...c,id:'a'}),otherBoss);
+  c.training=null;
+  assert.deepEqual(vm.runInNewContext(select+'\npreviousAnswer;',{...c,id:'a'}),ordinary);
 });
 
 test('review answers reveal saved input and a verified solution for the current variant only on expansion',()=>{
