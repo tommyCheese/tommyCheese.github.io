@@ -1,7 +1,7 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
+import { createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { clarifyGoalLabels } from './task-copy.mjs';
+import { clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
 // A Boss is one persistent workspace with simultaneous outcome constraints.
 // The tier adds recovery and safety requirements, rather than a command whitelist.
 export function createBossLesson(boss, id) {
@@ -31,7 +31,7 @@ export function createBossLesson(boss, id) {
       Object.assign(files,{'staging/spec.txt':'spec v2\n','staging/meeting notes.txt':'approved\n','staging/a.tmp':'discard\n','staging/sub/b.tmp':'discard\n','staging/sub/deep/c.tmp':'keep\n','staging/main.tmp.txt':'keep\n'});
       file('release/docs/spec.txt','spec v2\n');file('release/docs/meeting notes.txt','approved\n');
       absent('staging/a.tmp');absent('staging/sub/b.tmp');keep('staging/sub/deep/c.tmp','keep\n');keep('staging/main.tmp.txt','keep\n');keep('staging/spec.txt','spec v2\n');keep('staging/meeting notes.txt','approved\n');
-      solution.push('mkdir -p release/docs','cp staging/spec.txt "staging/meeting notes.txt" release/docs/','find staging -maxdepth 2 -type f -name "*.tmp" -delete');
+      solution.push('mkdir -p release/docs','cp staging/spec.txt "staging/meeting notes.txt" release/docs/','rm staging/a.tmp staging/sub/b.tmp');
       if(advanced) { files['staging/obsolete.txt']='old\n';absent('staging/obsolete.txt'); file('release/previous/spec.txt','spec v2\n');solution.push('mkdir -p release/previous','cp staging/spec.txt release/previous/','rm staging/obsolete.txt'); }
       if(master) { file('release/docs/spec.txt','spec v3\n');goals.splice(0,1);solution.push('sed -i "s/v2/v3/" release/docs/spec.txt');mode('release/previous/spec.txt','444');solution.push('chmod 444 release/previous/spec.txt'); }
       break;
@@ -114,7 +114,7 @@ export function createBossLesson(boss, id) {
   if(advanced) context += extensions[boss.chapter][0];
   if(master) context += extensions[boss.chapter][1];
   const lesson = clarifyGoalLabels({id,level:boss.level,chapter:boss.chapter,title,context,theory:'自由选择工具；全部目标同时达成才能通关。',command:'',commands:[],goals,solution,seed:{files,dirs,setup},
-    hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')]});
+    hints:['先检查输入和现状，再按目标拆分步骤。','注意输出格式、保留项和目录层级；可查阅命令手册。','参考解法：\n'+solution.join('\n')+(boss.chapter === 'files' ? '\n也可以使用 find 按目录深度、文件类型和后缀筛选临时文件后删除。' : '')]});
   prepareJudging(lesson,createLessonShell(Shell,seedState,lesson));
   return lesson;
 }

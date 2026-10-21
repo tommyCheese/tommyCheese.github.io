@@ -1,6 +1,6 @@
-import { introductoryTerms } from './terminology.mjs?v=20261021-first-terms-1';
-import { lessons } from './curriculum.mjs?v=20261020-judging-1';
-import { goalEntries } from './task-copy.mjs';
+import { introductoryTerms } from './terminology.mjs?v=20261021-english-terms-2';
+import { lessons } from './curriculum.mjs?v=20261021-prune-lessons-1';
+import { goalEntries } from './task-copy.mjs?v=20261021-prune-lessons-1';
 import { Shell, resolve, tokenize } from './shell.mjs?v=20261020-judging-1';
 
 const introductions = {
@@ -40,12 +40,10 @@ const lessonIntroductions = {
   "terminal-device": "这个终端也对应一个文件路径。tty 显示当前终端设备；pts 通常表示伪终端。",
   "list-installed": "安装前，先看看工具是否已经在了。apt list --installed 列出已安装的软件包，和目录里的文件清单不同。",
   "check-service-state": "只想知道服务在不在运行？is-active 给出简短状态，active 表示正在运行；它不代表已经设置开机启动。",
-  "starter-delivery": "先准备一张空白交接单。touch 遇到不存在的文件会创建它，遇到已有文件则不会清空正文。",
   "resolve-path": "路径里绕了几个弯？realpath 把 .、.. 等部分解析成完整绝对路径，方便核对真正的位置。",
   "identify-builtin": "有些命令就住在 Shell 里面。type 能区分内建命令和外部程序，cd 属于前者。",
   "temporary-workdir": "临时工作也要有独立空间。mktemp -d 创建一个名称不冲突的目录，模板末尾的 X 会被替换。",
   "empty-log": "清空内容，文件还要留着。truncate 调整文件长度；长度设为 0，就会丢弃原来的正文。",
-  "recursive-backup": "副本里也不能漏掉子目录。cp 的递归选项会沿着目录往下复制，嵌套配置也一起带走。",
   "number-blank-lines": "空行也算一行！nl 默认跳过空行编号；想连续编号，要明确让所有行都参与。",
   "reverse-log-lines": "先看最后发生的事。tac 会颠倒行的顺序，每一行内部的文字保持原样。",
   "reverse-characters": "这次翻转的是文字，不是行序。rev 反转每一行的字符，各行仍待在原来的位置。",
@@ -122,13 +120,10 @@ export function compareSolutions(history, candidates) {
   const reference = choices[0];
   const yours = history.flatMap(lines);
   if (!reference) return { yours, reference:null, message:'这次的操作已达成目标。暂时没有可验证的参考路径。' };
-  const delta = yours.length-reference.lines.length;
   const same = yours.length === reference.lines.length && yours.every((line,index)=>line === reference.lines[index]);
   const message = same ? '你的操作与这份参考路径一致，目标都完成了！'
     : history.length >= 200 ? '这里只显示最近 200 次输入，可对照路径、参数和命令组合。'
-    : delta > 0 ? `你多用了 ${delta} 行输入。看看哪些是在观察、查阅，哪些可以合并。`
-    : delta < 0 ? `你少用了 ${-delta} 行输入，也达成了全部目标。看看命令是怎样组合起来的！`
-    : '行数相同，写法不同。对照一下路径、参数和命令组合吧。';
+    : '目标已完成！观察、查阅和核对也是操作的一部分，可以结合参考路径比较不同写法。';
   return { yours, reference, message, ...lineDifferences(yours, reference.lines) };
 }
 
@@ -193,7 +188,7 @@ export function methodInsights(history, reference, env={}) {
   if (yours.absolute !== other.absolute) notes.push('一边使用了绝对路径，另一边依靠当前位置。绝对路径更明确，相对路径通常更简短。');
   if (yours.pipe !== other.pipe) notes.push('管道把前一步的输出直接交给下一步；分开执行则更方便逐步观察中间结果。');
   if (yours.names.has('tee') !== other.names.has('tee')) notes.push('tee 可以一边显示一边保存；重定向保存后，也能再读回文件核对。');
-  if ([...yours.names].some(name=>['man','help','ls','pwd'].includes(name) && !other.names.has(name))) notes.push('你的操作包含额外观察或查阅。它们帮助确认环境，不影响通关。');
+  if ([...yours.names].some(name=>['man','help','ls','pwd'].includes(name) && !other.names.has(name))) notes.push('你的操作包含观察或查阅，有助于确认环境和操作目标。');
   return notes.slice(0,3);
 }
 

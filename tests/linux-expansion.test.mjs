@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
 import { lessons, manuals, levels, chapters, createLessonShell } from '../linux-lab/curriculum.mjs';
+import { bossChallenges } from '../linux-lab/learning.mjs';
 const fresh = extra => new Shell(seedState(extra), manuals);
 test('each tier contains all ten topics with unique documented assignments', () => {
   assert.deepEqual(levels.map(item=>item.title), ['常用','进阶','大师']);
-  for (const level of levels) for (const chapter of chapters) assert.ok(lessons.some(item=>item.level===level.id&&item.chapter===chapter.id), `${level.id}/${chapter.id}`);
+  for (const level of levels) for (const chapter of chapters) assert.ok(lessons.some(item=>item.level===level.id&&item.chapter===chapter.id) || bossChallenges(lessons).some(item=>item.level===level.id&&item.chapter===chapter.id), `${level.id}/${chapter.id}`);
   for (const manual of manuals) assert.ok(levels.some(level=>level.id===manual.level),manual.name);
   for (const lesson of lessons) assert.ok(levels.some(level=>level.id===lesson.level),lesson.id);
 });

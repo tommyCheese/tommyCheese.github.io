@@ -79,6 +79,7 @@ export function extendLessonFlows(lessons, makeShell) {
     if (goal?.type === 'absent') {
       const path = resolve(goal.path); const node = initial.state.fs[path];
       if (node?.type === 'dir') {
+        before.length = 0; reuse.delete('mkdir');
         const obsolete = base + '/obsolete';
         lesson.seed = { ...lesson.seed, dirs:[...(lesson.seed?.dirs || []), obsolete] };
         lesson.flowAssets = [...(lesson.flowAssets || []), obsolete];

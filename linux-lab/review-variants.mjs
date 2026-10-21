@@ -1,8 +1,8 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { createReviewLesson } from './review-exercises.mjs?v=20261020-judging-1';
+import { createReviewLesson } from './review-exercises.mjs?v=20261021-prune-lessons-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
-import { clarifyGoalLabels } from './task-copy.mjs';
+import { createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
+import { clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
 
 const HOME = '/home/learner';
 const quote = value => '"' + value.replaceAll('"', '\\"') + '"';
@@ -32,9 +32,9 @@ export function createReviewVariant(source, variant, round = 0, translate = valu
     file('result.txt',text),read('result.txt',text),...extraGoals],extra);
   const numbers = [n*10,2,n,10,2,-n], log = rows(Array.from({length:n+3},(_,i)=>i%3===0 ? 'ERROR job-'+i : 'INFO job-'+i));
   switch(source.id) {
-    case 'where-am-i': case 'enter-projects': case 'success-chain': {
+    case 'where-am-i': case 'enter-projects': {
       const start = mode===0 ? HOME : HOME+'/staging';
-      const end = HOME+'/'+(source.id==='enter-projects'?'projects/'+target:dir+'/'+(source.id==='success-chain'?'release':target));
+      const end = HOME+'/'+(source.id==='enter-projects'?'projects/'+target:dir+'/'+target);
       const relative=end.slice(HOME.length+1);
       task=deliver({},['pwd','cd '+quote(mode===0 ? relative : mode===1 ? '../'+relative : end),'pwd'],[
         {...output(start),label:translate('输出出发位置的完整路径')},cwd(end),{...output(end),label:translate('切换目录后，输出新位置的完整路径')}],{cwd:start,dirs:['staging',relative,dir+'/other']});
@@ -55,7 +55,7 @@ export function createReviewVariant(source, variant, round = 0, translate = valu
       if(mode===2) task.solution[1]=command+(hidden?' -a':'')+' '+dir;
       principle='核对目标目录，别把同名文件的不同位置混在一起。'; break;
     }
-    case 'create-workspace': case 'new-readme': case 'starter-delivery': case 'batch-arguments': {
+    case 'create-workspace': case 'new-readme': {
       const paths=[dir+'/'+target+'/README.txt',dir+'/team notes/README.txt'];
       const dirs=paths.map(path=>path.slice(0,path.lastIndexOf('/')));
       const create=source.command==='mkdir' ? ['mkdir -p '+dirs.map(quote).join(' '),...paths.map(path=>'touch '+quote(path))]
@@ -64,8 +64,8 @@ export function createReviewVariant(source, variant, round = 0, translate = valu
         [...paths.map(path=>file(path,'')),keep(dir+'/keep.txt',batch+'\n'),{type:'output',includes:'README.txt',code:0,label:'在目录列表中确认 README.txt'}],source.command==='mkdir'?{}:{dirs});
       principle='带空格的路径需要作为一个完整参数传入。'; break;
     }
-    case 'copy-note': case 'rename-note': case 'move-download': case 'recursive-backup': case 'copy-project': {
-      const moving=source.command==='mv', recursive=['recursive-backup','copy-project'].includes(source.id);
+    case 'copy-note': case 'rename-note': case 'move-download': case 'copy-project': {
+      const moving=source.command==='mv', recursive=source.id==='copy-project';
       const input=dir+'/candidate '+(mode===1?'b':'a')+'.txt', other=dir+'/candidate '+(mode===1?'a':'b')+'.txt', dest='release/final.txt';
       const text=batch+' approved\n', draft=batch+' draft\n';
       if(recursive) {

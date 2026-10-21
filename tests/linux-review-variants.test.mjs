@@ -107,7 +107,6 @@ test('new conditions still fulfil the promise in the unchanged lesson title',()=
   for(const round of [0,1,2]) {
     const parent=createReviewVariant(lesson('parent-directory'),23,round);
     assert.equal(parent.goals.find(g=>g.type==='cwd').path,'/home/learner');
-    assert.match(createReviewVariant(lesson('success-chain'),23,round).goals.find(g=>g.type==='cwd').path,/\/release$/);
     const head=createReviewVariant(lesson('preview-log'),23,round);
     assert.ok(head.goals.some(g=>g.type==='output'&&g.exact===head.seed.files['batch.log'].split('\n').slice(0,2).join('\n')));
     const tail=createReviewVariant(lesson('latest-error'),23,round);

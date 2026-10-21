@@ -10,12 +10,22 @@ test('comparison uses the shortest supplied verified reference and counts input 
   const choices=[{command:'pwd\ncd projects\npwd'},{command:'pwd\ncd projects && pwd'}];
   const comparison=compareSolutions(['ls','pwd','cd projects && pwd'],choices);
   assert.equal(comparison.reference.command,choices[1].command);
-  assert.match(comparison.message,/多用了 1 行/);
+  assert.match(comparison.message,/观察、查阅和核对/);
   assert.deepEqual(choices.map(choice=>choice.command),['pwd\ncd projects\npwd','pwd\ncd projects && pwd']);
   assert.match(compareSolutions(['pwd','cd projects && pwd'],choices).message,/一致/);
-  assert.match(compareSolutions(['pwd && cd projects && pwd'],choices).message,/少用了 1 行/);
+  assert.equal(compareSolutions(['pwd && cd projects && pwd'],choices).message,comparison.message);
   assert.match(compareSolutions(Array(200).fill('ls'),choices).message,/最近 200/);
   assert.equal(compareSolutions(['pwd'],[]).reference,null);
+});
+test('checking deletion targets before rm is supported without treating extra input as inferior',()=>{
+  const lesson=lessons.find(item=>item.id==='cleanup-temp'), shell=createLessonShell(Shell,seedState,lesson);
+  const history=['ls downloads',...lesson.solution];
+  for(const command of history) assert.equal(shell.execute(command).code,0);
+  assert.ok(evaluate(lesson.goals,shell.state).every(goal=>goal.done));
+  const comparison=compareSolutions(history,[{command:lesson.solution.join('\n')}]);
+  assert.doesNotMatch(comparison.message,/多用了|少用了|多余|合并/);
+  assert.match(comparison.message,/目标.*完成|完成.*目标/);
+  assert.doesNotMatch(methodInsights(history,lesson.solution).join(''),/额外|多余/);
 });
 test('hints identify misplaced files, remaining content and permissions from actual state',()=>{
   const state=seedState(), lesson={command:'touch',reviewCommands:['ls'],hints:['','more','solution']};

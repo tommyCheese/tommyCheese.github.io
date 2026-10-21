@@ -6,6 +6,24 @@ import {lessons,manuals,createLessonShell} from '../linux-lab/curriculum.mjs';
 import {Shell,seedState,evaluate,HOME} from '../linux-lab/shell.mjs';
 import {validState,validateBackup} from '../linux-lab/backup.mjs';
 const bosses=bossChallenges(lessons);
+test('file cleanup Boss teaches explicit rm paths while keeping find as an optional approach',()=>{
+  for(const boss of bosses.filter(item=>item.chapter==='files')) {
+    const source=createBossLesson(boss,boss.prerequisites[0]);
+    assert.ok(source.solution.includes('rm staging/a.tmp staging/sub/b.tmp'),boss.id);
+    assert.ok(source.solution.every(command=>!command.startsWith('find ')),boss.id);
+    assert.match(source.hints[2],/也可以使用 find/);
+    for(const variant of [23,871]) {
+      const initial=createLessonShell(Shell,seedState,source);
+      const varied=varyExercise(source,initial.state,variant),shell=new Shell(varied.state,manuals);
+      let result;
+      for(const command of varied.lesson.solution) {
+        const optional=command.startsWith('rm ')&&command.includes('.tmp') ? 'find staging -maxdepth 2 -type f -name "*.tmp" -delete' : command;
+        result=shell.execute(optional);assert.equal(result.code,0,boss.id+': '+optional);
+      }
+      assert.ok(evaluate(varied.lesson.goals,shell.state,result).every(goal=>goal.done),boss.id);
+    }
+  }
+});
 test('Boss answer backups retain separate tiers and reject malformed answer records',()=>{
   const ids=new Set(lessons.map(item=>item.id)), names=new Set(manuals.map(item=>item.name));
   const data={version:1,completed:[],favorites:[],bossAnswers:{
