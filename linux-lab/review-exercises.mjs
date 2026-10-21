@@ -1,7 +1,7 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { createLessonShell } from './curriculum.mjs?v=20261020-judging-1';
+import { createLessonShell } from './curriculum.mjs?v=20261021-prune-lessons-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { clarifyGoalLabels } from './task-copy.mjs';
+import { clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
 // Variants keep the same objective skill ID; filenames, data and deliverables change.
 // Supporting commands are not credited as separate skills without their own assessment.
 const output = (label, exact, requiresPath) => ({type:'output',label,exact,code:0,...(requiresPath ? {requiresPath} : {})});

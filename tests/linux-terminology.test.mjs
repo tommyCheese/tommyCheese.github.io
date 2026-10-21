@@ -39,9 +39,10 @@ test('each concept is introduced only at its first lesson in either learning rou
   for(const course of [lessons,starterRoute.map(id=>lessons.find(l=>l.id===id))]) {
     const seen=new Set();
     for(const lesson of course) {
-      const expected=lessonTerms(lesson).filter(term=>!seen.has(term.id));
+      const relevant=lessonTerms(lesson).filter(term=>term.id!=='stream'||lesson.id==='write-note');
+      const expected=relevant.filter(term=>!seen.has(term.id));
       assert.deepEqual(lessonIntroduction(lesson,{course}).terms,expected,lesson.id);
-      for(const term of lessonTerms(lesson)) seen.add(term.id);
+      for(const term of relevant) seen.add(term.id);
     }
     const first=course[0],before=lessonIntroduction(first,{course}).terms;
     lessonIntroduction(course.at(-1),{course});
@@ -53,6 +54,18 @@ test('each concept is introduced only at its first lesson in either learning rou
   assert.ok(introIds('write-note').includes('overwrite'));
   assert.ok(introIds('append-note').includes('append'));
   assert.ok(!introIds('append-note').includes('stream'));
+});
+test('saving a sentence introduces stdin, stdout and stderr in both learning routes',()=>{
+  for(const course of [lessons,starterRoute.map(id=>lessons.find(lesson=>lesson.id===id))]) {
+    const lesson=course.find(item=>item.id==='write-note');
+    const stream=lessonIntroduction(lesson,{course}).terms.find(term=>term.id==='stream');
+    assert.ok(stream,'standard streams belong in the redirection lesson');
+    for(const name of ['stdin','stdout','stderr']) assert.ok(stream.description.includes(name),name);
+    assert.doesNotMatch(stream.description,/strerr/);
+    for(const other of course.filter(item=>item.id!=='write-note')) {
+      assert.ok(!lessonIntroduction(other,{course}).terms.some(term=>term.id==='stream'),other.id);
+    }
+  }
 });
 test('review and Boss introductions do not repeat course definitions',()=>{
   for(const lesson of lessons) {

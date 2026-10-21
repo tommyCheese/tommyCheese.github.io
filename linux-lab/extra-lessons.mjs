@@ -31,9 +31,7 @@ export function addExtraLessons(single, G, lessons) {
   add('master','system','memory-pressure','读取虚拟内存统计快照','vmstat','vmstat',inc('vmstat','输出内存、交换和 CPU 列','si so bi bo'),{},'r/b 是运行与阻塞进程数，si/so 是交换读写，wa 是 I/O 等待；这里提供固定快照。');
   add('advanced','system','kernel-messages','确认内核识别了文件系统','dmesg','dmesg',inc('dmesg','找到 EXT4 挂载消息','EXT4-fs (sda1): mounted filesystem'));
   add('master','navigation','resolve-link-chain','解析链接链的最终路径','realpath','realpath first-link',out('realpath','输出笔记的真实路径','/home/learner/projects/notes.txt'),{links:{'second-link':'projects/notes.txt','first-link':'second-link'}},'符号链接可以指向另一个链接。路径解析需要继续跟随到最终目标。');
-  add('advanced','files','recursive-backup','保存多层目录副本','cp','cp -r bundle bundle-backup',[G.file('副本包含嵌套配置','bundle-backup/config/app.conf','port=8080\n')],{files:{'bundle/config/app.conf':'port=8080\n'}});
   add('master','files','precise-temp-cleanup','只删除两层以内的临时文件','find','find staging -maxdepth 2 -name "*.tmp" -type f -delete',[G.absent('删除 staging/a.tmp','staging/a.tmp'),G.absent('删除 staging/sub/b.tmp','staging/sub/b.tmp'),G.file('保留更深的临时文件','staging/sub/deep/c.tmp','keep\n'),G.file('保留正式文件','staging/main.txt','keep\n')],{files:{'staging/a.tmp':'temp\n','staging/sub/b.tmp':'temp\n','staging/sub/deep/c.tmp':'keep\n','staging/main.txt':'keep\n'}});
-  add('master','shell','batch-arguments','从输入批量创建交付文件','xargs','xargs touch < filenames.txt',[G.file('创建 a.txt','a.txt',''),G.file('创建 b.txt','b.txt','')],{files:{'filenames.txt':'a.txt b.txt\n'}},'重定向提供文件名清单，xargs 将输入变成 touch 的参数。');
   add('advanced','shell','step-sequence','生成逗号分隔的奇数序列','seq','seq -s , 1 2 9',out('seq','输出 1,3,5,7,9','1,3,5,7,9'));
   add('master','permissions','remove-global-write','从整棵目录移除其他用户写权限','chmod','chmod -R o-w shared',[G.mode('shared 权限为 775','shared','775'),G.mode('note.txt 权限为 664','shared/note.txt','664')],{files:{'shared/note.txt':'note\n'},setup:['chmod 777 shared','chmod 666 shared/note.txt']},'o-w 只移除其他用户的写权限，保留其余权限位；-R 遍历目录内容。');
   add('advanced','permissions','recursive-owner','统一目录所有者','chown','chown -R root shared',[{type:'owner',label:'目录归 root',path:'shared',value:'root'},{type:'owner',label:'文件归 root',path:'shared/note.txt',value:'root'}],{files:{'shared/note.txt':'note\n'}});
@@ -44,6 +42,5 @@ export function addExtraLessons(single, G, lessons) {
   add('common','services','list-installed','查询已安装软件包','apt','apt list --installed',inc('apt','找到 coreutils','coreutils/stable installed'));
   add('common','services','check-service-state','确认服务是否运行','systemctl','systemctl is-active nginx',out('systemctl','输出 active','active'),{services:{nginx:{active:true,enabled:false}}});
   add('master','services','restart-enabled-service','重启已启用但停止的服务','systemctl','systemctl restart nginx',[G.service('nginx 运行中','active',true),G.service('保留开机启动','enabled',true)],{services:{nginx:{active:false,enabled:true}}},'重启控制当前运行状态，不改变开机启动设置。真实排查还应复核日志和配置。');
-  add('common','missions','starter-delivery','创建一份交接文件','touch','touch handoff.txt',[G.file('交接文件已创建','handoff.txt','')]);
   add('master','missions','name-intersection-report','将两组成员的交集保存为报告','comm','comm -12 dev.txt ops.txt > shared-members.txt',[G.file('报告只包含 bob','shared-members.txt','bob\n')],{files:{'dev.txt':'alice\nbob\n','ops.txt':'bob\ncarol\n'}},'每份名单已排序。隐藏独有列，将共同成员重定向到报告文件。');
 }

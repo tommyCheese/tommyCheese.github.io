@@ -101,7 +101,7 @@ test('Boss unlock requires every ordinary lesson in its topic',async()=>{
   boss.prerequisites.forEach(id=>other.add(id)); assert.equal(bossUnlocked(boss,other),true);
   other.delete(boss.prerequisites[0]); assert.equal(bossUnlocked(boss,other),false);
   assert.equal(new Set(bosses.map(item=>item.id)).size,bosses.length);
-  assert.ok(bosses.every(item=>item.prerequisites.every(id=>lessons.some(task=>task.id===id&&task.level===item.level&&task.chapter===item.chapter))));
+  assert.ok(bosses.every(item=>item.prerequisites.every(id=>lessons.some(task=>task.id===id&&task.level===item.level&&(task.chapter===item.chapter||item.chapter==='missions')))));
 });
 test('Boss completion and active challenge metadata survive backup',async()=>{
   const source=lessons[0], shell=createLessonShell(Shell,seedState,source);
@@ -110,4 +110,13 @@ test('Boss completion and active challenge metadata survive backup',async()=>{
   assert.deepEqual(validateBackup(data,ids,names).bossCompleted,['common/navigation']);
   assert.throws(()=>validateBackup({...data,bossCompleted:['bogus/level']},ids,names));
   assert.throws(()=>validateBackup({...data,session:{...data.session,exercise:{...data.session.exercise,boss:'bogus/level'}}},ids,names));
+});
+
+test('common capstone remains available after duplicate standalone missions are removed',async()=>{
+  const {bossChallenges,bossUnlocked}=await import('../linux-lab/learning.mjs');
+  const bosses=bossChallenges(lessons),boss=bosses.find(item=>item.id==='common/missions');
+  assert.equal(bosses.length,30);
+  assert.deepEqual(boss.prerequisites,lessons.filter(item=>item.level==='common').map(item=>item.id));
+  assert.equal(bossUnlocked(boss,new Set()),false);
+  assert.equal(bossUnlocked(boss,new Set(boss.prerequisites)),true);
 });

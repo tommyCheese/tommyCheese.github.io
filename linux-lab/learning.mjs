@@ -146,13 +146,18 @@ export function validExercise(exercise, ids) {
     && Number.isInteger(exercise.index) && exercise.index >= 0 && exercise.index < exercise.queue.length;
 }
 
-// Complete the entire topic before its integrated Boss challenge.
+// Complete the topic before its Boss; a capstone without standalone lessons
+// instead follows all retained lessons in that tier.
 export function bossChallenges(course) {
   const groups = new Map();
   for (const item of course) {
     const id = item.level + '/' + item.chapter;
     if (!groups.has(id)) groups.set(id, {id, level:item.level, chapter:item.chapter, lessons:[], prerequisites:[]});
     groups.get(id).lessons.push(item.id);
+  }
+  for (const level of new Set(course.map(item => item.level))) {
+    const id = level + '/missions';
+    if (!groups.has(id)) groups.set(id, {id, level, chapter:'missions', lessons:course.filter(item => item.level === level).map(item => item.id)});
   }
   return [...groups.values()].map(item => ({...item, prerequisites:[...item.lessons]}));
 }

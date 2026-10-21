@@ -1,10 +1,10 @@
 import { prepareJudging } from './judging.mjs?v=20261020-judging-1';
-import { clarifyTask, clarifyGoalLabels } from './task-copy.mjs';
-import { extendLessonFlows } from './lesson-flow.mjs?v=20261020-judging-1';
+import { clarifyTask, clarifyGoalLabels } from './task-copy.mjs?v=20261021-prune-lessons-1';
+import { extendLessonFlows } from './lesson-flow.mjs?v=20261021-solution-feedback-1';
 import { Shell, seedState } from './shell.mjs?v=20261020-judging-1';
-import { strengthenLessons } from './difficulty.mjs';
+import { strengthenLessons } from './difficulty.mjs?v=20261021-prune-lessons-1';
 import { extraEntries, levels, commandLevel } from './catalogue.mjs';
-import { addExtraLessons } from './extra-lessons.mjs';
+import { addExtraLessons } from './extra-lessons.mjs?v=20261021-prune-lessons-1';
 export { levels };
 export const chapters = [
   ['navigation', '01', '认识工作区', '从目录和路径开始，建立终端里的方向感。'],
@@ -188,7 +188,6 @@ task('shell','append-note','继续补充笔记','notes.txt 已有 first 一行�
 task('shell','save-errors','保存筛选后的错误','把 app.log 中两条 ERROR 记录保存到 errors.txt，原日志保持不变。','管道把前一条命令的输出传给下一条；重定向把输出交给文件。','grep tee',[G.file('errors.txt 只包含错误行','errors.txt','ERROR timeout\nERROR disk full\n'),G.file('原始日志仍保留四行','logs/app.log','INFO server started\nERROR timeout\nINFO request complete\nERROR disk full\n')],'grep ERROR logs/app.log > errors.txt','可直接重定向，也可用 tee 同时显示和保存。');
 task('shell','project-variable','设置项目环境变量','把 PROJECT 环境变量设为 cheese，让后续命令能读取它。','export 把变量加入环境。$PROJECT 会被 Shell 替换为变量值。','export printenv',[{ type:'env',label:'PROJECT 的值为 cheese',name:'PROJECT',value:'cheese' }],'export PROJECT=cheese','变量赋值的等号两边不要加空格。');
 task('shell','batch-files','把名单转换成文件','输入里列出了 a.txt 与 b.txt。把它们转换为 touch 的参数并创建两份空文件。','xargs 可以把标准输入变成下一条命令的参数；本节只处理不含空格的名称。','printf xargs touch',[G.file('创建 a.txt','a.txt',''),G.file('创建 b.txt','b.txt','')],'printf "a.txt b.txt" | xargs touch','让 xargs 调用 touch。');
-task('shell','success-chain','成功后再进入目录','创建 projects/release 目录，并在创建成功后进入它。','&& 仅在前一条命令成功时执行后一条。; 则不检查上一条是否成功。','mkdir cd',[G.dir('release 目录存在','projects/release'),G.cwd('进入 release 目录','projects/release')],'mkdir -p projects/release && cd projects/release','把目录创建和切换连接起来。');
 task('permissions','inspect-mode','查清脚本权限','查看 deploy.sh 的属性，确认它当前的权限。','stat 可展示权限；ls -l 可以用 rwx 形式查看。','stat ls',[G.includes('输出当前权限数值 644','644','stat')],'stat deploy.sh','stat 的 Access 字段会显示权限数值。');
 task('permissions','make-executable','让部署脚本可执行','为 deploy.sh 的所有者增加执行权限，最终权限为 744。','权限按所有者、组、其他用户分成三组。u+x 为所有者增加执行位。','chmod',[G.mode('deploy.sh 权限为 744','deploy.sh','744')],'chmod u+x deploy.sh','保留其他用户的原始权限。');
 task('permissions','private-file','保护私密配置','把 secret.txt 的权限设为 600，只有所有者可读写。','每组权限数值相加：读 4、写 2、执行 1。','chmod',[G.mode('secret.txt 权限为 600','secret.txt','600')],'chmod 600 secret.txt','所有者为 4+2，其他两组为 0。',{ files: { 'secret.txt': 'TOKEN=demo\n' } });
@@ -224,35 +223,23 @@ task('services','boot-web','让网站开机启动','设置 nginx 开机启动。
 task('services','service-error','找出服务最后的错误','只读取 nginx 服务日志的最后一行。','journalctl -u 选择服务，-n 选择末尾行数。','journalctl',[G.output('只输出 upstream 错误','ERROR upstream timeout','journalctl')],'journalctl -u nginx -n 1','限定服务和行数。');
 task('services','install-client','补上缺失的 HTTP 工具','把 curl 安装到教学机器的软件包列表。','Debian/Ubuntu 使用 apt。真实安装前通常先 apt update。','apt sudo',[{ type:'package',label:'curl 已安装',name:'curl' }],'sudo apt install curl','软件包操作只改变教学环境状态。');
 task('services','remove-package','移除不再需要的工具','教学机器装了 wget，当前无需保留它，请移除。','apt remove 移除软件包，和删除下载文件不是同一件事。','apt',[{ type:'package',label:'wget 已移除',name:'wget',present:false }],'sudo apt remove wget','选择 remove 动作。',{ packages:['bash','coreutils','wget'] });
-task('missions','incident-report','留下可交接的故障记录','把 app.log 的错误行保存到 reports/errors.log，并保留原日志。','把目录准备、筛选和保存连成一条工作流。','mkdir grep tee',[G.file('故障报告只含错误','reports/errors.log','ERROR timeout\nERROR disk full\n'),G.file('原日志保留','logs/app.log')],'mkdir -p reports\ngrep ERROR logs/app.log | tee reports/errors.log','先创建 reports，再把筛选结果写入目标。');
-task('missions','release-ready','准备发布目录','创建 release，复制 deploy.sh 进去，并将副本权限设为 755。原脚本保留。','交付文件需要正确内容、位置和权限。','mkdir cp chmod',[G.file('发布脚本内容正确','release/deploy.sh','#!/bin/sh\necho deploy\n'),G.mode('发布脚本权限为 755','release/deploy.sh','755'),G.file('原脚本保留','deploy.sh')],'mkdir release\ncp deploy.sh release/\nchmod 755 release/deploy.sh','按创建目录、复制、授权的顺序完成。');
 task('missions','clean-workspace','清理日志旁的临时文件','logs 下新增了两份 .tmp 文件。删掉它们，保留 app.log。','通配符适合按后缀批量选择。执行前可以先 ls 查看匹配结果。','ls rm find',[G.absent('移除 cache.tmp','logs/cache.tmp'),G.absent('移除 session.tmp','logs/session.tmp'),G.file('保留 app.log','logs/app.log')],'rm logs/*.tmp','只匹配 .tmp 后缀。',{ files:{'logs/cache.tmp':'cache\n','logs/session.tmp':'session\n'} });
-task('missions','developer-list','制作可复用的开发者名单','从 users.csv 中筛出 developer 记录，提取姓名并排序，保存到 developers.txt。','筛选记录、提取字段、排序、保存结果，分别交给擅长的工具。','grep cut awk sort',[G.file('名单包含 alice 与 carol','developers.txt','alice\ncarol\n')],'grep developer data/users.csv | cut -d , -f 1 | sort > developers.txt','不要把表头或 admin 放进名单。');
-task('missions','deploy-service','完成一次服务交付','下载 config.json，启动 nginx 并设置开机启动，最后备份配置为 config.tar.gz。','每个目标都检查环境结果，可以用你自己的命令组合完成。','curl wget systemctl tar',[G.file('下载正确配置','config.json','{"port":8080}\n'),G.service('nginx 运行中','active',true),G.service('nginx 开机启动','enabled',true),{ type:'archive',label:'归档包含 config.json',path:'config.tar.gz',entries:['config.json'] }],'curl -o config.json https://example.com/config.json\nsudo systemctl start nginx\nsudo systemctl enable nginx\ntar -czf config.tar.gz config.json','把四项要求分开完成，逐项观察目标打勾。');
 
 // Every level focuses on one command. Scenarios requiring several tools are
 // broken into successive steps, each with its own prepared starting state.
 function revise(id, changes) { Object.assign(lessons.find(item => item.id === id), changes); }
 revise('unique-names', { solution: ['sort -u data/names.txt'], theory: 'sort -u 一次完成排序与去重。uniq 的相邻去重会在单独的关卡中练习。' });
 revise('uppercase', { commands: ['tr'], context: 'greeting.txt 中写着 hello linux。只用 tr 把内容转换为大写输出。', solution: ['tr a-z A-Z < greeting.txt'], seed: { files: { 'greeting.txt': 'hello linux\n' } }, theory: 'tr 从标准输入读取字符。< greeting.txt 把文件送入标准输入，不需要额外命令。' });
-revise('success-chain', { title: '进入发布目录', commands: ['cd'], context: '同事已经准备好 projects/release。进入这个目录，开始下一项工作。', theory: '当前目录会影响后续相对路径。只需切换位置，不必重新创建目录。', goals: [G.cwd('进入 ~/projects/release', 'projects/release')], solution: ['cd projects/release'], seed: { dirs: ['projects/release'] } });
 revise('batch-files', { commands: ['xargs'], context: 'file-list.txt 中有 a.txt 和 b.txt 两个名称。用 xargs 把它们作为 touch 的参数，批量创建文件。', solution: ['xargs touch < file-list.txt'], seed: { files: { 'file-list.txt': 'a.txt b.txt\n' } }, theory: 'xargs 把输入变成命令参数。touch 是它调用的动作，< 负责读取名单。' });
 revise('save-errors', { commands: ['grep'], solution: ['grep ERROR logs/app.log > errors.txt'] });
 revise('clean-workspace', { commands: ['rm'] });
 revise('private-default', { commands: ['umask'], title: '先设置默认权限', context: '接下来要保存私密文件。先把新文件权限掩码设置为 077。', goals: [{ type: 'setting', name: 'umask', value: '077', label: '新文件权限掩码为 077' }], solution: ['umask 077'] });
 revise('restore-archive', { commands: ['tar'], context: '同事已创建 restored 目录。把 project.tar.gz 的内容解包进去，保留归档。', solution: ['tar -xf project.tar.gz -C restored'], seed: { dirs: ['restored'], setup: ['tar -cf project.tar.gz projects'] } });
-revise('incident-report', { commands: ['grep'], context: 'reports 目录已准备好。把 app.log 的错误行保存为 reports/errors.log。', solution: ['grep ERROR logs/app.log > reports/errors.log'], seed: { dirs: ['reports'] } });
-revise('release-ready', { commands: ['chmod'], title: '为发布脚本授权', context: '脚本已复制到 release/deploy.sh。只修改这个副本的权限为 755。', solution: ['chmod 755 release/deploy.sh'], seed: { files: { 'release/deploy.sh': '#!/bin/sh\necho deploy\n' } } });
-revise('developer-list', { commands: ['grep'], title: '名单挑战 ① 筛选记录', context: '先从 users.csv 中筛出 developer 记录，保存到 developer-rows.csv。后续关卡再提取姓名。', theory: '把复杂目标拆开，这一关只负责选择记录。', goals: [G.file('保存两条 developer 记录', 'developer-rows.csv', 'alice,developer\ncarol,developer\n')], solution: ['grep developer data/users.csv > developer-rows.csv'] });
-revise('deploy-service', { commands: ['curl'], title: '交付挑战 ① 下载配置', context: '先下载教学服务的 config.json。启动、开机启动与备份将在后续关卡完成。', theory: '这一关只练 curl，把 HTTP 响应保存到指定文件。', goals: [G.file('config.json 内容正确', 'config.json', '{"port":8080}\n')], solution: ['curl -o config.json https://example.com/config.json'] });
 for (const lesson of lessons) {
   lesson.command = lesson.commands[0]; lesson.commands = [lesson.command];
   lesson.solution = lesson.solution.map(line => lesson.command !== 'sudo' ? line.replace(/^sudo /, '') : line);
   lesson.hints = [lesson.hints[0], `本关练习 ${lesson.command}。输入 man ${lesson.command}，再对照任务目标选择参数。`, '参考解法：\n' + lesson.solution.join('\n')];
 }
-lessons.find(item => item.id === 'success-chain').hints[0] = '目录已经存在，用 cd 进入即可。';
-lessons.find(item => item.id === 'release-ready').hints[0] = '只需要修改发布副本的权限。';
-lessons.find(item => item.id === 'incident-report').hints[0] = 'reports 已存在，直接筛选并保存结果。';
 function single(chapter, id, title, context, theory, command, targets, solution, tip, seed = {}) {
   task(chapter, id, title, context, theory, command, targets, solution, tip, seed);
   const item = lessons.at(-1); item.command = command;
@@ -260,11 +247,6 @@ function single(chapter, id, title, context, theory, command, targets, solution,
 single('text','adjacent-duplicates','合并相邻重复名字','sorted-names.txt 已经排好序。用 uniq 去掉相邻重复名字。','uniq 只处理相邻重复行，本关的输入已排序。','uniq',[G.output('输出唯一名单','alice\nbob\ncarol','uniq')],'uniq sorted-names.txt','无需再次排序。',{ files:{'sorted-names.txt':'alice\nbob\nbob\ncarol\n'} });
 single('shell','tee-report','一边显示，一边保存','errors-source.txt 是已经筛好的错误。用 tee 显示它，同时保存为 errors-copy.txt。','tee 把标准输入同时送到屏幕与文件。< 可直接提供文件输入。','tee',[G.file('保存错误副本','errors-copy.txt','ERROR timeout\nERROR disk full\n'),G.output('终端仍显示错误','ERROR timeout\nERROR disk full','tee')],'tee errors-copy.txt < errors-source.txt','把保存路径作为 tee 的参数。',{files:{'errors-source.txt':'ERROR timeout\nERROR disk full\n'}});
 single('permissions','sudo-directory','试用管理员命令入口','在教学 /srv 下创建 web 目录。这一关练习 sudo 的调用形式。','sudo 是命令前缀，后面跟要执行的动作。沙盒不模拟密码和真实权限拦截。','sudo',[G.dir('/srv/web 已创建','/srv/web')],'sudo mkdir /srv/web','sudo 后面使用目录创建动作。');
-single('missions','developer-column','名单挑战 ② 提取姓名','上一阶段筛好的数据放在 developer-rows.csv。用 cut 提取第一列，保存为 names-unsorted.txt。','本关只负责字段提取，不再筛选记录。','cut',[G.file('保存姓名列','names-unsorted.txt','carol\nalice\n')],'cut -d , -f 1 developer-rows.csv > names-unsorted.txt','分隔符是逗号。',{files:{'developer-rows.csv':'carol,developer\nalice,developer\n'}});
-single('missions','developer-sort','名单挑战 ③ 整理顺序','names-unsorted.txt 已保存姓名。用 sort 排序，写入最终的 developers.txt。','一次只完成一项动作，三个小关就组成了名单处理流程。','sort',[G.file('最终名单排序正确','developers.txt','alice\ncarol\n')],'sort names-unsorted.txt > developers.txt','使用输出重定向保存排序结果。',{files:{'names-unsorted.txt':'carol\nalice\n'}});
-single('missions','delivery-start','交付挑战 ② 启动服务','配置已经准备好。用 systemctl 启动教学 nginx。','start 负责当前运行状态。','systemctl',[G.service('nginx 正在运行','active',true)],'systemctl start nginx','start 启动服务。');
-single('missions','delivery-enable','交付挑战 ③ 开机启动','nginx 已经运行。用 systemctl 设置它随机器启动。','enable 管理开机启动，不代替 start。','systemctl',[G.service('nginx 开机启动','enabled',true)],'systemctl enable nginx','使用 enable 动作。',{services:{nginx:{active:true,enabled:false}}});
-single('missions','delivery-archive','交付挑战 ④ 备份配置','config.json 已经下载。只用 tar 制作 config.tar.gz。','最后一个小关只负责配置归档。','tar',[{type:'archive',label:'归档包含 config.json',path:'config.tar.gz',entries:['config.json']}],'tar -czf config.tar.gz config.json','c 创建，z 压缩标记，f 后写归档名。',{files:{'config.json':'{"port":8080}\n'}});
 single('navigation','lookup-copy','查阅复制目录的参数','要复制整个项目目录，但忘记了参数。请在终端查询 cp 手册，找到目录复制选项；输出对应说明即可通关。','man 命令名 用于查询用法。本关练习查手册。','man',[G.includes('在终端查看 cp 手册中的“递归复制目录”说明','递归复制目录','man')],'man cp','把 cp 作为 man 的查询对象。');
 single('navigation','available-tools','你的工具箱里有什么','用 help 查看沙盒支持的命令列表。','教学环境的 help 展示工具箱，真实 Bash 的 help 主要查询内建命令。','help',[G.includes('输出可用命令列表','可用命令：','help')],'help','直接输入 help 即可。');
 single('files','identify-file','这是什么文件？','查看 deploy.sh 的文件类型。','file 可以辨别类型；教学环境按虚拟文件模型判断。','file',[G.includes('输出 UTF-8 文本类型','UTF-8 text','file')],'file deploy.sh','命令后跟需要识别的文件。');

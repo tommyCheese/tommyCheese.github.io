@@ -21,6 +21,14 @@ test('the starter route introduces tools before combining them across four stage
   for (const [before,after] of [['lookup-copy','copy-note'],['create-workspace','copy-note'],['write-note','append-note'],['filter-errors','count-lines'],['preview-log','numeric-sort'],['filter-errors','csv-column']]) assert.ok(starterRoute.indexOf(before)<starterRoute.indexOf(after));
   assert.ok(chapters.findIndex(item=>item.id==='shell')<chapters.findIndex(item=>item.id==='text'));
 });
+test('removing empty directories does not ask learners to create an already seeded report directory',()=>{
+  const lesson=lessons.find(item=>item.id==='remove-empty'), shell=createLessonShell(Shell,seedState,lesson);
+  assert.ok(shell.state.fs[HOME+'/reports/remove-empty/obsolete']);
+  assert.ok(lesson.solution.every(command=>!command.startsWith('mkdir')));
+  assert.ok(!lesson.reviewCommands.includes('mkdir'));
+  for(const command of lesson.solution) assert.equal(shell.execute(command).code,0);
+  assert.ok(evaluate(lesson.goals,shell.state).every(goal=>goal.done));
+});
 test('a full observation alone does not pass: the focused report must exclude irrelevant records',()=>{
   const lesson=lessons.find(item=>item.id==='process-list'),shell=createLessonShell(Shell,seedState,lesson);
   for (const line of lesson.solution) shell.execute(line);

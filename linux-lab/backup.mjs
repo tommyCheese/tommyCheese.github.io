@@ -1,4 +1,5 @@
-import { validLearning, validExercise, validAttempt, validBossId, validAnswer } from './learning.mjs?v=20261021-boss-answers-1';
+import { validLearning, validExercise, validAttempt, validBossId, validAnswer } from './learning.mjs?v=20261021-prune-lessons-1';
+import { retireLessonProgress } from './retired-lessons.mjs';
 const object = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 100000;
 const validSources = value => value === undefined || Array.isArray(value) && value.length <= 10000 && value.every(text);
@@ -25,6 +26,7 @@ export function validHistory(history) {
 }
 export function validateBackup(data, ids, names) {
   if (!object(data) || ![1,2].includes(data.version) || !Array.isArray(data.completed) || !Array.isArray(data.favorites)) throw new Error('备份格式不匹配');
+  data = retireLessonProgress(data);
   if (data.reviewBudget !== undefined && ![180,300,600].includes(data.reviewBudget)) throw new Error('复习时长无效');
   if (data.courseRoute !== undefined && !['starter','full'].includes(data.courseRoute)) throw new Error('学习路线无效');
   if (data.bossCompleted !== undefined && (!Array.isArray(data.bossCompleted) || data.bossCompleted.length > 30 || !data.bossCompleted.every(validBossId))) throw new Error('Boss 挑战记录无效');
