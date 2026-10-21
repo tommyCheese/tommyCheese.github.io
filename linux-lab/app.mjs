@@ -4,7 +4,7 @@ import { goalReference, goalEntries } from './task-copy.mjs';
 import { setupI18n, translate, locale, catalog, loadCatalog } from './i18n.mjs?v=20261020-intro-terms-1';
 import { createContentLocalizer } from './content-i18n.mjs?v=20261020-judging-1';
 import { editTerminalLine } from './terminal-keys.mjs';
-import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261020-intro-terms-1';
+import { completionMessage, compareSolutions, stateHint, methodInsights, describeChanges, nextTransition, pipelineStages, lessonIntroduction } from './guidance.mjs?v=20261021-first-terms-1';
 import { restoreFlowAssets, restoreFlowSnapshot } from './lesson-flow.mjs?v=20261020-judging-1';
 import { starterRoute, starterPhases, starterPhase, goalDifference, explainCommand, alternativeSolutions } from './practice-support.mjs';
 import { createBossLesson } from './bosses.mjs?v=20261020-judging-1';
@@ -168,7 +168,10 @@ function showTaskGuide() {
 }
 function showLessonIntro() {
   if (mode !== 'learn' || document.querySelector('dialog:modal')) return;
-  const intro = lessonIntroduction(lesson, {review:training?.kind === 'review',boss:training?.challengeVersion === 1});
+  const intro = lessonIntroduction(lesson, {
+    review:training?.kind === 'review',boss:training?.challengeVersion === 1,
+    course:starterMode ? starterRoute.map(id=>lessons.find(item=>item.id===id)) : lessons
+  });
   $('lesson-intro-title').textContent = lesson.title;
   $('lesson-intro-category').textContent = $('task-category').textContent;
   $('lesson-intro-lead').textContent = intro.lead;
