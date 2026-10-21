@@ -5336,7 +5336,7 @@
   "临时文件与唯一名称": "Temporary files and unique names",
   "临时文件用于短期工作；唯一名称避免覆盖已有文件，模板中的 X 会由创建工具替换。": "Temporary files serve short-term work. Unique names avoid overwriting files; the creation tool replaces X characters in the template.",
   "命令历史": "Command history",
-  "命令历史记录执行过的命令文本；清屏不会清除历史，也不会撤销已经完成的操作。": "Command history records executed command text. Clearing the screen neither erases history nor undoes completed operations.",
+  "命令历史记录执行过的命令文本。": "Command history records executed command text.",
   "格式占位符": "Format placeholders",
   "格式占位符描述输出数据的形式：%s 表示字符串，%d 表示整数，\\n 表示换行。": "Format placeholders specify how data is printed: %s for a string, %d for an integer, and \\n for a newline.",
   "查找深度与文件类型": "Search depth and file types",
