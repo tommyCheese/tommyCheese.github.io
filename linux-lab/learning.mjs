@@ -13,12 +13,15 @@ function validMemory(memory) {
       && (item.elapsedDays === undefined || finite(item.elapsedDays,0,100000000))
       && (item.probability === undefined || item.probability === null || finite(item.probability,0,1)));
 }
+export function validAnswer(answer) {
+  return object(answer) && typeof answer.title === 'string' && answer.title.length <= 500
+    && Array.isArray(answer.commands) && answer.commands.length <= 200 && answer.commands.every(command => typeof command === 'string' && command.length <= 4096);
+}
 export function validLearning(data, ids) {
   return object(data) && Object.entries(data).every(([id, item]) => ids.has(id) && object(item)
     && ['attempts','passes','independent','retrievals','stage','errors','hints','solutions','lastAt','dueAt'].every(key => validTime(item[key]))
     && (item.memory === undefined || validMemory(item.memory) && item.memory.dueAt === item.dueAt)
-    && (item.lastAnswer === undefined || object(item.lastAnswer) && typeof item.lastAnswer.title === 'string' && item.lastAnswer.title.length <= 500
-      && Array.isArray(item.lastAnswer.commands) && item.lastAnswer.commands.length <= 200 && item.lastAnswer.commands.every(command => typeof command === 'string' && command.length <= 4096))
+    && (item.lastAnswer === undefined || validAnswer(item.lastAnswer))
     && (item.lastPassed === undefined || typeof item.lastPassed === 'boolean') && item.stage <= 5 && Array.isArray(item.days) && item.days.length <= 60 && item.days.every(validTime)
     && ['passed','failed','independent','hinted','solution','retry'].includes(item.lastOutcome));
 }
