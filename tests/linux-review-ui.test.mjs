@@ -4,6 +4,11 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { reviewPlan, validExercise, mastery } from '../linux-lab/learning.mjs';
 import { createTranslator } from '../linux-lab/i18n-core.mjs';
+import { lessons, manuals, createLessonShell } from '../linux-lab/curriculum.mjs';
+import { Shell, seedState, evaluate } from '../linux-lab/shell.mjs';
+import { createReviewVariant } from '../linux-lab/review-variants.mjs';
+import { alternativeSolutions } from '../linux-lab/practice-support.mjs';
+import { compareSolutions } from '../linux-lab/guidance.mjs';
 
 const source = readFileSync(new URL('../linux-lab/app.mjs', import.meta.url), 'utf8');
 const start = source.indexOf('function resumableReview()');
@@ -139,5 +144,45 @@ test('every edition removes time selection and offers a pause action',()=>{
     assert.ok(!html.includes('id="review-budget'));
     assert.equal((html.match(/id="review-start"/g)||[]).length,1);
     assert.ok(html.includes('id="review-finish"'));
+  }
+});
+
+test('review answers reveal saved input and a verified solution for the current variant only on expansion',()=>{
+  const lesson=createReviewVariant(lessons[0],23,1), initial=createLessonShell(Shell,seedState,lesson).state;
+  for (const previousAnswer of [undefined,{title:'你现在在哪里？',commands:['pwd','cd projects','pwd']}]) {
+    const nodes=new Map();let writes=0;
+    const element=(tag,textContent='',className='')=>({tag,textContent,className,children:[],open:false,hidden:false,
+      append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},
+      addEventListener(type,callback){this[type]=callback;}});
+    const $=id=>{if(!nodes.has(id))nodes.set(id,element('div'));return nodes.get(id);};
+    const context={$,element,lesson,previousAnswer,exerciseInitialState:initial,solutionCache:undefined,
+      localizeContent:value=>value,alternativeSolutions,compareSolutions,attempt:{graded:false,maxHint:0},persist(){writes++;}};
+    const start=source.indexOf('function renderReviewAnswers()');
+    vm.runInNewContext(source.slice(start,source.indexOf('function renderSolutionReview()',start)),context);
+    $('review-answers').toggle();assert.equal(nodes.has('review-answers-content'),false);assert.equal(writes,0);
+    $('review-answers').open=true;$('review-answers').toggle();
+    assert.equal(context.attempt.maxHint,3);assert.equal(writes,1);
+    const sections=$('review-answers-content').children[0].children;
+    assert.deepEqual(sections.map(section=>section.children[0].textContent),['上次答案','标准答案']);
+    assert.ok(!descendants($('review-answers-content')).some(node=>node.textContent==='你现在在哪里？'));
+    const commands=section=>descendants(section).filter(node=>node.tag==='code').map(node=>node.textContent);
+    assert.deepEqual(commands(sections[0]),previousAnswer?.commands || []);
+    if(!previousAnswer)assert.ok(descendants(sections[0]).some(node=>node.textContent.includes('暂无上次答案记录')));
+    const shell=new Shell(structuredClone(initial),manuals),outputs=new Set();let result;
+    for(const command of commands(sections[1])) {
+      result=shell.execute(command);assert.equal(result.code,0);
+      evaluate(lesson.goals,shell.state,result).forEach((goal,index)=>{if(goal.type==='output'&&goal.done)outputs.add(index);});
+    }
+    assert.ok(evaluate(lesson.goals,shell.state,result).every((goal,index)=>goal.done||goal.type==='output'&&outputs.has(index)));
+    assert.deepEqual(commands(sections[0]),previousAnswer?.commands || [],'rendering never replaces saved input with the reference');
+    $('review-answers').open=false;$('review-answers').toggle();assert.equal(writes,1);
+  }
+  for(const edition of ['','en/','ja/','ru/','zh-TW/']) {
+    const html=readFileSync(new URL('../linux-lab/'+edition+'index.html',import.meta.url),'utf8');
+    assert.match(html,/<details id="review-answers"[^>]*hidden[^>]*>/);
+    assert.ok(!/<details id="review-answers"[^>]*\bopen\b/.test(html));
+    const locale=edition.replace('/','');
+    const label=locale ? JSON.parse(readFileSync(new URL('../linux-lab/locales/'+locale+'.json',import.meta.url)))['查看上次答案'] : '查看上次答案';
+    assert.ok(html.includes('<summary>'+label+'</summary>'));
   }
 });
