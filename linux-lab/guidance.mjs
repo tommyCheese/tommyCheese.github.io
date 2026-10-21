@@ -1,4 +1,5 @@
-import { lessonTerms } from './terminology.mjs?v=20261020-intro-terms-1';
+import { introductoryTerms } from './terminology.mjs?v=20261021-first-terms-1';
+import { lessons } from './curriculum.mjs?v=20261020-judging-1';
 import { goalEntries } from './task-copy.mjs';
 import { Shell, resolve, tokenize } from './shell.mjs?v=20261020-judging-1';
 
@@ -61,7 +62,7 @@ const lessonIntroductions = {
   "inspect-http-headers": "先看信封，不急着读正文。curl -I 请求 HTTP 响应头，状态码和内容类型都在这里。",
   "precise-temp-cleanup": "同样是 .tmp，也不一定都该删。find 的路径深度、文件类型和名称条件会共同决定清理范围，先预览再动手。"
 };
-export function lessonIntroduction(lesson, { review = false, boss = false } = {}) {
+export function lessonIntroduction(lesson, { review = false, boss = false, course = lessons } = {}) {
   const genericTheory = lesson.theory === '对照目标选择参数，观察文件或输出的变化。';
   const lead = lessonIntroductions[lesson.id] || lesson.theory || introductions[lesson.command] || '';
   const knowledge = lessonIntroductions[lesson.id]
@@ -72,7 +73,7 @@ export function lessonIntroduction(lesson, { review = false, boss = false } = {}
       : review ? '回来热热手！先试着回忆这把工具怎么用，想不起来时再查介绍或手册。' : lead,
     knowledge: boss || review ? (genericTheory ? lead : lesson.theory || '') : knowledge,
     showTool: !boss,
-    terms: lessonTerms(lesson,{boss})
+    terms: introductoryTerms(lesson,course,{review,boss})
   };
 }
 

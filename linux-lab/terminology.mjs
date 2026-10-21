@@ -119,3 +119,14 @@ export function lessonTerms(lesson, {boss=false}={}) {
   }
   return [...keys].map(id=>({id,label:terminology[id][0],description:terminology[id][1]}));
 }
+
+// Ownership follows curriculum order, not the order in which a learner opens dialogs.
+export function introductoryTerms(lesson, course, {review=false,boss=false}={}) {
+  if(review || boss) return [];
+  const introduced=new Set();
+  for(const previous of course) {
+    if(previous.id===lesson.id) return lessonTerms(lesson).filter(term=>!introduced.has(term.id));
+    for(const term of lessonTerms(previous)) introduced.add(term.id);
+  }
+  return [];
+}

@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {lessonTerms,terminology} from '../linux-lab/terminology.mjs';
+import {lessonTerms,introductoryTerms,terminology} from '../linux-lab/terminology.mjs';
+import {starterRoute} from '../linux-lab/practice-support.mjs';
 import {lessonIntroduction} from '../linux-lab/guidance.mjs';
 import {lessons} from '../linux-lab/curriculum.mjs';
 import {createTranslator} from '../linux-lab/i18n-core.mjs';
@@ -25,7 +26,7 @@ test('every lesson and review gets relevant, unique definitions without changing
     const original=structuredClone(lesson),terms=lessonTerms(lesson),intro=lessonIntroduction(lesson);
     assert.ok(terms.length,source.id);
     assert.equal(new Set(terms.map(term=>term.id)).size,terms.length,source.id);
-    assert.deepEqual(intro.terms,terms);
+    assert.deepEqual(intro.terms,introductoryTerms(lesson,lessons));
     assert.ok(terms.every(term=>term.label&&term.description));
     assert.deepEqual(lesson,original);
   }
@@ -33,6 +34,32 @@ test('every lesson and review gets relevant, unique definitions without changing
   assert.ok(ids(lessons.find(l=>l.id==='append-note')).includes('append'));
   assert.ok(ids(lessons.find(l=>l.id==='csv-column')).includes('fields'));
   assert.ok(ids(lessons.find(l=>l.id==='stop-worker')).includes('signal'));
+});
+test('each concept is introduced only at its first lesson in either learning route',()=>{
+  for(const course of [lessons,starterRoute.map(id=>lessons.find(l=>l.id===id))]) {
+    const seen=new Set();
+    for(const lesson of course) {
+      const expected=lessonTerms(lesson).filter(term=>!seen.has(term.id));
+      assert.deepEqual(lessonIntroduction(lesson,{course}).terms,expected,lesson.id);
+      for(const term of lessonTerms(lesson)) seen.add(term.id);
+    }
+    const first=course[0],before=lessonIntroduction(first,{course}).terms;
+    lessonIntroduction(course.at(-1),{course});
+    assert.deepEqual(lessonIntroduction(first,{course}).terms,before,'reopening the first lesson retains its definitions');
+  }
+  const introIds=id=>lessonIntroduction(lessons.find(l=>l.id===id)).terms.map(term=>term.id);
+  assert.ok(introIds('where-am-i').includes('paths'));
+  for(const id of ['look-around','enter-projects','parent-directory','resolve-path']) assert.ok(!introIds(id).includes('paths'),id);
+  assert.ok(introIds('write-note').includes('overwrite'));
+  assert.ok(introIds('append-note').includes('append'));
+  assert.ok(!introIds('append-note').includes('stream'));
+});
+test('review and Boss introductions do not repeat course definitions',()=>{
+  for(const lesson of lessons) {
+    assert.deepEqual(lessonIntroduction(lesson,{review:true}).terms,[]);
+    for(const round of [0,1,2]) assert.deepEqual(lessonIntroduction(createReviewVariant(lesson,23,round),{review:true}).terms,[]);
+    assert.deepEqual(lessonIntroduction(lesson,{boss:true}).terms,[]);
+  }
 });
 test('Boss terminology follows its goals without disclosing reference commands',()=>{
   const terms=lessonTerms({solution:['grep ERROR log | sort > answer'],goals:[{type:'archive'},{type:'mode'}]},{boss:true});
