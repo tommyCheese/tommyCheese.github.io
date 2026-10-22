@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-10-22",
+  "updated_at": "2026-10-23",
   "items": [
+    {
+      "id": "modular-max-source-available-license",
+      "category": "ai",
+      "published_at": "2026-10-22",
+      "collected_at": "2026-10-23",
+      "source": "Modular / Phoronix",
+      "url": "https://www.modular.com/blog/max-license",
+      "image": "https://cdn.prod.website-files.com/68c9c3107effc2ea46e1a82c/6ada33a38fa22d25cecfaab5_ProductReleaseBlogPost-Option_9.1.jpeg",
+      "image_credit": "Modular · MAX source availability announcement",
+      "image_fit": "contain"
+    },
+    {
+      "id": "linux-74-uaccess-legacy-removal",
+      "category": "software",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-23",
+      "source": "Linux kernel / Phoronix",
+      "url": "https://github.com/torvalds/linux/commit/22a78a25438d246e4e951960523bee6a5155897d",
+      "image": "https://www.phoronix.net/image.php?id=2026&image=get_put_user",
+      "image_credit": "Phoronix · user access code comparison",
+      "image_fit": "contain"
+    },
+    {
+      "id": "microsoft-kls-human-directed-ai-proof",
+      "category": "science",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-23",
+      "source": "Microsoft Research / arXiv",
+      "url": "https://www.microsoft.com/en-us/research/blog/solving-a-31-year-old-grand-challenge-in-mathematics-the-kls-conjecture/",
+      "image": "https://www.microsoft.com/en-us/research/wp-content/uploads/2026/10/KLS-illustration-scaled.png",
+      "image_credit": "Microsoft Research · simplified KLS geometry illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "powertoys-0102-mouse-accessibility-tools",
       "category": "software",
