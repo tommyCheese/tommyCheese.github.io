@@ -490,7 +490,14 @@ window.SITE_MESSAGES = {
     "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：在可抢占实例上运行容错工作流",
     "research.faaspot-fault-tolerant-serverless-workflows.summary": "按任务图的故障影响选择检查点、扩缩容和重试策略。在轨迹驱动的模拟器中，八种工作流完成率为89.03%；这不等同于生产云保障。作者注明录用于 Middleware 2026，轨道未注明。",
     "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler 字符串连接：用位图和前缀分组减少比较",
-    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字符集条件下线性计算相似度，结合自适应位图剪枝和 PUMA 前缀分组。作者在大规模集合上报告最高千倍加速；收益取决于阈值与数据。论文已列入 SIGMOD 2027 官方录用清单。"
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字符集条件下线性计算相似度，结合自适应位图剪枝和 PUMA 前缀分组。作者在大规模集合上报告最高千倍加速；收益取决于阈值与数据。论文已列入 SIGMOD 2027 官方录用清单。",
+    "news.category.security": "安全与隐私",
+    "news.php2shell-emergency-security-releases.title": "PHP 发布紧急补丁，修复两项远程代码执行漏洞",
+    "news.php2shell-emergency-security-releases.summary": "PHP 8.5.12、8.4.27、8.3.36 和8.2.35修复两项可被未认证请求利用的漏洞，影响处理网页请求的部署。官方强调临时缓解不能替代补丁；旧版本用户需核对发行商回补或迁移到受支持版本。",
+    "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 新增鼠标按键锁定和指针隐藏工具",
+    "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock 可在松开按键后继续拖拽或选择，CursorHide 可在打字或闲置时隐藏指针。命令面板加入最多九项的快捷栏，部分工具也新增命令行接口。",
+    "news.mozilla-emudhra-certificate-blocking.title": "Firefox 更新拦截 eMudhra 问题中间证书",
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已通过 OneCRL 拦截八张私钥泄露的中间证书，并用后续客户端更新覆盖未及时接收撤销列表的配置。使用独立证书库的软件仍需单独修补，不能据此认定所有应用都已受保护。"
   },
   "en": {
     "nav.about": "About",
@@ -982,7 +989,14 @@ window.SITE_MESSAGES = {
     "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot runs fault-tolerant workflows on spot instances",
     "research.faaspot-fault-tolerant-serverless-workflows.summary": "DAG failure impact guides checkpointing, scaling and retries. Eight workflows reach 89.03% completion in a trace-driven emulator, not a production-cloud guarantee. The authors report Middleware 2026 acceptance; the track is unspecified.",
     "research.jaro-winkler-scalable-string-joins.title": "Faster Jaro-Winkler joins with bitmap pruning and prefix groups",
-    "research.jaro-winkler-scalable-string-joins.summary": "JUMP computes similarity in linear time for bounded alphabets; adaptive bitmaps and PUMA prefix groups prune comparisons. The authors report up to 1,000× speedups, depending on data and thresholds. The paper appears on SIGMOD 2027’s official acceptance list."
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP computes similarity in linear time for bounded alphabets; adaptive bitmaps and PUMA prefix groups prune comparisons. The authors report up to 1,000× speedups, depending on data and thresholds. The paper appears on SIGMOD 2027’s official acceptance list.",
+    "news.category.security": "Security and privacy",
+    "news.php2shell-emergency-security-releases.title": "PHP issues emergency fixes for two remote code execution flaws",
+    "news.php2shell-emergency-security-releases.summary": "PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35 fix two flaws exploitable by unauthenticated web requests. Temporary mitigations do not replace patches. Users of older branches need vendor backports or migration to a supported release.",
+    "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 adds mouse button locking and cursor hiding",
+    "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock keeps a drag or selection active after release; CursorHide hides the pointer during typing or inactivity. The release also adds a Command Palette shelf and command-line interfaces for several utilities.",
+    "news.mozilla-emudhra-certificate-blocking.title": "Firefox updates block compromised eMudhra intermediates",
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla blocked eight intermediates with compromised private keys through OneCRL, with later client updates covering configurations that missed timely revocation updates. Software using separate trust stores still needs its own fixes; protection is not universal."
   },
   "ja": {
     "nav.about": "私について",
@@ -1474,7 +1488,14 @@ window.SITE_MESSAGES = {
     "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：中断可能なインスタンスで耐障害ワークフローを実行",
     "research.faaspot-fault-tolerant-serverless-workflows.summary": "DAGの障害影響に応じてチェックポイント、拡縮、再試行を選択。トレース駆動エミュレーターの8種類のワークフローで完了率89.03%を報告したが、本番クラウドの保証ではない。著者はMiddleware 2026採択を記載し、トラックは未記載。",
     "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler結合：ビットマップと接頭辞グループで比較を削減",
-    "research.jaro-winkler-scalable-string-joins.summary": "JUMPは有限の文字集合を前提に線形時間で類似度を計算し、適応型ビットマップとPUMAの接頭辞分類で候補を絞る。最大1000倍の高速化はデータと閾値に依存。SIGMOD 2027の公式採択一覧に掲載。"
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMPは有限の文字集合を前提に線形時間で類似度を計算し、適応型ビットマップとPUMAの接頭辞分類で候補を絞る。最大1000倍の高速化はデータと閾値に依存。SIGMOD 2027の公式採択一覧に掲載。",
+    "news.category.security": "セキュリティとプライバシー",
+    "news.php2shell-emergency-security-releases.title": "PHP、遠隔コード実行の脆弱性2件を緊急修正",
+    "news.php2shell-emergency-security-releases.summary": "PHP 8.5.12、8.4.27、8.3.36、8.2.35で、認証なしのWebリクエストから悪用されうる2件を修正。一時的な緩和策は更新の代わりにはならない。旧版はベンダーのバックポート確認かサポート対象版への移行が必要。",
+    "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102、マウスボタン固定とポインター非表示を追加",
+    "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lockはボタンを離した後もドラッグや選択を継続でき、CursorHideは入力中や無操作時にポインターを隠す。Command Paletteのショートカット欄や一部ツールのコマンドライン操作も追加された。",
+    "news.mozilla-emudhra-certificate-blocking.title": "Firefox更新でeMudhraの問題ある中間証明書を遮断",
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozillaは秘密鍵が漏えいした8件の中間証明書をOneCRLで遮断し、失効情報を適時に受け取れなかった構成向けの更新も提供。独自の証明書ストアを使うソフトは別途対応が必要で、全アプリが保護されたわけではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -1966,7 +1987,14 @@ window.SITE_MESSAGES = {
     "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot: отказоустойчивые процессы на прерываемых инстансах",
     "research.faaspot-fault-tolerant-serverless-workflows.summary": "Влияние отказа узлов DAG определяет контрольные точки, масштабирование и повторы. В эмуляторе на трассах восемь процессов дают 89,03% завершений; это не гарантия для облака. Авторы указывают принятие на Middleware 2026, трек не назван.",
     "research.jaro-winkler-scalable-string-joins.title": "Ускорение соединений Jaro-Winkler битовыми картами и префиксами",
-    "research.jaro-winkler-scalable-string-joins.summary": "JUMP вычисляет сходство за линейное время для ограниченного алфавита; адаптивные карты и PUMA сокращают сравнения. Ускорение до 1000× зависит от данных и порога. Работа включена в официальный список принятых статей SIGMOD 2027."
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP вычисляет сходство за линейное время для ограниченного алфавита; адаптивные карты и PUMA сокращают сравнения. Ускорение до 1000× зависит от данных и порога. Работа включена в официальный список принятых статей SIGMOD 2027.",
+    "news.category.security": "Безопасность и приватность",
+    "news.php2shell-emergency-security-releases.title": "PHP срочно исправляет две уязвимости выполнения кода",
+    "news.php2shell-emergency-security-releases.summary": "PHP 8.5.12, 8.4.27, 8.3.36 и 8.2.35 устраняют две уязвимости, доступные через веб-запросы без аутентификации. Временные меры не заменяют патчи. Для старых веток нужны исправления поставщика или переход на поддерживаемую версию.",
+    "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 добавляет фиксацию кнопки мыши и скрытие курсора",
+    "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock продолжает перетаскивание или выделение после отпускания кнопки; CursorHide скрывает указатель при вводе или простое. Также добавлены панель быстрых команд и интерфейсы командной строки для ряда утилит.",
+    "news.mozilla-emudhra-certificate-blocking.title": "Обновления Firefox блокируют скомпрометированные сертификаты eMudhra",
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla заблокировала восемь промежуточных сертификатов через OneCRL и выпустила обновления для конфигураций, не получивших список отзыва вовремя. Программам с отдельными хранилищами доверия нужны собственные исправления; защита не универсальна."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2458,6 +2486,13 @@ window.SITE_MESSAGES = {
     "research.faaspot-fault-tolerant-serverless-workflows.title": "FaaSpot：在可搶占執行個體上執行容錯工作流程",
     "research.faaspot-fault-tolerant-serverless-workflows.summary": "按任務圖的故障影響選擇檢查點、擴縮和重試策略。在軌跡驅動的模擬器中，八種工作流程完成率為89.03%；這不等同於正式環境保障。作者註明錄取於 Middleware 2026，軌道未註明。",
     "research.jaro-winkler-scalable-string-joins.title": "Jaro-Winkler 字串連接：用位元圖和前綴分組減少比較",
-    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字元集條件下線性計算相似度，結合自適應位元圖剪枝和 PUMA 前綴分組。作者在大規模集合上報告最高千倍加速；效益取決於閾值與資料。論文已列入 SIGMOD 2027 官方錄取清單。"
+    "research.jaro-winkler-scalable-string-joins.summary": "JUMP 在有界字元集條件下線性計算相似度，結合自適應位元圖剪枝和 PUMA 前綴分組。作者在大規模集合上報告最高千倍加速；效益取決於閾值與資料。論文已列入 SIGMOD 2027 官方錄取清單。",
+    "news.category.security": "安全與隱私",
+    "news.php2shell-emergency-security-releases.title": "PHP 發布緊急補丁，修復兩項遠端程式碼執行漏洞",
+    "news.php2shell-emergency-security-releases.summary": "PHP 8.5.12、8.4.27、8.3.36 和8.2.35修復兩項可被未驗證請求利用的漏洞，影響處理網頁請求的部署。官方強調暫時緩解不能取代補丁；舊版本使用者需核對發行商回補或遷移至受支援版本。",
+    "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 新增滑鼠按鍵鎖定和游標隱藏工具",
+    "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock 可在鬆開按鍵後繼續拖曳或選取，CursorHide 可在打字或閒置時隱藏游標。命令面板加入最多九項的快捷列，部分工具也新增命令列介面。",
+    "news.mozilla-emudhra-certificate-blocking.title": "Firefox 更新攔截 eMudhra 問題中繼憑證",
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已透過 OneCRL 攔截八張私密金鑰外洩的中繼憑證，並用後續用戶端更新涵蓋未及時接收撤銷清單的設定。使用獨立憑證庫的軟體仍需另外修補，不能據此認定所有應用程式都已受保護。"
   }
 };
