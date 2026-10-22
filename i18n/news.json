@@ -1,6 +1,50 @@
 {
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-22",
   "items": [
+    {
+      "id": "php2shell-emergency-security-fixes",
+      "category": "software",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-22",
+      "source": "PHP Security Team / BleepingComputer",
+      "url": "https://www.php.net/archive/2026.php#2026-10-21-5",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/21/PHP.jpg",
+      "image_credit": "BleepingComputer · PHP illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nodejs-october-security-patches",
+      "category": "software",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-22",
+      "source": "Node.js Project",
+      "url": "https://nodejs.org/en/blog/release/v22.23.4/",
+      "image": "https://nodejs.org/en/next-data/og/vulnerability/Node.js%20%E2%80%94%20Wednesday,%20October%2021,%202026%20Security%20Releases",
+      "image_credit": "Node.js Project · security release graphic",
+      "image_fit": "contain"
+    },
+    {
+      "id": "onamae-desktop-cloud-security-shutdown",
+      "category": "software",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-22",
+      "source": "BleepingComputer / Onamae.com",
+      "url": "https://www.bleepingcomputer.com/news/security/japans-onamae-desktop-cloud-hacked-up-to-27-000-servers-affected/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/21/cloud-servers.jpg",
+      "image_credit": "BleepingComputer · cloud server illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "chrome-enhanced-protection-clickfix",
+      "category": "software",
+      "published_at": "2026-10-20",
+      "collected_at": "2026-10-22",
+      "source": "Google Chrome Security",
+      "url": "https://blog.google/security/our-latest-defenses-against-evolving-web-scams/",
+      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Scam_Roundup_BlogHeaders_Option_3.width-1300.png",
+      "image_credit": "Google · scam protection illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "openbsd-80-release",
       "category": "software",
