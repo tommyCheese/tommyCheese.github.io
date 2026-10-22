@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-22",
   "items": [
+    {
+      "id": "php2shell-emergency-security-releases",
+      "category": "security",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-22",
+      "source": "PHP Security Team / BleepingComputer",
+      "url": "https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/21/PHP.jpg",
+      "image_credit": "BleepingComputer · PHP illustration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "powertoys-0102-mouse-accessibility-tools",
+      "category": "software",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-22",
+      "source": "Microsoft Windows Command Line",
+      "url": "https://devblogs.microsoft.com/commandline/powertoys-0-102-is-here-new-mouse-utilities-command-palette-improvements-and-much-more/",
+      "image": "https://www.bleepstatic.com/images/news/u/1109292/2026/PowerToys-Mouse-Button-Lock.jpg",
+      "image_credit": "BleepingComputer · PowerToys screenshot",
+      "image_fit": "contain"
+    },
+    {
+      "id": "mozilla-emudhra-certificate-blocking",
+      "category": "security",
+      "published_at": "2026-10-20",
+      "collected_at": "2026-10-22",
+      "source": "Mozilla Security Blog",
+      "url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/20/certificate.jpg",
+      "image_credit": "BleepingComputer · certificate illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "openbsd-80-release",
       "category": "software",
@@ -380,6 +413,7 @@
     "devices",
     "cars",
     "software",
-    "science"
+    "science",
+    "security"
   ]
 }
