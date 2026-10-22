@@ -523,7 +523,13 @@ window.SITE_MESSAGES = {
     "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 新增鼠标按键锁定和指针隐藏工具",
     "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock 可在松开按键后继续拖拽或选择，CursorHide 可在打字或闲置时隐藏指针。命令面板加入最多九项的快捷栏，部分工具也新增命令行接口。",
     "news.mozilla-emudhra-certificate-blocking.title": "Firefox 更新拦截 eMudhra 问题中间证书",
-    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已通过 OneCRL 拦截八张私钥泄露的中间证书，并用后续客户端更新覆盖未及时接收撤销列表的配置。使用独立证书库的软件仍需单独修补，不能据此认定所有应用都已受保护。"
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已通过 OneCRL 拦截八张私钥泄露的中间证书，并用后续客户端更新覆盖未及时接收撤销列表的配置。使用独立证书库的软件仍需单独修补，不能据此认定所有应用都已受保护。",
+    "news.modular-max-source-available-license.title": "MAX 公开编译器与运行时源码，许可仍有限制",
+    "news.modular-max-source-available-license.summary": "Modular 随 26.7 版本公开 MAX 图编译器、运行时和硬件后端源码。新许可允许免费商用，但限制修改后源码的公开分发和用 AI 重做 MAX，商业托管服务另有标识要求；原有 Apache 许可组件继续沿用原许可。",
+    "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 开发分支清理旧用户内存访问接口",
+    "news.linux-74-uaccess-legacy-removal.summary": "Torvalds 合并 48 项提交，清理缺少地址范围检查的 __get_user() 和 __put_user() 旧用法，改用更合适的访问接口。通用代码已完成清理，x86 移除整套旧接口；部分其他架构仍有保留，改动进入 7.4 开发周期。",
+    "news.microsoft-kls-human-directed-ai-proof.title": "微软研究院介绍人类引导 AI 辅助 KLS 证明的过程",
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日发布的说明介绍了 Zhao Song 与 Xinzhi Zhang 如何引导 AI 探索证明思路，并由研究者筛选、组合和核验论证。论文 4 日更新版本给出与维度无关的 KLS 常数界；这是理论结果，论文以预印本形式公开，说明未披露所用模型。"
   },
   "en": {
     "nav.about": "About",
@@ -1048,7 +1054,13 @@ window.SITE_MESSAGES = {
     "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 adds mouse button locking and cursor hiding",
     "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock keeps a drag or selection active after release; CursorHide hides the pointer during typing or inactivity. The release also adds a Command Palette shelf and command-line interfaces for several utilities.",
     "news.mozilla-emudhra-certificate-blocking.title": "Firefox updates block compromised eMudhra intermediates",
-    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla blocked eight intermediates with compromised private keys through OneCRL, with later client updates covering configurations that missed timely revocation updates. Software using separate trust stores still needs its own fixes; protection is not universal."
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla blocked eight intermediates with compromised private keys through OneCRL, with later client updates covering configurations that missed timely revocation updates. Software using separate trust stores still needs its own fixes; protection is not universal.",
+    "news.modular-max-source-available-license.title": "MAX publishes compiler and runtime sources under a restricted license",
+    "news.modular-max-source-available-license.summary": "Modular 26.7 makes the MAX graph compiler, runtime and hardware backends source available. The new license permits royalty-free commercial use but restricts modified-source distribution and AI-assisted reimplementation. Commercial hosted services have branding requirements; existing Apache-licensed components keep their licenses.",
+    "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 development removes legacy user-memory access helpers",
+    "news.linux-74-uaccess-legacy-removal.summary": "Torvalds merged 48 commits replacing legacy __get_user() and __put_user() uses that lack address-range checks. Generic code is converted and x86 removes the interface; some other architectures retain it. The changes are part of the 7.4 development cycle.",
+    "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research details human-directed AI work on the KLS proof",
+    "news.microsoft-kls-human-directed-ai-proof.summary": "An October 21 account describes Zhao Song and Xinzhi Zhang directing AI exploration while selecting and checking the mathematical arguments themselves. The October 4 paper revision gives a dimension-independent KLS bound. This is a theoretical result published as a preprint; the account does not identify the models used."
   },
   "ja": {
     "nav.about": "私について",
@@ -1573,7 +1585,13 @@ window.SITE_MESSAGES = {
     "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102、マウスボタン固定とポインター非表示を追加",
     "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lockはボタンを離した後もドラッグや選択を継続でき、CursorHideは入力中や無操作時にポインターを隠す。Command Paletteのショートカット欄や一部ツールのコマンドライン操作も追加された。",
     "news.mozilla-emudhra-certificate-blocking.title": "Firefox更新でeMudhraの問題ある中間証明書を遮断",
-    "news.mozilla-emudhra-certificate-blocking.summary": "Mozillaは秘密鍵が漏えいした8件の中間証明書をOneCRLで遮断し、失効情報を適時に受け取れなかった構成向けの更新も提供。独自の証明書ストアを使うソフトは別途対応が必要で、全アプリが保護されたわけではない。"
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozillaは秘密鍵が漏えいした8件の中間証明書をOneCRLで遮断し、失効情報を適時に受け取れなかった構成向けの更新も提供。独自の証明書ストアを使うソフトは別途対応が必要で、全アプリが保護されたわけではない。",
+    "news.modular-max-source-available-license.title": "MAX がコンパイラとランタイムのソースを公開、ライセンスに制限も",
+    "news.modular-max-source-available-license.summary": "Modular 26.7 は MAX のグラフコンパイラ、ランタイム、ハードウェアバックエンドをソース公開した。新ライセンスは無償の商用利用を認める一方、変更したソースの配布や AI による MAX の再実装を制限する。商用ホスティングには表示要件があり、既存の Apache ライセンス部分は従来どおり。",
+    "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 開発版で古いユーザーメモリアクセス API を整理",
+    "news.linux-74-uaccess-legacy-removal.summary": "Torvalds は 48 件のコミットを統合し、アドレス範囲を確認しない __get_user() と __put_user() の旧来の使い方を置き換えた。共通コードの移行と x86 の API 削除を完了したが、一部の他アーキテクチャには残る。変更は 7.4 開発サイクルに入った。",
+    "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research、人が AI を導いた KLS 証明の過程を紹介",
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日の解説では、Zhao Song と Xinzhi Zhang が AI に証明の候補を探索させ、研究者自身が方針を選び、論証を組み立てて確認した過程を紹介した。4 日更新の論文は次元に依存しない KLS 定数の上界を示す理論研究。論文はプレプリントとして公開され、解説は使用モデルを明かしていない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2098,7 +2116,13 @@ window.SITE_MESSAGES = {
     "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 добавляет фиксацию кнопки мыши и скрытие курсора",
     "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock продолжает перетаскивание или выделение после отпускания кнопки; CursorHide скрывает указатель при вводе или простое. Также добавлены панель быстрых команд и интерфейсы командной строки для ряда утилит.",
     "news.mozilla-emudhra-certificate-blocking.title": "Обновления Firefox блокируют скомпрометированные сертификаты eMudhra",
-    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla заблокировала восемь промежуточных сертификатов через OneCRL и выпустила обновления для конфигураций, не получивших список отзыва вовремя. Программам с отдельными хранилищами доверия нужны собственные исправления; защита не универсальна."
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla заблокировала восемь промежуточных сертификатов через OneCRL и выпустила обновления для конфигураций, не получивших список отзыва вовремя. Программам с отдельными хранилищами доверия нужны собственные исправления; защита не универсальна.",
+    "news.modular-max-source-available-license.title": "MAX публикует исходники компилятора и среды выполнения с ограничениями лицензии",
+    "news.modular-max-source-available-license.summary": "Modular 26.7 открывает исходники компилятора графов MAX, среды выполнения и аппаратных бэкендов. Новая лицензия разрешает коммерческое использование без роялти, но ограничивает распространение изменённых исходников и воссоздание MAX с помощью ИИ. Для коммерческих хостинговых сервисов предусмотрены требования к обозначению бренда; компоненты под Apache сохраняют свои лицензии.",
+    "news.linux-74-uaccess-legacy-removal.title": "В разработке Linux 7.4 убирают старые функции доступа к памяти пользователя",
+    "news.linux-74-uaccess-legacy-removal.summary": "Торвальдс объединил 48 коммитов, заменяющих старые вызовы __get_user() и __put_user() без проверки диапазона адресов. Общий код переведён на другие интерфейсы, а x86 удаляет старый API полностью; некоторые другие архитектуры его сохраняют. Изменения вошли в цикл разработки 7.4.",
+    "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research описывает роль человека и ИИ в доказательстве гипотезы KLS",
+    "news.microsoft-kls-human-directed-ai-proof.summary": "В публикации от 21 октября описано, как Чжао Сун и Синьчжи Чжан направляли поиск ИИ, сами отбирая и проверяя аргументы. Версия статьи от 4 октября даёт не зависящую от размерности оценку константы KLS. Это теоретический результат, опубликованный как препринт; используемые модели не названы."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2623,6 +2647,12 @@ window.SITE_MESSAGES = {
     "news.powertoys-0102-mouse-accessibility-tools.title": "PowerToys 0.102 新增滑鼠按鍵鎖定和游標隱藏工具",
     "news.powertoys-0102-mouse-accessibility-tools.summary": "Mouse Button Lock 可在鬆開按鍵後繼續拖曳或選取，CursorHide 可在打字或閒置時隱藏游標。命令面板加入最多九項的快捷列，部分工具也新增命令列介面。",
     "news.mozilla-emudhra-certificate-blocking.title": "Firefox 更新攔截 eMudhra 問題中繼憑證",
-    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已透過 OneCRL 攔截八張私密金鑰外洩的中繼憑證，並用後續用戶端更新涵蓋未及時接收撤銷清單的設定。使用獨立憑證庫的軟體仍需另外修補，不能據此認定所有應用程式都已受保護。"
+    "news.mozilla-emudhra-certificate-blocking.summary": "Mozilla 已透過 OneCRL 攔截八張私密金鑰外洩的中繼憑證，並用後續用戶端更新涵蓋未及時接收撤銷清單的設定。使用獨立憑證庫的軟體仍需另外修補，不能據此認定所有應用程式都已受保護。",
+    "news.modular-max-source-available-license.title": "MAX 公開編譯器與執行環境原始碼，授權仍有限制",
+    "news.modular-max-source-available-license.summary": "Modular 隨 26.7 版本公開 MAX 圖編譯器、執行環境及硬體後端原始碼。新授權允許免費商用，但限制修改後原始碼的公開散布及用 AI 重做 MAX，商業託管服務另有標示要求；原有 Apache 授權元件繼續沿用原授權。",
+    "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 開發分支清理舊使用者記憶體存取介面",
+    "news.linux-74-uaccess-legacy-removal.summary": "Torvalds 合併 48 項提交，清理缺少位址範圍檢查的 __get_user() 和 __put_user() 舊用法，改用更合適的存取介面。共用程式碼已完成清理，x86 移除整套舊介面；部分其他架構仍有保留，改動進入 7.4 開發週期。",
+    "news.microsoft-kls-human-directed-ai-proof.title": "微軟研究院介紹人類引導 AI 輔助 KLS 證明的過程",
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日發布的說明介紹了 Zhao Song 與 Xinzhi Zhang 如何引導 AI 探索證明思路，並由研究者篩選、組合和核驗論證。論文 4 日更新版本給出與維度無關的 KLS 常數界；這是理論結果，論文以預印本形式公開，說明未披露所用模型。"
   }
 };
