@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-22",
   "tags": [
     "ai",
     "agents",
@@ -12,6 +12,141 @@
     "databases"
   ],
   "items": [
+    {
+      "id": "nousdb-semantic-query-engine",
+      "kind": "preprint",
+      "published_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "systems",
+        "papers"
+      ],
+      "source": "Tsapelas, Christos et al. · arXiv:2610.28551v1",
+      "url": "https://arxiv.org/abs/2610.28551v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "swatcher-dynamic-cardinality-estimation",
+      "kind": "preprint",
+      "published_at": "2026-10-20",
+      "tags": [
+        "ai",
+        "systems",
+        "papers"
+      ],
+      "source": "Liu, Yuxi et al. · arXiv:2610.28270v1",
+      "url": "https://arxiv.org/abs/2610.28270v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "koala-stateful-dataflow-reconfiguration",
+      "kind": "preprint",
+      "published_at": "2026-10-20",
+      "tags": [
+        "systems",
+        "papers"
+      ],
+      "source": "Huang, Lei et al. · arXiv:2610.28939v1",
+      "url": "https://arxiv.org/abs/2610.28939v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "flashattention-long-vector-processors",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "systems",
+        "papers"
+      ],
+      "source": "Irabor, Emmanuel et al. · arXiv:2610.29489v1",
+      "url": "https://arxiv.org/abs/2610.29489v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "fairamo-time-series-orchestration",
+      "kind": "conference-paper",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Guan, Tong et al. · arXiv:2610.29504v1",
+      "url": "https://arxiv.org/abs/2610.29504v1",
+      "venue": "NeurIPS 2026 · FMTS Workshop (author-reported acceptance)",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "reflexivity-multi-agent-prediction-threshold",
+      "kind": "conference-paper",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Mahrous, Ahmed et al. · arXiv:2610.29577v1",
+      "url": "https://arxiv.org/abs/2610.29577v1",
+      "venue": "NeurIPS 2026 (author-reported acceptance; track unspecified)",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "pace-four-bit-recurrent-state",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "systems",
+        "papers"
+      ],
+      "source": "Haller, Patrick et al. · arXiv:2610.29545v1",
+      "url": "https://arxiv.org/abs/2610.29545v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "risk-kv-selective-cache-reconstruction",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "systems",
+        "papers"
+      ],
+      "source": "Yuekai, Wang et al. · arXiv:2610.29544v1",
+      "url": "https://arxiv.org/abs/2610.29544v1",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "real-time-dnn-certified-scheduling",
+      "kind": "conference-paper",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "systems",
+        "papers",
+        "conferences"
+      ],
+      "source": "Blanco, Francesco Giulio et al. · arXiv:2610.29503v1",
+      "url": "https://arxiv.org/abs/2610.29503v1",
+      "venue": "RTNS 2026 (author-reported acceptance)",
+      "collected_at": "2026-10-22"
+    },
+    {
+      "id": "client-led-consensus-inclusion-safety",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "systems",
+        "security",
+        "papers"
+      ],
+      "source": "Amoussou-Guenou, Yackolley et al. · arXiv:2610.29497v1",
+      "url": "https://arxiv.org/abs/2610.29497v1",
+      "collected_at": "2026-10-22"
+    },
     {
       "id": "athanor-autonomous-post-training",
       "kind": "preprint",
