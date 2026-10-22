@@ -529,7 +529,20 @@ window.SITE_MESSAGES = {
     "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 开发分支清理旧用户内存访问接口",
     "news.linux-74-uaccess-legacy-removal.summary": "Torvalds 合并 48 项提交，清理缺少地址范围检查的 __get_user() 和 __put_user() 旧用法，改用更合适的访问接口。通用代码已完成清理，x86 移除整套旧接口；部分其他架构仍有保留，改动进入 7.4 开发周期。",
     "news.microsoft-kls-human-directed-ai-proof.title": "微软研究院介绍人类引导 AI 辅助 KLS 证明的过程",
-    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日发布的说明介绍了 Zhao Song 与 Xinzhi Zhang 如何引导 AI 探索证明思路，并由研究者筛选、组合和核验论证。论文 4 日更新版本给出与维度无关的 KLS 常数界；这是理论结果，论文以预印本形式公开，说明未披露所用模型。"
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日发布的说明介绍了 Zhao Song 与 Xinzhi Zhang 如何引导 AI 探索证明思路，并由研究者筛选、组合和核验论证。论文 4 日更新版本给出与维度无关的 KLS 常数界；这是理论结果，论文以预印本形式公开，说明未披露所用模型。",
+    "research.tag.rag": "RAG",
+    "research.tag.ontology": "本体",
+    "research.tag.data-governance": "数据治理",
+    "research.audq-auditable-rule-discovery.title": "AuDQ：用 Agent 发现可审计的数据质量规则",
+    "research.audq-auditable-rule-discovery.summary": "将数据本体、规则版本和来源关联起来，用自主发现与人工引导两种模式生成检查规则。金融、零售两组数据的初步实验支持规则多样性相近，但尚不能证明质量相当；完整执行与根因分析闭环仍待实现。",
+    "research.lmvu-budgeted-rag-evidence.title": "LMVU：在有限上下文里保留更多 RAG 观点证据",
+    "research.lmvu-budgeted-rag-evidence.summary": "按每条候选证据新增的观点覆盖量动态排序。在四个带观点标注的基准、1024 token 预算下，两种覆盖指标最多提高 0.047 和 0.052。训练依赖观点标注，结果衡量证据覆盖，不能直接当作生成答案准确率提升。",
+    "research.precomem-predictive-dialogue-memory.title": "PreCoMem：让对话 Agent 区分记忆变化与短暂噪声",
+    "research.precomem-predictive-dialogue-memory.summary": "结合语义偏离、矛盾证据和检索置信度，决定强化记忆、暂存假设或修正旧事实。在长期对话基准中取得较高总体准确率，并测试信念漂移。结果限于所测模型、数据及评判协议，不能据此认定适用于所有真实用户。",
+    "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：评测 Agent 如何在多轮交流中修复代码",
+    "research.userswe-dynamic-user-coding-evaluation.summary": "用动态模拟用户逐步提供信息，每轮运行测试，并由不同模型家族交叉审查判定。11 个 Agent 在 42 个仓库的 72 项任务上，排名随交互轮数变化；基准覆盖短期维护任务，尚不包含从零构建或长期开发。",
+    "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：把 SQL 重写过程变成可回放的等价证明",
+    "research.equitrace-replayable-sql-equivalence.summary": "通过对齐查询表示和组合重写规则，输出两条 SQL 到共同表达式的推导。在 240 对执行结果相同的模型重写查询中证明 97 对。证明依赖规则正确性，搜索容量及外连接、窗口函数等表示仍有限制；未证明不代表不等价。"
   },
   "en": {
     "nav.about": "About",
@@ -1060,7 +1073,20 @@ window.SITE_MESSAGES = {
     "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 development removes legacy user-memory access helpers",
     "news.linux-74-uaccess-legacy-removal.summary": "Torvalds merged 48 commits replacing legacy __get_user() and __put_user() uses that lack address-range checks. Generic code is converted and x86 removes the interface; some other architectures retain it. The changes are part of the 7.4 development cycle.",
     "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research details human-directed AI work on the KLS proof",
-    "news.microsoft-kls-human-directed-ai-proof.summary": "An October 21 account describes Zhao Song and Xinzhi Zhang directing AI exploration while selecting and checking the mathematical arguments themselves. The October 4 paper revision gives a dimension-independent KLS bound. This is a theoretical result published as a preprint; the account does not identify the models used."
+    "news.microsoft-kls-human-directed-ai-proof.summary": "An October 21 account describes Zhao Song and Xinzhi Zhang directing AI exploration while selecting and checking the mathematical arguments themselves. The October 4 paper revision gives a dimension-independent KLS bound. This is a theoretical result published as a preprint; the account does not identify the models used.",
+    "research.tag.rag": "RAG",
+    "research.tag.ontology": "Ontologies",
+    "research.tag.data-governance": "Data governance",
+    "research.audq-auditable-rule-discovery.title": "AuDQ: auditable data-quality rule discovery with agents",
+    "research.audq-auditable-rule-discovery.summary": "AuDQ links rules to ontologies, versions and provenance, comparing autonomous discovery with human-guided rules. Initial finance and retail experiments support similar rule diversity but do not establish quality parity. The full execution and root-cause feedback loop remains future work.",
+    "research.lmvu-budgeted-rag-evidence.title": "LMVU: selecting viewpoint evidence within a RAG context budget",
+    "research.lmvu-budgeted-rag-evidence.summary": "LMVU ranks evidence by the viewpoint coverage it adds to the current selection. On four annotated benchmarks with 1,024 tokens, coverage gains reach 0.047 and 0.052 on two metrics. Training needs viewpoint labels; evidence coverage does not establish improved answer accuracy.",
+    "research.precomem-predictive-dialogue-memory.title": "PreCoMem: separating changing user beliefs from memory noise",
+    "research.precomem-predictive-dialogue-memory.summary": "Semantic deviation, contradiction evidence and retrieval confidence gate memory reinforcement, tentative hypotheses or corrections. The authors report stronger overall results on long-dialogue benchmarks and test belief drift. Findings are limited to the evaluated models, datasets and judging protocol, without guarantees for all real users.",
+    "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE: evaluating coding agents with dynamic multi-turn users",
+    "research.userswe-dynamic-user-coding-evaluation.summary": "Simulated users reveal information gradually; tests run every turn, with verdicts reviewed across model families. Eleven agents on 72 tasks from 42 repositories change rank as interaction budgets vary. The benchmark covers short maintenance episodes, not repository creation or long-term development.",
+    "research.equitrace-replayable-sql-equivalence.title": "EquiTrace: replayable SQL equivalence proofs from rewrite rules",
+    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace aligns query representations and composes rewrites into derivations reaching a common expression. It proves 97 of 240 execution-identical model rewrites. Proofs assume sound rules; search capacity and representations for outer joins and windows remain limited. Failure to prove is not evidence of inequivalence."
   },
   "ja": {
     "nav.about": "私について",
@@ -1591,7 +1617,20 @@ window.SITE_MESSAGES = {
     "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 開発版で古いユーザーメモリアクセス API を整理",
     "news.linux-74-uaccess-legacy-removal.summary": "Torvalds は 48 件のコミットを統合し、アドレス範囲を確認しない __get_user() と __put_user() の旧来の使い方を置き換えた。共通コードの移行と x86 の API 削除を完了したが、一部の他アーキテクチャには残る。変更は 7.4 開発サイクルに入った。",
     "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research、人が AI を導いた KLS 証明の過程を紹介",
-    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日の解説では、Zhao Song と Xinzhi Zhang が AI に証明の候補を探索させ、研究者自身が方針を選び、論証を組み立てて確認した過程を紹介した。4 日更新の論文は次元に依存しない KLS 定数の上界を示す理論研究。論文はプレプリントとして公開され、解説は使用モデルを明かしていない。"
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日の解説では、Zhao Song と Xinzhi Zhang が AI に証明の候補を探索させ、研究者自身が方針を選び、論証を組み立てて確認した過程を紹介した。4 日更新の論文は次元に依存しない KLS 定数の上界を示す理論研究。論文はプレプリントとして公開され、解説は使用モデルを明かしていない。",
+    "research.tag.rag": "RAG",
+    "research.tag.ontology": "オントロジー",
+    "research.tag.data-governance": "データガバナンス",
+    "research.audq-auditable-rule-discovery.title": "AuDQ：Agent による監査可能なデータ品質ルールの発見",
+    "research.audq-auditable-rule-discovery.summary": "オントロジー、バージョン、出所にルールを結び付け、自律的な発見と人が導く方式を比較する。金融・小売の初期実験ではルールの多様性は近いが、品質が同等とは確認できていない。実行と根本原因分析を含む閉ループ全体は今後の実装課題。",
+    "research.lmvu-budgeted-rag-evidence.title": "LMVU：限られた RAG 文脈で多様な観点の根拠を選ぶ",
+    "research.lmvu-budgeted-rag-evidence.summary": "選択済みの根拠に追加できる観点の量で候補を動的に順位付けする。観点ラベル付きの4基準、1024 token の条件で、2種の被覆指標が最大0.047、0.052改善した。学習はラベルに依存し、根拠の被覆改善が回答精度の向上を示すわけではない。",
+    "research.precomem-predictive-dialogue-memory.title": "PreCoMem：対話 Agent の記憶更新で変化とノイズを分ける",
+    "research.precomem-predictive-dialogue-memory.summary": "意味のずれ、矛盾の根拠、検索の確信度から、記憶の強化、仮説の保留、事実の修正を選ぶ。長期対話の基準で高い総合精度を報告し、信念の変化も評価した。結果は使用モデル、データ、判定方式の範囲に限られ、実利用全般への保証ではない。",
+    "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：動的な利用者との複数ターンでコーディング Agent を評価",
+    "research.userswe-dynamic-user-coding-evaluation.summary": "模擬利用者が段階的に情報を伝え、各ターンでテストし、異なるモデル系列が判定を相互確認する。42リポジトリの72課題で11 Agent を比較すると、対話回数によって順位が変わった。短期保守が対象で、ゼロからの構築や長期開発は含まない。",
+    "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：SQL 書き換えから再生可能な等価証明を作る",
+    "research.equitrace-replayable-sql-equivalence.summary": "問い合わせ表現の整合と書き換え規則の合成により、共通の式へ至る導出を出力する。実行結果が一致するモデル生成の240組中97組を証明した。規則の正しさを前提とし、探索量や外部結合・ウィンドウ関数の表現には制限がある。未証明は非等価を意味しない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2122,7 +2161,20 @@ window.SITE_MESSAGES = {
     "news.linux-74-uaccess-legacy-removal.title": "В разработке Linux 7.4 убирают старые функции доступа к памяти пользователя",
     "news.linux-74-uaccess-legacy-removal.summary": "Торвальдс объединил 48 коммитов, заменяющих старые вызовы __get_user() и __put_user() без проверки диапазона адресов. Общий код переведён на другие интерфейсы, а x86 удаляет старый API полностью; некоторые другие архитектуры его сохраняют. Изменения вошли в цикл разработки 7.4.",
     "news.microsoft-kls-human-directed-ai-proof.title": "Microsoft Research описывает роль человека и ИИ в доказательстве гипотезы KLS",
-    "news.microsoft-kls-human-directed-ai-proof.summary": "В публикации от 21 октября описано, как Чжао Сун и Синьчжи Чжан направляли поиск ИИ, сами отбирая и проверяя аргументы. Версия статьи от 4 октября даёт не зависящую от размерности оценку константы KLS. Это теоретический результат, опубликованный как препринт; используемые модели не названы."
+    "news.microsoft-kls-human-directed-ai-proof.summary": "В публикации от 21 октября описано, как Чжао Сун и Синьчжи Чжан направляли поиск ИИ, сами отбирая и проверяя аргументы. Версия статьи от 4 октября даёт не зависящую от размерности оценку константы KLS. Это теоретический результат, опубликованный как препринт; используемые модели не названы.",
+    "research.tag.rag": "RAG",
+    "research.tag.ontology": "Онтологии",
+    "research.tag.data-governance": "Управление данными",
+    "research.audq-auditable-rule-discovery.title": "AuDQ: проверяемые правила качества данных, найденные агентами",
+    "research.audq-auditable-rule-discovery.summary": "AuDQ связывает правила с онтологиями, версиями и происхождением и сравнивает автономное обнаружение с работой под руководством человека. Первые эксперименты на финансовых и розничных данных показывают сходное разнообразие правил, но не доказывают равенства качества. Полный цикл исполнения и анализа первопричин ещё предстоит реализовать.",
+    "research.lmvu-budgeted-rag-evidence.title": "LMVU: отбор разных точек зрения при ограниченном контексте RAG",
+    "research.lmvu-budgeted-rag-evidence.summary": "LMVU ранжирует свидетельства по дополнительному охвату точек зрения. На четырёх размеченных наборах при бюджете 1024 токена прирост двух метрик достигает 0,047 и 0,052. Обучение требует разметки; лучший охват свидетельств сам по себе не доказывает роста точности ответов.",
+    "research.precomem-predictive-dialogue-memory.title": "PreCoMem: как отличать изменения убеждений пользователя от шума памяти",
+    "research.precomem-predictive-dialogue-memory.summary": "Семантическое отклонение, противоречия и уверенность поиска определяют усиление памяти, сохранение предварительных гипотез или исправление фактов. Авторы сообщают о лучших совокупных результатах на тестах длинных диалогов и проверяют дрейф убеждений. Выводы ограничены изученными моделями, данными и протоколом оценки и не гарантируют результат для всех пользователей.",
+    "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE: оценка программирующих агентов в многоходовом диалоге",
+    "research.userswe-dynamic-user-coding-evaluation.summary": "Симулированные пользователи постепенно раскрывают сведения; тесты выполняются после каждого хода, а решения проверяют разные семейства моделей. На 72 задачах из 42 репозиториев места 11 агентов меняются с числом ходов. Тест охватывает короткие эпизоды сопровождения, а не создание репозитория или длительную разработку.",
+    "research.equitrace-replayable-sql-equivalence.title": "EquiTrace: воспроизводимые доказательства эквивалентности SQL",
+    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace согласует представления запросов и составляет вывод к общему выражению из правил переписывания. Он доказывает 97 из 240 пар с одинаковым результатом исполнения. Корректность правил предполагается; остаются ограничения поиска, внешних соединений и оконных функций. Отсутствие доказательства не означает неэквивалентности."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2653,6 +2705,19 @@ window.SITE_MESSAGES = {
     "news.linux-74-uaccess-legacy-removal.title": "Linux 7.4 開發分支清理舊使用者記憶體存取介面",
     "news.linux-74-uaccess-legacy-removal.summary": "Torvalds 合併 48 項提交，清理缺少位址範圍檢查的 __get_user() 和 __put_user() 舊用法，改用更合適的存取介面。共用程式碼已完成清理，x86 移除整套舊介面；部分其他架構仍有保留，改動進入 7.4 開發週期。",
     "news.microsoft-kls-human-directed-ai-proof.title": "微軟研究院介紹人類引導 AI 輔助 KLS 證明的過程",
-    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日發布的說明介紹了 Zhao Song 與 Xinzhi Zhang 如何引導 AI 探索證明思路，並由研究者篩選、組合和核驗論證。論文 4 日更新版本給出與維度無關的 KLS 常數界；這是理論結果，論文以預印本形式公開，說明未披露所用模型。"
+    "news.microsoft-kls-human-directed-ai-proof.summary": "21 日發布的說明介紹了 Zhao Song 與 Xinzhi Zhang 如何引導 AI 探索證明思路，並由研究者篩選、組合和核驗論證。論文 4 日更新版本給出與維度無關的 KLS 常數界；這是理論結果，論文以預印本形式公開，說明未披露所用模型。",
+    "research.tag.rag": "RAG",
+    "research.tag.ontology": "本體",
+    "research.tag.data-governance": "資料治理",
+    "research.audq-auditable-rule-discovery.title": "AuDQ：用 Agent 發現可稽核的資料品質規則",
+    "research.audq-auditable-rule-discovery.summary": "將資料本體、規則版本和來源關聯起來，用自主發現與人工引導兩種模式產生檢查規則。金融、零售兩組資料的初步實驗支持規則多樣性相近，但尚不能證明品質相當；完整執行與根因分析閉環仍待實作。",
+    "research.lmvu-budgeted-rag-evidence.title": "LMVU：在有限上下文裡保留更多 RAG 觀點證據",
+    "research.lmvu-budgeted-rag-evidence.summary": "按每條候選證據新增的觀點覆蓋量動態排序。在四個帶觀點標註的基準、1024 token 預算下，兩種覆蓋指標最多提高 0.047 和 0.052。訓練依賴觀點標註，結果衡量證據覆蓋，不能直接當作生成答案準確率提升。",
+    "research.precomem-predictive-dialogue-memory.title": "PreCoMem：讓對話 Agent 區分記憶變化與短暫雜訊",
+    "research.precomem-predictive-dialogue-memory.summary": "結合語意偏離、矛盾證據和檢索信心，決定強化記憶、暫存假設或修正舊事實。在長期對話基準中取得較高整體準確率，並測試信念漂移。結果限於所測模型、資料及評判協定，不能據此認定適用於所有真實使用者。",
+    "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：評測 Agent 如何在多輪交流中修復程式碼",
+    "research.userswe-dynamic-user-coding-evaluation.summary": "用動態模擬使用者逐步提供資訊，每輪執行測試，並由不同模型家族交叉審查判定。11 個 Agent 在 42 個儲存庫的 72 項任務上，排名隨互動輪數變化；基準涵蓋短期維護任務，尚不包含從零建置或長期開發。",
+    "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：把 SQL 重寫過程變成可重播的等價證明",
+    "research.equitrace-replayable-sql-equivalence.summary": "透過對齊查詢表示和組合重寫規則，輸出兩條 SQL 到共同運算式的推導。在 240 對執行結果相同的模型重寫查詢中證明 97 對。證明依賴規則正確性，搜尋容量及外部連接、視窗函數等表示仍有限制；未證明不代表不等價。"
   }
 };

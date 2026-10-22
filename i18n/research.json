@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22",
+  "updated_at": "2026-10-23",
   "tags": [
     "ai",
     "agents",
@@ -9,9 +9,81 @@
     "security",
     "robotics",
     "systems",
-    "databases"
+    "databases",
+    "rag",
+    "ontology",
+    "data-governance"
   ],
   "items": [
+    {
+      "id": "audq-auditable-rule-discovery",
+      "kind": "preprint",
+      "published_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "agents",
+        "ontology",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Biggiogera, Jacopo et al. · arXiv:2610.26031v1",
+      "url": "https://arxiv.org/abs/2610.26031v1",
+      "collected_at": "2026-10-23"
+    },
+    {
+      "id": "lmvu-budgeted-rag-evidence",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Duan, Yiyang et al. · arXiv:2610.29234v1",
+      "url": "https://arxiv.org/abs/2610.29234v1",
+      "collected_at": "2026-10-23"
+    },
+    {
+      "id": "precomem-predictive-dialogue-memory",
+      "kind": "conference-paper",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Zhong, Jian et al. · arXiv:2610.29467v1",
+      "url": "https://arxiv.org/abs/2610.29467v1",
+      "collected_at": "2026-10-23",
+      "venue": "NeurIPS 2026 · Poster (official listing; track unspecified)"
+    },
+    {
+      "id": "userswe-dynamic-user-coding-evaluation",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Wu, Zhan-Yu et al. · arXiv:2610.29822v1",
+      "url": "https://arxiv.org/abs/2610.29822v1",
+      "collected_at": "2026-10-23"
+    },
+    {
+      "id": "equitrace-replayable-sql-equivalence",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "databases",
+        "systems",
+        "papers"
+      ],
+      "source": "Chen, Chunyu et al. · arXiv:2610.30100v1",
+      "url": "https://arxiv.org/abs/2610.30100v1",
+      "collected_at": "2026-10-23"
+    },
     {
       "id": "nousdb-semantic-query-engine",
       "kind": "preprint",
