@@ -545,7 +545,13 @@ window.SITE_MESSAGES = {
     "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：评测 Agent 如何在多轮交流中修复代码",
     "research.userswe-dynamic-user-coding-evaluation.summary": "用动态模拟用户逐步提供信息，每轮运行测试，并由不同模型家族交叉审查判定。11 个 Agent 在 42 个仓库的 72 项任务上，排名随交互轮数变化；基准覆盖短期维护任务，尚不包含从零构建或长期开发。",
     "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：把 SQL 重写过程变成可回放的等价证明",
-    "research.equitrace-replayable-sql-equivalence.summary": "通过对齐查询表示和组合重写规则，输出两条 SQL 到共同表达式的推导。在 240 对执行结果相同的模型重写查询中证明 97 对。证明依赖规则正确性，搜索容量及外连接、窗口函数等表示仍有限制；未证明不代表不等价。"
+    "research.equitrace-replayable-sql-equivalence.summary": "通过对齐查询表示和组合重写规则，输出两条 SQL 到共同表达式的推导。在 240 对执行结果相同的模型重写查询中证明 97 对。证明依赖规则正确性，搜索容量及外连接、窗口函数等表示仍有限制；未证明不代表不等价。",
+    "news.solidigm-preipo-ipo-review-halted.title": "Solidigm 停止 IPO 及上市前融资评估",
+    "news.solidigm-preipo-ipo-review-halted.summary": "SK 海力士确认，考虑资本市场状况及股价变化，Solidigm 停止评估上市前融资和 IPO。公司表示扩充美国产能的投资需求未变，将继续评估直接投资等融资方式；这不代表新工厂项目已经取消。",
+    "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 发布，加入 DTLS 1.3 与 GREASE",
+    "news.openssl-410-dtls-grease-release.summary": "新版本加入 DTLS 1.3、用于改善协议兼容性的 GREASE，以及多项加密运算优化，并移除 Windows CE 和 Itanium 构建目标。发布说明同时列出 DTLS 握手、重传和监听错误处理的已知问题，部署前仍需核对。",
+    "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 安装包及容器镜像遭投毒",
+    "news.litellm-11070-release-artifact-compromise.summary": "维护者披露，21 日发布的 1.107.0 wheel 安装包及指定容器镜像含窃密载荷，已被移除或回滚。官方源码标签未含恶意文件；使用过受影响产物的环境仍需隔离检查并轮换可能泄露的凭证，卸载或升级不等于清除感染。"
   },
   "en": {
     "nav.about": "About",
@@ -1092,7 +1098,13 @@ window.SITE_MESSAGES = {
     "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE: evaluating coding agents with dynamic multi-turn users",
     "research.userswe-dynamic-user-coding-evaluation.summary": "Simulated users reveal information gradually; tests run every turn, with verdicts reviewed across model families. Eleven agents on 72 tasks from 42 repositories change rank as interaction budgets vary. The benchmark covers short maintenance episodes, not repository creation or long-term development.",
     "research.equitrace-replayable-sql-equivalence.title": "EquiTrace: replayable SQL equivalence proofs from rewrite rules",
-    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace aligns query representations and composes rewrites into derivations reaching a common expression. It proves 97 of 240 execution-identical model rewrites. Proofs assume sound rules; search capacity and representations for outer joins and windows remain limited. Failure to prove is not evidence of inequivalence."
+    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace aligns query representations and composes rewrites into derivations reaching a common expression. It proves 97 of 240 execution-identical model rewrites. Proofs assume sound rules; search capacity and representations for outer joins and windows remain limited. Failure to prove is not evidence of inequivalence.",
+    "news.solidigm-preipo-ipo-review-halted.title": "Solidigm halts its IPO and pre-IPO funding review",
+    "news.solidigm-preipo-ipo-review-halted.summary": "SK hynix confirmed that Solidigm stopped reviewing pre-IPO fundraising and an IPO, citing capital-market conditions and share-price trends. The company says U.S. capacity investment remains necessary and it will assess alternatives including direct investment. The decision does not establish that a new fab has been cancelled.",
+    "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 adds DTLS 1.3 and GREASE",
+    "news.openssl-410-dtls-grease-release.summary": "The release adds DTLS 1.3, GREASE for protocol compatibility and cryptographic optimizations, while dropping Windows CE and Itanium build targets. Release notes also list known DTLS handshake, retransmission and listener error-handling issues that require review before deployment.",
+    "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 packages and container images were compromised",
+    "news.litellm-11070-release-artifact-compromise.summary": "Maintainers disclosed credential-stealing payloads in October 21 wheels and specified container images, now removed or rolled back. The official source tag did not contain the malicious files. Exposed environments still need isolation, investigation and credential rotation; uninstalling or upgrading alone does not establish that an infection is cleared."
   },
   "ja": {
     "nav.about": "私について",
@@ -1639,7 +1651,13 @@ window.SITE_MESSAGES = {
     "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：動的な利用者との複数ターンでコーディング Agent を評価",
     "research.userswe-dynamic-user-coding-evaluation.summary": "模擬利用者が段階的に情報を伝え、各ターンでテストし、異なるモデル系列が判定を相互確認する。42リポジトリの72課題で11 Agent を比較すると、対話回数によって順位が変わった。短期保守が対象で、ゼロからの構築や長期開発は含まない。",
     "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：SQL 書き換えから再生可能な等価証明を作る",
-    "research.equitrace-replayable-sql-equivalence.summary": "問い合わせ表現の整合と書き換え規則の合成により、共通の式へ至る導出を出力する。実行結果が一致するモデル生成の240組中97組を証明した。規則の正しさを前提とし、探索量や外部結合・ウィンドウ関数の表現には制限がある。未証明は非等価を意味しない。"
+    "research.equitrace-replayable-sql-equivalence.summary": "問い合わせ表現の整合と書き換え規則の合成により、共通の式へ至る導出を出力する。実行結果が一致するモデル生成の240組中97組を証明した。規則の正しさを前提とし、探索量や外部結合・ウィンドウ関数の表現には制限がある。未証明は非等価を意味しない。",
+    "news.solidigm-preipo-ipo-review-halted.title": "Solidigm、IPO と上場前資金調達の検討を停止",
+    "news.solidigm-preipo-ipo-review-halted.summary": "SK hynix は資本市場の状況と株価動向を踏まえ、Solidigm の上場前資金調達と IPO の検討を停止したと発表した。米国での生産能力拡大に向けた投資需要は変わらず、直接投資などの方法を引き続き検討するという。新工場計画の中止が確定したわけではない。",
+    "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0、DTLS 1.3 と GREASE に対応",
+    "news.openssl-410-dtls-grease-release.summary": "DTLS 1.3、プロトコル互換性を高める GREASE、暗号演算の最適化を追加し、Windows CE と Itanium 向けビルドを廃止した。リリースノートには DTLS のハンドシェイク、再送、リスナーのエラー処理に関する既知の問題もあり、導入前の確認が必要。",
+    "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 の配布パッケージとコンテナが改ざん",
+    "news.litellm-11070-release-artifact-compromise.summary": "保守者によると、21 日公開の wheel と特定のコンテナに認証情報を盗む処理が含まれ、削除または巻き戻し済み。公式ソースタグには悪意あるファイルはなかった。影響を受けた環境は隔離・調査と認証情報の更新が必要で、削除やアップグレードだけでは感染除去を確認できない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2186,7 +2204,13 @@ window.SITE_MESSAGES = {
     "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE: оценка программирующих агентов в многоходовом диалоге",
     "research.userswe-dynamic-user-coding-evaluation.summary": "Симулированные пользователи постепенно раскрывают сведения; тесты выполняются после каждого хода, а решения проверяют разные семейства моделей. На 72 задачах из 42 репозиториев места 11 агентов меняются с числом ходов. Тест охватывает короткие эпизоды сопровождения, а не создание репозитория или длительную разработку.",
     "research.equitrace-replayable-sql-equivalence.title": "EquiTrace: воспроизводимые доказательства эквивалентности SQL",
-    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace согласует представления запросов и составляет вывод к общему выражению из правил переписывания. Он доказывает 97 из 240 пар с одинаковым результатом исполнения. Корректность правил предполагается; остаются ограничения поиска, внешних соединений и оконных функций. Отсутствие доказательства не означает неэквивалентности."
+    "research.equitrace-replayable-sql-equivalence.summary": "EquiTrace согласует представления запросов и составляет вывод к общему выражению из правил переписывания. Он доказывает 97 из 240 пар с одинаковым результатом исполнения. Корректность правил предполагается; остаются ограничения поиска, внешних соединений и оконных функций. Отсутствие доказательства не означает неэквивалентности.",
+    "news.solidigm-preipo-ipo-review-halted.title": "Solidigm прекращает рассмотрение IPO и предварительного привлечения капитала",
+    "news.solidigm-preipo-ipo-review-halted.summary": "SK hynix подтвердила прекращение рассмотрения IPO и предшествующего финансирования Solidigm, сославшись на условия рынка капитала и динамику акций. По словам компании, потребность расширять мощности в США сохраняется; рассматриваются альтернативы, включая прямые инвестиции. Решение само по себе не означает отмены нового завода.",
+    "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 добавляет DTLS 1.3 и GREASE",
+    "news.openssl-410-dtls-grease-release.summary": "Релиз добавляет DTLS 1.3, механизм GREASE для совместимости протоколов и оптимизации криптографических операций, убирая сборки для Windows CE и Itanium. В примечаниях также перечислены известные проблемы рукопожатия DTLS, повторной передачи и обработки ошибок слушателя; их следует проверить перед внедрением.",
+    "news.litellm-11070-release-artifact-compromise.title": "Скомпрометированы пакеты и контейнеры LiteLLM 1.107.0",
+    "news.litellm-11070-release-artifact-compromise.summary": "Разработчики сообщили о крадущей учётные данные нагрузке в wheel-пакетах от 21 октября и определённых контейнерах, которые уже удалены или заменены. Официальный тег исходников не содержал вредоносных файлов. Затронутым средам нужны изоляция, расследование и смена учётных данных; одно удаление или обновление не подтверждает устранения заражения."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2733,6 +2757,12 @@ window.SITE_MESSAGES = {
     "research.userswe-dynamic-user-coding-evaluation.title": "UserSWE：評測 Agent 如何在多輪交流中修復程式碼",
     "research.userswe-dynamic-user-coding-evaluation.summary": "用動態模擬使用者逐步提供資訊，每輪執行測試，並由不同模型家族交叉審查判定。11 個 Agent 在 42 個儲存庫的 72 項任務上，排名隨互動輪數變化；基準涵蓋短期維護任務，尚不包含從零建置或長期開發。",
     "research.equitrace-replayable-sql-equivalence.title": "EquiTrace：把 SQL 重寫過程變成可重播的等價證明",
-    "research.equitrace-replayable-sql-equivalence.summary": "透過對齊查詢表示和組合重寫規則，輸出兩條 SQL 到共同運算式的推導。在 240 對執行結果相同的模型重寫查詢中證明 97 對。證明依賴規則正確性，搜尋容量及外部連接、視窗函數等表示仍有限制；未證明不代表不等價。"
+    "research.equitrace-replayable-sql-equivalence.summary": "透過對齊查詢表示和組合重寫規則，輸出兩條 SQL 到共同運算式的推導。在 240 對執行結果相同的模型重寫查詢中證明 97 對。證明依賴規則正確性，搜尋容量及外部連接、視窗函數等表示仍有限制；未證明不代表不等價。",
+    "news.solidigm-preipo-ipo-review-halted.title": "Solidigm 停止 IPO 及上市前融資評估",
+    "news.solidigm-preipo-ipo-review-halted.summary": "SK 海力士確認，考量資本市場狀況及股價變化，Solidigm 停止評估上市前融資和 IPO。公司表示擴充美國產能的投資需求未變，將繼續評估直接投資等融資方式；這不代表新工廠計畫已經取消。",
+    "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 發布，加入 DTLS 1.3 與 GREASE",
+    "news.openssl-410-dtls-grease-release.summary": "新版本加入 DTLS 1.3、用於改善協定相容性的 GREASE，以及多項加密運算最佳化，並移除 Windows CE 和 Itanium 建置目標。發布說明同時列出 DTLS 交握、重傳和監聽錯誤處理的已知問題，部署前仍需核對。",
+    "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 安裝套件及容器映像遭植入惡意程式",
+    "news.litellm-11070-release-artifact-compromise.summary": "維護者披露，21 日發布的 1.107.0 wheel 安裝套件及指定容器映像含竊密程式，已被移除或回復。官方原始碼標籤未含惡意檔案；使用過受影響產物的環境仍需隔離檢查並輪換可能外洩的憑證，解除安裝或升級不等於清除感染。"
   }
 };

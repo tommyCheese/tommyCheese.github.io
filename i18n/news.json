@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-10-23",
+  "updated_at": "2026-10-24",
   "items": [
+    {
+      "id": "solidigm-preipo-ipo-review-halted",
+      "category": "semiconductors",
+      "published_at": "2026-10-23",
+      "collected_at": "2026-10-24",
+      "source": "SK hynix / Yonhap",
+      "url": "https://news.skhynix.com/en/fact-12/",
+      "image": "https://img4.yna.co.kr/photo/cms/2026/10/18/01/PCM20261018000001990_P4.jpg",
+      "image_credit": "Solidigm / Yonhap · company building",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openssl-410-dtls-grease-release",
+      "category": "software",
+      "published_at": "2026-10-23",
+      "collected_at": "2026-10-24",
+      "source": "OpenSSL Project / Phoronix",
+      "url": "https://github.com/openssl/openssl/releases/tag/openssl-4.1.0",
+      "image": "https://www.phoronix.net/image.php?id=2025&image=openssl",
+      "image_credit": "OpenSSL / Phoronix · library logo",
+      "image_fit": "contain"
+    },
+    {
+      "id": "litellm-11070-release-artifact-compromise",
+      "category": "security",
+      "published_at": "2026-10-21",
+      "collected_at": "2026-10-24",
+      "source": "LiteLLM incident report / BleepingComputer",
+      "url": "https://docs.litellm.ai/blog/security-incident-oct-21-2026",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/10/22/LiteLLM.jpg",
+      "image_credit": "BleepingComputer · LiteLLM illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "modular-max-source-available-license",
       "category": "ai",
