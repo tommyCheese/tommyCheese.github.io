@@ -94,6 +94,9 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         card.append(copy)
         return card
 
+    # Preserve the original personal sections before recreating their grouping.
+    for group in doc.xpath('//*[@id="home-personal"]'):
+        group.drop_tag()
     # Rebuild owned fragments on every run; the Chinese output is also a source.
     for old in doc.xpath('//*[@data-reading-layout]'):
         old.getparent().remove(old)
@@ -222,7 +225,7 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
 
         news = node('section', id='today-news', class_='home-section container', data_reading_layout='news', aria_labelledby='news-heading')
         heading = node('div', class_='section-heading news-heading')
-        heading.append(label('h2', 'nav.news', id='news-heading'))
+        heading.append(label('h3', 'nav.news', id='news-heading'))
         heading.append(label('a', 'news.viewAll', href='/news/', class_='news-view-all'))
         news.append(heading)
         news.append(label('p', 'news.previewIntro', class_='news-intro'))
@@ -232,7 +235,7 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         news.append(grid)
         research = node('section', id='frontier-research', class_='home-section container', data_reading_layout='research', aria_labelledby='research-heading')
         heading = node('div', class_='section-heading news-heading')
-        heading.append(label('h2', 'nav.research', id='research-heading'))
+        heading.append(label('h3', 'nav.research', id='research-heading'))
         heading.append(label('a', 'research.viewAll', href='/research/', class_='news-view-all'))
         research.append(heading)
         research.append(label('p', 'research.previewIntro', class_='news-intro'))
@@ -262,13 +265,21 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         more_posts = [slug for slug in sorted(articles, key=lambda slug: articles[slug].get('date', ''), reverse=True) if slug not in FEATURED]
         for slug in more_posts[:5]:
             recent.append(post_link(slug))
-        essays = node('section', id='home-essays', data_reading_layout='essays', aria_labelledby='essays-heading')
-        group_heading = node('div', class_='home-group-heading')
-        group_heading.append(label('h2', 'nav.blogs', id='essays-heading'))
-        essays.append(group_heading)
-        essays.extend([featured, recent, topics])
+        def home_group(name, title_key, sections):
+            group = node('section', id='home-' + name, class_='home-group', data_reading_layout=name, aria_labelledby=name + '-heading')
+            heading = node('div', class_='home-group-heading', data_reading_layout=name + '-heading')
+            heading.append(label('h2', title_key, id=name + '-heading'))
+            group.append(heading)
+            group.extend(sections)
+            return group
+
+        updates = home_group('updates', 'homepage.updatesGroup', [news, research])
+        essays = home_group('essays', 'nav.blogs', [featured, recent, topics])
+        about_heading = doc.get_element_by_id('about').find('.//h3')
+        about_heading.getparent().replace(about_heading, label('h3', 'section.about', class_='text-center bg-transparent'))
+        personal = home_group('personal', 'homepage.personalGroup', [doc.get_element_by_id(name) for name in ['about', 'experience', 'contact']])
         # Keep visual and keyboard reading order aligned, with frequent updates first.
-        for offset, section in enumerate([news, research, essays], start=1):
+        for offset, section in enumerate([updates, essays, personal], start=1):
             content.insert(content.index(hero) + offset, section)
 
     if path in ['/news/', '/research/']:

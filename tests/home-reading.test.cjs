@@ -20,13 +20,17 @@ for (const locale of ['', 'en', 'ja', 'ru', 'zh-TW']) {
     assert.equal(more.length, 5);
     assert.equal(new Set([...featured, ...more]).size, 8);
 
-    const flow = ['hero', 'today-news', 'frontier-research', 'home-essays', 'featured-posts', 'recent-posts']
+    const flow = ['hero', 'home-updates', 'today-news', 'frontier-research', 'home-essays', 'featured-posts', 'recent-posts']
       .map(id => home.indexOf(`id="${id}"`));
     flow.push(home.indexOf('data-reading-layout="topics"'));
     assert.ok(flow.every((position, index) => position >= 0 && (!index || position > flow[index - 1])));
     assert.match(home, /<section\b[^>]*id="home-essays"[^>]*aria-labelledby="essays-heading"/);
     assert.match(home, /<h2\b[^>]*id="essays-heading"/);
-    for (const id of ['featured-heading', 'recent-heading', 'topics-heading']) {
+    for (const name of ['updates', 'personal']) {
+      assert.match(home, new RegExp(`<section\\b[^>]*id="home-${name}"[^>]*aria-labelledby="${name}-heading"`));
+      assert.match(home, new RegExp(`<h2\\b[^>]*id="${name}-heading"`));
+    }
+    for (const id of ['news-heading', 'research-heading', 'featured-heading', 'recent-heading', 'topics-heading', 'comments-heading']) {
       assert.match(home, new RegExp(`<h3\\b[^>]*id="${id}"`));
     }
 

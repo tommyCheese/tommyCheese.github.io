@@ -263,8 +263,8 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
   margin: 0 auto 24px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
 }
-#content.home-bento > *, #home-essays > * { grid-column: 1 / -1; min-width: 0; }
-#home-essays { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+#content.home-bento > *, #content.home-bento .home-group > * { grid-column: 1 / -1; min-width: 0; }
+#content.home-bento .home-group { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
 #content.home-bento .home-group-heading { display: flex; align-items: center; gap: 16px; padding: 8px 4px 0; }
 #content.home-bento .home-group-heading h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1.3rem; }
 .home-group-heading h2::before { content: ''; width: 4px; height: 20px; border-radius: 4px; background: var(--ui-accent); }
@@ -284,7 +284,7 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
 #content.home-bento #hero .eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px var(--ui-pill); }
 #content.home-bento #hero .home-focus { font-size: .85rem; line-height: 1.7; color: var(--text-secondary-color); }
 #content.home-bento #hero .home-photo { flex: 0 0 auto; width: 168px; height: 126px; margin: 0; object-fit: cover; }
-#content.home-bento h2, #content.home-bento .home-section > h3, #content.home-bento .section-heading > h3, #content.home-bento > :is(#about, #experience, #contact) h3.text-center {
+#content.home-bento h2, #content.home-bento .home-section > h3, #content.home-bento .section-heading > h3, #content.home-bento :is(#about, #experience, #contact) h3.text-center, #content.home-bento #comments > h3 {
   margin: 0 0 14px;
   font-size: 1.05rem;
   font-weight: 700;
@@ -292,7 +292,7 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
   text-align: left !important;
   color: var(--text-color) !important;
 }
-#content.home-bento .news-heading h2 { margin: 0; }
+#content.home-bento .news-heading :is(h2, h3) { margin: 0; }
 #content.home-bento .section-heading { align-items: center; gap: 8px; }
 #content.home-bento .section-heading > a { flex-shrink: 0; font-size: .75rem; text-decoration: none; }
 #content.home-bento .news-intro { margin: 0 0 14px; font-size: .75rem; line-height: 1.6; }
@@ -339,7 +339,7 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
 #content.home-bento #recent-posts .post-copy h3 { margin-bottom: 2px; }
 #content.home-bento #recent-posts .post-copy p { display: none; }
 #content.home-bento #recent-posts time { font-size: .65rem; }
-#content.home-bento > :is(#about, #experience, #contact) > .container { max-width: none; padding: 0; }
+#content.home-bento :is(#about, #experience, #contact) > .container { max-width: none; padding: 0; }
 #content.home-bento #about .row { margin: 0; padding: 0 !important; }
 #content.home-bento #about .row > :not(.content) { display: none !important; }
 #content.home-bento #about .content { width: 100%; padding: 0; font-size: .86rem; }
@@ -352,13 +352,13 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
 #content.home-bento #contact .btn { padding: 8px 16px; font-size: .8rem; }
 #content.home-bento #comments { max-width: none; }
 @media (min-width: 1200px) {
-  #content.home-bento > #today-news { grid-column: span 8; }
-  #content.home-bento > #frontier-research { grid-column: 9 / -1; }
+  #content.home-bento #today-news { grid-column: span 8; }
+  #content.home-bento #frontier-research { grid-column: 9 / -1; }
   #content.home-bento #featured-posts { grid-column: span 8; }
   #content.home-bento #recent-posts { grid-column: span 4; }
-  #content.home-bento > #about { grid-column: span 4; }
-  #content.home-bento > #experience { grid-column: 5 / -1; grid-row: span 2; }
-  #content.home-bento > #contact { grid-column: 1 / 5; }
+  #content.home-bento #about { grid-column: span 4; }
+  #content.home-bento #experience { grid-column: 5 / -1; grid-row: span 2; }
+  #content.home-bento #contact { grid-column: 1 / 5; }
   #content.home-bento #experience .experience-container { grid-template-columns: 180px minmax(0, 1fr); gap: 16px; }
   #content.home-bento #experience .experience-sheet { min-height: 360px; padding: 24px; }
 }
@@ -372,7 +372,7 @@ body.dark #profileHeader .navbar-nav a.linux-lab-nav {
 }
 @media (max-width: 767.98px) {
   #content.home-bento { width: calc(100% - 24px); gap: 12px; }
-  #home-essays { gap: 12px; }
+  #content.home-bento .home-group { gap: 12px; }
   #content.home-bento :is(.home-section, #about, #experience, #contact, #comments) { padding: 16px !important; border-radius: 20px; }
   #content.home-bento #hero .intro-layout { display: flex; padding: 4px; gap: 16px; min-height: 100px; }
   #content.home-bento #hero h1 { font-size: 1.7rem; }
