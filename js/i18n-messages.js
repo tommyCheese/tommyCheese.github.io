@@ -551,7 +551,17 @@ window.SITE_MESSAGES = {
     "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 发布，加入 DTLS 1.3 与 GREASE",
     "news.openssl-410-dtls-grease-release.summary": "新版本加入 DTLS 1.3、用于改善协议兼容性的 GREASE，以及多项加密运算优化，并移除 Windows CE 和 Itanium 构建目标。发布说明同时列出 DTLS 握手、重传和监听错误处理的已知问题，部署前仍需核对。",
     "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 安装包及容器镜像遭投毒",
-    "news.litellm-11070-release-artifact-compromise.summary": "维护者披露，21 日发布的 1.107.0 wheel 安装包及指定容器镜像含窃密载荷，已被移除或回滚。官方源码标签未含恶意文件；使用过受影响产物的环境仍需隔离检查并轮换可能泄露的凭证，卸载或升级不等于清除感染。"
+    "news.litellm-11070-release-artifact-compromise.summary": "维护者披露，21 日发布的 1.107.0 wheel 安装包及指定容器镜像含窃密载荷，已被移除或回滚。官方源码标签未含恶意文件；使用过受影响产物的环境仍需隔离检查并轮换可能泄露的凭证，卸载或升级不等于清除感染。",
+    "research.contestable-agent-metadata-stewardship.title": "可质询的数据治理 Agent：把人工审核过程留下来",
+    "research.contestable-agent-metadata-stewardship.summary": "让专门 Agent 为元数据提案提供证据，审核者可逐条接受、驳回或修改，并保存理由与来源。暖通分类参考实现和保修案例展示了流程；跨系统记录与先例门控仍属方案，尚未测量对审核负担或决策质量的改善。",
+    "research.gbor-rag-enrichment-evidence.title": "GBOR-RAG：用证据子图解释跨库基因富集结果",
+    "research.gbor-rag-enrichment-evidence.summary": "将基因集数据库组织为术语—基因图，检索连通证据后生成解释。在 42 个查询中，预建图后的 ORA 查询中位提速 37 倍。评估依赖经小规模人工校准的模型评分，证据忠实度不代表生物学结论正确。",
+    "research.petri-net-agent-execution-harness.title": "用 Petri 网约束 Agent 的工具执行",
+    "research.petri-net-agent-execution-harness.summary": "将能力、审批与预算建模为可消耗标记，推导安全监督器及减少重试开销的条件。发布 Agent 示例表明，部署启动后仍需可拒绝的提交步骤。保证依赖完整中介和状态映射等四项假设，未覆盖合法调用参数中的任意数据泄露。",
+    "research.lara-agentic-retrieval-attribution.title": "LARA：把 Agent 检索质量与用户行为分开评测",
+    "research.lara-agentic-retrieval-attribution.summary": "用检索质量、使用结果和任务成功三个层次，配合四个追溯字段处理跨轮归因。单一创作助手的日志表明，改写请求不能直接视为检索失败；完整字段尚未部署，许多指标仍依赖时间推断，框架效果尚待验证。",
+    "research.phystrace-temporal-physical-consistency.title": "PhysTrace：定位视频中违反物理规律的时段",
+    "research.phystrace-temporal-physical-consistency.summary": "把多模态模型根据历史生成的预期与视频窗口对齐，标出异常并给出解释。在 IntPhys2-Timing 的不同物理类别中，最高定位命中率为 70.7%。结果受模型、提示及筛选后的场景类别影响，不能当作通用物理验证器。"
   },
   "en": {
     "nav.about": "About",
@@ -1104,7 +1114,17 @@ window.SITE_MESSAGES = {
     "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 adds DTLS 1.3 and GREASE",
     "news.openssl-410-dtls-grease-release.summary": "The release adds DTLS 1.3, GREASE for protocol compatibility and cryptographic optimizations, while dropping Windows CE and Itanium build targets. Release notes also list known DTLS handshake, retransmission and listener error-handling issues that require review before deployment.",
     "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 packages and container images were compromised",
-    "news.litellm-11070-release-artifact-compromise.summary": "Maintainers disclosed credential-stealing payloads in October 21 wheels and specified container images, now removed or rolled back. The official source tag did not contain the malicious files. Exposed environments still need isolation, investigation and credential rotation; uninstalling or upgrading alone does not establish that an infection is cleared."
+    "news.litellm-11070-release-artifact-compromise.summary": "Maintainers disclosed credential-stealing payloads in October 21 wheels and specified container images, now removed or rolled back. The official source tag did not contain the malicious files. Exposed environments still need isolation, investigation and credential rotation; uninstalling or upgrading alone does not establish that an infection is cleared.",
+    "research.contestable-agent-metadata-stewardship.title": "Contestable governance agents record human review of metadata",
+    "research.contestable-agent-metadata-stewardship.summary": "Specialist agents attach evidence to metadata proposals; stewards can challenge arguments and retain their interventions. An HVAC classification implementation and warranty example illustrate the workflow. Cross-system records and precedent gates remain proposals, without measured gains in review effort or decision quality.",
+    "research.gbor-rag-enrichment-evidence.title": "GBOR-RAG interprets enrichment results through evidence subgraphs",
+    "research.gbor-rag-enrichment-evidence.summary": "A term–gene graph connects gene-set databases and supplies evidence for generated interpretations. Across 42 queries, ORA query time improves by a median 37 times after graph construction. Evaluation uses model ratings calibrated on small human samples; faithfulness to evidence does not establish biological correctness.",
+    "research.petri-net-agent-execution-harness.title": "Petri nets constrain tool execution by agents",
+    "research.petri-net-agent-execution-harness.summary": "Capabilities, approvals and budgets become consumable marks, enabling safety supervision and analysis of retry costs. A release-agent example needs a refusable commit step after rollout begins. Guarantees depend on four assumptions including complete mediation and faithful state mapping, and do not cover arbitrary leakage through permitted call arguments.",
+    "research.lara-agentic-retrieval-attribution.title": "LARA separates agentic retrieval quality from user behavior",
+    "research.lara-agentic-retrieval-attribution.summary": "Three measurement layers and four lineage fields connect retrieval, use and task outcomes across turns. Logs from one creative assistant show why reformulation is not a direct retrieval-failure signal. The fields are not yet deployed; many metrics remain timing-based, and the framework’s benefits require validation.",
+    "research.phystrace-temporal-physical-consistency.title": "PhysTrace localizes physical violations in video",
+    "research.phystrace-temporal-physical-consistency.summary": "PhysTrace aligns history-conditioned multimodal expectations with video windows to locate violations and explain them. Its best category-level localization hit rate on IntPhys2-Timing is 70.7%. Results depend on the model, prompts and selected scene categories; this is not a general physical verifier."
   },
   "ja": {
     "nav.about": "私について",
@@ -1657,7 +1677,17 @@ window.SITE_MESSAGES = {
     "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0、DTLS 1.3 と GREASE に対応",
     "news.openssl-410-dtls-grease-release.summary": "DTLS 1.3、プロトコル互換性を高める GREASE、暗号演算の最適化を追加し、Windows CE と Itanium 向けビルドを廃止した。リリースノートには DTLS のハンドシェイク、再送、リスナーのエラー処理に関する既知の問題もあり、導入前の確認が必要。",
     "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 の配布パッケージとコンテナが改ざん",
-    "news.litellm-11070-release-artifact-compromise.summary": "保守者によると、21 日公開の wheel と特定のコンテナに認証情報を盗む処理が含まれ、削除または巻き戻し済み。公式ソースタグには悪意あるファイルはなかった。影響を受けた環境は隔離・調査と認証情報の更新が必要で、削除やアップグレードだけでは感染除去を確認できない。"
+    "news.litellm-11070-release-artifact-compromise.summary": "保守者によると、21 日公開の wheel と特定のコンテナに認証情報を盗む処理が含まれ、削除または巻き戻し済み。公式ソースタグには悪意あるファイルはなかった。影響を受けた環境は隔離・調査と認証情報の更新が必要で、削除やアップグレードだけでは感染除去を確認できない。",
+    "research.contestable-agent-metadata-stewardship.title": "異議を示せるデータガバナンス Agent：人の審査過程を記録",
+    "research.contestable-agent-metadata-stewardship.summary": "専任 Agent がメタデータ案に根拠を付け、担当者は個々の論点を承認・却下・修正し、その経緯を残す。空調分類の参照実装と保証事例で流れを示した。システム横断記録と先例への昇格制御は提案段階で、審査負担や判断品質の改善は未測定。",
+    "research.gbor-rag-enrichment-evidence.title": "GBOR-RAG：根拠部分グラフで複数データベースの富化結果を説明",
+    "research.gbor-rag-enrichment-evidence.summary": "遺伝子セットを用語—遺伝子グラフに統合し、連結した根拠から解釈を生成する。42問い合わせで、グラフ構築後の ORA 検索は中央値37倍高速化した。評価は少人数の人手評価で校正したモデル採点に依存し、根拠への忠実さは生物学的正しさを保証しない。",
+    "research.petri-net-agent-execution-harness.title": "Petri ネットで Agent のツール実行を制御",
+    "research.petri-net-agent-execution-harness.summary": "権限、承認、予算を消費可能なマークとして表し、安全な監督器と再試行費用の条件を導く。リリース Agent の例では、展開開始後にも拒否可能な確定操作が必要だった。保証は完全仲介や正確な状態対応など4仮定に依存し、許可済み呼出しの引数による任意の漏えいまで防ぐものではない。",
+    "research.lara-agentic-retrieval-attribution.title": "LARA：Agent の検索品質と利用者行動を分けて評価",
+    "research.lara-agentic-retrieval-attribution.summary": "3つの評価層と4つの来歴フィールドで検索、利用、タスク結果を複数ターンにわたり結び付ける。単一の制作支援サービスのログは、言い換えを検索失敗と直結できないことを示す。全フィールドは未導入で、多くの指標は時刻による推定に留まり、効果検証が必要。",
+    "research.phystrace-temporal-physical-consistency.title": "PhysTrace：動画で物理法則に反する時間帯を探す",
+    "research.phystrace-temporal-physical-consistency.summary": "履歴からマルチモーダルモデルが予測した状態と動画の時間窓を照合し、違反を特定して説明する。IntPhys2-Timing のカテゴリー別最高命中率は70.7%。モデル、プロンプト、選別した場面に依存するため、汎用的な物理検証器とはいえない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2210,7 +2240,17 @@ window.SITE_MESSAGES = {
     "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 добавляет DTLS 1.3 и GREASE",
     "news.openssl-410-dtls-grease-release.summary": "Релиз добавляет DTLS 1.3, механизм GREASE для совместимости протоколов и оптимизации криптографических операций, убирая сборки для Windows CE и Itanium. В примечаниях также перечислены известные проблемы рукопожатия DTLS, повторной передачи и обработки ошибок слушателя; их следует проверить перед внедрением.",
     "news.litellm-11070-release-artifact-compromise.title": "Скомпрометированы пакеты и контейнеры LiteLLM 1.107.0",
-    "news.litellm-11070-release-artifact-compromise.summary": "Разработчики сообщили о крадущей учётные данные нагрузке в wheel-пакетах от 21 октября и определённых контейнерах, которые уже удалены или заменены. Официальный тег исходников не содержал вредоносных файлов. Затронутым средам нужны изоляция, расследование и смена учётных данных; одно удаление или обновление не подтверждает устранения заражения."
+    "news.litellm-11070-release-artifact-compromise.summary": "Разработчики сообщили о крадущей учётные данные нагрузке в wheel-пакетах от 21 октября и определённых контейнерах, которые уже удалены или заменены. Официальный тег исходников не содержал вредоносных файлов. Затронутым средам нужны изоляция, расследование и смена учётных данных; одно удаление или обновление не подтверждает устранения заражения.",
+    "research.contestable-agent-metadata-stewardship.title": "Агенты управления данными сохраняют ход проверки метаданных человеком",
+    "research.contestable-agent-metadata-stewardship.summary": "Агенты прикладывают свидетельства к предложениям, а ответственный специалист может оспорить аргументы и записать свои решения. Реализация классификации HVAC и пример гарантийного случая показывают процесс. Межсистемные записи и допуск прецедентов пока предложены, а влияние на трудозатраты и качество решений не измерено.",
+    "research.gbor-rag-enrichment-evidence.title": "GBOR-RAG объясняет результаты обогащения через подграфы свидетельств",
+    "research.gbor-rag-enrichment-evidence.summary": "Граф терминов и генов объединяет базы наборов генов и даёт основания для генерируемых интерпретаций. На 42 запросах медианное ускорение ORA после построения графа составило 37 раз. Оценка опирается на модель, откалиброванную на малых человеческих выборках; верность свидетельствам не доказывает биологической правильности.",
+    "research.petri-net-agent-execution-harness.title": "Сети Петри ограничивают выполнение инструментов агентами",
+    "research.petri-net-agent-execution-harness.summary": "Права, одобрения и бюджеты представлены расходуемыми метками для безопасного надзора и анализа стоимости повторных попыток. Пример агента выпуска требует возможности отказать в фиксации после начала развёртывания. Гарантии зависят от четырёх допущений, включая полный контроль действий и точное отображение состояния, и не охватывают произвольную утечку через разрешённые аргументы.",
+    "research.lara-agentic-retrieval-attribution.title": "LARA разделяет качество агентного поиска и поведение пользователя",
+    "research.lara-agentic-retrieval-attribution.summary": "Три уровня измерений и четыре поля происхождения связывают поиск, использование и результат задачи между ходами. Логи одного творческого помощника показывают, почему переформулировка не равна сбою поиска. Поля ещё не внедрены; многие метрики основаны на временных связях, а польза подхода требует проверки.",
+    "research.phystrace-temporal-physical-consistency.title": "PhysTrace находит моменты физических нарушений в видео",
+    "research.phystrace-temporal-physical-consistency.summary": "Метод сопоставляет ожидания мультимодальной модели, обусловленные историей, с окнами видео и объясняет нарушения. Лучший показатель локализации по категориям IntPhys2-Timing — 70,7%. Результаты зависят от модели, запросов и отбора сцен; универсальная проверка физических законов не обеспечивается."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2763,6 +2803,16 @@ window.SITE_MESSAGES = {
     "news.openssl-410-dtls-grease-release.title": "OpenSSL 4.1.0 發布，加入 DTLS 1.3 與 GREASE",
     "news.openssl-410-dtls-grease-release.summary": "新版本加入 DTLS 1.3、用於改善協定相容性的 GREASE，以及多項加密運算最佳化，並移除 Windows CE 和 Itanium 建置目標。發布說明同時列出 DTLS 交握、重傳和監聽錯誤處理的已知問題，部署前仍需核對。",
     "news.litellm-11070-release-artifact-compromise.title": "LiteLLM 1.107.0 安裝套件及容器映像遭植入惡意程式",
-    "news.litellm-11070-release-artifact-compromise.summary": "維護者披露，21 日發布的 1.107.0 wheel 安裝套件及指定容器映像含竊密程式，已被移除或回復。官方原始碼標籤未含惡意檔案；使用過受影響產物的環境仍需隔離檢查並輪換可能外洩的憑證，解除安裝或升級不等於清除感染。"
+    "news.litellm-11070-release-artifact-compromise.summary": "維護者披露，21 日發布的 1.107.0 wheel 安裝套件及指定容器映像含竊密程式，已被移除或回復。官方原始碼標籤未含惡意檔案；使用過受影響產物的環境仍需隔離檢查並輪換可能外洩的憑證，解除安裝或升級不等於清除感染。",
+    "research.contestable-agent-metadata-stewardship.title": "可質詢的資料治理 Agent：把人工審核過程留下來",
+    "research.contestable-agent-metadata-stewardship.summary": "讓專門 Agent 為中繼資料提案提供證據，審核者可逐條接受、駁回或修改，並保存理由與來源。暖通分類參考實作和保固案例展示了流程；跨系統紀錄與先例門控仍屬方案，尚未測量對審核負擔或決策品質的改善。",
+    "research.gbor-rag-enrichment-evidence.title": "GBOR-RAG：用證據子圖解釋跨庫基因富集結果",
+    "research.gbor-rag-enrichment-evidence.summary": "將基因集資料庫組織為術語—基因圖，檢索連通證據後產生解釋。在 42 個查詢中，預建圖後的 ORA 查詢中位提速 37 倍。評估依賴經小規模人工校準的模型評分，證據忠實度不代表生物學結論正確。",
+    "research.petri-net-agent-execution-harness.title": "用 Petri 網約束 Agent 的工具執行",
+    "research.petri-net-agent-execution-harness.summary": "將能力、審批與預算建模為可消耗標記，推導安全監督器及減少重試開銷的條件。發布 Agent 範例表明，部署啟動後仍需可拒絕的提交步驟。保證依賴完整中介和狀態對映等四項假設，未涵蓋合法呼叫參數中的任意資料外洩。",
+    "research.lara-agentic-retrieval-attribution.title": "LARA：把 Agent 檢索品質與使用者行為分開評測",
+    "research.lara-agentic-retrieval-attribution.summary": "用檢索品質、使用結果和任務成功三個層次，配合四個追溯欄位處理跨輪歸因。單一創作助手的紀錄表明，改寫請求不能直接視為檢索失敗；完整欄位尚未部署，許多指標仍依賴時間推斷，框架效果尚待驗證。",
+    "research.phystrace-temporal-physical-consistency.title": "PhysTrace：定位影片中違反物理規律的時段",
+    "research.phystrace-temporal-physical-consistency.summary": "把多模態模型根據歷史產生的預期與影片時間窗對齊，標出異常並給出解釋。在 IntPhys2-Timing 的不同物理類別中，最高定位命中率為 70.7%。結果受模型、提示及篩選後的場景類別影響，不能當作通用物理驗證器。"
   }
 };

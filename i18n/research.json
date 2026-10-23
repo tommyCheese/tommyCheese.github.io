@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23",
+  "updated_at": "2026-10-24",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,76 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "contestable-agent-metadata-stewardship",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Akhtar, Humza; Freeman, Brian · arXiv:2610.31553v1",
+      "url": "https://arxiv.org/abs/2610.31553v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "gbor-rag-enrichment-evidence",
+      "kind": "conference-paper",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "rag",
+        "papers",
+        "conferences"
+      ],
+      "source": "Li, Guangcan et al. · arXiv:2610.30710v1",
+      "url": "https://arxiv.org/abs/2610.30710v1",
+      "collected_at": "2026-10-24",
+      "venue": "IEEE BIBM 2026 (author-reported acceptance; track unspecified)"
+    },
+    {
+      "id": "petri-net-agent-execution-harness",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "agents",
+        "security",
+        "papers"
+      ],
+      "source": "Gu, Chao; Zhu, Quanyan · arXiv:2610.31376v1",
+      "url": "https://arxiv.org/abs/2610.31376v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "lara-agentic-retrieval-attribution",
+      "kind": "preprint",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Liang, Yan (Fergie) et al. · arXiv:2610.30423v1",
+      "url": "https://arxiv.org/abs/2610.30423v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "phystrace-temporal-physical-consistency",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "papers",
+        "results"
+      ],
+      "source": "Yoo, Taekoan et al. · arXiv:2610.31429v1",
+      "url": "https://arxiv.org/abs/2610.31429v1",
+      "collected_at": "2026-10-24"
+    },
     {
       "id": "audq-auditable-rule-discovery",
       "kind": "preprint",
