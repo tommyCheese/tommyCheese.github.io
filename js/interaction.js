@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const hoverPointer = window.matchMedia('(any-hover: hover) and (any-pointer: fine)');
 
   // Keep the document visible if JS or an animation API is unavailable.
   if ('IntersectionObserver' in window && Element.prototype.animate) {
@@ -23,6 +24,86 @@
     reducedMotion.addEventListener('change', () => {
       if (reducedMotion.matches) running.forEach(animation => animation.cancel());
     });
+  }
+
+  const navbar = document.getElementById('navbarContent');
+  const nav = navbar?.querySelector('.navbar-nav');
+  if (nav) {
+    const links = [...nav.querySelectorAll('a.nav-link:not(.linux-lab-nav)')];
+    let hoveredLink = null;
+    let focusedLink = null;
+    let activeRect = null;
+    const linkFrom = target => {
+      const link = target?.closest?.('a.nav-link:not(.linux-lab-nav)');
+      return links.includes(link) ? link : null;
+    };
+    function syncNavGlass() {
+      const link = hoveredLink || focusedLink || links.find(link => link.getAttribute('aria-current') === 'page');
+      const rect = link?.getBoundingClientRect();
+      activeRect = rect;
+      if (!rect?.width || !rect.height) {
+        nav.classList.remove('has-liquid');
+        return;
+      }
+      const surface = nav.getBoundingClientRect();
+      const firstPlacement = !nav.classList.contains('has-liquid');
+      if (firstPlacement) nav.classList.add('liquid-snap');
+      nav.style.setProperty('--nav-x', `${rect.left - surface.left - nav.clientLeft + nav.scrollLeft}px`);
+      nav.style.setProperty('--nav-y', `${rect.top - surface.top - nav.clientTop + nav.scrollTop}px`);
+      nav.style.setProperty('--nav-width', `${rect.width}px`);
+      nav.style.setProperty('--nav-height', `${rect.height}px`);
+      nav.style.setProperty('--nav-glint', '50%');
+      nav.classList.add('has-liquid');
+      if (firstPlacement) {
+        // Commit the first position before enabling the elastic slide.
+        void nav.offsetWidth;
+        nav.classList.remove('liquid-snap');
+      }
+    }
+    nav.classList.add('nav-liquid');
+    const aboutLink = links.find(link => link.getAttribute('data-i18n') === 'nav.about');
+    if (aboutLink) {
+      const pageLink = links.find(link => link.getAttribute('aria-current') === 'page');
+      const aboutTarget = new URL(aboutLink.href, window.location.href);
+      function syncSectionSelection() {
+        const current = window.location.pathname === aboutTarget.pathname && window.location.hash === aboutTarget.hash
+          ? aboutLink : pageLink;
+        for (const link of links) {
+          if (link === current) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        }
+        syncNavGlass();
+      }
+      window.addEventListener('hashchange', syncSectionSelection);
+      syncSectionSelection();
+    }
+    nav.addEventListener('pointerover', event => {
+      if (event.pointerType !== 'mouse' || !hoverPointer.matches) return;
+      const link = linkFrom(event.target);
+      if (link === hoveredLink) return;
+      if (!link && !event.target.closest?.('.header-actions, .linux-lab-nav, [data-search-open]')) return;
+      hoveredLink = link;
+      syncNavGlass();
+    });
+    nav.addEventListener('pointermove', event => {
+      if (event.pointerType !== 'mouse' || !hoverPointer.matches || reducedMotion.matches || !hoveredLink || !activeRect?.width) return;
+      const position = Math.max(12, Math.min(88, (event.clientX - activeRect.left) / activeRect.width * 100));
+      nav.style.setProperty('--nav-glint', `${position}%`);
+    }, { passive: true });
+    nav.addEventListener('pointerleave', () => { hoveredLink = null; syncNavGlass(); });
+    nav.addEventListener('focusin', event => {
+      hoveredLink = null;
+      focusedLink = linkFrom(event.target);
+      syncNavGlass();
+    });
+    nav.addEventListener('focusout', event => { focusedLink = linkFrom(event.relatedTarget); syncNavGlass(); });
+    window.addEventListener('blur', () => { hoveredLink = focusedLink = null; syncNavGlass(); });
+    hoverPointer.addEventListener('change', () => { hoveredLink = null; syncNavGlass(); });
+    navbar.addEventListener('shown.bs.collapse', syncNavGlass);
+    if ('ResizeObserver' in window) new ResizeObserver(syncNavGlass).observe(nav);
+    else window.addEventListener('resize', syncNavGlass, { passive: true });
+    document.fonts?.ready.then(syncNavGlass);
+    syncNavGlass();
   }
 
   const segments = document.getElementById('pills-tab');

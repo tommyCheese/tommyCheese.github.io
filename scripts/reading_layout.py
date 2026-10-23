@@ -54,7 +54,6 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
     def news_card(item, preview=False, research=False):
         collection = 'research' if research else 'news'
         date = research_archive_date(item) if research else item['published_at']
-        href = '/' + collection + '/#' + collection + '-' + date if preview else item['url']
         tags = item['tags'] if research else [item['category']]
         card = node('article', class_='news-card ' + ('news-preview' if preview else 'news-entry') + (' research-card' if research else ''),
                     data_news_tags=' '.join(tags))
@@ -73,25 +72,24 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
                                 href='/' + collection + '/?tag=' + tag, class_='news-category', rel='tag', data_news_tag=tag))
         copy.append(labels)
         title = node('h3')
-        main_link = label('a', collection + '.' + item['id'] + '.title', href=href, class_='news-main-link')
-        if not preview:
-            main_link.set('target', '_blank')
-            main_link.set('rel', 'noopener noreferrer')
+        main_link = label('a', collection + '.' + item['id'] + '.title', href=item['url'], class_='news-main-link',
+                          target='_blank', rel='noopener noreferrer')
         title.append(main_link)
         copy.append(title)
         copy.append(label('p', collection + '.' + item['id'] + '.summary'))
         metadata = node('div', class_='news-meta')
         metadata.append(node('span', item['source']))
-        if research:
+        if research and not preview:
             if item.get('venue'):
                 metadata.append(node('span', item['venue'], class_='research-venue'))
             metadata.append(label('span', 'research.published'))
         if preview or research:
-            metadata.append(node('time', item['published_at'], datetime=item['published_at']))
-        if research and item.get('collected_at'):
+            metadata_date = date if preview else item['published_at']
+            metadata.append(node('time', metadata_date, datetime=metadata_date))
+        if research and not preview and item.get('collected_at'):
             metadata.append(label('span', 'research.collected'))
             metadata.append(node('time', item['collected_at'], datetime=item['collected_at']))
-        metadata.append(label('span', collection + '.viewDay' if preview else 'news.original', class_='news-card-action', aria_hidden='true'))
+        metadata.append(label('span', 'news.original', class_='news-card-action', aria_hidden='true'))
         copy.append(metadata)
         card.append(copy)
         return card
@@ -172,17 +170,18 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         address = urlsplit(anchor.get('href'))
         anchor.set('href', urlunsplit(address._replace(path=quote(unquote(address.path).strip(), safe='@+,'))))
 
-    def topic_links():
+    def topic_links(include_research=True):
         links = node('div', class_='topic-links')
         for topic, slugs in TOPICS.items():
             anchor = node('a', href='/topics/#' + topic)
             anchor.append(label('strong', 'topics.' + topic + '.title'))
             anchor.append(node('span', messages['topics.count'].replace('{count}', str(len(slugs)))))
             links.append(anchor)
-        anchor = node('a', href='/research/')
-        anchor.append(label('strong', 'nav.research'))
-        anchor.append(node('span', messages['research.count'].replace('{count}', str(len(RESEARCH['items'])))))
-        links.append(anchor)
+        if include_research:
+            anchor = node('a', href='/research/')
+            anchor.append(label('strong', 'nav.research'))
+            anchor.append(node('span', messages['research.count'].replace('{count}', str(len(RESEARCH['items'])))))
+            links.append(anchor)
         return links
 
     if path == '/':
@@ -194,6 +193,7 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         identity = node('div')
         identity.append(label('p', 'homepage.greeting', class_='eyebrow'))
         identity.append(node('h1', 'Tommy Cheese'))
+        identity.append(label('p', 'homepage.focus', class_='home-focus'))
         intro.append(identity)
         intro.append(node('img', id='dynImg', src='/images/town.jpg', alt='', width='200', height='150', class_='home-photo'))
         hero.append(intro)
@@ -215,7 +215,11 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         doc.find('body').append(image_theme)
 
         content = hero.getparent()
-        sections = []
+        content.set('class', 'home-bento')
+        topics = node('section', class_='home-section home-topics container', data_reading_layout='topics', aria_labelledby='topics-heading')
+        topics.append(label('h3', 'nav.topics', id='topics-heading'))
+        topics.append(topic_links(include_research=False))
+
         news = node('section', id='today-news', class_='home-section container', data_reading_layout='news', aria_labelledby='news-heading')
         heading = node('div', class_='section-heading news-heading')
         heading.append(label('h2', 'nav.news', id='news-heading'))
@@ -226,7 +230,6 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
         for item in news_items[:3]:
             grid.append(news_card(item, preview=True))
         news.append(grid)
-        sections.append(news)
         research = node('section', id='frontier-research', class_='home-section container', data_reading_layout='research', aria_labelledby='research-heading')
         heading = node('div', class_='section-heading news-heading')
         heading.append(label('h2', 'nav.research', id='research-heading'))
@@ -240,29 +243,32 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
             if item:
                 grid.append(news_card(item, preview=True, research=True))
         research.append(grid)
-        sections.append(research)
         featured = node('section', id='featured-posts', class_='home-section container', data_reading_layout='featured', aria_labelledby='featured-heading')
-        featured.append(label('h2', 'section.featured', id='featured-heading'))
+        featured.append(label('h3', 'section.featured', id='featured-heading'))
         cards = node('div', class_='featured-grid')
         for slug in FEATURED:
             cards.append(post_link(slug, featured=True))
+        lead_image = cards[0].find('img')
+        if lead_image is not None:
+            lead_image.set('loading', 'eager')
+            lead_image.set('fetchpriority', 'high')
         featured.append(cards)
-        sections.append(featured)
-
-        topics = node('section', class_='home-section container', data_reading_layout='topics', aria_labelledby='topics-heading')
-        topics.append(label('h2', 'nav.topics', id='topics-heading'))
-        topics.append(topic_links())
-        sections.append(topics)
 
         recent = node('section', id='recent-posts', class_='home-section container', data_reading_layout='recent', aria_labelledby='recent-heading')
         heading = node('div', class_='section-heading')
-        heading.append(label('h2', 'section.recent', id='recent-heading'))
+        heading.append(label('h3', 'homepage.morePosts', id='recent-heading'))
         heading.append(label('a', 'action.allPosts', href='/blogs/'))
         recent.append(heading)
-        for slug in sorted(articles, key=lambda slug: articles[slug].get('date', ''), reverse=True)[:5]:
+        more_posts = [slug for slug in sorted(articles, key=lambda slug: articles[slug].get('date', ''), reverse=True) if slug not in FEATURED]
+        for slug in more_posts[:5]:
             recent.append(post_link(slug))
-        sections.append(recent)
-        for offset, section in enumerate(sections, start=1):
+        essays = node('section', id='home-essays', data_reading_layout='essays', aria_labelledby='essays-heading')
+        group_heading = node('div', class_='home-group-heading')
+        group_heading.append(label('h2', 'nav.blogs', id='essays-heading'))
+        essays.append(group_heading)
+        essays.extend([featured, recent, topics])
+        # Keep visual and keyboard reading order aligned, with frequent updates first.
+        for offset, section in enumerate([news, research, essays], start=1):
             content.insert(content.index(hero) + offset, section)
 
     if path in ['/news/', '/research/']:

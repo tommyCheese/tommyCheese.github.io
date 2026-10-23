@@ -96,9 +96,10 @@ for locale in LOCALES:
     expected = [next(item for item in items if item['kind'] == kind) for kind in ['preprint', 'research', 'conference-paper']]
     assert [card.get('data-research-id') for card in previews] == [item['id'] for item in expected]
     for card, item in zip(previews, expected):
-        url = urlsplit(card.xpath('.//a[@class="news-main-link"]/@href')[0])
-        assert url.path == prefix + '/research/'
-        assert url.fragment == 'research-' + research_archive_date(item)
+        link = card.xpath('.//a[@class="news-main-link"]')[0]
+        assert link.get('href') == item['url'] and link.get('target') == '_blank'
+        assert set(link.get('rel').split()) == {'noopener', 'noreferrer'}
+        assert card.xpath('.//*[@class="news-card-action"]')[0].text_content() == messages['news.original']
     directory = read(root / 'tags/index.html')
     for collection, tags, entries in [('news', NEWS_TAGS, NEWS['items']), ('research', RESEARCH['tags'], items)]:
         links = directory.xpath('//*[@data-tag-group="' + collection + '"]//a[@data-catalog-tag]')

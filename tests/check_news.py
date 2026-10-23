@@ -38,9 +38,10 @@ for locale in LOCALES:
     assert len(all_link) == 1 and urlsplit(all_link[0]).path == prefix + '/news/'
     for item, card in zip(items, previews):
         link = card.xpath('.//a[@class="news-main-link"]')[0]
-        url = urlsplit(link.get('href'))
-        assert url.path == prefix + '/news/' and url.fragment == 'news-' + item['published_at']
-        assert not link.get('target')
+        assert link.get('href') == item['url']
+        assert link.get('target') == '_blank'
+        assert set(link.get('rel').split()) == {'noopener', 'noreferrer'}
+        assert card.xpath('.//*[@class="news-card-action"]')[0].text_content() == MESSAGES[locale]['news.original']
         assert card.xpath('.//img/@src') == [item['image']]
         assert card.xpath('.//h3')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.title']
         assert card.xpath('.//time/@datetime') == [item['published_at']]

@@ -25,7 +25,12 @@ for locale in LOCALES:
     assert len(home.xpath('//*[@id="dynImg"]')) == 1
     assert len(home.xpath('//script[@data-reading-layout="hero-theme"]')) == 1
     sections = home.xpath('//*[@id="content"]/*/@id')
-    assert sections.index('featured-posts') < sections.index('recent-posts') < sections.index('about')
+    assert sections.index('today-news') < sections.index('frontier-research') < sections.index('home-essays') < sections.index('about')
+    essays = home.get_element_by_id('home-essays')
+    assert essays.get('aria-labelledby') == 'essays-heading'
+    assert essays.xpath('./section/@data-reading-layout') == ['featured', 'recent', 'topics']
+    assert len(essays.xpath('./div/h2[@id="essays-heading"]')) == 1
+    assert len(essays.xpath('.//h3[@id="featured-heading" or @id="recent-heading" or @id="topics-heading"]')) == 3
     assert len(home.xpath('//*[@id="featured-posts"]//a')) == len(FEATURED)
     assert len(home.xpath('//*[@id="recent-posts"]//time')) == 5
     assert not home.xpath('//a[@download][@href="#"]')
