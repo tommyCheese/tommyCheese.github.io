@@ -36,7 +36,7 @@ def render_comments(doc, path, locale, messages, revision):
         return node(tag, messages[key], data_i18n=key, **attrs)
 
     section = node('section', id='comments', class_='comments-section', data_comments_layout='section', aria_labelledby='comments-heading')
-    section.append(label('h2', 'comments.title', id='comments-heading'))
+    section.append(label('h3' if path == '/' else 'h2', 'comments.title', id='comments-heading'))
     section.append(label('p', 'comments.intro', class_='comments-intro'))
     container = node('div', class_='giscus', data_repo=REPOSITORY, data_repo_id=REPOSITORY_ID,
                      data_category=CATEGORY, data_category_id=CATEGORY_ID, data_term=path, data_lang=locale)
@@ -55,6 +55,6 @@ def render_comments(doc, path, locale, messages, revision):
         (trail if trail is not None and trail.get('data-reading-layout') == 'trail' else article).addnext(section)
     else:
         section.set('class', 'comments-section container')
-        doc.get_element_by_id('content').append(section)
+        doc.get_element_by_id('home-personal' if path == '/' else 'content').append(section)
     doc.find('head').append(node('meta', name='giscus:backlink', content=BASE + quote(path), data_comments_layout='backlink'))
     doc.find('body').append(node('script', src='/js/comments.js?v=' + revision, defer='defer', data_comments_layout='runtime'))

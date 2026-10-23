@@ -25,7 +25,15 @@ for locale in LOCALES:
     assert len(home.xpath('//*[@id="dynImg"]')) == 1
     assert len(home.xpath('//script[@data-reading-layout="hero-theme"]')) == 1
     sections = home.xpath('//*[@id="content"]/*/@id')
-    assert sections.index('today-news') < sections.index('frontier-research') < sections.index('home-essays') < sections.index('about')
+    assert sections == ['hero', 'home-updates', 'home-essays', 'home-personal']
+    updates = home.get_element_by_id('home-updates')
+    assert updates.xpath('./section/@id') == ['today-news', 'frontier-research']
+    personal = home.get_element_by_id('home-personal')
+    assert personal.xpath('./section/@id') == ['about', 'experience', 'contact', 'comments']
+    for name in ['updates', 'essays', 'personal']:
+        group = home.get_element_by_id('home-' + name)
+        assert group.get('aria-labelledby') == name + '-heading'
+        assert group.xpath('./div/h2/@id') == [name + '-heading']
     essays = home.get_element_by_id('home-essays')
     assert essays.get('aria-labelledby') == 'essays-heading'
     assert essays.xpath('./section/@data-reading-layout') == ['featured', 'recent', 'topics']
