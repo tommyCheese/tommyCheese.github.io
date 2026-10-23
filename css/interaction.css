@@ -8,6 +8,7 @@ body {
   --text-color-dark: #eef3ff;
   --text-secondary-color-dark: #b6c3df;
   --primary-color-dark: #a9c6ff;
+  --selection-background: rgb(121 171 240 / 30%);
   --glass-surface: rgb(255 255 255 / 54%);
   --glass-edge: rgb(255 255 255 / 80%);
   --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 46%), rgb(255 255 255 / 4%) 40%, rgb(255 255 255 / 20%));
@@ -27,6 +28,7 @@ body {
   transition: background-color var(--ui-settle) ease, color var(--ui-settle) ease;
 }
 body.dark {
+  --selection-background: rgb(155 194 255 / 26%);
   --glass-surface: rgb(29 39 62 / 68%);
   --glass-edge: rgb(193 214 255 / 22%);
   --glass-sheen: linear-gradient(135deg, rgb(188 211 255 / 12%), rgb(188 211 255 / 1%) 40%, rgb(188 211 255 / 5%));
@@ -37,6 +39,7 @@ body.dark {
   --ui-glass: rgb(27 37 59 / 90%);
   --ui-pill: rgb(255 255 255 / 13%);
 }
+body *::selection { background-color: var(--selection-background) !important; }
 html { scroll-behavior: smooth; }
 #about, #experience, #contact { scroll-margin-top: 96px; }
 #profileHeader, #profileHeader .primary-font, #profileHeader input,
