@@ -1,0 +1,606 @@
+{
+  "required_from": "2026-10-25",
+  "articles": [
+    {
+      "catalog": "news",
+      "id": "kimi-k31-pro-hosted-release",
+      "written_at": "2026-10-24",
+      "sources": [
+        {
+          "label": "Moonshot AI · technical announcement",
+          "url": "https://www.kimi.ai/blog/kimi-k3-1-pro"
+        },
+        {
+          "label": "IT之家 · original report",
+          "url": "https://www.ithome.com/1/017/284.htm"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Kimi K3.1 Pro 这次发布最需要分清的，是模型服务已经上线，完整权重仍待发布。前者意味着可以通过厂商提供的入口使用模型，后者才决定开发者何时能拿到模型文件、检查许可并评估自己的部署方案。把这两个阶段混在一起，容易高估本次发布已经交付的东西。",
+          "sections": [
+            {
+              "heading": "这次到底更新了什么",
+              "paragraphs": [
+                "月之暗面的技术公告称，K3.1 Pro 是在 K3 基础上增加后训练计算得到的版本，支持 100 万 token 上下文；Pro 与 Highspeed 已通过托管入口提供。完整权重承诺在 11 月 4 日前发布。本篇所链接的 IT之家原创报道发表于 10 月 24 日，归档日期据此保留。",
+                "托管服务和开放权重是两种不同的交付方式。调用服务时，推理由厂商运行；拿到权重后，团队才有可能自行部署，但仍需检查许可、硬件、运行成本与工具链。公告中的开放权重表述，不能替代实际可下载的文件和许可说明。"
+              ]
+            },
+            {
+              "heading": "为什么要关注后训练和长上下文",
+              "paragraphs": [
+                "后训练侧重模型在具体任务中的行为，例如如何分解问题、调用工具、检查结果。更大的上下文窗口则允许一次输入更多材料。两者分别关系到“如何处理任务”和“能带入多少信息”，都值得关注，但输入容量本身不能保证模型读懂每一段内容，也不能保证跨文档结论正确。",
+                "对 Agent 或 RAG 应用来说，比较有用的验证方式是拿自己的任务检查证据定位、工具调用和长流程完成情况。把所有文件塞进窗口，并不会自动解决检索、权限、知识更新或来源追踪问题。这里是应用层面的判断，不是我们独立测得的新模型成绩。"
+              ]
+            },
+            {
+              "heading": "怎样看待官方展示的成绩",
+              "paragraphs": [
+                "公告给出了编程、Agent 和知识类测试结果，其中也有内部基准。本站本次没有独立运行模型，不能据此给出通用排名。不同测试的任务、执行环境、工具和推理预算会影响分数；比较结果时，需要先确认这些条件是否一致。",
+                "内部幻觉压力测试还刻意选取容易出错的情形。它可以说明模型在这组题上的变化，却不能直接代表日常使用错误率。厂商公布的能力描述，应当与可复现的设置、外部验证和实际工作负载分开理解。"
+              ]
+            },
+            {
+              "heading": "接下来还要看什么",
+              "paragraphs": [
+                "本次可以确认的进展，是厂商宣布了新的托管版本和后续权重发布安排。接下来最有价值的材料是权重是否如期交付、具体许可、可复现评测，以及团队在真实任务中的独立测试。若要判断是否适合现有系统，还需要把质量、延迟、成本和部署条件放在同一任务上比较。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本次发布的两个阶段：服务可用与权重交付分别核验。",
+            "steps": [
+              "托管版本已公告可用",
+              "完整权重待交付",
+              "检查许可与独立测试"
+            ]
+          }
+        },
+        "en": {
+          "lead": "The key distinction in the Kimi K3.1 Pro announcement is between an available hosted service and a model whose full weights have yet to be delivered. Hosted access lets users run the provider’s service. Weight delivery is the point at which developers can inspect the files and licence and assess their own deployment options.",
+          "sections": [
+            {
+              "heading": "What has been announced",
+              "paragraphs": [
+                "Moonshot describes Pro as a K3 version with more post-training compute and a one-million-token context window. Pro and Highspeed are available through hosted endpoints, while full weights are promised by November 4. The linked original IT Home report is dated October 24; that is the publication date retained here.",
+                "Service access and weight release are different delivery stages. The provider runs hosted inference. Self-hosting also requires actual files, a suitable licence, hardware and an operational plan. An open-weight description does not itself establish that downloads and licensing are already available."
+              ]
+            },
+            {
+              "heading": "Why the technical changes matter",
+              "paragraphs": [
+                "Post-training concerns task behaviour, while context capacity determines how much material can be supplied at once. More room does not guarantee that every passage is used correctly. For Agent and RAG applications, a useful test would examine evidence selection, tool calls and completion of your own workflows. These are evaluation considerations, not new results measured by this site."
+              ]
+            },
+            {
+              "heading": "How to interpret the reported performance",
+              "paragraphs": [
+                "The announcement includes coding, agent and knowledge evaluations, including internal benchmarks. We did not independently run the model. Task definitions, tools, execution environments and reasoning budgets affect comparisons, so the figures cannot establish a universal ranking.",
+                "The internal hallucination stress test deliberately targets difficult cases. Its error rate should not be treated as an everyday error rate. Provider claims, reproducible settings and independent workload tests remain separate kinds of evidence."
+              ]
+            },
+            {
+              "heading": "What to watch next",
+              "paragraphs": [
+                "The immediate development is an announced hosted update plus a weight-delivery commitment. The next checks are delivery, licensing, reproducible evaluations and independent tests. A deployment decision should compare quality, latency, cost and operational requirements on the same tasks."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Hosted availability and weight delivery require separate checks.",
+            "steps": [
+              "Hosted availability announced",
+              "Full weights pending",
+              "Check licence and independent tests"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Kimi K3.1 Pro の発表では、提供済みのホスト型サービスと、今後公開される完全な重みを区別する必要があります。前者は提供元のサービスを使える段階です。後者で初めて、開発者はファイルとライセンスを確認し、自前での運用を検討できます。",
+          "sections": [
+            {
+              "heading": "今回発表されたこと",
+              "paragraphs": [
+                "Moonshot の技術発表によると、Pro は K3 に追加の事後学習計算を投入した版で、100 万トークンのコンテキストに対応します。Pro と Highspeed はホスト型の窓口で提供され、完全な重みは 11 月 4 日までの公開予定です。リンク先の IT之家による独自報道は 10 月 24 日付で、この日付を保持しています。",
+                "サービス利用と重みの配布は別の段階です。ホスト型では提供元が推論を実行します。自前の運用には、実際のファイルに加え、ライセンス、ハードウェア、運用体制の確認が必要です。公開重みという説明だけで、配布済みとは判断できません。"
+              ]
+            },
+            {
+              "heading": "事後学習と長いコンテキストを見る理由",
+              "paragraphs": [
+                "事後学習はタスクでの振る舞いに、コンテキスト容量は一度に渡せる資料の量に関わります。容量が大きくても、すべての記述を正しく利用できる保証はありません。Agent や RAG では、自分の業務の証拠選択、ツール呼び出し、処理の完了を評価すると有用です。これは評価上の考え方であり、本站が測定した新モデルの成績ではありません。"
+              ]
+            },
+            {
+              "heading": "公開された成績の読み方",
+              "paragraphs": [
+                "発表には社内ベンチマークを含む評価があります。本站はモデルを独自に実行していません。タスク、ツール、実行環境、推論予算で結果は変わるため、一般的な順位とは扱えません。",
+                "幻覚の社内ストレステストは、意図的に間違いやすいケースを対象にしています。その誤り率は日常利用の誤り率ではありません。提供元の主張、再現可能な条件、独立した実務評価を分けて確認する必要があります。"
+              ]
+            },
+            {
+              "heading": "今後確認したい点",
+              "paragraphs": [
+                "現時点の進展はホスト型の更新と重み公開の約束です。実際の公開、ライセンス、再現可能な評価と独立検証が次の確認点になります。導入判断では、同じタスクで品質、遅延、費用、運用条件を比較する必要があります。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "サービスの提供と重みの公開は別々に確認します。",
+            "steps": [
+              "ホスト型の提供を発表",
+              "完全な重みは公開待ち",
+              "ライセンスと独立評価を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "В объявлении Kimi K3.1 Pro следует различать доступный облачный сервис и ещё не опубликованные полные веса. Сервис позволяет пользоваться инфраструктурой поставщика. После получения весов разработчики смогут изучить файлы и лицензию и оценить собственное развёртывание.",
+          "sections": [
+            {
+              "heading": "Что объявлено",
+              "paragraphs": [
+                "По техническому сообщению Moonshot, Pro — версия K3 с дополнительными вычислениями на этапе постобучения и контекстом в миллион токенов. Pro и Highspeed доступны через облачные точки доступа; полные веса обещаны к 4 ноября. Дата исходной публикации IT Home — 24 октября — сохранена в архиве.",
+                "Доступ к сервису и выпуск весов — разные этапы. В облаке вычисления выполняет поставщик. Для собственного развёртывания нужны файлы, подходящая лицензия, оборудование и эксплуатационная схема. Обозначение open-weight ещё не означает, что файлы и условия лицензии уже опубликованы."
+              ]
+            },
+            {
+              "heading": "Зачем смотреть на постобучение и контекст",
+              "paragraphs": [
+                "Постобучение влияет на поведение при выполнении задач, размер контекста — на объём передаваемых материалов. Вместимость не гарантирует правильного использования каждого фрагмента. Для Agent и RAG полезно проверить выбор свидетельств, вызовы инструментов и завершение собственных процессов. Это рекомендации по оценке, а не измеренные нами результаты новой модели."
+              ]
+            },
+            {
+              "heading": "Как читать заявленные результаты",
+              "paragraphs": [
+                "Объявление содержит результаты, в том числе на внутренних тестах. Мы модель независимо не запускали. Задачи, инструменты, окружение и бюджет рассуждений влияют на сравнение; из этих чисел нельзя вывести универсальный рейтинг.",
+                "Внутренний стресс-тест галлюцинаций специально выбирает сложные случаи. Его частота ошибок не равна частоте ошибок повседневного использования. Заявления поставщика, воспроизводимые условия и независимые прикладные тесты дают разные виды свидетельств."
+              ]
+            },
+            {
+              "heading": "Что проверять дальше",
+              "paragraphs": [
+                "Сейчас подтверждены объявление облачного обновления и обещание выпуска весов. Следующие проверки — фактическая поставка, лицензия, воспроизводимые оценки и независимые испытания. Решение о внедрении требует сравнения качества, задержки, стоимости и эксплуатации на одинаковых задачах."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Облачную доступность и поставку весов нужно проверять отдельно.",
+            "steps": [
+              "Облачный доступ объявлен",
+              "Полные веса ожидаются",
+              "Проверка лицензии и независимых тестов"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Kimi K3.1 Pro 這次發布最需要分清的，是模型服務已經上線，完整權重仍待發布。前者意味著可以透過廠商提供的入口使用模型，後者才決定開發者何時能拿到模型檔案、檢查授權並評估自己的部署方案。把這兩個階段混在一起，容易高估本次發布已經交付的東西。",
+          "sections": [
+            {
+              "heading": "這次到底更新了什麼",
+              "paragraphs": [
+                "月之暗面的技術公告稱，K3.1 Pro 是在 K3 基礎上增加後訓練計算得到的版本，支援 100 萬 token 上下文；Pro 與 Highspeed 已透過託管入口提供。完整權重承諾在 11 月 4 日前發布。本篇所連結的 IT之家原創報導發表於 10 月 24 日，歸檔日期據此保留。",
+                "託管服務和開放權重是兩種不同的交付方式。呼叫服務時，推論由廠商執行；拿到權重後，團隊才有可能自行部署，但仍需檢查授權、硬體、執行成本與工具鏈。公告中的開放權重表述，不能替代實際可下載的檔案和授權說明。"
+              ]
+            },
+            {
+              "heading": "為什麼要關注後訓練和長上下文",
+              "paragraphs": [
+                "後訓練著重模型在具體任務中的行為，例如如何拆解問題、呼叫工具、檢查結果。更大的上下文視窗則允許一次輸入更多材料。兩者分別關係到如何處理任務和能帶入多少資訊，但輸入容量不能保證模型讀懂每一段內容，也不能保證跨文件結論正確。",
+                "對 Agent 或 RAG 應用來說，有用的驗證方式是拿自己的任務檢查證據定位、工具呼叫和長流程完成情況。把所有檔案塞進視窗，並不會自動解決檢索、權限、知識更新或來源追蹤問題。這裡是應用層面的判斷，不是我們獨立測得的新模型成績。"
+              ]
+            },
+            {
+              "heading": "怎樣看待官方展示的成績",
+              "paragraphs": [
+                "公告給出了程式設計、Agent 和知識類測試結果，其中也有內部基準。本站本次沒有獨立執行模型，不能據此給出通用排名。不同測試的任務、執行環境、工具和推論預算會影響分數；比較結果時，需要先確認這些條件是否一致。",
+                "內部幻覺壓力測試刻意選取容易出錯的情形。它可以說明模型在這組題上的變化，卻不能直接代表日常使用錯誤率。廠商公布的能力描述，應與可重現的設定、外部驗證和實際工作負載分開理解。"
+              ]
+            },
+            {
+              "heading": "接下來還要看什麼",
+              "paragraphs": [
+                "本次可以確認的進展，是廠商宣布了新的託管版本和後續權重發布安排。接下來最有價值的材料是權重是否如期交付、具體授權、可重現評測，以及團隊在真實任務中的獨立測試。若要判斷是否適合現有系統，還需要把品質、延遲、成本和部署條件放在同一任務上比較。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本次發布的兩個階段：服務可用與權重交付分別核驗。",
+            "steps": [
+              "託管版本已公告可用",
+              "完整權重待交付",
+              "檢查授權與獨立測試"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "episem-missing-evidence-agent-safety",
+      "written_at": "2026-10-24",
+      "sources": [
+        {
+          "label": "EpiSEM-Bench · paper",
+          "url": "https://arxiv.org/abs/2610.31650v1"
+        },
+        {
+          "label": "EpiSEM-Bench · full text",
+          "url": "https://arxiv.org/html/2610.31650v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Agent 拿到的信息全都是真的，也可能做出不该做的操作。原因未必是提示注入或编造事实，而可能是工具少返回了一条决定权限的证据。EpiSEM-Bench 就研究这种缺口：模型能否意识到证据不足，主动补查，再决定该执行还是停止。",
+          "sections": [
+            {
+              "heading": "问题出在“没看到”，而不是“看到了假话”",
+              "paragraphs": [
+                "例如，一个付款请求本身可能完全正常，但是否允许付款还取决于授权额度或是否已经支付。这里是帮助理解问题的简化情境：如果这些事实没有出现在工具返回中，模型不能仅凭其余信息都真实，就推断自己已经得到执行许可。",
+                "这与常见的攻击指令测试有所区别。论文屏蔽的是环境中的关键事实，保留下来的陈述仍为真，用户目标和操作规则也没有改变。因此，评测关注的是证据不足时的决策，而不只是能否识别恶意文字。"
+              ]
+            },
+            {
+              "heading": "评测怎样把安全与能力分开",
+              "paragraphs": [
+                "研究构造了六个领域的 300 对任务，评估 10 个模型。每对任务保留同一请求和工具接口，只改变让操作被允许或被禁止的关键环境状态。执行器不会代替模型阻拦违规动作，评测者再用完整状态判断结果。",
+                "这样可以同时识别两种问题：凡事执行，可能完成合法任务，却也做出被禁止的操作；凡事拒绝，可能少犯错，却没有真正完成能做的事。安全和任务成功必须结合来看，不能只拿其中一个指标评价 Agent。"
+              ]
+            },
+            {
+              "heading": "补查工具提供了什么证据",
+              "paragraphs": [
+                "在证据屏蔽设置中，重复调用普通读取工具也不会补回被删掉的事实。另一设置额外提供独立审计工具，模型只有发起有效查询，才会拿到遗漏事实。研究因此能区分“没有想到查”“查了但没有正确使用”以及“确认许可后仍不行动”。",
+                "作者报告，提供恢复工具后，所测 10 个模型的违规执行都有减少。但抗缺失能力、主动查证能力和恢复后的正确行动并不是同一件事。不能把工具存在，或模型调用过工具，直接当成决策已经可靠的证据。"
+              ]
+            },
+            {
+              "heading": "对实际系统有什么用",
+              "paragraphs": [
+                "这项工作的价值，在于把 Agent 的权限判断变成可执行的成对测试。系统开发者可以据此检查：工具是否暴露决定权限的事实，证据不足时是否有独立补查路径，以及模型是否在查明事实后分别处理允许与禁止的情况。这是由论文机制推导出的工程启发，不是已经验证的通用防护方案。",
+                "结果仍限于受控任务、人工定义的证据屏蔽和所测模型。论文没有证明它覆盖所有真实系统，也没有证明小型或快速模型的结果能代表同系列更大模型。我们未独立复现实验；这篇按预印本收录，不把它写成已获会议录用的成果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "按论文机制重绘：查询恢复证据后，仍需依据权限作出不同决定。",
+            "steps": [
+              "工具返回缺少关键事实",
+              "主动调用审计工具",
+              "允许则执行，禁止则停止"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An agent can receive only true statements and still take a prohibited action. The problem may be a missing fact rather than an injected instruction or a false claim. EpiSEM-Bench tests whether agents seek that evidence and then use it to decide whether to proceed.",
+          "sections": [
+            {
+              "heading": "Missing evidence changes permission",
+              "paragraphs": [
+                "Consider a payment whose permissibility depends on an authorisation limit or a prior payment. This simplified example illustrates the problem: the truth of other tool outputs does not establish permission when the decisive fact is absent. The paper suppresses facts while preserving the request, rules and truth of remaining observations."
+              ]
+            },
+            {
+              "heading": "Separating safety from task completion",
+              "paragraphs": [
+                "The authors evaluate ten models on 300 matched task pairs across six domains. Each pair keeps the request and interface but changes the state determining permission. Execution tools do not block prohibited actions on the agent’s behalf.",
+                "Always acting can complete legitimate tasks while also violating rules. Always refusing can avoid violations while failing useful work. Matched cases make both behaviours visible; one score alone cannot establish reliable judgement."
+              ]
+            },
+            {
+              "heading": "What the recovery tool reveals",
+              "paragraphs": [
+                "Repeated ordinary reads do not restore the masked facts. An independent audit tool returns them only after a valid query. This separates failure to investigate from failure to use recovered evidence.",
+                "Recovery access reduces prohibited execution for all ten tested models, according to the authors. Robustness to omissions, active investigation and appropriate action after recovery remain different capabilities. Calling a tool is therefore not sufficient evidence of a sound decision."
+              ]
+            },
+            {
+              "heading": "Implications and limits",
+              "paragraphs": [
+                "A practical lesson is to test both permitted and prohibited versions of a workflow, expose permission-relevant facts, and provide an independent verification path. That is an engineering interpretation of the mechanism, not a proven universal defence.",
+                "Evidence comes from controlled tasks, specified omission masks and selected models. It does not establish coverage of every deployment or transfer to larger models in the same family. We have not reproduced the experiments. The article is listed as a preprint, without a verified conference acceptance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Our reconstruction of the evaluation mechanism: recovered evidence still requires a permission decision.",
+            "steps": [
+              "A critical fact is missing",
+              "Query the audit tool",
+              "Proceed if permitted; otherwise stop"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agent が受け取った記述がすべて真実でも、禁止された操作を実行することがあります。原因は偽情報ではなく、許可を判断する事実の欠落かもしれません。EpiSEM-Bench は、不足を調べ直し、その証拠で行動を変えられるかを評価します。",
+          "sections": [
+            {
+              "heading": "欠けた事実が許可を変える",
+              "paragraphs": [
+                "たとえば支払いの可否は、承認限度額や支払い済みかどうかに依存します。これは問題を説明する簡略例です。他のツール出力が真実でも、決定的な事実がなければ実行の許可は確立しません。論文は依頼、規則、残りの情報の真偽を変えずに事実を隠します。"
+              ]
+            },
+            {
+              "heading": "安全性とタスク完了を分ける",
+              "paragraphs": [
+                "6 分野の 300 組の対応タスクで 10 モデルを評価します。依頼とインターフェースは同じにし、許可を決める環境状態だけを変えます。実行ツールはモデルに代わって違反を止めません。",
+                "常に実行すれば、正当な作業も違反操作も行う可能性があります。常に拒否すれば、違反を避けても役に立ちません。対応するケースで両方を観察するため、一つの指標だけで判断力を評価することはできません。"
+              ]
+            },
+            {
+              "heading": "証拠の回復で分かること",
+              "paragraphs": [
+                "通常の読み取りを繰り返しても、隠した事実は戻りません。独立した監査ツールへの有効な問い合わせで初めて回復します。調べなかった失敗と、調べた証拠を利用しなかった失敗を区別できます。",
+                "著者によると、回復ツールは対象 10 モデルすべての違反実行を減らしました。ただし、欠落への強さ、能動的な調査、回復後の正しい行動は異なる能力です。ツールを呼んだだけでは適切な判断の証明になりません。"
+              ]
+            },
+            {
+              "heading": "実務への示唆と限界",
+              "paragraphs": [
+                "許可される場合と禁止される場合の両方をテストし、許可に必要な事実を公開し、独立した確認経路を用意することが示唆されます。これは仕組みから導いた設計上の考察で、万能な防御策が検証されたわけではありません。",
+                "結果は管理されたタスク、指定された情報欠落、評価対象モデルに限られます。すべての実環境や同系列の大きなモデルを代表するものではありません。本站は実験を再現しておらず、会議採択を確認した成果ではなくプレプリントとして扱います。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の仕組みを再構成：証拠を回復した後も許可の判断が必要です。",
+            "steps": [
+              "重要な事実が欠落",
+              "監査ツールで確認",
+              "許可なら実行、禁止なら停止"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Агент может получать только правдивые сведения и всё равно совершить запрещённое действие. Причиной бывает пропущенный факт, а не ложь или вредоносная инструкция. EpiSEM-Bench проверяет, ищет ли агент недостающее свидетельство и использует ли его для решения.",
+          "sections": [
+            {
+              "heading": "Пропущенный факт меняет разрешение",
+              "paragraphs": [
+                "Например, допустимость платежа может зависеть от лимита полномочий или уже проведённой оплаты. Этот упрощённый пример показывает: правдивость остальных ответов инструмента ещё не устанавливает разрешение. В работе скрываются факты, но сохраняются запрос, правила и истинность остальных наблюдений."
+              ]
+            },
+            {
+              "heading": "Безопасность и полезная работа",
+              "paragraphs": [
+                "Десять моделей проверяются на 300 парах задач в шести областях. Запрос и интерфейс сохраняются, меняется состояние, определяющее разрешение. Инструменты исполнения не блокируют нарушения вместо агента.",
+                "Безусловное выполнение помогает завершать разрешённые задачи, но ведёт и к нарушениям. Постоянный отказ может снизить нарушения ценой полезности. Парные случаи показывают обе стороны, поэтому одного показателя недостаточно."
+              ]
+            },
+            {
+              "heading": "Что показывает восстановление свидетельств",
+              "paragraphs": [
+                "Повторное обычное чтение не возвращает скрытые факты. Независимый инструмент аудита выдаёт их после корректного запроса. Это позволяет различать отсутствие проверки и неправильное использование полученных сведений.",
+                "По данным авторов, доступ к восстановлению снижает запрещённое исполнение у всех десяти моделей. Но устойчивость к пропускам, инициативный поиск и правильное последующее действие — разные способности. Сам вызов инструмента не подтверждает обоснованность решения."
+              ]
+            },
+            {
+              "heading": "Практический смысл и границы",
+              "paragraphs": [
+                "Полезный инженерный вывод — проверять разрешённые и запрещённые варианты процесса, раскрывать значимые для разрешения факты и предоставлять независимый путь проверки. Это интерпретация механизма, а не доказанная универсальная защита.",
+                "Результаты ограничены контролируемыми задачами, заданными масками пропусков и выбранными моделями. Они не доказывают перенос на все системы или более крупные модели той же семьи. Мы эксперименты не воспроизводили; материал учтён как препринт без подтверждённого принятия на конференцию."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша схема механизма оценки: восстановленные факты всё равно требуют проверки разрешения.",
+            "steps": [
+              "Ключевой факт отсутствует",
+              "Запрос к инструменту аудита",
+              "Выполнить при разрешении, иначе остановиться"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Agent 拿到的資訊全都是真的，也可能做出不該做的操作。原因未必是提示注入或編造事實，而可能是工具少回傳了一筆決定權限的證據。EpiSEM-Bench 就研究這種缺口：模型能否意識到證據不足，主動補查，再決定該執行還是停止。",
+          "sections": [
+            {
+              "heading": "問題出在沒看到，而不是看到了假話",
+              "paragraphs": [
+                "例如，一個付款請求本身可能完全正常，但是否允許付款還取決於授權額度或是否已經支付。這裡是幫助理解問題的簡化情境：如果這些事實沒有出現在工具回傳中，模型不能僅憑其餘資訊都真實，就推斷自己已經得到執行許可。",
+                "這與常見的攻擊指令測試有所區別。論文遮蔽的是環境中的關鍵事實，保留下來的陳述仍為真，使用者目標和操作規則也沒有改變。因此，評測關注的是證據不足時的決策，而不只是能否辨識惡意文字。"
+              ]
+            },
+            {
+              "heading": "評測怎樣把安全與能力分開",
+              "paragraphs": [
+                "研究建構了六個領域的 300 對任務，評估 10 個模型。每對任務保留同一請求和工具介面，只改變讓操作被允許或被禁止的關鍵環境狀態。執行器不會代替模型阻擋違規動作，評測者再用完整狀態判斷結果。",
+                "這樣可以同時辨識兩種問題：凡事執行，可能完成合法任務，卻也做出被禁止的操作；凡事拒絕，可能少犯錯，卻沒有真正完成能做的事。安全和任務成功必須結合來看，不能只拿其中一個指標評價 Agent。"
+              ]
+            },
+            {
+              "heading": "補查工具提供了什麼證據",
+              "paragraphs": [
+                "在證據遮蔽設定中，重複呼叫普通讀取工具也不會補回被刪掉的事實。另一設定額外提供獨立稽核工具，模型只有發起有效查詢，才會拿到遺漏事實。研究因此能區分沒有想到查、查了但沒有正確使用，以及確認許可後仍不行動。",
+                "作者報告，提供恢復工具後，所測 10 個模型的違規執行都有減少。但抗缺失能力、主動查證能力和恢復後的正確行動並不是同一件事。不能把工具存在，或模型呼叫過工具，直接當成決策已經可靠的證據。"
+              ]
+            },
+            {
+              "heading": "對實際系統有什麼用",
+              "paragraphs": [
+                "這項工作的價值，在於把 Agent 的權限判斷變成可執行的成對測試。系統開發者可以據此檢查：工具是否揭露決定權限的事實，證據不足時是否有獨立補查路徑，以及模型是否在查明事實後分別處理允許與禁止的情況。這是由論文機制推導出的工程啟發，不是已經驗證的通用防護方案。",
+                "結果仍限於受控任務、人工定義的證據遮蔽和所測模型。論文沒有證明它涵蓋所有真實系統，也沒有證明小型或快速模型的結果能代表同系列更大模型。我們未獨立重現實驗；這篇按預印本收錄，不把它寫成已獲會議錄用的成果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "按論文機制重繪：查詢恢復證據後，仍需依據權限作出不同決定。",
+            "steps": [
+              "工具回傳缺少關鍵事實",
+              "主動呼叫稽核工具",
+              "允許則執行，禁止則停止"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "legacy_ids": {
+    "news": [
+      "kimi-k31-pro-hosted-release",
+      "systemd-rust-leaf-components-merged",
+      "nasa-swift-science-mission-ended",
+      "metr-openai-monitoring-pilot-review",
+      "anthropic-rocq-oss-formal-verification",
+      "solidigm-preipo-ipo-review-halted",
+      "openssl-410-dtls-grease-release",
+      "litellm-11070-release-artifact-compromise",
+      "modular-max-source-available-license",
+      "linux-74-uaccess-legacy-removal",
+      "microsoft-kls-human-directed-ai-proof",
+      "powertoys-0102-mouse-accessibility-tools",
+      "mozilla-emudhra-certificate-blocking",
+      "php2shell-emergency-security-fixes",
+      "nodejs-october-security-patches",
+      "onamae-desktop-cloud-security-shutdown",
+      "chrome-enhanced-protection-clickfix",
+      "openbsd-80-release",
+      "qbittorrent-530-webui-security",
+      "quantinuum-helios-color-code-memory",
+      "ovhcloud-cli-release-assets-compromise",
+      "torchneuron-native-pytorch-trainium-beta",
+      "jaxa-mmx-h3-launch-success",
+      "rankmath-pro-supply-chain-incident",
+      "nasa-standardized-shock-vibration-analysis",
+      "euclid-first-new-comet",
+      "siteguard-statistics-exploitation",
+      "opencode-console-provider-key-breach",
+      "esa-juice-janus-africa-flyby-images",
+      "chrome-155-prerender-security-update",
+      "nasa-artemis-ii-heat-shield-assessment",
+      "github-license-compliance-ga",
+      "nasa-black-marble-isaias-power-recovery",
+      "ollama-0406-gguf-windows-fixes",
+      "mozilla-devtools-mcp-0106-pdf-tabs",
+      "anthropic-nist-curve-seed-research",
+      "windows-11-28120-3272-accessibility-fixes",
+      "debian-linux-dsa-6568-security-update",
+      "prismml-ternary-bonsai2-small-models",
+      "tsmc-2026-third-quarter-results",
+      "geely-holding-q3-2026-sales",
+      "google-deep-review-public-release",
+      "nvidia-cupotential-ai-defined-fabs",
+      "samsung-future-wireless-summit-2026",
+      "grok-voice-3-api",
+      "globalfoundries-us-japan-new-york-fabs",
+      "sk-hynix-3d-fenand-compute-research",
+      "samsung-health-sleep-coaching-update",
+      "google-gemini4-argon-cloud",
+      "anthropic-evaluation-internet-safety",
+      "globalfoundries-fdx-fusion-roadmap",
+      "openai-gpt6-intelligent-ui",
+      "tsmc-september-revenue",
+      "samsung-smartthings-now"
+    ],
+    "research": [
+      "episem-missing-evidence-agent-safety",
+      "clariedge-rag-query-clarification",
+      "coater-continuous-ontology-assurance",
+      "biasguard-typed-record-quality",
+      "tt-sax-language-shape-querying",
+      "contestable-agent-metadata-stewardship",
+      "gbor-rag-enrichment-evidence",
+      "petri-net-agent-execution-harness",
+      "lara-agentic-retrieval-attribution",
+      "phystrace-temporal-physical-consistency",
+      "audq-auditable-rule-discovery",
+      "lmvu-budgeted-rag-evidence",
+      "precomem-predictive-dialogue-memory",
+      "userswe-dynamic-user-coding-evaluation",
+      "equitrace-replayable-sql-equivalence",
+      "nousdb-semantic-query-engine",
+      "swatcher-dynamic-cardinality-estimation",
+      "koala-stateful-dataflow-reconfiguration",
+      "flashattention-long-vector-processors",
+      "fairamo-time-series-orchestration",
+      "reflexivity-multi-agent-prediction-threshold",
+      "pace-four-bit-recurrent-state",
+      "risk-kv-selective-cache-reconstruction",
+      "real-time-dnn-certified-scheduling",
+      "client-led-consensus-inclusion-safety",
+      "athanor-autonomous-post-training",
+      "into-the-unknown-agent-benchmark",
+      "nist-curve-seed-origins",
+      "skillformer-audio-skill-adapters",
+      "heterogeneous-agent-model-persona-effects",
+      "jepa-inverse-dynamics-control-representations",
+      "grade-gradient-admission-small-models",
+      "checkerbench-static-analysis-agent-evaluation",
+      "self-improvement-winners-curse",
+      "best-of-n-sample-only-policy-evaluation",
+      "lecuration-small-world-model-data",
+      "rt-safe-real-time-embodied-safety",
+      "searchworld-spatial-world-model-uav",
+      "raw-video-language-model-mid-training",
+      "intent-graph-exploratory-data-analysis",
+      "nomos-verified-agent-tool-gates",
+      "agenthorizon-long-horizon-judges",
+      "openproblembench-theoretical-science-evaluation",
+      "misvisagentbench-misleading-charts",
+      "treehca-agent-hindsight-credit",
+      "agent-pr-code-deployment-integration-study",
+      "collaborative-theory-of-mind-self-revision",
+      "t-mem-temporal-evidence-forests",
+      "portable-skills-agentic-rag",
+      "sceneforesee-scene-evolution",
+      "tetpo-effective-sample-size",
+      "kv4-rl-rollout-quantization",
+      "executable-task-contracts",
+      "momatune-numerical-records",
+      "sequent-prover-verifiable-reasoning",
+      "recap-history-aware-quantization",
+      "lehami-symplectic-world-models",
+      "co-dsl-layout-concepts",
+      "quantization-compensation-limits",
+      "echo-agent-credit-assignment",
+      "recons-multi-agent-privacy",
+      "agent-benchmark-oracle-integrity",
+      "dream2discern-runtime-auditor",
+      "foundation-event-predictor",
+      "yubi-real2sim-policy-evaluation",
+      "box-wam-compact-world-actions",
+      "tacitvla-reasoning-latency",
+      "safe-agent-memory-certification",
+      "wealth-of-agents-multi-developer",
+      "cipr-cross-interface-agent-robustness",
+      "scaling-discovery-requires-forgetting",
+      "physga-physics-grounded-composition",
+      "jetstream-verified-query-accelerators",
+      "agent-approval-effect-binding",
+      "hnsw-rag-topology-poisoning-study",
+      "linguaguardbench-agent-guard-language",
+      "mcp-fsd-filesystem-capability-study",
+      "claude-quantum-circuit-optimization",
+      "ai-expectations-gap-survey",
+      "anthropic-employment-agent-work-study",
+      "google-verid-lab-in-loop-agents",
+      "memcode-discrete-agent-memory",
+      "prod-progress-aware-agent-distillation",
+      "agent-safety-shortcut-sensitivity",
+      "mlexpert-autonomous-ml-engineering",
+      "librarian-agents-proactive-workspaces",
+      "os-helix-hybrid-computer-agents",
+      "mpt-decentralized-agent-self-orchestration",
+      "knowgpo-knowledge-grouped-search",
+      "diverse-scientific-ideas-set-rl",
+      "omniverifier-graded-world-verification",
+      "leash-uncertainty-agent-escalation",
+      "fde-gym-ai-delivery-benchmark",
+      "random-projection-private-rag",
+      "langdit-continuous-diffusion-transformer",
+      "realtime-bench-temporal-action",
+      "value-as-memory-robot-posttraining",
+      "cyclotron-recurrence-communication-compiler",
+      "seer-repro-analytical-robustness",
+      "self-building-labs-automation",
+      "consdl-consistent-concept-discovery",
+      "tider-temporal-agent-memory",
+      "c-to-rust-performance-recovery",
+      "memderive-evolving-data-agent-memory",
+      "action-time-reasoning-state-tracking",
+      "remoteann-object-storage-vector-search",
+      "faaspot-fault-tolerant-serverless-workflows",
+      "jaro-winkler-scalable-string-joins"
+    ]
+  }
+}
