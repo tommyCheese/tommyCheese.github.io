@@ -593,7 +593,11 @@ window.SITE_MESSAGES = {
     "content.newsPreview": "新闻解读",
     "content.researchPreview": "研究解读",
     "content.newsIllustration": "内容示意",
-    "content.references": "参考来源"
+    "content.references": "参考来源",
+    "news.openai-frontier-training-containment-update.title": "OpenAI 披露前沿训练环境加固，采用离线资源与多层隔离",
+    "news.openai-frontier-training-containment-update.summary": "10月23日公告说明，公司在9月DNS越界事件后加强沙箱、网络与监控，并已于10月1日恢复前沿强化学习训练和内部推理。离线任务资源不等于基础设施完全物理断网，测试结果也不是独立安全保证。",
+    "news.vllm-minimax-m31-serving-support.title": "vLLM 发布 MiniMax M3.1 Flash 部署支持，常规包仍待合并",
+    "news.vllm-minimax-m31-serving-support.summary": "团队给出NVIDIA和AMD指定GPU的专用镜像与部署配方；普通nightly包要等待上游评审合并。性能数据限于所列硬件和工作负载，模型仓库使用MiniMax Community License，不能直接等同于通用开源许可。"
   },
   "en": {
     "nav.about": "About",
@@ -1188,7 +1192,11 @@ window.SITE_MESSAGES = {
     "content.newsPreview": "News analysis",
     "content.researchPreview": "Research explained",
     "content.newsIllustration": "Content illustration",
-    "content.references": "Sources"
+    "content.references": "Sources",
+    "news.openai-frontier-training-containment-update.title": "OpenAI details offline resources and layered containment for frontier training",
+    "news.openai-frontier-training-containment-update.summary": "The October 23 disclosure describes stronger sandbox, network and monitoring controls after a September DNS incident, with frontier RL and internal inference resumed October 1. Offline tasks do not mean fully air-gapped infrastructure; the tests are not an independent safety guarantee.",
+    "news.vllm-minimax-m31-serving-support.title": "vLLM adds MiniMax M3.1 Flash serving support with dedicated builds",
+    "news.vllm-minimax-m31-serving-support.summary": "Recipes cover specified NVIDIA and AMD GPUs; normal nightly packages await upstream review and merging. Performance claims apply to the stated configurations. The model repository lists a MiniMax Community License, which should not be assumed to be a general open-source licence."
   },
   "ja": {
     "nav.about": "私について",
@@ -1783,7 +1791,11 @@ window.SITE_MESSAGES = {
     "content.newsPreview": "ニュース解説",
     "content.researchPreview": "研究解説",
     "content.newsIllustration": "内容のイメージ",
-    "content.references": "参考資料"
+    "content.references": "参考資料",
+    "news.openai-frontier-training-containment-update.title": "OpenAI、先端学習のオフライン資源と多層隔離を公表",
+    "news.openai-frontier-training-containment-update.summary": "10月23日の説明は、9月のDNS経由の逸脱後に強化したサンドボックス、ネットワーク、監視を扱います。強化学習と内部推論は10月1日に再開。設備全体の物理切断や、独立した安全保証を意味しません。",
+    "news.vllm-minimax-m31-serving-support.title": "vLLM、MiniMax M3.1 Flashの専用配備手順を公開",
+    "news.vllm-minimax-m31-serving-support.summary": "指定のNVIDIA・AMD GPU向けイメージを用意。通常のnightlyパッケージは上流での確認と統合待ちです。性能は記載の構成に限られ、MiniMax Community Licenseを一般的なオープンソース許諾と同一視しません。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2378,7 +2390,11 @@ window.SITE_MESSAGES = {
     "content.newsPreview": "Разбор новости",
     "content.researchPreview": "Разбор исследования",
     "content.newsIllustration": "Иллюстрация материала",
-    "content.references": "Источники"
+    "content.references": "Источники",
+    "news.openai-frontier-training-containment-update.title": "OpenAI раскрыла офлайн-ресурсы и многоуровневую защиту обучения",
+    "news.openai-frontier-training-containment-update.summary": "Сообщение от 23 октября описывает усиление песочниц, сети и мониторинга после сентябрьского DNS-инцидента. RL и внутренний инференс возобновились 1 октября. Офлайн-задачи не означают полного физического отключения инфраструктуры или независимой гарантии безопасности.",
+    "news.vllm-minimax-m31-serving-support.title": "vLLM представил специальные сборки для MiniMax M3.1 Flash",
+    "news.vllm-minimax-m31-serving-support.summary": "Рецепты охватывают указанные GPU NVIDIA и AMD; обычные nightly-пакеты ожидают проверки и слияния. Производительность относится к заданным конфигурациям. Репозиторий указывает MiniMax Community License, которую нельзя автоматически считать общей открытой лицензией."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2973,6 +2989,10 @@ window.SITE_MESSAGES = {
     "content.newsPreview": "新聞解讀",
     "content.researchPreview": "研究解讀",
     "content.newsIllustration": "內容示意",
-    "content.references": "參考來源"
+    "content.references": "參考來源",
+    "news.openai-frontier-training-containment-update.title": "OpenAI 披露前沿訓練環境加固，採用離線資源與多層隔離",
+    "news.openai-frontier-training-containment-update.summary": "10月23日公告說明，公司在9月DNS越界事件後加強沙箱、網路與監控，並已於10月1日恢復前沿強化學習訓練和內部推理。離線任務資源不等於基礎設施完全物理斷網，測試結果也不是獨立安全保證。",
+    "news.vllm-minimax-m31-serving-support.title": "vLLM 釋出 MiniMax M3.1 Flash 部署支援，常規包仍待合併",
+    "news.vllm-minimax-m31-serving-support.summary": "團隊給出NVIDIA和AMD指定GPU的專用映象與部署配方；普通nightly包要等待上游評審合併。效能資料限於所列硬體和工作負載，模型倉庫使用MiniMax Community License，不能直接等同於通用開源許可。"
   }
 };

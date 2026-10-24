@@ -1,6 +1,28 @@
 {
-  "updated_at": "2026-10-24",
+  "updated_at": "2026-10-25",
   "items": [
+    {
+      "id": "openai-frontier-training-containment-update",
+      "category": "ai",
+      "published_at": "2026-10-23",
+      "collected_at": "2026-10-25",
+      "source": "OpenAI / Reuters",
+      "url": "https://openai.com/index/securing-our-frontier-model-training-environment/",
+      "image": "https://tommycheese.github.io/images/news/frontier-training-containment.svg",
+      "image_credit": "Tech Daily · editorial illustration, not an experiment result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "vllm-minimax-m31-serving-support",
+      "category": "ai",
+      "published_at": "2026-10-23",
+      "collected_at": "2026-10-25",
+      "source": "vLLM / MiniMax",
+      "url": "https://vllm-project.github.io/2026/10/23/minimax-m31-flash.html",
+      "image": "https://vllm-project.github.io/assets/figures/2026-10-23-minimax-m31-flash/hero.png",
+      "image_credit": "vLLM · deployment support illustration",
+      "image_fit": "contain"
+    },
     {
       "id": "kimi-k31-pro-hosted-release",
       "category": "ai",
@@ -63,8 +85,8 @@
       "collected_at": "2026-10-24",
       "source": "SK hynix / Yonhap",
       "url": "https://news.skhynix.com/en/fact-12/",
-      "image": "https://img4.yna.co.kr/photo/cms/2026/10/18/01/PCM20261018000001990_P4.jpg",
-      "image_credit": "Solidigm / Yonhap · company building",
+      "image": "https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/07/31152725/en_newsroom_thumb-1.png",
+      "image_credit": "SK hynix · newsroom illustration, not a new-factory photograph",
       "image_fit": "contain"
     },
     {
