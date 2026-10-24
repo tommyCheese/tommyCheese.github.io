@@ -16,6 +16,76 @@
   ],
   "items": [
     {
+      "id": "episem-missing-evidence-agent-safety",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "agents",
+        "security",
+        "papers"
+      ],
+      "source": "Zhang, Qijin et al. · arXiv:2610.31650v1",
+      "url": "https://arxiv.org/abs/2610.31650v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "clariedge-rag-query-clarification",
+      "kind": "preprint",
+      "published_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "He, Lihong; Popa, Lucian; Danilevsky, Marina · arXiv:2610.28686v1",
+      "url": "https://arxiv.org/abs/2610.28686v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "coater-continuous-ontology-assurance",
+      "kind": "preprint",
+      "published_at": "2026-10-16",
+      "tags": [
+        "ontology",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Lämmel, Ralf · arXiv:2610.24322v1",
+      "url": "https://arxiv.org/abs/2610.24322v1",
+      "collected_at": "2026-10-24"
+    },
+    {
+      "id": "biasguard-typed-record-quality",
+      "kind": "conference-paper",
+      "published_at": "2026-10-21",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "papers",
+        "conferences"
+      ],
+      "source": "Subasi, Kardelen; Chudziak, Jarosław A. · arXiv:2610.29669v1",
+      "url": "https://arxiv.org/abs/2610.29669v1",
+      "collected_at": "2026-10-24",
+      "venue": "CoopIS 2026 (author-reported acceptance; track unspecified)"
+    },
+    {
+      "id": "tt-sax-language-shape-querying",
+      "kind": "conference-paper",
+      "published_at": "2026-10-22",
+      "tags": [
+        "databases",
+        "papers",
+        "conferences"
+      ],
+      "source": "Tan, Zhao et al. · arXiv:2610.30593v1",
+      "url": "https://arxiv.org/abs/2610.30593v1",
+      "collected_at": "2026-10-24",
+      "venue": "ADC 2026 (author-reported acceptance; track unspecified; pre-review manuscript)"
+    },
+    {
       "id": "contestable-agent-metadata-stewardship",
       "kind": "preprint",
       "published_at": "2026-10-22",
