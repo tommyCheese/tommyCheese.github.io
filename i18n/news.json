@@ -2,6 +2,61 @@
   "updated_at": "2026-10-24",
   "items": [
     {
+      "id": "kimi-k31-pro-hosted-release",
+      "category": "ai",
+      "published_at": "2026-10-24",
+      "collected_at": "2026-10-24",
+      "source": "IT之家 / Moonshot AI",
+      "url": "https://www.ithome.com/1/017/284.htm",
+      "image": "https://statics.kimi.ai/kimi-web-seo/assets/kimi-logo-CegIMkbU.png",
+      "image_credit": "Moonshot AI · Kimi logo",
+      "image_fit": "contain"
+    },
+    {
+      "id": "systemd-rust-leaf-components-merged",
+      "category": "software",
+      "published_at": "2026-10-24",
+      "collected_at": "2026-10-24",
+      "source": "systemd / GitHub",
+      "url": "https://github.com/systemd/systemd/pull/44324",
+      "image": "https://opengraph.githubassets.com/660b6833f0488b2498df60973adce9e95d37c24c4177ee99d8f63df9f77bad62/systemd/systemd/pull/44324",
+      "image_credit": "systemd / GitHub · pull request preview",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-swift-science-mission-ended",
+      "category": "science",
+      "published_at": "2026-10-23",
+      "collected_at": "2026-10-24",
+      "source": "NASA Science",
+      "url": "https://science.nasa.gov/missions/swift/nasas-swift-mission-ends/",
+      "image": "https://assets.science.nasa.gov/content/dam/science/missions/swift-observatory/news/2026/end-of-mission/Swift_in_space_15_ac.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+      "image_credit": "NASA Goddard Conceptual Image Lab · artist’s concept",
+      "image_fit": "contain"
+    },
+    {
+      "id": "metr-openai-monitoring-pilot-review",
+      "category": "ai",
+      "published_at": "2026-10-22",
+      "collected_at": "2026-10-24",
+      "source": "METR / Redwood Research",
+      "url": "https://metr.org/blog/2026-10-22-red-teaming-openai-agent-monitoring/",
+      "image": "https://metr.org/assets/images/logo/og-image-logo.png",
+      "image_credit": "METR · organization logo",
+      "image_fit": "contain"
+    },
+    {
+      "id": "anthropic-rocq-oss-formal-verification",
+      "category": "ai",
+      "published_at": "2026-10-22",
+      "collected_at": "2026-10-24",
+      "source": "Anthropic / Theorem",
+      "url": "https://www.anthropic.com/research/formal-verification",
+      "image": "https://www-cdn.anthropic.com/images/4zrzovbb/website/80cf520cb540989c3643907f004b2514ec4d01f1-1200x630.jpg",
+      "image_credit": "Anthropic · formal verification illustration",
+      "image_fit": "contain"
+    },
+    {
       "id": "solidigm-preipo-ipo-review-halted",
       "category": "semiconductors",
       "published_at": "2026-10-23",

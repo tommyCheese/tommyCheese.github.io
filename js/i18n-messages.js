@@ -561,7 +561,17 @@ window.SITE_MESSAGES = {
     "research.lara-agentic-retrieval-attribution.title": "LARA：把 Agent 检索质量与用户行为分开评测",
     "research.lara-agentic-retrieval-attribution.summary": "用检索质量、使用结果和任务成功三个层次，配合四个追溯字段处理跨轮归因。单一创作助手的日志表明，改写请求不能直接视为检索失败；完整字段尚未部署，许多指标仍依赖时间推断，框架效果尚待验证。",
     "research.phystrace-temporal-physical-consistency.title": "PhysTrace：定位视频中违反物理规律的时段",
-    "research.phystrace-temporal-physical-consistency.summary": "把多模态模型根据历史生成的预期与视频窗口对齐，标出异常并给出解释。在 IntPhys2-Timing 的不同物理类别中，最高定位命中率为 70.7%。结果受模型、提示及筛选后的场景类别影响，不能当作通用物理验证器。"
+    "research.phystrace-temporal-physical-consistency.summary": "把多模态模型根据历史生成的预期与视频窗口对齐，标出异常并给出解释。在 IntPhys2-Timing 的不同物理类别中，最高定位命中率为 70.7%。结果受模型、提示及筛选后的场景类别影响，不能当作通用物理验证器。",
+    "news.kimi-k31-pro-hosted-release.title": "Kimi K3.1 Pro 上线，完整权重尚未发布",
+    "news.kimi-k31-pro-hosted-release.summary": "月之暗面推出 K3.1 Pro 及高速版，支持 100 万 token 上下文，并增加后训练计算量。托管服务已上线，公司承诺 11 月 4 日前发布完整权重；公开成绩含内部测试，不能直接当作日常任务的效果保证。",
+    "news.systemd-rust-leaf-components-merged.title": "systemd 主线合入 Rust 程序支持",
+    "news.systemd-rust-leaf-components-merged.summary": "新加入的叶子组件可以用 Rust 编写，仍由 Meson 构建，不使用 Cargo。现有 C 代码保留，核心库暂不采用 Rust；这项支持可按构建选项启用，当前属于主线开发变更。",
+    "news.nasa-swift-science-mission-ended.title": "NASA 宣布 Swift 结束科学观测",
+    "news.nasa-swift-science-mission-ended.summary": "Swift 于 10 月 20 日完成最后一次观测。轨道降至约 275 公里以下后，大气阻力已影响望远镜稳定指向。NASA 预计它将在未来几周再入大气层，具体日期尚未确定；近 22 年的观测资料仍可公开查阅。",
+    "news.metr-openai-monitoring-pilot-review.title": "METR 公布 OpenAI 内部 Agent 监测评估",
+    "news.metr-openai-monitoring-pilot-review.summary": "METR 与 Redwood Research 在 7—8 月开展高权限评估，发现监测覆盖和防绕过机制的缺口。结果针对截至 7 月 21 日的历史系统；OpenAI 称影响生产防护的漏洞已修复，METR 尚未复核。",
+    "news.anthropic-rocq-oss-formal-verification.title": "Anthropic 报告 Claude 生成软件安全证明",
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 与 Theorem 报告，Claude 为 123 个开源库的 239 个测试入口生成了经 Rocq 检查的证明。结论限于小于 64 MB 的输入及特定单线程 RISC-V/Linux 环境，不代表整个库没有漏洞；目前仅公开了部分证明。"
   },
   "en": {
     "nav.about": "About",
@@ -1124,7 +1134,17 @@ window.SITE_MESSAGES = {
     "research.lara-agentic-retrieval-attribution.title": "LARA separates agentic retrieval quality from user behavior",
     "research.lara-agentic-retrieval-attribution.summary": "Three measurement layers and four lineage fields connect retrieval, use and task outcomes across turns. Logs from one creative assistant show why reformulation is not a direct retrieval-failure signal. The fields are not yet deployed; many metrics remain timing-based, and the framework’s benefits require validation.",
     "research.phystrace-temporal-physical-consistency.title": "PhysTrace localizes physical violations in video",
-    "research.phystrace-temporal-physical-consistency.summary": "PhysTrace aligns history-conditioned multimodal expectations with video windows to locate violations and explain them. Its best category-level localization hit rate on IntPhys2-Timing is 70.7%. Results depend on the model, prompts and selected scene categories; this is not a general physical verifier."
+    "research.phystrace-temporal-physical-consistency.summary": "PhysTrace aligns history-conditioned multimodal expectations with video windows to locate violations and explain them. Its best category-level localization hit rate on IntPhys2-Timing is 70.7%. Results depend on the model, prompts and selected scene categories; this is not a general physical verifier.",
+    "news.kimi-k31-pro-hosted-release.title": "Kimi K3.1 Pro is live; full weights are still pending",
+    "news.kimi-k31-pro-hosted-release.summary": "Moonshot has launched Pro and Highspeed variants with a one-million-token context window and more post-training compute. Hosted access is live; full weights are promised by November 4. Reported scores include internal tests and do not guarantee performance on everyday tasks.",
+    "news.systemd-rust-leaf-components-merged.title": "systemd merges support for programs written in Rust",
+    "news.systemd-rust-leaf-components-merged.summary": "New leaf components can use Rust, built through Meson without Cargo. Existing C code stays in place, and core libraries do not yet use Rust. The support is configurable at build time and is currently a mainline development change.",
+    "news.nasa-swift-science-mission-ended.title": "NASA announces the end of Swift science operations",
+    "news.nasa-swift-science-mission-ended.summary": "Swift made its final observation on October 20. Below roughly 275 kilometers, atmospheric drag prevents steady telescope pointing. NASA expects re-entry in the next few weeks, with no exact date established. Nearly 22 years of observations remain publicly available.",
+    "news.metr-openai-monitoring-pilot-review.title": "METR publishes its review of OpenAI’s internal agent monitors",
+    "news.metr-openai-monitoring-pilot-review.summary": "A high-access exercise with Redwood Research in July and August found gaps in monitoring coverage and resistance to bypass. Findings concern the historical system as of July 21. OpenAI says flaws affecting production safeguards were patched; METR has not verified that claim.",
+    "news.anthropic-rocq-oss-formal-verification.title": "Anthropic reports machine-checked software proofs written by Claude",
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic and Theorem report Rocq-checked proofs for 239 test entry points across 123 open-source libraries. Guarantees cover inputs below 64 MB under specific single-threaded RISC-V/Linux assumptions, rather than entire bug-free libraries. Only a subset of the proofs is public."
   },
   "ja": {
     "nav.about": "私について",
@@ -1687,7 +1707,17 @@ window.SITE_MESSAGES = {
     "research.lara-agentic-retrieval-attribution.title": "LARA：Agent の検索品質と利用者行動を分けて評価",
     "research.lara-agentic-retrieval-attribution.summary": "3つの評価層と4つの来歴フィールドで検索、利用、タスク結果を複数ターンにわたり結び付ける。単一の制作支援サービスのログは、言い換えを検索失敗と直結できないことを示す。全フィールドは未導入で、多くの指標は時刻による推定に留まり、効果検証が必要。",
     "research.phystrace-temporal-physical-consistency.title": "PhysTrace：動画で物理法則に反する時間帯を探す",
-    "research.phystrace-temporal-physical-consistency.summary": "履歴からマルチモーダルモデルが予測した状態と動画の時間窓を照合し、違反を特定して説明する。IntPhys2-Timing のカテゴリー別最高命中率は70.7%。モデル、プロンプト、選別した場面に依存するため、汎用的な物理検証器とはいえない。"
+    "research.phystrace-temporal-physical-consistency.summary": "履歴からマルチモーダルモデルが予測した状態と動画の時間窓を照合し、違反を特定して説明する。IntPhys2-Timing のカテゴリー別最高命中率は70.7%。モデル、プロンプト、選別した場面に依存するため、汎用的な物理検証器とはいえない。",
+    "news.kimi-k31-pro-hosted-release.title": "Kimi K3.1 Pro が公開、モデル重みは後日提供へ",
+    "news.kimi-k31-pro-hosted-release.summary": "Moonshot は100万 token の文脈長を持つ Pro と Highspeed を公開し、事後学習の計算量を増やした。ホスト型サービスは利用可能で、完全な重みは11月4日までの公開を予定する。成績には社内評価が含まれ、日常業務での効果を保証するものではない。",
+    "news.systemd-rust-leaf-components-merged.title": "systemd が Rust プログラムのビルド対応を統合",
+    "news.systemd-rust-leaf-components-merged.summary": "新しい末端コンポーネントを Rust で記述でき、Cargo を使わず Meson でビルドする。既存の C コードは維持し、コアライブラリへの Rust 導入は対象外。ビルド時に設定できる対応で、現在は開発版の変更となる。",
+    "news.nasa-swift-science-mission-ended.title": "NASA、Swift の科学観測終了を発表",
+    "news.nasa-swift-science-mission-ended.summary": "Swift は10月20日に最後の観測を実施した。高度が約275キロメートルを下回り、大気抵抗で望遠鏡の向きを安定させられなくなった。数週間以内の大気圏再突入を見込むが、日付は未確定。約22年分の観測資料は引き続き公開される。",
+    "news.metr-openai-monitoring-pilot-review.title": "METR、OpenAI 内部 Agent 監視の評価を公表",
+    "news.metr-openai-monitoring-pilot-review.summary": "Redwood Research と7〜8月に内部アクセスを伴う評価を行い、監視範囲と回避耐性に不足を見つけた。結果は7月21日時点の旧システムを対象とする。OpenAI は本番の保護に影響する問題を修正したと説明するが、METR は未検証。",
+    "news.anthropic-rocq-oss-formal-verification.title": "Anthropic、Claude によるソフトウェア安全性の証明を報告",
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic と Theorem は、123のオープンソースライブラリの239テスト入口で Rocq が検査した証明を報告した。64 MB 未満の入力、単一スレッドの特定 RISC-V/Linux 環境などが前提で、ライブラリ全体の無欠陥は保証しない。公開は証明の一部に限られる。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2250,7 +2280,17 @@ window.SITE_MESSAGES = {
     "research.lara-agentic-retrieval-attribution.title": "LARA разделяет качество агентного поиска и поведение пользователя",
     "research.lara-agentic-retrieval-attribution.summary": "Три уровня измерений и четыре поля происхождения связывают поиск, использование и результат задачи между ходами. Логи одного творческого помощника показывают, почему переформулировка не равна сбою поиска. Поля ещё не внедрены; многие метрики основаны на временных связях, а польза подхода требует проверки.",
     "research.phystrace-temporal-physical-consistency.title": "PhysTrace находит моменты физических нарушений в видео",
-    "research.phystrace-temporal-physical-consistency.summary": "Метод сопоставляет ожидания мультимодальной модели, обусловленные историей, с окнами видео и объясняет нарушения. Лучший показатель локализации по категориям IntPhys2-Timing — 70,7%. Результаты зависят от модели, запросов и отбора сцен; универсальная проверка физических законов не обеспечивается."
+    "research.phystrace-temporal-physical-consistency.summary": "Метод сопоставляет ожидания мультимодальной модели, обусловленные историей, с окнами видео и объясняет нарушения. Лучший показатель локализации по категориям IntPhys2-Timing — 70,7%. Результаты зависят от модели, запросов и отбора сцен; универсальная проверка физических законов не обеспечивается.",
+    "news.kimi-k31-pro-hosted-release.title": "Kimi K3.1 Pro доступен в сервисах; веса ещё не опубликованы",
+    "news.kimi-k31-pro-hosted-release.summary": "Moonshot представила Pro и Highspeed с контекстом в миллион токенов и увеличенным объёмом дообучения. Доступ через сервисы уже открыт, полные веса обещаны к 4 ноября. Результаты включают внутренние тесты и не гарантируют качество в повседневных задачах.",
+    "news.systemd-rust-leaf-components-merged.title": "systemd добавил поддержку программ на Rust в основную ветку",
+    "news.systemd-rust-leaf-components-merged.summary": "Новые конечные компоненты можно писать на Rust и собирать через Meson без Cargo. Существующий код на C сохраняется, основные библиотеки пока не используют Rust. Поддержка настраивается при сборке и относится к разрабатываемой версии.",
+    "news.nasa-swift-science-mission-ended.title": "NASA объявило об окончании научных наблюдений Swift",
+    "news.nasa-swift-science-mission-ended.summary": "Последнее наблюдение Swift состоялось 20 октября. Ниже примерно 275 км атмосферное сопротивление мешает стабильно наводить телескопы. NASA ожидает вход в атмосферу в ближайшие недели, но точной даты пока нет. Почти 22 года наблюдений остаются в открытом архиве.",
+    "news.metr-openai-monitoring-pilot-review.title": "METR опубликовала оценку внутренних мониторов агентов OpenAI",
+    "news.metr-openai-monitoring-pilot-review.summary": "Исследование с Redwood Research в июле и августе выявило пробелы в охвате мониторинга и защите от обхода. Выводы касаются системы по состоянию на 21 июля. OpenAI заявляет об исправлении проблем производственных средств защиты; METR это не проверяла.",
+    "news.anthropic-rocq-oss-formal-verification.title": "Anthropic сообщила о проверенных доказательствах безопасности от Claude",
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic и Theorem сообщают о проверенных Rocq доказательствах для 239 тестовых входов в 123 открытых библиотеках. Гарантии ограничены входами меньше 64 МБ и заданной однопоточной средой RISC-V/Linux, а не отсутствием всех ошибок. Опубликована лишь часть доказательств."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2813,6 +2853,16 @@ window.SITE_MESSAGES = {
     "research.lara-agentic-retrieval-attribution.title": "LARA：把 Agent 檢索品質與使用者行為分開評測",
     "research.lara-agentic-retrieval-attribution.summary": "用檢索品質、使用結果和任務成功三個層次，配合四個追溯欄位處理跨輪歸因。單一創作助手的紀錄表明，改寫請求不能直接視為檢索失敗；完整欄位尚未部署，許多指標仍依賴時間推斷，框架效果尚待驗證。",
     "research.phystrace-temporal-physical-consistency.title": "PhysTrace：定位影片中違反物理規律的時段",
-    "research.phystrace-temporal-physical-consistency.summary": "把多模態模型根據歷史產生的預期與影片時間窗對齊，標出異常並給出解釋。在 IntPhys2-Timing 的不同物理類別中，最高定位命中率為 70.7%。結果受模型、提示及篩選後的場景類別影響，不能當作通用物理驗證器。"
+    "research.phystrace-temporal-physical-consistency.summary": "把多模態模型根據歷史產生的預期與影片時間窗對齊，標出異常並給出解釋。在 IntPhys2-Timing 的不同物理類別中，最高定位命中率為 70.7%。結果受模型、提示及篩選後的場景類別影響，不能當作通用物理驗證器。",
+    "news.kimi-k31-pro-hosted-release.title": "Kimi K3.1 Pro 上線，完整權重尚未發布",
+    "news.kimi-k31-pro-hosted-release.summary": "月之暗面推出 K3.1 Pro 及高速版，支援 100 萬 token 上下文，並增加後訓練運算量。託管服務已上線，公司承諾 11 月 4 日前發布完整權重；公開成績含內部測試，不能直接當作日常任務的效果保證。",
+    "news.systemd-rust-leaf-components-merged.title": "systemd 主線合併 Rust 程式支援",
+    "news.systemd-rust-leaf-components-merged.summary": "新加入的葉節點元件可以用 Rust 編寫，仍由 Meson 建置，不使用 Cargo。既有 C 程式碼保留，核心函式庫暫不採用 Rust；這項支援可透過建置選項啟用，目前屬於主線開發變更。",
+    "news.nasa-swift-science-mission-ended.title": "NASA 宣布 Swift 結束科學觀測",
+    "news.nasa-swift-science-mission-ended.summary": "Swift 於 10 月 20 日完成最後一次觀測。軌道降至約 275 公里以下後，大氣阻力已影響望遠鏡穩定指向。NASA 預計它將在未來幾週重返大氣層，具體日期尚未確定；近 22 年的觀測資料仍可公開查閱。",
+    "news.metr-openai-monitoring-pilot-review.title": "METR 公布 OpenAI 內部 Agent 監測評估",
+    "news.metr-openai-monitoring-pilot-review.summary": "METR 與 Redwood Research 在 7—8 月開展高權限評估，發現監測涵蓋範圍和防繞過機制的缺口。結果針對截至 7 月 21 日的歷史系統；OpenAI 稱影響正式環境防護的漏洞已修復，METR 尚未複核。",
+    "news.anthropic-rocq-oss-formal-verification.title": "Anthropic 報告 Claude 產生軟體安全證明",
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 與 Theorem 報告，Claude 為 123 個開源函式庫的 239 個測試入口產生了經 Rocq 檢查的證明。結論限於小於 64 MB 的輸入及特定單執行緒 RISC-V/Linux 環境，不代表整個函式庫沒有漏洞；目前僅公開了部分證明。"
   }
 };
