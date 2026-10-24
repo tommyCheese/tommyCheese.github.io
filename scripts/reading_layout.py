@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.parse import quote, unquote, urlsplit, urlunsplit
 import json
 from lxml import html
+from editorials import ARTICLES, check_coverage
 
 ARCHITECTURE = ['再读整洁架构之道' + number for number in '一二三四五六']
 MODEL_TRANSFER = '实用干货如何把pytorch模型参数加载到mindspore模型'
@@ -16,6 +17,7 @@ FEATURED = ['opencode-v2-extensions', ARCHITECTURE[0], MODEL_TRANSFER]
 NEWS = json.loads((Path(__file__).resolve().parents[1] / 'i18n/news.json').read_text())
 NEWS_TAGS = NEWS['tags']
 RESEARCH = json.loads((Path(__file__).resolve().parents[1] / 'i18n/research.json').read_text())
+check_coverage({'news': NEWS, 'research': RESEARCH})
 
 
 def research_archive_date(item):
@@ -58,6 +60,9 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         card = node('article', class_='news-card ' + ('news-preview' if preview else 'news-entry') + (' research-card' if research else ''),
                     data_news_tags=' '.join(tags))
         card.set('data-' + collection + '-id', item['id'])
+        for key in ['source', 'published_at', 'collected_at', 'venue']:
+            if item.get(key):
+                card.set('data-preview-' + key.replace('_', '-'), item[key])
         if item.get('image'):
             card.append(node('img', src=item['image'], alt='', loading='lazy', decoding='async', width='640', height='360', referrerpolicy='no-referrer', class_='news-file-photo' if item.get('file_photo') else ('news-cover news-cover-contain' if item.get('image_fit') == 'contain' else 'news-cover')))
         copy = node('div', class_='news-copy')
@@ -89,9 +94,37 @@ def enhance_layout(doc, path, locale, articles, messages, revision):
         if research and not preview and item.get('collected_at'):
             metadata.append(label('span', 'research.collected'))
             metadata.append(node('time', item['collected_at'], datetime=item['collected_at']))
-        metadata.append(label('span', 'news.original', class_='news-card-action', aria_hidden='true'))
+        metadata.append(label('span', 'content.preview', class_='news-preview-hint', hidden='hidden'))
+        metadata.append(label('a', 'news.original', class_='news-card-action', href=item['url'],
+                              target='_blank', rel='noopener noreferrer'))
         copy.append(metadata)
         card.append(copy)
+        editorial = ARTICLES.get((collection, item['id']))
+        if editorial:
+            body = editorial['locales'][locale]
+            template = node('template', data_editorial='', lang=locale)
+            article = node('div', class_='editorial-body')
+            article.append(node('p', body['lead'], class_='editorial-lead'))
+            visual = node('figure', class_='editorial-visual')
+            steps = node('ol')
+            for step in body['visual']['steps']:
+                steps.append(node('li', step))
+            visual.append(steps)
+            visual.append(node('figcaption', body['visual']['caption']))
+            article.append(visual)
+            for section in body['sections']:
+                block = node('section')
+                block.append(node('h3', section['heading']))
+                for paragraph in section['paragraphs']:
+                    block.append(node('p', paragraph))
+                article.append(block)
+            sources = node('section', class_='editorial-sources')
+            sources.append(label('h3', 'content.references'))
+            for source in editorial['sources']:
+                sources.append(node('a', source['label'], href=source['url'], target='_blank', rel='noopener noreferrer'))
+            article.append(sources)
+            template.append(article)
+            card.append(template)
         return card
 
     # Preserve the original personal sections before recreating their grouping.
@@ -469,3 +502,19 @@ document.getElementById('theme-toggle').addEventListener('click', syncHomeImage)
                 for target in [target for target in TOPICS[topic] if target != slug][:2]:
                     trail.append(post_link(target))
             article.addnext(trail)
+
+    if doc.xpath('//article[@data-news-id or @data-research-id]'):
+        dialog = node('dialog', id='content-preview', class_='content-preview',
+                      aria_labelledby='content-preview-title', data_reading_layout='preview')
+        toolbar = node('div', class_='content-preview-toolbar')
+        toolbar.append(label('span', 'content.preview', id='content-preview-kind'))
+        toolbar.append(label('button', 'content.close', type='button', class_='content-preview-close',
+                             data_preview_close='', autofocus='autofocus'))
+        dialog.append(toolbar)
+        dialog.append(node('div', id='content-preview-body'))
+        footer = node('div', class_='content-preview-footer')
+        footer.append(label('a', 'news.original', id='content-preview-original', target='_blank', rel='noopener noreferrer'))
+        dialog.append(footer)
+        doc.find('body').append(dialog)
+        if not doc.xpath('//script[@data-reading-layout="runtime"]'):
+            doc.find('body').append(node('script', src='/js/reading.js?v=' + revision, defer='defer', data_reading_layout='runtime'))
