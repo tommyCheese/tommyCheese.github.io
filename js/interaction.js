@@ -12,14 +12,14 @@
         observer.unobserve(entry.target);
         if (reducedMotion.matches) return;
         const animation = entry.target.animate([
-          { opacity: 0, translate: '0 10px' },
+          { opacity: 0, translate: '0 6px' },
           { opacity: 1, translate: '0 0' }
-        ], { duration: 420, delay: Math.min(index * 45, 135), easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'backwards' });
+        ], { duration: 320, delay: Math.min(index * 30, 90), easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'backwards' });
         running.add(animation);
         animation.finished.then(() => running.delete(animation), () => running.delete(animation));
       });
     }, { threshold: .08 });
-    document.querySelectorAll('.intro-layout, .home-section, #about .row, .experience-container, .topic-directory > section')
+    document.querySelectorAll('.home-group-heading, .topic-directory > section')
       .forEach(element => observer.observe(element));
     reducedMotion.addEventListener('change', () => {
       if (reducedMotion.matches) running.forEach(animation => animation.cancel());

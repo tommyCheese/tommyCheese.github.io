@@ -124,6 +124,7 @@
   function openSearch() {
     if (!dialog.open) {
       returnFocus = document.activeElement;
+      input.value = '';
       dialog.showModal();
       document.body.classList.add('spotlight-open');
       search();
@@ -136,9 +137,8 @@
     dialog.close();
     ++request;
     document.body.classList.remove('spotlight-open');
-    input.value = '';
-    clearResults();
-    showStatus(t('search.prompt'));
+    // Keep the window's contents stable during its native CSS exit transition.
+    // The next open resets the query and rebuilds results synchronously.
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
   }
   dialog.addEventListener('keydown', event => {
