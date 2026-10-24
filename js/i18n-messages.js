@@ -571,7 +571,17 @@ window.SITE_MESSAGES = {
     "news.metr-openai-monitoring-pilot-review.title": "METR 公布 OpenAI 内部 Agent 监测评估",
     "news.metr-openai-monitoring-pilot-review.summary": "METR 与 Redwood Research 在 7—8 月开展高权限评估，发现监测覆盖和防绕过机制的缺口。结果针对截至 7 月 21 日的历史系统；OpenAI 称影响生产防护的漏洞已修复，METR 尚未复核。",
     "news.anthropic-rocq-oss-formal-verification.title": "Anthropic 报告 Claude 生成软件安全证明",
-    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 与 Theorem 报告，Claude 为 123 个开源库的 239 个测试入口生成了经 Rocq 检查的证明。结论限于小于 64 MB 的输入及特定单线程 RISC-V/Linux 环境，不代表整个库没有漏洞；目前仅公开了部分证明。"
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 与 Theorem 报告，Claude 为 123 个开源库的 239 个测试入口生成了经 Rocq 检查的证明。结论限于小于 64 MB 的输入及特定单线程 RISC-V/Linux 环境，不代表整个库没有漏洞；目前仅公开了部分证明。",
+    "research.episem-missing-evidence-agent-safety.title": "EpiSEM-Bench：Agent 缺少关键证据时会怎样行动",
+    "research.episem-missing-evidence-agent-safety.summary": "用六个领域的 300 对安全与不安全任务，测试 10 个模型在证据缺失时的决策。补充审计工具可减少违规执行，但会查证不等于会正确行动；结果限于受控任务和所测模型。",
+    "research.clariedge-rag-query-clarification.title": "ClariEdge：让 RAG 先问清楚再回答",
+    "research.clariedge-rag-query-clarification.summary": "用 3,892 条样例训练查询澄清模型，加入看似含糊、实际可由上下文解决的负例。作者报告测试集分类准确率达 96.6%；目前只评测英语和单次澄清，不能等同于完整问答效果。",
+    "research.coater-continuous-ontology-assurance.title": "COATER：用外部资料持续检查本体",
+    "research.coater-continuous-ontology-assurance.summary": "把外部资料对本体的支持和质疑转成可追踪的复核任务。在 FSL 案例中，600 个实体全部通过链接规则检查；这不代表本体语义全部正确，新补链接也未逐条完成人工核验。",
+    "research.biasguard-typed-record-quality.title": "BiasGuard-D：为生成数据留下可审计的纠错记录",
+    "research.biasguard-typed-record-quality.summary": "结合不同模型的辩论、投票与确定性检查，追踪生成记录的质量问题。BBQ 和 HaluEval 小样本实验显示纠错收益，但也会误改正确答案；效果依赖裁判模型，尚未验证大量改写场景。",
+    "research.tt-sax-language-shape-querying.title": "TT-SAX：用自然语言查找时间序列的走势",
+    "research.tt-sax-language-shape-querying.summary": "把数值水平与跨片段趋势分别编码，帮助模型将走势描述转成查询。在 220 条基准查询和 6 个模型上改善候选筛选；另测 1,000 条同分布生成查询，仍不能代表任意真实查询。"
   },
   "en": {
     "nav.about": "About",
@@ -1144,7 +1154,17 @@ window.SITE_MESSAGES = {
     "news.metr-openai-monitoring-pilot-review.title": "METR publishes its review of OpenAI’s internal agent monitors",
     "news.metr-openai-monitoring-pilot-review.summary": "A high-access exercise with Redwood Research in July and August found gaps in monitoring coverage and resistance to bypass. Findings concern the historical system as of July 21. OpenAI says flaws affecting production safeguards were patched; METR has not verified that claim.",
     "news.anthropic-rocq-oss-formal-verification.title": "Anthropic reports machine-checked software proofs written by Claude",
-    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic and Theorem report Rocq-checked proofs for 239 test entry points across 123 open-source libraries. Guarantees cover inputs below 64 MB under specific single-threaded RISC-V/Linux assumptions, rather than entire bug-free libraries. Only a subset of the proofs is public."
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic and Theorem report Rocq-checked proofs for 239 test entry points across 123 open-source libraries. Guarantees cover inputs below 64 MB under specific single-threaded RISC-V/Linux assumptions, rather than entire bug-free libraries. Only a subset of the proofs is public.",
+    "research.episem-missing-evidence-agent-safety.title": "EpiSEM-Bench: How agents act when key evidence is missing",
+    "research.episem-missing-evidence-agent-safety.summary": "Tests 10 models on 300 safe/unsafe task pairs across six domains. An audit tool reduces prohibited actions, but seeking evidence does not ensure appropriate action. Findings cover controlled tasks and the tested models.",
+    "research.clariedge-rag-query-clarification.title": "ClariEdge: Teaching RAG to ask for clarification",
+    "research.clariedge-rag-query-clarification.summary": "Trains clarification models on 3,892 examples, including apparently ambiguous queries resolvable from context. The authors report 96.6% test classification accuracy. Evaluation covers English and a single clarification, not end-to-end question answering.",
+    "research.coater-continuous-ontology-assurance.title": "COATER: Checking ontologies against external sources",
+    "research.coater-continuous-ontology-assurance.summary": "Turns support and challenges from external sources into traceable review tasks. All 600 entities in the FSL case pass a linkage policy; this does not establish semantic correctness, and new links were not all manually verified.",
+    "research.biasguard-typed-record-quality.title": "BiasGuard-D: Auditable quality checks for generated records",
+    "research.biasguard-typed-record-quality.summary": "Combines cross-model deliberation, voting and deterministic checks to trace record-quality issues. Small BBQ and HaluEval experiments show correction gains but also damage to correct answers. Results depend on judge capability; paraphrase-rich settings remain untested.",
+    "research.tt-sax-language-shape-querying.title": "TT-SAX: Querying time-series shapes in natural language",
+    "research.tt-sax-language-shape-querying.summary": "Encodes levels and cross-segment trends separately to help models compile shape queries. Candidate filtering improves across 220 benchmark queries and six models. A further 1,000 generated queries share the same distribution, limiting broader conclusions."
   },
   "ja": {
     "nav.about": "私について",
@@ -1717,7 +1737,17 @@ window.SITE_MESSAGES = {
     "news.metr-openai-monitoring-pilot-review.title": "METR、OpenAI 内部 Agent 監視の評価を公表",
     "news.metr-openai-monitoring-pilot-review.summary": "Redwood Research と7〜8月に内部アクセスを伴う評価を行い、監視範囲と回避耐性に不足を見つけた。結果は7月21日時点の旧システムを対象とする。OpenAI は本番の保護に影響する問題を修正したと説明するが、METR は未検証。",
     "news.anthropic-rocq-oss-formal-verification.title": "Anthropic、Claude によるソフトウェア安全性の証明を報告",
-    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic と Theorem は、123のオープンソースライブラリの239テスト入口で Rocq が検査した証明を報告した。64 MB 未満の入力、単一スレッドの特定 RISC-V/Linux 環境などが前提で、ライブラリ全体の無欠陥は保証しない。公開は証明の一部に限られる。"
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic と Theorem は、123のオープンソースライブラリの239テスト入口で Rocq が検査した証明を報告した。64 MB 未満の入力、単一スレッドの特定 RISC-V/Linux 環境などが前提で、ライブラリ全体の無欠陥は保証しない。公開は証明の一部に限られる。",
+    "research.episem-missing-evidence-agent-safety.title": "EpiSEM-Bench：重要な証拠が欠けたときの Agent の行動",
+    "research.episem-missing-evidence-agent-safety.summary": "6 分野の安全・危険なタスク 300 組で 10 モデルを評価。監査ツールは違反行動を減らす一方、証拠を探しても正しく行動できるとは限りません。結果は管理されたタスクと評価対象モデルに限定されます。",
+    "research.clariedge-rag-query-clarification.title": "ClariEdge：RAG が回答前に問いを確かめる",
+    "research.clariedge-rag-query-clarification.summary": "文脈から解消できる見かけ上の曖昧さも含む 3,892 件で確認質問モデルを学習。著者報告のテスト分類精度は 96.6% です。評価は英語と 1 回の確認質問に限られ、質問応答全体の性能ではありません。",
+    "research.coater-continuous-ontology-assurance.title": "COATER：外部資料を使ったオントロジーの継続点検",
+    "research.coater-continuous-ontology-assurance.summary": "外部資料による支持や異論を、追跡可能なレビュータスクにします。FSL の 600 エンティティがリンク規則を満たしましたが、意味の正しさを保証する結果ではなく、新規リンクすべての人手確認も行われていません。",
+    "research.biasguard-typed-record-quality.title": "BiasGuard-D：生成データの修正過程を監査可能にする",
+    "research.biasguard-typed-record-quality.summary": "異なるモデルの議論・投票と決定的な検査で、レコードの品質問題を追跡。BBQ と HaluEval の小規模実験では修正効果と正答の誤修正の両方が見られます。判定モデルへの依存があり、多様な言い換えは未検証です。",
+    "research.tt-sax-language-shape-querying.title": "TT-SAX：自然言語で時系列の形を検索する",
+    "research.tt-sax-language-shape-querying.summary": "値の水準と区間をまたぐ傾向を別々に符号化し、形の説明を検索式に変換します。220 クエリと 6 モデルで候補の絞り込みが改善。追加の生成クエリ 1,000 件も同分布で、任意の実利用へは一般化できません。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2290,7 +2320,17 @@ window.SITE_MESSAGES = {
     "news.metr-openai-monitoring-pilot-review.title": "METR опубликовала оценку внутренних мониторов агентов OpenAI",
     "news.metr-openai-monitoring-pilot-review.summary": "Исследование с Redwood Research в июле и августе выявило пробелы в охвате мониторинга и защите от обхода. Выводы касаются системы по состоянию на 21 июля. OpenAI заявляет об исправлении проблем производственных средств защиты; METR это не проверяла.",
     "news.anthropic-rocq-oss-formal-verification.title": "Anthropic сообщила о проверенных доказательствах безопасности от Claude",
-    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic и Theorem сообщают о проверенных Rocq доказательствах для 239 тестовых входов в 123 открытых библиотеках. Гарантии ограничены входами меньше 64 МБ и заданной однопоточной средой RISC-V/Linux, а не отсутствием всех ошибок. Опубликована лишь часть доказательств."
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic и Theorem сообщают о проверенных Rocq доказательствах для 239 тестовых входов в 123 открытых библиотеках. Гарантии ограничены входами меньше 64 МБ и заданной однопоточной средой RISC-V/Linux, а не отсутствием всех ошибок. Опубликована лишь часть доказательств.",
+    "research.episem-missing-evidence-agent-safety.title": "EpiSEM-Bench: действия агентов при нехватке свидетельств",
+    "research.episem-missing-evidence-agent-safety.summary": "Десять моделей проверены на 300 парах безопасных и опасных задач в шести областях. Инструмент аудита снижает число запрещённых действий, но поиск свидетельств не гарантирует верного решения. Выводы ограничены контролируемыми задачами и протестированными моделями.",
+    "research.clariedge-rag-query-clarification.title": "ClariEdge: обучение RAG уточняющим вопросам",
+    "research.clariedge-rag-query-clarification.summary": "Модели обучены на 3 892 примерах, включая кажущуюся неоднозначность, устранимую контекстом. Авторы сообщают о точности классификации 96,6% на тесте. Проверены только английский язык и один уточняющий вопрос, а не качество ответов всей системы.",
+    "research.coater-continuous-ontology-assurance.title": "COATER: постоянная проверка онтологий по внешним источникам",
+    "research.coater-continuous-ontology-assurance.summary": "Подтверждения и возражения из внешних источников превращаются в отслеживаемые задачи проверки. Все 600 сущностей FSL прошли проверку правил ссылок. Это не доказывает семантическую корректность; не все новые ссылки проверены вручную.",
+    "research.biasguard-typed-record-quality.title": "BiasGuard-D: проверяемая история исправления сгенерированных данных",
+    "research.biasguard-typed-record-quality.summary": "Обсуждение разных моделей, голосование и детерминированные проверки помогают отслеживать дефекты записей. Небольшие эксперименты BBQ и HaluEval показывают исправления, но также порчу верных ответов. Результат зависит от модели-судьи; разнообразные перефразировки не проверены.",
+    "research.tt-sax-language-shape-querying.title": "TT-SAX: поиск формы временных рядов на естественном языке",
+    "research.tt-sax-language-shape-querying.summary": "Уровни и межсегментные тренды кодируются отдельно для построения запросов по описанию формы. Отбор кандидатов улучшился на 220 запросах и шести моделях. Ещё 1 000 сгенерированных запросов имеют то же распределение, что ограничивает обобщение."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2863,6 +2903,16 @@ window.SITE_MESSAGES = {
     "news.metr-openai-monitoring-pilot-review.title": "METR 公布 OpenAI 內部 Agent 監測評估",
     "news.metr-openai-monitoring-pilot-review.summary": "METR 與 Redwood Research 在 7—8 月開展高權限評估，發現監測涵蓋範圍和防繞過機制的缺口。結果針對截至 7 月 21 日的歷史系統；OpenAI 稱影響正式環境防護的漏洞已修復，METR 尚未複核。",
     "news.anthropic-rocq-oss-formal-verification.title": "Anthropic 報告 Claude 產生軟體安全證明",
-    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 與 Theorem 報告，Claude 為 123 個開源函式庫的 239 個測試入口產生了經 Rocq 檢查的證明。結論限於小於 64 MB 的輸入及特定單執行緒 RISC-V/Linux 環境，不代表整個函式庫沒有漏洞；目前僅公開了部分證明。"
+    "news.anthropic-rocq-oss-formal-verification.summary": "Anthropic 與 Theorem 報告，Claude 為 123 個開源函式庫的 239 個測試入口產生了經 Rocq 檢查的證明。結論限於小於 64 MB 的輸入及特定單執行緒 RISC-V/Linux 環境，不代表整個函式庫沒有漏洞；目前僅公開了部分證明。",
+    "research.episem-missing-evidence-agent-safety.title": "EpiSEM-Bench：Agent 缺少關鍵證據時會怎樣行動",
+    "research.episem-missing-evidence-agent-safety.summary": "用六個領域的 300 對安全與不安全任務，測試 10 個模型在證據缺失時的決策。補充稽核工具可減少違規執行，但會查證不等於會正確行動；結果限於受控任務和所測模型。",
+    "research.clariedge-rag-query-clarification.title": "ClariEdge：讓 RAG 先問清楚再回答",
+    "research.clariedge-rag-query-clarification.summary": "用 3,892 筆樣例訓練查詢釐清模型，加入看似含糊、實際可由上下文解決的負例。作者報告測試集分類準確率達 96.6%；目前只評測英語和單次釐清，不能等同於完整問答效果。",
+    "research.coater-continuous-ontology-assurance.title": "COATER：用外部資料持續檢查本體",
+    "research.coater-continuous-ontology-assurance.summary": "把外部資料對本體的支持和質疑轉成可追蹤的複核任務。在 FSL 案例中，600 個實體全部通過連結規則檢查；這不代表本體語義全部正確，新補連結也未逐條完成人工核驗。",
+    "research.biasguard-typed-record-quality.title": "BiasGuard-D：為生成資料留下可稽核的糾錯紀錄",
+    "research.biasguard-typed-record-quality.summary": "結合不同模型的辯論、投票與確定性檢查，追蹤生成紀錄的品質問題。BBQ 和 HaluEval 小樣本實驗顯示糾錯效益，但也會誤改正確答案；效果依賴裁判模型，尚未驗證大量改寫情境。",
+    "research.tt-sax-language-shape-querying.title": "TT-SAX：用自然語言查找時間序列的走勢",
+    "research.tt-sax-language-shape-querying.summary": "把數值水準與跨片段趨勢分別編碼，幫助模型將走勢描述轉成查詢。在 220 筆基準查詢和 6 個模型上改善候選篩選；另測 1,000 筆同分布生成查詢，仍不能代表任意真實查詢。"
   }
 };
