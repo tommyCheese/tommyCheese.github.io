@@ -235,6 +235,7 @@ if (wall) {
       if (g.mode === 'move') {
         const rect = g.tile.getBoundingClientRect();
         g.ghost = g.tile.cloneNode(true); g.ghost.classList.add('photo-drag-ghost'); g.ghost.setAttribute('aria-hidden','true');
+        g.ghost.dataset.photoFrame = g.slot.dataset.photoFrame;
         const width=g.tile.offsetWidth, height=g.tile.offsetHeight;
         Object.assign(g.ghost.style,{left:rect.left+rect.width/2-width/2+'px',top:rect.top+rect.height/2-height/2+'px',width:width+'px',rotate:getComputedStyle(g.tile).rotate,transformOrigin:'50% 50%'});
         document.body.append(g.ghost); g.slot.classList.add('is-lifted');

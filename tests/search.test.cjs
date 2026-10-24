@@ -74,7 +74,7 @@ function searchUI({ locale = 'zh-CN', fetchIndex = async () => entries } = {}) {
   };
   vm.runInNewContext(source, context);
   return {
-    input, results, status,
+    input, results, status, dialog,
     options: () => results.querySelectorAll(),
     open: () => document.emit('keydown', { ctrlKey: true, key: 'k' }),
     titles: () => results.querySelectorAll().map(option => option.children[0].textContent)
@@ -263,4 +263,25 @@ test('news and research are default shortcuts in all languages and open with the
     assert.equal(ui.options()[7].clicked, true);
     assert.equal(fetched, false);
   }
+});
+
+test('closing preserves the exit frame, cancels pending results, and reopening starts fresh', async () => {
+  let resolveIndex;
+  const ui = searchUI({ fetchIndex: () => new Promise(resolve => { resolveIndex = resolve; }) });
+  await ui.open();
+  ui.input.value = '博客';
+  const pending = ui.input.emit('input');
+  await Promise.resolve();
+  const exitTitles = ui.titles();
+  await ui.dialog.emit('keydown', { key: 'Escape' });
+  assert.equal(ui.dialog.open, false);
+  assert.equal(ui.input.value, '博客');
+  assert.deepEqual(ui.titles(), exitTitles, 'the shrinking window must retain its contents');
+  resolveIndex(entries);
+  await pending;
+  assert.deepEqual(ui.titles(), exitTitles, 'late results must not change the closing window');
+  await ui.open();
+  assert.equal(ui.dialog.open, true);
+  assert.equal(ui.input.value, '');
+  assert.equal(ui.options().length, 8);
 });

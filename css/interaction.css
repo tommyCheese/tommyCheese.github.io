@@ -40,7 +40,8 @@ body.dark {
   --ui-pill: rgb(255 255 255 / 13%);
 }
 body *::selection { background-color: var(--selection-background) !important; }
-html { scroll-behavior: smooth; }
+/* Keep the shell width stable when navigation or a dialog removes the scrollbar. */
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 #about, #experience, #contact { scroll-margin-top: 96px; }
 #profileHeader, #profileHeader .primary-font, #profileHeader input,
 #experience #pills-tab, body .btn {
@@ -65,7 +66,7 @@ body > #profileHeader {
   transition: background-color var(--ui-settle) ease, box-shadow var(--ui-settle) ease;
 }
 #profileHeader.showHeaderOnTop { box-shadow: 0 4px 18px rgb(0 0 0 / 6%); }
-#profileHeader .navbar.animate { animation: ui-appear 360ms var(--ui-ease) both; }
+#profileHeader .navbar.animate { animation: none; }
 #profileHeader .navbar-nav a.nav-link,
 .header-actions button#theme-toggle, .language-switch summary, .navbar-toggler {
   border-radius: 10px;
@@ -725,6 +726,112 @@ dialog.spotlight::backdrop { background: rgb(25 38 68 / 20%); }
   body.dark { --glass-surface: #212e47; --ui-glass: #1b253b; }
   body :is(header, .home-section, .intro-layout, #about, #experience, #contact, #comments, .news-card, .featured-post, .tag-card, .topic-links a, .lab-product, .reading-trail, .news-date-filter, .news-filter-empty, .mobile-toc, aside, .card, .experience-sheet, .language-switch nav, .dropdown-menu, dialog) { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }
+/* System motion: quick response, soft settling, and a stable navigation shell. */
+:root {
+  --motion-press: 90ms;
+  --motion-release: 420ms;
+  --motion-window: 360ms;
+  --motion-out: cubic-bezier(.16, 1, .3, 1);
+  --motion-spring: cubic-bezier(.2, 1.35, .35, 1);
+}
+@supports (animation-timing-function: linear(0, 1)) {
+  :root { --motion-spring: linear(0, .4 12%, .76 24%, .98 38%, 1.075 50%, 1.025 68%, .997 86%, 1); }
+}
+body :is(.btn, .search-trigger, .spotlight-close, .navbar-toggler, .header-actions button,
+  .language-switch summary, .news-date-filter button, .news-categories a, #pills-tab .nav-link) {
+  scale: 1;
+  transform-origin: center;
+  transition: scale var(--motion-release) var(--motion-spring),
+    background-color var(--ui-quick) ease, border-color var(--ui-quick) ease,
+    color var(--ui-quick) ease, box-shadow var(--ui-quick) ease !important;
+}
+body :is(.btn, .search-trigger, .spotlight-close, .navbar-toggler, .header-actions button,
+  .language-switch summary, .news-date-filter button, .news-categories a, #pills-tab .nav-link):active:not(:disabled) {
+  scale: .94;
+  transform: none;
+  transition-duration: var(--motion-press) !important;
+  transition-timing-function: ease-out !important;
+}
+.featured-post, .tag-card, .topic-links a, .post-row, .news-card {
+  transition: scale var(--motion-release) var(--motion-spring), transform var(--ui-settle) var(--motion-out),
+    background-color var(--ui-quick) ease, border-color var(--ui-quick) ease, box-shadow var(--ui-quick) ease;
+}
+.featured-post:active, .tag-card:active, .topic-links a:active, .post-row:active,
+.news-card:has(.news-main-link:active) { scale: .985; transition-duration: var(--motion-press); }
+.featured-post:active, .tag-card:active, .topic-links a:active { transform: none; }
+#profileHeader .nav-liquid::before {
+  transition: transform var(--motion-release) var(--motion-spring), width var(--motion-release) var(--motion-spring),
+    height var(--motion-release) var(--motion-spring), opacity var(--ui-quick) ease;
+}
+#experience #pills-tab.ui-segments::before {
+  transition: transform var(--motion-release) var(--motion-spring), width var(--motion-release) var(--motion-spring),
+    height var(--motion-release) var(--motion-spring), background-color var(--ui-quick) ease;
+}
+#experience .tab-pane { transition: none; }
+#experience .tab-pane.active { animation: ui-pane var(--motion-window) var(--motion-out) both; }
+.language-switch[open] nav, .dropdown-menu.show { transform-origin: top right; animation: ui-popover var(--motion-window) var(--motion-spring) both; }
+#navbarContent.show .navbar-nav { animation: ui-appear 240ms var(--motion-out) both; }
+/* Native dialog exit retains the top layer until the visual transition ends.
+   Older engines retain the existing instant close and animated entrance. */
+@supports (transition-behavior: allow-discrete) and (overlay: auto) {
+  body dialog#search-content.spotlight {
+    flex-direction: column;
+    pointer-events: none;
+    opacity: 0;
+    translate: 0 -10px;
+    scale: .965;
+    transform-origin: top center;
+    transition: opacity 150ms ease, translate 180ms var(--motion-out), scale 180ms var(--motion-out),
+      display 180ms allow-discrete, overlay 180ms allow-discrete;
+  }
+  body dialog#search-content.spotlight[open] {
+    pointer-events: auto;
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    animation: none;
+    transition: opacity 180ms ease, translate var(--motion-window) var(--motion-spring), scale var(--motion-window) var(--motion-spring),
+      display var(--motion-window) allow-discrete, overlay var(--motion-window) allow-discrete;
+  }
+  dialog.spotlight::backdrop {
+    opacity: 0;
+    animation: none;
+    transition: opacity 180ms ease, display 180ms allow-discrete, overlay 180ms allow-discrete;
+  }
+  dialog.spotlight[open]::backdrop { opacity: 1; }
+  @starting-style {
+    body dialog#search-content.spotlight[open] { opacity: 0; translate: 0 -14px; scale: .965; }
+    dialog.spotlight[open]::backdrop { opacity: 0; }
+  }
+}
+/* Capture the viewport, not #content: pages have different content widths and
+   heights, so an element snapshot would stretch the outgoing images to fit.
+   The navigation shell is isolated and never replays an entrance animation. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  #profileHeader { view-transition-name: system-shell; }
+  ::view-transition { pointer-events: none; }
+  ::view-transition-group(root) { animation: none; }
+  ::view-transition-group(system-shell) { z-index: 2; animation-duration: 240ms; animation-timing-function: var(--motion-out); }
+  ::view-transition-old(root) { animation: system-scene-out 160ms ease-out both; }
+  ::view-transition-new(root) { animation: system-scene-in var(--motion-window) var(--motion-out) both; }
+  ::view-transition-old(system-shell), ::view-transition-new(system-shell) { animation-duration: 180ms; }
+}
+@keyframes system-scene-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes system-scene-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  body :is(.btn, .search-trigger, .spotlight-close, .navbar-toggler, .header-actions button,
+    .language-switch summary, .news-date-filter button, .news-categories a, #pills-tab .nav-link,
+    .featured-post, .tag-card, .topic-links a, .post-row, .news-card) { scale: 1 !important; }
+  dialog.spotlight::backdrop { transition: none !important; }
+}
 @keyframes ui-appear {
   from { opacity: 0; translate: 0 -6px; }
   to { opacity: 1; translate: 0 0; }
@@ -734,12 +841,12 @@ dialog.spotlight::backdrop { background: rgb(25 38 68 / 20%); }
   to { opacity: 1; }
 }
 @keyframes ui-popover {
-  from { opacity: 0; translate: 0 -4px; scale: .98; }
+  from { opacity: 0; translate: 0 -8px; scale: .96; }
   to { opacity: 1; translate: 0 0; scale: 1; }
 }
 @keyframes ui-pane {
-  from { opacity: 0; translate: 0 6px; }
-  to { opacity: 1; translate: 0 0; }
+  from { opacity: 0; translate: 0 12px; scale: .99; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
 }
 @keyframes ui-icon {
   from { opacity: .5; rotate: -35deg; scale: .8; }
