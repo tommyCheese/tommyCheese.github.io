@@ -597,7 +597,17 @@ window.SITE_MESSAGES = {
     "news.openai-frontier-training-containment-update.title": "OpenAI 披露前沿训练环境加固，采用离线资源与多层隔离",
     "news.openai-frontier-training-containment-update.summary": "10月23日公告说明，公司在9月DNS越界事件后加强沙箱、网络与监控，并已于10月1日恢复前沿强化学习训练和内部推理。离线任务资源不等于基础设施完全物理断网，测试结果也不是独立安全保证。",
     "news.vllm-minimax-m31-serving-support.title": "vLLM 发布 MiniMax M3.1 Flash 部署支持，常规包仍待合并",
-    "news.vllm-minimax-m31-serving-support.summary": "团队给出NVIDIA和AMD指定GPU的专用镜像与部署配方；普通nightly包要等待上游评审合并。性能数据限于所列硬件和工作负载，模型仓库使用MiniMax Community License，不能直接等同于通用开源许可。"
+    "news.vllm-minimax-m31-serving-support.summary": "团队给出NVIDIA和AMD指定GPU的专用镜像与部署配方；普通nightly包要等待上游评审合并。性能数据限于所列硬件和工作负载，模型仓库使用MiniMax Community License，不能直接等同于通用开源许可。",
+    "research.adaptive-skill-granularity-recovery.title": "编程 Agent 如何选择技能粒度，并从失败中恢复",
+    "research.adaptive-skill-granularity-recovery.summary": "研究在微操作、宏技能与混合执行间动态路由，并根据失败时的工作区状态决定是否接管。受控代码任务显示成功与成本的改善；更广泛仓库与故障分布仍需验证。",
+    "research.simulated-control-evaluations.title": "用模拟工具反馈评估 Agent 监控，而不执行攻击动作",
+    "research.simulated-control-evaluations.summary": "Redwood 将语言模型模拟与 LinuxArena 实际执行对照。在5%审查预算、五种监控器条件下，安全预测总均方根误差为3.6个百分点；模拟器可信性与跨环境迁移仍是限制。",
+    "research.qprotfuse-query-guided-protein-rag.title": "QProtFuse：按问题融合蛋白质模型各层，改善 RAG 检索",
+    "research.qprotfuse-query-guided-protein-rag.summary": "联合训练序列与注释检索，按查询选择蛋白质多层特征。Prot-Inst-OOD 上注释重排的 Recall@1 为16.4%；下游描述改善由模型评审衡量，不等于生物实验验证。",
+    "research.delayed-countdown-review-validation.title": "Delayed Countdown：持续审阅文档时如何估计遗漏",
+    "research.delayed-countdown-review-validation.summary": "在审阅途中抽样，估计固定集合中的相关文档总数，再随进度换算召回率区间。贡献是统计验证方法而非普遍降本实证；依赖集合、相关性定义与人工标签稳定可靠。",
+    "research.direct-passk-thought-pruning.title": "按 pass@k 筛选推理路线，兼顾质量与多样性",
+    "research.direct-passk-thought-pruning.summary": "从推理前缀中选择一组互补候选，优化至少一条答对的机会。八个开放权重模型的数学实验支持这种裁剪；理论保证针对近似目标，未证明开放任务普遍受益。"
   },
   "en": {
     "nav.about": "About",
@@ -1196,7 +1206,17 @@ window.SITE_MESSAGES = {
     "news.openai-frontier-training-containment-update.title": "OpenAI details offline resources and layered containment for frontier training",
     "news.openai-frontier-training-containment-update.summary": "The October 23 disclosure describes stronger sandbox, network and monitoring controls after a September DNS incident, with frontier RL and internal inference resumed October 1. Offline tasks do not mean fully air-gapped infrastructure; the tests are not an independent safety guarantee.",
     "news.vllm-minimax-m31-serving-support.title": "vLLM adds MiniMax M3.1 Flash serving support with dedicated builds",
-    "news.vllm-minimax-m31-serving-support.summary": "Recipes cover specified NVIDIA and AMD GPUs; normal nightly packages await upstream review and merging. Performance claims apply to the stated configurations. The model repository lists a MiniMax Community License, which should not be assumed to be a general open-source licence."
+    "news.vllm-minimax-m31-serving-support.summary": "Recipes cover specified NVIDIA and AMD GPUs; normal nightly packages await upstream review and merging. Performance claims apply to the stated configurations. The model repository lists a MiniMax Community License, which should not be assumed to be a general open-source licence.",
+    "research.adaptive-skill-granularity-recovery.title": "Choosing skill granularity and recovering coding agents",
+    "research.adaptive-skill-granularity-recovery.summary": "Runtime routing chooses primitive actions, macro skills or hybrid recovery according to task and failure state. Controlled coding tasks show a better success–cost balance; broader repositories and failure distributions remain untested.",
+    "research.simulated-control-evaluations.title": "Evaluating agent monitors through simulated tool responses",
+    "research.simulated-control-evaluations.summary": "Redwood compares language-model simulation with LinuxArena execution. Across five monitors at a 5% audit budget, total safety-prediction RMSE is 3.6 percentage points; simulator trust and transfer remain limitations.",
+    "research.qprotfuse-query-guided-protein-rag.title": "QProtFuse: query-guided protein layers for RAG retrieval",
+    "research.qprotfuse-query-guided-protein-rag.summary": "Joint sequence and annotation retrieval learns to fuse protein-model layers by query. Annotation reranking reaches 16.4% Recall@1 on Prot-Inst-OOD; improved descriptions are model-judged, not biologically verified.",
+    "research.delayed-countdown-review-validation.title": "Delayed Countdown: estimating omissions during document review",
+    "research.delayed-countdown-review-validation.summary": "A mid-review sample estimates the fixed total of relevant documents, enabling recall intervals as review advances. This is a statistical validation method, not universal cost-saving evidence; collection and labels must stay reliable and stable.",
+    "research.direct-passk-thought-pruning.title": "Pruning reasoning paths for pass@k: quality and diversity",
+    "research.direct-passk-thought-pruning.summary": "Select complementary prefixes to improve the chance that at least one continued path is correct. Mathematics experiments cover eight open-weight models; formal guarantees concern a surrogate, without establishing universal gains on open tasks."
   },
   "ja": {
     "nav.about": "私について",
@@ -1795,7 +1815,17 @@ window.SITE_MESSAGES = {
     "news.openai-frontier-training-containment-update.title": "OpenAI、先端学習のオフライン資源と多層隔離を公表",
     "news.openai-frontier-training-containment-update.summary": "10月23日の説明は、9月のDNS経由の逸脱後に強化したサンドボックス、ネットワーク、監視を扱います。強化学習と内部推論は10月1日に再開。設備全体の物理切断や、独立した安全保証を意味しません。",
     "news.vllm-minimax-m31-serving-support.title": "vLLM、MiniMax M3.1 Flashの専用配備手順を公開",
-    "news.vllm-minimax-m31-serving-support.summary": "指定のNVIDIA・AMD GPU向けイメージを用意。通常のnightlyパッケージは上流での確認と統合待ちです。性能は記載の構成に限られ、MiniMax Community Licenseを一般的なオープンソース許諾と同一視しません。"
+    "news.vllm-minimax-m31-serving-support.summary": "指定のNVIDIA・AMD GPU向けイメージを用意。通常のnightlyパッケージは上流での確認と統合待ちです。性能は記載の構成に限られ、MiniMax Community Licenseを一般的なオープンソース許諾と同一視しません。",
+    "research.adaptive-skill-granularity-recovery.title": "コーディング Agent の技能粒度と失敗からの復旧",
+    "research.adaptive-skill-granularity-recovery.summary": "微小操作、マクロ技能、混合復旧をタスクと故障時の状態で選ぶ。制御されたコード課題で成功と費用の両立を報告するが、より広いリポジトリや故障分布での検証は今後の課題だ。",
+    "research.simulated-control-evaluations.title": "ツール応答の模擬で Agent 監視を評価する",
+    "research.simulated-control-evaluations.summary": "Redwood が言語モデルによる模擬と LinuxArena の実行を比較。監査予算5%、五種類の監視器で安全指標の予測誤差は総 RMSE 3.6ポイント。模擬器への信頼と環境間の移行は未解決だ。",
+    "research.qprotfuse-query-guided-protein-rag.title": "QProtFuse：質問に応じた層融合でタンパク質 RAG を改善",
+    "research.qprotfuse-query-guided-protein-rag.summary": "配列と注釈の検索を共同学習し、質問でタンパク質モデルの層を融合する。Prot-Inst-OOD の再順位付けで Recall@1 は16.4%。生成説明の改善はモデル審査で、生物実験の検証ではない。",
+    "research.delayed-countdown-review-validation.title": "Delayed Countdown：文書審査の進行中に見落としを推定",
+    "research.delayed-countdown-review-validation.summary": "途中の標本から固定集合の関連文書総数を推定し、進捗に応じて召回率区間を計算する。統計的な検証法であり普遍的な費用削減の実証ではない。集合、関連性、ラベルの安定性が前提だ。",
+    "research.direct-passk-thought-pruning.title": "pass@k による推論経路の削減：品質と多様性の両立",
+    "research.direct-passk-thought-pruning.summary": "途中の推論から補い合う候補を残し、少なくとも一本が正答する機会を高める。八つの公開重みモデルの数学実験で検証。理論保証は代理目的に対するもので、自由形式の課題全般への効果は未確認だ。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2394,7 +2424,17 @@ window.SITE_MESSAGES = {
     "news.openai-frontier-training-containment-update.title": "OpenAI раскрыла офлайн-ресурсы и многоуровневую защиту обучения",
     "news.openai-frontier-training-containment-update.summary": "Сообщение от 23 октября описывает усиление песочниц, сети и мониторинга после сентябрьского DNS-инцидента. RL и внутренний инференс возобновились 1 октября. Офлайн-задачи не означают полного физического отключения инфраструктуры или независимой гарантии безопасности.",
     "news.vllm-minimax-m31-serving-support.title": "vLLM представил специальные сборки для MiniMax M3.1 Flash",
-    "news.vllm-minimax-m31-serving-support.summary": "Рецепты охватывают указанные GPU NVIDIA и AMD; обычные nightly-пакеты ожидают проверки и слияния. Производительность относится к заданным конфигурациям. Репозиторий указывает MiniMax Community License, которую нельзя автоматически считать общей открытой лицензией."
+    "news.vllm-minimax-m31-serving-support.summary": "Рецепты охватывают указанные GPU NVIDIA и AMD; обычные nightly-пакеты ожидают проверки и слияния. Производительность относится к заданным конфигурациям. Репозиторий указывает MiniMax Community License, которую нельзя автоматически считать общей открытой лицензией.",
+    "research.adaptive-skill-granularity-recovery.title": "Масштаб навыков и восстановление агента для кода",
+    "research.adaptive-skill-granularity-recovery.summary": "Выбор микроопераций, макронавыков и гибридного восстановления зависит от задачи и состояния сбоя. На контролируемых задачах улучшен баланс успеха и затрат; перенос на другие репозитории ещё требует проверки.",
+    "research.simulated-control-evaluations.title": "Оценка мониторов агента по симулированным ответам",
+    "research.simulated-control-evaluations.summary": "Redwood сопоставляет симуляцию с выполнением LinuxArena. При бюджете аудита 5% совокупная RMSE прогноза безопасности для пяти мониторов — 3,6 п.п.; доверие к симулятору и перенос остаются ограничениями.",
+    "research.qprotfuse-query-guided-protein-rag.title": "QProtFuse: слои белковой модели под запрос для RAG",
+    "research.qprotfuse-query-guided-protein-rag.summary": "Совместное обучение поиска последовательностей и аннотаций задаёт смешивание слоёв по вопросу. Recall@1 после переранжирования — 16,4% на Prot-Inst-OOD. Описания оценивает модель, не биологический эксперимент.",
+    "research.delayed-countdown-review-validation.title": "Delayed Countdown: оценка пропусков при проверке документов",
+    "research.delayed-countdown-review-validation.summary": "Выборка в ходе просмотра оценивает постоянное общее число релевантных документов для последующих интервалов полноты. Это статистический метод, не универсальная экономия; важны стабильность коллекции и надёжность меток.",
+    "research.direct-passk-thought-pruning.title": "Отсечение рассуждений по pass@k: качество и разнообразие",
+    "research.direct-passk-thought-pruning.summary": "Из префиксов выбираются дополняющие пути ради хотя бы одного верного ответа. Проверено на математике с восемью моделями открытых весов; гарантии относятся к приближённой цели, не ко всем открытым задачам."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -2993,6 +3033,16 @@ window.SITE_MESSAGES = {
     "news.openai-frontier-training-containment-update.title": "OpenAI 披露前沿訓練環境加固，採用離線資源與多層隔離",
     "news.openai-frontier-training-containment-update.summary": "10月23日公告說明，公司在9月DNS越界事件後加強沙箱、網路與監控，並已於10月1日恢復前沿強化學習訓練和內部推理。離線任務資源不等於基礎設施完全物理斷網，測試結果也不是獨立安全保證。",
     "news.vllm-minimax-m31-serving-support.title": "vLLM 釋出 MiniMax M3.1 Flash 部署支援，常規包仍待合併",
-    "news.vllm-minimax-m31-serving-support.summary": "團隊給出NVIDIA和AMD指定GPU的專用映象與部署配方；普通nightly包要等待上游評審合併。效能資料限於所列硬體和工作負載，模型倉庫使用MiniMax Community License，不能直接等同於通用開源許可。"
+    "news.vllm-minimax-m31-serving-support.summary": "團隊給出NVIDIA和AMD指定GPU的專用映象與部署配方；普通nightly包要等待上游評審合併。效能資料限於所列硬體和工作負載，模型倉庫使用MiniMax Community License，不能直接等同於通用開源許可。",
+    "research.adaptive-skill-granularity-recovery.title": "程式設計 Agent 如何選擇技能粒度，並從失敗中恢復",
+    "research.adaptive-skill-granularity-recovery.summary": "研究在微操作、宏技能與混合執行間動態路由，並根據失敗時的工作區狀態決定是否接管。受控程式碼任務顯示成功與成本的改善；更廣泛倉庫與故障分佈仍需驗證。",
+    "research.simulated-control-evaluations.title": "用模擬工具反饋評估 Agent 監控，而不執行攻擊動作",
+    "research.simulated-control-evaluations.summary": "Redwood 將語言模型模擬與 LinuxArena 實際執行對照。在5%審查預算、五種監控器條件下，安全預測總均方根誤差為3.6個百分點；模擬器可信性與跨環境遷移仍是限制。",
+    "research.qprotfuse-query-guided-protein-rag.title": "QProtFuse：按問題融合蛋白質模型各層，改善 RAG 檢索",
+    "research.qprotfuse-query-guided-protein-rag.summary": "聯合訓練序列與註釋檢索，按查詢選擇蛋白質多層特徵。Prot-Inst-OOD 上註釋重排的 Recall@1 為16.4%；下游描述改善由模型評審衡量，不等於生物實驗驗證。",
+    "research.delayed-countdown-review-validation.title": "Delayed Countdown：持續審閱文件時如何估計遺漏",
+    "research.delayed-countdown-review-validation.summary": "在審閱途中抽樣，估計固定集合中的相關文件總數，再隨進度換算召回率區間。貢獻是統計驗證方法而非普遍降本實證；依賴集合、相關性定義與人工標籤穩定可靠。",
+    "research.direct-passk-thought-pruning.title": "按 pass@k 篩選推理路線，兼顧質量與多樣性",
+    "research.direct-passk-thought-pruning.summary": "從推理字首中選擇一組互補候選，最佳化至少一條答對的機會。八個開放權重模型的數學實驗支援這種裁剪；理論保證針對近似目標，未證明開放任務普遍受益。"
   }
 };

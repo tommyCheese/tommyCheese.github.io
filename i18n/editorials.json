@@ -1843,6 +1843,2076 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "adaptive-skill-granularity-recovery",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.31461v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.31461v1"
+        },
+        {
+          "label": "arXiv:2610.31461v1 · full paper",
+          "url": "https://arxiv.org/html/2610.31461v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "编程 Agent 调用一个大工具，一步完成许多操作，看起来比连续执行小操作更省事。但工具在中途失败时，已经改过哪些文件、是否需要重做，往往很难判断。这篇研究把问题从“要不要用技能”推进到“此时该用多大的技能，以及失败后怎样接手”。",
+          "sections": [
+            {
+              "heading": "把动作大小变成可选项",
+              "paragraphs": [
+                "作者区分三种执行方式：逐个调用基础工具的微操作、把多个步骤封装起来的宏技能，以及宏技能失败后由微操作接管的混合方式。系统根据任务特征选择路线，恢复执行器再按状态处理失败。论文也提出宏技能的准入思路：先在历史任务上回放，写清副作用与回退路径；这不是声称系统已经能自动发现并安全部署任意技能。"
+              ]
+            },
+            {
+              "heading": "失败发生的时机很重要",
+              "paragraphs": [
+                "在修改尚未完成时退出，切回小操作可能救回任务；如果主要修改已经完成，盲目从头回退反而增加调用与令牌开销。因此，恢复不能只看工具是否报错，还要看工作区状态与任务验证结果。作者同时比较简单启发式路由与使用离线执行日志训练的决策树路由，研究路由错误如何改变成本。"
+              ]
+            },
+            {
+              "heading": "在受控代码任务上比较",
+              "paragraphs": [
+                "GranBench-Code 包含简单、中等、重构与恢复四类任务，并在宏操作前后安排受控故障。各方法共享语言模型、基础工具和验证器，区别在允许的动作与路由。任务运行在可丢弃工作区，保留初始快照，由任务专用检查判断成功。作者报告，混合执行能兼顾所测任务的成功与成本，纯宏技能则更容易受故障影响。"
+              ]
+            },
+            {
+              "heading": "结果还不能推到所有仓库",
+              "paragraphs": [
+                "论文中的成功是这些任务及其验证器定义下的成功，不代表真实软件工程中没有漏测或隐藏缺陷。成本比较计入失败执行与令牌消耗，也不能直接换算成相同比例的墙钟时间节省。本站据此理解的工程启发是：技能接口需要同时声明正常产出和失败后的可恢复状态；更广泛的仓库、模型与故障分布仍需验证。本条按预印本收录，未据此认定会议录用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文执行机制重绘的解释图，非实验结果图",
+            "steps": [
+              "读取任务与工作区特征",
+              "选择宏技能或微操作",
+              "检查副作用并恢复",
+              "由任务验证器核验"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A large coding-agent tool can bundle many edits into one call, but its failure may leave a partly changed workspace. This study asks when an agent should choose a large skill and when smaller actions should take over, rather than assuming that bigger tools always improve efficiency.",
+          "sections": [
+            {
+              "heading": "Actions at different scales",
+              "paragraphs": [
+                "The authors compare primitive micro actions, bundled macro skills and a hybrid that recovers from macro failures through micro actions. A controller selects the route from task features, while a state-based executor handles recovery. Proposed admission criteria include replaying historical tasks and documenting side effects and fallback paths; they do not establish automatic safe discovery of arbitrary skills."
+              ]
+            },
+            {
+              "heading": "Recovery depends on progress",
+              "paragraphs": [
+                "An early failure may benefit from primitive-tool recovery. A late failure can occur after the useful edits are already complete, making unconditional fallback wasteful. The study compares heuristic routing with a decision-tree router learned offline from execution logs. Workspace state and verification therefore matter alongside the tool’s reported status."
+              ]
+            },
+            {
+              "heading": "What the benchmark tests",
+              "paragraphs": [
+                "GranBench-Code covers simple, medium, refactoring and recovery task families with controlled failures around macro execution. Variants share the language model, base tools and verifier, but differ in action spaces and routing. Disposable workspaces and pristine snapshots support task-specific validation. The authors report a favorable success–cost balance for hybrid execution on these tasks, with macro-only execution more brittle under failure."
+              ]
+            },
+            {
+              "heading": "Where the evidence stops",
+              "paragraphs": [
+                "Success means passing the supplied task validators, not defect-free performance across real repositories. Costs include failed executions and tokens; they are not automatically equivalent to elapsed-time savings. Our engineering interpretation is that skill interfaces should describe recoverable failure states as carefully as normal outputs. Broader repositories, models and failure distributions remain to be tested. We list the work as a preprint without inferring conference acceptance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of the execution mechanism, not an experimental plot",
+            "steps": [
+              "Inspect task and workspace",
+              "Route to macro or micro actions",
+              "Check effects and recover",
+              "Validate the task"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "大きなツールを一度呼び出せば、コーディング Agent は複数の編集をまとめて進められる。しかし途中で失敗すると、どの変更まで完了したのかが分かりにくい。本研究は、技能の大きさをいつ切り替え、失敗後にどう作業を引き継ぐかを扱う。",
+          "sections": [
+            {
+              "heading": "操作の粒度を選ぶ",
+              "paragraphs": [
+                "著者らは、基本ツールを順に使う微小操作、複数工程をまとめたマクロ技能、失敗後に微小操作へ戻る混合方式を比較する。タスクの特徴から経路を選び、状態に応じた実行器が復旧を担当する。過去タスクでの再実行、副作用と代替経路の明記も提案するが、任意の技能を自動発見して安全に導入できたという主張ではない。"
+              ]
+            },
+            {
+              "heading": "同じ失敗でも進捗が違う",
+              "paragraphs": [
+                "編集の初期に失敗すれば、小さな操作への切り替えが役立つ。一方、必要な編集が済んだ後の失敗では、無条件のやり直しが費用を増やしうる。論文は単純な規則による経路選択と、過去の実行ログから学習した決定木を比較する。ツールの終了状態だけでなく、作業領域と検証結果を見る必要がある。"
+              ]
+            },
+            {
+              "heading": "比較したタスクの範囲",
+              "paragraphs": [
+                "GranBench-Code は単純、中程度、リファクタリング、復旧の四系統で、マクロ操作の前後に制御された故障を置く。各方式は同じ言語モデル、基本ツール、検証器を使う。使い捨ての作業領域と初期スナップショットを用い、タスク別の検査で成否を判定した。著者らは、この条件では混合方式が成功と費用を両立し、マクロのみの方式は故障に弱いと報告する。"
+              ]
+            },
+            {
+              "heading": "実際の開発へ移す際の注意",
+              "paragraphs": [
+                "成功は用意した検証器を通過したという意味で、現実の全リポジトリに欠陥なく対応する証拠ではない。費用には失敗した実行とトークンを含み、実時間の短縮率とは一致しない。本サイトの解釈として、技能の仕様には正常な出力だけでなく復旧可能な状態も必要だと考える。モデルや故障分布を広げた検証は今後の課題で、会議採択を確認した論文としては扱わない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の実行機構を本サイトが描き直した説明図。実験結果ではない",
+            "steps": [
+              "タスクと状態を確認",
+              "操作の粒度を選択",
+              "副作用を確認して復旧",
+              "検証器で成否を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Крупный инструмент агента для программирования объединяет несколько изменений в один вызов. Но после сбоя рабочая копия может остаться изменённой лишь частично. Авторы изучают, когда выбирать такую операцию и когда переходить к небольшим действиям для восстановления.",
+          "sections": [
+            {
+              "heading": "Выбор масштаба действий",
+              "paragraphs": [
+                "Сравниваются базовые микрооперации, составные макронавыки и гибрид с восстановлением через микрооперации. Контроллер выбирает маршрут по признакам задачи, а исполнитель учитывает состояние работы. Предлагаются проверка навыков на прошлых задачах и описание побочных эффектов и запасных путей. Это не доказательство безопасного автоматического создания любых навыков."
+              ]
+            },
+            {
+              "heading": "Сбой до и после полезной работы",
+              "paragraphs": [
+                "При раннем сбое мелкие действия могут спасти выполнение. При позднем нужные изменения уже могут быть готовы, и безусловное повторение лишь увеличивает расходы. Авторы сопоставляют эвристическую маршрутизацию с деревом решений, обученным на журналах выполнения. Поэтому важны состояние файлов и результат проверки, а не только код завершения инструмента."
+              ]
+            },
+            {
+              "heading": "Условия эксперимента",
+              "paragraphs": [
+                "GranBench-Code включает простые, средние задачи, рефакторинг и восстановление с управляемыми сбоями вокруг макроопераций. Языковая модель, базовые инструменты и проверяющий компонент одинаковы; меняются пространство действий и маршрутизация. Используются одноразовые рабочие копии и исходные снимки. По отчёту авторов, гибрид сочетает успех и меньшие затраты в этих условиях, тогда как только макрооперации более чувствительны к сбоям."
+              ]
+            },
+            {
+              "heading": "Границы переноса",
+              "paragraphs": [
+                "Успех означает прохождение проверок конкретной задачи, а не отсутствие ошибок во всех реальных репозиториях. Затраты включают неудачные запуски и токены, но не обещают такого же сокращения времени. Наша инженерная интерпретация: интерфейс навыка должен описывать состояния для восстановления наряду с обычным результатом. Другие модели, репозитории и распределения сбоев ещё требуют проверки. Работа учтена как препринт без подтверждённого принятия на конференцию."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Схема механизма, заново составленная редакцией; не график результатов",
+            "steps": [
+              "Проверить задачу и состояние",
+              "Выбрать масштаб действий",
+              "Проверить последствия и восстановиться",
+              "Проверить выполнение"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "程式設計 Agent 呼叫一個大工具，一步完成許多操作，看起來比連續執行小操作更省事。但工具在中途失敗時，已經改過哪些檔案、是否需要重做，往往很難判斷。這篇研究把問題從“要不要用技能”推進到“此時該用多大的技能，以及失敗後怎樣接手”。",
+          "sections": [
+            {
+              "heading": "把動作大小變成可選項",
+              "paragraphs": [
+                "作者區分三種執行方式：逐個呼叫基礎工具的微操作、把多個步驟封裝起來的宏技能，以及宏技能失敗後由微操作接管的混合方式。系統根據任務特徵選擇路線，恢復執行器再按狀態處理失敗。論文也提出宏技能的准入思路：先在歷史任務上回放，寫清副作用與回退路徑；這不是聲稱系統已經能自動發現並安全部署任意技能。"
+              ]
+            },
+            {
+              "heading": "失敗發生的時機很重要",
+              "paragraphs": [
+                "在修改尚未完成時退出，切回小操作可能救回任務；如果主要修改已經完成，盲目從頭回退反而增加呼叫與令牌開銷。因此，恢復不能只看工具是否報錯，還要看工作區狀態與任務驗證結果。作者同時比較簡單啟發式路由與使用離線執行日誌訓練的決策樹路由，研究路由錯誤如何改變成本。"
+              ]
+            },
+            {
+              "heading": "在受控程式碼任務上比較",
+              "paragraphs": [
+                "GranBench-Code 包含簡單、中等、重構與恢復四類任務，並在宏操作前後安排受控故障。各方法共享語言模型、基礎工具和驗證器，區別在允許的動作與路由。任務執行在可丟棄工作區，保留初始快照，由任務專用檢查判斷成功。作者報告，混合執行能兼顧所測任務的成功與成本，純宏技能則更容易受故障影響。"
+              ]
+            },
+            {
+              "heading": "結果還不能推到所有倉庫",
+              "paragraphs": [
+                "論文中的成功是這些任務及其驗證器定義下的成功，不代表真實軟體工程中沒有漏測或隱藏缺陷。成本比較計入失敗執行與令牌消耗，也不能直接換算成相同比例的牆鍾時間節省。本站據此理解的工程啟發是：技能介面需要同時宣告正常產出和失敗後的可恢復狀態；更廣泛的倉庫、模型與故障分佈仍需驗證。本條按預印本收錄，未據此認定會議錄用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文執行機制重繪的解釋圖，非實驗結果圖",
+            "steps": [
+              "讀取任務與工作區特徵",
+              "選擇宏技能或微操作",
+              "檢查副作用並恢復",
+              "由任務驗證器核驗"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "simulated-control-evaluations",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.31593v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.31593v1"
+        },
+        {
+          "label": "arXiv:2610.31593v1 · full paper",
+          "url": "https://arxiv.org/html/2610.31593v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "想知道监控器能否发现 Agent 的违规行为，通常需要让攻击策略在真实测试环境中执行。这样既昂贵，也限制了反复试验的速度。Redwood 的研究尝试用语言模型模拟工具返回，再校准这种模拟是否足以预测真实执行下的监控表现。",
+          "sections": [
+            {
+              "heading": "模拟的是环境反馈",
+              "paragraphs": [
+                "攻击策略仍然选择动作，但动作不在部署环境执行，而由模拟器生成工具响应。模拟器参考诚实执行轨迹和代码库信息，成功判定器判断攻击是否达到目标，监控器负责发现异常。这种设计隔离了实际执行，却没有自动保证模拟行为与真实系统一致，因此论文把与真实运行的比较作为关键检验。"
+              ]
+            },
+            {
+              "heading": "样本与比较对象",
+              "paragraphs": [
+                "主要实验抽取 LinuxArena 的一千组任务对，覆盖十个环境；每组含正常任务和攻击目标，分别进行两次模拟攻击、两次真实执行，并准备一次诚实参考轨迹。抽样有放回，所以一千次抽取不等于一千个互不重复的任务。作者还用相同攻击策略、监控器和长度限制比较 BashArena 的一千次执行攻击。"
+              ]
+            },
+            {
+              "heading": "误差数字说明什么",
+              "paragraphs": [
+                "在百分之五的审查预算下，五种监控器的安全指标预测总均方根误差为三点六个百分点，BashArena 比较为十点一个百分点。这里预算对应诚实轨迹上的误报比例，数字衡量模拟对真实评估的预测误差，不是攻击风险下降了三点六个百分点。安全指标综合了被发现的攻击与成功且未被发现的攻击，也不是简单的分类准确率。"
+              ]
+            },
+            {
+              "heading": "可信模拟器仍是前提",
+              "paragraphs": [
+                "结果说明经过环境信息约束的模拟，在这组任务上比另一个基准更贴近目标评估，不能据此认为所有 Agent 环境都可被替代。平均攻击成功率相近也可能掩盖逐任务偏差。若模拟器本身不可信，可能与攻击策略串通，给出虚假的安全信号；反复优化还可能利用模拟器特有漏洞。作者尚未解决这些迁移与信任问题，本站也未独立复现实验。本条为预印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的评估流程示意；数字来自论文，图本身不是实验曲线",
+            "steps": [
+              "准备诚实轨迹与环境信息",
+              "模拟工具反馈",
+              "监控与判定攻击",
+              "对照真实执行校准"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Testing whether a monitor catches an agent’s misconduct normally requires running attack policies in a real evaluation environment. Redwood explores a cheaper alternative: simulate tool responses with a language model, then measure how closely the resulting evaluation predicts actual execution.",
+          "sections": [
+            {
+              "heading": "What the simulator replaces",
+              "paragraphs": [
+                "The attack policy still chooses actions, but a simulator supplies tool responses instead of executing those actions in the deployment environment. Honest reference trajectories and codebase information ground the simulator. Separate components judge attack success and monitor suspicious behavior. Isolation alone does not establish fidelity, so comparison with executed attacks is central."
+              ]
+            },
+            {
+              "heading": "A paired evaluation",
+              "paragraphs": [
+                "The main experiment draws 1,000 LinuxArena task pairs across ten environments. A pair combines a legitimate task and an attack objective, with two simulated attacks, two executed attacks and an honest reference run. Sampling is with replacement, so these are not necessarily 1,000 distinct pairs. Another comparison uses 1,000 BashArena attacks with the same policy, monitors and length limit."
+              ]
+            },
+            {
+              "heading": "Reading the reported error",
+              "paragraphs": [
+                "At a 5% audit budget, the total root-mean-square error in predicted safety across five monitors is 3.6 percentage points, versus 10.1 for the BashArena comparison. Budget here is a false-positive rate on honest trajectories. The result measures prediction error, not a 3.6-point reduction in attack risk. The safety metric combines detected attacks with successful undetected attacks rather than ordinary classification accuracy."
+              ]
+            },
+            {
+              "heading": "Trust and transfer remain open",
+              "paragraphs": [
+                "Grounded simulation tracks this target evaluation better, but that does not validate every agent environment. Similar average success rates can conceal task-level biases. An untrusted simulator could collude with an attack policy and inflate safety estimates; repeated optimization could also exploit simulation artifacts. Those trust and transfer problems remain unresolved. Our article reports the authors’ experiments, not an independent reproduction, and lists the work as a preprint."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of the evaluation process, not an experimental curve",
+            "steps": [
+              "Ground in honest runs and code",
+              "Simulate tool responses",
+              "Monitor and judge attacks",
+              "Calibrate against execution"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agent の不正行動を監視器が発見できるか調べるには、通常は攻撃方策を実際の評価環境で動かす必要がある。Redwood は、言語モデルにツールの返答を模擬させ、その評価が実行時の結果をどの程度予測できるかを調べた。",
+          "sections": [
+            {
+              "heading": "環境の返答を置き換える",
+              "paragraphs": [
+                "攻撃方策は行動を選ぶが、その行動を配備環境では実行しない。代わりに模擬器がツールの応答を作る。誠実な実行軌跡とコードベースを参照させ、別の判定器と監視器が攻撃の成否と検知を評価する。隔離できることと現実を再現できることは別なので、実行結果との照合が重要になる。"
+              ]
+            },
+            {
+              "heading": "何を比較したか",
+              "paragraphs": [
+                "主実験は十の環境から LinuxArena のタスク対を千回抽出する。通常の作業と攻撃目標を組にし、模擬攻撃二回、実行攻撃二回、誠実な参照実行一回を用意する。復元抽出なので千回の抽出がすべて異なるタスクとは限らない。さらに同じ方策、監視器、長さ制限で BashArena の千回の実行攻撃とも比較する。"
+              ]
+            },
+            {
+              "heading": "数値は予測誤差を表す",
+              "paragraphs": [
+                "監査予算五パーセントの条件で、五種類の監視器を通じた安全指標の予測の総二乗平均平方根誤差は三・六ポイント、BashArena との比較では十・一ポイントだった。予算は誠実な軌跡での誤検知率を指す。攻撃リスクが三・六ポイント減ったという意味ではない。安全指標も通常の分類精度ではなく、検知された攻撃と成功して未検知の攻撃を組み合わせたものだ。"
+              ]
+            },
+            {
+              "heading": "信頼と移行の限界",
+              "paragraphs": [
+                "環境情報に基づく模擬は、この評価対象に近づくが、すべての Agent 環境で有効とはいえない。成功率の平均が近くても、個別タスクの偏りは残る。模擬器が信頼できなければ攻撃方策と結託して安全性を過大評価し、繰り返しの最適化が模擬固有の弱点を利用する恐れもある。これらは未解決で、本サイトは独自の追試を行っていない。会議採択の証拠がないため、プレプリントとして紹介する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の評価手順を本サイトが描き直した説明図。実験曲線ではない",
+            "steps": [
+              "誠実な実行とコードを参照",
+              "ツールの返答を模擬",
+              "攻撃を監視・判定",
+              "実行結果で校正"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Чтобы проверить обнаружение нарушений агентом, обычно приходится запускать атакующую политику в настоящей тестовой среде. Redwood исследует замену: языковая модель имитирует ответы инструментов, а её оценки затем сопоставляются с реальным выполнением.",
+          "sections": [
+            {
+              "heading": "Что именно моделируется",
+              "paragraphs": [
+                "Атакующая политика по-прежнему выбирает действия, но они не выполняются в среде развёртывания. Симулятор создаёт ответы инструментов с опорой на добросовестную траекторию и код. Отдельные компоненты оценивают успех атаки и обнаружение монитором. Изоляция действий сама по себе не подтверждает реалистичность симуляции."
+              ]
+            },
+            {
+              "heading": "Парное сравнение",
+              "paragraphs": [
+                "Основной эксперимент использует 1 000 выборок пар задач LinuxArena из десяти сред. Пара содержит обычную задачу и цель атаки; для неё предусмотрены два симулированных, два настоящих атакующих запуска и один добросовестный ориентир. Выборка с возвращением, поэтому пары могут повторяться. Дополнительно сравниваются 1 000 выполненных атак BashArena при одинаковых политике, мониторах и ограничении длины."
+              ]
+            },
+            {
+              "heading": "Как понимать ошибку",
+              "paragraphs": [
+                "При бюджете аудита 5% совокупная среднеквадратическая ошибка прогноза безопасности для пяти мониторов равна 3,6 процентного пункта против 10,1 у сравнения с BashArena. Бюджет означает долю ложных тревог на добросовестных траекториях. Это ошибка предсказания, а не снижение риска атаки на 3,6 пункта. Метрика безопасности учитывает обнаруженные и успешные необнаруженные атаки, а не обычную точность классификации."
+              ]
+            },
+            {
+              "heading": "Открытые ограничения",
+              "paragraphs": [
+                "Привязка к среде помогает предсказывать именно эту оценку, но не подтверждает перенос на любые системы. Совпадающие средние могут скрывать смещение по отдельным задачам. Недоверенный симулятор способен сговориться с атакующей политикой, а многократная оптимизация — использовать его искусственные особенности. Эти вопросы доверия и переноса остаются открытыми. Мы пересказываем эксперименты авторов без собственного воспроизведения; работа учтена как препринт."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема процедуры, не экспериментальная кривая",
+            "steps": [
+              "Опорные траектории и код",
+              "Симуляция ответов",
+              "Мониторинг и оценка атак",
+              "Калибровка реальным выполнением"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "想知道監控器能否發現 Agent 的違規行為，通常需要讓攻擊策略在真實測試環境中執行。這樣既昂貴，也限制了反覆試驗的速度。Redwood 的研究嘗試用語言模型模擬工具返回，再校準這種模擬是否足以預測真實執行下的監控表現。",
+          "sections": [
+            {
+              "heading": "模擬的是環境反饋",
+              "paragraphs": [
+                "攻擊策略仍然選擇動作，但動作不在部署環境執行，而由模擬器生成工具響應。模擬器參考誠實執行軌跡和程式碼庫資訊，成功判定器判斷攻擊是否達到目標，監控器負責發現異常。這種設計隔離了實際執行，卻沒有自動保證模擬行為與真實系統一致，因此論文把與真實執行的比較作為關鍵檢驗。"
+              ]
+            },
+            {
+              "heading": "樣本與比較物件",
+              "paragraphs": [
+                "主要實驗抽取 LinuxArena 的一千組任務對，覆蓋十個環境；每組含正常任務和攻擊目標，分別進行兩次模擬攻擊、兩次真實執行，並準備一次誠實參考軌跡。抽樣有放回，所以一千次抽取不等於一千個互不重複的任務。作者還用相同攻擊策略、監控器和長度限制比較 BashArena 的一千次執行攻擊。"
+              ]
+            },
+            {
+              "heading": "誤差數字說明什麼",
+              "paragraphs": [
+                "在百分之五的審查預算下，五種監控器的安全指標預測總均方根誤差為三點六個百分點，BashArena 比較為十點一個百分點。這裡預算對應誠實軌跡上的誤報比例，數字衡量模擬對真實評估的預測誤差，不是攻擊風險下降了三點六個百分點。安全指標綜合了被發現的攻擊與成功且未被發現的攻擊，也不是簡單的分類準確率。"
+              ]
+            },
+            {
+              "heading": "可信模擬器仍是前提",
+              "paragraphs": [
+                "結果說明經過環境資訊約束的模擬，在這組任務上比另一個基準更貼近目標評估，不能據此認為所有 Agent 環境都可被替代。平均攻擊成功率相近也可能掩蓋逐任務偏差。若模擬器本身不可信，可能與攻擊策略串通，給出虛假的安全訊號；反覆最佳化還可能利用模擬器特有漏洞。作者尚未解決這些遷移與信任問題，本站也未獨立復現實驗。本條為預印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的評估流程示意；數字來自論文，圖本身不是實驗曲線",
+            "steps": [
+              "準備誠實軌跡與環境資訊",
+              "模擬工具反饋",
+              "監控與判定攻擊",
+              "對照真實執行校準"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "qprotfuse-query-guided-protein-rag",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.30180v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.30180v1"
+        },
+        {
+          "label": "arXiv:2610.30180v1 · full paper",
+          "url": "https://arxiv.org/html/2610.30180v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "面对同一条蛋白质序列，询问催化功能与询问结构域，可能需要不同的参考资料。QProtFuse 研究的不是让大模型凭记忆回答生物问题，而是改进检索：根据问题，从蛋白质模型不同深度的表示中选取并融合有用信息，再把资料交给生成模型。",
+          "sections": [
+            {
+              "heading": "为什么不只取最后一层",
+              "paragraphs": [
+                "现有方法常固定使用蛋白质语言模型的最后一层。作者检查 ESM-2 后发现，不同任务的较优层次并不相同，简单平均各层也不是总能达到最佳效果。QProtFuse 用问题来分配多层特征权重，同时训练蛋白质到蛋白质、蛋白质到文字注释两种对比目标，使检索既能找到相似序列，也能匹配所问的功能信息。"
+              ]
+            },
+            {
+              "heading": "评估库与检索口径",
+              "paragraphs": [
+                "实验使用 Prot-Inst-OOD，包含蛋白质功能、催化活性、结构域或基序、一般功能四类任务。实验以 14,503 条测试样本查询 284,526 条训练记录构成的共享参考库。作者采用降低注释泄漏的分布外划分；注释检索的候选集合更小，因此其分数不能直接与全训练库上的蛋白质检索横比。"
+              ]
+            },
+            {
+              "heading": "更好的参考是否改善回答",
+              "paragraphs": [
+                "论文报告，在注释重排配置下，四任务宏平均 Recall@1 为百分之十六点四，表示首位检索结果命中相关记录的比例。RAG 生成使用前十条参考资料；配合 Qwen3-8B 与 DeepSeek-V4-Pro，模型评审分分别为六点二二和六点六八，满分十分。这是作者使用大模型评审得到的描述质量指标，不是湿实验成功率，也不是蛋白质功能已被实验确认。"
+              ]
+            },
+            {
+              "heading": "生成端没有自动核验",
+              "paragraphs": [
+                "消融支持问题引导的融合与双重训练目标在该基准上的作用，代码和数据也有公开入口。但评估主要集中于一个基准，生成模型保持冻结，输出没有再与检索证据逐项核验。把这套机制用于更大生物数据库或新的任务，需要重新检查检索覆盖和回答可靠性。本站将其归入 RAG 主方向，是因为论文直接研究检索与证据融合；不据此宣称能够替代生物实验。本条为预印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文检索机制重绘，非蛋白质结构图或实验结果图",
+            "steps": [
+              "问题决定融合权重",
+              "融合蛋白质多层表示",
+              "检索并重排参考资料",
+              "生成仍需核验的描述"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Different questions about one protein can require different evidence: catalytic activity is not the same as a domain description. QProtFuse changes retrieval rather than asking a general language model to answer from memory. It uses the question to combine representations from different depths of a protein model before retrieving references.",
+          "sections": [
+            {
+              "heading": "Why the last layer is insufficient",
+              "paragraphs": [
+                "The authors probe ESM-2 and find that useful layers differ by task. Uniform averaging also leaves room for improvement. Query-conditioned weights fuse the layers, while joint protein-to-protein and protein-to-annotation contrastive objectives train retrieval of both related sequences and relevant textual knowledge."
+              ]
+            },
+            {
+              "heading": "The reference collection",
+              "paragraphs": [
+                "Prot-Inst-OOD covers protein function, catalytic activity, domains or motifs and general function. Its 14,503 test samples query a shared collection of 284,526 training records, using a split designed to reduce annotation leakage. Annotation retrieval has a smaller candidate set, so its scores cannot be directly compared with protein retrieval over the full training collection."
+              ]
+            },
+            {
+              "heading": "Retrieval and generated descriptions",
+              "paragraphs": [
+                "With annotation reranking, the paper reports a four-task macro-averaged Recall@1 of 16.4%, measuring whether the first returned record is relevant. Generation uses ten retrieved references. Qwen3-8B and DeepSeek-V4-Pro obtain judge scores of 6.22 and 6.68 out of ten. These are author-reported language-model assessments of description quality, not wet-lab success rates or experimental confirmation of protein functions."
+              ]
+            },
+            {
+              "heading": "What remains unverified",
+              "paragraphs": [
+                "Ablations support query-guided fusion and the joint objectives on this benchmark, and data and code are linked. Evaluation remains concentrated on one benchmark; the generator is frozen and responses are not subsequently verified against retrieved evidence. Larger biological resources and new tasks require further testing. We classify this as primary RAG research because retrieval and evidence fusion are the actual method, without suggesting that it replaces biological experiments. It is listed as a preprint."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of retrieval, not a protein structure or experimental plot",
+            "steps": [
+              "Question sets fusion weights",
+              "Combine protein-model layers",
+              "Retrieve and rerank evidence",
+              "Generate a description requiring verification"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じタンパク質でも、触媒活性を聞く場合とドメインを聞く場合では必要な資料が違う。QProtFuse は一般言語モデルの記憶に頼るのではなく、質問に応じてタンパク質モデルの各層の情報を組み合わせ、回答に渡す資料の検索を改善する研究だ。",
+          "sections": [
+            {
+              "heading": "最終層だけでは足りない",
+              "paragraphs": [
+                "著者らは ESM-2 を調べ、よい検索結果を与える層がタスクによって異なることを示す。全層の単純平均にも改善の余地がある。質問から融合の重みを決め、タンパク質同士とタンパク質・文章注釈の二種類の対照学習を組み合わせる。配列の類似性だけでなく、質問が求める機能情報も検索に反映する仕組みだ。"
+              ]
+            },
+            {
+              "heading": "評価対象と候補集合",
+              "paragraphs": [
+                "Prot-Inst-OOD の四タスクは機能、触媒活性、ドメインまたはモチーフ、一般的機能を扱う。14,503 件のテスト例から、284,526 件の学習記録を共通の参照集合として検索する。分布外の分割で注釈の漏れを抑える。ただし文章注釈の候補集合はより小さく、全学習集合を対象とするタンパク質検索の点数と直接比較はできない。"
+              ]
+            },
+            {
+              "heading": "回答への効果をどう測ったか",
+              "paragraphs": [
+                "注釈による再順位付けでは、四タスクのマクロ平均 Recall@1 が十六・四パーセントだった。これは一位の検索結果が関連記録に当たる割合を表す。生成には上位十件の資料を使い、Qwen3-8B と DeepSeek-V4-Pro のモデル審査点は十点中六・二二と六・六八だった。いずれも著者らの言語モデルによる評価で、生物実験の成功率ではない。"
+              ]
+            },
+            {
+              "heading": "生成結果は別途確かめる必要がある",
+              "paragraphs": [
+                "構成要素を外す実験は、このベンチマークで質問に応じた融合と二重の学習目標が役立つことを支える。データとコードも公開されている。一方、評価は一つのベンチマークが中心で、生成モデルは固定され、出力を取得資料に照らして再検証していない。より大きな生物資源や新しい課題への移行は追加検証を要する。検索と証拠融合を直接研究するため RAG 主方向に分類するが、生物実験の代替とは考えない。プレプリントとして収録する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "検索機構を本サイトが描き直した説明図。構造図や実験結果ではない",
+            "steps": [
+              "質問から重みを計算",
+              "モデル各層を融合",
+              "資料を検索・再順位付け",
+              "検証を要する説明を生成"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Вопросы о каталитической активности и доменах одного белка требуют разных источников. QProtFuse улучшает поиск этих источников: вопрос определяет, как объединять представления разных слоёв белковой модели, прежде чем передать найденное генератору ответа.",
+          "sections": [
+            {
+              "heading": "Не только последний слой",
+              "paragraphs": [
+                "Анализ ESM-2 показывает, что полезные для поиска слои зависят от задачи. Простое усреднение тоже не всегда достаточно. Авторы обучают зависящее от запроса смешивание слоёв и две контрастивные цели: белок–белок и белок–текстовая аннотация. Так поиск учитывает не только похожую последовательность, но и нужный аспект функции."
+              ]
+            },
+            {
+              "heading": "Коллекция для проверки",
+              "paragraphs": [
+                "Prot-Inst-OOD охватывает функции, каталитическую активность, домены или мотивы и общие описания. 14 503 тестовых примера обращаются к общей базе из 284 526 обучающих записей. Разделение направлено на уменьшение утечки аннотаций. У поиска аннотаций набор кандидатов меньше, поэтому его оценки нельзя напрямую сравнивать с поиском белков по полной базе."
+              ]
+            },
+            {
+              "heading": "Как оценивались ответы",
+              "paragraphs": [
+                "После переранжирования аннотациями макроусреднённый по четырём задачам Recall@1 достигает 16,4%: это попадание релевантной записи на первое место. Для генерации берутся десять источников. Qwen3-8B и DeepSeek-V4-Pro получают оценки судьи 6,22 и 6,68 из десяти. Это сообщённые авторами оценки описаний языковой моделью, а не доля успешных лабораторных экспериментов или подтверждённых функций."
+              ]
+            },
+            {
+              "heading": "Пределы результата",
+              "paragraphs": [
+                "Абляции поддерживают пользу адаптивного смешивания и совместного обучения на этом наборе; опубликованы ссылки на данные и код. Однако основной тест один, генератор заморожен, а готовый ответ не перепроверяется по найденным доказательствам. Перенос на более крупные биологические базы требует новой проверки. Работа относится к основному направлению RAG именно из-за исследования поиска и слияния доказательств, но не заменяет биологические эксперименты. Статус — препринт."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема поиска; не структура белка и не график эксперимента",
+            "steps": [
+              "Вопрос задаёт веса",
+              "Смешать слои модели",
+              "Найти и переранжировать источники",
+              "Сформировать описание для проверки"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "面對同一條蛋白質序列，詢問催化功能與詢問結構域，可能需要不同的參考資料。QProtFuse 研究的不是讓大模型憑記憶回答生物問題，而是改進檢索：根據問題，從蛋白質模型不同深度的表示中選取並融合有用資訊，再把資料交給生成模型。",
+          "sections": [
+            {
+              "heading": "為什麼不只取最後一層",
+              "paragraphs": [
+                "現有方法常固定使用蛋白質語言模型的最後一層。作者檢查 ESM-2 後發現，不同任務的較優層次並不相同，簡單平均各層也不是總能達到最佳效果。QProtFuse 用問題來分配多層特徵權重，同時訓練蛋白質到蛋白質、蛋白質到文字註釋兩種對比目標，使檢索既能找到相似序列，也能匹配所問的功能資訊。"
+              ]
+            },
+            {
+              "heading": "評估庫與檢索口徑",
+              "paragraphs": [
+                "實驗使用 Prot-Inst-OOD，包含蛋白質功能、催化活性、結構域或基序、一般功能四類任務。實驗以 14,503 條測試樣本查詢 284,526 條訓練記錄構成的共享參考庫。作者採用降低註釋洩漏的分佈外劃分；註釋檢索的候選集合更小，因此其分數不能直接與全訓練庫上的蛋白質檢索橫比。"
+              ]
+            },
+            {
+              "heading": "更好的參考是否改善回答",
+              "paragraphs": [
+                "論文報告，在註釋重排配置下，四任務宏平均 Recall@1 為百分之十六點四，表示首位檢索結果命中相關記錄的比例。RAG 生成使用前十條參考資料；配合 Qwen3-8B 與 DeepSeek-V4-Pro，模型評審分分別為六點二二和六點六八，滿分十分。這是作者使用大模型評審得到的描述質量指標，不是溼實驗成功率，也不是蛋白質功能已被實驗確認。"
+              ]
+            },
+            {
+              "heading": "生成端沒有自動核驗",
+              "paragraphs": [
+                "消融支援問題引導的融合與雙重訓練目標在該基準上的作用，程式碼和資料也有公開入口。但評估主要集中於一個基準，生成模型保持凍結，輸出沒有再與檢索證據逐項核驗。把這套機制用於更大生物資料庫或新的任務，需要重新檢查檢索覆蓋和回答可靠性。本站將其歸入 RAG 主方向，是因為論文直接研究檢索與證據融合；不據此宣稱能夠替代生物實驗。本條為預印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文檢索機制重繪，非蛋白質結構圖或實驗結果圖",
+            "steps": [
+              "問題決定融合權重",
+              "融合蛋白質多層表示",
+              "檢索並重排參考資料",
+              "生成仍需核驗的描述"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "delayed-countdown-review-validation",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.31311v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.31311v1"
+        },
+        {
+          "label": "arXiv:2610.31311v1 · full paper",
+          "url": "https://arxiv.org/html/2610.31311v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "在文档审阅中，AI 可以把可能相关的材料排到前面，但“已经找到了多少”和“还漏掉多少”是两个问题。Delayed Countdown 研究如何在人工持续审阅的同时，保留对整体召回率的统计依据，而不是不断重新抽样，直到得到一个看起来满意的结果。",
+          "sections": [
+            {
+              "heading": "估计一个不会随进度变化的量",
+              "paragraphs": [
+                "作者针对以人工审阅为中心的技术辅助审阅流程：模型决定优先看什么，人给出最终标签。通常未审集合中的相关比例会随审阅变化，直接重复使用旧估计容易出错。论文改为估计固定文档集合中相关材料的总数；只要集合和正确标签不变，这个总数不会因多看了几份文档而改变。"
+              ]
+            },
+            {
+              "heading": "先审一部分，再抽一次样",
+              "paragraphs": [
+                "方法在某个时点从尚未审阅的文档中随机抽样并标注，估计剩余相关数量的置信区间，再加上已经找到的相关数量，得到全库总量的区间。随后用不断增加的已审相关数，确定性地换算各阶段的召回率区间，同时剔除不可能的边界值。论文允许简单无放回随机抽样，也讨论分层抽样，关键是维持相应统计假设。"
+              ]
+            },
+            {
+              "heading": "为什么不是反复试到过关",
+              "paragraphs": [
+                "更新使用的是同一份对固定总量的估计，不是每次不满意就另抽一批并选择有利结果。论文还讨论抽样材料进入训练或过程控制的条件，因为它评估的是审阅流程中的固定总量，而非拿该样本直接测试某个最终分类器。这不能推广成允许随意把测试数据用于训练，也不能忽略人为标签质量。"
+              ]
+            },
+            {
+              "heading": "方法论结果与实际保障的距离",
+              "paragraphs": [
+                "主要贡献是统计推导和数值说明，不是证明在所有真实项目里都降低费用的大规模部署实验。样本量与抽样时机仍会影响成本和区间宽度，置信区间也不是某个项目必然正确的保证。若文档集合、相关性定义或人工标签发生变化，固定总量的前提可能失效。本站将其归入数据治理主方向，依据是文档质量审计与过程验证这一核心问题；不把研究结论写成法律意见或司法认可。本条为预印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按统计验证流程重绘的解释图，非真实项目效果图",
+            "steps": [
+              "审阅部分文档",
+              "抽样估计全库相关总量",
+              "随进度换算召回区间",
+              "检查假设与停止条件"
+            ]
+          }
+        },
+        "en": {
+          "lead": "AI can prioritize likely relevant documents, but finding many relevant records does not reveal how many remain undiscovered. Delayed Countdown studies how to retain a statistical basis for recall while human review continues, without repeatedly sampling until a favorable estimate appears.",
+          "sections": [
+            {
+              "heading": "Estimate a fixed quantity",
+              "paragraphs": [
+                "The setting is review-oriented technology-assisted review: models prioritize work and people assign the final labels. The proportion of relevant documents left unreviewed changes over time. The authors instead estimate the total number of relevant documents in a fixed collection. That total remains unchanged as review progresses if the collection and correct labels stay fixed."
+              ]
+            },
+            {
+              "heading": "Sample after some review",
+              "paragraphs": [
+                "At a chosen point, reviewers draw and label a random sample of unreviewed documents. An interval for the remaining relevant count is added to the known reviewed relevant count, producing an interval for the collection total. Later recall intervals are deterministic transformations of that same estimate, using updated reviewed counts and pruning logically impossible endpoints. Simple random sampling without replacement and stratified sampling are discussed under their respective assumptions."
+              ]
+            },
+            {
+              "heading": "Why this differs from repeated testing",
+              "paragraphs": [
+                "The method reuses an estimate of an unchanging total, rather than drawing new samples and selecting a convenient outcome. The paper discusses when sampled documents may enter training or process control because the target is the collection total, not direct testing of a final classifier. This is not a general license to train on test data or disregard annotation errors."
+              ]
+            },
+            {
+              "heading": "A methodological contribution",
+              "paragraphs": [
+                "The evidence consists primarily of statistical arguments and numerical illustrations, not a broad deployment trial establishing universal cost savings. Sample size, timing and labeling quality affect usefulness; a confidence interval is not certainty about one project. Changing the collection or relevance definition can invalidate the fixed-total premise. We classify the core document-quality audit and process-validation problem as data governance, without turning the paper into legal advice or a claim of court approval. It is listed as a preprint."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of statistical validation, not measured project outcomes",
+            "steps": [
+              "Review some documents",
+              "Sample and estimate the fixed total",
+              "Update recall intervals with progress",
+              "Check assumptions and stopping criteria"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "AI が関連文書を先に並べても、見つけた件数だけでは未発見の件数は分からない。Delayed Countdown は、人の審査を続けながら再現性のある統計的根拠で召回率を把握する方法を扱う。都合のよい推定が出るまで抽出をやり直す方式とは異なる。",
+          "sections": [
+            {
+              "heading": "進捗で変わらない量を推定",
+              "paragraphs": [
+                "対象は、モデルが優先順位を決め、人が最終ラベルを付ける文書審査だ。未審査部分に残る関連文書の割合は進捗とともに変わる。そこで論文は、固定された集合全体に含まれる関連文書の総数を推定する。文書集合と正しいラベルが変わらなければ、審査によって総数そのものは変化しない。"
+              ]
+            },
+            {
+              "heading": "途中で一度抽出する",
+              "paragraphs": [
+                "ある程度審査した時点で、残りから無作為標本を取りラベルを付ける。残りの関連件数の区間に既知の関連件数を加え、全体の総数の区間へ変換する。その後は増えていく既審査の関連件数を使い、同じ推定から召回率の区間を計算し、論理的に不可能な境界を除く。非復元の単純無作為抽出と層化抽出を、それぞれの仮定の下で論じる。"
+              ]
+            },
+            {
+              "heading": "再抽出で合格を狙わない",
+              "paragraphs": [
+                "使い続けるのは固定総数に対する一つの推定であり、不都合な結果のたびに別の標本へ取り替えるのではない。標本を学習や工程管理に使える条件も論じるが、最終分類器の性能をその標本で直接測る設定とは異なる。テストデータを無条件に学習へ流してよいという意味でも、人のラベル誤りを無視してよいという意味でもない。"
+              ]
+            },
+            {
+              "heading": "実務への保証とは区別する",
+              "paragraphs": [
+                "主な証拠は統計的な導出と数値例で、あらゆる現場で費用を減らす大規模実証ではない。標本数、抽出時期、ラベル品質で区間の幅や費用は変わり、信頼区間も個別案件の正しさを保証しない。集合や関連性の定義が変われば固定総数の前提は崩れうる。文書品質の監査と工程検証が核心なのでデータガバナンスの主方向に分類する。法的助言や裁判所の承認としては紹介せず、プレプリントとして扱う。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "統計的検証の手順を本サイトが描き直した図。実案件の効果測定ではない",
+            "steps": [
+              "一部の文書を審査",
+              "標本から全体総数を推定",
+              "進捗で召回率区間を更新",
+              "仮定と終了条件を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Приоритизация документов с помощью ИИ помогает находить нужное, но не показывает, сколько важных записей осталось. Delayed Countdown предлагает сохранять статистическое основание для оценки полноты по мере ручной проверки, не повторяя выборку до удобного результата.",
+          "sections": [
+            {
+              "heading": "Неизменная величина",
+              "paragraphs": [
+                "Модель задаёт порядок просмотра, а окончательные метки ставят люди. Доля релевантных документов среди ещё не просмотренных меняется. Вместо неё авторы оценивают общее число релевантных документов в фиксированной коллекции: при неизменных коллекции и правильных метках эта величина постоянна."
+              ]
+            },
+            {
+              "heading": "Выборка в ходе работы",
+              "paragraphs": [
+                "В выбранный момент из непроверенной части берут случайную выборку и размечают её. Интервал для оставшегося релевантного количества складывают с уже известным количеством, получая оценку общего числа. Затем полноту пересчитывают из того же интервала с учётом новых проверенных записей, исключая логически невозможные границы. Рассмотрены простая случайная выборка без возвращения и стратифицированная выборка с соответствующими предпосылками."
+              ]
+            },
+            {
+              "heading": "Почему это не подбор удачного теста",
+              "paragraphs": [
+                "Переиспользуется оценка постоянного общего числа, а не новые выборки, из которых выбирают выгодный ответ. Обсуждаются условия использования выбранных документов в обучении и управлении процессом: оценивается коллекция, а не конечный классификатор непосредственно на этом тесте. Это не разрешение произвольно обучаться на тестовых данных или игнорировать ошибки разметки."
+              ]
+            },
+            {
+              "heading": "Границы доказательства",
+              "paragraphs": [
+                "Основа работы — статистические рассуждения и численные примеры, а не масштабное доказательство экономии на любых проектах. Размер и момент выборки, качество меток влияют на полезность; доверительный интервал не гарантирует правильность отдельного проекта. Изменение коллекции или определения релевантности нарушает предпосылку. Мы относим аудит качества документов и проверку процесса к основному направлению управления данными. Это не юридическая рекомендация и не утверждение об одобрении судами. Статус — препринт."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема статистической проверки, не измерение эффекта проекта",
+            "steps": [
+              "Просмотреть часть документов",
+              "Оценить постоянное общее число",
+              "Обновлять интервал полноты",
+              "Проверять предпосылки и условия завершения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "在文件審閱中，AI 可以把可能相關的材料排到前面，但“已經找到了多少”和“還漏掉多少”是兩個問題。Delayed Countdown 研究如何在人工持續審閱的同時，保留對整體召回率的統計依據，而不是不斷重新抽樣，直到得到一個看起來滿意的結果。",
+          "sections": [
+            {
+              "heading": "估計一個不會隨進度變化的量",
+              "paragraphs": [
+                "作者針對以人工審閱為中心的技術輔助審閱流程：模型決定優先看什麼，人給出最終標籤。通常未審集合中的相關比例會隨審閱變化，直接重複使用舊估計容易出錯。論文改為估計固定文件集合中相關材料的總數；只要集合和正確標籤不變，這個總數不會因多看了幾份文件而改變。"
+              ]
+            },
+            {
+              "heading": "先審一部分，再抽一次樣",
+              "paragraphs": [
+                "方法在某個時點從尚未審閱的文件中隨機抽樣並標註，估計剩餘相關數量的置信區間，再加上已經找到的相關數量，得到全庫總量的區間。隨後用不斷增加的已審相關數，確定性地換算各階段的召回率區間，同時剔除不可能的邊界值。論文允許簡單無放回隨機抽樣，也討論分層抽樣，關鍵是維持相應統計假設。"
+              ]
+            },
+            {
+              "heading": "為什麼不是反覆試到過關",
+              "paragraphs": [
+                "更新使用的是同一份對固定總量的估計，不是每次不滿意就另抽一批並選擇有利結果。論文還討論抽樣材料進入訓練或過程控制的條件，因為它評估的是審閱流程中的固定總量，而非拿該樣本直接測試某個最終分類器。這不能推廣成允許隨意把測試資料用於訓練，也不能忽略人為標籤質量。"
+              ]
+            },
+            {
+              "heading": "方法論結果與實際保障的距離",
+              "paragraphs": [
+                "主要貢獻是統計推導和數值說明，不是證明在所有真實專案裡都降低費用的大規模部署實驗。樣本量與抽樣時機仍會影響成本和區間寬度，置信區間也不是某個專案必然正確的保證。若文件集合、相關性定義或人工標籤發生變化，固定總量的前提可能失效。本站將其歸入資料治理主方向，依據是文件質量審計與過程驗證這一核心問題；不把研究結論寫成法律意見或司法認可。本條為預印本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按統計驗證流程重繪的解釋圖，非真實專案效果圖",
+            "steps": [
+              "審閱部分文件",
+              "抽樣估計全庫相關總量",
+              "隨進度換算召回區間",
+              "檢查假設與停止條件"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "direct-passk-thought-pruning",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.31667v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.31667v1"
+        },
+        {
+          "label": "arXiv:2610.31667v1 · full paper",
+          "url": "https://arxiv.org/html/2610.31667v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让推理模型同时尝试许多解法，可能提高至少找到一个正确答案的机会，但把每条思路都生成到底很贵。这篇论文研究先生成一段，再选择少数路线继续：选择时既要看单条路线的质量，也要避免留下的一组路线犯同样的错。",
+          "sections": [
+            {
+              "heading": "把选一组与选最好的一条分开",
+              "paragraphs": [
+                "只按质量分数排序，可能选出几条高度相似、一起出错的思路；只追求不同，又可能浪费预算在明显不可靠的思路上。作者直接以 pass@k 为目标，即保留的 k 条路线中至少一条最终正确的概率，并用隐状态特征描述路线间的相关性。这里的任务是推理时的候选裁剪，未涉及 Agent 规划、记忆或知识检索。"
+              ]
+            },
+            {
+              "heading": "可计算的是一个近似目标",
+              "paragraphs": [
+                "方法用线性探针估计前缀质量，以潜在高斯模型表达联合正确性，再用局部二次近似得到便于计算的集合目标。贪心选择配合秩一更新降低选择成本。论文给出的单调性、次模性与近似保证针对这个形式化目标，并非证明现实语言模型的真实正确率一定满足同样保证；这个区别决定了理论结论能用到哪里。"
+              ]
+            },
+            {
+              "heading": "实验怎样判定答案",
+              "paragraphs": [
+                "作者测试八个开放权重推理模型，使用不同难度的数学竞赛题组合，每个模型起始约六百题，并去除一百二十八次尝试中全对或全错的题。实验采用八折交叉验证、二十次随机划分重复，完整路线的令牌上限为 32,768。答案等价性由 Qwen3-32B 判断，不是独立人工或纯符号证明。不同模型档位使用不同题集，不能直接把分数当统一排行榜。"
+              ]
+            },
+            {
+              "heading": "收益与适用边界",
+              "paragraphs": [
+                "作者报告，这种同时考虑质量与多样性的裁剪在所测模型上优于质量排序、仅多样性及随机选择等比较，保留数量适中时尤为明显。但生成前缀和运行选择器仍要付出成本；更晚裁剪带来更多信息，也消耗更多令牌。结果集中于数学推理及筛选后的题目，并不证明开放任务或生产系统都有同样收益。本站将其计入其他方向的通用推理研究，按预印本介绍，不占 Agent 等主方向名额。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依候选裁剪机制重绘的解释图，非成功率曲线",
+            "steps": [
+              "并行生成推理前缀",
+              "估计质量与相关性",
+              "选择互补的 k 条路线",
+              "继续生成并核对答案"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Sampling many reasoning paths can improve the chance of finding a correct answer, but completing every path is costly. This paper studies generating prefixes first, then continuing only a selected subset. Good selection needs both promising individual paths and protection against shared mistakes.",
+          "sections": [
+            {
+              "heading": "A set is not its highest-ranked member",
+              "paragraphs": [
+                "Quality-only ranking can retain nearly identical wrong paths; diversity alone can keep unpromising ones. The authors target pass@k, the probability that at least one of k retained paths ends correctly, and use hidden representations to model dependence. This is inference-time reasoning pruning, not a study of agent planning, memory or retrieval."
+              ]
+            },
+            {
+              "heading": "An approximate objective",
+              "paragraphs": [
+                "A linear probe estimates prefix quality, and a latent Gaussian model represents joint correctness. A local quadratic approximation yields a tractable set objective, optimized greedily with rank-one updates. Monotonicity, submodularity and approximation guarantees apply to this formal surrogate. They do not prove an identical guarantee for the language model’s true success probability."
+              ]
+            },
+            {
+              "heading": "Experimental conditions",
+              "paragraphs": [
+                "Eight open-weight reasoning models are tested on tier-specific mixtures of competition mathematics, starting with roughly 600 problems per model and excluding problems that are always correct or always wrong across 128 trials. Evaluation uses eight-fold cross-validation repeated with twenty random partitions. Completed paths have a 32,768-token limit. Qwen3-32B judges answer equivalence rather than an independent human or purely symbolic proof. Different tiers use different problem sets, so scores are not a uniform model ranking."
+              ]
+            },
+            {
+              "heading": "Interpreting the gains",
+              "paragraphs": [
+                "The authors report improvements over quality-only, diversity-only and random pruning, especially at moderate retained-set sizes. Prefix generation and selection still cost computation; later pruning supplies more information at additional token expense. Evidence is concentrated on mathematics and filtered problems, not arbitrary open tasks or production systems. We count this as supplementary general-reasoning research, without assigning it to the Agent/RAG primary quota. The work is listed as a preprint."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of candidate pruning, not a success-rate curve",
+            "steps": [
+              "Generate reasoning prefixes",
+              "Estimate quality and dependence",
+              "Select k complementary paths",
+              "Complete and check answers"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "推論の道筋を多数試せば正答を得る機会は増えるが、すべて最後まで生成すると費用がかかる。本論文は途中まで生成してから少数を残す方法を扱う。個々の見込みだけでなく、残した道筋が同じ誤りを繰り返さないことも必要だ。",
+          "sections": [
+            {
+              "heading": "上位の一本とよい集合は違う",
+              "paragraphs": [
+                "品質点だけで選ぶと、よく似た誤答への道筋が残りうる。違いだけを重視すると、見込みの薄い候補に予算を使う。著者らは、残した k 本のうち少なくとも一本が正答に到達する確率 pass@k を目標にし、隠れ状態から候補間の依存を捉える。Agent の計画、記憶、検索ではなく推論時の候補削減が主題だ。"
+              ]
+            },
+            {
+              "heading": "理論保証の対象を限定する",
+              "paragraphs": [
+                "線形プローブで途中経過の品質を推定し、潜在ガウスモデルで正否の相関を表す。局所的な二次近似から計算可能な集合目的を作り、階数一の更新を用いた貪欲選択を行う。単調性、劣モジュラ性、近似保証はこの形式的な代理目的に対するもので、言語モデルの真の正答確率に同じ保証が成立する証明ではない。"
+              ]
+            },
+            {
+              "heading": "実験の条件",
+              "paragraphs": [
+                "八つの公開重み推論モデルを、規模に応じた数学競技問題の組み合わせで評価する。各モデルで約六百問から始め、百二十八回すべて正解または不正解の問題を除く。八分割交差検証を二十回の無作為分割で繰り返し、完成までの上限は 32,768 トークンとする。答えの同値性は Qwen3-32B が判定し、人手や記号的証明ではない。規模別に問題集合も違うため、モデルの統一順位表とは読めない。"
+              ]
+            },
+            {
+              "heading": "効果と費用を一緒に見る",
+              "paragraphs": [
+                "著者らは品質のみ、多様性のみ、無作為の選択より改善し、中程度の候補数で特に有効だったと報告する。ただし途中までの生成と選択器の計算は無料ではない。遅く削減するほど情報は増えるが、トークンも消費する。根拠は数学と選別後の問題が中心で、自由形式の作業全般や本番システムへの効果は未確認だ。一般推論の補助方向として数え、主方向の枠には入れない。採択を推定せずプレプリントとして収録する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "候補削減機構を本サイトが描き直した説明図。成功率の曲線ではない",
+            "steps": [
+              "推論の冒頭を並列生成",
+              "品質と依存を推定",
+              "補い合う k 本を選択",
+              "最後まで生成して照合"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Много параллельных рассуждений повышают шанс найти верный ответ, но доводить каждое до конца дорого. Работа предлагает сначала получить префиксы, затем продолжить выбранные пути. Важно учитывать и перспективность пути, и риск одинаковых ошибок у всей группы.",
+          "sections": [
+            {
+              "heading": "Лучший путь и лучший набор",
+              "paragraphs": [
+                "Ранжирование только по качеству может сохранить похожие неверные решения, а чистое разнообразие — бесперспективные. Цель pass@k выражает вероятность хотя бы одного верного ответа среди k продолженных путей. Зависимость оценивается по скрытым представлениям. Это отсечение рассуждений при выводе, а не исследование памяти, планирования агента или поиска знаний."
+              ]
+            },
+            {
+              "heading": "Приближение вместо точного оракула",
+              "paragraphs": [
+                "Линейный зонд оценивает качество префикса, латентная гауссова модель — совместную правильность. Локальное квадратичное приближение даёт вычислимую функцию набора; используется жадный выбор с обновлениями ранга один. Монотонность, субмодулярность и гарантии приближения относятся к этой формальной функции, а не непосредственно к истинной вероятности успеха модели."
+              ]
+            },
+            {
+              "heading": "Условия проверки",
+              "paragraphs": [
+                "Проверены восемь моделей с открытыми весами на разных по сложности наборах математических соревнований. Изначально около 600 задач на модель; исключены всегда верные или всегда неверные за 128 попыток. Восемь блоков перекрёстной проверки повторяются при двадцати случайных разбиениях. Лимит полного пути — 32 768 токенов. Эквивалентность ответа проверяет Qwen3-32B, не независимый человек или чисто символьное доказательство. Наборы для групп моделей различаются, поэтому это не единый рейтинг."
+              ]
+            },
+            {
+              "heading": "Выигрыш с оговорками",
+              "paragraphs": [
+                "Авторы сообщают преимущество над отбором только по качеству, только по разнообразию и случайным выбором, особенно при умеренном числе сохранённых путей. Генерация префиксов и селектор тоже требуют ресурсов; поздний отбор информативнее, но дороже в токенах. Данные относятся к математике и отфильтрованным задачам, не ко всем рабочим сценариям. Мы учитываем работу как дополнительное общее исследование рассуждений, не в основной квоте Agent/RAG. Статус — препринт."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема отсечения, не кривая успешности",
+            "steps": [
+              "Сгенерировать префиксы",
+              "Оценить качество и зависимость",
+              "Выбрать k дополняющих путей",
+              "Завершить и проверить ответы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓推理模型同時嘗試許多解法，可能提高至少找到一個正確答案的機會，但把每條思路都生成到底很貴。這篇論文研究先生成一段，再選擇少數路線繼續：選擇時既要看單條路線的質量，也要避免留下的一組路線犯同樣的錯。",
+          "sections": [
+            {
+              "heading": "把選一組與選最好的一條分開",
+              "paragraphs": [
+                "只按質量分數排序，可能選出幾條高度相似、一起出錯的思路；只追求不同，又可能浪費預算在明顯不可靠的思路上。作者直接以 pass@k 為目標，即保留的 k 條路線中至少一條最終正確的機率，並用隱狀態特徵描述路線間的相關性。這裡的任務是推理時的候選裁剪，未涉及 Agent 規劃、記憶或知識檢索。"
+              ]
+            },
+            {
+              "heading": "可計算的是一個近似目標",
+              "paragraphs": [
+                "方法用線性探針估計字首質量，以潛在高斯模型表達聯合正確性，再用區域性二次近似得到便於計算的集合目標。貪心選擇配合秩一更新降低選擇成本。論文給出的單調性、次模性與近似保證針對這個形式化目標，並非證明現實語言模型的真實正確率一定滿足同樣保證；這個區別決定了理論結論能用到哪裡。"
+              ]
+            },
+            {
+              "heading": "實驗怎樣判定答案",
+              "paragraphs": [
+                "作者測試八個開放權重推理模型，使用不同難度的數學競賽題組合，每個模型起始約六百題，並去除一百二十八次嘗試中全對或全錯的題。實驗採用八折交叉驗證、二十次隨機劃分重複，完整路線的令牌上限為 32,768。答案等價性由 Qwen3-32B 判斷，不是獨立人工或純符號證明。不同模型檔位使用不同題集，不能直接把分數當統一排行榜。"
+              ]
+            },
+            {
+              "heading": "收益與適用邊界",
+              "paragraphs": [
+                "作者報告，這種同時考慮質量與多樣性的裁剪在所測模型上優於質量排序、僅多樣性及隨機選擇等比較，保留數量適中時尤為明顯。但生成字首和執行選擇器仍要付出成本；更晚裁剪帶來更多資訊，也消耗更多令牌。結果集中於數學推理及篩選後的題目，並不證明開放任務或生產系統都有同樣收益。本站將其計入其他方向的通用推理研究，按預印本介紹，不佔 Agent 等主方向名額。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依候選裁剪機制重繪的解釋圖，非成功率曲線",
+            "steps": [
+              "並行生成推理字首",
+              "估計質量與相關性",
+              "選擇互補的 k 條路線",
+              "繼續生成並核對答案"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "clariedge-rag-query-clarification",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.28686v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.28686v1"
+        },
+        {
+          "label": "arXiv:2610.28686v1 · full paper",
+          "url": "https://arxiv.org/html/2610.28686v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG 检索到了资料，也未必知道用户究竟想问什么。“这张卡”可能指前文两张卡中的任何一张；一个看似完整的问题，也可能在资料中对应多个答案。ClariEdge 把“是否需要追问”和“怎样追问”放在一起研究，目标是少问无用的问题，也少在歧义尚未解决时直接作答。",
+          "sections": [
+            {
+              "heading": "歧义要结合上下文判断",
+              "paragraphs": [
+                "数据既包含真正有多种合理解释的问题，也包含随机选出的明确问题，以及表面模糊、实际能从对话消除歧义的困难负例。最后一类尤其重要：如果只看到“哪一个”就要求用户补充，系统会把本来清楚的对话变得繁琐。作者使用人工编写与模型生成后人工复核相结合的流程，构造对话及必要的检索材料。"
+              ]
+            },
+            {
+              "heading": "追问不是简单说请澄清",
+              "paragraphs": [
+                "对于确实含糊的问题，方法先定位有歧义的对象，再从资料与对话提取候选解释、去重并检查一致性。候选较少时，可以列出选项并附短说明；候选较多时列出清单，范围开放时再请用户指定。生成的参考追问由人工校正，使它问的是实际缺少的信息，而不是随意换句话重复用户的问题。"
+              ]
+            },
+            {
+              "heading": "准确率对应哪一步",
+              "paragraphs": [
+                "数据共有 3,892 例，训练集 3,509 例、测试集 383 例。作者用轻量 LoRA 微调三十亿参数 Granite 模型，也与提示式更大模型等方案比较；报告的百分之九十六点六是歧义分类准确率，不是最终问答正确率。检索前与检索后都可插入该检查，实验支持困难负例对区分真假歧义的价值。"
+              ]
+            },
+            {
+              "heading": "还不是完整的多轮澄清系统",
+              "paragraphs": [
+                "实验只覆盖英语，每次生成一个追问，并未证明跨语言迁移或连续多轮缩小意图都有效。追问生成还使用模型评审；标注一致性另以八十例分类与二十个追问进行检查，不能视为全部测试回答都经过独立人工评分。本站的工程理解是先判断是否真的需要用户介入，再选择具体追问；实际系统仍需检查额外延迟与用户体验。本条保留原预印本口径，此次只补正文，不改发表与收录日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文澄清流程重绘的解释图，非用户研究结果",
+            "steps": [
+              "读取对话与可用资料",
+              "区分真实歧义与困难负例",
+              "整理候选解释",
+              "提出有针对性的追问"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Retrieved evidence does not necessarily reveal what a user means. “This card” may refer to either of two cards in a conversation, and a complete-looking question may have several grounded interpretations. ClariEdge studies both whether clarification is needed and how to ask, avoiding unnecessary interruptions as well as premature answers.",
+          "sections": [
+            {
+              "heading": "Ambiguity is contextual",
+              "paragraphs": [
+                "The dataset combines genuinely ambiguous examples, randomly selected clear examples and hard negatives that look ambiguous but are resolved by the conversation. Those negatives matter: a phrase such as “which one” does not automatically justify another question. Human writing and model generation followed by human checking produce conversations and, where needed, retrieved passages."
+              ]
+            },
+            {
+              "heading": "Ask for the missing distinction",
+              "paragraphs": [
+                "For an ambiguous query, the pipeline locates the uncertain entity, extracts candidate interpretations from dialogue and evidence, deduplicates and checks them, then chooses a clarification style. A few options can include short explanations; larger sets use lists, while open-ended ambiguity calls for an open question. Humans correct the reference clarifications rather than treating generated wording as ground truth without review."
+              ]
+            },
+            {
+              "heading": "What 96.6% measures",
+              "paragraphs": [
+                "There are 3,892 examples, with 3,509 for training and 383 for testing. A lightweight LoRA on a three-billion-parameter Granite model is compared with prompted larger models and other variants. The reported 96.6% is ambiguity-classification accuracy, not final question-answering accuracy. Tests support hard negatives and both pre-retrieval and post-retrieval checks."
+              ]
+            },
+            {
+              "heading": "Not a complete dialogue policy",
+              "paragraphs": [
+                "Evaluation is English-only and generates one clarification at a time; multilingual transfer and iterative clarification remain open. Generation evaluation uses model judging. Annotation agreement is checked on eighty classification examples and twenty clarifications, not independent human scoring of every output. Our engineering interpretation is to establish whether user intervention is necessary before choosing a specific question. Latency and user experience still need deployment testing. The existing preprint status and original dates are retained; this update adds the article only."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of clarification, not a user-study result",
+            "steps": [
+              "Read dialogue and evidence",
+              "Distinguish true ambiguity from hard negatives",
+              "Organize interpretations",
+              "Ask a targeted question"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "資料を取得できても、利用者が何を指しているか分かるとは限らない。「このカード」が前の二枚のどちらか分からない場合も、完全な質問が資料中で複数の意味を持つ場合もある。ClariEdge は、確認が必要かの判断と、何を聞き返すかを一緒に研究する。",
+          "sections": [
+            {
+              "heading": "文脈で曖昧さを判断する",
+              "paragraphs": [
+                "データには本当に複数の解釈がある質問、無作為に選んだ明確な質問、一見曖昧でも会話から解決できる難しい負例を含む。最後の区分がないと、「どれ」という表現だけで余計な質問をしかねない。人が書いた例と、モデル生成後に人が確認した例を組み合わせ、必要に応じて検索資料も付ける。"
+              ]
+            },
+            {
+              "heading": "不足している区別を尋ねる",
+              "paragraphs": [
+                "曖昧な対象を見つけ、会話と資料から候補を抽出し、重複と整合性を確認する。少数なら短い説明付きの候補、中程度なら一覧、候補が開いている場合は対象を指定する質問にする。参考となる確認文も人が修正する。単に利用者の問いを言い換えるのではなく、回答に必要な区別を明示する仕組みだ。"
+              ]
+            },
+            {
+              "heading": "九十六・六パーセントの意味",
+              "paragraphs": [
+                "全 3,892 例を学習 3,509 例、テスト 383 例に分ける。三十億パラメータの Granite に軽量 LoRA を適用し、大きなモデルへのプロンプトなどと比較した。九十六・六パーセントは曖昧さの分類精度で、最終回答の正答率ではない。難しい負例と、検索前・検索後の両方での検査の有用性を報告する。"
+              ]
+            },
+            {
+              "heading": "会話全体の解決は未検証",
+              "paragraphs": [
+                "対象言語は英語のみで、一度に一つの確認質問を作る。言語間の移行や繰り返しの絞り込みは今後の課題だ。生成文の評価にはモデル審査を使い、注釈一致の確認は分類八十例と質問二十件であって、全出力の独立した人手評価ではない。本サイトの工程上の解釈は、まず介入の必要性を確かめてから具体的に尋ねること。遅延や使い心地の実証は別に必要だ。既存のプレプリント区分と元の日付を保ち、今回は本文のみを追加する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の確認手順を本サイトが描き直した図。利用者実験の結果ではない",
+            "steps": [
+              "会話と資料を読む",
+              "真の曖昧さを判別",
+              "解釈候補を整理",
+              "不足情報を尋ねる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Найденные источники не всегда объясняют намерение пользователя. «Эта карта» может означать любую из двух, а внешне полный вопрос — иметь несколько трактовок. ClariEdge изучает, нужно ли уточнение и как его сформулировать, чтобы не мешать лишними вопросами и не отвечать преждевременно.",
+          "sections": [
+            {
+              "heading": "Контекст решает",
+              "paragraphs": [
+                "В наборе есть настоящая неоднозначность, случайные ясные вопросы и трудные отрицательные примеры: формально неясные, но разрешимые по разговору. Последняя категория не позволяет считать любое «который» поводом для уточнения. Примеры написаны людьми либо сгенерированы моделью и проверены людьми; часть снабжена найденными документами."
+              ]
+            },
+            {
+              "heading": "Уточнять конкретное различие",
+              "paragraphs": [
+                "Система находит неоднозначный объект, извлекает варианты из диалога и источников, убирает повторы и проверяет согласованность. Для нескольких вариантов добавляются пояснения, для большего набора — список, для открытого множества — общий уточняющий вопрос. Эталонные формулировки исправляются людьми, а не принимаются автоматически."
+              ]
+            },
+            {
+              "heading": "Что означает точность",
+              "paragraphs": [
+                "Всего 3 892 примера: 3 509 обучающих и 383 тестовых. Лёгкая LoRA для Granite с тремя миллиардами параметров сравнивается с подсказками более крупным моделям и другими вариантами. 96,6% — точность классификации неоднозначности, не правильность итогового ответа. Опыты поддерживают пользу трудных отрицательных примеров и проверок до и после поиска."
+              ]
+            },
+            {
+              "heading": "Не полная стратегия диалога",
+              "paragraphs": [
+                "Проверен только английский и одно уточнение за шаг. Перенос между языками и многоэтапное сужение намерения не подтверждены. Качество генерации оценивается также моделью; согласие разметчиков проверено на восьмидесяти классификациях и двадцати уточнениях, не на всех выходах. Наша инженерная интерпретация — сначала решить, нужна ли помощь пользователя, затем спрашивать конкретно. Задержку и удобство предстоит оценить отдельно. Статус препринта и исходные даты сохранены: дописан только материал."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема уточнения, не результат пользовательского исследования",
+            "steps": [
+              "Прочитать диалог и источники",
+              "Определить неоднозначность",
+              "Собрать варианты",
+              "Задать точный вопрос"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG 檢索到了資料，也未必知道使用者究竟想問什麼。“這張卡”可能指前文兩張卡中的任何一張；一個看似完整的問題，也可能在資料中對應多個答案。ClariEdge 把“是否需要追問”和“怎樣追問”放在一起研究，目標是少問無用的問題，也少在歧義尚未解決時直接作答。",
+          "sections": [
+            {
+              "heading": "歧義要結合上下文判斷",
+              "paragraphs": [
+                "資料既包含真正有多種合理解釋的問題，也包含隨機選出的明確問題，以及表面模糊、實際能從對話消除歧義的困難負例。最後一類尤其重要：如果只看到“哪一個”就要求使用者補充，系統會把本來清楚的對話變得繁瑣。作者使用人工編寫與模型生成後人工複核相結合的流程，構造對話及必要的檢索材料。"
+              ]
+            },
+            {
+              "heading": "追問不是簡單說請澄清",
+              "paragraphs": [
+                "對於確實含糊的問題，方法先定位有歧義的物件，再從資料與對話提取候選解釋、去重並檢查一致性。候選較少時，可以列出選項並附短說明；候選較多時列出清單，範圍開放時再請使用者指定。生成的參考追問由人工校正，使它問的是實際缺少的資訊，而不是隨意換句話重複使用者的問題。"
+              ]
+            },
+            {
+              "heading": "準確率對應哪一步",
+              "paragraphs": [
+                "資料共有 3,892 例，訓練集 3,509 例、測試集 383 例。作者用輕量 LoRA 微調三十億引數 Granite 模型，也與提示式更大模型等方案比較；報告的百分之九十六點六是歧義分類準確率，不是最終問答正確率。檢索前與檢索後都可插入該檢查，實驗支援困難負例對區分真假歧義的價值。"
+              ]
+            },
+            {
+              "heading": "還不是完整的多輪澄清系統",
+              "paragraphs": [
+                "實驗只覆蓋英語，每次生成一個追問，並未證明跨語言遷移或連續多輪縮小意圖都有效。追問生成還使用模型評審；標註一致性另以八十例分類與二十個追問進行檢查，不能視為全部測試回答都經過獨立人工評分。本站的工程理解是先判斷是否真的需要使用者介入，再選擇具體追問；實際系統仍需檢查額外延遲與使用者體驗。本條保留原預印本口徑，此次只補正文，不改發表與收錄日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文澄清流程重繪的解釋圖，非使用者研究結果",
+            "steps": [
+              "讀取對話與可用資料",
+              "區分真實歧義與困難負例",
+              "整理候選解釋",
+              "提出有針對性的追問"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "coater-continuous-ontology-assurance",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.24322v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.24322v1"
+        },
+        {
+          "label": "arXiv:2610.24322v1 · full paper",
+          "url": "https://arxiv.org/html/2610.24322v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "本体把领域里的概念及关系写成可共享的知识，但即使内部格式正确，也可能跟外部事实逐渐脱节。COATER 关注这种长期维护：把每条判断与明确的外部资源联系起来，持续记录哪些知识得到了支持，哪些需要人工重新检查。",
+          "sections": [
+            {
+              "heading": "外部资料提供证据而非自动裁决",
+              "paragraphs": [
+                "方法用可执行的“箭头”连接本体的一部分与一个范围明确的资源。比较结果可以支持已有断言、提出反例，或生成补全、纠正和重组任务。资源的范围与权威性必须先判断；某个资料库没有收录一个概念，不等于现实中不存在它，更不能直接把缺失变成否定事实。"
+              ]
+            },
+            {
+              "heading": "把维护工作留下可追溯记录",
+              "paragraphs": [
+                "一个断言可能同时面对多种证据，系统需要记录比较对象、得到的判断和后续任务，而不是抽取一句话就自动写回本体。覆盖率由这些已执行的检查来描述，也有助于看见尚未检查的空白。论文以软件语言工程领域的 FSL 本体为案例，讨论百科、标准、文献与软件制品等资源各自适合支持什么判断。"
+              ]
+            },
+            {
+              "heading": "六百分之六百是什么",
+              "paragraphs": [
+                "在 Wikipedia 链接维护实验中，符合既定链接政策的实体从 600 个中的 405 个增加到 600 个。这个结果含 17 个明确标记为不适用的例外，表示政策合规，不是六百个概念的语义都已被证明正确。作者对新处理链接先人工检查前十个，之后批量确认，既有支持判断也未全部重新核验，因此不能写成六百项全部经过逐条专家审查。"
+              ]
+            },
+            {
+              "heading": "覆盖率不等于本体质量的全部",
+              "paragraphs": [
+                "COATER 提供的是持续检查与维护流程，不替代逻辑一致性测试，也没有证明所有能力问题都能得到正确答案。外部资料会过时，资源之间可能冲突，人如何分流和复核仍有成本。可视化、交叉核验与人工工作量的长期测量被列为后续工作。本站认为它的价值在于把维护依据显式化；这是一种工程解释，不是新增实测结论。保留论文原有预印本、审阅中口径，此次补写不改原日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文外部证据维护机制重绘，非覆盖率实验图",
+            "steps": [
+              "选定断言与资源范围",
+              "运行有来源的比较",
+              "记录支持或挑战",
+              "人工处理修订任务"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An ontology can be internally well formed yet gradually drift away from external knowledge. COATER studies ongoing maintenance: connect specific assertions to scoped external resources, record supporting or challenging evidence, and turn unresolved issues into review tasks.",
+          "sections": [
+            {
+              "heading": "Evidence is not an automatic verdict",
+              "paragraphs": [
+                "Executable “arrows” compare part of an ontology with a specified resource. They can support an assertion, challenge it or motivate completion, correction and restructuring. Resource scope and authority must be judged first. Absence from a particular collection is not proof that a concept does not exist, and should not automatically become a negative assertion."
+              ]
+            },
+            {
+              "heading": "A traceable maintenance process",
+              "paragraphs": [
+                "A claim can face several sources with different coverage. The process retains what was compared, the assessment and any resulting task, rather than committing every extracted statement. Assurance coverage describes executed checks and exposes gaps. The paper uses the FSL software-language-engineering ontology and discusses what encyclopedias, standards, literature and software artifacts can legitimately support."
+              ]
+            },
+            {
+              "heading": "What 600 out of 600 means",
+              "paragraphs": [
+                "In a Wikipedia-link maintenance exercise, compliance rises from 405 of 600 entities to 600 of 600. This includes seventeen explicit not-applicable exceptions. It is compliance with a linkage policy, not proof of every entity’s semantic correctness. The first ten newly resolved links were manually inspected before bulk confirmation; earlier supporting assessments were not all rechecked. It would be inaccurate to call this six hundred individual expert validations."
+              ]
+            },
+            {
+              "heading": "Coverage is only one dimension",
+              "paragraphs": [
+                "The method organizes continuous checking; it does not replace logical-consistency tests or establish correct answers to all competency questions. External resources age and disagree, while human triage still costs effort. Cross-validation, visualization and long-term measurement of review effort remain future work. Our interpretation is that explicit maintenance evidence is useful, not that we measured new gains. We retain the original preprint/under-review description and dates; this run adds the editorial only."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of evidence-based maintenance, not the coverage experiment",
+            "steps": [
+              "Scope an assertion and resource",
+              "Run an attributable comparison",
+              "Record support or challenge",
+              "Review revision tasks"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "本体の形式が整っていても、外部の知識と徐々にずれることはある。COATER は、個々の断言と範囲を定めた外部資料を結び、支持と反証を記録し、見直すべき事項を作業として残す継続的な保守を扱う。",
+          "sections": [
+            {
+              "heading": "資料を自動的な正解にしない",
+              "paragraphs": [
+                "実行可能な「矢印」で本体の一部と特定の資源を比較する。結果は既存断言の支持、疑問、補完や修正、再構成につながる。ただし先に資料の範囲と権威性を判断する必要がある。一つの資料に概念が載っていないことを、現実に存在しない証拠として扱ってはならない。"
+              ]
+            },
+            {
+              "heading": "保守の根拠をたどれる形に",
+              "paragraphs": [
+                "一つの断言に複数の資料が関わる場合、比較対象、評価、発生した作業を残す。抽出した文を無条件で本体に書き戻すのではない。保証の被覆率は実行済みの検査を表し、未検査部分も見えるようにする。論文はソフトウェア言語工学の FSL 本体を例に、百科事典、標準、研究文献、ソフトウェア成果物が何の根拠になるかを整理する。"
+              ]
+            },
+            {
+              "heading": "六百分の六百の読み方",
+              "paragraphs": [
+                "Wikipedia リンクの保守で、定めた方針に適合する実体は六百中四百五から六百へ増えた。ただし十七件の「適用外」を含む。リンク方針への適合であり、全実体の意味が正しいと証明した数字ではない。新たに解決したリンクは最初の十件を人が確認した後に一括確定し、以前の支持判断もすべて再検査したわけではない。六百件の専門家による個別検証とは書けない。"
+              ]
+            },
+            {
+              "heading": "被覆率で全品質は測れない",
+              "paragraphs": [
+                "継続的な検査を整理する方法であり、論理的一貫性の検査を代替せず、すべての能力質問への正答も保証しない。資料の古さや食い違い、振り分けと再確認の人件費も残る。相互検証、可視化、人の作業量の長期測定は今後の課題だ。保守の根拠を明示する価値は本サイトの解釈で、新しい実測ではない。既存のプレプリント・審査中という記述と日付を保持し、今回は本文だけ補う。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "外部証拠による保守を本サイトが描き直した図。被覆率の実験図ではない",
+            "steps": [
+              "断言と資源の範囲を定義",
+              "出典付きで比較",
+              "支持や疑問を記録",
+              "修正作業を人が確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Онтология может быть формально корректной и при этом устаревать относительно внешних знаний. COATER организует постоянное обслуживание: связывает утверждения с источниками определённого охвата, сохраняет подтверждения и возражения и создаёт задания на пересмотр.",
+          "sections": [
+            {
+              "heading": "Источник не равен приговору",
+              "paragraphs": [
+                "Исполняемые «стрелки» сравнивают часть онтологии с конкретным ресурсом. Результат может поддержать утверждение, оспорить его или предложить дополнение и перестройку. Сначала нужно оценить границы и авторитетность источника. Отсутствие понятия в одной коллекции не доказывает его отсутствия в мире."
+              ]
+            },
+            {
+              "heading": "След обслуживания",
+              "paragraphs": [
+                "Для утверждения могут существовать разные свидетельства. Сохраняются объект сравнения, вывод и последующая задача, а не автоматически принимается любое извлечённое предложение. Покрытие проверками показывает и необследованные места. Примером служит онтология FSL для инженерии программных языков; обсуждаются энциклопедии, стандарты, литература и программные артефакты."
+              ]
+            },
+            {
+              "heading": "Как понимать 600 из 600",
+              "paragraphs": [
+                "В упражнении с Wikipedia соблюдение политики ссылок выросло с 405 до 600 сущностей из 600. Включены семнадцать исключений «неприменимо». Это соответствие политике, а не доказательство семантической правильности всех сущностей. Первые десять новых ссылок проверили вручную, затем подтверждали пакетно; прежние поддерживающие оценки не пересматривали полностью. Нельзя считать это шестьюстами отдельными экспертными проверками."
+              ]
+            },
+            {
+              "heading": "Не вся оценка качества",
+              "paragraphs": [
+                "Процесс не заменяет логическую проверку согласованности и не гарантирует ответы на все контрольные вопросы. Источники устаревают и конфликтуют, ручной разбор требует труда. Взаимная проверка, визуализация и долгосрочное измерение нагрузки остаются будущей работой. Польза явных оснований обслуживания — наша интерпретация, не новое измерение. Сохранены прежние даты и описание препринта на рассмотрении; добавлен только редакционный текст."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема обслуживания по источникам, не график покрытия",
+            "steps": [
+              "Ограничить утверждение и ресурс",
+              "Выполнить сравнение с источником",
+              "Записать поддержку или возражение",
+              "Проверить задачи изменения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "本體把領域裡的概念及關係寫成可共享的知識，但即使內部格式正確，也可能跟外部事實逐漸脫節。COATER 關注這種長期維護：把每條判斷與明確的外部資源聯絡起來，持續記錄哪些知識得到了支援，哪些需要人工重新檢查。",
+          "sections": [
+            {
+              "heading": "外部資料提供證據而非自動裁決",
+              "paragraphs": [
+                "方法用可執行的“箭頭”連線本體的一部分與一個範圍明確的資源。比較結果可以支援已有斷言、提出反例，或生成補全、糾正和重組任務。資源的範圍與權威性必須先判斷；某個資料庫沒有收錄一個概念，不等於現實中不存在它，更不能直接把缺失變成否定事實。"
+              ]
+            },
+            {
+              "heading": "把維護工作留下可追溯記錄",
+              "paragraphs": [
+                "一個斷言可能同時面對多種證據，系統需要記錄比較物件、得到的判斷和後續任務，而不是抽取一句話就自動寫回本體。覆蓋率由這些已執行的檢查來描述，也有助於看見尚未檢查的空白。論文以軟體語言工程領域的 FSL 本體為案例，討論百科、標準、文獻與軟體製品等資源各自適合支援什麼判斷。"
+              ]
+            },
+            {
+              "heading": "六百分之六百是什麼",
+              "paragraphs": [
+                "在 Wikipedia 連結維護實驗中，符合既定連結政策的實體從 600 箇中的 405 個增加到 600 個。這個結果含 17 個明確標記為不適用的例外，表示政策合規，不是六百個概念的語義都已被證明正確。作者對新處理連結先人工檢查前十個，之後批次確認，既有支援判斷也未全部重新核驗，因此不能寫成六百項全部經過逐條專家審查。"
+              ]
+            },
+            {
+              "heading": "覆蓋率不等於本體質量的全部",
+              "paragraphs": [
+                "COATER 提供的是持續檢查與維護流程，不替代邏輯一致性測試，也沒有證明所有能力問題都能得到正確答案。外部資料會過時，資源之間可能衝突，人如何分流和複核仍有成本。視覺化、交叉核驗與人工工作量的長期測量被列為後續工作。本站認為它的價值在於把維護依據顯式化；這是一種工程解釋，不是新增實測結論。保留論文原有預印本、審閱中口徑，此次補寫不改原日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文外部證據維護機制重繪，非覆蓋率實驗圖",
+            "steps": [
+              "選定斷言與資源範圍",
+              "執行有來源的比較",
+              "記錄支援或挑戰",
+              "人工處理修訂任務"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "biasguard-typed-record-quality",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.29669v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.29669v1"
+        },
+        {
+          "label": "arXiv:2610.29669v1 · full paper",
+          "url": "https://arxiv.org/html/2610.29669v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让多个模型讨论答案，并不自然等于答案可靠。如果不知道谁提出了哪条证据、谁反对、最后为何通过，讨论仍是一段难以审计的文字。BiasGuard-D 把这些交互改成结构化记录，研究如何在模型生成的数据进入业务系统前，检查记录之间是否自洽。",
+          "sections": [
+            {
+              "heading": "把分歧写成能查询的记录",
+              "paragraphs": [
+                "系统先分流待检查内容，由不同模型家族的对抗角色交换带标识的主张，再由三个模型家族构成的仲裁组表决。主张、引用、投票与修改指令都保存在类型明确的记录中。确定性的检查器验证引用覆盖和证据跨度的一致性；这里的“一致”来自具体规则，不等于机器已经证明自然语言含义正确。"
+              ]
+            },
+            {
+              "heading": "既查错误，也查误伤",
+              "paragraphs": [
+                "实验包含 BBQ 年龄题 115 项，其中完整点对点流程用 50 项，另有残障类别的消融；HaluEval 采用两组各 50 项的不同切片，一组输入合成幻觉答案，一组输入正确答案。第二组很重要，因为一个频繁重写的系统可能删除错误，也可能把本来正确的回答改坏。不能只报告幻觉清除而忽略这种代价。"
+              ]
+            },
+            {
+              "heading": "可审计不等于越改越好",
+              "paragraphs": [
+                "作者发现结构化不变量能发现仅检查引用存在性会遗漏的冲突，迭代讨论也影响记录质量。但正确输入的控制实验显示，双审查器中任一报警就升级，会产生大量不必要委派，部分正确回答被改成含糊表述。改用双审查器一致才升级可减少误伤，却会放过一部分真正幻觉。这是召回与精度之间的取舍，不是可以同时无损改进的承诺。"
+              ]
+            },
+            {
+              "heading": "实验与录用证据的边界",
+              "paragraphs": [
+                "HaluEval 的结果标签仍用模型评审，未由独立人工全量确认；仲裁器能力会影响效果，基于文本重叠的阈值也尚未在大量改写的语料上验证。本站把可查询的决策记录视为数据治理启发，不把其当成生产级准确性保证。论文作者注明获 CoopIS 2026 录用，但未说明轨道；本站保留“作者注明、轨道未明”的会议论文口径，不宣称独立核实主会录用。此次补正文，原始日期不变。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文审查机制重绘的解释图，非偏差消除效果图",
+            "steps": [
+              "审查器分流记录",
+              "对抗角色交换类型化主张",
+              "多方仲裁并保留投票",
+              "确定性检查与隔离"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Several models discussing an answer do not automatically make it trustworthy. Without records of claims, evidence, disagreement and approval, the discussion remains hard to audit. BiasGuard-D structures those exchanges so that generated data can be checked before entering downstream systems.",
+          "sections": [
+            {
+              "heading": "Queryable disagreement",
+              "paragraphs": [
+                "After triage, adversarial roles from distinct model families exchange identified claims, and a quorum from three families adjudicates. Claims, citations, votes and revision instructions become typed records. Deterministic checks cover referential completeness and consistency of cited spans. This is a concrete record-level rule, not a proof that natural-language meaning is correct."
+              ]
+            },
+            {
+              "heading": "Test errors and collateral damage",
+              "paragraphs": [
+                "Experiments include 115 BBQ Age items, with the full peer-to-peer condition on fifty, plus a Disability ablation. HaluEval uses two distinct fifty-item slices: synthesized hallucinated answers and correct answers. The correct-input control matters because rewriting can remove errors while also damaging information that was already right."
+              ]
+            },
+            {
+              "heading": "Auditability is not automatic improvement",
+              "paragraphs": [
+                "The authors find that structured invariants catch conflicts missed by reference-presence checks, and iterative deliberation affects record quality. But escalation when either of two auditors flags an item generates false delegations; some correct answers become hedges. Requiring agreement reduces false escalation while letting some genuine hallucinations pass. This is a precision–recall trade-off, not a promise to improve both without loss."
+              ]
+            },
+            {
+              "heading": "Evidence and acceptance limits",
+              "paragraphs": [
+                "HaluEval outcome labels still use model judging rather than independent human validation throughout. Arbiter capability matters, and overlap thresholds have not been tested on paraphrase-rich corpora. We treat queryable decision records as a governance idea, not a production accuracy guarantee. Authors report CoopIS 2026 acceptance without a specified track; that attribution is retained rather than upgraded to independently verified main-track acceptance. This backfill preserves all original dates."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of review, not a bias-reduction plot",
+            "steps": [
+              "Triage records",
+              "Exchange typed adversarial claims",
+              "Adjudicate and retain votes",
+              "Check invariants and quarantine"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "複数モデルが議論しても、それだけで回答が信頼できるわけではない。誰がどの証拠で主張し、反対し、なぜ承認したかを残さなければ監査は難しい。BiasGuard-D はこのやり取りを構造化し、生成データが業務システムに入る前に整合性を検査する。",
+          "sections": [
+            {
+              "heading": "照会できる形で対立を残す",
+              "paragraphs": [
+                "内容を振り分けた後、異なるモデル系列の対抗役が識別子付きの主張を交換し、三系列の仲裁組が判断する。主張、引用、投票、修正指示を型のある記録として保存する。決定的な検査器が参照の網羅と根拠範囲の整合を確認する。ただし具体的な記録上の規則であり、自然言語の意味を機械が証明したことにはならない。"
+              ]
+            },
+            {
+              "heading": "誤りと誤修正を両方調べる",
+              "paragraphs": [
+                "BBQ の年齢問題百十五件を用い、完全な対等通信条件は五十件、別に障害区分で構成要素を除く実験を行う。HaluEval は各五十件の別々の部分集合で、幻覚を合成した回答と正しい回答を入力する。後者は重要だ。積極的な書き換えは誤りを減らす一方、正しかった内容を損なう可能性がある。"
+              ]
+            },
+            {
+              "heading": "監査可能でも常に改善しない",
+              "paragraphs": [
+                "著者らは、参照が存在するかだけの検査で見逃す矛盾を構造的不変条件が捉え、反復議論も品質に影響すると報告する。しかし二つの審査器のどちらかが警告すれば上げる方式では、不要な再審査が多く、一部の正答が曖昧な文になった。両方の一致を要求すると誤修正は減るが、一部の本当の幻覚を通す。両方を無損失で改善する仕組みではない。"
+              ]
+            },
+            {
+              "heading": "証拠と採択情報の範囲",
+              "paragraphs": [
+                "HaluEval の結果判定にもモデル審査を使い、全件を独立した人が確認したわけではない。仲裁器の能力に依存し、文章の重なりの閾値も大量の言い換えで未検証だ。追跡可能な判断記録はガバナンスの着想として紹介し、本番精度の保証にはしない。著者は CoopIS 2026 採択を記すが軌道は不明で、独立確認した主会採択とは書かない。今回は本文補完だけで元の日付を保つ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "審査の仕組みを本サイトが描き直した図。偏り低減の結果ではない",
+            "steps": [
+              "記録を振り分け",
+              "型付き主張を交換",
+              "仲裁と投票を保存",
+              "不変条件を検査して隔離"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Обсуждение ответа несколькими моделями само по себе не создаёт доверия. Без истории утверждений, источников, возражений и одобрения его трудно проверить. BiasGuard-D превращает взаимодействия в структурированные записи для контроля генерируемых данных перед дальнейшим использованием.",
+          "sections": [
+            {
+              "heading": "Проверяемые разногласия",
+              "paragraphs": [
+                "После первичного отбора противостоящие роли из разных семейств моделей обмениваются утверждениями с идентификаторами. Решение принимает кворум трёх семейств. Сохраняются ссылки, голоса и инструкции исправления. Детерминированные проверки контролируют полноту ссылок и согласованность текстовых фрагментов. Это правило над записями, а не доказательство правильного понимания смысла."
+              ]
+            },
+            {
+              "heading": "Не повредить правильное",
+              "paragraphs": [
+                "Эксперименты включают 115 вопросов BBQ Age, полный одноранговый процесс на пятидесяти и отдельную абляцию Disability. HaluEval использует два разных набора по пятьдесят: ответы с синтетическими галлюцинациями и правильные ответы. Второй нужен, чтобы измерить ущерб от ненужного переписывания, а не только удаление ошибок."
+              ]
+            },
+            {
+              "heading": "Контролируемый компромисс",
+              "paragraphs": [
+                "Структурные инварианты обнаруживают конфликты, которые пропускает простая проверка наличия ссылок. Итерации обсуждения тоже влияют на качество. Но передача на разбор при тревоге любого из двух аудиторов создаёт ложные назначения, и часть правильных ответов становится уклончивой. Требование согласия уменьшает их число, одновременно пропуская некоторые настоящие галлюцинации. Это компромисс полноты и точности."
+              ]
+            },
+            {
+              "heading": "Ограничения свидетельств",
+              "paragraphs": [
+                "Метки результатов HaluEval оценивает также модель, а не независимые люди во всех случаях. Важна способность арбитра; пороги текстового пересечения не проверены на корпусах с обильным перефразированием. Мы рассматриваем журнал решений как идею управления данными, не гарантию производственной точности. Принятие на CoopIS 2026 указано авторами без трека; это не независимое подтверждение основного трека. При дополнении текста даты сохранены."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема проверки, не график устранения смещений",
+            "steps": [
+              "Первичный отбор",
+              "Обмен типизированными утверждениями",
+              "Арбитраж и сохранение голосов",
+              "Проверка инвариантов и изоляция"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓多個模型討論答案，並不自然等於答案可靠。如果不知道誰提出了哪條證據、誰反對、最後為何透過，討論仍是一段難以審計的文字。BiasGuard-D 把這些互動改成結構化記錄，研究如何在模型生成的資料進入業務系統前，檢查記錄之間是否自洽。",
+          "sections": [
+            {
+              "heading": "把分歧寫成能查詢的記錄",
+              "paragraphs": [
+                "系統先分流待檢查內容，由不同模型家族的對抗角色交換帶標識的主張，再由三個模型家族構成的仲裁組表決。主張、引用、投票與修改指令都儲存在型別明確的記錄中。確定性的檢查器驗證引用覆蓋和證據跨度的一致性；這裡的“一致”來自具體規則，不等於機器已經證明自然語言含義正確。"
+              ]
+            },
+            {
+              "heading": "既查錯誤，也查誤傷",
+              "paragraphs": [
+                "實驗包含 BBQ 年齡題 115 項，其中完整點對點流程用 50 項，另有殘障類別的消融；HaluEval 採用兩組各 50 項的不同切片，一組輸入合成幻覺答案，一組輸入正確答案。第二組很重要，因為一個頻繁重寫的系統可能刪除錯誤，也可能把本來正確的回答改壞。不能只報告幻覺清除而忽略這種代價。"
+              ]
+            },
+            {
+              "heading": "可審計不等於越改越好",
+              "paragraphs": [
+                "作者發現結構化不變數能發現僅檢查引用存在性會遺漏的衝突，迭代討論也影響記錄質量。但正確輸入的控制實驗顯示，雙審查器中任一報警就升級，會產生大量不必要委派，部分正確回答被改成含糊表述。改用雙審查器一致才升級可減少誤傷，卻會放過一部分真正幻覺。這是召回與精度之間的取捨，不是可以同時無損改進的承諾。"
+              ]
+            },
+            {
+              "heading": "實驗與錄用證據的邊界",
+              "paragraphs": [
+                "HaluEval 的結果標籤仍用模型評審，未由獨立人工全量確認；仲裁器能力會影響效果，基於文字重疊的閾值也尚未在大量改寫的語料上驗證。本站把可查詢的決策記錄視為資料治理啟發，不把其當成生產級準確性保證。論文作者註明獲 CoopIS 2026 錄用，但未說明軌道；本站保留“作者註明、軌道未明”的會議論文口徑，不宣稱獨立核實主會錄用。此次補正文，原始日期不變。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文審查機制重繪的解釋圖，非偏差消除效果圖",
+            "steps": [
+              "審查器分流記錄",
+              "對抗角色交換型別化主張",
+              "多方仲裁併保留投票",
+              "確定性檢查與隔離"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "tt-sax-language-shape-querying",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.30593v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.30593v1"
+        },
+        {
+          "label": "arXiv:2610.30593v1 · full paper",
+          "url": "https://arxiv.org/html/2610.30593v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "“先快速上升，再保持平稳”很容易用语言描述，却不容易在很长的时间序列里准确查找。TT-SAX 研究怎样把数值曲线变成语言模型更好理解的符号，让模型生成检索条件，再由原始数值验证候选，而不是要求模型直接读完整条曲线。",
+          "sections": [
+            {
+              "heading": "高度相似不代表走势相同",
+              "paragraphs": [
+                "传统 SAX 把时间窗口的数值水平压成字母序列，但相近的水平编码可能掩盖方向和速度的差别。作者增加一条与之对齐的趋势轨，跨相邻片段测量变化，用有语义提示的字母表达。两条轨保留“处在什么水平”和“怎样变化”的不同信息，这是一种面向语言查询的表示设计，不是给时间序列自动赋予业务含义。"
+              ]
+            },
+            {
+              "heading": "语言模型负责生成模式",
+              "paragraphs": [
+                "同一条流水线先做符号化，再让模型根据查询、编码说明及可选技能提示生成正则表达式，最后在符号串上寻找候选窗口。后续验证器回到原始数值检查。漏掉真答案无法由验证找回，多留候选则增加验证费用，所以评估必须同时关注召回率与留下多少窗口，不能只看筛得是否够少。"
+              ]
+            },
+            {
+              "heading": "基准和指标的具体含义",
+              "paragraphs": [
+                "主要实验使用 NLQTSBench 的 220 个多领域复合趋势查询，比较六种语言模型。另用公开生成器构造一千个去重查询做压力测试，但分布仍与原基准相近。论文的 lift 把召回与候选比例结合，并为候选比例设置百分之十的下限；它不是通常的答案准确率。作者报告，双轨表示在这些比较中保持较好的召回与候选数量平衡。"
+              ]
+            },
+            {
+              "heading": "尚未证明端到端普遍更快",
+              "paragraphs": [
+                "相近分布的一千题增加了样本量，不等于覆盖新的查询语言与真实业务需求。窗口、离散阈值和趋势定义仍会影响结果，语言编译与数值验证也有成本。因此不能把候选减少直接写成所有工作负载都按比例加速。作者注明 ADC 2026 录用、轨道未说明，且上传的是评审前稿；本站保留这一证据口径，不推测最终修订内容。此次只补写解读，不改原始日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文两阶段检索流程重绘，非真实曲线或性能图",
+            "steps": [
+              "数值转为水平与趋势双轨",
+              "语言查询编译为模式",
+              "符号匹配筛选候选",
+              "原始数值再次验证"
+            ]
+          }
+        },
+        "en": {
+          "lead": "“Rise rapidly, then stay flat” is easy to say but harder to locate in a long time series. TT-SAX studies a symbolic representation that a language model can translate into search patterns, followed by verification on raw values rather than asking the model to inspect the entire numerical history.",
+          "sections": [
+            {
+              "heading": "Level and trend differ",
+              "paragraphs": [
+                "Classical SAX encodes numerical levels into letters, but similar level strings can conceal different directions or speeds. The proposal adds an aligned trend track measured across neighboring segments, using mnemonic letters. The tracks separate where a value lies from how it changes. This is a query-oriented representation, not automatic interpretation of business meaning."
+              ]
+            },
+            {
+              "heading": "Compile, search, verify",
+              "paragraphs": [
+                "A shared pipeline symbolizes the series, then asks a language model to compile the query into a regular expression using an encoding guide and optional learned skills. Pattern matching returns candidate windows; raw-value verification follows. A missed answer cannot be recovered downstream, whereas extra candidates increase verification work. Both recall and candidate volume therefore matter."
+              ]
+            },
+            {
+              "heading": "Benchmark and metric scope",
+              "paragraphs": [
+                "The main evaluation uses 220 composite-trend queries from NLQTSBench across six language models. A thousand deduplicated queries from the public generator form a larger stress test, but not a different distribution. Lift combines recall with candidate fraction using a ten-percent floor on the latter; it is not ordinary answer accuracy. The authors report a favorable recall–candidate balance for the two-track representation in these comparisons."
+              ]
+            },
+            {
+              "heading": "No universal speed claim",
+              "paragraphs": [
+                "More same-distribution queries do not establish transfer to new query languages or business needs. Windows, thresholds and trend definitions matter, and compilation and numerical checking also cost resources. Fewer candidates do not imply proportional end-to-end acceleration everywhere. Authors report ADC 2026 acceptance without a track, while identifying the uploaded version as a pre-review manuscript. We retain those distinctions rather than inferring the final revision. This backfill changes no original dates."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of two-stage search, not a measured curve or performance chart",
+            "steps": [
+              "Encode levels and trends",
+              "Compile language into a pattern",
+              "Match candidate windows",
+              "Verify raw values"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "「急上昇してから横ばい」という条件は言葉では簡単でも、長い時系列から正確に探すのは難しい。TT-SAX は数値を言語モデルに分かりやすい記号へ変え、検索条件を生成し、最後に元の数値で候補を確かめる方法を研究する。",
+          "sections": [
+            {
+              "heading": "高さと変化を分ける",
+              "paragraphs": [
+                "従来の SAX は数値水準を文字列に圧縮するが、近い水準の並びでも変化の向きや速さが違うことがある。著者らは隣接区間をまたぐ変化を測り、意味を連想しやすい文字で表す傾向の軌道を追加する。水準の軌道と位置をそろえ、値の高さと動きを分けて保持する。業務上の意味を自動的に理解したという主張ではない。"
+              ]
+            },
+            {
+              "heading": "言語から検索パターンへ",
+              "paragraphs": [
+                "系列を記号化し、モデルが問い合わせ、符号の説明、任意の技能ガイドから正規表現を作る。記号列で候補を抽出し、後段で元の値に戻って検証する。落とした真の答えは後段では救えず、余分な候補は検証費用になる。そのため絞り込みの強さだけでなく、召回率も同時に見る必要がある。"
+              ]
+            },
+            {
+              "heading": "ベンチマークの範囲",
+              "paragraphs": [
+                "NLQTSBench の複合傾向クエリ二百二十件を六つの言語モデルで評価する。公開生成器から重複を除いた千件でも調べるが、分布は同じ系統だ。lift は召回と候補割合を組み合わせ、候補割合に十パーセントの下限を置く指標で、通常の回答正解率とは異なる。著者らは双軌道がこれらの条件で召回と候補数をよく両立したと報告する。"
+              ]
+            },
+            {
+              "heading": "処理全体の高速化は別の問題",
+              "paragraphs": [
+                "同じ分布の問題を増やしても、新しい問い合わせ言語や実務へ移る証拠にはならない。窓、離散化の閾値、傾向の定義に影響され、言語の変換と数値検査にも費用がある。候補数の減少を、そのまま全処理の比例した高速化とは書けない。著者は ADC 2026 採択と記すが軌道は不明で、アップロード版は審査前原稿だ。この区別を維持し、最終改訂内容を推測しない。今回は本文のみを加え、元の日付は保持する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "二段階検索を本サイトが描き直した図。実際の曲線や性能グラフではない",
+            "steps": [
+              "水準と傾向を符号化",
+              "言語をパターンへ変換",
+              "候補区間を抽出",
+              "元の数値で検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "«Быстро вырасти, затем оставаться ровным» легко описать словами, но трудно найти в длинном временном ряду. TT-SAX создаёт символьное представление, из которого языковая модель строит шаблон поиска, после чего кандидаты проверяются по исходным числам.",
+          "sections": [
+            {
+              "heading": "Уровень и движение",
+              "paragraphs": [
+                "Классический SAX кодирует уровни значений буквами, однако похожие уровни скрывают разную скорость и направление. Добавляется согласованная по позиции дорожка тренда с изменениями между соседними сегментами и мнемоническими буквами. Так отделяются положение значения и характер движения. Это представление для запросов, не автоматическое понимание бизнес-смысла."
+              ]
+            },
+            {
+              "heading": "Компиляция и проверка",
+              "paragraphs": [
+                "Сначала ряд символизируется. Затем модель по запросу, описанию кодировки и необязательным навыкам составляет регулярное выражение. Оно выбирает окна-кандидаты, а следующая стадия проверяет исходные значения. Потерянный ответ уже не восстановить, дополнительные кандидаты увеличивают работу. Поэтому важны и полнота, и объём кандидатов."
+              ]
+            },
+            {
+              "heading": "Размеры и метрики",
+              "paragraphs": [
+                "Основной тест — 220 запросов составных трендов NLQTSBench и шесть языковых моделей. Тысяча новых неповторяющихся запросов публичного генератора расширяет стресс-тест, но не меняет распределение. Lift сочетает полноту с долей кандидатов, ограничивая знаменатель снизу десятью процентами; это не обычная точность ответов. Авторы сообщают благоприятный баланс двух показателей у двухдорожечной схемы."
+              ]
+            },
+            {
+              "heading": "Не универсальное ускорение",
+              "paragraphs": [
+                "Больше однотипных запросов не доказывает перенос на новый язык или реальные потребности. Важны окна, пороги и определения тренда; компиляция и численная проверка тоже стоят ресурсов. Меньше кандидатов не означает пропорционального ускорения всей системы. Авторы указывают принятие на ADC 2026 без трека и называют загруженную версию дорецензионной. Мы сохраняем эту атрибуцию, не угадывая финальные изменения. При дополнении статьи исходные даты не меняются."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема двухэтапного поиска, не реальная кривая или график скорости",
+            "steps": [
+              "Кодировать уровень и тренд",
+              "Построить шаблон из запроса",
+              "Найти кандидатов",
+              "Проверить исходные числа"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "“先快速上升，再保持平穩”很容易用語言描述，卻不容易在很長的時間序列裡準確查詢。TT-SAX 研究怎樣把數值曲線變成語言模型更好理解的符號，讓模型生成檢索條件，再由原始數值驗證候選，而不是要求模型直接讀完整條曲線。",
+          "sections": [
+            {
+              "heading": "高度相似不代表走勢相同",
+              "paragraphs": [
+                "傳統 SAX 把時間視窗的數值水平壓成字母序列，但相近的水平編碼可能掩蓋方向和速度的差別。作者增加一條與之對齊的趨勢軌，跨相鄰片段測量變化，用有語義提示的字母表達。兩條軌保留“處在什麼水平”和“怎樣變化”的不同資訊，這是一種面向語言查詢的表示設計，不是給時間序列自動賦予業務含義。"
+              ]
+            },
+            {
+              "heading": "語言模型負責生成模式",
+              "paragraphs": [
+                "同一條流水線先做符號化，再讓模型根據查詢、編碼說明及可選技能提示生成正規表示式，最後在符號串上尋找候選視窗。後續驗證器回到原始數值檢查。漏掉真答案無法由驗證找回，多留候選則增加驗證費用，所以評估必須同時關注召回率與留下多少視窗，不能只看篩得是否夠少。"
+              ]
+            },
+            {
+              "heading": "基準和指標的具體含義",
+              "paragraphs": [
+                "主要實驗使用 NLQTSBench 的 220 個多領域複合趨勢查詢，比較六種語言模型。另用公開生成器構造一千個去重查詢做壓力測試，但分佈仍與原基準相近。論文的 lift 把召回與候選比例結合，併為候選比例設定百分之十的下限；它不是通常的答案準確率。作者報告，雙軌表示在這些比較中保持較好的召回與候選數量平衡。"
+              ]
+            },
+            {
+              "heading": "尚未證明端到端普遍更快",
+              "paragraphs": [
+                "相近分佈的一千題增加了樣本量，不等於覆蓋新的查詢語言與真實業務需求。視窗、離散閾值和趨勢定義仍會影響結果，語言編譯與數值驗證也有成本。因此不能把候選減少直接寫成所有工作負載都按比例加速。作者註明 ADC 2026 錄用、軌道未說明，且上傳的是評審前稿；本站保留這一證據口徑，不推測最終修訂內容。此次只補寫解讀，不改原始日期。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文兩階段檢索流程重繪，非真實曲線或效能圖",
+            "steps": [
+              "數值轉為水平與趨勢雙軌",
+              "語言查詢編譯為模式",
+              "符號匹配篩選候選",
+              "原始數值再次驗證"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "contestable-agent-metadata-stewardship",
+      "written_at": "2026-10-25",
+      "sources": [
+        {
+          "label": "arXiv:2610.31553v1 · original abstract and version metadata",
+          "url": "https://arxiv.org/abs/2610.31553v1"
+        },
+        {
+          "label": "arXiv:2610.31553v1 · full paper",
+          "url": "https://arxiv.org/html/2610.31553v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "传感器字段名相同，不代表它们测的是同一位置。设备型号、手册版本和既有映射都可能改变含义。本文讨论让 Agent 辅助管理这些元数据时，如何让人有机会质疑结论，并把证据、修改与批准留下来，而不是一键接受一个缺少来由的标签。",
+          "sections": [
+            {
+              "heading": "争议发生在提交之前",
+              "paragraphs": [
+                "作者提出把代理的分类建议与来源绑定，让不同专长的代理提出支持与反对意见，再由数据管理员接受、拒绝或改写。决策记录需保留模型版本、审核人和修改轨迹，历史只追加，不覆盖。已验证的结论还要经过门槛，才能升级为后续参考的先例。这些都是所提出的治理要求，不代表每个环节已在生产落地。"
+              ]
+            },
+            {
+              "heading": "用设备文档解释同名字段",
+              "paragraphs": [
+                "参考实现以空调设备点位为例，名称匹配角色与文档阅读角色对一个点位提出不同标签，管理员可据手册范围作决定。合成站点有 247 个点位，其中 18 个标记为含糊，但完整工作流实际只演示一个点位；不能把另外 229 个较短审阅路径写成已经自动正确处理的实验结果。"
+              ]
+            },
+            {
+              "heading": "本体标签选择与图验证不同",
+              "paragraphs": [
+                "示例使用 Brick 类名，但其中送风与出风类名在所引用版本中存在等价或别名关系。实现仍按三个标签评分，因此并不等于对三个独立本体概念完成正确分类，也不是 Brick 实例图的验证。论文明确提出实际部署应先规范等价标签，记录本体版本，并对设备与点位之间的图关系另做检查。"
+              ]
+            },
+            {
+              "heading": "留下证据也不能保证正确",
+              "paragraphs": [
+                "另一个保修故障案例展示如何组织跨系统证据，但完整记录与先例升级门槛仍是提案。相同来源拆成多条论据可能放大分数，审计记录可重建决定，却不自动证明决定正确。作者尚未测量审核时间、误提交与后续撤销等真实收益。本站把它当作元数据治理架构的研究讨论，而非品牌案例推广或已验证的全自动治理产品。保留原预印本和日期，此次只补写正文。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依论文提出的治理链重绘，含尚待实现环节，并非部署成效图",
+            "steps": [
+              "收集有版本的证据",
+              "代理提出可质疑建议",
+              "管理员审阅并提交",
+              "保留溯源并审核先例资格"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Identical sensor names need not mean identical locations: equipment models, manual revisions and previous mappings can change their meaning. This paper asks how agent-assisted metadata management can let a person challenge a proposal and retain its evidence, edits and approval instead of merely accepting a label.",
+          "sections": [
+            {
+              "heading": "Contest before committing",
+              "paragraphs": [
+                "Proposals cite their sources, specialist agents provide supporting and opposing arguments, and a steward accepts, rejects or modifies the decision. Records retain model versions, reviewers and append-only history. Verified decisions must pass another gate before becoming precedents. These are proposed governance requirements, not evidence that every stage is deployed."
+              ]
+            },
+            {
+              "heading": "A bounded equipment example",
+              "paragraphs": [
+                "The reference implementation uses HVAC point classification, with name-matching and document-reading roles proposing labels for one point. The synthetic site contains 247 points, eighteen marked ambiguous, but the full workflow is demonstrated on only one point. The shorter review path proposed for the other 229 is not a measured automatic-correctness result."
+              ]
+            },
+            {
+              "heading": "Labels are not graph validation",
+              "paragraphs": [
+                "The example uses Brick class labels, including two labels that are equivalent or aliases in the cited ontology version. The implementation nevertheless scores three labels separately. It therefore does not establish three independent ontology choices or validate a Brick instance graph. Deployment would need canonical labels, recorded ontology versions and separate checks of equipment–point relationships."
+              ]
+            },
+            {
+              "heading": "A reconstructable decision can still be wrong",
+              "paragraphs": [
+                "A warranty example illustrates cross-system evidence, while the full record and precedent-promotion gate remain proposed. Splitting correlated evidence into several arguments can inflate margins. No measured reduction in review time, erroneous commits or later reversals is established. We treat this as research on metadata-governance architecture, not brand promotion or a validated fully automatic product. Original preprint status and dates are retained; only the editorial is added."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial reconstruction of a proposed governance chain, including unfinished stages; not deployment results",
+            "steps": [
+              "Collect versioned evidence",
+              "Propose contestable classifications",
+              "Steward reviews and commits",
+              "Retain lineage and gate precedents"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じセンサー名でも、測っている場所が同じとは限らない。機種、手順書の版、過去の対応付けで意味は変わる。本論文は Agent が補助するメタデータ管理で、人が結論に異議を唱え、証拠、編集、承認を残せる仕組みを考える。",
+          "sections": [
+            {
+              "heading": "確定する前に異議を扱う",
+              "paragraphs": [
+                "提案を出典に結び、専門の違う代理が賛否の根拠を出し、管理者が受諾、拒否、修正を選ぶ。モデルの版、審査者、変更履歴を残し、履歴は追記する。検証した決定も別の門を通ってから後続作業の先例にする。これらは提案するガバナンス要件で、すべてが本番に導入済みという証拠ではない。"
+              ]
+            },
+            {
+              "heading": "設備の例で何を動かしたか",
+              "paragraphs": [
+                "参照実装は空調設備の点位分類で、名前を見る役と文書を読む役が一つの点位に異なるラベルを提案する。合成サイトには二百四十七点あり、十八点が曖昧とされるが、完全な流れを実行したのは一点だ。残る二百二十九点への短い審査経路を、実測した自動正答の結果として扱ってはいけない。"
+              ]
+            },
+            {
+              "heading": "ラベルと本体グラフを分ける",
+              "paragraphs": [
+                "例では Brick のクラス名を使うが、参照版で同値または別名に当たる二つのラベルが含まれる。実装は三ラベルを別々に採点するので、三つの独立した本体概念の正しい選択を示さず、Brick の実体グラフも検証していない。実装へ進むなら同値名を正規化し、本体の版を記録し、設備と点位の関係を別に検査する必要がある。"
+              ]
+            },
+            {
+              "heading": "追跡できても正しいとは限らない",
+              "paragraphs": [
+                "保修故障の例はシステム間の根拠の整理を示すが、完全な記録と先例昇格の門は提案段階だ。同じ出典を複数の論拠に分ければ点数を過大にできる。判断を再構成できることは、正しさの保証ではない。審査時間、誤確定、後の取り消しの改善も未測定だ。ブランド宣伝や実証済みの全自動製品ではなく、メタデータ統治の設計研究として扱う。元のプレプリント区分と日付を保持し、本文のみ補う。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "未実装部分を含む提案の流れを本サイトが描き直した図。導入効果ではない",
+            "steps": [
+              "版付きの証拠を収集",
+              "異議を扱える提案",
+              "管理者が審査・確定",
+              "溯源と先例資格を記録"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Одинаковое имя датчика не гарантирует одинаковое назначение: значение зависит от модели оборудования, версии руководства и прошлых сопоставлений. Работа рассматривает управление метаданными с агентами, где человек может оспорить предложение и сохранить основания, правки и одобрение.",
+          "sections": [
+            {
+              "heading": "Оспаривание до записи",
+              "paragraphs": [
+                "Предложения снабжаются источниками, специализированные агенты выдвигают доводы за и против, а распорядитель данных принимает, отклоняет или изменяет решение. Сохраняются версии моделей, проверяющие и история только с добавлением. Проверенное решение отдельно допускается в прецеденты. Это требования предлагаемой архитектуры, не свидетельство полного внедрения."
+              ]
+            },
+            {
+              "heading": "Ограниченный пример",
+              "paragraphs": [
+                "Эталонная реализация классифицирует точки HVAC: роли сопоставления имени и чтения документации предлагают варианты для одной точки. Синтетический объект включает 247 точек, восемнадцать неоднозначных, но полный процесс показан лишь для одной. Предложенный короткий путь проверки остальных 229 не является измеренным результатом автоматической правильности."
+              ]
+            },
+            {
+              "heading": "Метки и онтологический граф",
+              "paragraphs": [
+                "Используются имена классов Brick, среди которых две метки эквивалентны или являются псевдонимами в указанной версии. Реализация всё же оценивает три метки отдельно. Это не три независимых понятия и не проверка графа экземпляров Brick. Для внедрения нужны канонизация, версия онтологии и отдельный контроль связей оборудования с точками."
+              ]
+            },
+            {
+              "heading": "Восстановимость не равна истинности",
+              "paragraphs": [
+                "Пример гарантийного отказа иллюстрирует межсистемные доказательства, но полная запись и допуск в прецеденты пока предложены. Несколько доводов из одного источника могут завысить оценку. Не измерены время проверки, ошибочные записи и последующие отмены. Мы рассматриваем архитектурное исследование управления метаданными, не рекламу бренда или проверенный полностью автоматический продукт. Статус препринта и исходные даты сохранены; дополнен только текст."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Редакционная схема предложенного процесса с ещё не реализованными этапами; не эффект внедрения",
+            "steps": [
+              "Собрать версионированные источники",
+              "Предложить оспоримую классификацию",
+              "Проверка и запись человеком",
+              "Сохранить происхождение и допуск прецедентов"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "感測器欄位名相同，不代表它們測的是同一位置。裝置型號、手冊版本和既有對映都可能改變含義。本文討論讓 Agent 輔助管理這些後設資料時，如何讓人有機會質疑結論，並把證據、修改與批准留下來，而不是一鍵接受一個缺少來由的標籤。",
+          "sections": [
+            {
+              "heading": "爭議發生在提交之前",
+              "paragraphs": [
+                "作者提出把代理的分類建議與來源繫結，讓不同專長的代理提出支援與反對意見，再由資料管理員接受、拒絕或改寫。決策記錄需保留模型版本、稽核人和修改軌跡，歷史只追加，不覆蓋。已驗證的結論還要經過門檻，才能升級為後續參考的先例。這些都是所提出的治理要求，不代表每個環節已在生產落地。"
+              ]
+            },
+            {
+              "heading": "用裝置文件解釋同名欄位",
+              "paragraphs": [
+                "參考實現以空調裝置點位為例，名稱匹配角色與文件閱讀角色對一個點位提出不同標籤，管理員可據手冊範圍作決定。合成站點有 247 個點位，其中 18 個標記為含糊，但完整工作流實際只演示一個點位；不能把另外 229 個較短審閱路徑寫成已經自動正確處理的實驗結果。"
+              ]
+            },
+            {
+              "heading": "本體標籤選擇與圖驗證不同",
+              "paragraphs": [
+                "示例使用 Brick 類名，但其中送風與出風類名在所引用版本中存在等價或別名關係。實現仍按三個標籤評分，因此並不等於對三個獨立本體概念完成正確分類，也不是 Brick 例項圖的驗證。論文明確提出實際部署應先規範等價標籤，記錄本體版本，並對裝置與點位之間的圖關係另做檢查。"
+              ]
+            },
+            {
+              "heading": "留下證據也不能保證正確",
+              "paragraphs": [
+                "另一個保修故障案例展示如何組織跨系統證據，但完整記錄與先例升級門檻仍是提案。相同來源拆成多條論據可能放大分數，審計記錄可重建決定，卻不自動證明決定正確。作者尚未測量稽核時間、誤提交與後續撤銷等真實收益。本站把它當作後設資料治理架構的研究討論，而非品牌案例推廣或已驗證的全自動治理產品。保留原預印本和日期，此次只補寫正文。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依論文提出的治理鏈重繪，含尚待實現環節，並非部署成效圖",
+            "steps": [
+              "收集有版本的證據",
+              "代理提出可質疑建議",
+              "管理員審閱並提交",
+              "保留溯源並稽核先例資格"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

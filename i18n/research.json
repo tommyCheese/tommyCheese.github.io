@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-24",
+  "updated_at": "2026-10-25",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,71 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "adaptive-skill-granularity-recovery",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Zhang, Dingxuan et al. · arXiv:2610.31461v1",
+      "url": "https://arxiv.org/abs/2610.31461v1",
+      "collected_at": "2026-10-25"
+    },
+    {
+      "id": "simulated-control-evaluations",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "agents",
+        "security",
+        "papers"
+      ],
+      "source": "Olmo, Jeffrey et al. · arXiv:2610.31593v1",
+      "url": "https://arxiv.org/abs/2610.31593v1",
+      "collected_at": "2026-10-25"
+    },
+    {
+      "id": "qprotfuse-query-guided-protein-rag",
+      "kind": "preprint",
+      "published_at": "2026-10-19",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Pan, Mianzhi et al. · arXiv:2610.30180v1",
+      "url": "https://arxiv.org/abs/2610.30180v1",
+      "collected_at": "2026-10-25"
+    },
+    {
+      "id": "delayed-countdown-review-validation",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Lewis, David D. et al. · arXiv:2610.31311v1",
+      "url": "https://arxiv.org/abs/2610.31311v1",
+      "collected_at": "2026-10-25"
+    },
+    {
+      "id": "direct-passk-thought-pruning",
+      "kind": "preprint",
+      "published_at": "2026-10-22",
+      "tags": [
+        "ai",
+        "papers"
+      ],
+      "source": "Salmani, Mahdi et al. · arXiv:2610.31667v1",
+      "url": "https://arxiv.org/abs/2610.31667v1",
+      "collected_at": "2026-10-25"
+    },
     {
       "id": "episem-missing-evidence-agent-safety",
       "kind": "preprint",
