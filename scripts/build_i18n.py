@@ -9,7 +9,9 @@ from hashlib import sha256
 import json
 import re
 from lxml import html, etree
-from reading_layout import enhance_layout
+from reading_layout import enhance_layout, NEWS, RESEARCH
+from editorials import DATA as EDITORIAL_DATA
+from public_content import check_public_content
 from tag_taxonomy import POST_TAGS, canonical_tag_path, prepare_tag_sources, render_tags, prepare_tag_feeds
 from comments_layout import render_comments
 
@@ -20,6 +22,7 @@ PREFIX = {locale: '' if locale == 'zh-CN' else '/' + locale for locale in LOCALE
 UI_REVISION = sha256(b''.join((ROOT / name).read_bytes() for name in ['css/i18n.css','css/gallery.css','images/gallery/charms.svg','js/gallery.mjs','js/i18n.js','js/i18n-messages.js','js/mathjax-config.js','i18n/news.json','i18n/research.json','i18n/editorials.json','scripts/editorials.py','scripts/build_i18n.py','scripts/reading_layout.py','scripts/tag_taxonomy.py','scripts/comments_layout.py','css/reading.css','js/reading.js','css/interaction.css','js/interaction.js','js/search.js','js/comments.js'])).hexdigest()[:12]
 source = (ROOT / 'js/i18n-messages.js').read_text()
 MESSAGES = json.loads(source[source.index('{'):source.rindex('}') + 1])
+check_public_content({'news': NEWS, 'research': RESEARCH}, EDITORIAL_DATA, MESSAGES)
 SOURCE_MAP = json.loads((ROOT / 'i18n/message-map.json').read_text())
 normalize = lambda value: ' '.join(value.split())
 TEXT_KEYS = {normalize(text): key for text, key in SOURCE_MAP['text'].items()}
