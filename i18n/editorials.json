@@ -8690,6 +8690,236 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-gpt61-terra-release",
+      "written_at": "2026-10-27",
+      "sources": [
+        {
+          "label": "OpenAI · Introducing GPT-6.1 Terra",
+          "url": "https://openai.com/index/introducing-gpt-6-1-terra/"
+        },
+        {
+          "label": "OpenAI · GPT-6.1 Terra model documentation",
+          "url": "https://developers.openai.com/api/docs/models/gpt-6.1-terra"
+        },
+        {
+          "label": "OpenAI · GPT-6.1 Terra system card",
+          "url": "https://deploymentsafety.openai.com/gpt-6-1-terra"
+        },
+        {
+          "label": "窓の杜 · GPT-6.1 Terra release report",
+          "url": "https://forest.watch.impress.co.jp/docs/news/2151338.html"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "10 月 26 日，OpenAI 发布 GPT-6.1 Terra，接续 GPT-5.6 Terra，面向看懂屏幕、操作应用和处理文字等工作。它已通过 ChatGPT Work、Codex 和名为 gpt-6.1-terra 的 API 提供。此次更新的实质是模型服务上线及计费、能力的变化；公告没有交付可供本地部署的模型权重。",
+          "sections": [
+            {
+              "heading": "从理解画面到完成操作",
+              "paragraphs": [
+                "视觉推理是根据图片、图表或屏幕内容判断信息；电脑操作则进一步通过工具在应用中执行步骤。比如处理一张表单，模型既要识别字段，也要根据任务填写并查看结果。这里的流程是对能力用途的解释，不是本站对某项业务成功率的实测。",
+                "模型文档列出文本与图像输入、文本输出，工具调用要求使用 Responses API。原生音频和视频输入并不在支持列表中，因此公告所说的“编辑视频”等任务，应理解为借助软件和工具操作，不能据此推断模型直接支持视频流输入。"
+              ]
+            },
+            {
+              "heading": "价格变了，但每项任务的账单仍不同",
+              "paragraphs": [
+                "标准 API 以 token，也就是模型处理的文本单位计费：每百万输入 token 为 1 美元，缓存输入为 0.05 美元，输出为 5 美元。缓存输入是复用已有输入时的计价；缓存写入另有费用。这些是开发者调用 API 的单价，不是 ChatGPT 订阅费。",
+                "文档给出的上下文容量为 1,050,000 token，最大输出为 128,000 token。不过，输入超过 272,000 token 时，整次请求的输入及缓存费率按 2 倍计算，输出按 1.5 倍；工具也可能另收费。本站据此判断，基础单价降低不等于任何工作流的总成本都按相同比例降低，实际还取决于输入长度、输出量和调用次数。"
+              ]
+            },
+            {
+              "heading": "评测显示进步，也要看清比较条件",
+              "paragraphs": [
+                "OpenAI 报告，在测试命令行任务完成能力的 Terminal-Bench 4.0 上，Terra 在最高推理档位完成了 50.3% 的任务，前代公开分数为 21.5%。在公司内部专门诱发事实错误的提示集合上，低推理档位的错误率从 53.6% 降至 16.7%。前者是特定测试任务的成功比例，后者是内部测试口径，不能读成日常所有回答的错误概率。",
+                "这些数字来自 OpenAI；窓の杜的报道同样将相关成绩归于官方公布，没有提供独立复测。系统卡还提醒，研究环境或 API 的提示、工具和推理设置可能与正式产品不同，部分对照模型的数值来自较新版本，未必等于它们首发时的成绩。"
+              ]
+            },
+            {
+              "heading": "上线后仍需验证的部分",
+              "paragraphs": [
+                "对需要在应用间执行明确流程的团队，这次发布提供了新的模型选项。但能否可靠完成自己的表单、文档或开发任务，还需要用实际工作样本检查。本站的工程判断是，应把完成质量、操作错误、耗时和整项任务成本一起比较；公开基准不能代替这些验证。系统卡说明评测条件，也不构成任何应用场景下零错误的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站绘制的电脑操作流程示意：解释输入、工具与结果检查之间的关系，不是模型内部结构图或实测成绩。",
+            "steps": [
+              "读取文本与屏幕图像",
+              "结合任务判断下一步",
+              "通过工具执行操作",
+              "检查结果并继续或结束"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 26, OpenAI released GPT-6.1 Terra, succeeding GPT-5.6 Terra for work involving screens, applications and text. Access is through ChatGPT Work, Codex and the gpt-6.1-terra API model. The concrete news is a live model service with changed capabilities and pricing; the announcement does not deliver model weights for local deployment.",
+          "sections": [
+            {
+              "heading": "Understanding a screen is only part of the job",
+              "paragraphs": [
+                "Visual reasoning means interpreting information in an image, diagram or screen. Computer use adds steps performed through tools in an application. Completing a form, for example, involves identifying fields, entering information and checking the result. This describes how the capability can be used; it is not a success-rate measurement by this site.",
+                "The model documentation lists text and image input and text output. Tool calling requires the Responses API. Native audio and video input are not supported, so an example such as editing video should be understood as operating software through tools, not as evidence that the model accepts a video stream directly."
+              ]
+            },
+            {
+              "heading": "Token prices are not the cost of a finished task",
+              "paragraphs": [
+                "Standard API rates are $1 per million input tokens, $0.05 for cached input and $5 for output. Tokens are the units of text processed by the model. Cached input refers to reused input; writing a cache carries separate charges. These are API usage rates, not ChatGPT subscription fees.",
+                "The documented context limit is 1,050,000 tokens, with up to 128,000 output tokens. Above 272,000 input tokens, the whole request uses twice the input and cache rates and 1.5 times the output rate. Tools can add charges. Our reading is that a lower base rate does not make every workflow cheaper by the same proportion: input length, output volume and the number of calls still matter."
+              ]
+            },
+            {
+              "heading": "What the reported improvements actually measure",
+              "paragraphs": [
+                "OpenAI reports that at maximum reasoning effort Terra completes 50.3% of Terminal-Bench 4.0 command-line tasks, against its predecessor’s published 21.5%. On an internal set designed to elicit factual mistakes, the low-effort error rate falls from 53.6% to 16.7%. The first is a share of specific benchmark tasks; the second uses an internal evaluation definition. Neither is a universal error rate for everyday answers.",
+                "These figures come from OpenAI. The report in Mado no Mori also attributes the scores to the company rather than supplying an independent replication. The system card cautions that research or API settings can differ from production prompts, tools and reasoning settings. Some comparator scores use later model versions and need not match their launch results."
+              ]
+            },
+            {
+              "heading": "What remains to be established in practice",
+              "paragraphs": [
+                "Teams with defined workflows across applications now have another model option. Whether it reliably handles their own forms, documents or development tasks still needs testing on representative work. Our engineering interpretation is to compare completion quality, action errors, elapsed time and total task cost together. Public benchmarks cannot replace that check, and a system card describing evaluation conditions is not a guarantee of error-free operation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram of computer use: inputs, tool actions and result checks, not model internals or measured performance.",
+            "steps": [
+              "Read text and screen images",
+              "Determine the next task step",
+              "Execute an action through tools",
+              "Check the result, then continue or finish"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAIは10月26日、画面の理解、アプリの操作、文章処理を担うGPT-6.1 Terraを公開した。GPT-5.6 Terraの後継で、ChatGPT Work、Codex、gpt-6.1-terraというAPIモデルから利用できる。今回の実質的な変化はモデルサービスの提供開始と能力・料金の更新であり、ローカル実行用のモデル重みを配布する発表ではない。",
+          "sections": [
+            {
+              "heading": "画面を読むことと、操作すること",
+              "paragraphs": [
+                "視覚推論は、画像や図面、画面の情報を読み取って判断する能力を指す。コンピューター操作では、さらにツールを通してアプリ内の手順を実行する。例えばフォームの処理なら、項目を識別し、入力し、結果を確認する必要がある。これは能力の使い方の説明で、本站が業務の成功率を測定した結果ではない。",
+                "モデル文書に記載される入出力は、テキスト・画像入力とテキスト出力で、ツール呼び出しにはResponses APIが必要だ。音声や動画の直接入力は対応一覧に含まれない。「動画編集」という用途例も、ソフトウェアをツールで操作する意味で捉えるべきで、動画ストリームを直接受け取れる根拠にはならない。"
+              ]
+            },
+            {
+              "heading": "単価だけでは作業全体の費用は決まらない",
+              "paragraphs": [
+                "標準API料金は、入力100万トークン当たり1ドル、キャッシュ入力0.05ドル、出力5ドル。トークンはモデルが文章を処理する単位で、キャッシュ入力は既存の入力を再利用する際の料金を指す。キャッシュへの書き込みは別料金となる。いずれもAPI利用料であり、ChatGPTの月額料金ではない。",
+                "文書上のコンテキスト上限は1,050,000トークン、最大出力は128,000トークン。ただし入力が272,000トークンを超えると、リクエスト全体で入力・キャッシュ単価は2倍、出力単価は1.5倍となり、ツールの追加料金もあり得る。本站の解釈では、基本単価が下がっても全ワークフローの総費用が同じ割合で下がるとは限らず、入力量、出力量、呼び出し回数が影響する。"
+              ]
+            },
+            {
+              "heading": "改善した数値の測定範囲",
+              "paragraphs": [
+                "OpenAIによると、コマンドライン作業を評価するTerminal-Bench 4.0では、最大推論設定のTerraが50.3%の課題を完了した。前世代の公表値は21.5%だった。事実誤認を誘発する社内プロンプト集合では、低推論設定のエラー率が53.6%から16.7%に下がった。前者は特定の課題集合の成功割合、後者は社内評価の定義に基づく数字で、日常の全回答の誤り率を示すものではない。",
+                "これらはOpenAIの評価結果だ。窓の杜も公式発表の数値として報じており、独立した追試ではない。システムカードは、研究環境やAPIのプロンプト、ツール、推論設定が製品環境と異なる可能性を明記する。比較対象の一部には後のモデル版の値が使われ、初回公開時の成績と一致するとは限らない。"
+              ]
+            },
+            {
+              "heading": "実際の仕事で確認すべきこと",
+              "paragraphs": [
+                "アプリをまたぐ明確な手順を持つチームには、モデルの選択肢が増えた。ただし自分たちのフォーム、文書、開発作業を安定して処理できるかは、実務に近いサンプルで確認する必要がある。本站の工学的な見方では、完了品質、操作ミス、所要時間、作業全体の費用を合わせて比較すべきだ。公開ベンチマークや評価条件の説明は、その検証や無誤動作の保証にはならない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站によるコンピューター操作の説明図。入力・ツール操作・結果確認の関係を示し、モデル内部構造や実測性能は表さない。",
+            "steps": [
+              "テキストと画面画像を読む",
+              "次の手順を判断する",
+              "ツールで操作する",
+              "結果を確認し、続行または終了する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "26 октября OpenAI выпустила GPT-6.1 Terra — преемницу GPT-5.6 Terra для задач с экранами, приложениями и текстом. Модель доступна в ChatGPT Work, Codex и через API под именем gpt-6.1-terra. Событие состоит в запуске сервиса с обновлёнными возможностями и тарифами; объявление не предоставляет веса модели для локального запуска.",
+          "sections": [
+            {
+              "heading": "Понять экран и выполнить действие — разные этапы",
+              "paragraphs": [
+                "Визуальное рассуждение позволяет интерпретировать изображение, чертёж или экран. Работа с компьютером добавляет действия в приложении через инструменты. Например, для заполнения формы нужно распознать поля, внести данные и проверить результат. Это пояснение способа применения, а не измеренная нашей редакцией доля успешных операций.",
+                "Документация указывает текстовый и графический ввод и текстовый вывод. Вызов инструментов требует Responses API. Прямой ввод аудио и видео не поддерживается. Поэтому пример с монтажом видео следует понимать как управление программой через инструменты, а не как подтверждение приёма видеопотока самой моделью."
+              ]
+            },
+            {
+              "heading": "Цена токена не равна стоимости готовой работы",
+              "paragraphs": [
+                "Стандартный API стоит $1 за миллион входных токенов, $0,05 за кешированный ввод и $5 за вывод. Токены — единицы обрабатываемого моделью текста. Кешированный ввод означает повторное использование входных данных; запись кеша оплачивается отдельно. Это тарифы API, а не цена подписки ChatGPT.",
+                "В документации указано окно контекста 1 050 000 токенов и максимум 128 000 токенов вывода. При вводе свыше 272 000 токенов для всего запроса ставки ввода и кеша удваиваются, а вывода умножаются на 1,5. За инструменты также возможна отдельная плата. Наш вывод: снижение базового тарифа не означает одинаковое снижение затрат для любого процесса — важны объём ввода и вывода и число обращений."
+              ]
+            },
+            {
+              "heading": "Что именно измеряют опубликованные результаты",
+              "paragraphs": [
+                "По данным OpenAI, на максимальном уровне рассуждения Terra выполняет 50,3% заданий Terminal-Bench 4.0, проверяющего работу в командной строке; опубликованный результат предшественницы — 21,5%. На внутреннем наборе запросов, провоцирующих фактические ошибки, доля ошибок при низком уровне рассуждения снизилась с 53,6% до 16,7%. Первый показатель относится к конкретному набору задач, второй — к внутренней методике. Это не вероятность ошибки в любом повседневном ответе.",
+                "Числа получены OpenAI. Издание Mado no Mori также приводит их со ссылкой на компанию, без независимого повторения экспериментов. Системная карточка предупреждает, что инструкции, инструменты и настройки рассуждения в исследовательской среде или API могут отличаться от продукта. Часть сравнений использует более поздние версии других моделей, поэтому их оценки не обязательно совпадают с результатами на момент запуска."
+              ]
+            },
+            {
+              "heading": "Что ещё предстоит проверить на практике",
+              "paragraphs": [
+                "У команд с определёнными рабочими процедурами в приложениях появился дополнительный вариант модели. Надёжность обработки собственных форм, документов или задач разработки всё равно требует проверки на характерных примерах. Наша инженерная интерпретация — оценивать вместе качество выполнения, ошибки действий, время и полную стоимость задачи. Публичные тесты не заменяют такую проверку, а описание условий оценки не гарантирует безошибочную работу."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема работы с компьютером: ввод, действия через инструменты и проверка результата. Не архитектура модели и не измерение производительности.",
+            "steps": [
+              "Прочитать текст и изображение экрана",
+              "Определить следующий шаг",
+              "Выполнить действие инструментом",
+              "Проверить результат и продолжить либо завершить"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "10 月 26 日，OpenAI 釋出 GPT-6.1 Terra，接續 GPT-5.6 Terra，面向看懂螢幕、操作應用和處理文字等工作。它已透過 ChatGPT Work、Codex 和名為 gpt-6.1-terra 的 API 提供。此次更新的實質是模型服務上線及計費、能力的變化；公告沒有交付可供本地部署的模型權重。",
+          "sections": [
+            {
+              "heading": "從理解畫面到完成操作",
+              "paragraphs": [
+                "視覺推理是根據圖片、圖表或螢幕內容判斷資訊；電腦操作則進一步透過工具在應用中執行步驟。比如處理一張表單，模型既要識別欄位，也要根據任務填寫並檢視結果。這裡的流程是對能力用途的解釋，不是本站對某項業務成功率的實測。",
+                "模型文件列出文字與影象輸入、文字輸出，工具呼叫要求使用 Responses API。原生音訊和影片輸入並不在支援列表中，因此公告所說的“編輯影片”等任務，應理解為藉助軟體和工具操作，不能據此推斷模型直接支援影片流輸入。"
+              ]
+            },
+            {
+              "heading": "價格變了，但每項任務的賬單仍不同",
+              "paragraphs": [
+                "標準 API 以 token，也就是模型處理的文字單位計費：每百萬輸入 token 為 1 美元，快取輸入為 0.05 美元，輸出為 5 美元。快取輸入是複用已有輸入時的計價；快取寫入另有費用。這些是開發者呼叫 API 的單價，不是 ChatGPT 訂閱費。",
+                "文件給出的上下文容量為 1,050,000 token，最大輸出為 128,000 token。不過，輸入超過 272,000 token 時，整次請求的輸入及快取費率按 2 倍計算，輸出按 1.5 倍；工具也可能另收費。本站據此判斷，基礎單價降低不等於任何工作流的總成本都按相同比例降低，實際還取決於輸入長度、輸出量和呼叫次數。"
+              ]
+            },
+            {
+              "heading": "評測顯示進步，也要看清比較條件",
+              "paragraphs": [
+                "OpenAI 報告，在測試命令列任務完成能力的 Terminal-Bench 4.0 上，Terra 在最高推理檔位完成了 50.3% 的任務，前代公開分數為 21.5%。在公司內部專門誘發事實錯誤的提示集合上，低推理檔位的錯誤率從 53.6% 降至 16.7%。前者是特定測試任務的成功比例，後者是內部測試口徑，不能讀成日常所有回答的錯誤機率。",
+                "這些數字來自 OpenAI；窓の杜的報道同樣將相關成績歸於官方公佈，沒有提供獨立複測。系統卡還提醒，研究環境或 API 的提示、工具和推理設定可能與正式產品不同，部分對照模型的數值來自較新版本，未必等於它們首發時的成績。"
+              ]
+            },
+            {
+              "heading": "上線後仍需驗證的部分",
+              "paragraphs": [
+                "對需要在應用間執行明確流程的團隊，這次釋出提供了新的模型選項。但能否可靠完成自己的表單、文件或開發任務，還需要用實際工作樣本檢查。本站的工程判斷是，應把完成質量、操作錯誤、耗時和整項任務成本一起比較；公開基準不能代替這些驗證。系統卡說明評測條件，也不構成任何應用場景下零錯誤的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站繪製的電腦操作流程示意：解釋輸入、工具與結果檢查之間的關係，不是模型內部結構圖或實測成績。",
+            "steps": [
+              "讀取文字與螢幕影象",
+              "結合任務判斷下一步",
+              "透過工具執行操作",
+              "檢查結果並繼續或結束"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

@@ -633,7 +633,9 @@ window.SITE_MESSAGES = {
     "research.hyperdoc-budget-aware-multimodal-rag.title": "HyperDoc：按问题意图和预算选择多模态文档证据",
     "research.hyperdoc-budget-aware-multimodal-rag.summary": "用超图绑定图表、说明与章节关系，再按覆盖收益和输入成本选择证据。在三项长文档问答基准测试；作者注明 ICDE 2027 录用，未注明轨道，仍需关注 OCR 与意图判断误差。",
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：用更少辅助空间回答后缀数组查询",
-    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理论结果在只读文本、常数时间字符访问条件下，用 O(n/τ) 个机器字辅助空间，在隐藏对数因子的 O(τ³) 时间回答 SA 和 ISA 查询。没有系统性能实验，不能把渐近界写成实测压缩或加速。"
+    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理论结果在只读文本、常数时间字符访问条件下，用 O(n/τ) 个机器字辅助空间，在隐藏对数因子的 O(τ³) 时间回答 SA 和 ISA 查询。没有系统性能实验，不能把渐近界写成实测压缩或加速。",
+    "news.openai-gpt61-terra-release.title": "OpenAI 发布 GPT-6.1 Terra，更新视觉推理与电脑操作模型",
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。标准 API 每百万输入／输出 token 分别为 1／5 美元；官方报告电脑操作和编程能力提升，相关分数仍是厂商评测。"
   },
   "en": {
     "nav.about": "About",
@@ -1268,7 +1270,9 @@ window.SITE_MESSAGES = {
     "research.hyperdoc-budget-aware-multimodal-rag.title": "HyperDoc selects multimodal evidence by intent and input budget",
     "research.hyperdoc-budget-aware-multimodal-rag.summary": "A document hypergraph binds visual, textual and structural evidence before cost-aware selection. Evaluated on three long-document QA benchmarks; authors report ICDE 2027 acceptance without naming a track.",
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays trades auxiliary space for query time",
-    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "With read-only constant-time text access, the theoretical structure uses O(n/τ) words and answers suffix-array and inverse queries in Õ(τ³) time. No implementation benchmark establishes practical compression or speed."
+    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "With read-only constant-time text access, the theoretical structure uses O(n/τ) words and answers suffix-array and inverse queries in Õ(τ³) time. No implementation benchmark establishes practical compression or speed.",
+    "news.openai-gpt61-terra-release.title": "OpenAI releases GPT-6.1 Terra for visual reasoning and computer use",
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra is available through ChatGPT Work, Codex and the API. Standard input/output rates are $1/$5 per million tokens; reported gains in computer use and coding remain vendor evaluations."
   },
   "ja": {
     "nav.about": "私について",
@@ -1903,7 +1907,9 @@ window.SITE_MESSAGES = {
     "research.hyperdoc-budget-aware-multimodal-rag.title": "HyperDoc：意図と予算に合わせた文書根拠の選択",
     "research.hyperdoc-budget-aware-multimodal-rag.summary": "超グラフで図表、説明、章の関係を保ち、網羅性と入力費用で根拠を選ぶ。三つの長文書QAで評価。著者はICDE 2027採択と記載するが、トラックは不明。",
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：補助空間と検索時間の交換",
-    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "文字を定数時間で読める読み取り専用テキストで、補助空間 O(n/τ) 語とクエリ時間 Õ(τ³) を示す理論研究。実装の圧縮率や高速化を測った結果ではない。"
+    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "文字を定数時間で読める読み取り専用テキストで、補助空間 O(n/τ) 語とクエリ時間 Õ(τ³) を示す理論研究。実装の圧縮率や高速化を測った結果ではない。",
+    "news.openai-gpt61-terra-release.title": "OpenAIがGPT-6.1 Terraを公開、視覚推論とコンピューター操作を更新",
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 TerraがChatGPT Work、Codex、APIで提供開始。標準API料金は入力／出力100万トークン当たり1／5ドル。操作やコーディングの改善値はOpenAIによる評価。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2538,7 +2544,9 @@ window.SITE_MESSAGES = {
     "research.hyperdoc-budget-aware-multimodal-rag.title": "HyperDoc выбирает мультимодальные доказательства по бюджету",
     "research.hyperdoc-budget-aware-multimodal-rag.summary": "Гиперграф связывает рисунки, текст и структуру документа до выбора по стоимости. Проверены три набора длинных документов; авторы указывают принятие на ICDE 2027 без уточнения трека.",
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays: обмен дополнительной памяти на время",
-    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "Для текста только для чтения с доступом к символу за O(1) доказана структура на O(n/τ) машинных слов с запросом за Õ(τ³). Практическое ускорение и сжатие экспериментально не измерены."
+    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "Для текста только для чтения с доступом к символу за O(1) доказана структура на O(n/τ) машинных слов с запросом за Õ(τ³). Практическое ускорение и сжатие экспериментально не измерены.",
+    "news.openai-gpt61-terra-release.title": "OpenAI выпустила GPT-6.1 Terra для визуального анализа и работы с приложениями",
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra доступна в ChatGPT Work, Codex и API. Стандартная цена за миллион входных/выходных токенов — $1/$5. Заявленные улучшения работы с компьютером и кодом основаны на оценках OpenAI."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3173,6 +3181,8 @@ window.SITE_MESSAGES = {
     "research.hyperdoc-budget-aware-multimodal-rag.title": "HyperDoc：按問題意圖和預算選擇多模態文件證據",
     "research.hyperdoc-budget-aware-multimodal-rag.summary": "用超圖繫結圖表、說明與章節關係，再按涵蓋收益和輸入成本選擇證據。在三項長文件問答基準測試；作者註明 ICDE 2027 錄用，未註明軌道，仍需關注 OCR 與意圖判斷誤差。",
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：用更少輔助空間回答後綴陣列查詢",
-    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理論結果在唯讀文字、常數時間字元存取條件下，用 O(n/τ) 個機器字輔助空間，在隱藏對數因子的 O(τ³) 時間回答 SA 和 ISA 查詢。沒有系統效能實驗，不能把漸近界寫成實測壓縮或加速。"
+    "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理論結果在唯讀文字、常數時間字元存取條件下，用 O(n/τ) 個機器字輔助空間，在隱藏對數因子的 O(τ³) 時間回答 SA 和 ISA 查詢。沒有系統效能實驗，不能把漸近界寫成實測壓縮或加速。",
+    "news.openai-gpt61-terra-release.title": "OpenAI 釋出 GPT-6.1 Terra，更新視覺推理與電腦操作模型",
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。標準 API 每百萬輸入／輸出 token 分別為 1／5 美元；官方報告電腦操作和程式設計能力提升，相關分數仍是廠商評測。"
   }
 };
