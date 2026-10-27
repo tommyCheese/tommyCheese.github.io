@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">GPT-6.1 Terra: from screen input to tool actions</title>
+<desc id="desc">Text and screen images inform a task step, tools execute an action, and the resulting screen is checked. An original explanatory diagram, not a model architecture or benchmark result.</desc>
+<rect width="1200" height="630" fill="#edf3f5"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="64" y="67" font-size="19" fill="#33756f" font-weight="600">TECH DAILY / MODEL RELEASE</text>
+<text x="64" y="133" font-size="44" fill="#173e41" font-weight="600">GPT-6.1 Terra</text>
+<text x="64" y="175" font-size="25" fill="#416568">From screen input to actions in an application</text>
+<g fill="#fff" stroke="#8bafae" stroke-width="2">
+<rect x="64" y="230" width="320" height="160" rx="18"/>
+<rect x="440" y="230" width="320" height="160" rx="18"/>
+<rect x="816" y="230" width="320" height="160" rx="18"/>
+</g>
+<g font-size="27" fill="#173e41" font-weight="600">
+<text x="86" y="278">Observe</text><text x="462" y="278">Choose a step</text><text x="838" y="278">Act with tools</text>
+</g>
+<g font-size="22" fill="#416568">
+<text x="86" y="325">Text and screen images</text><text x="462" y="325">Use the task context</text><text x="838" y="325">Operate the application</text>
+</g>
+<g fill="none" stroke="#568d88" stroke-width="3">
+<path d="M396 310H424M411 300L424 310L411 320M772 310H800M787 300L800 310L787 320"/>
+<path d="M976 402V470H224V402M214 415L224 402L234 415"/>
+</g>
+<rect x="407" y="449" width="386" height="42" rx="12" fill="#edf3f5"/>
+<text x="600" y="478" text-anchor="middle" font-size="23" fill="#416568">Check the resulting screen</text>
+<text x="64" y="576" font-size="20" fill="#55777a">Original explanatory diagram · workflow, not measured performance</text>
+</g></svg>
