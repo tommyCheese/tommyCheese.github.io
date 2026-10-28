@@ -1,6 +1,50 @@
 {
-  "updated_at": "2026-10-27",
+  "updated_at": "2026-10-28",
   "items": [
+    {
+      "id": "google-genie4-interactive-world-preview",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-28",
+      "category": "ai",
+      "source": "Google DeepMind / Ars Technica",
+      "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
+      "image": "https://tommycheese.github.io/images/news/genie4-world-loop.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
+    {
+      "id": "anthropic-drug-development-early-studies",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-28",
+      "category": "science",
+      "source": "Anthropic / BigHat / Enveda / SiliconReport",
+      "url": "https://www.anthropic.com/research/early-progress-drug-development",
+      "image": "https://tommycheese.github.io/images/news/anthropic-drug-research.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-signals-work-activities-data",
+      "published_at": "2026-10-26",
+      "collected_at": "2026-10-28",
+      "category": "ai",
+      "source": "OpenAI / Techsuda",
+      "url": "https://openai.com/index/chatgpt-expanding-world-of-work/",
+      "image": "https://tommycheese.github.io/images/news/signals-work-activities.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
+    {
+      "id": "microsoft-emudhra-offline-trust-update",
+      "published_at": "2026-10-26",
+      "collected_at": "2026-10-28",
+      "category": "security",
+      "source": "Microsoft / BleepingComputer",
+      "url": "https://www.microsoft.com/en-us/msrc/blog/2026/10/microsoft-response-to-compromised-emudhra-certificate-authority-keys",
+      "image": "https://tommycheese.github.io/images/news/windows-certificate-trust.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
     {
       "id": "openai-gpt61-terra-release",
       "published_at": "2026-10-26",

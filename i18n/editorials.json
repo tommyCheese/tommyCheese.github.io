@@ -10970,6 +10970,1950 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-signals-work-activities-data",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "OpenAI · release and work-activity findings",
+          "url": "https://openai.com/index/chatgpt-expanding-world-of-work/"
+        },
+        {
+          "label": "OpenAI Signals · data and methodology",
+          "url": "https://openai.com/signals/data-download/"
+        },
+        {
+          "label": "OpenAI Signals v3.0 · data dictionary",
+          "url": "https://cdn.openai.com/signals/data-dictionary.pdf"
+        },
+        {
+          "label": "Techsuda · independent reporting and interpretation",
+          "url": "https://www.techsuda.com/openai-chatgpt-work-activities-korea-creative-thinking/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "10 月 26 日，OpenAI 为 Signals 增加了一组按工作活动划分的公开数据。它把个人版 ChatGPT 的工作相关消息与 O*NET 职业任务框架连接起来，覆盖近百个国家、165 类中间工作活动，时间从 2025 年第一季度延伸到 2026 年第三季度。新增价值是提供可下载、可跨期比较的活动分类，而不是发布一个新模型或宣称 AI 已经替代了多少岗位。",
+          "sections": [
+            {
+              "heading": "从职业名称转向具体活动",
+              "paragraphs": [
+                "同一项工作活动可能出现在许多职业里，例如准备教学材料、撰写内容或分析业务数据。O*NET 的中间工作活动把这些任务放到共同框架中，研究者可以比较不同国家带给 ChatGPT 的任务，也可以与职业和就业资料对照。Signals 公布的是消息所占比例，分类由模型推断，不是用户填写的职业调查，更不等于任务完成记录。",
+                "OpenAI 报告，在每个季度都有观测的 74 个国家里，各国最常见十类活动占已分类工作消息的平均比例，从 56.0% 下降到 51.1%，减少 4.9 个百分点。这个结果说明被观察到的使用用途较少集中在少数活动中；它不是全球消息按总量加权后的比例，也不意味着工作总量或某类任务的绝对使用量减少。"
+              ]
+            },
+            {
+              "heading": "方法决定了能看见哪些人",
+              "paragraphs": [
+                "v3.0 数据字典说明，整体 Signals 数据以每月 100 万条个人版消息为样本，来自声明年龄至少 18 岁的账户；完整方法时间窗为 2024 年 7 月至 2026 年 9 月，不能与本次工作活动序列的起点混为一谈。已删除账户和不允许数据用于训练的用户被排除，企业版与 Codex 也不在样本中，因此商务和技术使用可能被低估。消息按日期加权，以匹配各天在当月真实消息量中的比例。",
+                "研究者不直接阅读原始对话：消息先去除识别信息，再由自动分类系统处理，发布时使用聚合结果、抑制小样本组并加入差分隐私噪声。更细的国家和活动组合来自更小的子样本，波动也会更大。数据按 CC BY 4.0 提供，可引用和再分析，但这不消除分类误差、样本选择和小组统计的不确定性。"
+              ]
+            },
+            {
+              "heading": "能提出问题，不能直接证明经济效果",
+              "paragraphs": [
+                "官方比较还提示，美国按就业加权的活动组合中，约 43% 落在没有单独展开的“其他活动”里，包括搬运、驾驶和部分记录维护。这些活动在最初美国 ChatGPT 样本中未达到稳定单列的条件，因此聊天用途与现实劳动结构之间有明显缺口。Techsuda 的独立报道也提醒，活动占比变化不能直接理解为绝对使用量变化。",
+                "本站据这些统计口径作出的判断是：这组资料适合观察用途扩散、地区差异以及提出后续研究问题；它没有记录每次回答是否正确、被采用或节省多少时间，不能单独证明生产率提升、岗位减少或国家之间的因果差异。要回答这些问题，还需要任务结果、时间或就业数据，以及能排除其他因素的研究设计。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据数据方法重绘的解释性流程，说明统计如何形成，不展示个人对话或生产率实测。",
+            "steps": [
+              "抽样个人版工作相关消息",
+              "去除识别信息并自动归类",
+              "按日期加权和隐私保护处理",
+              "按国家与季度汇总工作活动",
+              "比较使用结构并保留样本边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 26, OpenAI expanded Signals with public data organized by work activity. It connects work-related messages on individual ChatGPT plans to 165 Intermediate Work Activities from the O*NET occupational framework, across nearly 100 countries from Q1 2025 to Q3 2026. The addition is a downloadable series for comparison over time, not a new model or a count of jobs replaced by AI.",
+          "sections": [
+            {
+              "heading": "Activities rather than job titles",
+              "paragraphs": [
+                "Preparing teaching materials, creating content and analyzing business data can occur in many occupations. A common activity framework lets researchers compare the tasks people bring to ChatGPT across countries and alongside employment data. Signals measures shares of messages. Models infer the categories; they are neither a self-reported occupational survey nor a record of completed tasks.",
+                "OpenAI reports that, across 74 countries observed in every quarter, the average share of each country’s classified work messages belonging to its ten most common activities fell from 56.0% to 51.1%, a decline of 4.9 percentage points. Observed use became less concentrated. This is not a global message-volume-weighted share and does not establish that total work or the absolute use of any activity declined."
+              ]
+            },
+            {
+              "heading": "The method defines who is represented",
+              "paragraphs": [
+                "The v3.0 dictionary describes an overall Signals sample of one million personal-plan messages per month from accounts declaring an age of at least 18. Its full methodological window is July 2024 to September 2026, distinct from the start of this work-activity series. Deleted accounts and users who disallow training use are excluded, as are enterprise messages and Codex. Business and technical use may therefore be understated. Day-level weights match each day’s contribution to actual monthly message volume.",
+                "Researchers do not read the raw conversations: identifying information is removed before automatic classification, and publication uses aggregates, small-group suppression and differential-privacy noise. Finer country–activity breakdowns use smaller subsamples and have greater variability. The data is available under CC BY 4.0 for attributed reuse, but availability does not eliminate classification errors, selection effects or uncertainty in small groups."
+              ]
+            },
+            {
+              "heading": "A starting point for economic questions",
+              "paragraphs": [
+                "OpenAI notes that roughly 43% of the employment-weighted activity mix for mapped US occupations falls into an Other category, including moving materials, driving and some record maintenance. These activities did not qualify for consistent individual reporting in the original US ChatGPT sample. Chat usage is therefore a different map from the economy’s work. Independent reporting by Techsuda likewise cautions against reading share changes as changes in absolute usage.",
+                "Our interpretation of these measurement choices is that the release can support studies of adoption patterns and regional differences, but cannot by itself establish productivity gains, job losses or causal differences between countries. It does not show whether each response was correct, adopted or time-saving. Those questions require outcome, time or employment evidence and a design that can separate competing explanations."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from the methodology; it depicts aggregate statistics, not private conversations or measured productivity.",
+            "steps": [
+              "Sample personal-plan work messages",
+              "Remove identifying information and classify automatically",
+              "Apply day weights and privacy protections",
+              "Aggregate activities by country and quarter",
+              "Compare usage patterns within sampling limits"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は 10 月 26 日、Signals に業務活動別の公開データを追加した。個人版 ChatGPT の仕事に関するメッセージを、O*NET の 165 種類の中間業務活動に対応付け、約 100 か国について 2025 年第 1 四半期から 2026 年第 3 四半期までを示す。新しい点は、時系列で比較できるデータを取得できることであり、新モデルの発表や AI に置き換わった雇用数の報告ではない。",
+          "sections": [
+            {
+              "heading": "職業名ではなく活動を比べる",
+              "paragraphs": [
+                "教材作成、コンテンツ制作、業務データ分析などは複数の職業に共通する。活動を同じ枠組みで分類すれば、各国で ChatGPT に持ち込まれる作業を比べ、雇用統計と対照できる。ただし数えているのはメッセージの比率だ。分類はモデルの推定であり、本人回答の職業調査でも、完了した仕事の記録でもない。",
+                "OpenAI によると、全四半期で観測できた 74 か国では、各国の分類済み業務メッセージに占める上位 10 活動の平均比率が 56.0% から 51.1% へ、4.9 ポイント低下した。観測された用途の集中が弱まったという結果である。世界全体をメッセージ量で加重した比率ではなく、仕事の総量や特定用途の絶対的な利用が減ったとも言えない。"
+              ]
+            },
+            {
+              "heading": "方法が調査対象を決める",
+              "paragraphs": [
+                "v3.0 のデータ辞書は、Signals 全体の標本を、年齢を 18 歳以上と申告した個人版アカウントの月 100 万メッセージと説明する。方法全体の対象期間は 2024 年 7 月から 2026 年 9 月で、今回の業務活動系列の開始時期とは別だ。削除済みアカウント、学習利用を認めない利用者、企業版、Codex は含まれず、業務・技術用途を過小に表す可能性がある。各日の実際の月間メッセージ量への寄与に合わせて日単位で重みを付ける。",
+                "研究者は元の対話を直接読まない。識別情報を除いて自動分類し、集計、小集団の非公開化、差分プライバシーのノイズを使って公開する。国と活動を細かく区切るほど標本が小さくなり、変動は大きくなる。CC BY 4.0 に基づく引用・再分析が可能だが、分類誤差や対象選択、小集団の不確実性がなくなるわけではない。"
+              ]
+            },
+            {
+              "heading": "経済効果を証明するデータではない",
+              "paragraphs": [
+                "公式の比較では、対応する米国職業の雇用加重活動構成の約 43% が個別に示されない「その他」に入る。資材の移動、運転、一部の記録管理などは、元の米国 ChatGPT 標本で安定して単独表示する条件を満たさなかった。対話の用途と実際の労働の分布には隔たりがある。独立メディア Techsuda も、比率の変化を絶対的な利用量の変化と読むべきではないと指摘している。",
+                "当サイトは、こうした測定条件から、このデータは用途の広がりや地域差を調べる出発点と考える。一方、回答の正確さ、採用の有無、節約時間は示されず、生産性向上、雇用減少、国の違いの因果関係を単独で証明できない。それには成果、時間、雇用に関する資料と、別の要因を切り分ける研究設計が必要になる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "方法資料を基に当サイトが描き直した説明図。集計過程を示し、個人の対話や生産性の実測ではない。",
+            "steps": [
+              "個人版の業務メッセージを抽出",
+              "識別情報を除き自動分類",
+              "日別の重みとプライバシー保護を適用",
+              "国・四半期別に活動を集計",
+              "標本の範囲を踏まえて用途を比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "26 октября OpenAI дополнила Signals открытыми данными по видам рабочей деятельности. Сообщения о работе из личных тарифов ChatGPT сопоставлены со 165 промежуточными видами деятельности O*NET почти в 100 странах, с I квартала 2025-го по III квартал 2026-го. Новшество — скачиваемый ряд для сравнения во времени, а не новая модель или подсчёт заменённых ИИ рабочих мест.",
+          "sections": [
+            {
+              "heading": "Сравниваются занятия, а не названия профессий",
+              "paragraphs": [
+                "Подготовка учебных материалов, создание контента и анализ деловых данных встречаются в разных профессиях. Единая классификация позволяет сравнивать задачи, с которыми обращаются к ChatGPT, между странами и с данными о занятости. Однако Signals измеряет доли сообщений. Категории определяет модель: это не опрос о профессии и не реестр выполненных заданий.",
+                "По данным OpenAI, в 74 странах, наблюдаемых в каждом квартале, средняя доля десяти наиболее распространённых занятий среди классифицированных рабочих сообщений каждой страны снизилась с 56,0% до 51,1%, на 4,9 процентного пункта. Наблюдаемые сценарии стали менее концентрированными. Это не мировая доля, взвешенная по объёму сообщений, и не доказательство снижения общего объёма работы или абсолютного использования отдельного занятия."
+              ]
+            },
+            {
+              "heading": "Метод определяет границы выборки",
+              "paragraphs": [
+                "Словарь v3.0 описывает общую выборку Signals: миллион сообщений личных тарифов ежемесячно от аккаунтов, указавших возраст не менее 18 лет. Полное методологическое окно — июль 2024-го — сентябрь 2026-го; его нельзя путать с началом новой серии рабочих активностей. Исключены удалённые аккаунты, пользователи, запретившие использование данных для обучения, корпоративные сообщения и Codex. Деловые и технические сценарии могут быть недопредставлены. Дневные веса согласуют выборку с фактическим вкладом каждого дня в месячный объём сообщений.",
+                "Исследователи не читают исходные диалоги. После удаления идентифицирующих сведений выполняется автоматическая классификация; публикуются агрегаты с подавлением малых групп и шумом дифференциальной приватности. Детальные срезы по странам и занятиям основаны на меньших подвыборках и сильнее колеблются. Лицензия CC BY 4.0 допускает повторный анализ с указанием источника, но не устраняет ошибки классификации, отбора и неопределённость малых групп."
+              ]
+            },
+            {
+              "heading": "Данные помогают поставить вопрос, но не доказывают эффект",
+              "paragraphs": [
+                "OpenAI отмечает, что около 43% взвешенного по занятости набора активностей сопоставленных профессий США относится к нераскрытой категории Other. Перемещение грузов, вождение и некоторые виды ведения записей не достигли порога устойчивого отдельного представления в исходной американской выборке ChatGPT. Карта использования чата отличается от структуры реального труда. Независимое издание Techsuda также предупреждает: изменение доли не равно изменению абсолютного использования.",
+                "По нашей оценке, эти условия измерения делают набор полезным для изучения распространения сценариев и региональных различий, но не позволяют самостоятельно доказать рост производительности, сокращение рабочих мест или причинные различия между странами. Здесь нет сведений о правильности ответа, его применении или сэкономленном времени. Для таких выводов нужны данные о результатах, времени либо занятости и исследовательский дизайн, отделяющий альтернативные объяснения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново составленная сайтом по методологии: агрегирование статистики, а не личные разговоры или замеры производительности.",
+            "steps": [
+              "Отобрать рабочие сообщения личных тарифов",
+              "Удалить идентифицирующие данные и классифицировать",
+              "Применить дневные веса и защиту приватности",
+              "Сгруппировать занятия по странам и кварталам",
+              "Сравнить сценарии с учётом границ выборки"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "10 月 26 日，OpenAI 為 Signals 增加了一組按工作活動劃分的公開資料。它把個人版 ChatGPT 的工作相關訊息與 O*NET 職業任務框架連線起來，覆蓋近百個國家、165 類中間工作活動，時間從 2025 年第一季度延伸到 2026 年第三季度。新增價值是提供可下載、可跨期比較的活動分類，而不是釋出一個新模型或宣稱 AI 已經替代了多少崗位。",
+          "sections": [
+            {
+              "heading": "從職業名稱轉向具體活動",
+              "paragraphs": [
+                "同一項工作活動可能出現在許多職業裡，例如準備教學材料、撰寫內容或分析業務資料。O*NET 的中間工作活動把這些任務放到共同框架中，研究者可以比較不同國家帶給 ChatGPT 的任務，也可以與職業和就業資料對照。Signals 公佈的是訊息所佔比例，分類由模型推斷，不是使用者填寫的職業調查，更不等於任務完成記錄。",
+                "OpenAI 報告，在每個季度都有觀測的 74 個國家裡，各國最常見十類活動佔已分類工作訊息的平均比例，從 56.0% 下降到 51.1%，減少 4.9 個百分點。這個結果說明被觀察到的使用用途較少集中在少數活動中；它不是全球訊息按總量加權後的比例，也不意味著工作總量或某類任務的絕對使用量減少。"
+              ]
+            },
+            {
+              "heading": "方法決定了能看見哪些人",
+              "paragraphs": [
+                "v3.0 資料字典說明，整體 Signals 資料以每月 100 萬條個人版訊息為樣本，來自宣告年齡至少 18 歲的賬戶；完整方法時間窗為 2024 年 7 月至 2026 年 9 月，不能與本次工作活動序列的起點混為一談。已刪除賬戶和不允許資料用於訓練的使用者被排除，企業版與 Codex 也不在樣本中，因此商務和技術使用可能被低估。訊息按日期加權，以匹配各天在當月真實訊息量中的比例。",
+                "研究者不直接閱讀原始對話：訊息先去除識別資訊，再由自動分類系統處理，釋出時使用聚合結果、抑制小樣本組並加入差分隱私噪聲。更細的國家和活動組合來自更小的子樣本，波動也會更大。資料按 CC BY 4.0 提供，可引用和再分析，但這不消除分類誤差、樣本選擇和小組統計的不確定性。"
+              ]
+            },
+            {
+              "heading": "能提出問題，不能直接證明經濟效果",
+              "paragraphs": [
+                "官方比較還提示，美國按就業加權的活動組合中，約 43% 落在沒有單獨展開的“其他活動”裡，包括搬運、駕駛和部分記錄維護。這些活動在最初美國 ChatGPT 樣本中未達到穩定單列的條件，因此聊天用途與現實勞動結構之間有明顯缺口。Techsuda 的獨立報道也提醒，活動佔比變化不能直接理解為絕對使用量變化。",
+                "本站據這些統計口徑作出的判斷是：這組資料適合觀察用途擴散、地區差異以及提出後續研究問題；它沒有記錄每次回答是否正確、被採用或節省多少時間，不能單獨證明生產率提升、崗位減少或國家之間的因果差異。要回答這些問題，還需要任務結果、時間或就業資料，以及能排除其他因素的研究設計。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據資料方法重繪的解釋性流程，說明統計如何形成，不展示個人對話或生產率實測。",
+            "steps": [
+              "抽樣個人版工作相關訊息",
+              "去除識別資訊並自動歸類",
+              "按日期加權和隱私保護處理",
+              "按國家與季度彙總工作活動",
+              "比較使用結構並保留樣本邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "anthropic-drug-development-early-studies",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Anthropic · October 27 research update",
+          "url": "https://www.anthropic.com/research/early-progress-drug-development"
+        },
+        {
+          "label": "BigHat / Anthropic · antibody optimization technical report",
+          "url": "https://www.bighatbio.com/bighat-anthropic-collaboration-report-10-27-2026"
+        },
+        {
+          "label": "Enveda · CDP technical report",
+          "url": "https://enveda.com/CMC-Document-Processor/"
+        },
+        {
+          "label": "SiliconReport · independent coverage of the announcement",
+          "url": "https://www.siliconreport.com/anthropic-partners-with-six-organizations-on-drug-development"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "10 月 27 日，Anthropic 公布 Claude 参与药物研发的阶段性结果，涉及 BigHat、Bristol Myers Squibb、Divergence Labs、Enveda、Generate Biomedicines 和 The Column Group 六家机构，并披露自有研究进展。与泛泛的“AI 加速制药”不同，这次附带技术报告，可以具体检查模型做了什么、实验怎样验证，以及宣传中的数字究竟指哪一步。",
+          "sections": [
+            {
+              "heading": "先改进测量，再谈分子优化",
+              "paragraphs": [
+                "BigHat 的研究把两种抗体片段作为起点，由研究人员、Claude 和实验平台协作，约十周完成七轮、约 1,010 个设计变体的测试。重要发现不只是筛到更好的变体：团队发现某些热稳定性指标没有测量其名称暗示的性质，于是回看原始仪器曲线、提出物理解释，并通过后续实验检查新指标。研究人员指导判断，BigHat 实际制造和测试样品，不能写成 AI 独立完成研发。",
+                "报告最终选出的两个平衡候选，结合能力约为起点的九倍和六倍，相应热行为改善约 8°C 和 18°C。公告中的“超过十倍”指其他表现最佳的单项变体，不应移到这两个最终候选上。关键读数只有一至两次重复，部分比较已碰到仪器分辨极限；样本也仅为一个平台上的两种骨架，没有另一种设计流程的并行对照，不能把全部收益都归因于 Claude。"
+              ]
+            },
+            {
+              "heading": "文件审核提速，不能省掉最终人审",
+              "paragraphs": [
+                "Enveda 的 CDP 处理另一类瓶颈：把生产记录与对应的批准文件联系起来，逐页检查，给出带出处的疑点。模型拿到的是只读副本，不会改写正式记录。公开评价来自一次二期项目生产活动的四份记录，共 1,061 页。人工找到的 11 个不同问题，CDP 在多次运行中合计都曾提示；这不等于任意一次运行都能全部发现。",
+                "一次 Claude Opus 4.7 运行还提出七个经裁定有用、人工未发现的问题。计时比较为人工 1,553 分钟，对照 CDP 处理加人工检查意见的 166 分钟，约减少 89%。这衡量的是这一组文件的辅助审核，不是整个研发周期。报告同时记载误读，且大约八成意见不需要行动；CDP 仍是建议工具，尚未作为 GMP 计算机化系统完成验证，最终批次放行由质量人员决定。"
+              ]
+            },
+            {
+              "heading": "早期证据离新药还有多远",
+              "paragraphs": [
+                "Anthropic 也披露收购 Mithril Medicine，继续两种罕见肌营养不良的研究；SiliconReport 的独立报道确认了这一新闻增量，但没有独立复现实验结果。相关候选最早在 2028 年底进入人体试验是附条件的目标，并非已经启动。合作版图中虽有临床计划与在研项目，公告所述研究总体仍以临床前阶段为主，动物或体外结果不能写成对患者有效。",
+                "这些报告展示的是如何把模型接到真实数据、实验和审核环节，而不是交付一款已证明疗效的新药。BigHat 与 Enveda 都是参与者的自报研究；Enveda 的原始批次资料因专有和个人信息无法公开，进一步限制外部复核。本站认为此次值得关注的是具体流程与可检查的限制，后续仍要看重复实验、更广范围的比较以及临床证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据技术报告重绘的人机协作示意，表示研究与审核分工，不是临床疗效图。",
+            "steps": [
+              "研究人员明确问题与评价条件",
+              "Claude 协助分析数据和提出候选",
+              "实验平台测试或逐页审查文件",
+              "人员核对结果、误读及指标限制",
+              "完成进一步验证后才进入下一阶段"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 27, Anthropic published early results from work with BigHat, Bristol Myers Squibb, Divergence Labs, Enveda, Generate Biomedicines and The Column Group, alongside internal research. The substantive addition is a set of technical reports that lets readers examine what the model contributed, how it was checked and which stage each headline number describes.",
+          "sections": [
+            {
+              "heading": "Improving measurement before optimizing molecules",
+              "paragraphs": [
+                "BigHat studied two antibody fragments through collaboration between researchers, Claude and its experimental platform: seven rounds and about 1,010 design variants over roughly ten weeks. Beyond finding improved variants, the team discovered that some thermal metrics did not measure the properties their names suggested. It revisited instrument curves, developed physical explanations and tested revised measurements. People directed the work and BigHat made and tested the samples; this was not autonomous AI drug development.",
+                "The two final candidates chosen for balanced properties bound about nine and six times more tightly than their starting molecules, with corresponding thermal improvements of roughly 8°C and 18°C. The announcement’s greater-than-tenfold figure refers to other best-performing variants on an individual measure, not those two selected leads. Important readings had only one or two replicates, and some comparisons reached instrument resolution limits. Two scaffolds on one platform, without a parallel campaign using another design strategy, cannot establish how much improvement Claude alone caused."
+              ]
+            },
+            {
+              "heading": "Faster document checks retain human responsibility",
+              "paragraphs": [
+                "Enveda’s CDP addresses a different bottleneck: linking manufacturing records to their governing documents, checking every page and presenting source-linked concerns. The model receives read-only copies and cannot alter official records. The published evaluation used four records totaling 1,061 pages from one Phase 2 manufacturing campaign. Across multiple runs, CDP flagged all 11 distinct issues found by human reviewers; that is not a guarantee that every single run found all 11.",
+                "One Claude Opus 4.7 pass also produced seven adjudicated actionable issues missed by people. Timed comparison was 1,553 minutes for unaided review versus 166 minutes for CDP processing plus human checking of its comments, approximately 89% less. This measures assisted review of those records, not the whole development cycle. The report also records misreads, and about four in five comments required no action. CDP remains advisory and is not validated as a GMP computerized system; quality staff retain final batch-release decisions."
+              ]
+            },
+            {
+              "heading": "Early evidence is not a new treatment",
+              "paragraphs": [
+                "Anthropic also disclosed acquiring Mithril Medicine and continuing research into two rare muscular dystrophies. Independent coverage by SiliconReport confirms the news event, not independent reproduction of the experiments. Human trials as early as late 2028 are a conditional target, not trials already underway. Although the partnerships include clinical planning and ongoing programs, the announced research is predominantly preclinical; animal and laboratory results do not establish benefit to patients.",
+                "The reports describe connecting models to real data, experiments and review, rather than delivering a medicine with proven efficacy. BigHat and Enveda are reporting their own collaborations. Enveda cannot publish underlying batch records because they contain proprietary and personal information, further limiting outside verification. Our assessment is that the concrete workflows and inspectable limitations make this update informative; replication, broader comparisons and clinical evidence remain the next tests."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Human–AI workflow redrawn by this site from the technical reports; it shows responsibilities, not measured clinical benefit.",
+            "steps": [
+              "Researchers define questions and evaluation conditions",
+              "Claude helps analyze evidence and propose candidates",
+              "Laboratories test or records undergo page-by-page review",
+              "People check findings, misreads and measurement limits",
+              "Further validation precedes the next development stage"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Anthropic は 10 月 27 日、BigHat、Bristol Myers Squibb、Divergence Labs、Enveda、Generate Biomedicines、The Column Group の六つの組織との協力と、自社研究の初期結果を公表した。今回は技術報告が添えられ、モデルの担当、実験による確認、見出しの数字が指す工程を具体的に検討できる点が新しい。",
+          "sections": [
+            {
+              "heading": "分子の最適化より先に測定を見直す",
+              "paragraphs": [
+                "BigHat は二つの抗体断片を対象に、研究者、Claude、実験基盤の協力で約十週間、七ラウンド、約 1,010 の設計変体を試した。改良体を見つけるだけでなく、一部の熱指標が名前から想定される性質を測っていないことに気付いた。装置の生データへ戻り、物理的な説明を考え、測定の見直しを実験で確認した。研究者が判断を導き、BigHat が試料を作り測定したのであり、AI が独力で創薬したわけではない。",
+                "特性のバランスで最後に選んだ二候補は、出発分子より結合が約九倍と六倍強く、対応する熱挙動の改善は約 8°C と 18°C だった。発表の「十倍超」は別の変体における単一指標の最高値で、この二候補にそのまま適用できない。主要値は一、二回の反復に基づき、一部は装置の分解能限界に達している。一つの基盤で二骨格を調べ、別の設計法による並行比較もないため、改善をすべて Claude に帰属できない。"
+              ]
+            },
+            {
+              "heading": "書類確認が速くなっても最終判断は人",
+              "paragraphs": [
+                "Enveda の CDP は別の障害に取り組む。製造記録を根拠となる承認文書に結び付け、全ページを確認し、出典付きの疑点を示す。モデルは読み取り専用の写しを受け取り、正式記録を書き換えない。評価は一つの第 2 相向け製造キャンペーンの四記録、計 1,061 ページ。人が見つけた異なる 11 問題を、CDP は複数回の実行を合わせてすべて指摘した。毎回すべて見つかるという結果ではない。",
+                "Claude Opus 4.7 の一回の実行では、人が見逃した七つの対応すべき問題も判定者が確認した。所要時間は手作業の 1,553 分に対し、CDP 処理と人によるコメント確認を合わせて 166 分で、約 89% 短かった。この記録群の補助レビューであり、開発全体の短縮率ではない。誤読もあり、コメントの約八割は対応不要だった。CDP は助言用で GMP コンピュータ化システムとして未検証であり、最終的な出荷判定は品質担当者が行う。"
+              ]
+            },
+            {
+              "heading": "初期成果から治療薬までには距離がある",
+              "paragraphs": [
+                "Anthropic は Mithril Medicine の買収と、二種の希少な筋ジストロフィーの研究継続も明らかにした。SiliconReport の独立報道はこの発表を確認するが、実験を独立に再現したものではない。早ければ 2028 年末の人体試験という時期は条件付きの目標で、既に開始したわけではない。臨床計画や進行中の案件も含まれるが、今回の研究全体は主に前臨床段階で、動物や試験管内の結果を患者への効果とは言えない。",
+                "報告が示すのは、モデルを現実のデータ、実験、確認作業へ接続する方法であり、有効性が証明された新薬の完成ではない。BigHat と Enveda は協力当事者による報告で、Enveda の原始記録は専有情報と個人情報のため公開できず、外部検証にも制約がある。当サイトは具体的な工程と検討可能な限界にニュース価値を見る。再現実験、広い比較、臨床証拠は引き続き必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "技術報告を基に当サイトが描き直した人と AI の分担図。臨床効果の測定結果ではない。",
+            "steps": [
+              "研究者が課題と評価条件を決める",
+              "Claude が分析と候補提案を補助",
+              "実験設備で試すか文書を全ページ確認",
+              "人が結果・誤読・測定限界を確認",
+              "追加検証を経て次の開発段階へ進む"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "27 октября Anthropic опубликовала ранние результаты сотрудничества с BigHat, Bristol Myers Squibb, Divergence Labs, Enveda, Generate Biomedicines и The Column Group, а также собственных исследований. Существенное дополнение — технические отчёты, позволяющие разобраться, что сделал Claude, как это проверили и к какому этапу относятся громкие показатели.",
+          "sections": [
+            {
+              "heading": "Сначала проверить измерение, затем улучшать молекулу",
+              "paragraphs": [
+                "BigHat исследовала два фрагмента антител совместно с учёными, Claude и своей экспериментальной платформой: семь раундов, около 1 010 вариантов примерно за десять недель. Помимо улучшения вариантов, команда обнаружила, что некоторые температурные показатели измеряли не те свойства, которые подразумевали их названия. Исследователи вернулись к исходным кривым приборов, предложили физические объяснения и проверили пересмотренные измерения. Люди руководили работой, а BigHat изготовила и испытала образцы: это не автономная разработка лекарств ИИ.",
+                "Два выбранных по балансу свойств финальных кандидата связывались с мишенью примерно в девять и шесть раз сильнее исходных молекул; соответствующие температурные улучшения составили около 8°C и 18°C. Указанное в объявлении улучшение более чем в десять раз относится к другим лучшим вариантам по отдельному показателю, не к этой паре. Важные значения основаны на одном-двух повторах; часть сравнений достигла предела разрешения прибора. Два каркаса на одной платформе без параллельного опыта с иной стратегией не позволяют приписать весь выигрыш одному Claude."
+              ]
+            },
+            {
+              "heading": "Ускорение проверки не отменяет ответственность человека",
+              "paragraphs": [
+                "CDP компании Enveda решает другую задачу: связывает производственные записи с определяющими их документами, проверяет страницы и предъявляет замечания с источниками. Модель получает копии только для чтения и не меняет официальные записи. В оценке участвовали четыре записи одной производственной кампании для II фазы, всего 1 061 страница. Все 11 различных проблем, найденных людьми, CDP отметил хотя бы в одном из нескольких запусков. Это не означает, что каждый запуск обнаруживал все 11.",
+                "Один проход Claude Opus 4.7 также выявил семь дополнительных проблем, признанных требующими действия и пропущенных людьми. Ручная проверка заняла 1 553 минуты против 166 минут обработки CDP вместе с проверкой его замечаний людьми — примерно на 89% меньше. Измерялся вспомогательный обзор этих записей, не весь цикл разработки. Отчёт фиксирует и ошибки чтения; около четырёх из пяти комментариев не требовали действий. CDP остаётся советующим инструментом и не валидирован как компьютеризированная система GMP; окончательное решение о выпуске партии принимает служба качества."
+              ]
+            },
+            {
+              "heading": "Ранний результат ещё не лечение",
+              "paragraphs": [
+                "Anthropic также раскрыла покупку Mithril Medicine и продолжение исследований двух редких мышечных дистрофий. Независимая публикация SiliconReport подтверждает новостное событие, но не воспроизводит эксперименты. Начало испытаний на людях уже в конце 2028 года — условная цель, а не начавшиеся испытания. Хотя сотрудничества затрагивают клиническое планирование и текущие программы, представленные исследования преимущественно доклинические. Результаты на животных или в лаборатории не устанавливают пользу для пациентов.",
+                "Отчёты показывают способы подключить модели к реальным данным, экспериментам и проверке, а не готовое лекарство с доказанной эффективностью. BigHat и Enveda описывают собственные сотрудничества; исходные записи Enveda недоступны из-за закрытых и персональных данных, что ограничивает внешнюю проверку. По нашей оценке, новость содержательна конкретными процессами и раскрытыми ограничениями. Повторение опытов, более широкое сравнение и клинические доказательства ещё необходимы."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново составленная сайтом по техническим отчётам: распределение работы, а не измеренная клиническая польза.",
+            "steps": [
+              "Учёные задают вопрос и условия оценки",
+              "Claude помогает анализировать и предлагать кандидатов",
+              "Лаборатория испытывает образцы или проверяются страницы записей",
+              "Люди проверяют выводы, ошибки чтения и пределы измерений",
+              "Дальнейшая проверка предшествует следующему этапу"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "10 月 27 日，Anthropic 公佈 Claude 參與藥物研發的階段性結果，涉及 BigHat、Bristol Myers Squibb、Divergence Labs、Enveda、Generate Biomedicines 和 The Column Group 六家機構，並披露自有研究進展。與泛泛的“AI 加速製藥”不同，這次附帶技術報告，可以具體檢查模型做了什麼、實驗怎樣驗證，以及宣傳中的數字究竟指哪一步。",
+          "sections": [
+            {
+              "heading": "先改進測量，再談分子最佳化",
+              "paragraphs": [
+                "BigHat 的研究把兩種抗體片段作為起點，由研究人員、Claude 和實驗平臺協作，約十週完成七輪、約 1,010 個設計變體的測試。重要發現不只是篩到更好的變體：團隊發現某些熱穩定性指標沒有測量其名稱暗示的性質，於是回看原始儀器曲線、提出物理解釋，並透過後續實驗檢查新指標。研究人員指導判斷，BigHat 實際製造和測試樣品，不能寫成 AI 獨立完成研發。",
+                "報告最終選出的兩個平衡候選，結合能力約為起點的九倍和六倍，相應熱行為改善約 8°C 和 18°C。公告中的“超過十倍”指其他表現最佳的單項變體，不應移到這兩個最終候選上。關鍵讀數只有一至兩次重複，部分比較已碰到儀器分辨極限；樣本也僅為一個平臺上的兩種骨架，沒有另一種設計流程的並行對照，不能把全部收益都歸因於 Claude。"
+              ]
+            },
+            {
+              "heading": "檔案稽核提速，不能省掉最終人審",
+              "paragraphs": [
+                "Enveda 的 CDP 處理另一類瓶頸：把生產記錄與對應的批准檔案聯絡起來，逐頁檢查，給出帶出處的疑點。模型拿到的是隻讀副本，不會改寫正式記錄。公開評價來自一次二期專案生產活動的四份記錄，共 1,061 頁。人工找到的 11 個不同問題，CDP 在多次執行中合計都曾提示；這不等於任意一次執行都能全部發現。",
+                "一次 Claude Opus 4.7 執行還提出七個經裁定有用、人工未發現的問題。計時比較為人工 1,553 分鐘，對照 CDP 處理加人工檢查意見的 166 分鐘，約減少 89%。這衡量的是這一組檔案的輔助稽核，不是整個研發週期。報告同時記載誤讀，且大約八成意見不需要行動；CDP 仍是建議工具，尚未作為 GMP 計算機化系統完成驗證，最終批次放行由質量人員決定。"
+              ]
+            },
+            {
+              "heading": "早期證據離新藥還有多遠",
+              "paragraphs": [
+                "Anthropic 也披露收購 Mithril Medicine，繼續兩種罕見肌營養不良的研究；SiliconReport 的獨立報道確認了這一新聞增量，但沒有獨立復現實驗結果。相關候選最早在 2028 年底進入人體試驗是附條件的目標，並非已經啟動。合作版圖中雖有臨床計劃與在研專案，公告所述研究總體仍以臨床前階段為主，動物或體外結果不能寫成對患者有效。",
+                "這些報告展示的是如何把模型接到真實資料、實驗和稽核環節，而不是交付一款已證明療效的新藥。BigHat 與 Enveda 都是參與者的自報研究；Enveda 的原始批次資料因專有和個人資訊無法公開，進一步限制外部複核。本站認為此次值得關注的是具體流程與可檢查的限制，後續仍要看重複實驗、更廣範圍的比較以及臨床證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據技術報告重繪的人機協作示意，表示研究與稽核分工，不是臨床療效圖。",
+            "steps": [
+              "研究人員明確問題與評價條件",
+              "Claude 協助分析資料和提出候選",
+              "實驗平臺測試或逐頁審查檔案",
+              "人員核對結果、誤讀及指標限制",
+              "完成進一步驗證後才進入下一階段"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "google-genie4-interactive-world-preview",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Google DeepMind · Genie 4 research preview",
+          "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/"
+        },
+        {
+          "label": "Google · availability announcement",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/introducing-genie-4/"
+        },
+        {
+          "label": "Ars Technica · independent release coverage",
+          "url": "https://arstechnica.com/google/2026/10/deepminds-genie-4-world-model-adds-audio-and-more-realistic-people-to-simulations/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "10 月 27 日，Google DeepMind 公布 Genie 4，并开始向少量可信测试者提供研究预览。它生成的是可以持续操作的场景：用户移动视角或改变要求后，模型接着生成环境的反应。这次加入了与世界一同生成的声音，也把 Gemini 放进持续观察和引导场景的过程。",
+          "sections": [
+            {
+              "heading": "从看视频到在场景里行动",
+              "paragraphs": [
+                "普通视频生成通常交付一段片段，世界模型则要在用户行动后继续接住前面的状态。Genie 4 支持键盘导航、摄像机控制，以及在模拟过程中用文字改变天气、加入人物或调整场景。环境音、音乐和人物对话由模型同时生成，不只是事后添加的配乐。",
+                "官方说明，Gemini Omni 提供与外观和行为有关的基础能力，Gemini 3.8 Flash 则充当引导者：把目标拆成步骤，观察输出画面，再检查场景有没有朝目标推进。本站将这一机制理解为带反馈的生成过程；它有助于解释为什么模型能够回应连续操作，但不能据此认定每一步都可靠。"
+              ]
+            },
+            {
+              "heading": "机器人演示证明了什么",
+              "paragraphs": [
+                "DeepMind 还展示了 Gemini 4 Argon 配合 Genie 4 的研究实验：围绕模拟中的 Apptronik Apollo 机器人下跳棋，规划步骤并生成相应场景。这个例子显示了将推理模型与视觉模拟结合的方向，演示发生在生成环境里，不能当作实体机器人已完成同一任务的证据。",
+                "对创作者而言，这类工具可能用于快速试验镜头和交互想法；对机器人研究者而言，关键问题则是模拟中的规律能否足够稳定、准确地对应现实。前一种用途可以容忍一定视觉误差，后一种需要更严格的验证。这是本站对应用条件的分析，并非本次发布已经证明的训练收益。"
+              ]
+            },
+            {
+              "heading": "开放范围和仍未解决的问题",
+              "paragraphs": [
+                "截至本次公告，已提供的是可信测试者研究预览。面向 Google AI Ultra 用户的 Project Genie，以及 Gemini API 和 AI Studio 的早期合作伙伴入口，仍属于后续计划。Google 官方简讯与独立报道都区分了这两个阶段，因此不能将它写成已经全面上线或开放模型权重。",
+                "DeepMind 承认，较长会话、复杂修改和场景导航仍可能使物体与细节漂移；物理交互、音频准确性、可读文字和空间一致性仍在研究中。官方视频是演示，不是本站独立测试。视频和音频会加入 SynthID 标记，但水印也不能替代对内容真实性和模拟精度的判断。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方机制重绘的解释示意，不代表实测性能。",
+            "steps": [
+              "用户提出目标或操作场景",
+              "Gemini 拆解目标并观察画面",
+              "Genie 4 生成后续画面与声音",
+              "继续观察、修正；长时间仍可能漂移"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 27, Google DeepMind announced Genie 4 and began a research preview with a small group of trusted testers. Rather than delivering a fixed clip, the model continues a scene as a user moves or changes the request. Native sound and an ongoing Gemini guidance loop are central additions.",
+          "sections": [
+            {
+              "heading": "A scene that responds to actions",
+              "paragraphs": [
+                "A video generator usually produces a clip; an interactive world model must carry the preceding state forward after a new action. Genie 4 supports keyboard navigation, camera control and text edits during a simulation, including changing weather or introducing a character. Ambient sound, music and dialogue are generated with the world rather than simply added afterwards.",
+                "DeepMind describes Gemini Omni as a foundation for appearance and behaviour, while Gemini 3.8 Flash acts as a guide: breaking a goal into steps, observing frames and checking progress. We interpret this as a feedback-driven generation process. That explains the intended role of continuous guidance, but does not establish that every correction succeeds."
+              ]
+            },
+            {
+              "heading": "What the robot demonstration establishes",
+              "paragraphs": [
+                "A separate research experiment pairs Gemini 4 Argon with Genie 4 around a simulated Apptronik Apollo robot playing checkers. Planning and scene generation illustrate a possible connection between reasoning and visual simulation. The demonstration takes place inside a generated environment; it is not evidence that a physical robot completed the same task.",
+                "Creative prototyping could tolerate some visual errors while a robot-training environment needs stable relationships with real physics. In our reading, these are different validation burdens. Faster experimentation with scenes is a plausible use, but improved real-world robot training has not been established by this announcement."
+              ]
+            },
+            {
+              "heading": "Preview access and unresolved limits",
+              "paragraphs": [
+                "The available release is the trusted-tester research preview. Project Genie for Google AI Ultra subscribers, and access for early Gemini API and AI Studio partners, remain forthcoming. Google’s short announcement and independent coverage distinguish these stages. This is neither general availability nor an open-weights release.",
+                "DeepMind acknowledges that objects and details can drift during longer sessions, complex edits and navigation. Physical interaction, audio accuracy, readable text and spatial consistency remain research problems. Official recordings are demonstrations, not our independent tests. SynthID marking is planned for generated video and audio; a watermark is not a guarantee of truth or simulation accuracy."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Our explanatory redraw of the announced mechanism; not a performance measurement.",
+            "steps": [
+              "A user supplies a goal or action",
+              "Gemini plans and observes frames",
+              "Genie 4 generates subsequent video and audio",
+              "Observe and revise; drift can still accumulate"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Google DeepMind は 10 月 27 日、Genie 4 を発表し、少数の信頼できるテスター向けに研究プレビューを開始した。完成した映像を渡すだけでなく、利用者が移動したり要求を変えたりすると、場面の続きを生成する。世界と同時に作る音声と、Gemini が継続的に観察して誘導する仕組みが今回の要点だ。",
+          "sections": [
+            {
+              "heading": "行動に応じて続く場面",
+              "paragraphs": [
+                "通常の動画生成が一つのクリップを出力するのに対し、世界モデルには新しい操作の後も前の状態を引き継ぐ必要がある。Genie 4 はキーボードによる移動、カメラ操作、途中で天候を変えたり人物を加えたりする文章指示に対応する。環境音、音楽、会話も世界と一緒に生成され、単なる後付けの音楽ではない。",
+                "公式説明では、Gemini Omni が外観や振る舞いの基盤となり、Gemini 3.8 Flash が目標を手順に分け、画面を観察して進行を確認する。本サイトはこれを、出力を見て次を調整する生成方式と捉える。ただし、この仕組みがあることと、すべての修正が成功することは別である。"
+              ]
+            },
+            {
+              "heading": "ロボットの実演から言える範囲",
+              "paragraphs": [
+                "別の研究実験では、Gemini 4 Argon と Genie 4 を組み合わせ、シミュレーション内の Apptronik Apollo ロボットがチェッカーをする場面を扱う。推論による計画と視覚的な生成をつなぐ方向性は示しているが、実機が同じ課題を達成した証拠ではない。",
+                "映像制作の構想を試す用途なら多少の見た目の誤差を許容できても、ロボットの訓練環境には現実の物理との安定した対応が必要になる。本サイトの見立てでは、両者に求められる検証は異なる。今回の発表だけで、実世界での訓練効果が改善したとは結論できない。"
+              ]
+            },
+            {
+              "heading": "公開状況と残る課題",
+              "paragraphs": [
+                "現在提供されているのはテスター向けの研究プレビューだ。Google AI Ultra 利用者向け Project Genie と、Gemini API・AI Studio の初期パートナー向け提供は今後の予定である。Google の公式短報と独立報道もこの段階を区別しており、一般公開済みや重み公開と表現するのは適切ではない。",
+                "DeepMind は、長い会話、複雑な編集、場面内の移動で物体や細部が変化し得ると認める。物理的な相互作用、音声の正確さ、読める文字、空間的一貫性も研究課題だ。公式映像は実演であり、本サイトの独立実測ではない。映像・音声には SynthID を付けるとしているが、透かしは内容の真実性や物理精度を保証しない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式説明を基に本サイトが描き直した概念図。性能測定ではありません。",
+            "steps": [
+              "利用者が目標や操作を入力",
+              "Gemini が計画し画面を観察",
+              "Genie 4 が次の映像と音声を生成",
+              "観察と修正を継続。ただしずれは残る"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "27 октября Google DeepMind представила Genie 4 и начала исследовательское тестирование с небольшой группой доверенных участников. Модель продолжает сцену после движения пользователя или изменения запроса, а не просто выдаёт готовый ролик. Важные дополнения — звук, создаваемый вместе с миром, и постоянное наблюдение со стороны Gemini.",
+          "sections": [
+            {
+              "heading": "Мир отвечает на действия",
+              "paragraphs": [
+                "Обычный генератор видео выдаёт клип, а интерактивная модель мира должна сохранять предыдущее состояние после нового действия. Genie 4 поддерживает навигацию с клавиатуры, управление камерой и текстовые изменения во время симуляции: например, смену погоды или добавление персонажа. Фоновые звуки, музыка и диалог создаются вместе со сценой, а не только накладываются впоследствии.",
+                "По описанию DeepMind, Gemini Omni задаёт основу внешнего вида и поведения, а Gemini 3.8 Flash разбивает цель на шаги, наблюдает кадры и проверяет продвижение. Мы рассматриваем это как генерацию с обратной связью. Такая схема объясняет замысел постоянного управления, но не доказывает успешность каждой коррекции."
+              ]
+            },
+            {
+              "heading": "Границы демонстрации с роботом",
+              "paragraphs": [
+                "В отдельном исследовательском эксперименте Gemini 4 Argon и Genie 4 моделируют игру робота Apptronik Apollo в шашки. Планирование шагов и генерация сцены показывают возможную связь рассуждения с визуальной симуляцией. Однако действие происходит в сгенерированной среде: это не свидетельство выполнения той же задачи физическим роботом.",
+                "При разработке творческой идеи некоторые визуальные ошибки допустимы. Среде обучения роботов, напротив, необходимо устойчиво воспроизводить реальные физические отношения. По нашей оценке, этим применениям нужны разные проверки. Объявление ещё не устанавливает улучшение обучения роботов в реальном мире."
+              ]
+            },
+            {
+              "heading": "Кому доступна модель и что пока не решено",
+              "paragraphs": [
+                "Сейчас доступен исследовательский предварительный вариант для доверенных тестеров. Project Genie для подписчиков Google AI Ultra и доступ для ранних партнёров Gemini API и AI Studio только запланированы. Официальная краткая публикация Google и независимое освещение различают эти стадии. Речь не идёт ни об общедоступном продукте, ни об открытых весах.",
+                "DeepMind признаёт возможное изменение объектов и деталей в длинных сеансах, после сложного редактирования и перемещения по сцене. Физические взаимодействия, точность звука, читаемый текст и пространственная согласованность остаются исследовательскими задачами. Официальные записи — демонстрации, а не наши независимые испытания. Маркировка SynthID для видео и звука не гарантирует достоверность содержания или точность симуляции."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по официальному описанию; не результат измерений.",
+            "steps": [
+              "Пользователь задаёт цель или действие",
+              "Gemini планирует и наблюдает кадры",
+              "Genie 4 создаёт следующие кадры и звук",
+              "Наблюдение и коррекция продолжаются; ошибки возможны"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "10 月 27 日，Google DeepMind 公佈 Genie 4，並開始向少量可信測試者提供研究預覽。它生成的是可以持續操作的場景：使用者移動視角或改變要求後，模型接著生成環境的反應。這次加入了與世界一同生成的聲音，也把 Gemini 放進持續觀察和引導場景的過程。",
+          "sections": [
+            {
+              "heading": "從看影片到在場景裡行動",
+              "paragraphs": [
+                "普通影片生成通常交付一段片段，世界模型則要在使用者行動後繼續接住前面的狀態。Genie 4 支援鍵盤導航、攝像機控制，以及在模擬過程中用文字改變天氣、加入人物或調整場景。環境音、音樂和人物對話由模型同時生成，不只是事後新增的配樂。",
+                "官方說明，Gemini Omni 提供與外觀和行為有關的基礎能力，Gemini 3.8 Flash 則充當引導者：把目標拆成步驟，觀察輸出畫面，再檢查場景有沒有朝目標推進。本站將這一機制理解為帶反饋的生成過程；它有助於解釋為什麼模型能夠回應連續操作，但不能據此認定每一步都可靠。"
+              ]
+            },
+            {
+              "heading": "機器人演示證明了什麼",
+              "paragraphs": [
+                "DeepMind 還展示了 Gemini 4 Argon 配合 Genie 4 的研究實驗：圍繞模擬中的 Apptronik Apollo 機器人下跳棋，規劃步驟並生成相應場景。這個例子顯示了將推理模型與視覺模擬結合的方向，演示發生在生成環境裡，不能當作實體機器人已完成同一任務的證據。",
+                "對創作者而言，這類工具可能用於快速試驗鏡頭和互動想法；對機器人研究者而言，關鍵問題則是模擬中的規律能否足夠穩定、準確地對應現實。前一種用途可以容忍一定視覺誤差，後一種需要更嚴格的驗證。這是本站對應用條件的分析，並非本次釋出已經證明的訓練收益。"
+              ]
+            },
+            {
+              "heading": "開放範圍和仍未解決的問題",
+              "paragraphs": [
+                "截至本次公告，已提供的是可信測試者研究預覽。面向 Google AI Ultra 使用者的 Project Genie，以及 Gemini API 和 AI Studio 的早期合作伙伴入口，仍屬於後續計劃。Google 官方簡訊與獨立報道都區分了這兩個階段，因此不能將它寫成已經全面上線或開放模型權重。",
+                "DeepMind 承認，較長會話、複雜修改和場景導航仍可能使物體與細節漂移；物理互動、音訊準確性、可讀文字和空間一致性仍在研究中。官方影片是演示，不是本站獨立測試。影片和音訊會加入 SynthID 標記，但水印也不能替代對內容真實性和模擬精度的判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方機制重繪的解釋示意，不代表實測效能。",
+            "steps": [
+              "使用者提出目標或操作場景",
+              "Gemini 拆解目標並觀察畫面",
+              "Genie 4 生成後續畫面與聲音",
+              "繼續觀察、修正；長時間仍可能漂移"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "microsoft-emudhra-offline-trust-update",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Microsoft MSRC · response and October 27 update",
+          "url": "https://www.microsoft.com/en-us/msrc/blog/2026/10/microsoft-response-to-compromised-emudhra-certificate-authority-keys"
+        },
+        {
+          "label": "Microsoft Trusted Root Program · October 26 announcement",
+          "url": "https://github.com/TrustedRootProgram/Program-Requirements/blob/main/Announcements.md"
+        },
+        {
+          "label": "Microsoft · Windows 11 KB5134133",
+          "url": "https://support.microsoft.com/en-us/servicing/os/windows-11/2026/10/kb5134133-windows-11-24h2-25h2-26h2-update"
+        },
+        {
+          "label": "Microsoft · Windows 10 KB5134125",
+          "url": "https://support.microsoft.com/en-us/servicing/os/windows-10/2026/10/kb5134125-windows-10-21h2-22h2-update"
+        },
+        {
+          "label": "BleepingComputer · independent coverage",
+          "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-releases-windows-oob-updates-to-distrust-emudhra-certificates/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "微软 10 月 26 日公布对 eMudhra 证书事件的进一步处置：Windows 不再默认信任七张相关证书，并提供带外更新，让无法自动获得证书信任列表的设备也能接收变更。27 日的官方补充确认，Edge 已移除相同七张证书。新增进展是信任范围与交付方式的变化，不是重复报道早先的漏洞发现。",
+          "sections": [
+            {
+              "heading": "为什么需要比吊销更广的措施",
+              "paragraphs": [
+                "证书可以理解为网站或软件身份的证明，浏览器和操作系统沿着证书链判断它由谁担保。此次受影响的是 eMudhra 八个中间证书机构的私钥，涉及六个 TLS 机构和两个代码签名机构。微软说明，这些密钥存在可被恢复的风险，可能被用于冒充网站或可信软件发布者；事件并非微软自身系统被攻破。",
+                "10 月 20 日，微软已通过 Windows 不受信任证书列表封禁受影响密钥，并通过 Edge、WebView2 的组件更新阻止相关 TLS 证书。26 日的决定更进一步：移除六张 eMudhra G3 根证书和一张 AAA Certificate Services 交叉签名证书。吊销已知中间证书与撤掉上层默认信任是两件事，后者会影响更广的证书路径。"
+              ]
+            },
+            {
+              "heading": "离线设备为什么单独提供更新",
+              "paragraphs": [
+                "能正常获取自动证书信任列表的设备，通过原有分发渠道接收变更。微软另行发布累积带外包，是为了覆盖无法连接证书更新服务、处于断网环境，或关闭自动列表更新的设备，而非要求每位用户都手动安装一个紧急包。",
+                "Windows 11 的 KB5134133 适用于 24H2、25H2、26H2；Windows 10 的 KB5134125 对应 21H2 和 22H2。应根据实际系统版本和官方支持条件选用。发布说明将这些包归为非安全带外更新，这个服务分类并不改变其中信任列表变更的安全目的；它们也包含此前累积更新内容。"
+              ]
+            },
+            {
+              "heading": "兼容性问题不能靠盲目恢复信任解决",
+              "paragraphs": [
+                "组织需要找出依赖被移除证书链的网站、服务和签名证书，并安排替换或使用有效的其他信任链。部分服务可能因为链路不再受信任而出现连接问题。微软特别提醒，不能只为恢复兼容性就重新信任受影响层级：某些软件不会可靠检查吊销状态或不受信任列表，可能因此重新接受危险证书。",
+                "截至 27 日，Windows 与 Edge 的移除动作都有官方记录，但公告发布不等于每台设备已经接收更新。管理员仍需确认各类设备的分发情况。微软继续评估其余 eMudhra 根证书，后续可能有更多调整；目前不能把七张证书的移除解释为所有相关风险都已消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据微软公告重绘的信任变更示意，不含攻击步骤。",
+            "steps": [
+              "发现中间 CA 私钥风险",
+              "10 月 20 日封禁已知受影响密钥",
+              "26—27 日移除七张上层证书",
+              "分发至设备并替换受影响证书链"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 26, Microsoft announced a broader response to the eMudhra certificate incident: Windows would stop trusting seven related certificates by default, with out-of-band packages for devices unable to receive automatic trust-list changes. An October 27 update confirmed the same removal in Edge. The new development concerns both the scope of distrust and how it reaches devices.",
+          "sections": [
+            {
+              "heading": "Revocation and removal solve different problems",
+              "paragraphs": [
+                "Certificates help browsers and operating systems establish who vouches for a website or software publisher. The incident involves recoverable private keys for eight eMudhra intermediate certificate authorities: six for TLS and two for code signing. Microsoft says those keys could enable impersonation. This was an incident in eMudhra’s hierarchy, not a compromise of Microsoft systems.",
+                "Microsoft had already blocked the affected keys through the Windows Disallowed Certificate Trust List on October 20, with separate Edge and WebView2 component protection for TLS. The new action removes six eMudhra G3 roots and one AAA Certificate Services cross-sign. Revoking known intermediate certificates differs from removing upper-level default trust; the latter affects a broader set of certification paths."
+              ]
+            },
+            {
+              "heading": "Why disconnected devices need a delivery route",
+              "paragraphs": [
+                "Devices receiving automatic certificate trust-list updates obtain the changes through that infrastructure. The cumulative out-of-band packages serve devices that cannot reach the certificate-update service, are disconnected or have automatic list updates disabled. This does not mean every user needs to install an emergency package manually.",
+                "Windows 11 package KB5134133 covers versions 24H2, 25H2 and 26H2; Windows 10 package KB5134125 covers 21H2 and 22H2. Selection depends on the system and applicable support conditions. Microsoft classifies these as non-security out-of-band updates. That servicing label does not negate the security purpose of the trust-list payload; the packages also contain earlier cumulative changes."
+              ]
+            },
+            {
+              "heading": "Do not restore trust just to clear an error",
+              "paragraphs": [
+                "Organisations need to identify dependent certificates and replace them or obtain another valid chain. Connections may fail when a previously accepted path loses trust. Microsoft warns against restoring trust solely for compatibility: software that does not reliably check revocation or the disallowed list could accept dangerous certificates again.",
+                "Windows and Edge removals are documented as of October 27, but an announcement does not prove delivery to every device. Administrators still need to check distribution across their environments. Microsoft is separately evaluating the remaining eMudhra roots, so further changes are possible. Removing seven certificates should not be interpreted as eliminating every associated risk."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Our explanatory redraw of Microsoft’s trust changes; no attack procedure.",
+            "steps": [
+              "Intermediate CA key risk identified",
+              "October 20: block affected keys",
+              "October 26–27: remove seven upper-level certificates",
+              "Deliver changes and replace dependent chains"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Microsoft は 10 月 26 日、eMudhra 証明書問題への追加対応を発表した。Windows の既定の信頼一覧から関連する 7 証明書を削除し、自動的に信頼一覧を更新できない機器向けに帯域外更新も提供する。27 日の追記では Edge でも同じ削除を実施したと確認された。今回は、信頼を外す範囲と端末への届け方が新しい点だ。",
+          "sections": [
+            {
+              "heading": "失効と信頼一覧からの削除は異なる",
+              "paragraphs": [
+                "証明書は、ウェブサイトやソフトウェアの身元を誰が保証するかを判断するために使われる。今回の問題は eMudhra の中間認証局 8 件、内訳は TLS 用 6 件とコード署名用 2 件の秘密鍵に関わる。Microsoft によると鍵を復元される恐れがあり、なりすましに使われ得る。Microsoft 自体への侵入ではない。",
+                "10 月 20 日には Windows の不信頼証明書リストで影響する鍵を遮断し、Edge と WebView2 にも TLS 向けのコンポーネント更新を配信した。追加措置では eMudhra G3 ルート 6 件と AAA Certificate Services のクロス署名 1 件を削除する。既知の中間証明書を失効させる措置と、上位の既定の信頼を外す措置は別で、後者はより広い証明書経路に影響する。"
+              ]
+            },
+            {
+              "heading": "オフライン機器への配信を補う",
+              "paragraphs": [
+                "自動的な証明書信頼一覧の更新を受け取れる端末には、従来の仕組みで変更が届く。累積帯域外パッケージは、更新サービスへ接続できない端末、ネットワークから切り離された環境、自動更新を無効にした端末を補うものだ。全利用者に緊急パッケージの手動導入を求める意味ではない。",
+                "Windows 11 の KB5134133 は 24H2、25H2、26H2、Windows 10 の KB5134125 は 21H2、22H2 が対象で、実際の環境とサポート条件を確認する必要がある。公式の配信分類は「非セキュリティの帯域外更新」だが、信頼一覧の変更が持つ安全上の目的は変わらない。以前の累積更新も含む。"
+              ]
+            },
+            {
+              "heading": "接続エラーだけを理由に信頼を戻さない",
+              "paragraphs": [
+                "組織は削除対象の証明書チェーンに依存するサイト、サービス、署名を確認し、証明書の交換や別の有効なチェーンへの移行を進める必要がある。信頼の削除で接続できなくなる場合もあるが、互換性のためだけに信頼を戻すのは危険だ。失効や不信頼一覧を確実に確認しないソフトウェアでは、危険な証明書を再び受け入れかねない。",
+                "27 日時点で Windows と Edge の削除は公式記録にある。ただし、発表されたことと全端末へ届いたことは同じではなく、管理者は配信状況の確認が必要だ。Microsoft は残る eMudhra ルートを別途評価している。今回の 7 件の削除で関連リスクがすべて解消したとは言えない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Microsoft の説明を基に本サイトが描き直した信頼変更図。攻撃手順は含みません。",
+            "steps": [
+              "中間 CA の秘密鍵リスクを確認",
+              "10 月 20 日：影響する鍵を遮断",
+              "26～27 日：上位の 7 証明書を削除",
+              "端末へ配信し依存するチェーンを交換"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "26 октября Microsoft объявила о расширении мер по инциденту с сертификатами eMudhra. Windows перестаёт по умолчанию доверять семи связанным сертификатам; внеплановые пакеты доставляют изменения устройствам без автоматического обновления списков доверия. Дополнение от 27 октября подтверждает аналогичное удаление в Edge. Новость — расширение меры и её доставки, а не повтор первоначального обнаружения.",
+          "sections": [
+            {
+              "heading": "Отзыв сертификата и удаление доверия различаются",
+              "paragraphs": [
+                "Сертификаты позволяют браузеру или операционной системе проверить, кто поручается за сайт или издателя программы. Инцидент затронул восстанавливаемые закрытые ключи восьми промежуточных центров сертификации eMudhra: шести для TLS и двух для подписи кода. Microsoft предупреждает о возможности подмены. Это проблема иерархии eMudhra, а не взлом систем Microsoft.",
+                "20 октября Microsoft уже заблокировала затронутые ключи через список недоверенных сертификатов Windows и отдельно защитила TLS в Edge и WebView2 обновлением компонентов. Новая мера удаляет шесть корневых сертификатов eMudhra G3 и один перекрёстный сертификат AAA Certificate Services. Отзыв известных промежуточных сертификатов и отказ от доверия вышестоящим сертификатам — разные действия; второе затрагивает более широкий набор путей сертификации."
+              ]
+            },
+            {
+              "heading": "Доставка на отключённые устройства",
+              "paragraphs": [
+                "Устройства с автоматическими обновлениями списков доверия получают изменения через существующую инфраструктуру. Накопительные внеплановые пакеты предназначены для устройств без доступа к службе обновления сертификатов, изолированных сред и систем с отключённым автоматическим обновлением списка. Это не требование каждому пользователю вручную устанавливать срочный пакет.",
+                "KB5134133 для Windows 11 охватывает версии 24H2, 25H2 и 26H2, а KB5134125 для Windows 10 — 21H2 и 22H2. Выбор зависит от системы и условий её поддержки. Microsoft относит пакеты к внеплановым обновлениям, не связанным с безопасностью. Эта категория обслуживания не отменяет защитную цель изменения списка доверия; пакеты также включают предыдущие накопительные изменения."
+              ]
+            },
+            {
+              "heading": "Не возвращать доверие только ради совместимости",
+              "paragraphs": [
+                "Организациям нужно выявить зависимые сертификаты и заменить их либо получить другую действительную цепочку. Потеря доверия к прежнему пути может вызвать ошибки соединения. Microsoft предостерегает от восстановления доверия только ради совместимости: программы, ненадёжно проверяющие отзыв или список недоверенных сертификатов, могут снова принять опасный сертификат.",
+                "По состоянию на 27 октября удаление в Windows и Edge подтверждено официально. Но публикация не означает, что изменения дошли до каждого устройства; администраторам необходимо проверить доставку. Microsoft отдельно оценивает остальные корневые сертификаты eMudhra, поэтому возможны дальнейшие меры. Удаление семи сертификатов не следует понимать как исчезновение всех связанных рисков."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема изменений доверия Microsoft; без описания атаки.",
+            "steps": [
+              "Обнаружен риск ключей промежуточных CA",
+              "20 октября: блокировка затронутых ключей",
+              "26–27 октября: удаление семи вышестоящих сертификатов",
+              "Доставка изменений и замена зависимых цепочек"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "微軟 10 月 26 日公佈對 eMudhra 證書事件的進一步處置：Windows 不再預設信任七張相關證書，並提供帶外更新，讓無法自動獲得證書信任列表的裝置也能接收變更。27 日的官方補充確認，Edge 已移除相同七張證書。新增進展是信任範圍與交付方式的變化，不是重複報道早先的漏洞發現。",
+          "sections": [
+            {
+              "heading": "為什麼需要比吊銷更廣的措施",
+              "paragraphs": [
+                "證書可以理解為網站或軟體身份的證明，瀏覽器和作業系統沿著證書鏈判斷它由誰擔保。此次受影響的是 eMudhra 八個中間證書機構的私鑰，涉及六個 TLS 機構和兩個程式碼簽名機構。微軟說明，這些金鑰存在可被恢復的風險，可能被用於冒充網站或可信軟體釋出者；事件並非微軟自身系統被攻破。",
+                "10 月 20 日，微軟已透過 Windows 不受信任證書列表封禁受影響金鑰，並透過 Edge、WebView2 的元件更新阻止相關 TLS 證書。26 日的決定更進一步：移除六張 eMudhra G3 根證書和一張 AAA Certificate Services 交叉簽名證書。吊銷已知中間證書與撤掉上層預設信任是兩件事，後者會影響更廣的證書路徑。"
+              ]
+            },
+            {
+              "heading": "離線裝置為什麼單獨提供更新",
+              "paragraphs": [
+                "能正常獲取自動證書信任列表的裝置，透過原有分發渠道接收變更。微軟另行釋出累積帶外包，是為了覆蓋無法連線證書更新服務、處於斷網環境，或關閉自動列表更新的裝置，而非要求每位使用者都手動安裝一個緊急包。",
+                "Windows 11 的 KB5134133 適用於 24H2、25H2、26H2；Windows 10 的 KB5134125 對應 21H2 和 22H2。應根據實際系統版本和官方支援條件選用。釋出說明將這些包歸為非安全帶外更新，這個服務分類並不改變其中信任列表變更的安全目的；它們也包含此前累積更新內容。"
+              ]
+            },
+            {
+              "heading": "相容性問題不能靠盲目恢復信任解決",
+              "paragraphs": [
+                "組織需要找出依賴被移除證書鏈的網站、服務和簽名證書，並安排替換或使用有效的其他信任鏈。部分服務可能因為鏈路不再受信任而出現連線問題。微軟特別提醒，不能只為恢復相容性就重新信任受影響層級：某些軟體不會可靠檢查吊銷狀態或不受信任列表，可能因此重新接受危險證書。",
+                "截至 27 日，Windows 與 Edge 的移除動作都有官方記錄，但公告發布不等於每臺裝置已經接收更新。管理員仍需確認各類裝置的分發情況。微軟繼續評估其餘 eMudhra 根證書，後續可能有更多調整；目前不能把七張證書的移除解釋為所有相關風險都已消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據微軟公告重繪的信任變更示意，不含攻擊步驟。",
+            "steps": [
+              "發現中間 CA 私鑰風險",
+              "10 月 20 日封禁已知受影響金鑰",
+              "26—27 日移除七張上層證書",
+              "分發至裝置並替換受影響證書鏈"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "onamae-desktop-cloud-security-shutdown",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Onamae · initial notice, October 21",
+          "url": "https://www.onamae.com/news/article/11584"
+        },
+        {
+          "label": "Onamae · scope and account-protection update, October 23",
+          "url": "https://www.onamae.com/news/article/11595/"
+        },
+        {
+          "label": "Onamae · account sessions and preventive measures, October 24",
+          "url": "https://www.onamae.com/news/article/11599/"
+        },
+        {
+          "label": "GMO Internet · recovery plan, October 24",
+          "url": "https://internet.gmo/news/article/249/"
+        },
+        {
+          "label": "GMO Internet · information-publication update, October 27",
+          "url": "https://internet.gmo/news/article/256/"
+        },
+        {
+          "label": "GMO Internet · domain-suspension update, October 28",
+          "url": "https://internet.gmo/news/article/259/"
+        },
+        {
+          "label": "BleepingComputer · October 21 independent report",
+          "url": "https://www.bleepingcomputer.com/news/security/japans-onamae-desktop-cloud-hacked-up-to-27-000-servers-affected/"
+        },
+        {
+          "label": "INTERNET Watch · October 26 follow-up",
+          "url": "https://internet.watch.impress.co.jp/docs/news/2150991.html"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Onamae Desktop Cloud 的事故已经不只是一次云服务中断。GMO Internet 在 10 月 21 日公布入侵并停服后，陆续收到账号异常操作报告；到 27 日，公司又确认疑似攻击者公开了声称属于公司及客户的信息。以下按公告时间梳理事件，避免把首报中的“尚未确认滥用”误当成后续调查结论。",
+          "sections": [
+            {
+              "heading": "从发现恶意程序到全线停服",
+              "paragraphs": [
+                "这项服务让用户通过远程桌面操作云端 Windows 环境。官方时间线显示，10 月 19 日收到用户询问后启动调查，20 日确认部分客户服务器被放入恶意程序，并停止新申请和控制面板访问；21 日日本时间凌晨 4 点起，全套餐服务器陆续关闭。BleepingComputer 的 21 日报道记录了当时的停服状态和未知恢复时间。",
+                "26,739 是可能涉及的服务器数量，不是已确认全部入侵、全部感染或全部泄露的数量。服务商在后续公告中特别区分了这个口径。公司称该服务服务器不保存其收取的信用卡等支付信息，但客户自行存放在服务器上的账号凭据等信息仍可能受到影响，两者不能混为一谈。"
+              ]
+            },
+            {
+              "heading": "首报之后，风险判断发生了变化",
+              "paragraphs": [
+                "21 日首报说尚未确认个人信息泄露或信息被滥用。23 日第三报则根据调查和用户反馈，表示服务器中保存的交易账号登录信息可能被第三方取得并用于异常操作，个别情况和范围仍在核查。这个变化意味着，早期“未确认”只能描述当时已知情况，不能再用来概括整个事件。",
+                "27 日公告称，公司在日本时间 12:30 确认疑似攻击者发布了声称属于公司和客户的信息，同时提醒其中可能含有不实内容。28 日 11:00 的第十三报又称，相关网站域名已在当天约 4:00 停用。域名停用限制了一个传播入口，不等于资料已经从所有地方删除，也不证明被公开的每项说法都属实。"
+              ]
+            },
+            {
+              "heading": "为何改密码还要结束登录状态",
+              "paragraphs": [
+                "官方第三、第五报都强调，修改密码后，某些外部服务的既有登录会话仍可能短暂有效。因此，账号恢复需要同时处理密码与已授权会话，并通过对应服务商核对陌生操作。这是在解释防护措施之间的区别，不表示所有用户账号都已被接管。服务商同时提醒警惕借补偿、退款名义索取信息的联系。"
+              ]
+            },
+            {
+              "heading": "恢复服务与完成调查是两回事",
+              "paragraphs": [
+                "GMO 在 24 日第四报决定不原样重启受影响的旧基建，而为愿意继续使用远程桌面的客户安排独立云基建上的替代服务，并承诺另行说明开始时间及迁移安排。该决定是恢复计划，不是已经全面恢复的证明。本文不展示泄露资料或攻击方链接，也不把威胁等同于实际执行：27 日 13:55 的公告当时仍未确认发生勒索软件攻击。最终入侵路径、完整受影响范围与各项资料真伪，仍需以进一步调查为准。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公开公告重绘的事件进展示意；封面为概念插图，不是入侵现场。",
+            "steps": [
+              "10 月 20 日：确认部分环境存在恶意程序",
+              "10 月 21 日：全套餐逐步停服",
+              "10 月 23—27 日：核查异常操作与信息公开",
+              "10 月 28 日：通报相关域名停用"
+            ]
+          }
+        },
+        "en": {
+          "lead": "The Onamae Desktop Cloud incident has developed beyond a cloud-service outage. After GMO Internet disclosed an intrusion and shut down the service on October 21, it received reports of unfamiliar account activity. On October 27, it also confirmed that a suspected attacker had published material purportedly concerning the company and its customers. The chronology matters: the first notice’s statement that misuse was unconfirmed is not a conclusion covering later developments.",
+          "sections": [
+            {
+              "heading": "From malware detection to a service-wide shutdown",
+              "paragraphs": [
+                "The service provides a cloud-hosted Windows environment operated through remote desktop. According to the official timeline, an inquiry on October 19 prompted an investigation; malware was confirmed in some customer server environments on October 20, when new applications and control-panel access were suspended. From 04:00 Japan time on October 21, servers across all plans were progressively stopped. BleepingComputer’s October 21 report described that initial shutdown and the then-unknown restoration date.",
+                "The figure 26,739 is the number of potentially affected servers, not a confirmed count of intrusions, infections or leaks. Later notices explicitly clarify this distinction. The operator says it does not store customer payment details, including credit-card information, on these service servers. Information customers themselves stored there, including account credentials, may nevertheless be affected. These are separate categories of data."
+              ]
+            },
+            {
+              "heading": "Later notices changed the risk picture",
+              "paragraphs": [
+                "The October 21 notice said personal-data leakage or misuse had not been confirmed. The third notice on October 23 said investigation and customer reports indicated that trading-account credentials stored on servers might have been obtained and misused, while individual cases and scope remained under investigation. The earlier absence of confirmation therefore describes knowledge at that time, not the incident as a whole.",
+                "The October 27 notice said the company confirmed at 12:30 Japan time that a suspected attacker had published purported company and customer information, while cautioning that some material might be false. The thirteenth notice, issued at 11:00 on October 28, said the associated website domain had been suspended around 04:00 that day. Suspending a domain removes one distribution route; it does not establish that every copy has disappeared or every published claim is authentic."
+              ]
+            },
+            {
+              "heading": "Why account recovery also involves sessions",
+              "paragraphs": [
+                "The third and fifth notices explain that an existing login session at some external services may remain valid temporarily after a password change. Recovery therefore involves both passwords and previously authorized sessions, with unfamiliar activity checked through the relevant provider. This distinction explains the protective measures; it does not mean every customer account was taken over. The operator also warned about contacts seeking information under the pretext of compensation or refunds."
+              ]
+            },
+            {
+              "heading": "Recovery plans are not a completed investigation",
+              "paragraphs": [
+                "In its fourth notice on October 24, GMO decided against restarting the affected infrastructure unchanged. It planned an alternative desktop service on independent cloud infrastructure for customers wishing to continue, with start dates and migration arrangements to follow. That is a recovery plan, not proof of full restoration. This article does not reproduce leaked material or attacker links, and it distinguishes threats from confirmed actions: the October 27 notice at 13:55 said a ransomware attack had not been confirmed at that time. The final entry route, full impact and authenticity of individual claims still require further investigation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original timeline redrawn from public notices. The cover is a conceptual illustration, not a photograph of the intrusion.",
+            "steps": [
+              "October 20: malware confirmed in some environments",
+              "October 21: progressive shutdown across all plans",
+              "October 23–27: account activity and publication investigated",
+              "October 28: suspension of the associated domain reported"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "お名前.com デスクトップクラウドの問題は、クラウドの停止だけではなくなっている。GMO インターネットは 10 月 21 日に不正アクセスと停止を公表した後、口座での身に覚えのない操作の報告を受けた。27 日には、攻撃者とみられる者が同社や顧客に関する情報と称するものを公開したことも確認した。初報の「悪用は未確認」を後の調査結果と混同しないよう、時点を分けて整理する。",
+          "sections": [
+            {
+              "heading": "不正プログラムの発見から全プラン停止まで",
+              "paragraphs": [
+                "このサービスは、クラウド上の Windows 環境をリモートデスクトップで操作する仕組みだ。公式の経緯によると、10 月 19 日の問い合わせを受けて調査を開始し、20 日に一部顧客のサーバー環境で不正プログラムを確認。同日に新規申し込みとコントロールパネルを停止し、21 日午前 4 時から全プランのサーバーを順次止めた。BleepingComputer の 21 日の報道は、その時点の停止状況と再開時期が未定であることを伝えていた。",
+                "26,739 件は影響の可能性があるサーバー数であり、侵入、感染、情報流出がすべて確認された件数ではない。後の公式発表はこの区別を明記している。同社はクレジットカードを含む顧客の決済情報を当該サービスのサーバーでは保有しないと説明する一方、顧客自身が保存した認証情報などは影響範囲に含まれるとしている。両者は別の情報である。"
+              ]
+            },
+            {
+              "heading": "初報の後で変わったリスク認識",
+              "paragraphs": [
+                "21 日の初報では、個人情報の漏えいや情報の悪用は確認されていなかった。しかし 23 日の第 3 報では、調査と顧客の報告から、保存された取引口座のログイン情報などが第三者に取得され、不正利用された可能性を説明した。個別の有無と範囲は引き続き調査中であり、初期の「未確認」を事件全体の結論にはできない。",
+                "27 日の発表では、同日 12 時 30 分に攻撃者とみられる者による情報公開を確認したとし、内容に事実と異なるものが含まれる可能性も示した。28 日 11 時の第 13 報では、関連するサイトのドメインが同日午前 4 時頃に停止されたと報告した。ドメイン停止は流通経路の一つを抑える措置であり、すべての複製が消えたことや、公開内容のすべてが本物であることを意味しない。"
+              ]
+            },
+            {
+              "heading": "パスワード変更とセッション終了の違い",
+              "paragraphs": [
+                "第 3 報と第 5 報は、一部の外部サービスではパスワードを変えても既存のログインセッションが一定期間続く場合があると説明する。このため、アカウントの保護ではパスワードと既に認可されたセッションの両方を扱い、身に覚えのない操作を各事業者に確認する必要がある。これは対策の役割の違いを示すもので、全利用者のアカウントが乗っ取られたという意味ではない。補償や返金を装い情報を求める連絡にも注意を促している。"
+              ]
+            },
+            {
+              "heading": "復旧計画と調査完了は別のこと",
+              "paragraphs": [
+                "GMO は 24 日の第 4 報で、被害を受けた基盤をそのまま再開せず、継続利用を希望する顧客に独立したクラウド基盤の代替サービスを案内するとした。開始時期や移行方法は別途案内する計画で、全面復旧済みという発表ではない。本稿は公開された資料や攻撃者のリンクを転載せず、脅迫と実行も区別する。27 日 13 時 55 分の発表では、その時点のランサムウェア攻撃は未確認だった。最終的な侵入経路、影響全体、個々の情報の真偽には、引き続き調査が必要である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開発表から当サイトが描き直した経緯の図。表紙は概念イラストで、侵入現場の写真ではない。",
+            "steps": [
+              "10 月 20 日：一部環境の不正プログラムを確認",
+              "10 月 21 日：全プランのサーバーを順次停止",
+              "10 月 23～27 日：不審操作と情報公開を調査",
+              "10 月 28 日：関連ドメインの停止を報告"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Инцидент Onamae Desktop Cloud вышел за рамки остановки облачного сервиса. После сообщения GMO Internet о вторжении и отключения 21 октября поступили жалобы на незнакомые операции в учётных записях. 27 октября компания также подтвердила публикацию предполагаемым злоумышленником материалов, заявленных как информация о ней и клиентах. Важна хронология: слова первого сообщения о неподтверждённом злоупотреблении не описывают все последующие события.",
+          "sections": [
+            {
+              "heading": "От обнаружения вредоносной программы к остановке сервиса",
+              "paragraphs": [
+                "Сервис позволяет управлять облачной средой Windows через удалённый рабочий стол. По официальной хронологии, обращение клиента 19 октября привело к расследованию; 20 октября в части клиентских серверных сред подтвердили вредоносные программы и остановили новые заявки и доступ к панели управления. С 04:00 по японскому времени 21 октября серверы всех тарифов последовательно отключались. Репортаж BleepingComputer от 21 октября описывал первоначальную остановку и неизвестный тогда срок восстановления.",
+                "26 739 — число потенциально затронутых серверов, а не подтверждённых взломов, заражений или утечек. Поздние объявления прямо разъясняют эту границу. Оператор сообщает, что не хранит платёжные сведения клиентов, включая данные карт, на серверах этого сервиса. Однако сведения, сохранённые там самими клиентами, в том числе данные входа, могут быть затронуты. Эти категории нельзя смешивать."
+              ]
+            },
+            {
+              "heading": "Последующие сообщения изменили картину риска",
+              "paragraphs": [
+                "Первое объявление 21 октября говорило об отсутствии подтверждения утечки персональных данных или их злоупотребления. Третье сообщение 23 октября уже указывало: расследование и обращения клиентов допускают получение и неправомерное использование сохранённых данных входа в торговые аккаунты. Отдельные случаи и масштаб ещё выяснялись. Поэтому первоначальное отсутствие подтверждения относится только к тому моменту, а не ко всему инциденту.",
+                "В сообщении 27 октября компания указала, что в 12:30 по японскому времени подтвердила публикацию предполагаемым злоумышленником материалов о компании и клиентах, предупредив о возможных недостоверных сведениях. Тринадцатое объявление, выпущенное в 11:00 28 октября, сообщило об остановке связанного домена примерно в 04:00 того дня. Это ограничивает один канал распространения, но не доказывает исчезновения всех копий или подлинности каждого опубликованного утверждения."
+              ]
+            },
+            {
+              "heading": "Почему восстановление доступа включает сеансы",
+              "paragraphs": [
+                "В третьем и пятом сообщениях объясняется, что в некоторых внешних сервисах существующий сеанс входа может временно сохраняться после смены пароля. Поэтому защита аккаунта касается и пароля, и ранее разрешённых сеансов; незнакомые операции проверяются через соответствующего поставщика. Это объяснение разных защитных мер, а не утверждение о захвате всех аккаунтов. Оператор также предупредил о сообщениях, собирающих сведения под видом компенсаций или возвратов."
+              ]
+            },
+            {
+              "heading": "План восстановления не завершает расследование",
+              "paragraphs": [
+                "В четвёртом сообщении 24 октября GMO решила не перезапускать пострадавшую инфраструктуру без изменений. Для желающих продолжить использование запланирован альтернативный сервис на независимой облачной инфраструктуре; сроки и порядок перехода должны сообщить отдельно. Это план, не доказательство полного восстановления. Здесь не воспроизводятся утёкшие материалы или ссылки злоумышленника, а угрозы отделены от подтверждённых действий: объявление от 27 октября, 13:55, сообщало, что атака программы-вымогателя на тот момент не подтверждена. Окончательный путь проникновения, полный масштаб и достоверность отдельных сведений остаются предметом расследования."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная схема хронологии по публичным объявлениям. Обложка — концептуальная иллюстрация, не фотография вторжения.",
+            "steps": [
+              "20 октября: вредоносные программы подтверждены в части сред",
+              "21 октября: последовательная остановка всех тарифов",
+              "23–27 октября: проверка операций и публикации сведений",
+              "28 октября: сообщение об остановке связанного домена"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Onamae Desktop Cloud 的事故已經不只是一次雲服務中斷。GMO Internet 在 10 月 21 日公佈入侵併停服後，陸續收到賬號異常操作報告；到 27 日，公司又確認疑似攻擊者公開了聲稱屬於公司及客戶的資訊。以下按公告時間梳理事件，避免把首報中的“尚未確認濫用”誤當成後續調查結論。",
+          "sections": [
+            {
+              "heading": "從發現惡意程式到全線停服",
+              "paragraphs": [
+                "這項服務讓使用者透過遠端桌面操作雲端 Windows 環境。官方時間線顯示，10 月 19 日收到使用者詢問後啟動調查，20 日確認部分客戶伺服器被放入惡意程式，並停止新申請和控制面板訪問；21 日日本時間凌晨 4 點起，全套餐伺服器陸續關閉。BleepingComputer 的 21 日報道記錄了當時的停服狀態和未知恢復時間。",
+                "26,739 是可能涉及的伺服器數量，不是已確認全部入侵、全部感染或全部洩露的數量。服務商在後續公告中特別區分了這個口徑。公司稱該服務伺服器不儲存其收取的信用卡等支付資訊，但客戶自行存放在伺服器上的賬號憑據等資訊仍可能受到影響，兩者不能混為一談。"
+              ]
+            },
+            {
+              "heading": "首報之後，風險判斷髮生了變化",
+              "paragraphs": [
+                "21 日首報說尚未確認個人資訊洩露或資訊被濫用。23 日第三報則根據調查和使用者反饋，表示伺服器中儲存的交易賬號登入資訊可能被第三方取得並用於異常操作，個別情況和範圍仍在核查。這個變化意味著，早期“未確認”只能描述當時已知情況，不能再用來概括整個事件。",
+                "27 日公告稱，公司在日本時間 12:30 確認疑似攻擊者釋出了聲稱屬於公司和客戶的資訊，同時提醒其中可能含有不實內容。28 日 11:00 的第十三報又稱，相關網站域名已在當天約 4:00 停用。域名停用限制了一個傳播入口，不等於資料已經從所有地方刪除，也不證明被公開的每項說法都屬實。"
+              ]
+            },
+            {
+              "heading": "為何改密碼還要結束登入狀態",
+              "paragraphs": [
+                "官方第三、第五報都強調，修改密碼後，某些外部服務的既有登入會話仍可能短暫有效。因此，賬號恢復需要同時處理密碼與已授權會話，並透過對應服務商核對陌生操作。這是在解釋防護措施之間的區別，不表示所有使用者賬號都已被接管。服務商同時提醒警惕借補償、退款名義索取資訊的聯絡。"
+              ]
+            },
+            {
+              "heading": "恢復服務與完成調查是兩回事",
+              "paragraphs": [
+                "GMO 在 24 日第四報決定不原樣重啟受影響的舊基建，而為願意繼續使用遠端桌面的客戶安排獨立雲基建上的替代服務，並承諾另行說明開始時間及遷移安排。該決定是恢復計劃，不是已經全面恢復的證明。本文不展示洩露資料或攻擊方連結，也不把威脅等同於實際執行：27 日 13:55 的公告當時仍未確認發生勒索軟體攻擊。最終入侵路徑、完整受影響範圍與各項資料真偽，仍需以進一步調查為準。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公開公告重繪的事件進展示意；封面為概念插圖，不是入侵現場。",
+            "steps": [
+              "10 月 20 日：確認部分環境存在惡意程式",
+              "10 月 21 日：全套餐逐步停服",
+              "10 月 23—27 日：核查異常操作與資訊公開",
+              "10 月 28 日：通報相關域名停用"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "mozilla-emudhra-certificate-blocking",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Mozilla Security Blog · incident response and October 21 update",
+          "url": "https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/"
+        },
+        {
+          "label": "Mozilla Security Blog · how OneCRL works",
+          "url": "https://blog.mozilla.org/security/2015/03/03/revoking-intermediate-certificates-introducing-onecrl/"
+        },
+        {
+          "label": "BleepingComputer · independent certificate-incident report",
+          "url": "https://www.bleepingcomputer.com/news/security/mozilla-google-apple-block-compromised-emudhra-ca-certificates/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "网页上的 HTTPS 连接能否可信，不只取决于传输有没有加密，还取决于浏览器是否认对了网站身份。eMudhra 的八张中间证书所关联的私钥出现安全问题后，Mozilla 先紧急下发阻止信任这些证书的列表，再用浏览器和证书库更新补足覆盖。10 月 20 日公告及 21 日增补解释了这几层措施为何缺一不可。",
+          "sections": [
+            {
+              "heading": "中间证书的问题为何会波及其他网站",
+              "paragraphs": [
+                "浏览器借助证书链确认网站身份：受信任的根证书授权中间机构，再由后者签发网站证书。中间证书私钥受损，会让不应有签发权的一方获得制造伪造网站证书的机会。Mozilla 说明，若攻击者还能拦截用户连接，就可能利用这些证书冒充网站、读取或修改通信。拥有问题密钥和能够拦截连接是不同条件，不能省略后者。",
+                "BleepingComputer 的独立报道补充称，研究人员发现了这些私钥的生成弱点，并核验过其中一个公开样本与问题证书相匹配。报道援引 eMudhra 对生成流程失误的解释；这是证书机构的原因说明。本文不展示密钥或复现方法，也不把可被利用的风险写成已经发生大规模流量窃取。"
+              ]
+            },
+            {
+              "heading": "第一层：先把撤销信息送到浏览器",
+              "paragraphs": [
+                "Mozilla 称，10 月 17 日 20:06 UTC 收到八张中间证书私钥受损的报告，随后通过 OneCRL 阻止这些证书。OneCRL 是集中维护并下发的证书撤销列表，浏览器拿到后可以拒绝相应的信任链，不必等每个网站自行处理，也不必为这次列表更新重启浏览器。",
+                "按 Mozilla 公布的时间，17 日 22:59 UTC 前，更新分发已覆盖标准配置的 Firefox，距离收到报告不到三小时。这里的“标准配置”是关键条件；它不是所有自定义设置、所有离线设备或所有使用同一根证书的软件都已经接收保护的保证。"
+              ]
+            },
+            {
+              "heading": "第二层：客户端和证书库更新补齐缺口",
+              "paragraphs": [
+                "20 日，Mozilla 发布桌面及 Android 版 Firefox 158.0.1，以及 ESR 115.43.1、153.5.1，为没有及时收到 OneCRL 的部分自定义配置补充分发保护。21 日 08:29 UTC 又发布 Android 158.0.2，修复部分客户端启动后没有立即应用内置阻止列表变化的问题。这是后续修复，不能用原有列表已经下发来忽略它。",
+                "另一条路径是 NSS 3.131.1 的信任列表更新，移除签发这些中间证书的根证书。它服务于使用 Mozilla 信任库或其衍生版本、却不接收 OneCRL 的其他应用。更新浏览器、更新撤销列表和更新应用自己的证书库是相关但不同的工作，不能互相替代。"
+              ]
+            },
+            {
+              "heading": "应如何理解已经提供的保护",
+              "paragraphs": [
+                "此次事件说明，共享一套证书来源并不意味着共享同一条安全更新通道。浏览器用户和软件维护者需要确认各自应用实际采用的版本、信任库和撤销机制，而不是仅凭系统里有一个已更新的浏览器判断全部程序安全。公开说明确认的是密钥受损与阻止措施，未提供所有潜在连接被冒用的证据；证书撤销也不等于 HTTPS 加密算法整体失效。本文记录的是这次已公布的处置范围，不将文中版本称为今后始终最新的版本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据 Mozilla 说明重绘的防护流程；封面为证书概念插图，不是真实泄露证书。",
+            "steps": [
+              "确认八张中间证书的私钥问题",
+              "通过 OneCRL 快速分发阻止列表",
+              "用客户端更新覆盖遗漏配置",
+              "更新其他应用使用的信任库"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Trust in an HTTPS connection depends on recognizing the right website, not simply encrypting traffic. After private keys associated with eight eMudhra intermediate certificates were compromised, Mozilla first distributed a blocklist and then used browser and certificate-library updates to extend coverage. Its October 20 announcement and October 21 addition explain why these layers address different gaps.",
+          "sections": [
+            {
+              "heading": "Why an intermediate certificate matters beyond one site",
+              "paragraphs": [
+                "A browser uses a certificate chain to establish website identity: a trusted root authorizes an intermediate authority, which can issue website certificates. Compromise of an intermediate private key gives an unauthorized party an opportunity to create fraudulent website certificates. Mozilla explains that an attacker who can also intercept a user’s connection could impersonate a site and read or modify traffic. Possessing the compromised key and intercepting the connection are distinct conditions; the second should not be omitted.",
+                "BleepingComputer independently reported that researchers found weaknesses in key generation and checked that one published sample matched an affected certificate. It cited eMudhra’s explanation of a generation-process error; that causal account comes from the certificate authority. This article does not reproduce keys or recovery procedures, and a usable weakness is not presented as evidence of widespread traffic theft."
+              ]
+            },
+            {
+              "heading": "First, deliver revocation information quickly",
+              "paragraphs": [
+                "Mozilla says it received the report concerning eight intermediates at 20:06 UTC on October 17 and blocked them through OneCRL. This centrally maintained revocation list is distributed to browsers, enabling rejection of the affected trust chains without waiting for individual websites to act or requiring a browser restart for this list update.",
+                "According to Mozilla, distribution to Firefox users with standard configurations was complete by 22:59 UTC on October 17, less than three hours after the report arrived. The standard-configuration qualification matters: it does not guarantee delivery to every customized setup, offline device or application trusting the same root."
+              ]
+            },
+            {
+              "heading": "Client and trust-store updates address the remaining gaps",
+              "paragraphs": [
+                "On October 20, Mozilla released Firefox 158.0.1 for desktop and Android and ESR 115.43.1 and 153.5.1 to provide protection for some custom configurations that had missed timely OneCRL delivery. At 08:29 UTC on October 21 it released Android 158.0.2, correcting an issue where some clients did not immediately apply bundled blocklist changes after startup. Earlier list distribution does not make this additional fix irrelevant.",
+                "A separate update to the NSS 3.131.1 trust list removes the root that signed the affected intermediates. It addresses other applications using Mozilla’s trust store or derived versions without receiving OneCRL. Updating a browser, distributing revocation information and updating an application’s own trust store are related but distinct tasks, not interchangeable substitutes."
+              ]
+            },
+            {
+              "heading": "What the protection does and does not establish",
+              "paragraphs": [
+                "Sharing a certificate source does not ensure sharing its security-update channel. Users and software maintainers need to establish which version, trust store and revocation mechanism each application actually uses rather than judging all software safe because one browser was updated. The public account confirms key compromise and blocking measures, not impersonation of every potentially exposed connection. Revocation also does not mean HTTPS encryption algorithms have generally failed. The versions named here document this response; they are not a claim to remain the newest versions indefinitely."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original protection flow redrawn from Mozilla’s explanation. The cover is a certificate illustration, not an exposed certificate.",
+            "steps": [
+              "Identify compromised keys for eight intermediates",
+              "Distribute blocks rapidly through OneCRL",
+              "Cover missed configurations with client updates",
+              "Update trust stores used by other applications"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "HTTPS 接続の信頼性は、通信が暗号化されているかだけでなく、相手のサイトを正しく確認できるかにも依存する。eMudhra の八つの中間証明書に関連する秘密鍵の問題を受け、Mozilla はまず拒否リストを配信し、その後ブラウザーと証明書ライブラリーの更新で保護範囲を補った。10 月 20 日の発表と 21 日の追記は、各対策が異なる隙間を埋めることを説明している。",
+          "sections": [
+            {
+              "heading": "中間証明書の問題が別のサイトにも関わる理由",
+              "paragraphs": [
+                "ブラウザーは証明書チェーンでサイトの身元を確認する。信頼するルートが中間認証局を認可し、その先でサイトの証明書を発行する仕組みだ。中間証明書の秘密鍵が侵害されると、権限のない者が偽のサイト証明書を作れる可能性が生じる。Mozilla は、攻撃者が利用者の接続を傍受できる場合、サイトになりすまし通信を読んだり変えたりできると説明する。鍵を持つことと接続を傍受できることは別条件で、後者を省いてはいけない。",
+                "BleepingComputer は、研究者が鍵生成の弱点を発見し、公開された一つのサンプルが問題の証明書と一致することを独自に確認したと報じた。生成工程の誤りという原因説明は eMudhra によるものである。本稿は鍵や再現手順を示さず、悪用可能な弱点があることを、大規模な通信窃取が実際に起きた証拠としても扱わない。"
+              ]
+            },
+            {
+              "heading": "まず失効情報を速く届ける",
+              "paragraphs": [
+                "Mozilla によると、10 月 17 日 20:06 UTC に八つの中間証明書の鍵侵害報告を受け、OneCRL で拒否した。OneCRL は集中管理した証明書失効リストをブラウザーへ配信する仕組みで、受信後は問題の信頼チェーンを拒否できる。各サイトの対応や、このリスト更新のためのブラウザー再起動を待つ必要がない。",
+                "Mozilla は同日 22:59 UTC までに標準設定の Firefox への配信を終えたと説明し、報告から三時間未満だった。「標準設定」という条件が重要で、すべての独自設定、オフライン端末、同じルートを信頼する別アプリまで受信済みと保証するものではない。"
+              ]
+            },
+            {
+              "heading": "クライアントと信頼ストアの更新で補う",
+              "paragraphs": [
+                "20 日にはデスクトップと Android の Firefox 158.0.1、ESR 115.43.1 と 153.5.1 を公開し、OneCRL を適時に受け取れなかった一部の独自設定にも保護を届けた。21 日 08:29 UTC の Android 158.0.2 は、一部クライアントで起動直後に内蔵拒否リストの変更が反映されない問題を修正した。先にリストを配信したからといって、この修正が不要になるわけではない。",
+                "別経路として NSS 3.131.1 の信頼リストから、問題の中間証明書に署名したルートを削除する。Mozilla の信頼ストアや派生版を使っても OneCRL を受信しないアプリを守るためだ。ブラウザー本体、失効情報、各アプリの信頼ストアの更新は関連するが、それぞれの役割があり、互いに代替するものではない。"
+              ]
+            },
+            {
+              "heading": "保護済みという説明の範囲",
+              "paragraphs": [
+                "同じ証明書の供給元を使っていても、安全性の更新経路まで共通とは限らない。利用者と保守担当者は、各アプリの版、信頼ストア、失効確認の仕組みを確認する必要があり、一つのブラウザーが更新済みだから全ソフトが安全とは判断できない。公開情報が確認するのは鍵の侵害と拒否措置であって、潜在的に影響し得る全接続で偽装が起きた証拠ではない。失効は HTTPS の暗号方式全体が破れた意味でもない。本文の版番号は今回の対応の記録であり、将来も常に最新版という主張ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Mozilla の説明をもとに当サイトが描き直した保護の流れ。表紙は概念図で、流出した証明書ではない。",
+            "steps": [
+              "八つの中間証明書の鍵の問題を確認",
+              "OneCRL で拒否情報を速やかに配信",
+              "クライアント更新で未受信の設定を補う",
+              "他アプリが利用する信頼ストアを更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Доверие к HTTPS зависит не только от шифрования, но и от правильного определения сайта на другом конце соединения. После компрометации закрытых ключей восьми промежуточных сертификатов eMudhra Mozilla сначала распространила список блокировки, затем дополнила защиту обновлениями браузера и библиотеки сертификатов. Объявление от 20 октября и дополнение от 21 октября показывают, какие разные пробелы закрывают эти уровни.",
+          "sections": [
+            {
+              "heading": "Почему промежуточный сертификат затрагивает не один сайт",
+              "paragraphs": [
+                "Браузер устанавливает подлинность сайта через цепочку сертификатов: доверенный корень разрешает работу промежуточного центра, а тот выдаёт сертификаты сайтам. Компрометация ключа промежуточного сертификата даёт постороннему возможность создавать поддельные сертификаты сайтов. По объяснению Mozilla, если злоумышленник также может перехватить соединение пользователя, он способен выдавать себя за сайт, читать или менять трафик. Обладание ключом и перехват соединения — разные условия; второе нельзя опускать.",
+                "BleepingComputer сообщил об обнаруженных исследователями слабостях генерации ключей и независимо проверил совпадение одного опубликованного образца с затронутым сертификатом. Объяснение ошибки процесса генерации издание приводит со слов eMudhra; это версия удостоверяющего центра. Здесь не воспроизводятся ключи или способы их восстановления, а возможность злоупотребления не выдаётся за доказательство массовой кражи трафика."
+              ]
+            },
+            {
+              "heading": "Сначала быстро доставить информацию об отзыве",
+              "paragraphs": [
+                "Mozilla сообщает, что получила сведения о восьми промежуточных сертификатах 17 октября в 20:06 UTC и заблокировала их через OneCRL. Это централизованно поддерживаемый список отзыва, доставляемый браузерам. После получения можно отклонять затронутые цепочки доверия, не ожидая действий каждого сайта и не перезапуская браузер ради данного обновления списка.",
+                "По данным Mozilla, к 22:59 UTC того же дня распространение завершилось для Firefox со стандартными настройками — менее чем через три часа после сообщения. Условие стандартной конфигурации существенно: оно не гарантирует получение всеми нестандартными установками, отключёнными от сети устройствами или другими приложениями, доверяющими тому же корню."
+              ]
+            },
+            {
+              "heading": "Обновления клиента и хранилища закрывают оставшиеся пробелы",
+              "paragraphs": [
+                "20 октября вышли Firefox 158.0.1 для настольных систем и Android, ESR 115.43.1 и 153.5.1. Они доставляют защиту некоторым нестандартным конфигурациям, не получившим OneCRL своевременно. 21 октября в 08:29 UTC вышла Android-версия 158.0.2, исправившая отсутствие немедленного применения изменений встроенного списка после запуска у части клиентов. Предшествующая доставка списка не делает это исправление ненужным.",
+                "Отдельно обновление списка доверия NSS 3.131.1 удаляет корень, подписавший затронутые промежуточные сертификаты. Это относится к приложениям, использующим хранилище Mozilla или производные версии без OneCRL. Обновление браузера, доставка отзыва и обновление собственного хранилища приложения связаны, но выполняют разные задачи и не заменяют друг друга."
+              ]
+            },
+            {
+              "heading": "Границы предоставленной защиты",
+              "paragraphs": [
+                "Общий источник сертификатов не означает общий канал обновлений безопасности. Пользователям и сопровождающим ПО нужно знать фактическую версию, хранилище доверия и механизм отзыва каждого приложения. Обновление одного браузера не доказывает безопасность остальных программ. Публичное сообщение подтверждает компрометацию ключей и блокировку, но не подмену всех потенциально затронутых соединений. Отзыв также не означает общего взлома алгоритмов шифрования HTTPS. Указанные версии фиксируют ответ на этот инцидент, а не объявляются навсегда самыми новыми."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная схема защиты по объяснению Mozilla. Обложка — иллюстрация сертификата, не утёкший сертификат.",
+            "steps": [
+              "Выявить проблему ключей восьми промежуточных сертификатов",
+              "Быстро доставить блокировку через OneCRL",
+              "Обновить клиенты для пропущенных конфигураций",
+              "Обновить хранилища доверия других приложений"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "網頁上的 HTTPS 連線能否可信，不只取決於傳輸有沒有加密，還取決於瀏覽器是否認對了網站身份。eMudhra 的八張中間證書所關聯的私鑰出現安全問題後，Mozilla 先緊急下發阻止信任這些證書的列表，再用瀏覽器和證書庫更新補足覆蓋。10 月 20 日公告及 21 日增補解釋了這幾層措施為何缺一不可。",
+          "sections": [
+            {
+              "heading": "中間證書的問題為何會波及其他網站",
+              "paragraphs": [
+                "瀏覽器藉助證書鏈確認網站身份：受信任的根證書授權中間機構，再由後者簽發網站證書。中間證書私鑰受損，會讓不應有簽發權的一方獲得製造偽造網站證書的機會。Mozilla 說明，若攻擊者還能攔截使用者連線，就可能利用這些證書冒充網站、讀取或修改通訊。擁有問題金鑰和能夠攔截連線是不同條件，不能省略後者。",
+                "BleepingComputer 的獨立報道補充稱，研究人員發現了這些私鑰的生成弱點，並核驗過其中一個公開樣本與問題證書相匹配。報道援引 eMudhra 對生成流程失誤的解釋；這是證書機構的原因說明。本文不展示金鑰或復現方法，也不把可被利用的風險寫成已經發生大規模流量竊取。"
+              ]
+            },
+            {
+              "heading": "第一層：先把撤銷資訊送到瀏覽器",
+              "paragraphs": [
+                "Mozilla 稱，10 月 17 日 20:06 UTC 收到八張中間證書私鑰受損的報告，隨後透過 OneCRL 阻止這些證書。OneCRL 是集中維護並下發的證書撤銷列表，瀏覽器拿到後可以拒絕相應的信任鏈，不必等每個網站自行處理，也不必為這次列表更新重啟瀏覽器。",
+                "按 Mozilla 公佈的時間，17 日 22:59 UTC 前，更新分發已覆蓋標準配置的 Firefox，距離收到報告不到三小時。這裡的“標準配置”是關鍵條件；它不是所有自定義設定、所有離線裝置或所有使用同一根證書的軟體都已經接收保護的保證。"
+              ]
+            },
+            {
+              "heading": "第二層：客戶端和證書庫更新補齊缺口",
+              "paragraphs": [
+                "20 日，Mozilla 釋出桌面及 Android 版 Firefox 158.0.1，以及 ESR 115.43.1、153.5.1，為沒有及時收到 OneCRL 的部分自定義配置補充分發保護。21 日 08:29 UTC 又釋出 Android 158.0.2，修復部分客戶端啟動後沒有立即應用內建阻止列表變化的問題。這是後續修復，不能用原有列表已經下發來忽略它。",
+                "另一條路徑是 NSS 3.131.1 的信任列表更新，移除簽發這些中間證書的根證書。它服務於使用 Mozilla 信任庫或其衍生版本、卻不接收 OneCRL 的其他應用。更新瀏覽器、更新撤銷列表和更新應用自己的證書庫是相關但不同的工作，不能互相替代。"
+              ]
+            },
+            {
+              "heading": "應如何理解已經提供的保護",
+              "paragraphs": [
+                "此次事件說明，共享一套證書來源並不意味著共享同一條安全更新通道。瀏覽器使用者和軟體維護者需要確認各自應用實際採用的版本、信任庫和撤銷機制，而不是僅憑系統裡有一個已更新的瀏覽器判斷全部程式安全。公開說明確認的是金鑰受損與阻止措施，未提供所有潛在連線被冒用的證據；證書撤銷也不等於 HTTPS 加密演算法整體失效。本文記錄的是這次已公佈的處置範圍，不將文中版本稱為今後始終最新的版本。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據 Mozilla 說明重繪的防護流程；封面為證書概念插圖，不是真實洩露證書。",
+            "steps": [
+              "確認八張中間證書的私鑰問題",
+              "透過 OneCRL 快速分發阻止列表",
+              "用客戶端更新覆蓋遺漏配置",
+              "更新其他應用使用的信任庫"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "powertoys-0102-mouse-accessibility-tools",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Microsoft · PowerToys 0.102 release overview",
+          "url": "https://devblogs.microsoft.com/commandline/powertoys-0-102-is-here-new-mouse-utilities-command-palette-improvements-and-much-more/"
+        },
+        {
+          "label": "Microsoft · PowerToys release v0.102.2933.0",
+          "url": "https://github.com/microsoft/PowerToys/releases/tag/v0.102.2933.0"
+        },
+        {
+          "label": "BleepingComputer · PowerToys mouse tools",
+          "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-powertoys-adds-cursorhide-button-lock-mouse-tools/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "微软在10月21日发布PowerToys 0.102，继续为Windows补充可单独启用的小工具。这次最直接的变化是减少持续按住鼠标和反复打开面板的操作：新增按键锁定与指针隐藏，命令面板提供常用项快捷栏。官方说明、已提供安装包的发行页与独立报道相互印证，属于已发布功能，不是将来才会上线的预告。",
+          "sections": [
+            {
+              "heading": "让拖拽不必一直用力按住",
+              "paragraphs": [
+                "Mouse Button Lock针对的是长距离拖拽和大范围选择。按住鼠标按钮达到设定时长后，即使手指松开，系统仍按“按钮保持按下”处理，下一次点击任意按钮才结束。它不会锁住屏幕，也不是永久禁用鼠标；改变的是一次拖拽中维持按键状态的方式。",
+                "对难以长时间按住按钮的人，这提供了一种操作替代。微软将无障碍使用列为目标，但公告没有给出用户试验或效率提升数据，不能据此判断适合每个人。另一个新工具CursorHide会在输入文字、鼠标闲置或同时满足这两类设置时隐藏指针，移动鼠标后重新显示，减少指针挡住文字的情况。"
+              ]
+            },
+            {
+              "heading": "常用操作可以直接出现在面板里",
+              "paragraphs": [
+                "Command Palette在此前紧凑模式基础上增加可选快捷栏，把固定的常用命令放在收起状态的搜索框下方，支持最多九项的数字快捷访问，还可以先选中而不立即执行。固定项能调整顺序，也可显示最近命令和应用。面板设置增加模糊搜索，帮助定位选项、扩展、别名和快捷键；Dock也可以用键盘聚焦和移动。"
+              ]
+            },
+            {
+              "heading": "截图说明与键盘映射一起调整",
+              "paragraphs": [
+                "ZoomIt新增截图时口述说明：选取区域的同时说出说明，语音在设备上转成文字，之后可一次粘贴截图与文字。这里的端侧转写只指该功能，不能推断PowerToys所有AI功能都不联网；Advanced Paste的AI操作仍使用用户配置的服务商和策略。",
+                "Keyboard Manager新增“单独轻按”映射：一个键独立按下时执行另一动作，在组合快捷键和鼠标组合中仍保留正常行为。编辑器增加搜索、筛选和批量删除。部分工具新增自动化接口，Color Picker与Text Extractor转用WinUI 3，官方表示原有快捷键和设置会保留；这不代表所有工具都已具备同样的自动化能力。"
+              ]
+            },
+            {
+              "heading": "变化的意义在操作方式，而非性能排名",
+              "paragraphs": [
+                "本站认为，这批更新的共同方向是让同一动作有更多入口：鼠标按住可以由状态保持代替，常用面板操作可以直接选择，截图可以附带口述说明。是否有用取决于具体工作与个人操作习惯。现有资料能确认功能和版本交付，不能证明某个场景的提速幅度或所有应用的兼容性；卡片所用设置截图也只是界面示例，不是独立效果测试。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公告重绘的鼠标按键锁定示意，解释状态变化，不是用户效果测试。",
+            "steps": [
+              "按住按钮达到设定时长",
+              "松开手指，保持拖拽状态",
+              "继续移动或选择",
+              "再次点击结束锁定"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Microsoft released PowerToys 0.102 on October 21, adding optional utilities to Windows. The most immediate changes reduce sustained mouse-button pressure and repeated trips into menus: button locking, cursor hiding and a shelf of favorite Command Palette items. The announcement, available release packages and independent reporting confirm delivery rather than a future feature promise.",
+          "sections": [
+            {
+              "heading": "Dragging without continuous pressure",
+              "paragraphs": [
+                "Mouse Button Lock targets long drags and selections. After a button has been held for the configured duration, releasing the finger leaves Windows treating it as pressed. Clicking any button ends that state. This neither locks the screen nor permanently disables the mouse; it changes how one drag remains active.",
+                "That provides an alternative for people who find a sustained press difficult. Microsoft identifies accessibility as a purpose but supplies no user-study results or measured productivity gain, so suitability cannot be assumed for everyone. CursorHide separately hides the pointer during typing, after inactivity, or both, and restores it when the mouse moves. It can keep the pointer from obscuring text."
+              ]
+            },
+            {
+              "heading": "Favorite actions stay within reach",
+              "paragraphs": [
+                "Command Palette adds an optional shelf to the earlier compact mode. Pinned actions appear below the search field while the palette is collapsed, with numbered access to up to nine items and an option to select an item before running it. Pins can be reordered, and recent commands or applications can appear alongside them. Fuzzy settings search locates options, extensions, aliases and shortcuts; the Dock also gains keyboard focus and navigation."
+              ]
+            },
+            {
+              "heading": "Capturing explanations and remapping keys",
+              "paragraphs": [
+                "ZoomIt adds dictation while capturing an area: speech is transcribed on the device, and one paste can include both the image and text. This local processing claim belongs to that feature, not every AI operation in PowerToys. Advanced Paste AI actions still follow the user’s configured providers and policies.",
+                "Keyboard Manager gains tap-alone mappings: a key can trigger another action when pressed alone while retaining normal behavior in keyboard and mouse combinations. Search, filters and bulk deletion simplify editing. Several utilities gain automation interfaces, while Color Picker and Text Extractor move to WinUI 3 with existing shortcuts and settings retained according to Microsoft. That does not mean every utility offers the same automation support."
+              ]
+            },
+            {
+              "heading": "An interaction change, not a performance ranking",
+              "paragraphs": [
+                "Our interpretation is that the update offers more ways to perform familiar actions: maintain a drag without continuous pressure, select a favorite directly, or attach spoken explanation to a capture. Its usefulness depends on the task and the user’s habits. The sources establish functionality and release availability, not a measured speedup or compatibility with every application. The settings screenshot illustrates the interface rather than an independent usability experiment."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of mouse-button locking from the announcement; not a user-performance experiment.",
+            "steps": [
+              "Hold for the configured duration",
+              "Release while the drag remains active",
+              "Continue moving or selecting",
+              "Click again to end the lock"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Microsoftは10月21日にPowerToys 0.102を公開した。Windowsに個別に有効化できる補助機能を加える更新で、今回はマウスを押し続ける操作やメニューを開く手間に焦点がある。ボタン固定、ポインター非表示、Command Paletteの常用項目棚を追加した。公式説明、提供済みの配布物、独立報道が対応しており、将来の予告ではない。",
+          "sections": [
+            {
+              "heading": "ドラッグ中ずっと押さえる必要を減らす",
+              "paragraphs": [
+                "Mouse Button Lockは長いドラッグや広い範囲の選択を対象にする。設定時間だけ押した後に指を離しても、Windowsはボタンが押された状態として扱い、どれかのボタンを再びクリックすると終了する。画面をロックしたりマウスを恒久的に無効化したりする機能ではなく、ドラッグ状態の維持方法を変える。",
+                "押し続ける動作が難しい人に別の操作方法を提供する。ただしMicrosoftはアクセシビリティを目的として挙げるだけで、利用者試験や効率向上の測定値は示していない。誰にでも適するとは判断できない。CursorHideは文字入力中、一定の非操作時間後、または両方でポインターを隠し、マウスを動かすと表示を戻す。"
+              ]
+            },
+            {
+              "heading": "常用操作をパネルに残す",
+              "paragraphs": [
+                "Command Paletteには従来のコンパクト表示に任意の棚が加わった。縮小状態でも検索欄の下に固定項目を表示し、最大九項目を数字操作で呼び出せる。すぐ実行せず選択する方法もある。並び替えや最近の操作・アプリ表示に対応し、設定のあいまい検索では項目、拡張、別名、ショートカットを探せる。Dockもキーボードでフォーカスして移動できる。"
+              ]
+            },
+            {
+              "heading": "説明付きキャプチャとキー設定",
+              "paragraphs": [
+                "ZoomItは領域を切り取る際の音声説明に対応した。端末上で音声を文字にし、画像と文を一度に貼り付けられる。端末内処理という説明はこの機能についてであり、PowerToysの全AI機能が通信しないという意味ではない。Advanced PasteのAI操作は設定済みのサービス提供者とポリシーに従う。",
+                "Keyboard Managerはキーの単独タップ時だけ別動作にする設定を加えた。組み合わせ操作では通常の役割を保つ。編集には検索、フィルター、一括削除が加わった。一部ツールは自動化用インターフェースを提供し、Color PickerとText ExtractorはWinUI 3に移行する。公式説明では既存設定とショートカットを保持するが、全ツールで同じ自動化が可能という意味ではない。"
+              ]
+            },
+            {
+              "heading": "速さの順位ではなく操作の選択肢",
+              "paragraphs": [
+                "当サイトでは、押し続けずにドラッグを保つ、固定項目を直接選ぶ、切り取りに口頭説明を付けるという選択肢が共通点だと考える。役立つかは作業と個人の習慣による。資料から確認できるのは機能と提供状況で、速度向上率や全アプリとの互換性ではない。設定画面の画像も操作例であり、独立した効果測定ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式説明を基に当サイトが描き直したボタン固定の説明図。利用者試験の結果ではない。",
+            "steps": [
+              "設定時間だけ押す",
+              "指を離してドラッグを維持",
+              "移動や選択を続ける",
+              "再クリックで解除"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "21 октября Microsoft выпустила PowerToys 0.102 — набор отдельно включаемых дополнений для Windows. Заметные изменения сокращают необходимость удерживать кнопку мыши и снова открывать меню: появились фиксация кнопки, скрытие указателя и полка избранного в Command Palette. Объявление, доступные установочные пакеты и независимое сообщение подтверждают выпуск, а не обещание будущих возможностей.",
+          "sections": [
+            {
+              "heading": "Перетаскивание без постоянного нажатия",
+              "paragraphs": [
+                "Mouse Button Lock предназначен для длинных перетаскиваний и выделений. После удержания в течение заданного времени палец можно отпустить: Windows продолжит считать кнопку нажатой. Любой следующий щелчок завершит это состояние. Функция не блокирует экран и не отключает мышь навсегда, а меняет способ поддержания одного перетаскивания.",
+                "Это даёт альтернативу людям, которым трудно долго удерживать кнопку. Microsoft указывает доступность как цель, но не приводит пользовательского исследования или измеренного прироста производительности. Нельзя считать решение подходящим для всех. Отдельный CursorHide скрывает указатель при наборе текста, после бездействия либо в обоих случаях и возвращает его при движении мыши."
+              ]
+            },
+            {
+              "heading": "Избранное остаётся под рукой",
+              "paragraphs": [
+                "В компактном режиме Command Palette появилась необязательная полка закреплённых действий под строкой поиска. До девяти пунктов доступны по номеру; пункт можно сначала выбрать, не запуская. Поддерживаются перестановка, недавние команды и приложения. Нечёткий поиск настроек находит параметры, расширения, псевдонимы и сочетания клавиш. Панель Dock также позволяет получать фокус и перемещаться с клавиатуры."
+              ]
+            },
+            {
+              "heading": "Снимок с объяснением и настройка клавиш",
+              "paragraphs": [
+                "ZoomIt позволяет диктовать описание во время выделения области. Речь преобразуется в текст на устройстве, после чего изображение и текст вставляются вместе. Это утверждение о локальной обработке относится к данной функции, а не ко всем ИИ-возможностям PowerToys. ИИ-действия Advanced Paste по-прежнему используют выбранных пользователем поставщиков и политики.",
+                "Keyboard Manager добавляет отдельное действие при одиночном нажатии клавиши, сохраняя её обычную роль в сочетаниях с клавиатурой и мышью. Редактирование дополнено поиском, фильтрами и массовым удалением. Некоторые утилиты получили интерфейсы автоматизации. Color Picker и Text Extractor переходят на WinUI 3; по сообщению Microsoft, прежние настройки и сочетания сохраняются. Это не означает одинаковую автоматизацию всех инструментов."
+              ]
+            },
+            {
+              "heading": "Выбор способа работы, а не рейтинг скорости",
+              "paragraphs": [
+                "По нашей интерпретации, обновление добавляет разные способы привычных действий: сохранить перетаскивание без давления, прямо выбрать избранное, приложить устное пояснение к снимку. Польза зависит от работы и привычек человека. Источники подтверждают функции и доступность версии, но не величину ускорения или совместимость со всеми приложениями. Снимок настроек показывает интерфейс, а не независимое испытание удобства."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема фиксации кнопки по объявлению; не результаты пользовательского испытания.",
+            "steps": [
+              "Удержать заданное время",
+              "Отпустить, сохранив перетаскивание",
+              "Продолжить движение или выделение",
+              "Щёлкнуть для завершения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "微軟在10月21日釋出PowerToys 0.102，繼續為Windows補充可單獨啟用的小工具。這次最直接的變化是減少持續按住滑鼠和反覆開啟面板的操作：新增按鍵鎖定與指標隱藏，命令面板提供常用項快捷欄。官方說明、已提供安裝包的發行頁與獨立報道相互印證，屬於已釋出功能，不是將來才會上線的預告。",
+          "sections": [
+            {
+              "heading": "讓拖拽不必一直用力按住",
+              "paragraphs": [
+                "Mouse Button Lock針對的是長距離拖拽和大範圍選擇。按住滑鼠按鈕達到設定時長後，即使手指鬆開，系統仍按“按鈕保持按下”處理，下一次點選任意按鈕才結束。它不會鎖住螢幕，也不是永久禁用滑鼠；改變的是一次拖拽中維持按鍵狀態的方式。",
+                "對難以長時間按住按鈕的人，這提供了一種操作替代。微軟將無障礙使用列為目標，但公告沒有給出使用者試驗或效率提升資料，不能據此判斷適合每個人。另一個新工具CursorHide會在輸入文字、滑鼠閒置或同時滿足這兩類設定時隱藏指標，移動滑鼠後重新顯示，減少指標擋住文字的情況。"
+              ]
+            },
+            {
+              "heading": "常用操作可以直接出現在面板裡",
+              "paragraphs": [
+                "Command Palette在此前緊湊模式基礎上增加可選快捷欄，把固定的常用命令放在收起狀態的搜尋框下方，支援最多九項的數字快捷訪問，還可以先選中而不立即執行。固定項能調整順序，也可顯示最近命令和應用。面板設定增加模糊搜尋，幫助定位選項、擴充套件、別名和快捷鍵；Dock也可以用鍵盤聚焦和移動。"
+              ]
+            },
+            {
+              "heading": "截圖說明與鍵盤對映一起調整",
+              "paragraphs": [
+                "ZoomIt新增截圖時口述說明：選取區域的同時說出說明，語音在裝置上轉成文字，之後可一次貼上截圖與文字。這裡的端側轉寫只指該功能，不能推斷PowerToys所有AI功能都不聯網；Advanced Paste的AI操作仍使用使用者配置的服務商和策略。",
+                "Keyboard Manager新增“單獨輕按”對映：一個鍵獨立按下時執行另一動作，在組合快捷鍵和滑鼠組合中仍保留正常行為。編輯器增加搜尋、篩選和批次刪除。部分工具新增自動化介面，Color Picker與Text Extractor轉用WinUI 3，官方表示原有快捷鍵和設定會保留；這不代表所有工具都已具備同樣的自動化能力。"
+              ]
+            },
+            {
+              "heading": "變化的意義在操作方式，而非效能排名",
+              "paragraphs": [
+                "本站認為，這批更新的共同方向是讓同一動作有更多入口：滑鼠按住可以由狀態保持代替，常用面板操作可以直接選擇，截圖可以附帶口述說明。是否有用取決於具體工作與個人操作習慣。現有資料能確認功能和版本交付，不能證明某個場景的提速幅度或所有應用的相容性；卡片所用設定截圖也只是介面示例，不是獨立效果測試。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公告重繪的滑鼠按鍵鎖定示意，解釋狀態變化，不是使用者效果測試。",
+            "steps": [
+              "按住按鈕達到設定時長",
+              "鬆開手指，保持拖拽狀態",
+              "繼續移動或選擇",
+              "再次點選結束鎖定"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "php2shell-emergency-security-fixes",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "PHP Security Team · October 21 advisory and subsequent notices",
+          "url": "https://www.php.net/archive/2026.php#2026-10-21-5"
+        },
+        {
+          "label": "BleepingComputer · emergency PHP2Shell patches",
+          "url": "https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "PHP安全团队在10月21日发布四条受支持分支的紧急修复，处理两项统称PHP2Shell的严重漏洞。问题位于PHP处理请求的底层状态和内存，而不是某个网站插件的普通功能错误。攻击者在满足条件时不必先登录，就可能以Web工作进程的权限执行代码；这也是网站运营者需要检查运行环境、不能只等应用更新的原因。",
+          "sections": [
+            {
+              "heading": "受影响的是处理网页请求的运行时",
+              "paragraphs": [
+                "官方列出的范围包括PHP-FPM、Apache的mod_php、php-cgi、FrankenPHP和LiteSpeed等面向Web请求的部署。PHP团队认为mod_php风险最高，并说明已存在可在应用自身代码运行前触发的验证。这一描述是官方对风险路径的判断，不代表所有部署都已被入侵，也不表示每种配置的利用难度相同。",
+                "两个编号分别是CVE-2026-109618与CVE-2026-109619。前者涉及内存不足时，请求数据尚未完成初始化就被中断，清理阶段错误地把不完整状态当成有效对象。后者涉及已经释放底层内存的请求状态仍被保留，同一工作进程处理后续请求时可能再次使用。这些问题破坏的是请求之间应有的隔离与内存有效性。"
+              ]
+            },
+            {
+              "heading": "四条分支都已有正式修复",
+              "paragraphs": [
+                "此次发布的版本为PHP 8.5.12、8.4.27、8.3.36和8.2.35。官方与BleepingComputer的21日报道一致确认这四个版本已经提供。发行版和长期支持供应商事先收到补丁，因此使用供应商软件包的环境应核对其安全公告与回补状态，而不能只比较上游版本文字。",
+                "PHP 8.1及更老分支已不再得到PHP项目常规更新。团队因严重性额外提供7.4、8.0和8.1的最小源码回补，但这不等于恢复这些分支的长期支持。受影响环境仍需确认供应商是否提供维护，或迁移到受支持版本。安全修复与长期维护安排是两个不同问题。"
+              ]
+            },
+            {
+              "heading": "缓解措施不能代替升级",
+              "paragraphs": [
+                "官方说明，限制输入规模、调整特定会话功能及处理异常终止路径，只能减少某些暴露面，不能让未更新的安装变得安全。隐藏报错信息也不等于修复内部状态。这里不列出攻击输入或可复制配置；对于部署者，关键是依据自己的发行渠道确认修复已经应用，并使服务实际运行修复后的程序。"
+              ]
+            },
+            {
+              "heading": "后续提醒也要保留适用条件",
+              "paragraphs": [
+                "10月23日PHP又提示一种罕见的会话上传进度场景：应用在运行中改变会话序列化方式，且相关功能仍开启时，还可能触发额外风险。官方建议相关环境暂时关闭上传进度功能，等待下一次常规修复；从不在运行时更换序列化处理器的应用可保留该功能。这个补充编号为CVE-2026-115560，不能据此宣称21日两项修复无效，也不能把少见配置扩写成全部网站必然受影响。本站的结论是，应同时追踪主修复和适用于自身配置的后续说明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的防御性处理示意，概括更新核验顺序，不含攻击流程或可执行配置。",
+            "steps": [
+              "识别实际PHP分支与部署方式",
+              "核对供应商修复或回补状态",
+              "应用修复并更新运行中的服务",
+              "关注与自身配置相关的后续公告"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 21, the PHP security team issued emergency fixes for four supported branches against two critical flaws collectively called PHP2Shell. The defects concern low-level request state and memory, rather than an ordinary feature bug in a website plugin. Under the relevant conditions, an unauthenticated attacker could execute code with a web worker’s privileges. Operators therefore need to examine the runtime rather than wait only for application updates.",
+          "sections": [
+            {
+              "heading": "The runtime serving web requests is affected",
+              "paragraphs": [
+                "The advisory includes PHP-FPM, Apache mod_php, php-cgi, FrankenPHP and LiteSpeed web deployments. The team considers mod_php the highest risk and describes a demonstrated path that can trigger before application code executes. This is the project’s assessment of an attack path, not evidence that every installation is compromised or equally easy to exploit.",
+                "CVE-2026-109618 involves an out-of-memory interruption before internal request data is fully initialized; cleanup can then mistake incomplete state for valid objects. CVE-2026-109619 concerns request state that remains after its backing memory is freed and may be reused by a later request in the same worker. Both undermine memory validity and the separation expected between requests."
+              ]
+            },
+            {
+              "heading": "Fixed releases exist on four branches",
+              "paragraphs": [
+                "The releases are PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35. The official announcement and BleepingComputer’s October 21 report agree that these versions are available. Distributions and long-term-support vendors received patches in advance. An installation using vendor packages should therefore verify that vendor’s security advisory and backport status, rather than infer patch status solely from the upstream version string.",
+                "PHP 8.1 and earlier no longer receive regular updates from the PHP project. Given the severity, the team additionally supplied minimal source backports for 7.4, 8.0 and 8.1. That does not restore their long-term support. Operators still need to establish whether a vendor maintains their branch or move to a supported version. An emergency fix and an ongoing maintenance commitment are different things."
+              ]
+            },
+            {
+              "heading": "Mitigation is not a substitute for patching",
+              "paragraphs": [
+                "According to PHP, constraining inputs, adjusting selected session features and addressing abnormal termination paths can reduce particular exposures without making an unpatched installation safe. Suppressing error messages does not repair internal state. We omit attack inputs and copyable configurations: the defensive priority is to confirm the fix through the installation’s distribution channel and ensure the running service uses the repaired runtime."
+              ]
+            },
+            {
+              "heading": "A later notice has specific conditions",
+              "paragraphs": [
+                "On October 23, PHP described an unusual additional session-upload-progress scenario: the application changes the session serialization handler at runtime while upload progress remains enabled. The project recommends temporarily disabling upload progress in the relevant environments pending the next regular fix; applications that never switch handlers at runtime may keep it enabled. This separate notice concerns CVE-2026-115560. It neither establishes that the October 21 fixes failed nor makes every site affected by the unusual setup. Our conclusion is to track both the main repair and later notices that match the deployment’s configuration."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original defensive explanatory redraw of update verification; no attack sequence or executable configuration.",
+            "steps": [
+              "Identify the runtime branch and deployment",
+              "Verify vendor fixes or backports",
+              "Apply fixes and refresh running services",
+              "Follow relevant configuration-specific notices"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "PHPのセキュリティチームは10月21日、PHP2Shellと総称される二つの重大な脆弱性に対し、サポート中の四系列へ緊急修正を出した。問題はサイトのプラグインの通常機能ではなく、PHP内部のリクエスト状態とメモリー管理にある。条件がそろうと認証前でもWebワーカーの権限でコードを実行される可能性があり、アプリ更新だけでなく実行環境の確認が必要になる。",
+          "sections": [
+            {
+              "heading": "Webリクエストを処理する実行環境が対象",
+              "paragraphs": [
+                "公式説明はPHP-FPM、Apacheのmod_php、php-cgi、FrankenPHP、LiteSpeedなどを対象に挙げる。チームはmod_phpのリスクが最も高いとし、アプリの処理が始まる前に到達する経路を検証したと説明する。これは経路に関する公式評価であり、全環境が侵入済み、または同じ難度で悪用できるという意味ではない。",
+                "CVE-2026-109618では、メモリー不足により内部データの初期化途中で処理が止まり、後片付けが不完全な状態を有効なものとして扱う。CVE-2026-109619では、実体のメモリー解放後もリクエスト状態が残り、同じワーカーの後続処理で使われる可能性がある。どちらもメモリーの有効性とリクエスト間の分離を損なう。"
+              ]
+            },
+            {
+              "heading": "四系列の正式修正版が公開済み",
+              "paragraphs": [
+                "公開版はPHP 8.5.12、8.4.27、8.3.36、8.2.35で、公式発表と21日のBleepingComputer報道で提供を確認できる。ディストリビューションと長期保守ベンダーには事前に修正が渡された。そのためベンダー配布版は上流の番号だけで判断せず、そのベンダーの公告と修正取り込み状況を確認する必要がある。",
+                "PHP 8.1以前はPHPプロジェクトの通常更新対象ではない。重大性を踏まえ7.4、8.0、8.1向けの最小限のソース修正も出たが、長期サポートを再開したわけではない。ベンダーによる保守の有無を確認するか、サポート中の系列へ移行する必要がある。緊急修正と継続保守の約束は別問題だ。"
+              ]
+            },
+            {
+              "heading": "暫定策だけでは解決しない",
+              "paragraphs": [
+                "入力規模の制限、特定のセッション機能の調整、異常終了経路の見直しは一部の露出を減らすが、未更新環境を安全にするものではないと公式は説明する。エラー表示を隠しても内部状態は直らない。ここでは攻撃入力やそのまま使える設定は示さない。配布元を通じて修正の適用を確認し、動作中のサービスも修正版を使うことが防御上の要点になる。"
+              ]
+            },
+            {
+              "heading": "後日の注意には条件がある",
+              "paragraphs": [
+                "10月23日には、セッションのシリアライズ処理を実行中に変更し、アップロード進捗機能が有効なままという珍しい組み合わせについて追加注意が出た。該当環境は次の通常修正まで進捗機能を停止するよう勧められるが、実行中に処理方式を変えないアプリは有効のままにできる。別番号CVE-2026-115560の説明であり、21日の修正が無効だった、あるいは全サイトに同じ条件があるとは言えない。当サイトは主修正と自環境に該当する追加説明を併せて追うべきだと考える。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "更新の確認順序を当サイトが描き直した防御向け説明図。攻撃手順や実行可能な設定は含まない。",
+            "steps": [
+              "系列と導入形態を確認",
+              "ベンダー修正と回補を確認",
+              "修正を適用し稼働サービスを更新",
+              "該当する構成の追加公告を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "21 октября команда безопасности PHP выпустила экстренные исправления для четырёх поддерживаемых веток против двух критических уязвимостей PHP2Shell. Дефекты находятся в низкоуровневом состоянии запросов и памяти, а не в обычной функции плагина сайта. При соответствующих условиях атакующий без входа в систему может выполнить код с правами веб-процесса. Поэтому проверять нужно среду исполнения, не ограничиваясь обновлением приложения.",
+          "sections": [
+            {
+              "heading": "Уязвима среда обработки веб-запросов",
+              "paragraphs": [
+                "Официальное уведомление охватывает PHP-FPM, Apache mod_php, php-cgi, FrankenPHP и LiteSpeed. Команда считает риск для mod_php наибольшим и сообщает о подтверждённом пути до начала выполнения приложения. Это оценка пути воздействия, а не доказательство взлома всех установок или одинаковой сложности эксплуатации каждой конфигурации.",
+                "CVE-2026-109618 связана с прерыванием при нехватке памяти до окончания инициализации данных запроса: очистка может принять неполное состояние за корректное. CVE-2026-109619 оставляет состояние запроса после освобождения соответствующей памяти; следующий запрос того же рабочего процесса может снова его использовать. Нарушаются корректность памяти и ожидаемое разделение запросов."
+              ]
+            },
+            {
+              "heading": "Исправления доступны в четырёх ветках",
+              "paragraphs": [
+                "Вышли PHP 8.5.12, 8.4.27, 8.3.36 и 8.2.35. Доступность подтверждают официальный выпуск и сообщение BleepingComputer от 21 октября. Дистрибутивы и поставщики длительной поддержки получили исправления заранее. При использовании их пакетов следует проверять уведомление и обратный перенос исправлений у поставщика, а не судить только по номеру исходной версии PHP.",
+                "PHP 8.1 и более старые ветки больше не получают обычных обновлений проекта. Из-за серьёзности проблемы команда также предоставила минимальные исходные исправления для 7.4, 8.0 и 8.1. Это не возобновляет длительную поддержку. Нужно выяснить, поддерживает ли ветку поставщик, либо перейти на поддерживаемую. Разовая экстренная заплата и дальнейшее сопровождение — разные обязательства."
+              ]
+            },
+            {
+              "heading": "Снижение риска не заменяет исправление",
+              "paragraphs": [
+                "По сообщению PHP, ограничения входных данных, изменения отдельных возможностей сеанса и устранение аварийных завершений уменьшают некоторые пути воздействия, но не делают неисправленную установку безопасной. Скрытие ошибок не восстанавливает внутреннее состояние. Мы не приводим атакующие данные или готовые настройки. Для защиты важно подтвердить исправление через канал поставки и убедиться, что работающая служба использует исправленную среду."
+              ]
+            },
+            {
+              "heading": "У последующего предупреждения есть условия",
+              "paragraphs": [
+                "23 октября PHP сообщил о редком дополнительном сценарии: приложение меняет обработчик сериализации сеанса во время исполнения, а учёт прогресса загрузки остаётся включённым. Для таких сред рекомендовано временно отключить эту функцию до очередного исправления; приложения без переключения обработчика могут оставить её. Это отдельное предупреждение CVE-2026-115560, а не доказательство неработоспособности исправлений от 21 октября или наличия редкой конфигурации на всех сайтах. По нашей оценке, нужно отслеживать основной выпуск и последующие разъяснения, относящиеся к конкретной конфигурации."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная защитная схема проверки обновления; без последовательности атаки и исполняемых настроек.",
+            "steps": [
+              "Определить ветку и способ развёртывания",
+              "Проверить исправления поставщика",
+              "Обновить среду и работающие службы",
+              "Следить за подходящими дополнительными уведомлениями"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "PHP安全團隊在10月21日釋出四條受支援分支的緊急修復，處理兩項統稱PHP2Shell的嚴重漏洞。問題位於PHP處理請求的底層狀態和記憶體，而不是某個網站外掛的普通功能錯誤。攻擊者在滿足條件時不必先登入，就可能以Web工作程序的許可權執行程式碼；這也是網站運營者需要檢查執行環境、不能只等應用更新的原因。",
+          "sections": [
+            {
+              "heading": "受影響的是處理網頁請求的執行時",
+              "paragraphs": [
+                "官方列出的範圍包括PHP-FPM、Apache的mod_php、php-cgi、FrankenPHP和LiteSpeed等面向Web請求的部署。PHP團隊認為mod_php風險最高，並說明已存在可在應用自身程式碼執行前觸發的驗證。這一描述是官方對風險路徑的判斷，不代表所有部署都已被入侵，也不表示每種配置的利用難度相同。",
+                "兩個編號分別是CVE-2026-109618與CVE-2026-109619。前者涉及記憶體不足時，請求資料尚未完成初始化就被中斷，清理階段錯誤地把不完整狀態當成有效物件。後者涉及已經釋放底層記憶體的請求狀態仍被保留，同一工作程序處理後續請求時可能再次使用。這些問題破壞的是請求之間應有的隔離與記憶體有效性。"
+              ]
+            },
+            {
+              "heading": "四條分支都已有正式修復",
+              "paragraphs": [
+                "此次釋出的版本為PHP 8.5.12、8.4.27、8.3.36和8.2.35。官方與BleepingComputer的21日報道一致確認這四個版本已經提供。發行版和長期支援供應商事先收到補丁，因此使用供應商軟體包的環境應核對其安全公告與回補狀態，而不能只比較上游版本文字。",
+                "PHP 8.1及更老分支已不再得到PHP專案常規更新。團隊因嚴重性額外提供7.4、8.0和8.1的最小原始碼回補，但這不等於恢復這些分支的長期支援。受影響環境仍需確認供應商是否提供維護，或遷移到受支援版本。安全修復與長期維護安排是兩個不同問題。"
+              ]
+            },
+            {
+              "heading": "緩解措施不能代替升級",
+              "paragraphs": [
+                "官方說明，限制輸入規模、調整特定會話功能及處理異常終止路徑，只能減少某些暴露面，不能讓未更新的安裝變得安全。隱藏報錯資訊也不等於修復內部狀態。這裡不列出攻擊輸入或可複製配置；對於部署者，關鍵是依據自己的發行渠道確認修復已經應用，並使服務實際執行修復後的程式。"
+              ]
+            },
+            {
+              "heading": "後續提醒也要保留適用條件",
+              "paragraphs": [
+                "10月23日PHP又提示一種罕見的會話上傳進度場景：應用在執行中改變會話序列化方式，且相關功能仍開啟時，還可能觸發額外風險。官方建議相關環境暫時關閉上傳進度功能，等待下一次常規修復；從不在執行時更換序列化處理器的應用可保留該功能。這個補充編號為CVE-2026-115560，不能據此宣稱21日兩項修復無效，也不能把少見配置擴寫成全部網站必然受影響。本站的結論是，應同時追蹤主修復和適用於自身配置的後續說明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的防禦性處理示意，概括更新核驗順序，不含攻擊流程或可執行配置。",
+            "steps": [
+              "識別實際PHP分支與部署方式",
+              "核對供應商修復或回補狀態",
+              "應用修復並更新執行中的服務",
+              "關注與自身配置相關的後續公告"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nodejs-october-security-patches",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Node.js Project · October security advisory",
+          "url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+        },
+        {
+          "label": "Node.js Project · 22.23.4 release",
+          "url": "https://nodejs.org/en/blog/release/v22.23.4/"
+        },
+        {
+          "label": "Node.js Project · 24.22.1 release",
+          "url": "https://nodejs.org/en/blog/release/v24.22.1"
+        },
+        {
+          "label": "Node.js Project · 26.12.1 release",
+          "url": "https://nodejs.org/en/blog/release/v26.12.1"
+        },
+        {
+          "label": "HKCERT · Node.js multiple vulnerabilities",
+          "url": "https://www.hkcert.org/security-bulletin/node-js-multiple-vulnerabilities_20261022"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Node.js项目在10月21日正式提供22.23.4、24.22.1和26.12.1安全版本，修复域名解析、证书验证、压缩数据处理和权限检查等问题。它们不是一个新功能包，也不是只影响网站界面的更新：Node.js运行时承担应用与网络、文件系统之间的基础工作，一处解析或状态检查偏差，就可能让上层应用的安全判断失效。",
+          "sections": [
+            {
+              "heading": "检查的名称必须和连接目标一致",
+              "paragraphs": [
+                "域名解析漏洞CVE-2026-105482涉及部分接口对带有特殊结束字符的名称处理不一致。应用认为自己验证了完整名称，底层却可能解析截短后的另一名称，削弱域名允许列表等保护。此次继续补齐此前修复未覆盖的解析入口，影响22、24和26三个系列。",
+                "TLS问题则发生在地址表示和证书身份的对应上。非标准数字写法可能被不同组件理解成不同地址，或者把IP地址按普通域名去匹配证书。修复的目标是让连接目的地与验证对象保持一致，而非关闭证书验证。部分问题覆盖三个系列，涉及全角数字处理的CVE-2026-105483仅列出24和26系列，不能把所有漏洞都套在每个版本上。"
+              ]
+            },
+            {
+              "heading": "压缩解码也属于安全边界",
+              "paragraphs": [
+                "Brotli用于压缩和还原数据。CVE-2026-111497使某些格式错误的压缩输入没有及时被当作永久错误停止，可能导致解码器越界写入。对会解压外部Brotli内容的应用，后果可能是进程崩溃、内存信息泄漏或远程代码执行，三个系列都受影响。这里的前提是应用实际接收并解码攻击者可控制的数据，不是只要安装Node.js就一定出现同样的暴露。"
+              ]
+            },
+            {
+              "heading": "连接复用、随机数和权限也有修复",
+              "paragraphs": [
+                "HTTP连接复用修复处理响应与请求的错误关联：在特定时序下，先于新请求到达的数据可能被当成该请求的响应。另一个问题是构建启动快照时把随机值缓存一并保存，多个进程可能重复使用本应唯一或不可预测的值。两者都提醒开发者，安全性不仅取决于单次调用，还取决于跨请求、跨进程保留了什么状态。",
+                "权限模型修复包括缺少读取检查的路径解析，以及26系列特有的通配规则匹配问题；26系列还修复了ZIP内容验证后的不一致。官方同时更新多个依赖，但分支组合不同，例如OpenSSL列在22和24系列、SQLite列在22系列。正文概括影响，不提供触发样本、绕过格式或攻击步骤。"
+              ]
+            },
+            {
+              "heading": "用实际分支确认更新范围",
+              "paragraphs": [
+                "本轮官方最高严重级别是High，而不是Critical。三个正式版本的发布页都标明10月21日，安全说明中的较早预告文字不表示补丁仍未上线。HKCERT在22日发布公告，并于26日更新风险说明，独立确认相同修复版本。本站建议把实际运行分支、使用到的网络和解压功能、供应商修复状态对应起来；已停止维护的分支不能因没有单独列在修复清单上就视为安全。公告说明潜在后果，不能据此判断某个站点已经遭到利用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的防御核验流程，说明如何对应运行分支和修复范围，不展示漏洞触发步骤。",
+            "steps": [
+              "确定应用实际运行分支",
+              "对应网络、解压和权限风险",
+              "采用该分支的安全修复",
+              "确认运行环境与供应商公告一致"
+            ]
+          }
+        },
+        "en": {
+          "lead": "The Node.js project released security versions 22.23.4, 24.22.1 and 26.12.1 on October 21. They address name resolution, certificate checks, compressed input and permission enforcement. These are runtime repairs rather than a feature pack or a change only to website interfaces: Node.js mediates between applications, networks and files, so inconsistent parsing or state checks can defeat decisions made by application code.",
+          "sections": [
+            {
+              "heading": "The checked name must match the destination",
+              "paragraphs": [
+                "CVE-2026-105482 concerns inconsistent handling of names containing a special termination character in some DNS interfaces. An application may validate the full name while a lower layer resolves a shortened, different name, weakening domain allowlists. The repair covers resolution entry points left out of an earlier fix and affects the 22, 24 and 26 lines.",
+                "TLS issues involve matching address representations to certificate identities. Nonstandard numeric forms can mean different addresses to different components, or an IP address may be matched as though it were a DNS name. The goal is consistency between the connection destination and the validated identity, not disabling certificate checks. Some issues affect all three lines; the fullwidth-digit regression CVE-2026-105483 is listed only for 24 and 26. The entire vulnerability list must not be applied indiscriminately to every version."
+              ]
+            },
+            {
+              "heading": "Decompression is a security boundary",
+              "paragraphs": [
+                "Brotli compresses and restores data. CVE-2026-111497 can prevent malformed input from being rejected as a permanent decoding error, permitting an out-of-bounds write. For an application that decompresses externally supplied Brotli data, possible outcomes include a crash, process-memory disclosure or remote code execution. All three lines are affected. The exposure depends on actually decoding attacker-controlled input; simply having Node.js installed does not establish an identical attack surface."
+              ]
+            },
+            {
+              "heading": "Connections, randomness and permissions also change",
+              "paragraphs": [
+                "The HTTP connection-reuse fix prevents a response from being associated with the wrong request: under particular timing, data that arrived before a new request could be accepted as its response. Another issue saves random-value caches into startup snapshots, allowing separate processes to reuse values expected to be unique or unpredictable. These show why security depends on state retained across requests and processes, not just individual calls.",
+                "Permission fixes cover missing read checks during path resolution and a wildcard-matching issue specific to line 26, which also receives a ZIP-content-validation fix. Several dependencies are updated, with different combinations by branch: OpenSSL is listed for 22 and 24, and SQLite for 22. This explanation covers defensive impact without trigger samples, bypass formats or attack procedures."
+              ]
+            },
+            {
+              "heading": "Match the repair to the running branch",
+              "paragraphs": [
+                "The project’s highest severity for this batch is High, not Critical. All three release pages identify October 21; older advance-notice wording in the advisory does not mean the patches are still pending. HKCERT published its notice on October 22 and updated the risk description on October 26, independently confirming the same fixed versions. Our recommendation is to map the actual runtime, network and decompression features, and vendor patch status together. An unsupported branch is not safe merely because it is absent from the fix list. Potential consequences in an advisory do not establish that a particular site was exploited."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original defensive explanatory redraw linking runtime branches to fixes; no vulnerability-triggering steps.",
+            "steps": [
+              "Identify the runtime branch",
+              "Map network, decompression and permission exposure",
+              "Apply that branch’s security fixes",
+              "Verify the running environment against vendor notices"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Node.jsプロジェクトは10月21日、22.23.4、24.22.1、26.12.1をセキュリティ版として公開した。名前解決、証明書検証、圧縮データ、権限確認などを修正する。新機能集やサイト画面だけの更新ではない。Node.jsはアプリとネットワーク、ファイルの間を受け持つため、解析や状態確認のずれが上位の安全判断を無効にし得る。",
+          "sections": [
+            {
+              "heading": "検査した名前と接続先を一致させる",
+              "paragraphs": [
+                "CVE-2026-105482は、一部DNS処理で特別な終端文字を含む名前の扱いが一致しない問題だ。アプリが完全な名前を検査しても、下層では途中までの別名が解決され、許可ドメインの制限が弱まる可能性がある。以前の修正で残った入口を補い、22、24、26系列に影響する。",
+                "TLSではアドレスの表記と証明書の身元を対応させる処理に問題があった。非標準の数字表記を構成要素ごとに異なるアドレスとして解釈したり、IPアドレスをDNS名として照合したりする。修正は接続先と確認対象を一致させるもので、証明書確認を止めるものではない。全角数字を扱うCVE-2026-105483は24と26だけが対象であり、全問題が全系列に当てはまるわけではない。"
+              ]
+            },
+            {
+              "heading": "圧縮解除にも境界がある",
+              "paragraphs": [
+                "Brotliはデータを圧縮・復元する形式だ。CVE-2026-111497では不正な形式を恒久的なエラーとして終了できず、範囲外への書き込みにつながる可能性がある。外部のBrotliデータを展開するアプリでは、停止、プロセスメモリーの漏えい、リモートコード実行が起こり得る。三系列とも対象だが、攻撃者が操作できるデータを実際に展開することが条件で、インストール済みというだけで同じ露出があるとは言えない。"
+              ]
+            },
+            {
+              "heading": "接続再利用と保存状態も修正",
+              "paragraphs": [
+                "HTTPの接続再利用では、新しい要求より前に届いたデータを、その要求への応答と誤認する特定のタイミングを修正する。起動スナップショットに乱数キャッシュが保存され、別プロセスで一意または予測不能であるべき値が繰り返される問題もある。安全性には単一の呼び出しだけでなく、要求間・プロセス間で残る状態が関わる。",
+                "権限モデルは経路解決の読み取り確認不足や、26系列固有のワイルドカード照合を修正し、26ではZIP内容検証の不一致も直す。依存関係の更新は系列ごとに異なり、OpenSSLは22と24、SQLiteは22に記載される。ここでは影響だけを説明し、発火例、回避表記、攻撃手順は示さない。"
+              ]
+            },
+            {
+              "heading": "稼働中の系列と修正版を対応させる",
+              "paragraphs": [
+                "公式の最高深刻度はHighでありCriticalではない。三版の公開ページは10月21日を示す。予告文が公告内に残っていても未公開という意味ではない。HKCERTも22日に公告を出し、26日にリスク説明を更新して同じ修正版を確認した。当サイトは、実際の系列、利用する通信・解凍機能、ベンダー修正状況を対応させることが重要と考える。保守終了系列は修正一覧にないから安全とは言えず、公告上の可能性だけで個別サイトの侵害を断定することもできない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "実行系列と修正範囲を対応させる、当サイトによる防御向け説明図。脆弱性の発火手順は含まない。",
+            "steps": [
+              "稼働系列を確認",
+              "通信・解凍・権限の露出を整理",
+              "該当系列の修正を適用",
+              "稼働環境とベンダー公告を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "21 октября проект Node.js выпустил защитные версии 22.23.4, 24.22.1 и 26.12.1. Исправлены разрешение имён, проверка сертификатов, обработка сжатых данных и разрешения. Это ремонт среды исполнения, а не набор новых функций или изменение только интерфейса сайта: Node.js связывает приложение с сетью и файлами, поэтому различия в разборе данных или проверке состояния могут нарушить защитные решения приложения.",
+          "sections": [
+            {
+              "heading": "Проверяемое имя должно совпадать с назначением",
+              "paragraphs": [
+                "CVE-2026-105482 затрагивает неодинаковую обработку имён со специальным завершающим символом некоторыми интерфейсами DNS. Приложение может проверить полное имя, а нижний слой разрешит сокращённое другое имя, ослабляя список разрешённых доменов. Исправление дополняет ранее пропущенные входы разрешения имён и касается веток 22, 24 и 26.",
+                "Проблемы TLS связывают представление адреса с идентичностью сертификата. Нестандартная запись цифр может означать разные адреса для разных компонентов, либо IP проверяется как доменное имя. Цель исправления — согласовать адрес соединения и проверяемую идентичность, а не отключить проверку сертификатов. Некоторые дефекты общие, но регрессия с полноширинными цифрами CVE-2026-105483 указана только для 24 и 26. Нельзя приписывать весь список каждой ветке."
+              ]
+            },
+            {
+              "heading": "Распаковка тоже является границей безопасности",
+              "paragraphs": [
+                "Brotli сжимает и восстанавливает данные. При CVE-2026-111497 некорректный формат может не вызвать окончательный отказ декодирования, допуская запись за границей памяти. В приложении, распаковывающем внешние данные Brotli, возможны сбой, раскрытие памяти процесса или удалённое исполнение кода. Затронуты все три ветки. Условие — реальная обработка данных под контролем атакующего, а не просто установленный Node.js."
+              ]
+            },
+            {
+              "heading": "Исправлены соединения, случайные значения и разрешения",
+              "paragraphs": [
+                "Исправление повторного использования HTTP-соединений предотвращает ошибочную привязку ответа: при определённом времени прихода данные до нового запроса могли приниматься за его ответ. Другая ошибка сохраняет кеш случайных значений в стартовом снимке, и разные процессы могут повторять значения, от которых ожидают уникальности или непредсказуемости. Важны не только отдельные вызовы, но и состояние между запросами и процессами.",
+                "Исправления разрешений включают пропущенную проверку чтения при разрешении пути и особую для ветки 26 ошибку шаблонного сопоставления. В 26 также устранено расхождение проверки содержимого ZIP. Зависимости обновляются по-разному: OpenSSL указан для 22 и 24, SQLite — для 22. Здесь описано защитное значение без провоцирующих примеров, форматов обхода и шагов атаки."
+              ]
+            },
+            {
+              "heading": "Соотнести исправления с рабочей веткой",
+              "paragraphs": [
+                "Высшая официальная серьёзность этой серии — High, не Critical. Страницы всех трёх выпусков датированы 21 октября; сохранившийся предварительный анонс не означает, что исправлений ещё нет. HKCERT опубликовал уведомление 22 октября и обновил описание риска 26 октября, независимо подтвердив те же версии. По нашей оценке, нужно сопоставить действующую среду, сетевые функции и распаковку со статусом исправлений поставщика. Неподдерживаемая ветка не становится безопасной из-за отсутствия в списке выпусков. Возможные последствия не доказывают эксплуатацию конкретного сайта."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная защитная схема сопоставления рабочих веток и исправлений; без шагов запуска уязвимости.",
+            "steps": [
+              "Определить рабочую ветку",
+              "Оценить сеть, распаковку и разрешения",
+              "Применить исправления нужной ветки",
+              "Сверить рабочую среду с уведомлениями поставщика"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Node.js專案在10月21日正式提供22.23.4、24.22.1和26.12.1安全版本，修復域名解析、證書驗證、壓縮資料處理和許可權檢查等問題。它們不是一個新功能包，也不是隻影響網站介面的更新：Node.js執行時承擔應用與網路、檔案系統之間的基礎工作，一處解析或狀態檢查偏差，就可能讓上層應用的安全判斷失效。",
+          "sections": [
+            {
+              "heading": "檢查的名稱必須和連線目標一致",
+              "paragraphs": [
+                "域名解析漏洞CVE-2026-105482涉及部分介面對帶有特殊結束字元的名稱處理不一致。應用認為自己驗證了完整名稱，底層卻可能解析截短後的另一名稱，削弱域名允許列表等保護。此次繼續補齊此前修復未覆蓋的解析入口，影響22、24和26三個系列。",
+                "TLS問題則發生在地址表示和證書身份的對應上。非標準數字寫法可能被不同元件理解成不同地址，或者把IP地址按普通域名去匹配證書。修復的目標是讓連線目的地與驗證物件保持一致，而非關閉證書驗證。部分問題覆蓋三個系列，涉及全形數字處理的CVE-2026-105483僅列出24和26系列，不能把所有漏洞都套在每個版本上。"
+              ]
+            },
+            {
+              "heading": "壓縮解碼也屬於安全邊界",
+              "paragraphs": [
+                "Brotli用於壓縮和還原資料。CVE-2026-111497使某些格式錯誤的壓縮輸入沒有及時被當作永久錯誤停止，可能導致解碼器越界寫入。對會解壓外部Brotli內容的應用，後果可能是程序崩潰、記憶體資訊洩漏或遠端程式碼執行，三個系列都受影響。這裡的前提是應用實際接收並解碼攻擊者可控制的資料，不是隻要安裝Node.js就一定出現同樣的暴露。"
+              ]
+            },
+            {
+              "heading": "連線複用、隨機數和許可權也有修復",
+              "paragraphs": [
+                "HTTP連線複用修復處理響應與請求的錯誤關聯：在特定時序下，先於新請求到達的資料可能被當成該請求的響應。另一個問題是構建啟動快照時把隨機值快取一併儲存，多個程序可能重複使用本應唯一或不可預測的值。兩者都提醒開發者，安全性不僅取決於單次呼叫，還取決於跨請求、跨程序保留了什麼狀態。",
+                "許可權模型修復包括缺少讀取檢查的路徑解析，以及26系列特有的通配規則匹配問題；26系列還修復了ZIP內容驗證後的不一致。官方同時更新多個依賴，但分支組合不同，例如OpenSSL列在22和24系列、SQLite列在22系列。正文概括影響，不提供觸發樣本、繞過格式或攻擊步驟。"
+              ]
+            },
+            {
+              "heading": "用實際分支確認更新範圍",
+              "paragraphs": [
+                "本輪官方最高嚴重級別是High，而不是Critical。三個正式版本的釋出頁都標明10月21日，安全說明中的較早預告文字不表示補丁仍未上線。HKCERT在22日釋出公告，並於26日更新風險說明，獨立確認相同修復版本。本站建議把實際執行分支、使用到的網路和解壓功能、供應商修復狀態對應起來；已停止維護的分支不能因沒有單獨列在修復清單上就視為安全。公告說明潛在後果，不能據此判斷某個站點已經遭到利用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的防禦核驗流程，說明如何對應執行分支和修復範圍，不展示漏洞觸發步驟。",
+            "steps": [
+              "確定應用實際執行分支",
+              "對應網路、解壓和許可權風險",
+              "採用該分支的安全修復",
+              "確認執行環境與供應商公告一致"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
