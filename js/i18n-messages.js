@@ -635,7 +635,17 @@ window.SITE_MESSAGES = {
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：用更少辅助空间回答后缀数组查询",
     "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理论结果在只读文本、常数时间字符访问条件下，用 O(n/τ) 个机器字辅助空间，在隐藏对数因子的 O(τ³) 时间回答 SA 和 ISA 查询。没有系统性能实验，不能把渐近界写成实测压缩或加速。",
     "news.openai-gpt61-terra-release.title": "OpenAI 发布 GPT-6.1 Terra，更新视觉推理与电脑操作模型",
-    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。标准 API 每百万输入／输出 token 分别为 1／5 美元；官方报告电脑操作和编程能力提升，相关分数仍是厂商评测。"
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。标准 API 每百万输入／输出 token 分别为 1／5 美元；官方报告电脑操作和编程能力提升，相关分数仍是厂商评测。",
+    "research.cohortflow-localized-agent-correction.title": "CohortFlow：用户修改筛选条件后，Agent 只重做受影响的步骤",
+    "research.cohortflow-localized-agent-correction.summary": "CohortFlow 把临床队列筛选拆成可复用的执行图，局部修改条件时保留未受影响的计算。在 100 个构造场景、126 次修改中，主要收益是缩短等待，要求解析准确率没有显著提升；实验也未验证临床队列的实际有效性。",
+    "research.cep-structured-agentic-evidence-search.title": "CEP / SCI：不让文档图里的高连接节点带偏 Agent 搜索",
+    "research.cep-structured-agentic-evidence-search.summary": "CEP 用最强证据路径和背景访问概率校准文档排名，SCI 再把路径交给 Agent 继续查证。在 BrowseComp-Plus 的 830 道问题上，GPT-6-Luna 版本准确率为 91.08%，对照为 88.92%；研究使用固定语料，生成费用不等于全部系统成本。",
+    "research.graphragprov-answer-source-provenance.title": "GraphRAGProv：把图查询的答案追溯到原文中的具体片段",
+    "research.graphragprov-answer-source-provenance.summary": "GraphRAGProv 为图中每次陈述出现建立身份，再把查询结果映射回原文片段。400 个监督诊断案例中有 311 个获得完整解码溯源；建图和查询时可见预期答案，这不是未知问题的问答成绩，完整计算链也不保证语义正确。",
+    "research.linepg-line-nearest-neighbor-search.title": "LinePG：用跨区域连边改进直线近邻搜索",
+    "research.linepg-line-nearest-neighbor-search.summary": "LinePG 在向量近邻图中加入少量跨区域连边，寻找靠近查询直线的点。在六个数据集、返回 100 项且召回率至少 0.99 的设置下，作者报告查询吞吐为直接图搜索的 1.44—2.44 倍；结果针对直线查询，并非 RAG 效果评测。",
+    "research.ams-contention-aware-sparse-multiplication.title": "AMS：让稀疏矩阵计算同时兼顾负载与缓存竞争",
+    "research.ams-contention-aware-sparse-multiplication.summary": "AMS 按预计输出量划分工作块，并错开缓存压力较大的任务。在展示的 20 个 SuiteSparse 矩阵中，两个增强版本各有 19 个快于对应基线；极稀疏任务可能因调度开销变慢。该技术报告的作者注明配套论文获 VLDB 2027 录用。"
   },
   "en": {
     "nav.about": "About",
@@ -1272,7 +1282,17 @@ window.SITE_MESSAGES = {
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays trades auxiliary space for query time",
     "research.tiny-suffix-arrays-space-time-tradeoff.summary": "With read-only constant-time text access, the theoretical structure uses O(n/τ) words and answers suffix-array and inverse queries in Õ(τ³) time. No implementation benchmark establishes practical compression or speed.",
     "news.openai-gpt61-terra-release.title": "OpenAI releases GPT-6.1 Terra for visual reasoning and computer use",
-    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra is available through ChatGPT Work, Codex and the API. Standard input/output rates are $1/$5 per million tokens; reported gains in computer use and coding remain vendor evaluations."
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra is available through ChatGPT Work, Codex and the API. Standard input/output rates are $1/$5 per million tokens; reported gains in computer use and coding remain vendor evaluations.",
+    "research.cohortflow-localized-agent-correction.title": "CohortFlow reruns only the steps affected by a user correction",
+    "research.cohortflow-localized-agent-correction.summary": "CohortFlow represents clinical cohort selection as a reusable execution graph. Across 100 constructed scenarios and 126 corrections, localized edits reduced waiting time without a significant improvement in requirement-parsing accuracy. The study does not establish clinical cohort validity.",
+    "research.cep-structured-agentic-evidence-search.title": "CEP and SCI keep highly connected documents from misleading search agents",
+    "research.cep-structured-agentic-evidence-search.summary": "CEP calibrates document ranking with strongest evidence paths and background visitation, while SCI exposes those paths for further investigation. On 830 BrowseComp-Plus questions, the GPT-6-Luna version achieved 91.08% accuracy versus 88.92% for RARG++. The study uses fixed corpora and reports generation costs, not full system costs.",
+    "research.graphragprov-answer-source-provenance.title": "GraphRAGProv traces graph-query answers back to exact source spans",
+    "research.graphragprov-answer-source-provenance.summary": "GraphRAGProv identifies individual statement occurrences and maps query results back to source text. Of 400 supervised diagnostic cases, 311 yielded fully decoded provenance. Construction could access expected answers, so this is not an unseen-question benchmark; a complete computation trace does not guarantee semantic correctness.",
+    "research.linepg-line-nearest-neighbor-search.title": "LinePG improves line-neighbor search with links between regions",
+    "research.linepg-line-nearest-neighbor-search.summary": "LinePG adds a small set of cross-region links to a vector proximity graph. For top-100 line queries at recall of at least 0.99 across six datasets, the authors report 1.44–2.44× the throughput of direct graph search. These are line-query benchmarks, not evaluations of RAG quality.",
+    "research.ams-contention-aware-sparse-multiplication.title": "AMS balances sparse-matrix work and cache contention",
+    "research.ams-contention-aware-sparse-multiplication.summary": "AMS sizes work chunks by expected output and mixes tasks with different cache demands. Its two enhanced variants each beat their corresponding baseline on 19 of 20 displayed SuiteSparse matrices, while very sparse cases can lose to scheduling overhead. The report authors state that a companion paper was accepted at VLDB 2027."
   },
   "ja": {
     "nav.about": "私について",
@@ -1909,7 +1929,17 @@ window.SITE_MESSAGES = {
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：補助空間と検索時間の交換",
     "research.tiny-suffix-arrays-space-time-tradeoff.summary": "文字を定数時間で読める読み取り専用テキストで、補助空間 O(n/τ) 語とクエリ時間 Õ(τ³) を示す理論研究。実装の圧縮率や高速化を測った結果ではない。",
     "news.openai-gpt61-terra-release.title": "OpenAIがGPT-6.1 Terraを公開、視覚推論とコンピューター操作を更新",
-    "news.openai-gpt61-terra-release.summary": "GPT-6.1 TerraがChatGPT Work、Codex、APIで提供開始。標準API料金は入力／出力100万トークン当たり1／5ドル。操作やコーディングの改善値はOpenAIによる評価。"
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 TerraがChatGPT Work、Codex、APIで提供開始。標準API料金は入力／出力100万トークン当たり1／5ドル。操作やコーディングの改善値はOpenAIによる評価。",
+    "research.cohortflow-localized-agent-correction.title": "CohortFlow：条件変更の影響を受ける処理だけをやり直す Agent",
+    "research.cohortflow-localized-agent-correction.summary": "CohortFlow は臨床コホートの抽出を再利用可能な実行グラフに分解する。100 の構成シナリオ、126 回の修正では待ち時間が短縮したが、条件の解析精度に有意な改善はなかった。臨床的に妥当な集団を抽出できるかは未検証。",
+    "research.cep-structured-agentic-evidence-search.title": "CEP / SCI：接続の多い文書に偏らない Agent 検索へ",
+    "research.cep-structured-agentic-evidence-search.summary": "CEP は最強の証拠経路と背景の訪問確率で順位を補正し、SCI は経路を Agent の追加調査に使う。BrowseComp-Plus の 830 問で GPT-6-Luna 版の正解率は 91.08%、RARG++ は 88.92%。固定コーパスでの結果であり、生成費用はシステム全体の費用ではない。",
+    "research.graphragprov-answer-source-provenance.title": "GraphRAGProv：グラフ検索の回答を原文の具体的な箇所まで追跡",
+    "research.graphragprov-answer-source-provenance.summary": "GraphRAGProv は同じ記述でも出現ごとに識別し、クエリ結果を原文の範囲へ結び付ける。正解も参照できる 400 件の教師あり診断で、311 件の来歴を完全に復元した。未知の質問への成績ではなく、計算の追跡可能性は意味の正しさを保証しない。",
+    "research.linepg-line-nearest-neighbor-search.title": "LinePG：領域をまたぐ辺で直線近傍探索を改善",
+    "research.linepg-line-nearest-neighbor-search.summary": "LinePG はベクトル近傍グラフに少数の領域間リンクを加える。6 データセットで上位 100 件、再現率 0.99 以上という条件では、著者らは直接グラフ探索の 1.44～2.44 倍のスループットを報告した。直線クエリの評価であり、RAG の品質評価ではない。",
+    "research.ams-contention-aware-sparse-multiplication.title": "AMS：疎行列計算の負荷とキャッシュ競合を一緒に調整",
+    "research.ams-contention-aware-sparse-multiplication.summary": "AMS は予想出力量で処理単位を作り、キャッシュ負荷の異なる仕事を組み合わせる。掲載された SuiteSparse の 20 行列では二つの強化版がそれぞれ 19 行列で対応する基準手法を上回ったが、非常に疎な条件では調整コストが不利になる。著者は関連論文の VLDB 2027 採択を記載している。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2546,7 +2576,17 @@ window.SITE_MESSAGES = {
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays: обмен дополнительной памяти на время",
     "research.tiny-suffix-arrays-space-time-tradeoff.summary": "Для текста только для чтения с доступом к символу за O(1) доказана структура на O(n/τ) машинных слов с запросом за Õ(τ³). Практическое ускорение и сжатие экспериментально не измерены.",
     "news.openai-gpt61-terra-release.title": "OpenAI выпустила GPT-6.1 Terra для визуального анализа и работы с приложениями",
-    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra доступна в ChatGPT Work, Codex и API. Стандартная цена за миллион входных/выходных токенов — $1/$5. Заявленные улучшения работы с компьютером и кодом основаны на оценках OpenAI."
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra доступна в ChatGPT Work, Codex и API. Стандартная цена за миллион входных/выходных токенов — $1/$5. Заявленные улучшения работы с компьютером и кодом основаны на оценках OpenAI.",
+    "research.cohortflow-localized-agent-correction.title": "CohortFlow повторяет только шаги, затронутые исправлением пользователя",
+    "research.cohortflow-localized-agent-correction.summary": "CohortFlow представляет отбор клинической когорты в виде графа с повторно используемыми результатами. В 100 сконструированных сценариях со 126 исправлениями сократилось ожидание, но значимого улучшения точности разбора условий не было. Клиническая достоверность отбора не проверялась.",
+    "research.cep-structured-agentic-evidence-search.title": "CEP и SCI уменьшают перекос поиска агентов в пользу связных документов",
+    "research.cep-structured-agentic-evidence-search.summary": "CEP корректирует ранжирование по сильнейшему пути доказательств и фоновой вероятности посещения, а SCI передаёт пути агенту. На 830 вопросах BrowseComp-Plus версия с GPT-6-Luna получила 91,08% точности против 88,92% у RARG++. Исследуются фиксированные корпуса; стоимость генерации не равна полной стоимости системы.",
+    "research.graphragprov-answer-source-provenance.title": "GraphRAGProv связывает ответы графовых запросов с точными фрагментами источников",
+    "research.graphragprov-answer-source-provenance.summary": "GraphRAGProv различает отдельные появления утверждений и возвращает результаты запросов к исходному тексту. Из 400 диагностических примеров с доступными ожидаемыми ответами 311 дали полностью декодированное происхождение. Это не тест неизвестных вопросов; полная трасса вычислений не гарантирует верность смысла.",
+    "research.linepg-line-nearest-neighbor-search.title": "LinePG: связи между областями для поиска соседей прямой",
+    "research.linepg-line-nearest-neighbor-search.summary": "LinePG добавляет немного межобластных связей в граф близости векторов. Для поиска 100 соседей прямой при полноте не ниже 0,99 на шести наборах авторы сообщают о пропускной способности в 1,44–2,44 раза выше прямого поиска по графу. Качество RAG в этих опытах не оценивалось.",
+    "research.ams-contention-aware-sparse-multiplication.title": "AMS: баланс нагрузки и конкуренции за кэш в разреженных матрицах",
+    "research.ams-contention-aware-sparse-multiplication.summary": "AMS формирует порции работы по ожидаемому выходу и сочетает задачи с разной нагрузкой на кэш. Два улучшенных варианта каждый превзошли свой базовый метод на 19 из 20 показанных матриц SuiteSparse, но очень разреженные случаи могут проигрывать из-за накладных расходов. Авторы отчёта указывают принятие сопутствующей статьи на VLDB 2027."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3183,6 +3223,16 @@ window.SITE_MESSAGES = {
     "research.tiny-suffix-arrays-space-time-tradeoff.title": "Tiny Suffix Arrays：用更少輔助空間回答後綴陣列查詢",
     "research.tiny-suffix-arrays-space-time-tradeoff.summary": "理論結果在唯讀文字、常數時間字元存取條件下，用 O(n/τ) 個機器字輔助空間，在隱藏對數因子的 O(τ³) 時間回答 SA 和 ISA 查詢。沒有系統效能實驗，不能把漸近界寫成實測壓縮或加速。",
     "news.openai-gpt61-terra-release.title": "OpenAI 釋出 GPT-6.1 Terra，更新視覺推理與電腦操作模型",
-    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。標準 API 每百萬輸入／輸出 token 分別為 1／5 美元；官方報告電腦操作和程式設計能力提升，相關分數仍是廠商評測。"
+    "news.openai-gpt61-terra-release.summary": "GPT-6.1 Terra 已在 ChatGPT Work、Codex 和 API 提供。標準 API 每百萬輸入／輸出 token 分別為 1／5 美元；官方報告電腦操作和程式設計能力提升，相關分數仍是廠商評測。",
+    "research.cohortflow-localized-agent-correction.title": "CohortFlow：使用者修改篩選條件後，Agent 只重做受影響的步驟",
+    "research.cohortflow-localized-agent-correction.summary": "CohortFlow 把臨床研究族群篩選拆成可重用的執行圖，局部修改條件時保留未受影響的計算。在 100 個構造場景、126 次修改中，主要收益是縮短等待，要求解析準確率沒有顯著提升；實驗也未驗證臨床研究族群的實際有效性。",
+    "research.cep-structured-agentic-evidence-search.title": "CEP / SCI：不讓文件圖裡的高連線節點帶偏 Agent 搜尋",
+    "research.cep-structured-agentic-evidence-search.summary": "CEP 用最強證據路徑和背景訪問機率校準文件排名，SCI 再把路徑交給 Agent 繼續查證。在 BrowseComp-Plus 的 830 道問題上，GPT-6-Luna 版本準確率為 91.08%，對照為 88.92%；研究使用固定語料，生成費用不等於全部系統成本。",
+    "research.graphragprov-answer-source-provenance.title": "GraphRAGProv：把圖查詢的答案追溯到原文中的具體片段",
+    "research.graphragprov-answer-source-provenance.summary": "GraphRAGProv 為圖中每次陳述出現建立身份，再把查詢結果對映回原文片段。400 個監督診斷案例中有 311 個獲得完整解碼溯源；建圖和查詢時可見預期答案，這不是未知問題的問答成績，完整計算鏈也不保證語義正確。",
+    "research.linepg-line-nearest-neighbor-search.title": "LinePG：用跨區域連邊改進直線近鄰搜尋",
+    "research.linepg-line-nearest-neighbor-search.summary": "LinePG 在向量近鄰圖中加入少量跨區域連邊，尋找靠近查詢直線的點。在六個資料集、返回 100 項且召回率至少 0.99 的設定下，作者報告查詢吞吐為直接圖搜尋的 1.44—2.44 倍；結果針對直線查詢，並非 RAG 效果評測。",
+    "research.ams-contention-aware-sparse-multiplication.title": "AMS：讓稀疏矩陣計算同時兼顧負載與快取競爭",
+    "research.ams-contention-aware-sparse-multiplication.summary": "AMS 按預計輸出量劃分工作塊，並錯開快取壓力較大的任務。在展示的 20 個 SuiteSparse 矩陣中，兩個增強版本各有 19 個快於對應基線；極稀疏任務可能因排程開銷變慢。該技術報告的作者註明配套論文獲 VLDB 2027 錄用。"
   }
 };

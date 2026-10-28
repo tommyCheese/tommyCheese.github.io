@@ -8920,6 +8920,2056 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "cohortflow-localized-agent-correction",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Original paper and version history",
+          "url": "https://arxiv.org/abs/2610.36100v1"
+        },
+        {
+          "label": "Full paper: methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.36100v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "用户让 Agent 筛选一组研究对象，做到一半又调整纳入条件，系统应该从哪里重来？10 月 26 日公开的 CohortFlow 研究把这个问题落到临床队列整理上：让修改只影响必要的计算，同时留下可检查的任务状态。它讨论的是工作流程的可靠性与效率，并不意味着已经能替代临床判断。",
+          "sections": [
+            {
+              "heading": "把一次修改与整项任务分开",
+              "paragraphs": [
+                "传统做法往往让模型重新生成整份筛选要求，再从头执行。这样不仅耗时，还可能连没有修改的条件也一起改掉。CohortFlow 先把自然语言要求整理为带类型的任务描述，记录每项条件、条件之间的逻辑关系和时间关系，再编译成持久保存的执行图。用户新增或修改条件时，模型只解释这部分语义变化，原有条件保留稳定标识。",
+                "执行图决定哪些结果仍能使用：节点的身份和语义指纹必须保持不变，已有结果仍可取得，而且上游依赖也都可复用。只要其中一项发生变化，相应节点及受它影响的后续步骤就要重算。修改可以在任务运行期间被解释，但状态更新按先后顺序提交，避免较旧的修改覆盖较新的要求。"
+              ]
+            },
+            {
+              "heading": "等待明显缩短，准确率没有显著领先",
+              "paragraphs": [
+                "作者从 CohortX 的临床试验条件构造了 100 个场景、126 次修改，使用同一款量化 Qwen3-8B 比较局部修正与整体重生成。在双方都可评分的 110 个状态中，要求字段的 micro-F1 为 77.0% 和 76.4%；差异检验 p=0.493，不能据此宣称解析能力提高。论文报告任务完成后的修改平均等待从 48.6 秒降至 17.1 秒，运行中的修改从 69.7 秒降至 38.8 秒，优势主要在少做重复工作。"
+              ]
+            },
+            {
+              "heading": "执行成功不等于临床结果正确",
+              "paragraphs": [
+                "另一个 MIMIC 后端实验使用人工固定的有效任务描述，而不是前一阶段模型预测的结果。10 个场景加 3 次结构化修改形成的 13 个状态都能执行，说明复用与重算机制可以落到后端，但不构成端到端临床准确率验证。第一阶段还排除了临床笔记的检索与推理工作，因此不能把节省的时间直接推广到完整病历处理。",
+                "系统也有明确短板：在仅有 8 个需要澄清歧义的案例中，局部修正成功 1 次，整体重生成成功 4 次。场景来自构造且只测试一款量化小模型，局部修改仍可能破坏整体逻辑。对工程设计而言，这项研究提供了保存状态、追踪依赖和检查失效范围的办法；对具体医疗应用，仍需要独立的临床有效性评估和人工核对。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，表示修改如何传播，不是临床验证结果。",
+            "steps": [
+              "筛选要求整理为任务描述",
+              "保存条件及其依赖关系",
+              "将用户修改解析为局部变化",
+              "保留有效结果，重算受影响步骤",
+              "核对逻辑与输出"
+            ]
+          }
+        },
+        "en": {
+          "lead": "When a user changes an eligibility rule halfway through an agent task, how much work should restart? CohortFlow, posted on October 26, studies that question in clinical cohort curation. Its contribution concerns inspectable task state and selective recomputation, rather than evidence that an agent can replace clinical judgment.",
+          "sections": [
+            {
+              "heading": "Separate the correction from the whole request",
+              "paragraphs": [
+                "Regenerating every requirement after an edit can waste computation and accidentally change conditions the user wanted to retain. CohortFlow first converts natural language into a typed task specification, including requirements, Boolean composition and temporal relationships. It compiles this into a persistent execution graph. A correction becomes a local semantic change, while unchanged requirements retain stable identities.",
+                "Reusing a node requires more than finding an old result. Its identity and semantic fingerprint must be unchanged, its artifact must remain available, and every parent must also be reusable. A changed dependency invalidates affected downstream computation. Corrections can be interpreted while work continues, but state changes are committed in order so that an older interpretation cannot overwrite a newer request."
+              ]
+            },
+            {
+              "heading": "Less waiting, without a significant accuracy gain",
+              "paragraphs": [
+                "The authors constructed 100 scenarios with 126 correction turns from CohortX trial criteria and compared both strategies using the same quantized Qwen3-8B model. Across 110 jointly scoreable states, requirement-field micro-F1 was 77.0% for local correction and 76.4% for full regeneration; p=0.493 does not establish an accuracy improvement. Reported mean correction latency fell from 48.6 to 17.1 seconds after completion, and from 69.7 to 38.8 seconds during an active run. The principal benefit was avoiding repeated work."
+              ]
+            },
+            {
+              "heading": "What backend execution does not establish",
+              "paragraphs": [
+                "A separate MIMIC backend experiment used manually frozen, valid specifications rather than the first-stage model predictions. All 13 states, comprising 10 scenarios and three structured corrections, executed successfully. That supports the reuse mechanism, not end-to-end clinical accuracy. The first-stage workload also excluded clinical-note retrieval and reasoning, so its timing cannot be treated as a measurement of complete medical-record processing.",
+                "Ambiguity remained a weakness: local correction clarified just one of eight cases, versus four for full regeneration. Constructed trajectories and a single quantized model limit generalization, and local changes can still damage global logic. The useful engineering lesson is to preserve state and track invalidation explicitly; clinical validity and human review remain separate requirements."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the paper; it shows correction propagation, not clinical validation.",
+            "steps": [
+              "Translate eligibility rules into a task specification",
+              "Preserve conditions and dependencies",
+              "Interpret a correction as a local change",
+              "Reuse valid results and recompute affected steps",
+              "Inspect logic and outputs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agent が対象者を選んでいる途中で、利用者が条件を変えたら、どこからやり直すべきか。10 月 26 日公開の CohortFlow は、臨床コホートの整理を題材にこの問題を扱う。狙いは必要な計算だけを再実行し、確認できる作業状態を残すことだ。臨床判断を代替できると示した研究ではない。",
+          "sections": [
+            {
+              "heading": "変更部分と依頼全体を分ける",
+              "paragraphs": [
+                "修正のたびに全条件を生成し直す方法は、計算が重複するだけでなく、変更していない条件まで変える可能性がある。CohortFlow は自然言語の依頼を型付きのタスク仕様に整理し、条件、論理的な組み合わせ、時間関係を記録する。それを永続的な実行グラフに変換し、修正時には変わった意味だけを解釈する。変わらない条件の識別子は維持する。",
+                "過去の結果が存在するだけでは再利用できない。ノードの識別子と意味を表す指紋が同じで、結果を取得でき、親ノードもすべて再利用できることが条件になる。依存関係が変わると、その影響を受ける後続処理を無効化して計算し直す。処理中に修正を解釈しても、状態の更新は順序通りに反映し、古い解釈による上書きを避ける。"
+              ]
+            },
+            {
+              "heading": "待ち時間と解析精度を区別する",
+              "paragraphs": [
+                "著者は CohortX の試験条件から 100 シナリオ、126 回の修正を構成し、同じ量子化 Qwen3-8B で局所修正と全体再生成を比較した。双方で評価可能な 110 状態における条件フィールドの micro-F1 は 77.0% と 76.4%、p=0.493 で、有意な精度向上ではない。一方、完了後の修正の平均待ち時間は 48.6 秒から 17.1 秒、実行中は 69.7 秒から 38.8 秒に短縮した。主な利点は重複処理の削減にある。"
+              ]
+            },
+            {
+              "heading": "実行できても臨床的な正しさは別問題",
+              "paragraphs": [
+                "MIMIC のバックエンド実験では、前段のモデル予測ではなく、人手で固定した妥当な仕様を使った。10 シナリオと 3 回の構造化修正による 13 状態はすべて実行できたが、これは再利用機構の確認であり、臨床的な正確さの端から端までの評価ではない。第 1 段階には診療記録の検索・推論も含まれず、処理時間を病歴全体の処理に一般化できない。",
+                "曖昧さの確認が必要な 8 例では、局所修正が成功したのは 1 例、全体再生成は 4 例だった。構成した修正系列と単一の量子化モデルによる結果であり、局所変更が全体の論理を壊す可能性も残る。状態と依存関係を明示的に管理する設計は参考になるが、医療への適用には別途の妥当性評価と人による確認が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した説明図。修正の伝播を示し、臨床評価の結果ではない。",
+            "steps": [
+              "条件をタスク仕様に整理",
+              "条件と依存関係を保存",
+              "修正を局所的な意味の変更に変換",
+              "有効な結果を再利用し影響部分を再計算",
+              "論理と出力を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Если пользователь меняет критерий отбора посреди работы агента, что именно следует запускать заново? Опубликованный 26 октября CohortFlow исследует этот вопрос на задаче формирования клинических когорт. Работа посвящена проверяемому состоянию задания и выборочному пересчёту, а не замене клинического суждения.",
+          "sections": [
+            {
+              "heading": "Исправление отдельно от всего задания",
+              "paragraphs": [
+                "Полная генерация условий после каждой правки повторяет вычисления и может изменить требования, которые пользователь не трогал. CohortFlow переводит запрос в типизированное описание: отдельные условия, их логические комбинации и временные отношения. Затем строится сохраняемый граф исполнения. Исправление интерпретируется как локальное изменение смысла, а неизменённые условия сохраняют идентификаторы.",
+                "Наличия старого результата недостаточно для повторного использования. Должны совпадать идентификатор узла и его семантический отпечаток, результат должен оставаться доступным, а все родительские узлы — пригодными для повторного использования. Изменение зависимости отменяет результаты затронутых последующих шагов. Интерпретировать правку можно во время работы, но обновления состояния применяются по порядку: старое исправление не должно перезаписывать новое."
+              ]
+            },
+            {
+              "heading": "Сокращение ожидания не равно росту точности",
+              "paragraphs": [
+                "Авторы сконструировали 100 сценариев со 126 исправлениями на основе критериев CohortX. Оба подхода использовали одну квантованную Qwen3-8B. В 110 состояниях, доступных для оценки у обоих методов, micro-F1 по полям условий составил 77,0% против 76,4%; p=0,493 не подтверждает значимого улучшения. Средняя задержка исправления после завершения задания снизилась с 48,6 до 17,1 секунды, а во время выполнения — с 69,7 до 38,8 секунды. Основной выигрыш связан с устранением повторной работы."
+              ]
+            },
+            {
+              "heading": "Границы проверки на клинических данных",
+              "paragraphs": [
+                "Отдельный эксперимент с backend на MIMIC использовал зафиксированные вручную корректные спецификации, а не предсказания модели из первого этапа. Все 13 состояний — 10 сценариев и три структурированных исправления — исполнились успешно. Это проверка механизма повторного использования, но не сквозной клинической точности. Первый этап также не включал поиск и рассуждение по клиническим заметкам: его задержки не характеризуют обработку полной истории болезни.",
+                "В восьми случаях с необходимостью уточнить неоднозначность локальный подход справился один раз, полная регенерация — четыре. Искусственно составленные траектории и единственная квантованная модель ограничивают обобщение; локальные изменения могут нарушать общую логику. Практический вывод относится к явному хранению состояния и зависимостей. Клиническая пригодность и проверка человеком требуют отдельной оценки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново составленная сайтом по статье: распространение исправления, а не клинические результаты.",
+            "steps": [
+              "Преобразовать условия в описание задания",
+              "Сохранить условия и зависимости",
+              "Выделить локальное изменение смысла",
+              "Повторно использовать допустимые результаты и пересчитать затронутые шаги",
+              "Проверить логику и выходные данные"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "使用者讓 Agent 篩選一組研究對象，做到一半又調整納入條件，系統應該從哪裡重來？10 月 26 日公開的 CohortFlow 研究把這個問題落到臨床研究族群整理上：讓修改只影響必要的計算，同時留下可檢查的任務狀態。它討論的是工作流程的可靠性與效率，並不意味著已經能替代臨床判斷。",
+          "sections": [
+            {
+              "heading": "把一次修改與整項任務分開",
+              "paragraphs": [
+                "傳統做法往往讓模型重新生成整份篩選要求，再從頭執行。這樣不僅耗時，還可能連沒有修改的條件也一起改掉。CohortFlow 先把自然語言要求整理為帶型別的任務描述，記錄每項條件、條件之間的邏輯關係和時間關係，再編譯成持久儲存的執行圖。使用者新增或修改條件時，模型只解釋這部分語義變化，原有條件保留穩定標識。",
+                "執行圖決定哪些結果仍能使用：節點的身份和語義指紋必須保持不變，已有結果仍可取得，而且上游依賴也都可重用。只要其中一項發生變化，相應節點及受它影響的後續步驟就要重算。修改可以在任務執行期間被解釋，但狀態更新按先後順序提交，避免較舊的修改覆蓋較新的要求。"
+              ]
+            },
+            {
+              "heading": "等待明顯縮短，準確率沒有顯著領先",
+              "paragraphs": [
+                "作者從 CohortX 的臨床試驗條件構造了 100 個場景、126 次修改，使用同一款量化 Qwen3-8B 比較局部修正與整體重生成。在雙方都可評分的 110 個狀態中，要求欄位的 micro-F1 為 77.0% 和 76.4%；差異檢驗 p=0.493，不能據此宣稱解析能力提高。論文報告任務完成後的修改平均等待從 48.6 秒降至 17.1 秒，執行中的修改從 69.7 秒降至 38.8 秒，優勢主要在少做重複工作。"
+              ]
+            },
+            {
+              "heading": "執行成功不等於臨床結果正確",
+              "paragraphs": [
+                "另一個 MIMIC 後端實驗使用人工固定的有效任務描述，而不是前一階段模型預測的結果。10 個場景加 3 次結構化修改形成的 13 個狀態都能執行，說明重用與重算機制可以落到後端，但不構成端到端臨床準確率驗證。第一階段還排除了臨床筆記的檢索與推理工作，因此不能把節省的時間直接推廣到完整病歷處理。",
+                "系統也有明確短板：在僅有 8 個需要澄清歧義的案例中，局部修正成功 1 次，整體重生成成功 4 次。場景來自構造且只測試一款量化小模型，局部修改仍可能破壞整體邏輯。對工程設計而言，這項研究提供了儲存狀態、追蹤依賴和檢查失效範圍的辦法；對具體醫療應用，仍需要獨立的臨床有效性評估和人工核對。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，表示修改如何傳播，不是臨床驗證結果。",
+            "steps": [
+              "篩選要求整理為任務描述",
+              "儲存條件及其依賴關係",
+              "將使用者修改解析為局部變化",
+              "保留有效結果，重算受影響步驟",
+              "核對邏輯與輸出"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "cep-structured-agentic-evidence-search",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Original paper and version history",
+          "url": "https://arxiv.org/abs/2610.36134v1"
+        },
+        {
+          "label": "Full paper: methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.36134v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把文档连成图，并不保证 Agent 找到更好的证据。有些文档因为提到常见实体而连接很多，容易被反复访问，却未必回答当前问题。10 月 26 日公开的这篇研究提出 CEP 排名方法和 SCI 搜索交互方式：既告诉 Agent 哪些文档值得看，也保留通向这些文档的证据路径。",
+          "sections": [
+            {
+              "heading": "连接多不该自动等于相关",
+              "paragraphs": [
+                "常见的图传播方法会累计从许多路径传来的分数，高连接节点因此可能排得很靠前。在 Agent 每次只能看到有限候选项时，这些节点会挤掉真正有用的线索。作者先通过共享实体连接文档，再结合关键词与语义检索确定起点；问题不在于放弃图，而在于让图中的结构优势不要冒充与问题的相关性。",
+                "CEP 按当前问题给转移关系加权，以通往候选文档的最强单条路径计算支持程度，不把所有路径的贡献简单相加。随后用同一问题条件下估计的背景访问概率平方根校准分数：本来就很容易到达的文档，需要更强的路径证据才能保持高排名。保留下来的路径还能说明下一条线索从哪里来。"
+              ]
+            },
+            {
+              "heading": "排名之后还要继续读原文",
+              "paragraphs": [
+                "SCI 把候选文档预览与路径组成结构化地图。Agent 可以读取原始文档，也可以从某个已知文档出发，沿新的问题继续扩展搜索。这样，图不是一次性给出答案的黑盒，而是帮助组织下一步阅读。路径说明文档怎样被找到，但它本身并不能证明最终回答正确，仍需要检查原始内容。"
+              ]
+            },
+            {
+              "heading": "两个任务，不能混用指标",
+              "paragraphs": [
+                "实验包括 BrowseComp-Plus 的 100,195 份文档和 830 道问题，以及 TREC-COVID 的 171,332 份文档和 50 个查询。前者衡量回答正确率：使用 GPT-6-Luna 时，SCI 为 91.08%，RARG++ 为 88.92%，平均工具调用分别为 16.14 次和 18.97 次。后者衡量前十项结果的排序质量，SCI 的 nDCG@10 为 81.77%，RARG++ 为 75.97%；这个按理想排序归一化的指标不是回答正确率。",
+                "作者报告，GPT-6-Luna 在全部 830 道问题上的生成费用为 11.82 美元，对照为 14.73 美元，不能误写成每题费用或系统总成本。研究的主要设置是固定语料库，尚未研究持续新增或修订文档后的图更新与一致性。这里最有价值的结果是候选排序、证据路径与后续阅读可以共同改善搜索；它并不保证在不断变化的开放网络上获得同样收益。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，展示证据路径如何组织搜索，不是原始实验图。",
+            "steps": [
+              "从关键词和语义检索找到起点",
+              "计算问题相关的最强路径",
+              "按背景访问概率校准候选排名",
+              "向 Agent 展示文档预览和路径",
+              "阅读原文并从已有线索继续扩展"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Connecting documents in a graph does not automatically give an agent better evidence. Documents mentioning common entities may attract many links and repeated visits without answering the current question. Posted on October 26, this paper proposes Contrastive Evidence Paths, or CEP, for ranking and Structured Corpus Interaction, or SCI, for follow-up investigation.",
+          "sections": [
+            {
+              "heading": "Connectivity is not the same as relevance",
+              "paragraphs": [
+                "Graph propagation can add contributions arriving along many paths, rewarding well-connected documents. When an agent sees only a small candidate list, such hubs can displace useful evidence. The method connects documents through shared entities and selects starting points with keyword and semantic retrieval. Its aim is to use those connections without confusing structural popularity with relevance to the question.",
+                "CEP weights transitions according to the query and scores a candidate using its strongest individual supporting path rather than summing all paths. It calibrates that support by the square root of the background visitation probability estimated on the same query-conditioned graph. An easy-to-reach document therefore needs stronger path evidence to rank well. Keeping the path also exposes how a candidate was reached."
+              ]
+            },
+            {
+              "heading": "A map for further reading",
+              "paragraphs": [
+                "SCI presents document previews and supporting paths as a structured map. The agent can read original documents and expand from an existing anchor when another clue is needed. The graph thus organizes investigation rather than directly certifying an answer. A retrieval path explains how evidence was found; it does not establish that the final answer correctly interprets the source."
+              ]
+            },
+            {
+              "heading": "Read the two evaluation metrics separately",
+              "paragraphs": [
+                "BrowseComp-Plus contains 100,195 documents and 830 questions in this evaluation; TREC-COVID contains 171,332 documents and 50 queries. With GPT-6-Luna, SCI achieved 91.08% answer accuracy on BrowseComp-Plus versus 88.92% for RARG++, with 16.14 versus 18.97 tool calls per question. TREC-COVID measures document ranking instead: nDCG@10 was 81.77% versus 75.97%. That metric normalizes the quality of the first ten results against an ideal ranking; it is not answer accuracy.",
+                "Reported generation cost for GPT-6-Luna was $11.82 for all 830 questions, compared with $14.73 for RARG++. These are neither per-question charges nor complete system costs. The main setting uses fixed corpora, and the paper does not investigate incremental graph updates and consistency after documents change. Its evidence supports combining ranking, paths and further reading in corpus search, not an assurance of equivalent gains on a changing open web."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the paper; it depicts evidence-guided search, not an experimental chart.",
+            "steps": [
+              "Retrieve starting points with keywords and semantics",
+              "Find the strongest query-relevant paths",
+              "Calibrate ranking by background visitation",
+              "Show document previews and paths to the agent",
+              "Read sources and expand from known clues"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "文書をグラフで結べば、Agent が良い根拠にたどり着くとは限らない。頻出する実体に触れた文書は接続が多く、何度も訪問されやすいが、現在の質問に答えるとは限らない。10 月 26 日公開の研究は、順位付けの CEP と追加調査の SCI を組み合わせ、候補だけでなく候補へ至る経路も利用する。",
+          "sections": [
+            {
+              "heading": "接続の多さと関連性を分ける",
+              "paragraphs": [
+                "複数の経路から来る点数を合計するグラフ伝播では、接続の多い文書が優遇されることがある。Agent が一度に見られる候補が少ないと、そのような文書が有用な手がかりを押し出す。提案法は共有する実体で文書を結び、キーワードと意味検索で出発点を選ぶ。グラフを捨てるのではなく、構造上の有利さを質問への関連性と混同しないことが狙いだ。",
+                "CEP は質問に応じて遷移に重みを付け、全経路の合計ではなく最も強い単一経路で候補を評価する。さらに同じ質問条件のグラフから推定した背景訪問確率の平方根で補正する。到達しやすい文書ほど、高順位を保つには強い根拠が必要になる。経路を保存することで、その文書がどこから見つかったかも確認できる。"
+              ]
+            },
+            {
+              "heading": "地図から原文へ戻る",
+              "paragraphs": [
+                "SCI は文書のプレビューと経路を構造化した地図として示す。Agent は原文を読み、追加の手がかりが必要なら既知の文書を起点に探索を広げる。グラフの役割は答えを保証することではなく、次に何を読むかを整理することにある。検索経路が分かっても、最終回答が原文を正しく解釈したかは別に確認しなければならない。"
+              ]
+            },
+            {
+              "heading": "正解率と検索順位の指標は別物",
+              "paragraphs": [
+                "評価では BrowseComp-Plus の 100,195 文書・830 問と、TREC-COVID の 171,332 文書・50 クエリを使う。GPT-6-Luna では前者の正解率が SCI 91.08%、RARG++ 88.92%、質問当たりのツール使用は 16.14 回と 18.97 回だった。後者は文書順位を評価し、nDCG@10 は 81.77% と 75.97%。先頭 10 件の順位を理想順位に対して正規化する指標であり、回答の正解率ではない。",
+                "GPT-6-Luna の生成費用は 830 問全体で 11.82 ドル、比較対象は 14.73 ドルと報告される。1 問当たりでもシステム全体の費用でもない。主な評価は固定コーパスで、文書の追加・改訂に伴うグラフ更新や整合性は未検証だ。順位付けと経路、原文の追加読解を組み合わせる価値は示されたが、変化し続ける公開ウェブでも同じ利益が出るとは言えない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した説明図。根拠経路による検索を示し、実験図ではない。",
+            "steps": [
+              "キーワードと意味検索で出発点を選ぶ",
+              "質問に関連する最強の経路を求める",
+              "背景訪問確率で順位を補正",
+              "文書プレビューと経路を Agent に提示",
+              "原文を読み既知の手がかりから探索を拡張"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Граф документов не гарантирует агенту более убедительных доказательств. Документ с часто встречающимися сущностями получает много связей и посещений, даже если не отвечает на вопрос. В статье от 26 октября предложены Contrastive Evidence Paths, или CEP, для ранжирования и Structured Corpus Interaction, или SCI, для дальнейшего исследования источников.",
+          "sections": [
+            {
+              "heading": "Связность не равна релевантности",
+              "paragraphs": [
+                "При распространении оценок по графу вклады разных путей могут суммироваться, поднимая популярные узлы. В ограниченном списке, видимом агенту, они вытесняют полезные свидетельства. Авторы соединяют документы по общим сущностям и находят стартовые узлы ключевым и семантическим поиском. Задача — использовать связи, не принимая структурное преимущество за соответствие вопросу.",
+                "CEP взвешивает переходы с учётом запроса и оценивает кандидата по сильнейшему отдельному пути, а не сумме всех путей. Затем оценка нормируется квадратным корнем фоновой вероятности посещения, рассчитанной на том же графе с учётом запроса. Легкодоступному документу нужны более сильные свидетельства, чтобы оставаться наверху. Сохранённый путь показывает, откуда появился кандидат."
+              ]
+            },
+            {
+              "heading": "Карта помогает продолжить чтение",
+              "paragraphs": [
+                "SCI объединяет краткие представления документов и пути в структурированную карту. Агент читает оригиналы и при необходимости расширяет поиск от уже найденного документа. Граф организует расследование, а не удостоверяет ответ. Путь показывает, как найден источник, но не доказывает, что итоговая интерпретация источника верна."
+              ]
+            },
+            {
+              "heading": "Две задачи и разные показатели",
+              "paragraphs": [
+                "Оценка охватывает 100 195 документов и 830 вопросов BrowseComp-Plus, а также 171 332 документа и 50 запросов TREC-COVID. С GPT-6-Luna точность ответов SCI на BrowseComp-Plus составила 91,08% против 88,92% у RARG++, среднее число обращений к инструментам — 16,14 против 18,97. На TREC-COVID оценивается ранжирование: nDCG@10 достиг 81,77% против 75,97%. Эта метрика сравнивает первые десять результатов с идеальным порядком и не является точностью ответов.",
+                "Авторы сообщают $11,82 затрат на генерацию для всех 830 вопросов с GPT-6-Luna против $14,73 у RARG++. Это не цена одного вопроса и не полная стоимость системы. Основная проверка использует фиксированные корпуса; обновление графа и согласованность после добавления или изменения документов не исследованы. Результаты поддерживают совместное использование ранжирования, путей и чтения источников, но не обещают такой же выигрыш в постоянно меняющемся открытом интернете."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново составленная сайтом по статье: поиск по путям доказательств, а не экспериментальный график.",
+            "steps": [
+              "Найти исходные документы ключевым и семантическим поиском",
+              "Определить сильнейшие пути для запроса",
+              "Скорректировать порядок по фоновым посещениям",
+              "Показать агенту документы и пути",
+              "Прочитать источники и расширить поиск от найденных зацепок"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把文件連成圖，並不保證 Agent 找到更好的證據。有些文件因為提到常見實體而連線很多，容易被反覆訪問，卻未必回答當前問題。10 月 26 日公開的這篇研究提出 CEP 排名方法和 SCI 搜尋互動方式：既告訴 Agent 哪些文件值得看，也保留通向這些文件的證據路徑。",
+          "sections": [
+            {
+              "heading": "連線多不該自動等於相關",
+              "paragraphs": [
+                "常見的圖傳播方法會累計從許多路徑傳來的分數，高連線節點因此可能排得很靠前。在 Agent 每次只能看到有限候選項時，這些節點會擠掉真正有用的線索。作者先透過共享實體連線文件，再結合關鍵詞與語義檢索確定起點；問題不在於放棄圖，而在於讓圖中的結構優勢不要冒充與問題的相關性。",
+                "CEP 按當前問題給轉移關係加權，以通往候選文件的最強單條路徑計算支援程度，不把所有路徑的貢獻簡單相加。隨後用同一問題條件下估計的背景訪問機率平方根校準分數：本來就很容易到達的文件，需要更強的路徑證據才能保持高排名。保留下來的路徑還能說明下一條線索從哪裡來。"
+              ]
+            },
+            {
+              "heading": "排名之後還要繼續讀原文",
+              "paragraphs": [
+                "SCI 把候選文件預覽與路徑組成結構化地圖。Agent 可以讀取原始文件，也可以從某個已知文件出發，沿新的問題繼續擴充套件搜尋。這樣，圖不是一次性給出答案的黑盒，而是幫助組織下一步閱讀。路徑說明文件怎樣被找到，但它本身並不能證明最終回答正確，仍需要檢查原始內容。"
+              ]
+            },
+            {
+              "heading": "兩個任務，不能混用指標",
+              "paragraphs": [
+                "實驗包括 BrowseComp-Plus 的 100,195 份文件和 830 道問題，以及 TREC-COVID 的 171,332 份文件和 50 個查詢。前者衡量回答正確率：使用 GPT-6-Luna 時，SCI 為 91.08%，RARG++ 為 88.92%，平均工具呼叫分別為 16.14 次和 18.97 次。後者衡量前十項結果的排序質量，SCI 的 nDCG@10 為 81.77%，RARG++ 為 75.97%；這個按理想排序歸一化的指標不是回答正確率。",
+                "作者報告，GPT-6-Luna 在全部 830 道問題上的生成費用為 11.82 美元，對照為 14.73 美元，不能誤寫成每題費用或系統總成本。研究的主要設定是固定語料庫，尚未研究持續新增或修訂文件後的圖更新與一致性。這裡最有價值的結果是候選排序、證據路徑與後續閱讀可以共同改善搜尋；它並不保證在不斷變化的開放網路上獲得同樣收益。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，展示證據路徑如何組織搜尋，不是原始實驗圖。",
+            "steps": [
+              "從關鍵詞和語義檢索找到起點",
+              "計算問題相關的最強路徑",
+              "按背景訪問機率校準候選排名",
+              "向 Agent 展示文件預覽和路徑",
+              "閱讀原文並從已有線索繼續擴充套件"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "graphragprov-answer-source-provenance",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "Original paper and version history",
+          "url": "https://arxiv.org/abs/2610.37237v1"
+        },
+        {
+          "label": "Full paper: methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.37237v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG 能列出参考文档，仍可能说不清答案究竟用了哪条事实，以及几条事实是怎样组合起来的。10 月 27 日公开的 GraphRAGProv 试图把这一步补上：从回答中的结果出发，沿查询计算回到图里的陈述，再定位到原文的具体字符范围。它让错误更容易被检查，而不是保证答案一定正确。",
+          "sections": [
+            {
+              "heading": "同一句事实，出现位置也要区分",
+              "paragraphs": [
+                "系统先让语言模型从材料中抽取主语、关系和宾语组成的陈述，同时提供对应引文。一个确定性的定位器把引文对齐到原文中的精确范围；找不到时要求修正，不能把未定位的片段当成精确证据。即使两处材料表达同一个三元组，也分别保留“陈述出现”的身份，这样才能知道一次计算实际用到了哪处来源。",
+                "接下来模型生成 SPARQL 查询，由图数据库执行。系统还重写查询，计算结果的 how-provenance：用乘法表示几条陈述必须共同成立，用加法表示可以得到同一结果的替代推导。读者不需要理解代数细节，也能沿这条链查看问题、查询、结果、参与计算的陈述和原文片段。没有结果时，系统不另用语言模型自由生成一个答案。"
+              ]
+            },
+            {
+              "heading": "311 条完整链，不能读成 311 道答对",
+              "paragraphs": [
+                "实验使用 2WikiMultiHopQA 的 200 个案例和 MuSiQue 的 200 个可回答案例，共 400 个。每个图只从指定的正确支持材料构建，没有评估寻找文档的能力。更关键的是，DeepSeek-V4-Flash 在建图与生成查询时可以看到问题、预期答案和推理证据。因此这是一种监督诊断设置，用来检查溯源机制，不是面对未知问题的泛化问答测试。",
+                "400 个案例中有 398 个查询可以执行，327 个返回答案，最终 311 个得到完整解码的溯源链，其中 193 个来自 2WikiMultiHopQA，118 个来自 MuSiQue。所有这些链都通过陈述身份和原文范围检查，结果绑定也与普通查询执行一致。但“计算可追溯”与“问题答对”是两件事，311 不能当成正确答案数。"
+              ]
+            },
+            {
+              "heading": "追得回去，才看得到哪里错了",
+              "paragraphs": [
+                "论文举例说明：原文中的国籍词虽然定位准确，却可能在抽取时被错误地归给电影而不是导演；另一些查询虽然返回了看似正确的年份，却没有验证问题要求的出版者条件。重复实体没有对齐，也会使原本能连接的事实无法连接。这些错误都可能发生在来源位置完全有效的情况下。",
+                "这项工作的价值是让审核从“相信一串引用”变成检查具体推导。它仍依赖抽取、实体对齐和查询是否忠实表达问题；指定证据、可见预期答案的设置也限制了对真实检索场景的推断。对数据治理或知识系统而言，可追踪的计算链有助于定位责任与修正环节，但不能替代事实核验和独立的端到端评估。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性溯源链，展示检查路径，不代表所有答案已经核实。",
+            "steps": [
+              "从原文抽取陈述并定位片段",
+              "分别记录每次陈述出现",
+              "执行图查询并记录组合关系",
+              "把结果映射回参与计算的陈述",
+              "逐项检查原文、关系和问题是否吻合"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A RAG system can list references without explaining which facts actually produced its answer or how those facts were combined. GraphRAGProv, posted on October 27, addresses that gap by tracing query results through graph statements to exact spans of source text. This makes computation inspectable; it does not make every answer true.",
+          "sections": [
+            {
+              "heading": "Track occurrences, not just facts",
+              "paragraphs": [
+                "A language model extracts subject–predicate–object statements and supporting quotations. A deterministic localizer aligns quotations to exact character spans. Failed alignment triggers correction rather than accepting an unlocated quotation as precise evidence. Two passages expressing an identical triple receive distinct statement-occurrence identities, preserving which occurrence participated in a calculation.",
+                "The model then generates a SPARQL query for execution by a graph database. Query rewriting also computes how-provenance: multiplication represents statements used jointly, while addition represents alternative derivations of the same result. Users can inspect the question, query, result, participating statements and original spans. When a query produces no answer, the system does not fall back to unconstrained language-model answer generation."
+              ]
+            },
+            {
+              "heading": "311 complete traces are not 311 correct answers",
+              "paragraphs": [
+                "The evaluation contains 200 2WikiMultiHopQA cases and 200 answerable MuSiQue cases, 400 in total. Each graph is built from designated gold supporting passages, excluding document retrieval from evaluation. Crucially, DeepSeek-V4-Flash could see the question, expected answer and reasoning evidence during graph and query construction. This is a supervised diagnostic setting for provenance, not a benchmark of generalization to unseen questions.",
+                "Of 400 cases, 398 queries executed, 327 returned answers, and 311 yielded fully decoded provenance: 193 from 2WikiMultiHopQA and 118 from MuSiQue. All decoded traces passed occurrence and span checks, and their result bindings matched ordinary query execution. Those checks establish trace fidelity. They do not turn 311 into a count of correct answers."
+              ]
+            },
+            {
+              "heading": "A faithful trace can expose a semantic mistake",
+              "paragraphs": [
+                "In one example, a nationality word was located correctly but attributed to a film rather than its director. Another query returned an apparently correct year without establishing the publisher required by the question. Failure to align duplicate entity identities could also prevent relevant facts from joining. Valid source positions can therefore coexist with faulty extraction or a query that answers the wrong question.",
+                "The contribution is moving review beyond a list of citations toward inspection of a concrete derivation. Correct extraction, entity alignment and question interpretation remain necessary. Gold passages and access to expected answers also constrain what can be inferred about real retrieval settings. For knowledge systems and data governance, such traces help identify where to correct a process, while factual verification and independent end-to-end evaluation remain separate tasks."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory provenance chain redrawn by this site from the paper; it shows an inspection route, not proof that every answer is verified.",
+            "steps": [
+              "Extract statements and locate source spans",
+              "Identify every statement occurrence separately",
+              "Execute the graph query and record combinations",
+              "Map results to participating statements",
+              "Check that sources, relations and the question agree"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "RAG が参考文献を並べても、どの事実を使い、どう組み合わせて回答したかまでは分からない場合がある。10 月 27 日公開の GraphRAGProv は、クエリ結果からグラフ内の記述をたどり、原文の正確な文字範囲まで追跡する。計算を調べやすくする仕組みであり、回答を必ず正しくする仕組みではない。",
+          "sections": [
+            {
+              "heading": "事実だけでなく出現箇所を識別する",
+              "paragraphs": [
+                "言語モデルが主語・関係・目的語の記述と対応する引用を抽出する。決定的な位置合わせ処理が引用を原文の文字範囲に結び付け、見つからなければ修正を要求する。場所の分からない引用を精密な根拠として受け入れない。同じ三つ組を表す文章が複数あっても、それぞれの出現に別の識別子を付け、計算で実際に使った箇所を区別する。",
+                "次にモデルが SPARQL クエリを生成し、グラフデータベースが実行する。クエリの書き換えによって how-provenance も計算し、複数の記述を同時に使う関係を積、同じ結果を導ける別の組み合わせを和で表す。質問、クエリ、結果、使った記述、原文範囲を順に確認できる。結果がない場合、別途モデルに自由な回答を生成させることはしない。"
+              ]
+            },
+            {
+              "heading": "完全な 311 本の経路は正答 311 件ではない",
+              "paragraphs": [
+                "評価は 2WikiMultiHopQA の 200 件と、回答可能な MuSiQue の 200 件、計 400 件からなる。各グラフは指定された正解の根拠文書から作られ、文書を探す能力は評価しない。さらに DeepSeek-V4-Flash は建図とクエリ生成時に質問、期待される回答、推論の根拠を参照できた。来歴の機構を診断する教師ありの設定であり、未知の質問への汎化試験ではない。",
+                "400 件中 398 件でクエリが実行され、327 件で回答が返り、311 件で来歴を完全に復元できた。内訳は 2WikiMultiHopQA が 193 件、MuSiQue が 118 件。復元した全経路は出現識別子と原文範囲の確認を通り、結果の値も通常のクエリ実行と一致した。ただしこれは計算の追跡が忠実だという確認であり、311 件が正答したという意味ではない。"
+              ]
+            },
+            {
+              "heading": "正確に追跡できても意味を取り違える",
+              "paragraphs": [
+                "論文では、国籍を表す語の場所は正しいのに、監督ではなく映画にその属性を割り当てた例を示す。別の例では、もっともらしい年が返っても、質問で指定された出版社を確かめていなかった。同じ実体の識別子が統合されず、関連する事実を結合できない場合もある。正しい出典位置と意味上の誤りは両立してしまう。",
+                "貢献は、引用一覧を信じるだけでなく、具体的な導出を検査できる点にある。抽出、実体の同一視、質問に忠実なクエリは依然として必要だ。正解の根拠や期待回答を使う設定から、実際の検索環境の性能を直接推定することもできない。来歴は修正すべき工程を特定する助けになるが、事実確認や独立した端から端までの評価を代替しない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した来歴の説明図。検査経路を示し、全回答の検証済みを意味しない。",
+            "steps": [
+              "原文から記述を抽出し範囲を特定",
+              "記述の出現を個別に識別",
+              "グラフクエリを実行し組み合わせを記録",
+              "結果を使用した記述に対応付け",
+              "原文・関係・質問の一致を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Список ссылок в RAG ещё не объясняет, какие факты породили ответ и как они были объединены. GraphRAGProv, опубликованный 27 октября, связывает результат запроса с утверждениями графа, а затем с точными диапазонами исходного текста. Это делает вычисление проверяемым, но не гарантирует истинность ответа.",
+          "sections": [
+            {
+              "heading": "Различать факты и их появления",
+              "paragraphs": [
+                "Языковая модель извлекает утверждения «субъект — отношение — объект» и подтверждающие цитаты. Детерминированный локализатор сопоставляет цитаты точным диапазонам символов. Если совпадение не найдено, требуется исправление: непозиционированная цитата не принимается за точное доказательство. Даже одинаковые тройки из разных отрывков получают отдельные идентификаторы появления, чтобы сохранить сведения о реально использованном источнике.",
+                "Затем модель создаёт SPARQL-запрос, который выполняет графовая база. Переписывание запроса вычисляет how-provenance: умножение обозначает совместное использование утверждений, сложение — альтернативные способы получить результат. Пользователь может проследить вопрос, запрос, результат, участвовавшие утверждения и исходные фрагменты. Если запрос не даёт ответа, система не подменяет его свободной генерацией языковой модели."
+              ]
+            },
+            {
+              "heading": "311 полных трасс — не 311 правильных ответов",
+              "paragraphs": [
+                "Проверка включает 200 примеров 2WikiMultiHopQA и 200 примеров MuSiQue с существующим ответом, всего 400. Граф каждого примера строится по заранее указанным правильным подтверждающим отрывкам; поиск документов не оценивается. Принципиально важно, что DeepSeek-V4-Flash при построении графа и запроса видел вопрос, ожидаемый ответ и свидетельства рассуждения. Это диагностическая проверка с подсказанными целевыми данными, а не тест обобщения на неизвестные вопросы.",
+                "Из 400 запросов 398 выполнились, 327 вернули ответы, а 311 дали полностью декодированное происхождение: 193 из 2WikiMultiHopQA и 118 из MuSiQue. Все декодированные трассы прошли проверку идентификаторов появлений и текстовых диапазонов; значения результатов совпали с обычным исполнением запроса. Это подтверждает верность трассировки вычислений, но не делает 311 числом правильных ответов."
+              ]
+            },
+            {
+              "heading": "Точная трасса помогает увидеть смысловую ошибку",
+              "paragraphs": [
+                "В одном примере слово, обозначающее национальность, было найдено точно, но отнесено к фильму вместо режиссёра. Другой запрос вернул правдоподобный год, не установив требуемого вопросом издателя. Несогласованные идентификаторы одной сущности также мешали соединять нужные факты. Корректное положение источника может сопровождаться ошибкой извлечения или запросом, отвечающим не на тот вопрос.",
+                "Ценность подхода — переход от доверия списку ссылок к проверке конкретного вывода. Правильное извлечение, согласование сущностей и верная интерпретация вопроса остаются обязательными. Заданные подтверждающие отрывки и доступ к ожидаемым ответам ограничивают выводы о реальном поиске. Для систем знаний и управления данными такая трасса помогает найти участок для исправления, но не заменяет проверку фактов и независимую сквозную оценку."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная цепочка происхождения, заново составленная сайтом по статье: путь проверки, а не гарантия истинности всех ответов.",
+            "steps": [
+              "Извлечь утверждения и найти исходные фрагменты",
+              "Раздельно идентифицировать каждое появление",
+              "Выполнить графовый запрос и записать сочетания",
+              "Связать результат с участвовавшими утверждениями",
+              "Проверить соответствие текста, отношений и вопроса"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG 能列出參考文件，仍可能說不清答案究竟用了哪條事實，以及幾條事實是怎樣組合起來的。10 月 27 日公開的 GraphRAGProv 試圖把這一步補上：從回答中的結果出發，沿查詢計算回到圖裡的陳述，再定位到原文的具體字元範圍。它讓錯誤更容易被檢查，而不是保證答案一定正確。",
+          "sections": [
+            {
+              "heading": "同一句事實，出現位置也要區分",
+              "paragraphs": [
+                "系統先讓語言模型從材料中抽取主語、關係和賓語組成的陳述，同時提供對應引文。一個確定性的定位器把引文對齊到原文中的精確範圍；找不到時要求修正，不能把未定位的片段當成精確證據。即使兩處材料表達同一個三元組，也分別保留“陳述出現”的身份，這樣才能知道一次計算實際用到了哪處來源。",
+                "接下來模型生成 SPARQL 查詢，由圖資料庫執行。系統還重寫查詢，計算結果的 how-provenance：用乘法表示幾條陳述必須共同成立，用加法表示可以得到同一結果的替代推導。讀者不需要理解代數細節，也能沿這條鏈檢視問題、查詢、結果、參與計算的陳述和原文片段。沒有結果時，系統不另用語言模型自由生成一個答案。"
+              ]
+            },
+            {
+              "heading": "311 條完整鏈，不能讀成 311 道答對",
+              "paragraphs": [
+                "實驗使用 2WikiMultiHopQA 的 200 個案例和 MuSiQue 的 200 個可回答案例，共 400 個。每個圖只從指定的正確支援材料構建，沒有評估尋找文件的能力。更關鍵的是，DeepSeek-V4-Flash 在建圖與生成查詢時可以看到問題、預期答案和推理證據。因此這是一種監督診斷設定，用來檢查溯源機制，不是面對未知問題的泛化問答測試。",
+                "400 個案例中有 398 個查詢可以執行，327 個返回答案，最終 311 個得到完整解碼的溯源鏈，其中 193 個來自 2WikiMultiHopQA，118 個來自 MuSiQue。所有這些鏈都透過陳述身份和原文範圍檢查，結果繫結也與普通查詢執行一致。但“計算可追溯”與“問題答對”是兩件事，311 不能當成正確答案數。"
+              ]
+            },
+            {
+              "heading": "追得回去，才看得到哪裡錯了",
+              "paragraphs": [
+                "論文舉例說明：原文中的國籍詞雖然定位準確，卻可能在抽取時被錯誤地歸給電影而不是導演；另一些查詢雖然返回了看似正確的年份，卻沒有驗證問題要求的出版者條件。重複實體沒有對齊，也會使原本能連線的事實無法連線。這些錯誤都可能發生在來源位置完全有效的情況下。",
+                "這項工作的價值是讓稽核從“相信一串引用”變成檢查具體推導。它仍依賴抽取、實體對齊和查詢是否忠實表達問題；指定證據、可見預期答案的設定也限制了對真實檢索場景的推斷。對資料治理或知識系統而言，可追蹤的計算鏈有助於定位責任與修正環節，但不能替代事實核驗和獨立的端到端評估。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性溯源鏈，展示檢查路徑，不代表所有答案已經核實。",
+            "steps": [
+              "從原文抽取陳述並定位片段",
+              "分別記錄每次陳述出現",
+              "執行圖查詢並記錄組合關係",
+              "把結果對映回參與計算的陳述",
+              "逐項檢查原文、關係和問題是否吻合"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "linepg-line-nearest-neighbor-search",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv:2610.37256v1 · paper and publication metadata",
+          "url": "https://arxiv.org/abs/2610.37256v1"
+        },
+        {
+          "label": "Full paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.37256v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "普通向量搜索寻找离某一个点最近的记录。LinePG 研究的是另一种需求：允许查询对象沿一个指定方向变化，同时仍匹配其余特征。例如，图像的光照可以变化，而其他内容尽量相近。论文于 2026 年 10 月 27 日首次提交，提出把查询表示为无限延伸的直线，数据库中的记录仍然是点。",
+          "sections": [
+            {
+              "heading": "为什么换一种距离还不够",
+              "paragraphs": [
+                "点到直线的距离忽略了沿线方向的差异。因此，两个彼此相距很远的点，也可能都紧贴同一条查询直线。普通近邻图主要连接彼此相近的点；直接替换距离函数，搜索容易停留在一个局部区域，漏掉直线另一端附近的结果。论文讨论的对象是无限直线，不是两张示例之间的有限线段。"
+              ]
+            },
+            {
+              "heading": "保留局部搜索，再补上区域间的通路",
+              "paragraphs": [
+                "LinePG 先复用已有近邻图，再把数据划分成区域。层次结构提供空间上分开的候选区域，区域之间的图连接则帮助识别绕路较长的位置；结合几何评分后，算法挑选具体端点，补上少量跨区域边。查询时交替进行局部探索与跨区域探测，而不是把所有点都升到更高维空间。",
+                "实验把每个点的总出边数限制为 32，其中跨区域边最多 4 条；必要时删去部分原有边。因此，增加远距离通路仍需权衡局部连接的保留，不能简单理解成边越多越好。"
+              ]
+            },
+            {
+              "heading": "速度提升是在什么条件下测得的",
+              "paragraphs": [
+                "作者在 YaleB、Multi-PIE、CelebA、FFHQ、SIFT 和 GIST 六个数据集上进行单线程查询测试，后两者各有 100 万个基础向量。返回前 100 项、召回率至少为 0.99 时，LinePG 的每秒查询数为 DirectSearch 的 1.44—2.44 倍。这里的召回率衡量找回了多少个真实最近邻；吞吐提高不代表检索语义或生成答案变得更好。",
+                "这些数字是论文作者的实验结果。包含基础向量在内的完整检索存储量为 DirectSearch 的 1.000—1.046 倍，但建图有额外开销：GIST 上从约 2272 秒增加到 2527 秒。不同方法比较时保留同一基础图构建设置，减少了起点不同造成的干扰。"
+              ]
+            },
+            {
+              "heading": "适合的查询与仍然存在的取舍",
+              "paragraphs": [
+                "SIFT 和 GIST 的直线由查询向量随机配对构成，并不代表自然语言检索流量。方法也依赖“可忽略的变化能由直线方向表达”这一前提。在 SIFT 的极高召回区间，把跨区域边当普通边充分探索的变体反而更快，说明默认策略并非所有工作点都最优。是否适合某个应用，需要先检验方向表示、召回要求和建图成本，不能据此宣称 RAG 或 Agent 整体能力得到提升。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，不是实验结果图。",
+            "steps": [
+              "用无限直线表达允许变化的方向",
+              "从基础近邻图划分区域",
+              "选择并加入少量跨区域边",
+              "交替探索局部邻居与远端区域"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Ordinary vector search retrieves records near one query point. LinePG asks a different question: can a specified direction of variation be ignored while the other characteristics still match? Lighting changes in images motivate this setting. First submitted on October 27, 2026, the paper represents the query as an infinite line while keeping database records as points.",
+          "sections": [
+            {
+              "heading": "Why changing the distance function is insufficient",
+              "paragraphs": [
+                "Distance to a line discards variation along that line. Two points can therefore be far from each other yet both close to the query. An ordinary proximity graph mostly connects nearby points; merely replacing its distance function can leave the search trapped in one region while missing another region beside the same line. The query here is an infinite line, not a finite segment between two examples."
+              ]
+            },
+            {
+              "heading": "Local exploration with routes between regions",
+              "paragraphs": [
+                "LinePG reuses a proximity graph and partitions its points into regions. A hierarchy proposes spatially separated region pairs, while a graph of region connections exposes potentially long detours. Geometric scoring then selects actual endpoint pairs for a small number of additional links. Queries interleave local exploration with probes into other regions rather than lifting every vector into a much higher-dimensional space.",
+                "The experiments cap total outgoing degree at 32 and allow at most four cross-region links per point. Some original edges may be pruned to meet that limit. Adding routes to distant regions therefore trades against retaining local connections; the method is not simply an instruction to add as many edges as possible."
+              ]
+            },
+            {
+              "heading": "What the throughput comparison measures",
+              "paragraphs": [
+                "The authors test single-threaded queries on YaleB, Multi-PIE, CelebA, FFHQ, SIFT and GIST; the last two contain one million base vectors each. For top-100 queries at recall of at least 0.99, reported queries per second are 1.44–2.44 times those of DirectSearch. Recall measures recovery of the true nearest neighbors. More queries per second does not establish better semantic relevance or better generated answers.",
+                "These are author-reported experiments. Total retrieval storage, including base vectors, is 1.000–1.046 times DirectSearch storage. Construction is not free: on GIST the reported build grows from about 2,272 to 2,527 seconds. The comparisons retain the same underlying graph-construction settings to reduce differences attributable to the starting index."
+              ]
+            },
+            {
+              "heading": "Where the result applies",
+              "paragraphs": [
+                "SIFT and GIST query lines are formed from random pairs of query vectors, rather than natural-language retrieval traffic. The application must also have a meaningful direction of variation that a line can express. In the very high-recall tail on SIFT, a variant that explores cross-region links as ordinary edges is faster than the default strategy, so the latter is not uniformly best. direction representation, recall requirements and build cost still need application-specific evaluation. The experiments do not establish an end-to-end improvement to RAG or agents."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn from the paper; not an experimental result.",
+            "steps": [
+              "Represent allowed variation with an infinite line",
+              "Partition the base proximity graph into regions",
+              "Select a few cross-region links",
+              "Alternate local exploration and remote-region probes"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "通常のベクトル検索は、一つのクエリ点に近い記録を探す。LinePG が扱うのは、指定した方向の変化を許容しながら、それ以外の特徴を合わせる検索である。画像の照明変化がその例になる。2026 年 10 月 27 日に初めて投稿された論文は、クエリを無限に延びる直線で表し、データベース内の記録は点のまま保持する。",
+          "sections": [
+            {
+              "heading": "距離関数を変えるだけでは足りない理由",
+              "paragraphs": [
+                "点と直線の距離では、直線に沿う方向の違いを無視する。このため、互いには遠い二点も、同じクエリ直線には近くなり得る。通常の近傍グラフは近い点同士を結ぶので、距離関数だけを置き換えると、探索が一つの領域にとどまり、同じ直線の別の場所にある候補を見落とす。ここで対象とするのは無限直線であり、二つの例の間の有限な線分ではない。"
+              ]
+            },
+            {
+              "heading": "近傍の探索に領域間の経路を加える",
+              "paragraphs": [
+                "LinePG は既存の近傍グラフを使い、点を領域に分ける。階層構造から空間的に離れた領域の組を候補にし、領域間の接続グラフから遠回りになる箇所も探す。幾何的な評価で端点を選び、少数の領域間リンクを追加する。クエリ時には局所探索と別領域への探索を組み合わせ、全ベクトルを大幅に高次元化する必要を避ける。",
+                "実験では各点の出辺を合計 32 本まで、領域間リンクを最大 4 本に制限した。必要なら元の辺を削るため、遠くへの経路を増やすことと局所的な接続を残すことにはトレードオフがある。辺を増やせば常によい、という方法ではない。"
+              ]
+            },
+            {
+              "heading": "速度の数字が表すもの",
+              "paragraphs": [
+                "著者らは YaleB、Multi-PIE、CelebA、FFHQ、SIFT、GIST で単一スレッドのクエリを評価した。後二者にはそれぞれ 100 万の基礎ベクトルがある。上位 100 件、再現率 0.99 以上では、毎秒クエリ数は DirectSearch の 1.44～2.44 倍と報告された。再現率は真の最近傍をどれだけ回収したかを測る。処理量の増加は意味的な適合性や生成回答の改善を示すものではない。",
+                "これらは著者による測定値である。基礎ベクトルを含む検索用の総ストレージは DirectSearch の 1.000～1.046 倍だが、構築コストは増える。GIST では約 2272 秒から 2527 秒になった。比較では基礎グラフの構築条件をそろえ、出発点の差の影響を抑えている。"
+              ]
+            },
+            {
+              "heading": "適用前に確かめたい条件",
+              "paragraphs": [
+                "SIFT と GIST のクエリ直線は、クエリベクトルをランダムに組み合わせたもので、自然言語検索の利用状況を表してはいない。許容したい変化を直線方向で表せることも前提となる。SIFT の特に高い再現率域では、領域間リンクを通常の辺として十分に探索する変形版の方が速く、標準方式が常に最良ではなかった。本稿ではデータベース検索アルゴリズムの研究として扱う。用途ごとの方向表現、再現率、構築費用の確認が必要であり、RAG や Agent 全体の改善を実証した結果ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに当サイトが描き直した説明用の流れ。実験結果の図ではない。",
+            "steps": [
+              "許容する変化を無限直線で表す",
+              "基礎近傍グラフを領域に分ける",
+              "少数の領域間リンクを選ぶ",
+              "局所探索と別領域の探索を組み合わせる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Обычный векторный поиск находит записи рядом с одной точкой запроса. LinePG рассматривает другой случай: разрешить изменение вдоль заданного направления, сохранив сходство по остальным признакам. Примером служит изменение освещения на изображении. Работа, впервые представленная 27 октября 2026 года, задаёт запрос бесконечной прямой, а записи базы оставляет точками.",
+          "sections": [
+            {
+              "heading": "Почему недостаточно заменить функцию расстояния",
+              "paragraphs": [
+                "Расстояние до прямой не учитывает различия вдоль неё. Поэтому две далёкие друг от друга точки могут обе оказаться близкими к запросу. Обычный граф близости соединяет преимущественно соседние точки. Если лишь заменить функцию расстояния, поиск может остановиться в одной области и пропустить другую рядом с той же прямой. Речь именно о бесконечной прямой, а не об отрезке между двумя примерами."
+              ]
+            },
+            {
+              "heading": "Локальный поиск и переходы между областями",
+              "paragraphs": [
+                "LinePG повторно использует граф близости и разбивает точки на области. Иерархия предлагает пространственно разделённые пары областей; граф их соединений помогает находить длинные обходные пути. Геометрическая оценка выбирает конкретные концы небольшого числа дополнительных связей. При запросе локальный поиск чередуется с переходами в другие области, без переноса всех векторов в пространство значительно большей размерности.",
+                "В опытах число исходящих рёбер ограничено 32, из них межобластных — не более четырёх. Для соблюдения лимита часть старых рёбер можно удалить. Следовательно, новые дальние переходы приходится сочетать с сохранением локальной связности: просто добавлять больше рёбер не всегда полезно."
+              ]
+            },
+            {
+              "heading": "Условия измерения скорости",
+              "paragraphs": [
+                "Авторы выполняют однопоточные запросы на YaleB, Multi-PIE, CelebA, FFHQ, SIFT и GIST. Последние два набора содержат по миллиону базовых векторов. Для 100 результатов при полноте не ниже 0,99 сообщается о числе запросов в секунду в 1,44–2,44 раза выше DirectSearch. Полнота здесь означает долю найденных истинных ближайших соседей. Рост пропускной способности сам по себе не означает улучшения смысловой релевантности или генерируемых ответов.",
+                "Это результаты экспериментов авторов. Полный объём хранения для поиска, включая базовые векторы, составляет 1,000–1,046 объёма DirectSearch. Дополнительное построение требует времени: на GIST оно увеличивается примерно с 2272 до 2527 секунд. В сравнении сохранены одинаковые параметры построения базового графа, чтобы уменьшить влияние различий исходного индекса."
+              ]
+            },
+            {
+              "heading": "Границы применимости",
+              "paragraphs": [
+                "Прямые запросов в SIFT и GIST образованы случайными парами запросных векторов, а не потоком естественно-языковых запросов. Кроме того, разрешённое изменение должно осмысленно выражаться направлением прямой. При очень высокой полноте на SIFT вариант, исследующий межобластные связи как обычные рёбра, оказывается быстрее стандартной стратегии: универсального превосходства нет. Представление направления, требуемую полноту и стоимость построения нужно проверять для конкретного применения; улучшение RAG или агентов в целом здесь не доказано."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье; это не график экспериментальных результатов.",
+            "steps": [
+              "Задать допустимое изменение бесконечной прямой",
+              "Разбить базовый граф близости на области",
+              "Выбрать немного межобластных связей",
+              "Чередовать локальный поиск и переходы в другие области"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "普通向量搜尋尋找離某一個點最近的記錄。LinePG 研究的是另一種需求：允許查詢物件沿一個指定方向變化，同時仍匹配其餘特徵。例如，影像的光照可以變化，而其他內容儘量相近。論文於 2026 年 10 月 27 日首次提交，提出把查詢表示為無限延伸的直線，資料庫中的記錄仍然是點。",
+          "sections": [
+            {
+              "heading": "為什麼換一種距離還不夠",
+              "paragraphs": [
+                "點到直線的距離忽略了沿線方向的差異。因此，兩個彼此相距很遠的點，也可能都緊貼同一條查詢直線。普通近鄰圖主要連線彼此相近的點；直接替換距離函式，搜尋容易停留在一個局部區域，漏掉直線另一端附近的結果。論文討論的物件是無限直線，不是兩張示例之間的有限線段。"
+              ]
+            },
+            {
+              "heading": "保留局部搜尋，再補上區域間的通路",
+              "paragraphs": [
+                "LinePG 先重用已有近鄰圖，再把資料劃分成區域。層次結構提供空間上分開的候選區域，區域之間的圖連線則幫助識別繞路較長的位置；結合幾何評分後，演算法挑選具體端點，補上少量跨區域邊。查詢時交替進行局部探索與跨區域探測，而不是把所有點都升到更高維空間。",
+                "實驗把每個點的總出邊數限制為 32，其中跨區域邊最多 4 條；必要時刪去部分原有邊。因此，增加遠距離通路仍需權衡局部連線的保留，不能簡單理解成邊越多越好。"
+              ]
+            },
+            {
+              "heading": "速度提升是在什麼條件下測得的",
+              "paragraphs": [
+                "作者在 YaleB、Multi-PIE、CelebA、FFHQ、SIFT 和 GIST 六個資料集上進行單執行緒查詢測試，後兩者各有 100 萬個基礎向量。返回前 100 項、召回率至少為 0.99 時，LinePG 的每秒查詢數為 DirectSearch 的 1.44—2.44 倍。這裡的召回率衡量找回了多少個真實最近鄰；吞吐提高不代表檢索語義或生成答案變得更好。",
+                "這些數字是論文作者的實驗結果。包含基礎向量在內的完整檢索儲存量為 DirectSearch 的 1.000—1.046 倍，但建圖有額外開銷：GIST 上從約 2272 秒增加到 2527 秒。不同方法比較時保留同一基礎圖構建設定，減少了起點不同造成的干擾。"
+              ]
+            },
+            {
+              "heading": "適合的查詢與仍然存在的取捨",
+              "paragraphs": [
+                "SIFT 和 GIST 的直線由查詢向量隨機配對構成，並不代表自然語言檢索流量。方法也依賴“可忽略的變化能由直線方向表達”這一前提。在 SIFT 的極高召回區間，把跨區域邊當普通邊充分探索的變體反而更快，說明預設策略並非所有工作點都最優。是否適合某個應用，需要先檢驗方向表示、召回要求和建圖成本，不能據此宣稱 RAG 或 Agent 整體能力得到提升。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，不是實驗結果圖。",
+            "steps": [
+              "用無限直線表達允許變化的方向",
+              "從基礎近鄰圖劃分區域",
+              "選擇並加入少量跨區域邊",
+              "交替探索局部鄰居與遠端區域"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "ams-contention-aware-sparse-multiplication",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv:2610.36822v1 · paper and publication metadata",
+          "url": "https://arxiv.org/abs/2610.36822v1"
+        },
+        {
+          "label": "Full paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.36822v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "稀疏矩阵只保存大量零值之外的少数非零项，常用于图分析和数据库查询。它们相乘时，把乘法次数平均分给各个线程，并不一定能同时完成：不同任务的结果量和缓存需求可能差别很大。10 月 27 日公开的 AMS 技术报告研究如何把这些差异纳入调度，而不是只追求每个线程账面上的计算量相等。",
+          "sections": [
+            {
+              "heading": "忙碌的线程也可能互相拖慢",
+              "paragraphs": [
+                "一个任务可能计算多、结果少，另一个任务却需要写出大量结果。多个缓存压力大的任务同时执行，还会争用有限的片上空间，增加数据往返。AMS 针对的是稀疏通用矩阵乘法 SpGEMM；论文将输出密度、计算量和局部性一起考察。它关注的是计算内核如何更高效地使用处理器和缓存。"
+              ]
+            },
+            {
+              "heading": "先按输出分块，再安排谁和谁一起做",
+              "paragraphs": [
+                "矩阵乘法的符号阶段会预先确定各行结果中非零项的数量。AMS 利用这份信息，把相邻行组成输出量大致相等的工作块，并让目标结果占用接近二级缓存容量的一半。这样先控制写出结果的负担，再比较每个输出项背后的计算量，也就是压缩因子。",
+                "CALB 调度器混合运行高、低压缩因子的工作块，减少高压力任务同时挤占缓存，并允许提前完成的线程帮助其他组。SMTact 则根据工作负载中最大的压缩因子，决定这一次计算是否启用同时多线程；它不是在每个工作块中随意切换。混合累加器 HYB 还会按块选择哈希或排序累加方式。"
+              ]
+            },
+            {
+              "heading": "有提升，但要看矩阵和比较口径",
+              "paragraphs": [
+                "主要实验在单插槽、32 个物理核的服务器上进行，覆盖不同倾斜程度的合成矩阵及 119 个 SuiteSparse 矩阵，其中详细展示 20 个代表。报告中的一般运行时间包含符号阶段、内存分配、调度准备、数值计算及结果整理，取 10 次运行的平均，而不是仅计最有利的一段。",
+                "在展示的 20 个真实矩阵上，AMS-HASH 和 AMS-ESC 各有 19 个快于对应的按乘法量分配基线，最大提升分别为 47.46% 和 25.92%；这些是最大值，不是平均收益。图分析的多源广度优先搜索实验另有 60 个工作负载，AMS-HYB 对 HASH 的几何平均加速为 1.18 倍，并在其中 47 个取得四种被测方法中的最高吞吐。"
+              ]
+            },
+            {
+              "heading": "调度也有成本，录用信息保持原口径",
+              "paragraphs": [
+                "非常稀疏、工作量不足的矩阵可能无法摊薄分块排序的开销，AMS 反而变慢。线程组比例和阈值经过经验调优，换处理器或数据分布仍要重新验证；结果不意味着增加线程或打开同时多线程就必然更快。本文依据作者测量解释缓存竞争与并发的取舍，没有独立复测。该版本是技术报告，arXiv 作者备注称配套论文获 VLDB 2027 录用；没有据此补写未明确的轨道或把备注当成独立确认的会议出版记录。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性机制示意，不是实测性能图。",
+            "steps": [
+              "读取符号阶段的输出规模信息",
+              "按相近结果量形成工作块",
+              "搭配高低缓存压力任务并选择线程策略",
+              "累加结果并计入完整执行成本"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Sparse matrices store relatively few nonzero entries among many zeros and are used in graph analysis and database queries. Equalizing multiplication counts across threads does not guarantee equal completion times: output volume and cache demand can differ sharply. The AMS technical report, released on October 27, studies scheduling that accounts for those differences rather than balancing arithmetic alone.",
+          "sections": [
+            {
+              "heading": "Busy threads can still slow one another down",
+              "paragraphs": [
+                "One task may perform many calculations but produce little output; another may spend more effort writing results. Running several cache-intensive tasks together also makes them compete for limited on-chip space and increases data movement. AMS targets sparse general matrix-matrix multiplication, or SpGEMM, considering computation, output density and locality together. Its contribution concerns how a computing kernel uses processors and caches efficiently."
+              ]
+            },
+            {
+              "heading": "Size chunks by output, then choose what runs together",
+              "paragraphs": [
+                "The symbolic phase of multiplication already determines the number of nonzeros in each output row. AMS uses that information to group consecutive rows into chunks with roughly equal output volume, targeting an output footprint around half the L2 cache. This first controls result-writing work, then compares the arithmetic per output entry, called the compression factor.",
+                "The CALB scheduler mixes chunks with high and low compression factors, limiting concurrent cache-intensive work and allowing threads that finish early to help other groups. SMTact uses the largest compression factor in the workload to decide whether simultaneous multithreading should be enabled for that computation; it is not an arbitrary per-chunk switch. A hybrid accumulator, HYB, also chooses hash-based or sorting-based accumulation for each chunk."
+              ]
+            },
+            {
+              "heading": "Read the results with their workload and denominator",
+              "paragraphs": [
+                "The main experiments use a single-socket server with 32 physical cores, synthetic matrices with different levels of skew, and 119 SuiteSparse matrices, of which 20 representatives are shown in detail. General runtime figures include symbolic processing, allocation, scheduling preparation, numeric computation and output finalization, averaged over ten runs. They do not isolate only a favorable execution phase.",
+                "On the 20 displayed real matrices, AMS-HASH and AMS-ESC each outperform their corresponding multiplication-count-based baseline on 19, with maximum improvements of 47.46% and 25.92%. Those are maxima, not average gains. A separate multi-source breadth-first-search evaluation has 60 workloads: AMS-HYB achieves a geometric-mean speedup of 1.18× over HASH and the highest throughput among the four tested methods on 47 workloads."
+              ]
+            },
+            {
+              "heading": "Overhead and publication boundaries",
+              "paragraphs": [
+                "Very sparse matrices with little computation may not amortize chunk-sorting costs, making AMS slower. Thread-group proportions and thresholds are empirically tuned and should be rechecked on other processors or data distributions. The results do not imply that adding threads or enabling simultaneous multithreading always helps. This account interprets the authors’ measurements; it is not an independent replication. The version is a technical report whose arXiv author comment states that a companion paper was accepted at VLDB 2027. We do not infer an unspecified track or treat that comment as an independently confirmed proceedings record."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory mechanism redrawn from the paper; not measured performance data.",
+            "steps": [
+              "Read output-size information from symbolic processing",
+              "Form chunks with similar result volumes",
+              "Mix cache demands and select the threading policy",
+              "Accumulate outputs and count the complete execution cost"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "疎行列は、多数のゼロの中にある少数の非ゼロ要素を保持し、グラフ分析やデータベースの問い合わせに使われる。乗算回数を各スレッドに等分しても、同時に終わるとは限らない。結果の量やキャッシュへの負荷が大きく違うためだ。10 月 27 日公開の AMS 技術報告は、計算量だけでなく、こうした差を含めて仕事を割り当てる方法を調べている。",
+          "sections": [
+            {
+              "heading": "全スレッドが動いていても遅くなる理由",
+              "paragraphs": [
+                "計算は多いが結果が少ない仕事もあれば、結果の書き出しが重い仕事もある。キャッシュ負荷の高い仕事を同時に実行すると、限られたチップ上の容量を奪い合い、データの往復が増える。AMS の対象は疎一般行列積 SpGEMM で、計算量、出力密度、局所性を合わせて考える。中心となるのは、計算カーネルがプロセッサーとキャッシュを効率的に使う方法だ。"
+              ]
+            },
+            {
+              "heading": "出力量で仕事を区切り、組み合わせを決める",
+              "paragraphs": [
+                "行列積のシンボリック段階では、出力の各行にある非ゼロ要素数が先に分かる。AMS はその情報から、連続する行をほぼ同じ出力量の小区画にまとめ、結果の容量を L2 キャッシュの半分程度に設定する。まず書き出し量の偏りを抑え、出力要素一つ当たりの計算量である圧縮係数を比較できるようにする。",
+                "CALB は圧縮係数が高い区画と低い区画を混ぜて実行し、重い仕事の同時集中を抑える。先に終わったスレッドは別のグループを手伝える。SMTact は仕事全体の最大圧縮係数から、その計算で同時マルチスレッディングを使うかを決める。区画ごとの無秩序な切り替えではない。HYB は区画に応じてハッシュ方式かソート方式の累積処理を選ぶ。"
+              ]
+            },
+            {
+              "heading": "行列と比較条件を含めて結果を読む",
+              "paragraphs": [
+                "主な実験は 32 物理コアの単一ソケットサーバーで行い、偏りの異なる合成行列と SuiteSparse の 119 行列を対象に、代表的な 20 行列を詳しく示した。一般の実行時間にはシンボリック処理、領域確保、調整準備、数値計算、結果の整理を含め、10 回の平均を取る。有利な処理段階だけを切り出した数字ではない。",
+                "掲載した 20 行列では、AMS-HASH と AMS-ESC がそれぞれ 19 行列で対応する乗算回数ベースの基準手法より速く、最大改善率は 47.46% と 25.92% だった。これは平均ではなく最大値である。別の多始点幅優先探索の 60 条件では、AMS-HYB の HASH に対する幾何平均加速率は 1.18 倍で、47 条件では比較した四方式中の最高スループットを得た。"
+              ]
+            },
+            {
+              "heading": "調整の費用と採択情報の範囲",
+              "paragraphs": [
+                "非常に疎で計算量の少ない場合、区画の並べ替えの費用を回収できず、AMS が遅くなることもある。スレッド配分やしきい値は経験的に調整されており、別のプロセッサーや分布では確認が必要だ。スレッドを増やす、あるいは同時マルチスレッディングを有効にすれば必ず速い、とは言えない。本稿は著者の測定を解説しており、独立した再実験ではない。この版は技術報告で、arXiv の著者コメントには関連論文が VLDB 2027 に採択されたとある。明記されていないトラックを補ったり、このコメントを独立に確認した会議録情報として扱ったりはしない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに当サイトが描き直した仕組みの説明。実測性能の図ではない。",
+            "steps": [
+              "シンボリック段階から出力規模を得る",
+              "結果量が近い小区画を作る",
+              "キャッシュ負荷を組み合わせてスレッド方針を選ぶ",
+              "結果を集計し実行全体の費用を測る"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Разреженные матрицы хранят немного ненулевых элементов среди множества нулей и применяются в анализе графов и запросах к базам данных. Равное число умножений на поток не обеспечивает одинакового времени завершения: объём результата и потребности в кэше могут сильно различаться. Технический отчёт AMS, опубликованный 27 октября, исследует планирование с учётом этих различий, а не только арифметики.",
+          "sections": [
+            {
+              "heading": "Занятые потоки могут мешать друг другу",
+              "paragraphs": [
+                "Одна задача много вычисляет, но выдаёт мало данных; другая тратит больше ресурсов на запись результата. Несколько задач с высокой потребностью в кэше конкурируют за ограниченную память на кристалле и увеличивают перемещение данных. AMS рассматривает общее умножение разреженных матриц, SpGEMM, совместно учитывая вычисления, плотность выхода и локальность. Вклад касается эффективного использования процессоров и кэша вычислительным ядром."
+              ]
+            },
+            {
+              "heading": "Сначала объём результата, затем сочетание задач",
+              "paragraphs": [
+                "Символьная фаза умножения заранее определяет число ненулевых элементов каждой выходной строки. AMS объединяет последовательные строки в порции с примерно одинаковым объёмом результата, ориентируясь на половину ёмкости кэша L2. Это сначала выравнивает запись результатов, после чего можно сравнивать число операций на выходной элемент — коэффициент сжатия.",
+                "Планировщик CALB сочетает порции с высоким и низким коэффициентом, ограничивает одновременную работу задач с высоким давлением на кэш и позволяет освободившимся потокам помогать другим группам. SMTact по максимальному коэффициенту в нагрузке решает, включать ли одновременную многопоточность для данного вычисления; это не произвольное переключение для каждой порции. Гибридный накопитель HYB также выбирает для порции накопление через хеширование или сортировку."
+              ]
+            },
+            {
+              "heading": "Что именно сравнивали",
+              "paragraphs": [
+                "Основные опыты используют односокетный сервер с 32 физическими ядрами, синтетические матрицы с разной неравномерностью и 119 матриц SuiteSparse; 20 представителей показаны подробно. Общие показатели времени включают символьную обработку, выделение памяти, подготовку планирования, численное вычисление и завершение вывода, с усреднением по десяти запускам. Они не ограничены одной выгодной фазой.",
+                "На 20 показанных реальных матрицах AMS-HASH и AMS-ESC каждый обгоняют соответствующий базовый алгоритм с распределением по числу умножений на 19 матрицах. Максимальные улучшения составляют 47,46% и 25,92%: это максимумы, не средний выигрыш. В отдельной оценке многoисточникового поиска в ширину на 60 нагрузках геометрическое среднее ускорение AMS-HYB относительно HASH равно 1,18; на 47 нагрузках он показывает наибольшую пропускную способность среди четырёх сравниваемых методов."
+              ]
+            },
+            {
+              "heading": "Накладные расходы и статус публикации",
+              "paragraphs": [
+                "При очень разреженных матрицах вычислений может не хватать, чтобы окупить сортировку порций, и AMS становится медленнее. Доли групп потоков и пороги подобраны эмпирически; другие процессоры и распределения требуют проверки. Добавление потоков или включение одновременной многопоточности не обязательно ускоряет работу. Здесь объясняются измерения авторов, а не результаты независимого воспроизведения. Рассмотренная версия — технический отчёт; в авторском комментарии arXiv указано принятие сопутствующей статьи на VLDB 2027. Мы не приписываем ей неуказанный трек и не считаем комментарий независимо подтверждённой записью в трудах конференции."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема механизма по статье; это не измеренный график производительности.",
+            "steps": [
+              "Получить размер выхода из символьной фазы",
+              "Сформировать порции с близким объёмом результата",
+              "Сочетать нагрузку на кэш и выбрать режим потоков",
+              "Накопить результат и учесть полное время выполнения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "稀疏矩陣只儲存大量零值之外的少數非零項，常用於圖分析和資料庫查詢。它們相乘時，把乘法次數平均分給各個執行緒，並不一定能同時完成：不同任務的結果量和快取需求可能差別很大。10 月 27 日公開的 AMS 技術報告研究如何把這些差異納入排程，而不是只追求每個執行緒賬面上的計算量相等。",
+          "sections": [
+            {
+              "heading": "忙碌的執行緒也可能互相拖慢",
+              "paragraphs": [
+                "一個任務可能計算多、結果少，另一個任務卻需要寫出大量結果。多個快取壓力大的任務同時執行，還會爭用有限的片上空間，增加資料往返。AMS 針對的是稀疏通用矩陣乘法 SpGEMM；論文將輸出密度、計算量和區域性一起考察。它關注的是計算核心如何更有效率地使用處理器和快取。"
+              ]
+            },
+            {
+              "heading": "先按輸出分塊，再安排誰和誰一起做",
+              "paragraphs": [
+                "矩陣乘法的符號階段會預先確定各行結果中非零項的數量。AMS 利用這份資訊，把相鄰行組成輸出量大致相等的工作塊，並讓目標結果佔用接近二級快取容量的一半。這樣先控制寫出結果的負擔，再比較每個輸出項背後的計算量，也就是壓縮因子。",
+                "CALB 排程器混合執行高、低壓縮因子的工作塊，減少高壓力任務同時擠佔快取，並允許提前完成的執行緒幫助其他組。SMTact 則根據工作負載中最大的壓縮因子，決定這一次計算是否啟用同時多執行緒；它不是在每個工作塊中隨意切換。混合累加器 HYB 還會按塊選擇雜湊或排序累加方式。"
+              ]
+            },
+            {
+              "heading": "有提升，但要看矩陣和比較口徑",
+              "paragraphs": [
+                "主要實驗在單插槽、32 個物理核的伺服器上進行，覆蓋不同傾斜程度的合成矩陣及 119 個 SuiteSparse 矩陣，其中詳細展示 20 個代表。報告中的一般執行時間包含符號階段、記憶體分配、排程準備、數值計算及結果整理，取 10 次執行的平均，而不是僅計最有利的一段。",
+                "在展示的 20 個真實矩陣上，AMS-HASH 和 AMS-ESC 各有 19 個快於對應的按乘法量分配基線，最大提升分別為 47.46% 和 25.92%；這些是最大值，不是平均收益。圖分析的多源廣度優先搜尋實驗另有 60 個工作負載，AMS-HYB 對 HASH 的幾何平均加速為 1.18 倍，並在其中 47 個取得四種被測方法中的最高吞吐。"
+              ]
+            },
+            {
+              "heading": "排程也有成本，錄用資訊保持原口徑",
+              "paragraphs": [
+                "非常稀疏、工作量不足的矩陣可能無法攤薄分塊排序的開銷，AMS 反而變慢。執行緒組比例和閾值經過經驗調優，換處理器或資料分佈仍要重新驗證；結果不意味著增加執行緒或開啟同時多執行緒就必然更快。本文依據作者測量解釋快取競爭與併發的取捨，沒有獨立複測。該版本是技術報告，arXiv 作者備註稱配套論文獲 VLDB 2027 錄用；沒有據此補寫未明確的軌道或把備註當成獨立確認的會議出版記錄。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性機制示意，不是實測效能圖。",
+            "steps": [
+              "讀取符號階段的輸出規模資訊",
+              "按相近結果量形成工作塊",
+              "搭配高低快取壓力任務並選擇執行緒策略",
+              "累加結果並計入完整執行成本"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "audq-auditable-rule-discovery",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv · original paper, fixed first version",
+          "url": "https://arxiv.org/html/2610.26031v1"
+        },
+        {
+          "label": "arXiv · abstract and publication metadata",
+          "url": "https://arxiv.org/abs/2610.26031v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "数据检查通常散落在不同流程中：有人检查空值，有人限制金额范围，却不容易说明规则为什么存在、由谁审核、修改后影响什么。AuDQ把规则本身作为可管理的对象，研究Agent能否根据数据统计与业务本体发现检查规则，再交由人审核。论文已经实现并评估规则发现核心；完整的数据质量闭环仍是后续设想。",
+          "sections": [
+            {
+              "heading": "先建立共同的规则依据",
+              "paragraphs": [
+                "系统先用不依赖语言模型的统计分析，整理每个字段的空值比例、取值数量、分布及字段间关系，再生成描述表、实体和字段含义的本体节点。本体在这里是连接数据与业务含义的结构化词汇，每条规则必须关联至少一个节点。组件通过统一的版本化资料库交换结果，便于回溯规则和审核记录。",
+                "自主模式把字段空间拆开，让不同Agent提出规则，直到每个字段至少被一条规则覆盖；引导模式由领域专家先识别约束，Agent只把它整理成同样的规则结构。两种模式都提供人工接受、修改或拒绝的入口。它们比较的是规则从哪里来，而不是“有人审核”和“无人审核”。"
+              ]
+            },
+            {
+              "heading": "实验测的是哪些规则",
+              "paragraphs": [
+                "实验使用银行关系数据Berka和零售关系数据rel-HM，两种模式在两个数据集上合计运行16次。4名有行业经验的审核者参与，每条规则由两名非作者审核者盲审。采用同一模型Qwen3.5-397B-A17B和0.5的温度设置。由于两个数据集都没有配套治理文档，实验没有启用治理文本检索，只使用统计与推断出的本体。"
+              ]
+            },
+            {
+              "heading": "多样性接近，不等于质量相当",
+              "paragraphs": [
+                "质量指标以审核规则总数为分母：直接接受计1分，修改后接受计0.5分，拒绝计0分，再按运行汇总。作者报告自主与引导模式的总体均值为0.906和0.865。不过质量等价检验的总体功效只有27.8%，置信区间超出预设等价范围，论文明确不据此认定两种模式质量相当。",
+                "规则多样性另用语法、语义与字段覆盖范围的相似度计算。四组权重下的结果落在预设等价界内，支持这两组数据上的多样性接近。这个结果不能证明自主规则足够复杂，也不能证明它们抓住了全部重要的数据问题。"
+              ]
+            },
+            {
+              "heading": "哪些环节还没有验证",
+              "paragraphs": [
+                "执行看板、持续运行记录和根因分析属于更完整系统的设想，尚未作为端到端闭环完成验证。现有实验只覆盖两个均带交易性质的数据集、少量审核者和一种模型配置；规则复杂度也未被测量。本站据此认为，论文提供了组织和审核规则的可测试方法，但还不能作为自动替代数据治理人员或已经满足合规要求的证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的AuDQ规则发现流程，说明已实现核心，不包含尚待验证的执行与根因分析闭环。",
+            "steps": [
+              "统计描述数据",
+              "建立关联字段的本体",
+              "自主或人工引导提出规则",
+              "审核并保存规则版本"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Data checks are often scattered across separate processes. A check for missing values may be easy to run but difficult to connect to its purpose, reviewer or revision history. AuDQ treats rules as managed objects and asks whether agents can discover them from data statistics and a business ontology before human review. Its evaluated contribution is the rule-discovery core; the complete data-quality feedback loop remains a proposal.",
+          "sections": [
+            {
+              "heading": "A shared basis for rules",
+              "paragraphs": [
+                "A profiler that does not use a language model summarizes missing values, cardinalities, distributions and relationships between fields. An ontology then describes tables, entities and columns. Here an ontology is a structured vocabulary linking data to meaning, and every proposed rule must reference at least one ontology node. Components exchange versioned artifacts through a common repository to preserve provenance and review decisions.",
+                "Full-Agentic mode partitions the columns among agents, which propose rules until every column has at least one associated rule. In Guided mode, a domain expert identifies the constraint and the agent serializes it into the same structure. Both modes allow a person to accept, modify or reject proposals. The comparison concerns who discovers a rule, not whether a human reviews it."
+              ]
+            },
+            {
+              "heading": "What the experiment actually covered",
+              "paragraphs": [
+                "The experiment uses the Berka banking database and the rel-HM retail database, with 16 runs across two datasets and two modes. Four experienced reviewers participate; each rule receives blinded ratings from two reviewers other than its author. All runs use Qwen3.5-397B-A17B at temperature 0.5. Neither dataset supplies governance documents, so governance-text retrieval is disabled: discovery uses statistics and the inferred ontology only."
+              ]
+            },
+            {
+              "heading": "Similar diversity does not establish equal quality",
+              "paragraphs": [
+                "The quality measure divides weighted review credit by the number of reviewed rules: acceptance earns one, acceptance after modification earns one half, and rejection earns zero, with results summarized over runs. The authors report overall means of 0.906 for Full-Agentic and 0.865 for Guided. However, the overall equivalence test has only 27.8% power, and its interval exceeds the prespecified margin. The paper explicitly does not establish quality parity.",
+                "Diversity is measured separately using similarity in syntax, semantics and rule scope. Results fall within the chosen equivalence margin under four weighting schemes, supporting similar diversity on these datasets. That does not show that autonomous rules are equally complex or cover every important failure."
+              ]
+            },
+            {
+              "heading": "The untested part of the vision",
+              "paragraphs": [
+                "Execution dashboards, continuing execution records and root-cause analysis belong to the broader proposed system, not an end-to-end validated loop. Evidence is limited to two transaction-oriented datasets, a small reviewer group and one model configuration; rule complexity is not measured. Our reading is that AuDQ offers a testable way to organize and review discovered rules, not evidence that it can replace data stewards or certify compliance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of AuDQ rule discovery, covering the implemented core rather than the unvalidated execution and diagnosis loop.",
+            "steps": [
+              "Profile the data",
+              "Build a field-linked ontology",
+              "Discover rules autonomously or with guidance",
+              "Review and version the rules"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "データの検査は、欠損値の確認や値の範囲制限などに分かれ、なぜその規則が必要か、誰が承認したか、変更の影響は何かを追いにくい。AuDQは規則そのものを管理対象にし、統計と業務オントロジーからAgentが検査規則を発見して人に提示する方法を研究する。実装・評価されたのは規則発見の中核であり、データ品質管理全体の閉ループは今後の構想だ。",
+          "sections": [
+            {
+              "heading": "規則の根拠を共有する",
+              "paragraphs": [
+                "最初に言語モデルを使わない統計処理で欠損率、値の種類、分布、列間の関係を整理し、表・実体・列の意味を表すオントロジーノードを生成する。ここでのオントロジーはデータと意味を結ぶ構造化語彙で、規則には最低一つのノードとの関連付けが必須だ。各段階は版管理された共通の保管庫を通じて結果を交換し、由来や審査履歴を追えるようにする。",
+                "自主モードでは列を分担したAgentが全列に少なくとも一つの規則を提案する。ガイドモードでは専門家が先に制約を見つけ、Agentは同じ構造に整理するだけだ。どちらにも人による承認・修正・拒否がある。比較対象は規則の発見者であり、人の審査の有無ではない。"
+              ]
+            },
+            {
+              "heading": "評価に含まれた条件",
+              "paragraphs": [
+                "銀行データBerkaと小売データrel-HMを用い、二つのモードと二つのデータ集合で計16回実行した。経験のある審査者4人が参加し、各規則を作成者以外の2人が生成モードを知らずに評価した。モデルはQwen3.5-397B-A17B、温度は0.5で統一した。両データ集合にはガバナンス文書が付属しないため、その文書検索は使わず、統計と推定したオントロジーだけで規則を発見した。"
+              ]
+            },
+            {
+              "heading": "多様性と品質を分けて読む",
+              "paragraphs": [
+                "品質指標は、審査対象の規則数を分母に、無修正の承認を1、修正後の承認を0.5、拒否を0として計算し、実行ごとに集計する。自主モードの全体平均は0.906、ガイドモードは0.865だった。しかし品質の同等性検定の検出力は全体で27.8%にとどまり、区間は事前に設定した同等性の幅を超えた。論文は品質が同等だとは結論していない。",
+                "多様性は構文、意味、適用範囲の類似度から別に測る。四つの重み設定で同等性の範囲に入り、この二つのデータ上では似た多様性を支持した。規則が同じ程度に複雑か、重要な不具合をすべて検出できるかは、この結果からは分からない。"
+              ]
+            },
+            {
+              "heading": "まだ実証されていない部分",
+              "paragraphs": [
+                "実行ダッシュボード、継続的な実行記録、根本原因分析は、拡張された構想であり、端から端までの閉ループとして検証されていない。二つのデータはどちらも取引を中心とし、審査人数とモデル設定も限定され、規則の複雑さも未測定だ。当サイトの読みでは、規則の整理と審査を検証可能にする研究であって、データ管理者の代替や法令遵守を証明したものではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "AuDQの実装済み規則発見部分を当サイトが描き直した説明図。未検証の実行・原因分析の閉ループは含まない。",
+            "steps": [
+              "データを統計で記述",
+              "列と意味を関連付ける",
+              "自律または人の指示で規則を提案",
+              "審査して版を保存"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Проверки данных часто разбросаны по разным процессам: проверку пропусков легко выполнить, но труднее объяснить её назначение, автора решения и историю изменений. AuDQ рассматривает правила как управляемые объекты. Работа изучает, могут ли агенты находить правила по статистике данных и бизнес-онтологии, а затем передавать их на проверку человеку. Оценено ядро поиска правил; полный цикл управления качеством остаётся проектом.",
+          "sections": [
+            {
+              "heading": "Общая основа для правил",
+              "paragraphs": [
+                "Профилировщик без языковой модели собирает доли пропусков, число различных значений, распределения и связи между столбцами. Затем строится онтология таблиц, сущностей и полей — структурированный словарь, связывающий данные со смыслом. Каждое правило обязано ссылаться хотя бы на один узел онтологии. Компоненты обмениваются версионируемыми материалами через общее хранилище, сохраняя происхождение и решения проверяющих.",
+                "В автономном режиме столбцы распределяются между агентами, пока каждый столбец не получит хотя бы одно правило. В управляемом режиме ограничение сначала находит эксперт, а агент лишь оформляет его в той же структуре. В обоих режимах человек может принять, исправить или отклонить правило. Сравнивается способ обнаружения правил, а не наличие человеческой проверки."
+              ]
+            },
+            {
+              "heading": "Что вошло в эксперимент",
+              "paragraphs": [
+                "Использованы банковская база Berka и розничная rel-HM: всего 16 запусков для двух наборов данных и двух режимов. Участвуют четыре опытных специалиста; каждое правило вслепую оценивают двое, не являющиеся его автором. Модель одна — Qwen3.5-397B-A17B, температура 0,5. К наборам не прилагаются документы управления данными, поэтому их поиск отключён: правила выводятся только из статистики и построенной онтологии."
+              ]
+            },
+            {
+              "heading": "Разнообразие не означает равное качество",
+              "paragraphs": [
+                "Показатель качества делит сумму баллов на число проверенных правил: принятие без изменений даёт один балл, после исправления — половину, отказ — ноль; затем результаты обобщаются по запускам. Авторы сообщают общие средние 0,906 для автономного режима и 0,865 для управляемого. Но мощность общего теста эквивалентности составляет лишь 27,8%, а интервал выходит за заданные границы. Работа прямо не устанавливает равенство качества.",
+                "Разнообразие отдельно оценивается по сходству синтаксиса, смысла и области действия правил. Для четырёх сочетаний весов результаты укладываются в заданные границы эквивалентности. Это поддерживает сходное разнообразие на этих данных, но не доказывает одинаковую сложность правил или охват всех важных сбоев."
+              ]
+            },
+            {
+              "heading": "Границы реализованной системы",
+              "paragraphs": [
+                "Панели исполнения, непрерывные записи проверок и анализ первопричин входят в расширенный замысел, но не проверены как полный цикл. Два набора ориентированы на транзакции, проверяющих мало, использована одна конфигурация модели, а сложность правил не измерялась. По нашей интерпретации, AuDQ предлагает проверяемый способ организации и экспертизы правил, а не доказательство замены специалистов по данным или соответствия нормативным требованиям."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема реализованного поиска правил AuDQ; не включает непроверенный полный цикл исполнения и диагностики.",
+            "steps": [
+              "Получить статистику данных",
+              "Построить онтологию полей",
+              "Предложить правила автономно или с экспертом",
+              "Проверить и сохранить версии"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "資料檢查通常散落在不同流程中：有人檢查空值，有人限制金額範圍，卻不容易說明規則為什麼存在、由誰稽核、修改後影響什麼。AuDQ把規則本身作為可管理的物件，研究Agent能否根據資料統計與業務本體發現檢查規則，再交由人稽核。論文已經實現並評估規則發現核心；完整的資料品質閉環仍是後續設想。",
+          "sections": [
+            {
+              "heading": "先建立共同的規則依據",
+              "paragraphs": [
+                "系統先用不依賴語言模型的統計分析，整理每個欄位的空值比例、取值數量、分佈及欄位間關係，再生成描述表、實體和欄位含義的本體節點。本體在這裡是連線資料與業務含義的結構化詞彙，每條規則必須關聯至少一個節點。元件透過統一的版本化資料庫交換結果，便於回溯規則和稽核記錄。",
+                "自主模式把欄位空間拆開，讓不同Agent提出規則，直到每個欄位至少被一條規則覆蓋；引導模式由領域專家先識別約束，Agent只把它整理成同樣的規則結構。兩種模式都提供人工接受、修改或拒絕的入口。它們比較的是規則從哪裡來，而不是“有人稽核”和“無人稽核”。"
+              ]
+            },
+            {
+              "heading": "實驗測的是哪些規則",
+              "paragraphs": [
+                "實驗使用銀行關係資料Berka和零售關係資料rel-HM，兩種模式在兩個資料集上合計執行16次。4名有行業經驗的稽核者參與，每條規則由兩名非作者稽核者盲審。採用同一模型Qwen3.5-397B-A17B和0.5的溫度設定。由於兩個資料集都沒有配套治理文件，實驗沒有啟用治理文字檢索，只使用統計與推斷出的本體。"
+              ]
+            },
+            {
+              "heading": "多樣性接近，不等於品質相當",
+              "paragraphs": [
+                "品質指標以稽核規則總數為分母：直接接受計1分，修改後接受計0.5分，拒絕計0分，再按執行彙總。作者報告自主與引導模式的總體均值為0.906和0.865。不過品質等價檢驗的總體功效只有27.8%，信賴區間超出預設等價範圍，論文明確不據此認定兩種模式品質相當。",
+                "規則多樣性另用語法、語義與欄位覆蓋範圍的相似度計算。四組權重下的結果落在預設等價界內，支持這兩組資料上的多樣性接近。這個結果不能證明自主規則足夠複雜，也不能證明它們抓住了全部重要的資料問題。"
+              ]
+            },
+            {
+              "heading": "哪些環節還沒有驗證",
+              "paragraphs": [
+                "執行看板、持續執行記錄和根因分析屬於更完整系統的設想，尚未作為端到端閉環完成驗證。現有實驗只覆蓋兩個均帶交易性質的資料集、少量稽核者和一種模型配置；規則複雜度也未被測量。本站據此認為，論文提供了組織和稽核規則的可測試方法，但還不能作為自動替代資料治理人員或已經滿足合規要求的證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的AuDQ規則發現流程，說明已實現核心，不包含尚待驗證的執行與根因分析閉環。",
+            "steps": [
+              "統計描述資料",
+              "建立關聯欄位的本體",
+              "自主或人工引導提出規則",
+              "稽核並儲存規則版本"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "lmvu-budgeted-rag-evidence",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv · original paper, fixed first version",
+          "url": "https://arxiv.org/html/2610.29234v1"
+        },
+        {
+          "label": "arXiv · abstract and publication metadata",
+          "url": "https://arxiv.org/abs/2610.29234v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG检索到的材料都与问题相关，也可能只重复一种立场。LMVU关注另一种资源分配问题：上下文长度有限时，如何让选中的材料覆盖更多不同答案或观点。它不是重新训练生成模型，而是在候选证据之间反复选择下一条，预测这条材料相对于已经选中的内容还能增加多少覆盖。",
+          "sections": [
+            {
+              "heading": "相似文字不一定代表同一观点",
+              "paragraphs": [
+                "传统相关性排序偏向最像问题的材料，多样性排序则常用向量距离惩罚重复。但语义距离只是近似：表达不同的材料可能支持同一观点，措辞接近也可能意见相反。LMVU用开发集的观点标签构造训练目标，比较在同一个已选状态下，哪条候选能带来更大的新增覆盖。",
+                "排序器使用相关性、候选长度以及候选与已选证据的相似关系等特征。运行时不读取真实观点标签，而是从空上下文开始，给能放入剩余预算的材料打分，选入一条后重新计算。材料必须完整装入，不截断到恰好填满预算；没有材料能放入时停止。"
+              ]
+            },
+            {
+              "heading": "覆盖率的分母是什么",
+              "paragraphs": [
+                "实验包括WVS、Perspectrum、ArgKP和ESS10四个带观点标注的数据集，主比较预算为1,024 token。RVC1按问题的全部标注观点平均计分，只要一个观点有至少一个来源支持就得满分；RVC2更看重重复支持，一个来源计半分，两个或更多不同来源计满分。这里的来源单位随数据集分别对应调查受访者、文档或论据，不是同一段文字重复出现就算第二份证据。"
+              ]
+            },
+            {
+              "heading": "进步发生在什么条件下",
+              "paragraphs": [
+                "作者摘要报告，相对各基准与指标的最强非理想化对照，RVC1和RVC2的最高增量分别为0.047、0.052；这是0到1尺度上的覆盖变化，不是答案准确率提高4.7%和5.2%。它在两个基准达到给定证据池和预算下的观点广度上限，该上限通过知道真实标签的离线最优选择计算，仅用于对照。",
+                "结果并非处处领先。正文指出，在Perspectrum上，不使用已选状态的候选排序器仍更强；预算放宽后，一些对照也能覆盖缺失观点，优势会缩小。完整候选池的扩展实验属于探索性结果，不能当作一次全新的确认性检验。"
+              ]
+            },
+            {
+              "heading": "还不能据此判断答案更可靠",
+              "paragraphs": [
+                "方法依赖训练与评估用的观点标注，以及把材料转成向量的嵌入流程；学到的排序没有覆盖近似保证。论文没有据此建立下游生成质量的提升，也没有解决新领域需要重新定义观点集合的问题。本站的工程解释是，覆盖多种证据可作为检索阶段的目标，但读者仍要把“材料更全面”和“最终回答正确、引用准确”分开检验。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的LMVU预算内选择流程，表示候选如何逐步进入上下文，不是论文实验曲线。",
+            "steps": [
+              "从候选证据开始",
+              "按已选内容估计新增覆盖",
+              "加入一条预算可容纳的完整材料",
+              "更新状态，直至无材料可放入"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Relevant retrieved passages can still repeat only one position. LMVU studies how to spend a limited RAG context budget on evidence supporting different answers or viewpoints. Rather than retraining a generator, it repeatedly chooses the next evidence item by predicting the coverage it adds beyond the material already selected.",
+          "sections": [
+            {
+              "heading": "Different wording is not necessarily a different viewpoint",
+              "paragraphs": [
+                "Relevance ranking favors passages that resemble the question. Diversity methods often penalize vector similarity, but semantic distance is only a proxy: differently worded items can support the same position, and similar wording can express disagreement. LMVU uses viewpoint annotations on development data to learn which candidate contributes more new coverage within the same selection state.",
+                "Its ranker uses relevance, candidate length and relations between candidates and selected evidence. At runtime it cannot access gold viewpoint labels. Starting with an empty context, it scores items that fit the remaining budget, adds one and recomputes the scores. Whole items must fit; they are not truncated to fill space. Selection stops when no remaining item fits."
+              ]
+            },
+            {
+              "heading": "What is counted as coverage",
+              "paragraphs": [
+                "Experiments use four annotated benchmarks: WVS, Perspectrum, ArgKP and ESS10, with a primary budget of 1,024 tokens. RVC1 averages across all annotated viewpoints for a query, giving a viewpoint full credit once one source supports it. RVC2 gives half credit for one source and full credit for two or more distinct sources. Source units are respondents, documents or arguments depending on the benchmark; repeating the same passage does not automatically supply independent support."
+              ]
+            },
+            {
+              "heading": "Where the gains do and do not hold",
+              "paragraphs": [
+                "The abstract reports maximum gains of 0.047 in RVC1 and 0.052 in RVC2 over the strongest non-oracle comparator for each benchmark and metric. These are changes on a zero-to-one coverage scale, not 4.7% or 5.2% improvements in answer accuracy. Two benchmarks reach the attainable breadth ceiling for the same pool and budget. That ceiling is computed offline using true labels and is a comparison device, not an available deployment policy.",
+                "Results are not uniformly better. The paper notes that a candidate-only ranker remains stronger on Perspectrum. When budgets grow, some baselines can also include previously omitted viewpoints, narrowing the gain. The full-pool extension is exploratory and must not be treated as a fresh confirmatory evaluation."
+              ]
+            },
+            {
+              "heading": "Broader evidence is not a proven better answer",
+              "paragraphs": [
+                "The approach depends on viewpoint annotations for training and evaluation and on the embedding pipeline. Its learned scores have no coverage approximation guarantee. The study does not establish improved downstream generation or solve adaptation to domains requiring a new viewpoint inventory. Our engineering interpretation is that evidence breadth can be a retrieval objective, but answer correctness and citation fidelity still need separate evaluation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of LMVU budgeted selection; a process diagram, not an experimental plot.",
+            "steps": [
+              "Start with candidate evidence",
+              "Estimate added coverage given the selection",
+              "Add one whole item that fits",
+              "Update the state until nothing fits"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "RAGで検索した資料が質問に関連していても、同じ立場を繰り返すだけかもしれない。LMVUは、限られたコンテキスト長を使って、異なる答えや観点をどう広く含めるかを扱う。生成モデルを学習し直すのではなく、選択済みの資料に対して新たな候補がどれだけ観点を追加できるかを予測し、一つずつ選ぶ方法だ。",
+          "sections": [
+            {
+              "heading": "言い回しの違いと観点の違い",
+              "paragraphs": [
+                "関連性の順位は質問に似た資料を優先し、多様性の順位はベクトルの類似度で重複を避けることが多い。しかし表現が異なっても同じ立場を支持し、似た文でも反対意見を述べる場合がある。LMVUは開発データの観点ラベルを使い、同じ選択済み状態でどの候補がより多くの新しい観点を加えるかを学習する。",
+                "順位付けには関連性、候補の長さ、候補と選択済み資料の類似関係などを使う。実行時には正解の観点ラベルを参照しない。空のコンテキストから始め、残り予算に収まる資料を採点し、一つ追加するたびに再計算する。資料は丸ごと収める必要があり、予算に合わせて途中で切らない。入る候補がなくなれば終了する。"
+              ]
+            },
+            {
+              "heading": "網羅率は何を数えるか",
+              "paragraphs": [
+                "評価はWVS、Perspectrum、ArgKP、ESS10の四つの観点付きデータで、主な比較予算は1,024トークンだ。RVC1は質問に付与された全観点を平均し、一つでも支持資料があればその観点を満点とする。RVC2では支持元が一つなら半点、異なる二つ以上なら満点となる。支持元の単位は調査回答者、文書、論拠などデータごとに異なり、同じ文章の繰り返しを独立した支持とみなすわけではない。"
+              ]
+            },
+            {
+              "heading": "改善の範囲を確認する",
+              "paragraphs": [
+                "要旨は、各ベンチマーク・指標の最強の非オラクル比較手法に対し、RVC1で最大0.047、RVC2で最大0.052の増加を報告する。0から1の網羅率尺度の差であり、回答正解率が4.7%や5.2%向上した意味ではない。二つのベンチマークでは、同じ候補集合と予算で達成可能な観点の広さの上限に達した。上限は正解ラベルを使うオフライン最適化で計算し、実運用の選択手順ではない。",
+                "すべての条件で優位ではない。Perspectrumでは選択済み状態を使わない順位付けが依然強く、予算が増えると比較手法も不足していた観点を含められ、差が縮む場合がある。全候補集合への拡張は探索的評価で、新たな確認的実験として扱えない。"
+              ]
+            },
+            {
+              "heading": "回答の信頼性とは別の検証",
+              "paragraphs": [
+                "学習・評価には観点ラベルが必要で、埋め込み処理にも依存する。学習した順位には網羅率の近似保証がない。下流の文章生成品質の改善や、新分野で必要になる観点一覧の作り直しは未解決だ。当サイトの工学的な解釈では、証拠の広さは検索段階の目標になり得るが、最終回答の正しさと引用の忠実さは別に測る必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "LMVUの予算内選択を当サイトが描き直した説明図。候補の追加手順を示し、実験曲線ではない。",
+            "steps": [
+              "証拠候補を用意",
+              "選択済み資料に対する追加網羅を推定",
+              "予算に収まる資料を丸ごと追加",
+              "状態を更新し、収まらなくなるまで続ける"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Даже релевантные найденные фрагменты могут повторять одну позицию. LMVU исследует распределение ограниченного контекста RAG между свидетельствами разных ответов или точек зрения. Метод не переобучает генератор: он последовательно выбирает материалы, оценивая, сколько нового покрытия каждый добавит к уже выбранным.",
+          "sections": [
+            {
+              "heading": "Разные формулировки не гарантируют разных позиций",
+              "paragraphs": [
+                "Ранжирование по релевантности предпочитает материалы, похожие на вопрос; методы разнообразия часто штрафуют близость векторных представлений. Но смысловое расстояние лишь приближает нужную величину: разные формулировки могут поддерживать одну позицию, а похожие — выражать противоположные. LMVU обучается по размеченным точкам зрения на данных разработки, сравнивая полезность кандидатов при одном и том же выбранном контексте.",
+                "Ранжировщик использует релевантность, длину материала и его отношения с уже выбранными свидетельствами. При применении правильные метки точек зрения недоступны. Метод начинает с пустого контекста, оценивает помещающиеся в бюджет материалы, добавляет один и пересчитывает оценки. Материал должен поместиться целиком: его не обрезают ради заполнения бюджета. Когда подходящих по размеру кандидатов нет, выбор заканчивается."
+              ]
+            },
+            {
+              "heading": "Что означает показатель покрытия",
+              "paragraphs": [
+                "Эксперименты охватывают WVS, Perspectrum, ArgKP и ESS10 с основной границей 1 024 токена. RVC1 усредняется по всем размеченным позициям вопроса и даёт полный балл позиции при наличии хотя бы одного подтверждающего источника. RVC2 даёт половину балла за один и полный балл за два или более различных источника. Единицей служит респондент, документ либо аргумент в зависимости от набора; повтор одного фрагмента не становится независимым подтверждением."
+              ]
+            },
+            {
+              "heading": "Улучшения зависят от условий",
+              "paragraphs": [
+                "В аннотации заявлены максимальные прибавки 0,047 для RVC1 и 0,052 для RVC2 относительно сильнейшего неидеального сравнения для соответствующего набора и показателя. Это изменение покрытия на шкале от нуля до единицы, а не рост точности ответов на 4,7% или 5,2%. На двух наборах достигнут предел широты покрытия для того же пула и бюджета. Этот предел вычисляется офлайн с правильными метками, а не служит доступной при эксплуатации стратегией.",
+                "Преимущество не универсально. На Perspectrum сильнее остаётся ранжировщик, не использующий выбранное состояние. При увеличении бюджета некоторые базовые методы тоже включают ранее пропущенные позиции, и разрыв сокращается. Расширение на полный пул носит исследовательский характер, а не представляет новое подтверждающее испытание."
+              ]
+            },
+            {
+              "heading": "Полнота материалов не равна достоверности ответа",
+              "paragraphs": [
+                "Метод зависит от разметки для обучения и оценки и от способа построения векторов. Для выученного ранжирования нет гарантии приближения оптимального покрытия. Работа не доказывает улучшение генерации ответа и не решает перенос в области с новым перечнем позиций. Наша инженерная интерпретация: широту свидетельств можно оптимизировать при поиске, но правильность ответа и точность ссылок необходимо проверять отдельно."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема выбора LMVU в пределах бюджета; не график экспериментальных результатов.",
+            "steps": [
+              "Получить кандидатов",
+              "Оценить добавочное покрытие",
+              "Добавить целый материал в пределах бюджета",
+              "Обновлять состояние, пока остаётся место"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG檢索到的材料都與問題相關，也可能只重複一種立場。LMVU關注另一種資源分配問題：上下文長度有限時，如何讓選中的材料覆蓋更多不同答案或觀點。它不是重新訓練生成模型，而是在候選證據之間反覆選擇下一條，預測這條材料相對於已經選中的內容還能增加多少覆蓋。",
+          "sections": [
+            {
+              "heading": "相似文字不一定代表同一觀點",
+              "paragraphs": [
+                "傳統相關性排序偏向最像問題的材料，多樣性排序則常用向量距離懲罰重複。但語義距離只是近似：表達不同的材料可能支持同一觀點，措辭接近也可能意見相反。LMVU用開發集的觀點標籤構造訓練目標，比較在同一個已選狀態下，哪條候選能帶來更大的新增覆蓋。",
+                "排序器使用相關性、候選長度以及候選與已選證據的相似關係等特徵。執行時不讀取真實觀點標籤，而是從空上下文開始，給能放入剩餘預算的材料打分，選入一條後重新計算。材料必須完整裝入，不截斷到恰好填滿預算；沒有材料能放入時停止。"
+              ]
+            },
+            {
+              "heading": "覆蓋率的分母是什麼",
+              "paragraphs": [
+                "實驗包括WVS、Perspectrum、ArgKP和ESS10四個帶觀點標註的資料集，主比較預算為1,024 token。RVC1按問題的全部標註觀點平均計分，只要一個觀點有至少一個來源支持就得滿分；RVC2更看重重複支持，一個來源計半分，兩個或更多不同來源計滿分。這裡的來源單位隨資料集分別對應調查受訪者、文件或論據，不是同一段文字重複出現就算第二份證據。"
+              ]
+            },
+            {
+              "heading": "進步發生在什麼條件下",
+              "paragraphs": [
+                "作者摘要報告，相對各基準與指標的最強非理想化對照，RVC1和RVC2的最高增量分別為0.047、0.052；這是0到1尺度上的覆蓋變化，不是答案準確率提高4.7%和5.2%。它在兩個基準達到給定證據池和預算下的觀點廣度上限，該上限透過知道真實標籤的離線最優選擇計算，僅用於對照。",
+                "結果並非處處領先。正文指出，在Perspectrum上，不使用已選狀態的候選排序器仍更強；預算放寬後，一些對照也能覆蓋缺失觀點，優勢會縮小。完整候選池的擴展實驗屬於探索性結果，不能當作一次全新的確認性檢驗。"
+              ]
+            },
+            {
+              "heading": "還不能據此判斷答案更可靠",
+              "paragraphs": [
+                "方法依賴訓練與評估用的觀點標註，以及把材料轉成向量的嵌入流程；學到的排序沒有覆蓋近似保證。論文沒有據此建立下游生成品質的提升，也沒有解決新領域需要重新定義觀點集合的問題。本站的工程解釋是，覆蓋多種證據可作為檢索階段的目標，但讀者仍要把“材料更全面”和“最終回答正確、引用準確”分開檢驗。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的LMVU預算內選擇流程，表示候選如何逐步進入上下文，不是論文實驗曲線。",
+            "steps": [
+              "從候選證據開始",
+              "按已選內容估計新增覆蓋",
+              "加入一條預算可容納的完整材料",
+              "更新狀態，直至無材料可放入"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "userswe-dynamic-user-coding-evaluation",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv · original paper, fixed first version",
+          "url": "https://arxiv.org/html/2610.29822v1"
+        },
+        {
+          "label": "arXiv · abstract and publication metadata",
+          "url": "https://arxiv.org/abs/2610.29822v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "真实的软件维护对话往往从一句不完整的故障描述开始，用户随后才补充现象，有时还会猜错原因。UserSWE把这种变化纳入编程Agent评测：同一个任务可以有多轮沟通，每轮都执行测试并审核结果。研究要衡量的是Agent在逐步获得信息时能否完成修复，而不只是拿到一份完整需求后一次答对。",
+          "sections": [
+            {
+              "heading": "固定问题，让表达方式变化",
+              "paragraphs": [
+                "任务一部分来自维护者明确关联的仓库问题，另一部分由现有单轮任务改造成对话。每个任务先冻结可披露的信息池，区分故障现象、正确或错误的原因线索及后续问题，再根据Agent的问题和测试结果决定下一轮披露什么。测试前检查原始状态失败、参考修复通过，避免把无法执行的题目纳入比较。",
+                "模拟用户的表达同时考虑现象说得清楚还是含糊、原因判断是缺失、正确、偏离还是错误，共形成八种组合。转变规律来自20,859个真实开发会话的汇总统计。每个任务预先固定一条表达变化序列，让不同Agent面对同样的变化；冻结的是信息边界与风格顺序，而不是把后续所有句子提前写死。"
+              ]
+            },
+            {
+              "heading": "判定首先依赖执行证据",
+              "paragraphs": [
+                "每轮修改后都运行测试，再由一个模型家族的判定者形成结果，另一个家族的复核者在计分前审查。模型判断用于测试无法覆盖的方面，不能推翻明确的执行结果。若测试仅因实现接口不同而拒绝功能等价的修复，框架允许有针对性地调整测试，但调整后的测试仍须在原始状态失败、在候选修复上通过，并通过复核。"
+              ]
+            },
+            {
+              "heading": "多轮结果与单轮榜单不同",
+              "paragraphs": [
+                "论文在42个仓库的72项任务上评估11个Agent，比较最多八轮交互内的完成比例。作者发现领先者随轮数变化：首轮完成最多的Agent不一定在第八轮完成最多。除完成率外，论文还用对轮数折扣的指标，完成越早分数越高，未完成则为零；没有实际修改的一轮按半轮计。因此榜单还取决于你愿意给多少沟通机会。",
+                "复核并非自动认可。作者报告，14.6%的评测单元至少提出过一次功能等价请求，而这些请求中51.2%获准。这个比例说明有些原测试不应成为唯一答案形式，也说明“看起来等价”本身并不足以得分；它不是某个Agent的通用修复成功率。"
+              ]
+            },
+            {
+              "heading": "离真实长期协作还有距离",
+              "paragraphs": [
+                "多轮执行和反复测试成本较高，目前只有72项任务，范围是一段维护过程中的一到两个问题，不包括从零创建仓库或长期开发。用户变化来自一套内部商业助手的会话分布，不代表所有开发者；论文仅发布必要的汇总行为统计，不公开原始对话或个人属性，并写明将来发布评测框架。本站没有独立复现实验，因此把这些结果作为交互评测方法的证据，而非通用产品排名。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的UserSWE交互评测流程：只说明论文的评测机制，不包含用户原始会话或实际程序片段。",
+            "steps": [
+              "按信息池生成当前请求",
+              "Agent完成本轮修复",
+              "运行测试并跨模型复核",
+              "反馈结果，继续下一轮或结束"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Software maintenance conversations often begin with an incomplete symptom, followed by more information and sometimes an incorrect guess about the cause. UserSWE brings that changing interaction into coding-agent evaluation. Tasks span several turns, with executed tests and reviewed verdicts after each turn. The question is whether an agent can repair a problem as information arrives, not simply solve a complete issue report in one attempt.",
+          "sections": [
+            {
+              "heading": "Keep the problem fixed while the user changes",
+              "paragraphs": [
+                "Some tasks come from repository issues explicitly linked by maintainers; others adapt existing single-turn tasks. Each task freezes a pool of permitted symptoms, correct or misleading causal hints and follow-up issues. The next disclosure depends on the agent’s questions and test results. Admission verifies that the initial state fails the relevant tests and the reference repair passes, so unusable tasks do not enter the comparison.",
+                "The simulated user combines clear or vague symptoms with absent, correct, off-target or wrong causal beliefs, forming eight personas. Transition patterns are calibrated on aggregate statistics from 20,859 development sessions. A persona sequence is sampled in advance for each task so different agents face the same changes. Information boundaries and style order are fixed, while later utterances still respond to the interaction."
+              ]
+            },
+            {
+              "heading": "Execution comes before model opinion",
+              "paragraphs": [
+                "Tests run after every turn. A judge from one model family writes the verdict and a reviewer from another checks it before it affects the score. Model reasoning covers aspects that tests cannot settle; it cannot override direct execution evidence. If a test rejects a functionally equivalent fix solely because its interface differs, a targeted test adaptation is possible. The revised test must still fail on the initial state, pass on the candidate and survive review."
+              ]
+            },
+            {
+              "heading": "More turns can change the ranking",
+              "paragraphs": [
+                "The paper evaluates eleven agents on 72 tasks from 42 repositories, measuring completion within up to eight turns. Leaders change with the allowed interaction budget: the strongest first-turn agent need not solve the most tasks by turn eight. A separate length-discounted measure rewards earlier completion and assigns zero to failures; turns without edits count as half a turn. Thus rankings also reflect how much conversation the evaluator permits.",
+                "Review is not automatic approval. The authors report that 14.6% of evaluation cells made at least one equivalence request, and 51.2% of submitted requests were accepted. This illustrates both why the original test form can be too rigid and why a plausible equivalence claim is insufficient for credit. It is not an agent’s general repair success rate."
+              ]
+            },
+            {
+              "heading": "A maintenance episode is not long-term collaboration",
+              "paragraphs": [
+                "Repeated execution makes evaluation expensive, limiting the set to 72 tasks. Each covers one maintenance episode involving one or two issues, not building a repository from scratch or sustained development. User transitions come from one internally deployed commercial assistant and do not represent every developer. The paper describes releasing only aggregate behavioral statistics, not raw conversations or individual attributes, and says the evaluation framework will be released. We have not independently reproduced the experiments; the results inform evaluation design rather than a universal product ranking."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of UserSWE evaluation; no raw user conversations or program fragments are reproduced.",
+            "steps": [
+              "Generate a request from the information pool",
+              "Let the agent attempt the repair",
+              "Execute tests and cross-family review",
+              "Return feedback, continue or finish"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "実際の保守対話は、不完全な不具合説明から始まり、後から現象が補足され、原因の推測が間違っていることもある。UserSWEはこの変化をコーディングAgentの評価に取り入れる。複数ターンで対話し、各ターンでテストを実行して判定を審査する。完全な仕様を一度に渡した場合の正解率ではなく、情報が徐々に増える状況で修正できるかを測る研究だ。",
+          "sections": [
+            {
+              "heading": "問題を固定し、説明の仕方を変える",
+              "paragraphs": [
+                "課題は保守者が明示的に関連付けたリポジトリの問題や、既存の単発課題から作る。現象、正しい・誤った原因の手掛かり、後続の問題を情報プールとして事前に固定し、Agentの質問とテスト結果に応じて次の開示を選ぶ。採用前には初期状態で対象テストが失敗し、参照修正では成功することを確認する。",
+                "模擬ユーザーは、現象の説明が明確か曖昧かと、原因の考えがない・正しい・的外れ・誤りの組み合わせで八つの人格を表す。遷移は20,859件の開発会話の集計に基づく。各課題の変化列を事前に固定し、異なるAgentが同じ変化に直面するようにする。固定するのは情報の境界と表現の順序で、後の発言すべてを台本にするのではない。"
+              ]
+            },
+            {
+              "heading": "実行結果を判定の基礎にする",
+              "paragraphs": [
+                "毎ターンの後にテストを実行し、一つのモデル系統の判定者が結果をまとめ、別系統の審査者が採点前に確認する。モデル判断はテストだけで決まらない部分を補うもので、明確な実行結果を覆さない。機能は等価なのにインターフェースの違いだけで落ちる場合は、限定的なテスト変更を許す。ただし変更後も初期状態で失敗し、候補修正で成功し、審査を通る必要がある。"
+              ]
+            },
+            {
+              "heading": "対話の予算で順位が変わる",
+              "paragraphs": [
+                "42リポジトリの72課題で11のAgentを評価し、最大八ターンまでの完了割合を比較した。最初のターンで最も多く解くAgentが八ターン目でも最多とは限らず、許される対話回数で首位が変わった。別の指標では早い完了ほど高得点にし、未完了をゼロ、変更のないターンを半ターンとして数える。順位には、どれだけ相談を許すかも影響する。",
+                "審査は自動承認ではない。評価単位の14.6%で少なくとも一度の等価性申請があり、その申請の51.2%が認められたと著者は報告する。元のテスト形式だけに固執すべきではない一方、等価に見えるという主張だけでは得点できないことを示す。Agent全般の修正成功率を示す割合ではない。"
+              ]
+            },
+            {
+              "heading": "長期協働全体を測るものではない",
+              "paragraphs": [
+                "毎ターンの実行は高コストで、課題は72件に限られる。一つか二つの問題を含む保守期間が対象で、ゼロからの構築や長期開発は含まない。ユーザーの遷移は一つの社内商用助手の会話分布から作られ、全開発者を代表しない。論文は原会話や個人属性を出さず必要な集計統計だけを公開し、評価枠組みは今後公開すると記す。当サイトは独立再現を行っておらず、普遍的な製品順位ではなく対話評価の方法として読む。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "UserSWEの評価手順を当サイトが描き直した説明図。ユーザーの原会話やプログラム断片は転載しない。",
+            "steps": [
+              "情報プールから今回の依頼を作る",
+              "Agentが修正する",
+              "テスト実行と別系統モデルの審査",
+              "結果を返し、継続または終了"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Разговор о сопровождении программы часто начинается с неполного описания сбоя, затем пользователь добавляет сведения и иногда ошибочно предполагает причину. UserSWE включает такие изменения в оценку программирующих агентов. Задача проходит несколько реплик, после каждой выполняются тесты и проверяется вердикт. Исследуется способность исправлять проблему по мере поступления информации, а не только отвечать на полное описание с первой попытки.",
+          "sections": [
+            {
+              "heading": "Проблема фиксирована, выражение запроса меняется",
+              "paragraphs": [
+                "Часть задач построена из проблем, явно связанных сопровождающими репозиториев, другая — из существующих одношаговых тестов. Для задачи заранее фиксируется пул симптомов, правильных и вводящих в заблуждение подсказок о причинах и последующих проблем. Что раскрыть дальше, определяется вопросами агента и тестами. При включении проверяется, что исходное состояние не проходит нужные тесты, а эталонное исправление проходит.",
+                "Симулятор сочетает ясное или расплывчатое описание с отсутствующим, правильным, не относящимся к делу либо ошибочным предположением о причине — восемь вариантов. Переходы откалиброваны по агрегированным данным 20 859 сеансов разработки. Для каждой задачи последовательность заранее фиксируется, чтобы агенты встретили одинаковые изменения. Границы сведений и порядок стилей заданы, но все последующие фразы не написаны заранее."
+              ]
+            },
+            {
+              "heading": "Сначала исполнение, затем мнение модели",
+              "paragraphs": [
+                "После каждого шага запускаются тесты. Судья одной модельной семьи формирует вердикт, а проверяющий другой семьи оценивает его до начисления баллов. Модельное рассуждение дополняет тесты там, где они не дают ответа, но не отменяет прямое свидетельство исполнения. Если функционально равнозначное решение отклоняется только из-за другого интерфейса, допустима целевая адаптация теста. Новый тест обязан провалиться на исходном состоянии, пройти на кандидате и получить одобрение проверяющего."
+              ]
+            },
+            {
+              "heading": "Бюджет диалога влияет на рейтинг",
+              "paragraphs": [
+                "Авторы оценивают одиннадцать агентов на 72 задачах из 42 репозиториев, сравнивая долю завершений за максимум восемь ходов. Лидер первого хода не обязательно решает больше всего к восьмому. Дополнительная метрика учитывает длину диалога: ранний успех получает больше баллов, неуспех — ноль, а ход без изменений считается половиной. Поэтому рейтинг зависит и от допустимого числа уточнений.",
+                "Проверка не сводится к одобрению. По данным авторов, 14,6% оценочных ячеек подали хотя бы один запрос на эквивалентность, и 51,2% таких запросов были приняты. Исходная форма теста иногда излишне жёсткая, но одного заявления о равнозначности недостаточно. Эти проценты не являются общей успешностью исправлений какого-либо агента."
+              ]
+            },
+            {
+              "heading": "Не оценка всей долгосрочной разработки",
+              "paragraphs": [
+                "Повторные тесты дороги, поэтому набор ограничен 72 задачами. Он охватывает эпизод сопровождения с одной или двумя проблемами, а не создание репозитория с нуля и не долгую разработку. Поведение пользователя основано на сеансах одного внутреннего коммерческого помощника и не представляет всех разработчиков. Работа описывает публикацию только агрегированных поведенческих статистик без исходных разговоров и личных атрибутов и обещает выпуск оценочной системы. Мы не воспроизводили эксперименты независимо; результаты относятся к дизайну интерактивной оценки, а не универсальному рейтингу продуктов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема UserSWE; исходные разговоры пользователей и фрагменты программ не воспроизводятся.",
+            "steps": [
+              "Составить запрос из пула сведений",
+              "Дать агенту попытаться исправить проблему",
+              "Запустить тесты и проверку другой моделью",
+              "Передать обратную связь и продолжить либо завершить"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "真實的軟體維護對話往往從一句不完整的故障描述開始，使用者隨後才補充現象，有時還會猜錯原因。UserSWE把這種變化納入程式設計Agent評測：同一個任務可以有多輪溝通，每輪都執行測試並稽核結果。研究要衡量的是Agent在逐步獲得資訊時能否完成修復，而不只是拿到一份完整需求後一次答對。",
+          "sections": [
+            {
+              "heading": "固定問題，讓表達方式變化",
+              "paragraphs": [
+                "任務一部分來自維護者明確關聯的倉庫問題，另一部分由現有單輪任務改造成對話。每個任務先凍結可披露的資訊池，區分故障現象、正確或錯誤的原因線索及後續問題，再根據Agent的問題和測試結果決定下一輪披露什麼。測試前檢查原始狀態失敗、參考修復通過，避免把無法執行的題目納入比較。",
+                "模擬使用者的表達同時考慮現象說得清楚還是含糊、原因判斷是缺失、正確、偏離還是錯誤，共形成八種組合。轉變規律來自20,859個真實開發會話的彙總統計。每個任務預先固定一條表達變化序列，讓不同Agent面對同樣的變化；凍結的是資訊邊界與風格順序，而不是把後續所有句子提前寫死。"
+              ]
+            },
+            {
+              "heading": "判定首先依賴執行證據",
+              "paragraphs": [
+                "每輪修改後都執行測試，再由一個模型家族的判定者形成結果，另一個家族的複核者在計分前審查。模型判斷用於測試無法覆蓋的方面，不能推翻明確的執行結果。若測試僅因實現介面不同而拒絕功能等價的修復，框架允許有針對性地調整測試，但調整後的測試仍須在原始狀態失敗、在候選修復上通過，並通過複核。"
+              ]
+            },
+            {
+              "heading": "多輪結果與單輪榜單不同",
+              "paragraphs": [
+                "論文在42個倉庫的72項任務上評估11個Agent，比較最多八輪互動內的完成比例。作者發現領先者隨輪數變化：首輪完成最多的Agent不一定在第八輪完成最多。除完成率外，論文還用對輪數折扣的指標，完成越早分數越高，未完成則為零；沒有實際修改的一輪按半輪計。因此榜單還取決於你願意給多少溝通機會。",
+                "複核並非自動認可。作者報告，14.6%的評測單元至少提出過一次功能等價請求，而這些請求中51.2%獲准。這個比例說明有些原測試不應成為唯一答案形式，也說明“看起來等價”本身並不足以得分；它不是某個Agent的通用修復成功率。"
+              ]
+            },
+            {
+              "heading": "離真實長期協作還有距離",
+              "paragraphs": [
+                "多輪執行和反覆測試成本較高，目前只有72項任務，範圍是一段維護過程中的一到兩個問題，不包括從零建立倉庫或長期開發。使用者變化來自一套內部商業助手的會話分佈，不代表所有開發者；論文僅釋出必要的彙總行為統計，不公開原始對話或個人屬性，並寫明將來發布評測框架。本站沒有獨立復現實驗，因此把這些結果作為互動評測方法的證據，而非通用產品排名。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的UserSWE互動評測流程：只說明論文的評測機制，不包含使用者原始會話或實際程式片段。",
+            "steps": [
+              "按資訊池生成當前請求",
+              "Agent完成本輪修復",
+              "執行測試並跨模型複核",
+              "反饋結果，繼續下一輪或結束"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "equitrace-replayable-sql-equivalence",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv · original paper, v1",
+          "url": "https://arxiv.org/html/2610.30100v1"
+        },
+        {
+          "label": "arXiv · publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.30100v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "同一个问题往往可以写成不同的 SQL。查询优化器或语言模型改写语句以后，关键不是语句看起来是否相似，而是它们在所有满足数据库约束的数据上是否得到相同结果。EquiTrace 把已有的查询改写知识组织为独立证明系统，给出的不仅是判断，还包括可以重新执行检查的推导过程。",
+          "sections": [
+            {
+              "heading": "把改写规则接成一条证明",
+              "paragraphs": [
+                "方法先把两条查询转为逻辑计划，在给定表结构、键和其他约束下，应用已接纳的保语义变换。两边若最终到达相同的逻辑表达式，而且输出要求兼容，就能通过两条推导链说明等价。规范化与表示对齐负责处理不同写法，有限预算的搜索则尝试把尚未接通的计划连接起来。",
+                "实现建立在 Apache Calcite 上，记录规则、适用条件、中间表达式和共同终点。回放检查器重新执行相同规则，检查能否重现终点。这一机制能暴露证明依赖了哪些假设，但不会替每条规则重新证明语义正确性：规则本身可靠、适用条件成立，仍然是结论成立的前提。"
+              ]
+            },
+            {
+              "heading": "证明覆盖率的分母是什么",
+              "paragraphs": [
+                "作者测试了三类共 3,233 对查询，包括从 text-to-SQL 数据构建的样本、人工整理和优化器规则测试样本，以及模型生成的改写。论文的证明率以其中预期等价或测试结果一致的子集为分母，而不是全部查询，更不是 SQL 语言所有可能情况。",
+                "这三个子集分别证明了 648/1,106、229/266 和 97/240 对。最后一组的 240 对只在基准数据库执行中得到一致结果，这种筛选本身并不证明任意数据库上都等价。同一组中 QED 证明 35 对、SQLSolver 证明 38 对；三种系统合起来证明 114 对，比 EquiTrace 单独多 17 对，说明方法仍有互补空间。"
+              ]
+            },
+            {
+              "heading": "没有找到证明，不代表查询不同",
+              "paragraphs": [
+                "在模型改写中仍未证明的 143 对里，101 对遇到规则应用上限或超时，39 对搜索已饱和却没有共同表达式，另有 3 对输入加载失败。大规模连接、UNION 分支、外连接和窗口函数是尚有缺口的场景。系统在预算内找不到推导时返回未知，不能把未知当作不等价。",
+                "本站的理解是，这项工作的价值在于让查询验证更可检查，而不是用一套规则取代所有语义推理。规则库的可信度、数据库约束是否完整，以及证明搜索的能力都影响适用范围。以上是作者的实验，本站未独立复现；固定版本元数据未给出会议录用说明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的证明流程：展示规则与推导的关系，不是实验结果图。",
+            "steps": [
+              "输入两条查询与数据库约束",
+              "规范化并应用已接纳规则",
+              "寻找相同逻辑表达式",
+              "回放推导；找不到则保持未知"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Two SQL statements can look quite different while answering the same question. After an optimizer or language model rewrites a query, the important issue is whether its result stays the same on every database satisfying the schema constraints. EquiTrace turns existing rewrite knowledge into a standalone proof system that returns a derivation which can be replayed, rather than only a verdict.",
+          "sections": [
+            {
+              "heading": "Connecting rewrites into a proof",
+              "paragraphs": [
+                "The system converts both queries into logical plans and applies admitted transformations under the supplied schema, keys and other constraints. If the two paths reach a common logical expression with compatible output contracts, the paths provide an equivalence argument. Normalization aligns alternative representations; bounded search tries to connect plans that still differ.",
+                "The implementation uses Apache Calcite and records transformations, conditions, intermediate expressions and the shared endpoint. A replay checker executes the same rules again to reproduce that endpoint. This exposes the assumptions behind a result, but does not prove the semantic validity of every rule anew. Sound rules and satisfied applicability conditions remain prerequisites."
+              ]
+            },
+            {
+              "heading": "The denominator matters",
+              "paragraphs": [
+                "The authors evaluate 3,233 query pairs across text-to-SQL-derived data, curated and optimizer-rule tests, and model-generated rewrites. Proof rates use the expected-equivalent or execution-agreeing subset of each corpus, not every input pair and certainly not all possible SQL programs.",
+                "Coverage on those subsets is 648/1,106, 229/266 and 97/240 respectively. The last 240 pairs agree when executed on benchmark databases; that label alone does not establish equivalence on every valid database. On the same subset QED proves 35 pairs and SQLSolver 38. Together the three systems prove 114, or 17 more than EquiTrace alone, showing complementary reasoning coverage."
+              ]
+            },
+            {
+              "heading": "Failure to prove is not proof of a difference",
+              "paragraphs": [
+                "Of 143 unresolved model-rewrite pairs, 101 reach a rule-application cap or timeout, 39 exhaust search without finding a shared expression, and three fail to load. Large joins, UNION branches, outer joins and window functions remain difficult. When its budget is exhausted without a derivation, the system returns unknown, not inequivalent.",
+                "Our interpretation is that the contribution makes query verification more inspectable; it does not replace every form of semantic reasoning. Rule-library trust, complete schema constraints and search capacity all bound its applicability. The results are the authors’ experiments, not an independent reproduction by this site. The fixed-version metadata supplies no conference acceptance statement."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redrawing of the proof pipeline, showing rules and derivations rather than experimental measurements.",
+            "steps": [
+              "Provide two queries and schema constraints",
+              "Normalize and apply admitted rules",
+              "Seek a shared logical expression",
+              "Replay the derivation, or retain unknown"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じ問いに答えるSQLでも、書き方は大きく異なり得る。最適化器や言語モデルがクエリを書き換えたとき、重要なのは見た目の類似ではなく、スキーマ制約を満たすどのデータベースでも結果が一致するかどうかだ。EquiTraceは既存の書き換え知識を独立した証明システムにまとめ、判定だけでなく再実行して確認できる導出を返す。",
+          "sections": [
+            {
+              "heading": "書き換えを証明につなぐ",
+              "paragraphs": [
+                "二つのクエリを論理プランに変換し、テーブル構造、キーなどの制約の下で、採用済みの意味保存変換を適用する。双方が同じ論理式に到達し、出力の要件も整合すれば、二本の導出経路で等価性を説明できる。正規化と表現の整合処理で異なる書き方を近づけ、残った違いを予算内の探索で接続する。",
+                "実装はApache Calciteを使い、規則、適用条件、中間式と共通の終点を記録する。再生検査は同じ規則をもう一度実行して終点が再現するか確かめる。依存する仮定を明示できる一方、規則自体の意味的な正しさを毎回証明するものではない。規則が健全で、適用条件が成立することが前提だ。"
+              ]
+            },
+            {
+              "heading": "証明率は何を分母にするか",
+              "paragraphs": [
+                "実験はtext-to-SQL由来、手作業で整理した事例と最適化器の規則テスト、モデル生成の書き換えという三種類、合計3,233組を対象とした。証明率の分母は各集合のうち等価と想定される組、または実行結果が一致した組であり、全入力やSQL全体ではない。",
+                "各部分集合で証明できたのは648/1,106、229/266、97/240組だった。最後の240組は基準データベースで実行結果が同じだっただけで、そのラベル自体は全データベース上の等価性を保証しない。同じ部分集合でQEDは35組、SQLSolverは38組を証明した。三方式の和集合では114組、EquiTrace単独より17組多く、推論能力が補完的であることも示された。"
+              ]
+            },
+            {
+              "heading": "証明できないことは不一致の証明ではない",
+              "paragraphs": [
+                "モデル書き換えの未解決143組のうち、101組は規則適用上限または時間切れ、39組は共通式に至らず探索が飽和し、3組は入力読み込みに失敗した。大きな結合領域、UNION分岐、外部結合、ウィンドウ関数には不足が残る。予算内に導出が見つからなければ返すのは「不明」で、「非等価」ではない。",
+                "当サイトの解釈では、価値は検証を点検可能にすることで、あらゆる意味推論を置き換えることではない。規則の信頼性、スキーマ制約の完全性、探索能力が適用範囲を左右する。数値は著者の実験であり、当サイトによる追試ではない。固定版のメタデータには会議採択の記載がない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した証明手順の説明図。規則と導出の関係を示し、実験値を表す図ではない。",
+            "steps": [
+              "二つのクエリと制約を入力",
+              "正規化して採用済み規則を適用",
+              "共通の論理式を探す",
+              "導出を再生し、未解決なら不明を保つ"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Разные SQL-запросы могут отвечать на один вопрос. После переписывания оптимизатором или языковой моделью важно не сходство текста, а одинаковый результат на любой базе, удовлетворяющей ограничениям схемы. EquiTrace организует известные преобразования запросов в отдельную систему доказательств: она возвращает не только вердикт, но и воспроизводимую цепочку вывода.",
+          "sections": [
+            {
+              "heading": "Как преобразования образуют доказательство",
+              "paragraphs": [
+                "Оба запроса преобразуются в логические планы. При заданных таблицах, ключах и других ограничениях применяются допущенные правила, сохраняющие семантику. Если обе цепочки достигают общего выражения с совместимыми требованиями к выходу, они обосновывают эквивалентность. Нормализация согласует разные представления, после чего поиск с ограниченным бюджетом пытается соединить оставшиеся варианты.",
+                "Реализация использует Apache Calcite и записывает правила, условия, промежуточные выражения и общий конец цепочек. Проверка повторяет те же преобразования и сверяет конечное выражение. Это раскрывает предпосылки результата, но не доказывает заново семантическую корректность каждого правила. Корректность правил и выполнение условий их применения остаются необходимыми предпосылками."
+              ]
+            },
+            {
+              "heading": "Что входит в знаменатель",
+              "paragraphs": [
+                "Авторы проверили 3 233 пары из трёх классов: данные text-to-SQL, специально собранные примеры и тесты правил оптимизатора, а также переписывания языковыми моделями. Доля доказанных пар рассчитывается по ожидаемо эквивалентному или совпадающему при выполнении подмножеству, а не по всем входам и не по всем возможным SQL-запросам.",
+                "Для этих подмножеств результат составил 648/1 106, 229/266 и 97/240 пар. Последние 240 совпадали при выполнении на тестовых базах; сама эта метка не доказывает равенство на любой допустимой базе. На том же подмножестве QED доказала 35 пар, SQLSolver — 38. Объединение трёх систем даёт 114 пар, на 17 больше EquiTrace, то есть их возможности дополняют друг друга."
+              ]
+            },
+            {
+              "heading": "Не найдено доказательство — не значит найдено различие",
+              "paragraphs": [
+                "Из 143 неразрешённых модельных переписываний 101 достигло ограничения числа правил или времени, в 39 поиск исчерпал варианты без общего выражения, а три не удалось загрузить. Сложности сохраняются для больших соединений, ветвей UNION, внешних соединений и оконных функций. Без найденного вывода система возвращает «неизвестно», а не «неэквивалентно».",
+                "Наша интерпретация: работа делает проверку запросов прозрачнее, но не заменяет все способы семантического рассуждения. Её область применения зависит от надёжности библиотеки правил, полноты ограничений схемы и возможностей поиска. Результаты получены авторами, без независимого воспроизведения нашей редакцией. Метаданные фиксированной версии не содержат заявления о принятии на конференцию."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: правила и цепочки вывода, не экспериментальные измерения.",
+            "steps": [
+              "Два запроса и ограничения схемы",
+              "Нормализация и допущенные правила",
+              "Поиск общего логического выражения",
+              "Повторение вывода либо сохранение неизвестного результата"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "同一個問題往往可以寫成不同的 SQL。查詢最佳化器或語言模型改寫語句以後，關鍵不是語句看起來是否相似，而是它們在所有滿足資料庫約束的資料上是否得到相同結果。EquiTrace 把已有的查詢改寫知識組織為獨立證明系統，給出的不僅是判斷，還包括可以重新執行檢查的推導過程。",
+          "sections": [
+            {
+              "heading": "把改寫規則接成一條證明",
+              "paragraphs": [
+                "方法先把兩條查詢轉為邏輯計劃，在給定表結構、鍵和其他約束下，應用已接納的保語義變換。兩邊若最終到達相同的邏輯表示式，而且輸出要求相容，就能透過兩條推導鏈說明等價。規範化與表示對齊負責處理不同寫法，有限預算的搜尋則嘗試把尚未接通的計劃連線起來。",
+                "實現建立在 Apache Calcite 上，記錄規則、適用條件、中間表示式和共同終點。回放檢查器重新執行相同規則，檢查能否重現終點。這一機制能暴露證明依賴了哪些假設，但不會替每條規則重新證明語義正確性：規則本身可靠、適用條件成立，仍然是結論成立的前提。"
+              ]
+            },
+            {
+              "heading": "證明覆蓋率的分母是什麼",
+              "paragraphs": [
+                "作者測試了三類共 3,233 對查詢，包括從 text-to-SQL 資料構建的樣本、人工整理和最佳化器規則測試樣本，以及模型生成的改寫。論文的證明率以其中預期等價或測試結果一致的子集為分母，而不是全部查詢，更不是 SQL 語言所有可能情況。",
+                "這三個子集分別證明了 648/1,106、229/266 和 97/240 對。最後一組的 240 對只在基準資料庫執行中得到一致結果，這種篩選本身並不證明任意資料庫上都等價。同一組中 QED 證明 35 對、SQLSolver 證明 38 對；三種系統合起來證明 114 對，比 EquiTrace 單獨多 17 對，說明方法仍有互補空間。"
+              ]
+            },
+            {
+              "heading": "沒有找到證明，不代表查詢不同",
+              "paragraphs": [
+                "在模型改寫中仍未證明的 143 對裡，101 對遇到規則應用上限或超時，39 對搜尋已飽和卻沒有共同表示式，另有 3 對輸入載入失敗。大規模連線、UNION 分支、外連線和視窗函式是尚有缺口的場景。系統在預算內找不到推導時返回未知，不能把未知當作不等價。",
+                "本站的理解是，這項工作的價值在於讓查詢驗證更可檢查，而不是用一套規則取代所有語義推理。規則庫的可信度、資料庫約束是否完整，以及證明搜尋的能力都影響適用範圍。以上是作者的實驗，本站未獨立復現；固定版本後設資料未給出會議錄用說明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的證明流程：展示規則與推導的關係，不是實驗結果圖。",
+            "steps": [
+              "輸入兩條查詢與資料庫約束",
+              "規範化並應用已接納規則",
+              "尋找相同邏輯表示式",
+              "回放推導；找不到則保持未知"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "nousdb-semantic-query-engine",
+      "written_at": "2026-10-28",
+      "sources": [
+        {
+          "label": "arXiv · original paper, v1",
+          "url": "https://arxiv.org/html/2610.28551v1"
+        },
+        {
+          "label": "arXiv · publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.28551v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让数据库调用语言模型理解评论、提取字段或判断两段文字是否对应同一对象，会带来不同于传统查询的成本：一行很短的文本和一行长文需要的推理工作差别很大。NousDB 在 Apache DataFusion 上研究语义查询执行，把优化重点从行数扩展到 token 数量，同时检查批量处理是否改变逐行执行的答案。",
+          "sections": [
+            {
+              "heading": "先描述计算，再决定如何少做重复工作",
+              "paragraphs": [
+                "系统定义扩展字段、语义筛选和语义连接三个算子，使模型推理可以与普通关系查询组合。优化器据此尝试提前筛选、合并部分操作，减少真正需要交给模型的输入。论文的逻辑语义假设同一模型与提示对同一输入给出确定结果，而且逐行输出只依赖声明的输入属性；作者明确承认这是用于推导的抽象，不是所有真实模型调用都满足的事实。",
+                "物理执行层用 token 长度分布估计一批能放多少行，再按 token 负载分配并行工作。批量调用可以复用指令，减少重复输入，但“没有超出上下文”与“答案没有变化”是两个不同要求。仅按窗口容量尽量塞满，可能在没有报错的情况下改变结果。"
+              ]
+            },
+            {
+              "heading": "用抽样检查批量答案是否偏离",
+              "paragraphs": [
+                "NousDB 的可选校准步骤把独立构造的批次中一个探测样本的答案，与该样本单独运行的答案比较。对候选批量大小计算单侧置信下界，并分配整体失败概率预算，选择满足用户误差容忍条件的大小；都不满足时退回逐行执行。这种“保真”参照的是同一模型逐行答案，不是人工标注的事实正确性，模型原本答错也可能保持一致。",
+                "实验比较 Qwen3-8B 和 GPT-5.4-nano 下的执行，使用 IMDB、SemBench-Movie 及增加语义算子的 JOB、STACK 查询；消融另用 Qwen3-32B。各系统采用相同模型和十个并行工作者。论文报告批量处理单独启用后，调用次数降到逐行执行的 5%—17%，token 用量降到 15%—32%；这是指定消融设置的比值，不是所有查询的统一节省比例。"
+              ]
+            },
+            {
+              "heading": "少用 token 不一定更快，也不一定更正确",
+              "paragraphs": [
+                "作者也报告了反例：在已有连续批处理的本地推理服务上，仅增大单次请求会增加延迟。例如 Qwen3-8B 的 Q4 从 97 秒变为 204 秒。普通批量方式在最敏感的测试中改变了 45% 的逐行答案；变化并不自动等于更差或更好，仍须用任务质量指标检查。校准要付出额外调用成本，在小输入上尤其不能忽略。",
+                "因此，本站的理解是这项工作提出了一套把容量、答案一致性和负载分布分别处理的查询优化办法，而非“批量越大越好”的结论。论文同时列出更高阶算子、把质量纳入成本模型等后续方向。以上性能均为作者报告，本站没有独立运行复现。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的执行流程：容量估计与答案一致性校准是不同环节，不表示新的实验结果。",
+            "steps": [
+              "描述语义算子与查询计划",
+              "估计 token 容量和负载",
+              "可选抽样校准批量答案",
+              "选择批量并分配执行工作"
+            ]
+          }
+        },
+        "en": {
+          "lead": "When a database asks a language model to interpret reviews, extract fields or match descriptions, row count stops being a sufficient measure of work: a short sentence and a long document cost very different amounts to process. Built on Apache DataFusion, NousDB studies semantic query execution using token-aware planning and checks whether batching changes the answers obtained one row at a time.",
+          "sections": [
+            {
+              "heading": "Describe the computation before removing repeated work",
+              "paragraphs": [
+                "Three operators extend records, filter them semantically and join them by meaning. They let model inference compose with conventional relational processing, enabling rewrites such as earlier filtering and certain operator fusions. The logical model assumes deterministic answers for a fixed model, prompt and input, and row-local input dependencies. The authors explicitly treat this as an abstraction, not a fact about every real model invocation.",
+                "At execution time, token-length distributions estimate how many rows fit in a request, while token loads guide parallel partitioning. Sharing instructions across rows saves repeated input. But fitting the context window and preserving answers are separate requirements: filling a request to capacity can silently alter its results."
+              ]
+            },
+            {
+              "heading": "Check agreement with single-row answers",
+              "paragraphs": [
+                "An optional calibration compares one probe from each independently constructed batch with that probe’s single-row answer. A one-sided confidence bound and an allocated failure budget select a candidate batch size satisfying the configured tolerance; otherwise execution falls back to single rows. Fidelity here means agreement with the model’s own reference answer, not factual correctness against human labels. An incorrect reference can still be reproduced consistently.",
+                "The experiments use Qwen3-8B and GPT-5.4-nano with IMDB, SemBench-Movie and semantically augmented JOB and STACK queries; ablations also use Qwen3-32B. Systems share models and ten parallel workers. In the reported ablation settings, batching alone reduces model calls to 5–17% and token use to 15–32% of single-row execution. These are conditional ratios, not guaranteed savings on every query."
+              ]
+            },
+            {
+              "heading": "Fewer tokens do not guarantee speed or correctness",
+              "paragraphs": [
+                "The authors report counterexamples on local inference servers that already use continuous batching: making individual requests larger can increase latency. For Q4 with Qwen3-8B, runtime grows from 97 to 204 seconds. Ordinary batching changes up to 45% of single-row answers in the most sensitive evaluated case. Change is not itself proof of better or worse quality, which still requires task metrics. Calibration also adds model calls and can be expensive on small inputs.",
+                "Our interpretation is a query-optimization approach that separates capacity, answer agreement and workload distribution, rather than a rule that larger batches are always better. Extending the operator algebra and incorporating quality into cost models remain future work. The performance is reported by the authors, not independently reproduced here."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redrawing: capacity estimation and answer-agreement calibration are separate steps, not new experimental results.",
+            "steps": [
+              "Describe operators and the query plan",
+              "Estimate token capacity and load",
+              "Optionally calibrate answer agreement",
+              "Choose batches and distribute execution"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "データベースが言語モデルでレビューを解釈し、項目を抽出し、文章同士を照合すると、行数だけでは処理量を表せなくなる。短い一文と長文では推論の負担が違うからだ。Apache DataFusion上のNousDBは、トークン量を考慮した意味的クエリ実行を研究し、まとめて処理した答えが一行ずつの実行と変わらないかも確認する。",
+          "sections": [
+            {
+              "heading": "計算の意味を定義してから重複を減らす",
+              "paragraphs": [
+                "システムは項目の拡張、意味に基づく絞り込み、意味に基づく結合という三つの演算子を定義する。通常の関係演算とモデル推論を組み合わせ、先に絞り込む、一部の操作を融合するなどの書き換えを行う。ただし論理的意味の定義は、モデル・指示・入力が固定なら出力が決定的で、各行が宣言された入力だけに依存するという仮定を置く。著者はこれを推論用の抽象化とし、実際の全呼び出しが満たすとは主張しない。",
+                "実行時にはトークン長の分布から一回に収まる行数を見積もり、トークン負荷に応じて並列作業を分配する。複数行で指示を共有すれば重複入力を減らせる。一方、コンテキストに収まることと答えが変わらないことは別問題で、上限まで詰め込むだけではエラーなしに結果が変わる可能性がある。"
+              ]
+            },
+            {
+              "heading": "一行ずつの答えとの一致を測る",
+              "paragraphs": [
+                "任意の校正段階では、独立に構成した各バッチから一つの試料を選び、単独実行の答えと比較する。片側信頼下限と失敗確率の配分により、設定した許容差を満たすバッチサイズを選ぶ。候補が通らなければ一行ずつに戻る。ここでの忠実度はモデル自身の基準回答との一致であり、人手の正解との一致ではない。誤答を一貫して再現することもあり得る。",
+                "評価はQwen3-8BとGPT-5.4-nanoを使い、IMDB、SemBench-Movie、意味演算を加えたJOBとSTACKを対象にした。要素分解実験ではQwen3-32Bも使い、各システムは同一モデルと10並列ワーカーで比較した。バッチ化だけを有効にした実験では、呼び出し回数は逐行方式の5～17%、トークン量は15～32%に減った。これは指定条件での比率で、全クエリ共通の削減保証ではない。"
+              ]
+            },
+            {
+              "heading": "トークンが減っても高速・正確になるとは限らない",
+              "paragraphs": [
+                "連続バッチ処理を既に備えるローカル推論では、単一リクエストを大きくするとかえって遅くなる例もある。Qwen3-8BのQ4は97秒から204秒になった。通常のバッチ方式は最も敏感なケースで逐行回答の45%を変えた。変化だけで品質の良否は判断できず、タスク指標での確認が必要だ。校正自体も追加呼び出しを伴い、入力が小さい場合は無視できない。",
+                "当サイトの解釈では、容量、答えの一致、負荷分散を別々に扱う最適化方式が貢献であり、大きいバッチほど良いという結論ではない。演算子の拡張や品質を費用モデルに組み込むことは今後の課題とされる。性能は著者の報告で、当サイトの追試ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した実行手順。容量の推定と回答一致の校正を分けて示し、新しい実験結果は表さない。",
+            "steps": [
+              "演算子とクエリ計画を記述",
+              "トークン容量と負荷を推定",
+              "必要に応じ回答一致を校正",
+              "バッチを選び実行を分散"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Если база данных поручает языковой модели понять отзыв, извлечь поля или сопоставить описания, число строк уже не отражает объём работы: короткая фраза и длинный документ требуют разных затрат. NousDB на базе Apache DataFusion исследует выполнение семантических запросов с учётом токенов и проверяет, меняются ли ответы при объединении строк в пакеты.",
+          "sections": [
+            {
+              "heading": "Сначала определить вычисление, затем убрать повторения",
+              "paragraphs": [
+                "Система вводит три оператора: расширение записи, семантическую фильтрацию и семантическое соединение. Они позволяют сочетать вывод модели с обычными реляционными операциями, переносить фильтрацию раньше и объединять некоторые вычисления. Логическая модель предполагает детерминированный ответ при фиксированных модели, инструкции и входе, а также зависимость строки только от объявленных атрибутов. Авторы подчёркивают, что это абстракция для рассуждения, а не свойство любого реального обращения к модели.",
+                "Распределение длины в токенах помогает оценить вместимость запроса; токенная нагрузка определяет разбиение параллельной работы. Общая инструкция для нескольких строк уменьшает повторяемый ввод. Но вместиться в контекст и сохранить ответы — разные требования: заполнение окна до предела может незаметно изменить результат."
+              ]
+            },
+            {
+              "heading": "Калибровка относительно построчного ответа",
+              "paragraphs": [
+                "Необязательная калибровка сравнивает ответ для одного пробного элемента из каждого независимо сформированного пакета с его ответом при отдельном запуске. Односторонняя доверительная граница и распределение бюджета вероятности ошибки определяют допустимый размер пакета; если ни один не подходит, остаётся построчный режим. Здесь верность означает согласие с ответом самой модели, а не с человеческой разметкой. Ошибочный эталон тоже можно устойчиво воспроизводить.",
+                "В экспериментах используются Qwen3-8B и GPT-5.4-nano, IMDB, SemBench-Movie и запросы JOB и STACK с добавленными семантическими операторами. В абляциях также применяется Qwen3-32B. Системы сравниваются с одинаковыми моделями и десятью параллельными исполнителями. В указанных абляциях одна пакетизация снижает число обращений до 5–17%, а расход токенов до 15–32% построчного режима. Это отношения для конкретных условий, не универсальная экономия."
+              ]
+            },
+            {
+              "heading": "Меньше токенов не всегда значит быстрее и правильнее",
+              "paragraphs": [
+                "Авторы приводят обратные примеры для локальных серверов, где уже работает непрерывная пакетизация: укрупнение отдельных запросов может увеличить задержку. В Q4 с Qwen3-8B время выросло с 97 до 204 секунд. Обычная пакетизация в наиболее чувствительном случае изменила 45% построчных ответов. Само изменение не означает улучшения или ухудшения: нужны показатели качества задачи. Калибровка также требует дополнительных обращений и особенно заметна на небольших входах.",
+                "Наша интерпретация — предложен способ отдельно управлять вместимостью, согласованностью ответов и распределением нагрузки, а не правило «чем больше пакет, тем лучше». Расширение алгебры и учёт качества в модели затрат остаются дальнейшими направлениями. Производительность сообщают авторы, наша редакция её независимо не воспроизводила."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: оценка вместимости и калибровка согласованности — отдельные этапы, не новые измерения.",
+            "steps": [
+              "Описать операторы и план запроса",
+              "Оценить вместимость и токенную нагрузку",
+              "При необходимости проверить согласованность",
+              "Выбрать пакеты и распределить выполнение"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓資料庫呼叫語言模型理解評論、提取欄位或判斷兩段文字是否對應同一物件，會帶來不同於傳統查詢的成本：一行很短的文字和一行長文需要的推理工作差別很大。NousDB 在 Apache DataFusion 上研究語義查詢執行，把最佳化重點從行數擴展到 token 數量，同時檢查批次處理是否改變逐行執行的答案。",
+          "sections": [
+            {
+              "heading": "先描述計算，再決定如何少做重複工作",
+              "paragraphs": [
+                "系統定義擴展欄位、語義篩選和語義連線三個運算子，使模型推理可以與普通關係查詢組合。最佳化器據此嘗試提前篩選、合併部分操作，減少真正需要交給模型的輸入。論文的邏輯語義假設同一模型與提示對同一輸入給出確定結果，而且逐行輸出只依賴宣告的輸入屬性；作者明確承認這是用於推導的抽象，不是所有真實模型呼叫都滿足的事實。",
+                "物理執行層用 token 長度分佈估計一批能放多少行，再按 token 負載分配並行工作。批次呼叫可以共用指令，減少重複輸入，但“沒有超出上下文”與“答案沒有變化”是兩個不同要求。僅按視窗容量儘量塞滿，可能在沒有報錯的情況下改變結果。"
+              ]
+            },
+            {
+              "heading": "用抽樣檢查批次答案是否偏離",
+              "paragraphs": [
+                "NousDB 的可選校準步驟把獨立構造的批次中一個探測樣本的答案，與該樣本單獨執行的答案比較。對候選批次大小計算單側信賴下界，並分配整體失敗機率預算，選擇滿足使用者誤差容忍條件的大小；都不滿足時退回逐行執行。這種“保真”參照的是同一模型逐行答案，不是人工標註的事實正確性，模型原本答錯也可能保持一致。",
+                "實驗比較 Qwen3-8B 和 GPT-5.4-nano 下的執行，使用 IMDB、SemBench-Movie 及增加語義運算子的 JOB、STACK 查詢；消融另用 Qwen3-32B。各系統採用相同模型和十個並行工作者。論文報告批次處理單獨啟用後，呼叫次數降到逐行執行的 5%—17%，token 用量降到 15%—32%；這是指定消融設定的比值，不是所有查詢的統一節省比例。"
+              ]
+            },
+            {
+              "heading": "少用 token 不一定更快，也不一定更正確",
+              "paragraphs": [
+                "作者也報告了反例：在已有連續批處理的本地推理服務上，僅增大單次請求會增加延遲。例如 Qwen3-8B 的 Q4 從 97 秒變為 204 秒。普通批次方式在最敏感的測試中改變了 45% 的逐行答案；變化並不自動等於更差或更好，仍須用任務品質指標檢查。校準要付出額外呼叫成本，在小輸入上尤其不能忽略。",
+                "因此，本站的理解是這項工作提出了一套把容量、答案一致性和負載分佈分別處理的查詢最佳化辦法，而非“批次越大越好”的結論。論文同時列出更高階運算子、把品質納入成本模型等後續方向。以上效能均為作者報告，本站沒有獨立執行復現。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的執行流程：容量估計與答案一致性校準是不同環節，不表示新的實驗結果。",
+            "steps": [
+              "描述語義運算子與查詢計劃",
+              "估計 token 容量和負載",
+              "可選抽樣校準批次答案",
+              "選擇批次並分配執行工作"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

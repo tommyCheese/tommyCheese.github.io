@@ -57,8 +57,16 @@ const base = process.env.PREVIEW_BASE_URL || 'http://127.0.0.1:8873';
         }
       }
     }
-    // Legacy cards without full articles keep direct source links.
-    assert.equal(await page.$eval('.news-card:not(:has(template[data-editorial])) .news-main-link', a => a.hasAttribute('aria-haspopup')), false);
+    // Check the archive: homepage selections may all have full articles now.
+    // This also remains valid once every historical article is complete.
+    await page.goto(base + '/news/', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.news-main-link[aria-haspopup="dialog"]');
+    const archiveCards = await page.$$eval('.news-card', cards => cards.map(card => ({
+      hasArticle: !!card.querySelector('template[data-editorial]'),
+      opensPreview: card.querySelector('.news-main-link').getAttribute('aria-haspopup') === 'dialog'
+    })));
+    assert.ok(archiveCards.length > 0);
+    for (const card of archiveCards) assert.equal(card.opensPreview, card.hasArticle);
     // Check mobile research, backdrop close and dark mode, plus a broken news cover.
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(base + '/research/', { waitUntil: 'domcontentloaded' });

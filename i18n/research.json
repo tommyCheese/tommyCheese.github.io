@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27",
+  "updated_at": "2026-10-28",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,76 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "cohortflow-localized-agent-correction",
+      "kind": "preprint",
+      "published_at": "2026-10-26",
+      "collected_at": "2026-10-28",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Chen, Neil et al. · arXiv:2610.36100v1",
+      "url": "https://arxiv.org/abs/2610.36100v1"
+    },
+    {
+      "id": "cep-structured-agentic-evidence-search",
+      "kind": "preprint",
+      "published_at": "2026-10-26",
+      "collected_at": "2026-10-28",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Li, Junchen et al. · arXiv:2610.36134v1",
+      "url": "https://arxiv.org/abs/2610.36134v1"
+    },
+    {
+      "id": "graphragprov-answer-source-provenance",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-28",
+      "tags": [
+        "ai",
+        "rag",
+        "data-governance",
+        "databases",
+        "papers"
+      ],
+      "source": "El Amrani, Wadie; Galárraga, Luis · arXiv:2610.37237v1",
+      "url": "https://arxiv.org/abs/2610.37237v1"
+    },
+    {
+      "id": "linepg-line-nearest-neighbor-search",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-28",
+      "tags": [
+        "databases",
+        "systems",
+        "papers"
+      ],
+      "source": "Xie, Jiadong et al. · arXiv:2610.37256v1",
+      "url": "https://arxiv.org/abs/2610.37256v1"
+    },
+    {
+      "id": "ams-contention-aware-sparse-multiplication",
+      "kind": "research",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-28",
+      "tags": [
+        "databases",
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Huang, Wentao et al. · arXiv:2610.36822v1",
+      "url": "https://arxiv.org/abs/2610.36822v1"
+    },
     {
       "id": "decisionrag-hierarchical-decision-retrieval",
       "kind": "preprint",
