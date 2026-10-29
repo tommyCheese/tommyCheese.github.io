@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-10-28",
+  "updated_at": "2026-10-29",
   "items": [
+    {
+      "id": "google-gemini4-carbon-defender-preview",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-29",
+      "category": "ai",
+      "source": "Google DeepMind / Reuters / Artificial Analysis / Collinear",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
+      "image": "https://tommycheese.github.io/images/news/gemini4-carbon-defender-preview.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
+    {
+      "id": "github-actions-workflow-lockfiles-ga",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-29",
+      "category": "security",
+      "source": "GitHub / DevOpsNess",
+      "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/",
+      "image": "https://tommycheese.github.io/images/news/github-actions-lockfiles-ga.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nist-pqc-transition-final-roadmap",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "category": "security",
+      "source": "NIST / Quantum Computing Report",
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-report-provides-guidelines-transition-post-quantum-cryptography",
+      "image": "https://tommycheese.github.io/images/news/nist-pqc-migration.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
+      "image_fit": "contain"
+    },
     {
       "id": "google-genie4-interactive-world-preview",
       "published_at": "2026-10-27",

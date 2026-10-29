@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">Gemini 4 Carbon: staged defender access</title>
+<desc id="desc">Original explanatory diagram. Carbon enters selected defender testing, repair validation and safeguard review. General availability is still pending. Not measured performance.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#071c39"/><stop offset="1" stop-color="#17415c"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 8 4 0 8" fill="none" stroke="#64d9c1" stroke-width="2"/></marker></defs>
+<rect width="1200" height="675" rx="28" fill="url(#bg)"/>
+<g font-family="Arial, sans-serif" fill="#edf7ff"><text x="68" y="92" font-size="24" letter-spacing="4" fill="#64d9c1">TECH DAILY · MODEL ACCESS</text><text x="68" y="170" font-size="58" font-weight="700">Gemini 4 Carbon</text><text x="70" y="218" font-size="26" fill="#b8cadc">Selected defenders first · broader access pending</text></g>
+<g fill="#112e48" stroke="#45718a" stroke-width="2"><rect x="70" y="292" width="295" height="192" rx="22"/><rect x="452" y="292" width="295" height="192" rx="22"/><rect x="835" y="292" width="295" height="192" rx="22"/></g>
+<g stroke="#64d9c1" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M380 390H432"/><path d="M762 390H815"/></g>
+<g font-family="Arial, sans-serif" text-anchor="middle"><g fill="#64d9c1" font-size="25"><text x="217" y="341">01</text><text x="599" y="341">02</text><text x="982" y="341">03</text></g><g fill="#edf7ff" font-size="29" font-weight="700"><text x="217" y="397">Controlled access</text><text x="599" y="397">Validate repairs</text><text x="982" y="397">Refine safeguards</text></g><g fill="#b8cadc" font-size="22"><text x="217" y="441">Trusted defender teams</text><text x="599" y="441">Check existing functionality</text><text x="982" y="441">Review feedback and risk</text></g></g>
+<g font-family="Arial, sans-serif"><text x="70" y="560" fill="#d3e5ef" font-size="24">Benchmark progress does not establish general availability.</text><text x="70" y="611" fill="#96b3c7" font-size="18">Original explanatory diagram based on public sources · not measured results</text></g>
+</svg>

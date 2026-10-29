@@ -14919,6 +14919,1679 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "google-gemini4-carbon-defender-preview",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Google · Carbon announcement and staged availability",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/"
+        },
+        {
+          "label": "Reuters · independent launch coverage",
+          "url": "https://tech.yahoo.com/ai/gemini/articles/google-launches-gemini-4-carbon-180841678.html"
+        },
+        {
+          "label": "Artificial Analysis · Intelligence Index v5.0 methodology and ranking",
+          "url": "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index"
+        },
+        {
+          "label": "Collinear · CWE-bench v1 results and evaluation conditions",
+          "url": "https://cwe-bench.com/"
+        },
+        {
+          "label": "Google DeepMind · Fairwind access and governance",
+          "url": "https://deepmind.google/fairwind-program/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Google 于 10 月 28 日公布 Gemini 4 Carbon，把这一代模型的改进重点放在长时间的软件工程任务和网络安全防御上。与两周前向公众开放的 Argon 相比，这次最先落地的是受控试用：Google 表示本周先让部分防御团队使用，再通过 Fairwind 项目扩展到更多可信合作方。路透社的报道也确认了这种分阶段安排。",
+          "sections": [
+            {
+              "heading": "谁现在能用，谁还需要等待",
+              "paragraphs": [
+                "公告没有给出普通开发者、企业客户和消费者全面使用 Carbon 的日期，也没有宣布交付模型权重。已经公布模型名称、评测结果和未来计费方式，并不等于所有用户今天就能接入。对于正在使用 Argon 的团队，这条新闻说明下一代能力进入外部受控验证，而不是现有服务已经自动切换。",
+                "Fairwind 是 Google 为网络防御组织设置的准入项目，面向政府、医疗和通信等关键领域，强调安全审查、受控访问和防御用途。项目的一般治理规则包括身份验证、访问记录和禁止转售访问权。它既希望让防御者更早发现与修复问题，也承认同样的能力可能被滥用；项目规模不能直接当成已经拿到 Carbon 的人数。"
+              ]
+            },
+            {
+              "heading": "独立测试说明了什么",
+              "paragraphs": [
+                "Artificial Analysis 已将高推理设置下的 Carbon 列入 Intelligence Index v5.0，显示综合得分 59，暂列榜首。这是九项评测汇总后的指数，知识工作、编程、科学和一般能力四类各占 25%，不是“59% 的工作能自动完成”。测试组合、推理设置和榜单版本共同决定分数，不能直接与旧版指数或不同配置比较。",
+                "安全修复方面，Collinear 的 CWE-bench v1 官方榜单给出更具体的参照：Carbon 使用 Antigravity 框架，程序校验的 pass@1 为 71%，Argon 为 68%。该版本包含 120 个未公开的审计与修补任务，每题高推理运行四次、每次限一小时；程序检查要求问题被修复且原有功能仍能通过测试。这个 71% 不是四次机会中至少一次成功的 pass@4，也不表示任意真实软件有七成漏洞会被发现。"
+              ]
+            },
+            {
+              "heading": "能力进展与部署条件要分开看",
+              "paragraphs": [
+                "Google 另外报告了漏洞发现、受控验证和长时工程任务上的提升，并称内部团队观察到更少的越界与编造行为。这些属于厂商自己的测试和使用观察，不能由独立综合榜单替它们背书。不同安全基准衡量的是不同阶段：找出问题、判断问题能否触发和提供有效修复，并不是同一个成功率。",
+                "对防御团队而言，值得跟进的是模型能否把问题定位、修复与回归检查连起来，减轻连续工作的负担。本站的判断是，现有证据支持继续测试这种可能性，但还不足以推断普通团队的真实耗时、稳定性或无人监督的安全性。明确的下一步仍是受控反馈与防护调整；普遍可用时间、具体产品入口和更广泛的独立使用结果，仍需后续确认。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方公告与独立评测重绘的解释性示意：受控开放与验证流程，不是实测性能图。",
+            "steps": [
+              "Google 公布 Carbon",
+              "部分防御团队先行验证",
+              "在受控任务中检查修复效果",
+              "收集反馈并调整防护",
+              "更广泛开放时间待确认"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Google announced Gemini 4 Carbon on October 28, focusing on sustained software engineering and cyber defense. Argon became broadly available roughly two weeks earlier, but Carbon begins with controlled access: Google says selected defenders will receive it this week, followed by more trusted partners through Fairwind. Reuters independently reports the same staged rollout.",
+          "sections": [
+            {
+              "heading": "Availability remains limited",
+              "paragraphs": [
+                "The announcement gives no date for general developer, enterprise or consumer access, and does not announce downloadable weights. A model name, benchmark results and future pricing do not mean that everyone can connect today. For teams already using Argon, this signals external controlled validation of the next model rather than an automatic change to their existing service.",
+                "Fairwind is Google’s access program for defenders in areas including government, healthcare and telecommunications. Its general governance requires identity checks, access tracking and restrictions on reselling access. The program aims to give defenders earlier opportunities to find and fix problems while recognising that the same capabilities can be misused. Its total partner count should not be read as the number already using Carbon."
+              ]
+            },
+            {
+              "heading": "What independent tests actually measure",
+              "paragraphs": [
+                "Artificial Analysis lists Carbon at high reasoning with a score of 59, currently first on Intelligence Index v5.0. This combines nine evaluations into four equally weighted areas: knowledge work, coding, science and general capability. It does not mean that 59% of all work can be automated. The test mixture, reasoning configuration and index version matter, so direct comparisons with older index versions or different settings are misleading.",
+                "Collinear’s CWE-bench v1 offers a more specific security reference. Carbon, running in Antigravity, has a programmatic pass@1 score of 71%, compared with Argon’s 68%. The version contains 120 private audit-and-patch tasks, with four high-reasoning rollouts per task and a one-hour limit per rollout. Programmatic checks require a successful fix without breaking existing functionality. The 71% figure is not pass@4, which allows success across four attempts, nor a claim that the model finds seven out of ten vulnerabilities in arbitrary real software."
+              ]
+            },
+            {
+              "heading": "Capability and deployment are different questions",
+              "paragraphs": [
+                "Google also reports improvements in vulnerability discovery, controlled validation and long engineering tasks, along with fewer instances of overreach and fabrication observed internally. These remain the vendor’s own tests and observations; the independent composite ranking does not verify them. Security evaluations also examine different stages: discovering a problem, establishing whether it can be triggered and producing a working fix are not interchangeable success measures.",
+                "For defenders, the practical question is whether a model can connect diagnosis, repair and regression checking across sustained work. Our assessment is that the available evidence justifies testing that possibility, but does not establish ordinary teams’ real completion times, reliability or safety without supervision. Controlled feedback and safeguard refinement come next. Broad availability, specific product entry points and more extensive independent experience still require confirmation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the announcement and independent evaluations: controlled rollout and validation, not a measured performance chart.",
+            "steps": [
+              "Google announces Carbon",
+              "Selected defenders receive early access",
+              "Check repairs in controlled tasks",
+              "Gather feedback and refine safeguards",
+              "Wider availability remains unconfirmed"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Google は 10 月 28 日、長時間のソフトウェア開発とサイバー防御を重視する Gemini 4 Carbon を発表した。Argon が約二週間前に一般提供されたのに対し、今回はアクセスを制限して始める。今週は一部の防御チームが利用し、その後 Fairwind を通じて信頼できる協力先へ広げるという。Reuters も同じ段階的な提供方針を報じている。",
+          "sections": [
+            {
+              "heading": "一般提供とは区別する",
+              "paragraphs": [
+                "発表には一般開発者、企業顧客、消費者が広く利用できる日付がなく、重みの配布も発表されていない。モデル名、評価結果、将来の料金が公表されても、全員が今日接続できるわけではない。既に Argon を使うチームにとっては次のモデルが外部の制御された検証に入る知らせであり、既存サービスが自動的に切り替わったという意味ではない。",
+                "Fairwind は政府、医療、通信などの防御組織を対象とした Google のアクセス制度だ。一般的な運用規則には本人確認、アクセスの記録、利用権の転売禁止が含まれる。防御側が早く問題を発見・修正できることを目指す一方、同じ能力が悪用され得ることも認めている。制度全体の参加者数を、そのまま Carbon 利用者数と読むことはできない。"
+              ]
+            },
+            {
+              "heading": "独立評価の数字を読み分ける",
+              "paragraphs": [
+                "Artificial Analysis は高推論設定の Carbon を Intelligence Index v5.0 に掲載し、現在首位の 59 点としている。九つの評価を知識作業、コーディング、科学、一般能力の四分野にまとめ、各分野に 25% の重みを置いた指数だ。「全業務の 59% を自動化できる」という意味ではない。問題構成、推論設定、指数の版が異なれば直接比較できない。",
+                "より具体的な安全修正の評価として、Collinear の CWE-bench v1 では Antigravity 上の Carbon のプログラム検証 pass@1 が 71%、Argon が 68% となる。この版は非公開の監査・修正課題 120 件を使い、高推論で各課題を四回、一回につき一時間まで実行する。修正が有効で、既存機能も壊していないことを検査する。71% は四回のうち一回でも成功する pass@4 ではなく、現実の任意のソフトウェアで七割の脆弱性を発見するという値でもない。"
+              ]
+            },
+            {
+              "heading": "能力の進歩と導入条件は別",
+              "paragraphs": [
+                "Google は脆弱性の発見、制御環境での確認、長時間の開発でも改善を報告し、社内利用で過剰な行動や捏造が減ったとしている。これはメーカー自身の検証・観察であり、独立した総合ランキングが各主張を裏付けるわけではない。問題を見つけること、実際に発生し得るか確かめること、有効な修正を作ることは別段階で、成功率を混同できない。",
+                "防御チームにとって重要なのは、原因の特定から修正、回帰検証までを継続した作業としてつなげられるかだ。当サイトの見方では、現時点の証拠はその可能性を試す理由にはなるが、一般チームでの実時間、安定性、無監督での安全性まで示してはいない。まずは制御された利用の反応を集め、防護策を調整する段階にある。一般提供日、具体的な利用画面や API、より広い独立利用の結果は続報を待つ必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式発表と独立評価に基づいて当サイトが描き直した説明図。段階的提供と検証の流れであり、性能の実測図ではない。",
+            "steps": [
+              "Google が Carbon を発表",
+              "一部の防御チームが先行利用",
+              "制御された課題で修正を検査",
+              "反応を集めて防護策を調整",
+              "一般提供時期は未確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "28 октября Google представила Gemini 4 Carbon с акцентом на длительную программную инженерию и киберзащиту. Argon стала общедоступной примерно двумя неделями ранее, но Carbon начинает с ограниченного доступа: на этой неделе модель получат отдельные защитные команды, затем круг проверенных партнёров расширят через Fairwind. Reuters независимо сообщает о том же поэтапном порядке.",
+          "sections": [
+            {
+              "heading": "Кому доступна модель",
+              "paragraphs": [
+                "В объявлении нет даты общего доступа для разработчиков, компаний и потребителей, как нет и объявления о выдаче весов. Название модели, результаты тестов и будущие расценки не означают, что подключиться сегодня может каждый. Для команд, использующих Argon, это начало внешней контролируемой проверки следующей модели, а не автоматическая замена действующей услуги.",
+                "Fairwind — программа Google для защитников, в том числе государственных организаций, здравоохранения и телекоммуникаций. Общие правила предусматривают проверку личности, учёт доступа и запрет его перепродажи. Цель — раньше дать защитникам возможность находить и исправлять проблемы, признавая, что те же способности могут использоваться во вред. Общее число партнёров программы нельзя считать числом уже получивших Carbon."
+              ]
+            },
+            {
+              "heading": "Что именно показывают независимые тесты",
+              "paragraphs": [
+                "Artificial Analysis оценивает Carbon с высоким уровнем рассуждения в 59 баллов — первое место на текущем Intelligence Index v5.0. Индекс объединяет девять оценок в четыре области с весом по 25%: работа со знаниями, программирование, наука и общие способности. Это не означает автоматизацию 59% любой работы. Состав заданий, настройка рассуждения и версия индекса важны; прямое сопоставление со старой версией или другой конфигурацией некорректно.",
+                "Более конкретный ориентир для исправления уязвимостей даёт CWE-bench v1 от Collinear. Carbon в среде Antigravity имеет программно проверяемый pass@1 71%, Argon — 68%. Версия включает 120 закрытых задач аудита и исправления; для каждой делают четыре запуска с высоким рассуждением, ограничивая каждый одним часом. Проверки требуют устранить проблему, сохранив действующую функциональность. Показатель 71% — не pass@4, допускающий успех среди четырёх попыток, и не обещание обнаружить семь из десяти уязвимостей в произвольном реальном ПО."
+              ]
+            },
+            {
+              "heading": "Результат теста ещё не условие внедрения",
+              "paragraphs": [
+                "Google дополнительно сообщает об улучшениях обнаружения уязвимостей, их контролируемой проверки и длительных инженерных задач, а также о меньшем количестве чрезмерных действий и выдуманных утверждений в собственных наблюдениях. Это внутренние тесты и опыт поставщика: независимый общий рейтинг не подтверждает каждое из этих заявлений. Обнаружить проблему, установить возможность её проявления и подготовить работающую правку — разные этапы, а не взаимозаменяемые показатели успеха.",
+                "Для защитных команд важен переход от диагностики к исправлению и регрессионной проверке в непрерывной работе. По нашей оценке, имеющиеся данные оправдывают дальнейшую проверку этой возможности, но не устанавливают реальное время выполнения, надёжность или безопасность без надзора в обычной команде. Следующий шаг — контролируемая обратная связь и настройка защит. Срок общего доступа, конкретные способы подключения и более широкий независимый опыт пока требуют подтверждения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново составлена сайтом по объявлению и независимым оценкам: поэтапный доступ и проверка, не график измеренной производительности.",
+            "steps": [
+              "Google объявляет Carbon",
+              "Выбранные защитники получают ранний доступ",
+              "Проверка исправлений в контролируемых задачах",
+              "Обратная связь и настройка защиты",
+              "Общий доступ пока без подтверждённой даты"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Google 於 10 月 28 日公佈 Gemini 4 Carbon，把這一代模型的改進重點放在長時間的軟體工程任務和網路安全防禦上。與兩週前向公眾開放的 Argon 相比，這次最先落地的是受控試用：Google 表示本週先讓部分防禦團隊使用，再透過 Fairwind 專案擴展到更多可信合作方。路透社的報道也確認了這種分階段安排。",
+          "sections": [
+            {
+              "heading": "誰現在能用，誰還需要等待",
+              "paragraphs": [
+                "公告沒有給出普通開發者、企業客戶和消費者全面使用 Carbon 的日期，也沒有宣佈交付模型權重。已經公佈模型名稱、評測結果和未來計費方式，並不等於所有使用者今天就能接入。對於正在使用 Argon 的團隊，這條新聞說明下一代能力進入外部受控驗證，而不是現有服務已經自動切換。",
+                "Fairwind 是 Google 為網路防禦組織設定的准入專案，面向政府、醫療和通訊等關鍵領域，強調安全審查、受控訪問和防禦用途。專案的一般治理規則包括身份驗證、訪問記錄和禁止轉售訪問權。它既希望讓防禦者更早發現與修復問題，也承認同樣的能力可能被濫用；專案規模不能直接當成已經拿到 Carbon 的人數。"
+              ]
+            },
+            {
+              "heading": "獨立測試說明了什麼",
+              "paragraphs": [
+                "Artificial Analysis 已將高推理設定下的 Carbon 列入 Intelligence Index v5.0，顯示綜合得分 59，暫列榜首。這是九項評測彙總後的指數，知識工作、程式設計、科學和一般能力四類各佔 25%，不是“59% 的工作能自動完成”。測試組合、推理設定和榜單版本共同決定分數，不能直接與舊版指數或不同配置比較。",
+                "安全修復方面，Collinear 的 CWE-bench v1 官方榜單給出更具體的參照：Carbon 使用 Antigravity 框架，程式校驗的 pass@1 為 71%，Argon 為 68%。該版本包含 120 個未公開的審計與修補任務，每題高推理執行四次、每次限一小時；程式檢查要求問題被修復且原有功能仍能透過測試。這個 71% 不是四次機會中至少一次成功的 pass@4，也不表示任意真實軟體有七成漏洞會被發現。"
+              ]
+            },
+            {
+              "heading": "能力進展與部署條件要分開看",
+              "paragraphs": [
+                "Google 另外報告了漏洞發現、受控驗證和長時工程任務上的提升，並稱內部團隊觀察到更少的越界與編造行為。這些屬於廠商自己的測試和使用觀察，不能由獨立綜合榜單替它們背書。不同安全基準衡量的是不同階段：找出問題、判斷問題能否觸發和提供有效修復，並不是同一個成功率。",
+                "對防禦團隊而言，值得跟進的是模型能否把問題定位、修復與迴歸檢查連起來，減輕連續工作的負擔。本站的判斷是，現有證據支援繼續測試這種可能性，但還不足以推斷普通團隊的真實耗時、穩定性或無人監督的安全性。明確的下一步仍是受控反饋與防護調整；普遍可用時間、具體產品入口和更廣泛的獨立使用結果，仍需後續確認。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方公告與獨立評測重繪的解釋性示意：受控開放與驗證流程，不是實測效能圖。",
+            "steps": [
+              "Google 公佈 Carbon",
+              "部分防禦團隊先行驗證",
+              "在受控任務中檢查修復效果",
+              "收集反饋並調整防護",
+              "更廣泛開放時間待確認"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "github-actions-workflow-lockfiles-ga",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "GitHub · General availability announcement, October 28",
+          "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/"
+        },
+        {
+          "label": "GitHub Docs · Workflow dependency lockfiles",
+          "url": "https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles"
+        },
+        {
+          "label": "GitHub · Official extension and current limitations",
+          "url": "https://github.com/github/gh-actions-lock"
+        },
+        {
+          "label": "GitHub · Maintainer clarification on reusable workflow calls",
+          "url": "https://github.com/github/gh-actions-lock/issues/179"
+        },
+        {
+          "label": "DevOpsNess · Independent technical assessment, October 26",
+          "url": "https://www.devopsness.com/blog/github-actions-workflow-lockfiles"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "GitHub 10 月 28 日宣布，Actions 工作流依赖锁文件从公开预览转为正式可用，覆盖 Enterprise Cloud、带数据驻留的 Enterprise Cloud、Team 和 Free。这个功能面向自动测试、构建与发布等流程：把“流程写着要用哪个版本”与“这次真正执行了哪份内容”对应起来，减少上游引用变化带来的意外。",
+          "sections": [
+            {
+              "heading": "为什么版本名还不够",
+              "paragraphs": [
+                "工作流常用标签或分支引用第三方 action，也就是执行某一步任务的可复用组件。但这类名字指向的内容可以变化；流程文件没有改，下一次执行仍可能拿到不同版本。如果上游账号被攻破，这种变化还可能带来未经审查的恶意内容。锁文件记录精确提交及来源仓库身份，让执行时可以核对实际来源。",
+                "过去把一个 action 固定到精确提交，主要约束了最外层引用。这个 action 还可能继续调用别的 action，形成间接依赖。新机制覆盖这些直接和传递的 action 依赖，让用户保留容易阅读的版本名称，同时把需要审查的实际版本集中记录下来。它提供的是依赖解析的一致性，而不是对整次构建结果的保证。"
+              ]
+            },
+            {
+              "heading": "正式提供改变了什么",
+              "paragraphs": [
+                "这次公告的实质是预览能力进入正式提供，而非宣布所有仓库已经自动启用。团队可以逐个工作流接入；已经接入的工作流必须在锁文件中列全它使用的 action 依赖，执行时采用记录的提交。管理员也可以在仓库、组织或企业范围要求使用锁文件。",
+                "Dependabot 为已接入的工作流提出 action 版本更新时，会在同一个变更请求里同步更新对应锁定记录，让版本名与实际提交一起接受审查。尚未接入的工作流不会因此自动获得覆盖。GitHub 还提供一致性验证，用于发现工作流与锁文件不匹配；锁定内容仍应先经过审查，不能把自动生成当成自动信任。"
+              ]
+            },
+            {
+              "heading": "仍需单独处理哪些风险",
+              "paragraphs": [
+                "当前官方文档明确指出，调用可复用工作流的那一层引用并不由锁文件固定；被调用工作流内部的 action，应由其所在仓库自己的锁文件管理。容器镜像也不在扩展工具的锁定范围内。独立技术文章 DevOpsNess 在 10 月 26 日讨论了这些边界，官方维护者也在公开问题记录中承认早期文档对此有误导，现有说明已明确区分。",
+                "因此，“正式可用”不能理解成供应链风险已经全部解决。精确版本仍可能有漏洞，参数、权限和运行环境也会影响执行结果。本站的理解是，这项变化让依赖升级更容易审查和追踪，但团队仍需判断依赖是否可信、确认覆盖范围，并单独维护未覆盖的输入。公告没有提供采用后漏洞减少比例，本稿也不把机制介绍写成实测安全效果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方说明重绘的解释图：展示依赖锁定及其边界，不是安全效果或性能实测图。",
+            "steps": [
+              "审查来源与所需版本",
+              "记录直接和间接 action",
+              "执行时核对锁定提交",
+              "升级时一起审查变更",
+              "另行管理未覆盖输入"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 28, GitHub moved Actions workflow dependency lockfiles from public preview to general availability on Enterprise Cloud, Enterprise Cloud with data residency, Team, and Free. The feature concerns automated testing, builds, and releases: it connects the version a workflow asks for with the exact action content that actually runs, reducing surprises when upstream references change.",
+          "sections": [
+            {
+              "heading": "Why a version name is not enough",
+              "paragraphs": [
+                "A workflow often refers to a third-party action—a reusable component that performs a task—by a tag or branch. Those names can point to different content later. A workflow may therefore run different code even though its own definition has not changed. If an upstream account is compromised, that change can introduce unreviewed malicious content. A lockfile records an exact commit and the identity of its source repository so execution can check the source.",
+                "Pinning an action to a precise commit traditionally constrained the outer reference. That action may itself call other actions, creating indirect dependencies. Lockfiles cover direct and transitive action dependencies, keeping readable version names while collecting the actual versions that need review. This provides consistent action resolution, not a guarantee that every input or output of a build is reproducible."
+              ]
+            },
+            {
+              "heading": "What general availability changes",
+              "paragraphs": [
+                "The announcement promotes the preview capabilities to general availability; it does not mean every repository has automatically enabled them. Teams can onboard workflows individually. For an onboarded workflow, all its action dependencies must appear in the lockfile, and execution uses the recorded commits. Administrators can also require lockfiles at repository, organization, or enterprise scope.",
+                "When Dependabot proposes an action version update for an onboarded workflow, it regenerates the matching locked entry in the same pull request. The readable reference and actual commit can then be reviewed together. This does not automatically onboard other workflows. GitHub also offers consistency checks to detect mismatches between workflows and their lockfile. Generated dependency records still require review; automatic generation is not automatic trust."
+              ]
+            },
+            {
+              "heading": "Which risks remain outside the lock",
+              "paragraphs": [
+                "The current official documentation explicitly excludes the reference that calls a reusable workflow. Actions inside that called workflow are governed by the lockfile in the repository where it is defined. Container images are outside the extension’s locking scope as well. An October 26 independent DevOpsNess article discussed these boundaries; a maintainer also acknowledged misleading early documentation in a public issue, and the current documentation makes the distinction explicit.",
+                "General availability therefore does not mean the whole software supply chain has been secured. A precise version can still contain vulnerabilities, and parameters, permissions, and execution environments still matter. Our interpretation is that locking makes dependency changes easier to review and trace, while teams must still assess trust, check coverage, and manage other inputs separately. The announcement supplies no measured reduction in vulnerabilities, and this explanation should not be read as an independent security-effectiveness test."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from official documentation: dependency locking and its boundaries, not measured security or performance results.",
+            "steps": [
+              "Review source and intended version",
+              "Record direct and transitive actions",
+              "Check the locked commit at execution",
+              "Review updates together",
+              "Manage uncovered inputs separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "GitHub は 10 月 28 日、Actions のワークフロー依存ロックファイルを公開プレビューから正式提供へ移行した。対象は Enterprise Cloud、データ所在地を指定できる Enterprise Cloud、Team、Free。自動テスト、ビルド、公開などで、指定した版と実際に実行する action の内容を対応させ、上流の参照先変更による予期しない差を減らす仕組みだ。",
+          "sections": [
+            {
+              "heading": "版の名前だけでは足りない理由",
+              "paragraphs": [
+                "ワークフローは、処理を担当する再利用可能な部品である第三者の action を、タグやブランチで指定することが多い。しかし、その名前が指す内容は後から変わり得る。自分の設定を変えていなくても、次の実行で別の内容を使う可能性がある。上流のアカウントが侵害されれば、未確認の悪意ある内容にもつながる。ロックファイルは正確なコミットと提供元リポジトリの識別情報を記録し、実行時に照合できるようにする。",
+                "従来、特定のコミットを指定して固定しても、主に外側の参照が固定されるだけだった。その action が別の action を呼ぶ場合には、間接的な依存が残る。新しい仕組みは直接・推移的な action 依存を対象とし、読みやすい版名を残しながら、審査すべき実際の版をまとめて記録する。これは action の解決を一定にする機能であり、ビルド全体の再現性を保証するものではない。"
+              ]
+            },
+            {
+              "heading": "正式提供で何が変わるか",
+              "paragraphs": [
+                "今回の変更はプレビュー機能の正式提供であって、全リポジトリへの自動適用ではない。チームはワークフローごとに導入できる。導入済みのワークフローでは、使うすべての action 依存をロックファイルに含め、記録されたコミットを実行する。管理者はリポジトリ、組織、企業の範囲でロックファイルを必須にできる。",
+                "Dependabot が導入済みワークフローの action 更新を提案すると、同じ変更リクエストで対応する固定記録も更新する。表示上の版と実際のコミットを一緒に審査できる一方、未導入のワークフローまで自動的に対象になるわけではない。ワークフローと固定記録の不整合を検出する検証機能もある。記録が自動生成されても、その依存を信頼してよいかは別途判断する必要がある。"
+              ]
+            },
+            {
+              "heading": "対象外の入力と残るリスク",
+              "paragraphs": [
+                "現在の公式文書は、再利用可能なワークフローを呼び出す参照自体は固定対象外だと明記している。呼び出し先の内部で使う action は、その定義元リポジトリ自身のロックファイルが管理する。コンテナイメージも拡張ツールの固定対象ではない。10 月 26 日の独立技術記事 DevOpsNess もこの境界を論じ、公式の担当者は公開 issue で初期文書の誤りを認めた。現在の説明では区別が明確になっている。",
+                "したがって、正式提供をサプライチェーン全体の安全保証と受け取るべきではない。固定した版にも脆弱性はあり得て、引数、権限、実行環境も結果に影響する。本站では、依存更新の審査と追跡を容易にする変更と捉えるが、信頼性と適用範囲の確認、対象外の入力管理は残ると考える。発表に導入後の脆弱性削減率はなく、この解説も独立した安全効果の実測ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式説明に基づき本站が描き直した解説図。依存固定と適用範囲を示し、安全効果や性能の実測結果ではない。",
+            "steps": [
+              "提供元と必要な版を審査",
+              "直接・間接の action を記録",
+              "実行時に固定コミットを確認",
+              "更新内容をまとめて審査",
+              "対象外の入力を別途管理"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "28 октября GitHub перевела файлы фиксации зависимостей процессов Actions из публичного предварительного режима в общую доступность для Enterprise Cloud, Enterprise Cloud с выбором региона хранения данных, Team и Free. Функция предназначена для автоматических проверок, сборок и выпуска: она связывает запрошенную версию с конкретным содержимым action, которое действительно запускается, уменьшая неожиданности при изменении внешних ссылок.",
+          "sections": [
+            {
+              "heading": "Почему имени версии недостаточно",
+              "paragraphs": [
+                "Процесс часто обращается к стороннему action — повторно используемому компоненту для отдельной задачи — через тег или ветку. Впоследствии такое имя может указывать уже на другое содержимое. Поэтому неизмененный процесс способен выполнить новую версию. При компрометации учетной записи поставщика это может оказаться непроверенный вредоносный код. Файл фиксации записывает точный коммит и идентичность исходного репозитория, которые можно проверить при запуске.",
+                "Привязка action к точному коммиту традиционно фиксировала внешний уровень ссылки. Но этот action может вызывать другие actions, образуя косвенные зависимости. Новый механизм охватывает прямые и транзитивные зависимости actions: понятные названия версий сохраняются, а реальные версии для проверки собраны отдельно. Это делает разрешение зависимостей постоянным, но не гарантирует воспроизводимость всех входов и результатов сборки."
+              ]
+            },
+            {
+              "heading": "Что означает общий доступ",
+              "paragraphs": [
+                "Объявление переводит предварительные возможности в общую доступность; оно не означает автоматического включения во всех репозиториях. Процессы можно подключать по одному. Для подключенного процесса все его зависимости actions должны присутствовать в файле фиксации, а исполняются записанные коммиты. Администраторы могут сделать использование таких файлов обязательным для репозитория, организации или предприятия.",
+                "Когда Dependabot предлагает обновление action в подключенном процессе, соответствующая запись фиксации обновляется в том же запросе на изменение. Название версии и реальный коммит можно рассмотреть вместе. Остальные процессы от этого автоматически не подключаются. GitHub также предоставляет проверку согласованности процесса с его файлом фиксации. Автоматическое создание записи не отменяет проверку зависимости и не делает ее автоматически доверенной."
+              ]
+            },
+            {
+              "heading": "Что остается за пределами защиты",
+              "paragraphs": [
+                "Текущая официальная документация прямо исключает ссылку, вызывающую повторно используемый процесс. Его внутренние actions должны контролироваться файлом фиксации в репозитории, где этот процесс определен. Образы контейнеров расширение тоже не фиксирует. Независимая техническая статья DevOpsNess от 26 октября обсуждала эти границы; сопровождающий проекта признал в публичном обсуждении ошибку ранней документации. Сейчас официальное описание явно разделяет эти случаи.",
+                "Общая доступность не означает устранения всех рисков цепочки поставок. Зафиксированная версия может содержать уязвимости; параметры, права и среда выполнения также влияют на результат. По нашей оценке, изменение облегчает проверку и отслеживание обновлений, но оценка доверия, проверка охвата и отдельное управление остальными входами сохраняются. В объявлении нет измеренного процента снижения уязвимостей; это объяснение механизма, а не независимый тест эффективности защиты."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема сайта по официальной документации: фиксация зависимостей и ее границы, не измерение безопасности или производительности.",
+            "steps": [
+              "Проверить источник и нужную версию",
+              "Записать прямые и косвенные actions",
+              "Сверить коммит при выполнении",
+              "Проверять обновления вместе",
+              "Отдельно управлять остальными входами"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "GitHub 10 月 28 日宣佈，Actions 工作流依賴鎖定檔從公開預覽轉為正式可用，覆蓋 Enterprise Cloud、帶資料駐留的 Enterprise Cloud、Team 和 Free。這個功能面向自動測試、構建與釋出等流程：把“流程寫著要用哪個版本”與“這次真正執行了哪份內容”對應起來，減少上游引用變化帶來的意外。",
+          "sections": [
+            {
+              "heading": "為什麼版本名還不夠",
+              "paragraphs": [
+                "工作流常用標籤或分支引用第三方 action，也就是執行某一步任務的可複用元件。但這類名字指向的內容可以變化；流程檔案沒有改，下一次執行仍可能拿到不同版本。如果上游帳號被攻破，這種變化還可能帶來未經審查的惡意內容。鎖定檔記錄精確提交及來源倉庫身份，讓執行時可以核對實際來源。",
+                "過去把一個 action 固定到精確提交，主要約束了最外層引用。這個 action 還可能繼續呼叫別的 action，形成間接依賴。新機制覆蓋這些直接和傳遞的 action 依賴，讓使用者保留容易閱讀的版本名稱，同時把需要審查的實際版本集中記錄下來。它提供的是依賴解析的一致性，而不是對整次構建結果的保證。"
+              ]
+            },
+            {
+              "heading": "正式提供改變了什麼",
+              "paragraphs": [
+                "這次公告的實質是預覽能力進入正式提供，而非宣佈所有倉庫已經自動啟用。團隊可以逐個工作流接入；已經接入的工作流必須在鎖定檔中列全它使用的 action 依賴，執行時採用記錄的提交。管理員也可以在倉庫、組織或企業範圍要求使用鎖定檔。",
+                "Dependabot 為已接入的工作流提出 action 版本更新時，會在同一個變更請求裡同步更新對應鎖定記錄，讓版本名與實際提交一起接受審查。尚未接入的工作流不會因此自動獲得覆蓋。GitHub 還提供一致性驗證，用於發現工作流與鎖定檔不匹配；鎖定內容仍應先經過審查，不能把自動生成當成自動信任。"
+              ]
+            },
+            {
+              "heading": "仍需單獨處理哪些風險",
+              "paragraphs": [
+                "當前官方文件明確指出，呼叫可複用工作流的那一層引用並不由鎖定檔固定；被呼叫工作流內部的 action，應由其所在倉庫自己的鎖定檔管理。容器映像也不在擴充套件工具的鎖定範圍內。獨立技術文章 DevOpsNess 在 10 月 26 日討論了這些邊界，官方維護者也在公開問題記錄中承認早期文件對此有誤導，現有說明已明確區分。",
+                "因此，“正式可用”不能理解成供應鏈風險已經全部解決。精確版本仍可能有漏洞，引數、許可權和執行環境也會影響執行結果。本站的理解是，這項變化讓依賴升級更容易審查和追蹤，但團隊仍需判斷依賴是否可信、確認覆蓋範圍，並單獨維護未覆蓋的輸入。公告沒有提供採用後漏洞減少比例，本稿也不把機制介紹寫成實測安全效果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方說明重繪的解釋圖：展示依賴鎖定及其邊界，不是安全效果或效能實測圖。",
+            "steps": [
+              "審查來源與所需版本",
+              "記錄直接和間接 action",
+              "執行時核對鎖定提交",
+              "升級時一起審查變更",
+              "另行管理未覆蓋輸入"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nist-pqc-transition-final-roadmap",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "NIST · announcement and publication date",
+          "url": "https://www.nist.gov/news-events/news/2026/10/nist-report-provides-guidelines-transition-post-quantum-cryptography"
+        },
+        {
+          "label": "NIST IR 8547 · final report",
+          "url": "https://nvlpubs.nist.gov/nistpubs/ir/2026/NIST.IR.8547.pdf"
+        },
+        {
+          "label": "NIST CSRC · version history",
+          "url": "https://csrc.nist.gov/pubs/ir/8547/final"
+        },
+        {
+          "label": "Quantum Computing Report · independent coverage",
+          "url": "https://quantumcomputingreport.com/nist-releases-final-ir-8547-establishing-definitive-post-quantum-cryptography-transition-timeline-and-deprecation-schedules/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "后量子密码算法已有标准，真正换进网络、证书和设备却可能需要多年。美国国家标准与技术研究院 NIST 于 10 月 27 日发布 NIST IR 8547 最终版，把迁移对象、风险排序与时间要求放到同一份路线图中。它替代 2024 年的草案，新增价值是明确怎样推进迁移，而不是宣布量子计算机已经破解现有系统。",
+          "sections": [
+            {
+              "heading": "先区分保密与身份验证",
+              "paragraphs": [
+                "密钥建立用于让通信双方取得共同秘密，随后用它保护数据；数字签名则帮助核验来源与内容是否被改动。RSA、椭圆曲线等公钥方案在足够强的量子计算机面前存在风险。即使这种设备尚未出现，攻击者也可能先保存密文，日后再解密，因此保密期很长的数据需要尽早考虑迁移。签名没有同样的“先收集后解密”问题，但证书和硬件的更新周期同样漫长。",
+                "报告列出已有替代标准：FIPS 203 的 ML-KEM 用于密钥建立，FIPS 204 的 ML-DSA 与 FIPS 205 的 SLH-DSA 用于数字签名。NIST 推荐 ML-KEM-768 作为默认参数集，但允许因性能或更高安全需求选择其他参数。HQC 已获选进入标准化，最终标准仍在制定，不能与已经批准的 ML-KEM 混为一谈。报告没有要求把 AES 等全部对称密码一并淘汰。"
+              ]
+            },
+            {
+              "heading": "2030、2031 和 2035 分别意味着什么",
+              "paragraphs": [
+                "一般路线是在 2030 年之后弃用易受量子攻击的公钥算法，在 2035 年之后不再允许按 NIST 标准和指南将其用于所述用途。“弃用”并不等于立即禁止，而是继续使用有风险，需要数据所有者评估。这个较宽的过渡窗口不覆盖所有系统，更不是全球所有企业一律适用的同一法律期限。",
+                "报告依据美国联邦政策，为高价值资产、高影响系统及其他优先保护的敏感系统列出更早节点：密钥建立须于 2030 年 12 月 31 日前迁移，数字签名须于 2031 年 12 月 31 日前迁移。联邦整体迁移目标仍为 2035 年。有关联邦系统还须在 2030 年 1 月 2 日前支持 TLS 1.3；支持这个协议版本本身，并不代表已经采用后量子算法。"
+              ]
+            },
+            {
+              "heading": "迁移涉及整条依赖链",
+              "paragraphs": [
+                "一次迁移会牵动通信协议、密码库、硬件模块、证书机构和实际应用。较大的密钥或签名、不同的接口，以及新旧系统之间的互通，都需要测试。报告特别提醒，有些设备出厂后难以更换固件签名的验证机制；如果设备预计使用很久，相关能力必须更早纳入设计。只升级一个库，不能证明整条链路已完成迁移。",
+                "混合方案把传统算法与后量子算法结合，可用于过渡，但增加复杂度、实现风险和成本；其安全性质仍须按具体组合分析。本站据此将这份报告理解为按数据保密期和系统依赖安排升级的依据，而不是量子威胁出现时间的预测。具体应用指南还会更新，无法支持新算法的系统可能需要替换或退役，路线图发布也不代表任何现有产品已通过验证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据 NIST 报告重绘的迁移示意，说明工作先后关系，不是合规认证或实测结果。",
+            "steps": [
+              "盘点算法与系统依赖",
+              "按保密期和风险排序",
+              "协调协议、证书与设备升级",
+              "验证互通并退出旧方案"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Post-quantum algorithms have standards, but putting them into networks, certificates and devices can take years. On October 27, NIST published the final NIST IR 8547, bringing migration targets, risk priorities and timing into one roadmap. It replaces the 2024 draft. The development is a clearer transition framework, not evidence that a quantum computer has already broken deployed systems.",
+          "sections": [
+            {
+              "heading": "Confidentiality and authentication have different risks",
+              "paragraphs": [
+                "Key establishment gives communicating parties a shared secret that can protect their data; digital signatures help verify origin and detect alteration. Public-key techniques such as RSA and elliptic-curve cryptography are vulnerable to a sufficiently capable quantum computer. Even before such a machine exists, adversaries could retain ciphertext to decrypt later. Data with a long confidentiality lifetime therefore deserves early attention. Signatures do not face that same harvest-now-decrypt-later problem, but certificate and hardware replacement still take time.",
+                "The report identifies standardized replacements: ML-KEM in FIPS 203 for key establishment, and ML-DSA in FIPS 204 and SLH-DSA in FIPS 205 for signatures. NIST recommends ML-KEM-768 as the default parameter set, with alternatives for performance constraints or higher security needs. HQC has been selected for standardization, but its final standard remains under development; it is not already approved alongside ML-KEM. The report does not require retiring all symmetric cryptography, such as AES."
+              ]
+            },
+            {
+              "heading": "What 2030, 2031 and 2035 mean",
+              "paragraphs": [
+                "The general schedule deprecates quantum-vulnerable public-key algorithms after 2030 and disallows their use for the stated purposes under NIST standards and guidelines after 2035. Deprecation is not an immediate ban: continued use carries risk for the data owner to assess. This wider transition window does not apply to every system, nor is it a single legal deadline binding every business worldwide.",
+                "Drawing on US federal policy, the report specifies earlier dates for high-value assets, high-impact systems and other prioritized sensitive systems: key establishment must migrate by December 31, 2030, and digital signatures by December 31, 2031. The overall federal migration target remains 2035. Relevant federal systems must also support TLS 1.3 by January 2, 2030; support for that protocol version alone does not mean post-quantum algorithms are in use."
+              ]
+            },
+            {
+              "heading": "The whole dependency chain must change",
+              "paragraphs": [
+                "Migration spans protocols, cryptographic libraries, hardware modules, certificate authorities and applications. Larger keys or signatures, different interfaces and interoperability with older systems all need testing. The report highlights devices whose firmware-signature verification cannot readily be replaced after manufacture: long service lives make early design decisions important. Updating a single library does not establish that the whole chain has migrated.",
+                "Hybrid techniques combine classical and post-quantum algorithms during transition, but add complexity, implementation risk and cost; their security properties need analysis for the particular construction. We read this roadmap as a basis for sequencing work around data lifetimes and dependencies, not a prediction of when quantum attacks will become practical. Application guidance will evolve, unsupported systems may need replacement or retirement, and publication of a roadmap does not validate any existing product."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory migration diagram redrawn from the NIST report; not a compliance certificate or measured result.",
+            "steps": [
+              "Inventory algorithms and dependencies",
+              "Prioritize confidentiality lifetimes and risk",
+              "Coordinate protocols, certificates and devices",
+              "Test interoperability and retire old schemes"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "耐量子暗号の規格ができても、ネットワーク、証明書、機器への導入には長い時間がかかる。NIST は10月27日、移行対象、リスクの優先順位、期限をまとめた NIST IR 8547 の最終版を公表した。2024年の草案を置き換えるもので、今回の進展は移行方針の具体化であり、量子計算機が既存システムを既に破ったという発表ではない。",
+          "sections": [
+            {
+              "heading": "機密性と認証ではリスクが異なる",
+              "paragraphs": [
+                "鍵確立は通信相手同士がデータ保護に使う共通の秘密を得る仕組みで、電子署名は送信元や改変の有無を確認する。RSA や楕円曲線などの公開鍵方式は、十分に強力な量子計算機に弱い。その機械がまだなくても、暗号文を保存して将来解読する攻撃は考えられるため、長期間秘密にする情報は早い対応が重要になる。署名に同じ収集後解読の問題はないが、証明書と機器の更新には時間がかかる。",
+                "代替規格は、鍵確立の FIPS 203 ML-KEM と、署名の FIPS 204 ML-DSA、FIPS 205 SLH-DSA。NIST は ML-KEM-768 を標準的なパラメーターとして推奨し、性能制約や高い安全性の必要に応じた選択も認める。HQC は標準化対象に選ばれた段階で最終規格は作成中であり、既に承認された ML-KEM と同じ状態ではない。AES など全ての共通鍵暗号を廃止する方針でもない。"
+              ]
+            },
+            {
+              "heading": "2030年、2031年、2035年の意味",
+              "paragraphs": [
+                "一般的な日程では、量子攻撃に弱い公開鍵方式を2030年後に非推奨とし、2035年後には NIST の規格・指針に基づく当該用途で認めなくする。非推奨は即時禁止ではなく、継続のリスクをデータ所有者が判断する期間を意味する。この幅広い移行期間が全システムに当てはまるわけではなく、世界中の企業に同じ法的期限を課すものでもない。",
+                "米国連邦政策に基づき、高価値資産、高影響システム、その他の優先保護対象には前倒しの期限を示す。鍵確立は2030年12月31日、署名は2031年12月31日までに移行する。連邦全体の目標は2035年のままだ。対象の連邦システムには2030年1月2日までの TLS 1.3 対応も求められるが、この版への対応だけで耐量子暗号の利用が完了するわけではない。"
+              ]
+            },
+            {
+              "heading": "依存関係全体を移行する",
+              "paragraphs": [
+                "移行には通信規約、暗号ライブラリー、ハードウェア、認証局、アプリケーションが関わる。鍵や署名の大型化、異なるインターフェース、新旧システムの相互運用を試験する必要がある。出荷後にファームウェア署名の検証機構を容易に変えられない機器では、長期利用を見込んだ初期設計が重要になる。一つのライブラリーの更新で経路全体の移行を証明することはできない。",
+                "従来方式と耐量子方式を組み合わせるハイブリッド手法も移行に使えるが、複雑さ、実装リスク、費用が増え、組合せごとの安全性分析が必要だ。当サイトはこの報告を、情報の機密保持期間と依存関係に沿って作業順を決める資料と捉える。量子攻撃の実現時期を予言するものではない。用途別指針は更新され、非対応システムは交換や廃止が必要な場合もある。報告の公表だけで既存製品が検証済みになることもない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "NIST 報告に基づき当サイトが描き直した移行手順の説明図。適合認証や実測結果ではない。",
+            "steps": [
+              "アルゴリズムと依存関係を棚卸し",
+              "機密保持期間とリスクで優先付け",
+              "通信・証明書・機器を協調更新",
+              "相互運用を検証して旧方式を終了"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Стандарты постквантовых алгоритмов уже существуют, но внедрение в сети, сертификаты и устройства занимает годы. 27 октября NIST выпустил окончательный NIST IR 8547, объединив объекты миграции, приоритеты риска и сроки в одной дорожной карте. Документ заменяет проект 2024 года. Новость состоит в уточнённой схеме перехода, а не в том, что квантовый компьютер уже взломал действующие системы.",
+          "sections": [
+            {
+              "heading": "Конфиденциальность и аутентификация требуют разных решений",
+              "paragraphs": [
+                "Установление ключа позволяет сторонам получить общий секрет для защиты данных; цифровая подпись помогает проверить источник и обнаружить изменение содержания. RSA и криптография на эллиптических кривых уязвимы перед достаточно мощным квантовым компьютером. Даже до его появления противник может сохранять шифротекст для будущего расшифрования. Поэтому данные с длительным сроком секретности требуют раннего перехода. Для подписей нет такого же риска «собрать сейчас, расшифровать потом», но замена сертификатов и оборудования также длительна.",
+                "Документ указывает стандартизованные замены: ML-KEM из FIPS 203 для установления ключа, ML-DSA из FIPS 204 и SLH-DSA из FIPS 205 для подписей. NIST рекомендует ML-KEM-768 как набор параметров по умолчанию, допуская другие варианты при ограничениях производительности или повышенных требованиях безопасности. HQC выбран для стандартизации, однако окончательный стандарт ещё разрабатывается: его статус отличается от уже одобренного ML-KEM. Отказываться от всей симметричной криптографии, включая AES, отчёт не требует."
+              ]
+            },
+            {
+              "heading": "Что означают 2030, 2031 и 2035 годы",
+              "paragraphs": [
+                "Общий график переводит уязвимые публично-ключевые алгоритмы в нежелательные после 2030 года и запрещает их для указанных целей в рамках стандартов и рекомендаций NIST после 2035 года. Нежелательный статус не равен немедленному запрету: владелец данных должен оценить риск продолжения использования. Это широкое переходное окно не относится ко всем системам и не является единым юридическим сроком для каждой компании в мире.",
+                "На основе федеральной политики США документ устанавливает более ранние сроки для особо ценных активов, систем высокого уровня воздействия и других приоритетных чувствительных систем: установление ключа должно перейти к 31 декабря 2030 года, подписи — к 31 декабря 2031 года. Общая федеральная цель остаётся 2035 годом. Соответствующие федеральные системы также должны поддерживать TLS 1.3 к 2 января 2030 года, но поддержка этой версии сама по себе не означает использования постквантовых алгоритмов."
+              ]
+            },
+            {
+              "heading": "Меняется вся цепочка зависимостей",
+              "paragraphs": [
+                "Переход охватывает протоколы, криптографические библиотеки, аппаратные модули, центры сертификации и приложения. Более крупные ключи и подписи, новые интерфейсы и совместимость со старыми системами требуют испытаний. Особое внимание уделено устройствам, где после производства сложно заменить проверку подписи прошивки: долгий срок эксплуатации требует ранних проектных решений. Обновление одной библиотеки не подтверждает завершение всей миграции.",
+                "Гибридные конструкции сочетают классические и постквантовые алгоритмы, но увеличивают сложность, риск ошибок реализации и стоимость; безопасность нужно анализировать для конкретной комбинации. Мы рассматриваем отчёт как основу очерёдности работ по срокам секретности и зависимостям, а не прогноз даты появления квантовых атак. Прикладные рекомендации будут обновляться, неподдерживаемые системы могут потребовать замены или вывода, а публикация карты не означает сертификацию существующих продуктов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема перехода по отчёту NIST; не сертификат соответствия и не результат измерений.",
+            "steps": [
+              "Учесть алгоритмы и зависимости",
+              "Определить сроки секретности и приоритеты риска",
+              "Согласовать обновление протоколов, сертификатов и устройств",
+              "Проверить совместимость и вывести старые схемы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "後量子密碼演算法已有標準，真正換進網路、證書和裝置卻可能需要多年。美國國家標準與技術研究院 NIST 於 10 月 27 日釋出 NIST IR 8547 最終版，把遷移物件、風險排序與時間要求放到同一份路線圖中。它替代 2024 年的草案，新增價值是明確怎樣推進遷移，而不是宣佈量子計算機已經破解現有系統。",
+          "sections": [
+            {
+              "heading": "先區分保密與身份驗證",
+              "paragraphs": [
+                "金鑰建立用於讓通訊雙方取得共同秘密，隨後用它保護資料；數字簽名則幫助核驗來源與內容是否被改動。RSA、橢圓曲線等公鑰方案在足夠強的量子計算機面前存在風險。即使這種裝置尚未出現，攻擊者也可能先儲存密文，日後再解密，因此保密期很長的資料需要儘早考慮遷移。簽名沒有同樣的“先收集後解密”問題，但證書和硬體的更新週期同樣漫長。",
+                "報告列出已有替代標準：FIPS 203 的 ML-KEM 用於金鑰建立，FIPS 204 的 ML-DSA 與 FIPS 205 的 SLH-DSA 用於數字簽名。NIST 推薦 ML-KEM-768 作為預設引數集，但允許因效能或更高安全需求選擇其他引數。HQC 已獲選進入標準化，最終標準仍在制定，不能與已經批准的 ML-KEM 混為一談。報告沒有要求把 AES 等全部對稱密碼一併淘汰。"
+              ]
+            },
+            {
+              "heading": "2030、2031 和 2035 分別意味著什麼",
+              "paragraphs": [
+                "一般路線是在 2030 年之後棄用易受量子攻擊的公鑰演算法，在 2035 年之後不再允許按 NIST 標準和指南將其用於所述用途。“棄用”並不等於立即禁止，而是繼續使用有風險，需要資料所有者評估。這個較寬的過渡視窗不覆蓋所有系統，更不是全球所有企業一律適用的同一法律期限。",
+                "報告依據美國聯邦政策，為高價值資產、高影響系統及其他優先保護的敏感系統列出更早節點：金鑰建立須於 2030 年 12 月 31 日前遷移，數字簽名須於 2031 年 12 月 31 日前遷移。聯邦整體遷移目標仍為 2035 年。有關聯邦系統還須在 2030 年 1 月 2 日前支援 TLS 1.3；支援這個協議版本本身，並不代表已經採用後量子演算法。"
+              ]
+            },
+            {
+              "heading": "遷移涉及整條依賴鏈",
+              "paragraphs": [
+                "一次遷移會牽動通訊協議、密碼庫、硬體模組、證書機構和實際應用。較大的金鑰或簽名、不同的介面，以及新舊系統之間的互通，都需要測試。報告特別提醒，有些裝置出廠後難以更換韌體簽名的驗證機制；如果裝置預計使用很久，相關能力必須更早納入設計。只升級一個庫，不能證明整條鏈路已完成遷移。",
+                "混合方案把傳統演算法與後量子演算法結合，可用於過渡，但增加複雜度、實現風險和成本；其安全性質仍須按具體組合分析。本站據此將這份報告理解為按資料保密期和系統依賴安排升級的依據，而不是量子威脅出現時間的預測。具體應用指南還會更新，無法支援新演算法的系統可能需要替換或退役，路線圖釋出也不代表任何現有產品已透過驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據 NIST 報告重繪的遷移示意，說明工作先後關係，不是合規認證或實測結果。",
+            "steps": [
+              "盤點演算法與系統依賴",
+              "按保密期和風險排序",
+              "協調協議、證書與裝置升級",
+              "驗證互通並退出舊方案"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "ovhcloud-cli-release-assets-compromise",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "OVHcloud · official security advisory",
+          "url": "https://github.com/ovh/ovhcloud-cli/security/advisories/GHSA-862f-55f5-vmvw"
+        },
+        {
+          "label": "BleepingComputer · independent report",
+          "url": "https://www.bleepingcomputer.com/news/security/ovhcloud-cli-releases-backdoored-on-github-to-steal-developer-secrets/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "2026 年 10 月 19 日，OVHcloud 用于管理云服务的命令行工具遭遇发布文件替换。用户看到的仍是熟悉的项目和版本号，但下载到的程序可能已经不同。20 日发布的官方安全通告确认，这是一宗利用被盗开发者账户篡改现成下载包的供应链事件；截至本次复核，官方将受影响范围限定在具体版本和下载时段。",
+          "sections": [
+            {
+              "heading": "同一个版本号，文件却被换了",
+              "paragraphs": [
+                "OVHcloud 列出的受影响版本是 v0.11.0 至 v0.15.0，时间为 10 月 19 日 12:47—14:21 UTC，即上海时间当日 20:47—22:21。此前下载的相同版本不因这次替换而自动变成恶意文件。官方还确认 v0.16.0 未受影响。因此，判断是否暴露需要同时看下载时段和实际文件，不能只凭版本号推断。",
+                "攻击者取得了一个有发布权限的开发者账户，替换已经存在的发布附件。项目尚未开启发布不可变保护，使这些下载文件可在正常构建之外被改写。公司称源代码、构建链及其他仓库未发现同类改动。其关键区别是：审查仓库内容或看到测试通过，并不能单独证明后来下载的文件就是当初构建出的文件。"
+              ]
+            },
+            {
+              "heading": "风险为什么不止于这个工具",
+              "paragraphs": [
+                "官方技术报告称，被替换的程序试图收集开发工具、云平台和远程访问所用的凭证及相关数据。风险因此可能超出 OVHcloud 本身：一台用于管理多种服务的工作环境往往同时持有不同系统的访问权限。这里描述的是恶意程序的收集目标，不代表所有相关服务都被入侵，也不证明每位下载者的数据都已成功外传。",
+                "OVHcloud 建议受影响用户不要通过再次运行可疑程序来判断安全性，而应按官方通告核对文件。已经执行过受影响包的用户需要处理受影响环境，并撤销、轮换可能暴露的凭证。替换为干净版本只能停止继续使用被篡改工具，不能让已经复制出去的访问权限自动失效；这也是单纯升级不足以完成处置的原因。"
+              ]
+            },
+            {
+              "heading": "已采取的措施与仍需区分的结论",
+              "paragraphs": [
+                "公司称，在客户报告后已删除恶意发布文件、停用涉事账户、复查写入权限，并启用发布不可变设置，随后发布干净的 v0.16.0。不可变发布的意义是阻止已发布附件被直接悄悄替换，而不是保证任何未来发布都天然可信。公司还提出进一步审查发布流程、签名与身份管理，这些后续计划应与已经完成的措施分开看。",
+                "官方公布约 250 次下载统计，但这不是确认的受害人数，更不是已泄露账户的数量。独立报道与官方材料均支持发布附件遭替换这一核心事实；攻击者归属、每次执行是否成功外传以及最终损失规模不能由下载量直接推得。对软件使用者而言，此事件说明版本号、公开源码和测试结果之外，交付文件本身及发布权限也需要独立保护。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方通告重绘的解释性流程，说明发布文件与用户处置的关系，不包含攻击步骤。",
+            "steps": [
+              "已有发布文件遭替换",
+              "限定下载时段与受影响版本",
+              "删除恶意文件并保护发布",
+              "受影响用户清理环境与轮换凭证"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 19, 2026, download files for OVHcloud’s cloud-management command-line tool were replaced. The project and version names still looked familiar, but the program obtained from a release could be different. An official advisory published on October 20 confirms a supply-chain incident involving a compromised developer account. The affected scope is defined by both versions and a specific download window.",
+          "sections": [
+            {
+              "heading": "A familiar version can contain a different file",
+              "paragraphs": [
+                "OVHcloud identifies versions v0.11.0 through v0.15.0 downloaded during October 19, 12:47–14:21 UTC, equivalent to 20:47–22:21 in Shanghai. Copies of those versions downloaded before the incident are not affected by this replacement. The company also identifies v0.16.0 as unaffected. Assessing exposure therefore requires the download period and the actual file, rather than a version number alone.",
+                "An attacker used a developer account with release access to replace existing attachments. Release immutability had not been enabled, allowing downloadable files to change outside the normal build process. OVHcloud says the source, build chain and other repositories showed no corresponding modifications. Reviewing repository contents or seeing successful tests does not, by itself, prove that a later download is the artifact those tests originally covered."
+              ]
+            },
+            {
+              "heading": "Why the exposure can extend beyond one tool",
+              "paragraphs": [
+                "The official technical report describes attempts to collect credentials and related data used by development tools, cloud platforms and remote access. The potential exposure can therefore reach beyond OVHcloud: one development environment may hold permissions for several systems. These are the program’s reported collection targets, not evidence that every associated service was breached or that data from every downloader was successfully transferred.",
+                "OVHcloud advises affected users to identify suspect files using its advisory without running them again. Users who executed a compromised package need to address the affected environment and revoke or rotate potentially exposed credentials. Replacing the tool with a clean release stops continued use of that tampered program, but does not invalidate credentials already copied elsewhere. This is why upgrading alone cannot complete the response."
+              ]
+            },
+            {
+              "heading": "Completed measures and unresolved conclusions",
+              "paragraphs": [
+                "The company says it removed malicious artifacts, suspended the account, reviewed write access and enabled immutable releases after a customer report, then issued clean v0.16.0. Immutability prevents direct replacement of already published attachments; it does not make every future release inherently trustworthy. Further reviews of publishing, signatures and identity management were proposed and should be distinguished from measures already completed.",
+                "The advisory reports approximately 250 downloads. That is not a confirmed count of victims or leaked accounts. Independent reporting and the company’s advisory support the central finding that release assets were replaced; attribution, successful exfiltration on individual systems and final losses cannot be inferred from download counts. The incident illustrates why delivered artifacts and release privileges need protection alongside public source and test results."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the advisory: release integrity and defensive response, with no attack procedure.",
+            "steps": [
+              "Existing release artifacts replaced",
+              "Check the affected version and download window",
+              "Remove malicious files and protect releases",
+              "Remediate exposure and rotate credentials"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "2026 年 10 月 19 日、OVHcloud のクラウド管理用コマンドラインツールで、配布ファイルが差し替えられた。見慣れたプロジェクト名やバージョンでも、取得するプログラムが同じとは限らなかった。20 日公開の公式アドバイザリーは、開発者アカウントの侵害によるサプライチェーン事件と確認している。影響範囲はバージョンだけでなく、取得した時間帯でも区切られる。",
+          "sections": [
+            {
+              "heading": "同じバージョンでも中身が変わる",
+              "paragraphs": [
+                "対象は v0.11.0～v0.15.0 で、取得時間帯は 10 月 19 日 12:47～14:21 UTC、上海時間では同日 20:47～22:21。事件より前に取得した同じバージョンは、この差し替えの影響を受けない。v0.16.0 も影響なしとされる。したがって、バージョン番号だけで判断せず、取得時刻と実際のファイルを確認する必要がある。",
+                "攻撃者はリリース権限を持つ開発者アカウントを使い、公開済みの添付ファイルを置き換えた。リリースの変更防止機能が有効でなく、通常のビルド工程を経ずに配布物を変更できたという。会社はソース、ビルドチェーン、他のリポジトリに同様の変更は見つからなかったと説明する。公開内容の確認やテスト成功だけでは、後から取得した配布物がテスト済みのものと同一だとは証明できない。"
+              ]
+            },
+            {
+              "heading": "被害範囲が一つのツールに収まらない理由",
+              "paragraphs": [
+                "公式技術報告では、開発ツール、クラウドサービス、リモートアクセスに使う認証情報や関連データの収集が狙われたとされる。一つの開発環境が複数システムへの権限を持つため、リスクは OVHcloud の利用だけに限定されない。ただし、これは悪意あるプログラムの収集対象を示す説明であり、関係する全サービスが侵害されたことや、すべての取得者から情報が外部送信されたことを意味しない。",
+                "OVHcloud は、確認のために疑わしいプログラムを再実行せず、公式通告に従ってファイルを照合するよう案内する。該当パッケージを実行した場合は環境を修復し、露出した可能性のある認証情報を無効化・更新する必要がある。正常な版への交換は改ざんされたツールの利用を止めるが、すでにコピーされた権限を自動で失効させるわけではない。更新だけでは対処が完了しない理由はここにある。"
+              ]
+            },
+            {
+              "heading": "完了した対策と未確定の点",
+              "paragraphs": [
+                "同社は顧客からの報告後、悪意ある配布物の削除、アカウントの停止、書込み権限の確認、リリース変更防止設定を行い、正常な v0.16.0 を公開したとする。この設定は公開後の添付物の直接差し替えを防ぐもので、将来の全リリースの安全を保証するものではない。公開工程、署名、ID 管理の追加見直しは、実施済み対策と分けて読むべき今後の計画だ。",
+                "公式資料の約 250 回というダウンロード統計は、被害者数や流出アカウント数ではない。独立報道と公式資料は配布物の差し替えという事実を支持するが、攻撃主体の帰属、個々の環境での外部送信の成否、最終損害を取得回数から推定することはできない。公開ソースやテスト結果に加え、届けるファイルと公開権限そのものを守る必要を示す事件である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式通告に基づき本站が描き直した説明図。配布物の保護と防御側の対応を示し、攻撃手順は含まない。",
+            "steps": [
+              "公開済み配布物が差し替えられる",
+              "対象バージョンと取得時間を確認",
+              "不正ファイルを削除し公開を保護",
+              "環境を修復し認証情報を更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "19 октября 2026 года были подменены файлы загрузки инструмента OVHcloud для управления облаком. Знакомые название проекта и номер версии больше не гарантировали прежнее содержимое программы. Официальное уведомление от 20 октября подтверждает атаку на цепочку поставок через скомпрометированную учётную запись разработчика. Область воздействия определяется одновременно версиями и временем загрузки.",
+          "sections": [
+            {
+              "heading": "Тот же номер версии, другой файл",
+              "paragraphs": [
+                "OVHcloud указывает версии v0.11.0–v0.15.0, загруженные 19 октября с 12:47 до 14:21 UTC, то есть с 20:47 до 22:21 по времени Шанхая. Экземпляры этих версий, полученные до инцидента, данной подменой не затронуты. Версия v0.16.0 также признана незатронутой. Поэтому оценивать риск нужно по времени получения и конкретному файлу, а не только по номеру версии.",
+                "Злоумышленник использовал учётную запись разработчика с правом публикации и заменил вложения существующих релизов. Защита неизменяемости релизов не была включена, поэтому файлы можно было поменять вне обычной сборки. Компания сообщает, что исходники, цепочка сборки и другие репозитории не содержали аналогичных изменений. Проверка исходного проекта и успешные тесты сами по себе не доказывают, что позднее скачанный файл совпадает с первоначально проверенным."
+              ]
+            },
+            {
+              "heading": "Почему риск выходит за пределы одного инструмента",
+              "paragraphs": [
+                "Официальный технический отчёт описывает попытки собрать учётные данные и связанные сведения инструментов разработки, облачных платформ и удалённого доступа. Одна рабочая среда может содержать права на несколько систем, поэтому возможный ущерб не ограничивается OVHcloud. Это перечень целей программы, а не доказательство взлома всех перечисленных сервисов или успешной отправки данных каждого скачавшего пользователя.",
+                "OVHcloud рекомендует проверять подозрительные файлы по своему уведомлению, не запуская их повторно ради диагностики. Тем, кто выполнил затронутый пакет, нужно восстановить безопасность среды и отозвать либо заменить потенциально раскрытые учётные данные. Чистая версия прекращает использование подменённой программы, но не отменяет доступ, уже скопированный злоумышленником. Поэтому одного обновления недостаточно."
+              ]
+            },
+            {
+              "heading": "Завершённые меры и остающиеся вопросы",
+              "paragraphs": [
+                "После сообщения клиента компания, по её данным, удалила вредоносные файлы, приостановила доступ учётной записи, проверила права записи, включила неизменяемость релизов и выпустила чистую v0.16.0. Неизменяемость предотвращает прямую подмену опубликованных вложений, но не гарантирует безопасность каждого будущего выпуска. Дополнительные проверки публикации, подписей и управления идентификацией заявлены как дальнейшие меры, отдельно от уже завершённых.",
+                "Указанные примерно 250 загрузок не являются подтверждённым числом пострадавших или утёкших аккаунтов. Независимая публикация и официальное уведомление подтверждают подмену файлов релизов, но из счётчика загрузок нельзя вывести принадлежность атакующих, успех передачи данных на каждом устройстве или окончательный ущерб. Инцидент показывает необходимость защищать поставляемые файлы и права публикации наряду с открытыми исходниками и результатами тестирования."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по официальному уведомлению: целостность релизов и защитные действия, без инструкции атаки.",
+            "steps": [
+              "Подменены файлы существующих релизов",
+              "Проверить версию и время загрузки",
+              "Удалить вредоносные файлы и защитить публикацию",
+              "Устранить последствия и заменить учётные данные"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "2026 年 10 月 19 日，OVHcloud 用於管理雲服務的命令列工具遭遇釋出檔案替換。使用者看到的仍是熟悉的專案和版本號，但下載到的程式可能已經不同。20 日釋出的官方安全通告確認，這是一宗利用被盜開發者帳戶篡改現成下載包的供應鏈事件；截至本次複核，官方將受影響範圍限定在具體版本和下載時段。",
+          "sections": [
+            {
+              "heading": "同一個版本號，檔案卻被換了",
+              "paragraphs": [
+                "OVHcloud 列出的受影響版本是 v0.11.0 至 v0.15.0，時間為 10 月 19 日 12:47—14:21 UTC，即上海時間當日 20:47—22:21。此前下載的相同版本不因這次替換而自動變成惡意檔案。官方還確認 v0.16.0 未受影響。因此，判斷是否暴露需要同時看下載時段和實際檔案，不能只憑版本號推斷。",
+                "攻擊者取得了一個有釋出許可權的開發者帳戶，替換已經存在的釋出附件。專案尚未開啟發布不可變保護，使這些下載檔案可在正常構建之外被改寫。公司稱原始碼、構建鏈及其他倉庫未發現同類改動。其關鍵區別是：審查倉庫內容或看到測試透過，並不能單獨證明後來下載的檔案就是當初構建出的檔案。"
+              ]
+            },
+            {
+              "heading": "風險為什麼不止於這個工具",
+              "paragraphs": [
+                "官方技術報告稱，被替換的程式試圖收集開發工具、雲平臺和遠端訪問所用的憑證及相關資料。風險因此可能超出 OVHcloud 本身：一臺用於管理多種服務的工作環境往往同時持有不同系統的訪問許可權。這裡描述的是惡意程式的收集目標，不代表所有相關服務都被入侵，也不證明每位下載者的資料都已成功外傳。",
+                "OVHcloud 建議受影響使用者不要透過再次執行可疑程式來判斷安全性，而應按官方通告核對檔案。已經執行過受影響包的使用者需要處理受影響環境，並撤銷、輪換可能暴露的憑證。替換為乾淨版本只能停止繼續使用被篡改工具，不能讓已經複製出去的訪問許可權自動失效；這也是單純升級不足以完成處置的原因。"
+              ]
+            },
+            {
+              "heading": "已採取的措施與仍需區分的結論",
+              "paragraphs": [
+                "公司稱，在客戶報告後已刪除惡意釋出檔案、停用涉事帳戶、複查寫入許可權，並啟用釋出不可變設定，隨後釋出乾淨的 v0.16.0。不可變釋出的意義是阻止已釋出附件被直接悄悄替換，而不是保證任何未來發布都天然可信。公司還提出進一步審查釋出流程、簽名與身份管理，這些後續計劃應與已經完成的措施分開看。",
+                "官方公佈約 250 次下載統計，但這不是確認的受害人數，更不是已洩露帳戶的數量。獨立報道與官方材料均支援釋出附件遭替換這一核心事實；攻擊者歸屬、每次執行是否成功外傳以及最終損失規模不能由下載量直接推得。對軟體使用者而言，此事件說明版本號、公開原始碼和測試結果之外，交付檔案本身及釋出許可權也需要獨立保護。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方通告重繪的解釋性流程，說明發布檔案與使用者處置的關係，不包含攻擊步驟。",
+            "steps": [
+              "已有釋出檔案遭替換",
+              "限定下載時段與受影響版本",
+              "刪除惡意檔案並保護發布",
+              "受影響使用者清理環境與輪換憑證"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "jaxa-mmx-h3-launch-success",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "JAXA · launch result",
+          "url": "https://www.jaxa.jp/press/2026/10/20261020-1_j.html"
+        },
+        {
+          "label": "JAXA · MMX mission overview",
+          "url": "https://www.mmx.jaxa.jp/en/mission/"
+        },
+        {
+          "label": "JAXA · MMX science objectives",
+          "url": "https://www.mmx.jaxa.jp/en/science/"
+        },
+        {
+          "label": "CNA · independent launch report",
+          "url": "https://www.cna.com.tw/news/ait/202610200017.aspx"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "2026 年 10 月 20 日，JAXA 宣布火星卫星探测器 MMX 发射成功。H3 十号机把探测器送上旅程，随后完成正常分离。这让一个长期停留在设计、制造与准备阶段的采样返回计划，进入实际飞行阶段；但当天确认的成绩是发射和分离，并不是已经抵达火星，更不是已经带回火卫一的样本。",
+          "sections": [
+            {
+              "heading": "这次确认了什么",
+              "paragraphs": [
+                "JAXA 的发射结果公告给出准确时间：日本时间 4:41:03，火箭从种子岛宇宙中心升空；约 1 小时 11 分 13 秒后，MMX 正常分离并被投入轨道。上海时间比日本早一小时，所以升空对应当日 3:41:03。中央社的独立报道也确认发射及分离，并将其描述为前往火星系统旅程的开始。",
+                "“投入轨道”在这里不能理解成已经进入火星轨道。按任务设计，探测器还要飞行约一年才到达火星附近，然后在接近火卫一的路径上进行详细观测。发射器完成交付与探测器完成后续深空任务，是两个不同阶段；本次消息的实质进展是前者已经发生，后者仍需要多年执行。"
+              ]
+            },
+            {
+              "heading": "为什么要把火卫一的材料带回地球",
+              "paragraphs": [
+                "火卫一的起源尚有竞争解释：它可能由撞击火星后形成的碎片聚集而成，也可能原本是后来被火星捕获的小行星。远距离测量能提供形状、光谱与成分线索，带回真实颗粒则有机会用地面实验室进一步检查材料组成与形成历史。MMX 计划从火卫一取回至少 10 克物质，意在给这些问题增加直接证据，而不是预先选定某一种起源结论。",
+                "JAXA 选择火卫一，也考虑到其较弱的引力和小天体环境，可以延续隼鸟系列积累的探测及采样经验。科学团队还希望在样本中识别由撞击抛出、后来落到火卫一表面的火星物质，借此研究火星系统的演变。这是科学目标与可能性，不能表述为已经发现火星生命或已确认样本中包含某种关键成分。"
+              ]
+            },
+            {
+              "heading": "后续观测与采样仍是任务目标",
+              "paragraphs": [
+                "任务流程将遥感、近距离观察和取样连接起来：先勘察火卫一的整体形状、地形与候选地点，再借助相机、光谱仪等观测选择适合着陆的位置。计划中的漫游车先于主探测器到达表面，随后主探测器采样。探测器还将观察火卫二，完成火星附近的活动后启程返回，最后由样本舱再入地球大气并回收。",
+                "JAXA 的任务概述把整个往返安排在约五年的尺度上，包含飞行、观测、采样和返回。每一步都仍受导航、通信、着陆环境和样本保存等条件约束。发射成功提供了实施这些研究的机会，却不保证采样量、返回时间或最终科学发现。配图中的 JAXA 标志用于标明机构身份，下面的流程示意解释任务阶段，并不是发射现场照片或已经完成的任务清单。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据 JAXA 任务说明重绘的解释性流程；仅发射与分离已由本次公告确认，后续步骤为计划。",
+            "steps": [
+              "已确认：H3 发射与 MMX 分离",
+              "计划：飞往火星并勘察卫星",
+              "计划：选择地点并采集火卫一样本",
+              "计划：返回地球并分析样本"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 20, 2026, JAXA announced the successful launch of its Martian Moons eXploration spacecraft, MMX. H3 Flight 10 carried the spacecraft into flight and separated it normally. A sample-return project that had passed through design, manufacture and preparation was now flying. The confirmed milestone was launch and separation, not arrival at Mars or the return of material from Phobos.",
+          "sections": [
+            {
+              "heading": "What the launch announcement actually confirms",
+              "paragraphs": [
+                "JAXA gives a precise departure time: 04:41:03 Japan Standard Time from Tanegashima Space Center. MMX separated normally about one hour, 11 minutes and 13 seconds later and was injected into orbit. Shanghai is one hour behind Japan, making liftoff 03:41:03 on the same date there. Independent reporting by CNA also confirms launch and separation, describing the beginning of the journey to the Martian system.",
+                "Orbit insertion in this announcement does not mean arrival in Mars orbit. The mission plan calls for roughly a year of travel before reaching the Martian region and conducting close observations along a trajectory near Phobos. Delivery by the launch vehicle and completion of the spacecraft’s deep-space mission are distinct stages. The news establishes the first, while the second still requires years of operations."
+              ]
+            },
+            {
+              "heading": "Why return material from Phobos",
+              "paragraphs": [
+                "Phobos has competing origin explanations: it may have formed from debris after a large impact on Mars, or have been an asteroid later captured by Mars. Remote measurements provide clues about shape, spectra and composition. Physical grains returned to laboratories offer a further way to investigate material composition and formation history. MMX aims to return at least ten grams from Phobos to test these questions, rather than assuming an origin in advance.",
+                "JAXA also selected Phobos because its weak gravity and small-body environment can build on exploration and sampling experience from the Hayabusa missions. Scientists hope to identify material thrown from Mars by impacts and later deposited on Phobos, offering clues to the Martian system’s evolution. This is a scientific objective and possibility, not an announcement that Martian life or a particular important constituent has already been found."
+              ]
+            },
+            {
+              "heading": "Observation and sampling remain future operations",
+              "paragraphs": [
+                "The planned sequence links remote sensing, close observation and sampling. MMX will survey Phobos’s overall shape, terrain and candidate sites, then use cameras, spectrometers and other observations to choose a suitable landing location. A rover is planned to reach the surface before the main spacecraft samples it. The mission will also observe Deimos, leave the Martian region and return a capsule for atmospheric entry and recovery on Earth.",
+                "JAXA’s overview describes an approximately five-year round trip covering travel, observations, collection and return. Navigation, communications, landing conditions and sample preservation remain constraints along the way. A successful launch creates the opportunity for that science but does not guarantee sample yield, a return date or discoveries. The existing JAXA logo identifies the agency; the explanatory diagram below describes mission stages, not a launch photograph or a checklist of completed achievements."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from JAXA’s mission description. Only launch and separation are confirmed by this announcement; later stages are planned.",
+            "steps": [
+              "Confirmed: H3 launch and MMX separation",
+              "Planned: travel to Mars and survey its moons",
+              "Planned: select a site and sample Phobos",
+              "Planned: return and analyze samples on Earth"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "2026 年 10 月 20 日、JAXA は火星衛星探査機 MMX の打上げ成功を発表した。H3 ロケット 10 号機は探査機を運び、正常に分離した。設計、製造、準備を重ねてきた試料帰還計画が、実際の飛行段階へ進んだことになる。ただし、この日に確認されたのは打上げと分離であり、火星への到着でも、フォボスの試料が地球へ戻ったことでもない。",
+          "sections": [
+            {
+              "heading": "発表で確認された到達点",
+              "paragraphs": [
+                "JAXA の結果発表によると、打上げは種子島宇宙センターから日本時間 4 時 41 分 03 秒。約 1 時間 11 分 13 秒後に MMX を正常に分離し、軌道へ投入した。上海時間は日本より 1 時間早いため、同日 3 時 41 分 03 秒に当たる。中央社の独立報道も打上げと分離を確認し、火星系への旅の始まりと伝えている。",
+                "この発表の「軌道投入」は火星軌道への到着を意味しない。計画では約 1 年かけて火星付近に到達し、その後フォボスの近傍を飛ぶ軌道で詳しく観測する。ロケットによる探査機の送り出しと、探査機による深宇宙ミッションの完遂は別の段階だ。今回の進展は前者が実現したことで、後者には今後数年間の運用が必要になる。"
+              ]
+            },
+            {
+              "heading": "フォボスの物質を地球へ持ち帰る理由",
+              "paragraphs": [
+                "フォボスの起源には、大きな天体が火星に衝突した際の破片からできたという説と、もともと小惑星だったものを火星が捕獲したという説がある。遠隔観測から形状、反射光、組成の手掛かりを得られるが、粒子を持ち帰れば地上の実験室で物質の構成や形成史をさらに調べられる。MMX の目標は少なくとも 10 グラムの試料を採取してこうした疑問を検証することであり、起源の答えを事前に決めることではない。",
+                "JAXA がフォボスを選んだ背景には、弱い重力と小天体という環境で、はやぶさシリーズの探査・採取経験を生かせる点もある。火星への衝突で飛び出し、後にフォボス表面へ落ちた物質を試料から識別できれば、火星系の進化を調べる手掛かりになる。ただし、これは科学目標と可能性であり、火星の生命や重要な成分をすでに発見したという意味ではない。"
+              ]
+            },
+            {
+              "heading": "観測と採取はこれからの目標",
+              "paragraphs": [
+                "計画では遠隔観測、近距離観測、採取をつなげる。まずフォボス全体の形状や地形、候補地点を調べ、カメラや分光計などの情報で着陸に適した場所を選ぶ。ローバーが主探査機より先に表面へ到達し、その後に主探査機が採取する予定だ。ダイモスも観測し、火星圏での活動後に地球へ戻り、最後に試料カプセルを大気圏へ再突入させて回収する。",
+                "JAXA の概要は、航行、観測、採取、帰還を含む往復を約 5 年とする。途中には航法、通信、着陸環境、試料保存といった条件がある。打上げ成功は研究を実現する機会を開くが、採取量、帰還時期、科学的発見を保証しない。既存の JAXA ロゴは機関を示す画像で、下の説明図は任務の段階を示したものだ。打上げ現場の写真でも、完了済み作業の一覧でもない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "JAXA の説明をもとに本站が描き直した説明図。今回確認されたのは打上げと分離で、その後は計画を示す。",
+            "steps": [
+              "確認済み：H3 打上げと MMX 分離",
+              "計画：火星へ航行し衛星を調査",
+              "計画：地点を選びフォボスで採取",
+              "計画：地球へ帰還し試料を分析"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "20 октября 2026 года JAXA объявило об успешном запуске аппарата MMX для исследования спутников Марса. Ракета H3 №10 вывела аппарат в полёт и штатно отделила его. Проект возврата образцов перешёл от проектирования, изготовления и подготовки к реальной миссии. Подтверждённый результат — запуск и отделение, а не прибытие к Марсу и не доставка вещества Фобоса на Землю.",
+          "sections": [
+            {
+              "heading": "Что именно подтвердило сообщение о запуске",
+              "paragraphs": [
+                "JAXA указывает точное время старта с космодрома Танэгасима: 04:41:03 по японскому стандартному времени. Примерно через час, 11 минут и 13 секунд MMX штатно отделился и был выведен на орбиту. В Шанхае в этот момент было 03:41:03 той же даты. Независимое сообщение CNA также подтверждает запуск и отделение, описывая начало пути к системе Марса.",
+                "Упомянутый здесь выход на орбиту не означает прибытия на орбиту Марса. По плану около года потребуется на перелёт, после чего аппарат начнёт подробные наблюдения, двигаясь вблизи Фобоса. Доставка ракетой и выполнение дальнейшей межпланетной миссии — разные этапы. Новость подтверждает первый; второй потребует ещё нескольких лет работы."
+              ]
+            },
+            {
+              "heading": "Зачем возвращать вещество Фобоса",
+              "paragraphs": [
+                "Существуют конкурирующие объяснения происхождения Фобоса: он мог образоваться из обломков после крупного удара по Марсу либо быть астероидом, позднее захваченным планетой. Дистанционные измерения дают сведения о форме, спектрах и составе. Реальные частицы, доставленные в лаборатории, позволят подробнее исследовать вещество и историю его формирования. MMX должен вернуть не менее десяти граммов материала, чтобы проверить эти вопросы, а не заранее принять одну гипотезу.",
+                "Выбор Фобоса также связан со слабой гравитацией и средой малого небесного тела, где полезен опыт исследований и отбора проб миссий Hayabusa. Учёные рассчитывают искать среди образцов вещество, выброшенное ударами с Марса и осевшее на Фобосе, чтобы изучать эволюцию марсианской системы. Это научная цель и возможность, а не сообщение об уже найденной жизни или подтверждённом важном компоненте."
+              ]
+            },
+            {
+              "heading": "Наблюдения и отбор образцов ещё впереди",
+              "paragraphs": [
+                "План соединяет дистанционное зондирование, близкие наблюдения и отбор проб. Сначала аппарат изучит общую форму, рельеф и возможные места посадки, затем камеры, спектрометры и другие измерения помогут выбрать подходящий участок. По плану ровер достигнет поверхности раньше основного аппарата, который возьмёт образцы. Миссия также будет наблюдать Деймос, затем покинет область Марса и доставит капсулу для входа в атмосферу и возвращения на Землю.",
+                "Обзор JAXA описывает примерно пятилетний путь туда и обратно с перелётом, наблюдениями, сбором материала и возвращением. На каждом этапе остаются ограничения навигации, связи, посадочных условий и сохранности образцов. Успешный запуск открывает возможность этих исследований, но не гарантирует массу проб, дату возвращения или открытия. Логотип JAXA обозначает агентство; поясняющая схема показывает этапы миссии, а не фотографию старта или список уже выполненных работ."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по описанию JAXA. Подтверждены только запуск и отделение; последующие этапы запланированы.",
+            "steps": [
+              "Подтверждено: запуск H3 и отделение MMX",
+              "План: перелёт и исследования спутников",
+              "План: выбор участка и пробы Фобоса",
+              "План: возвращение и анализ на Земле"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "2026 年 10 月 20 日，JAXA 宣佈火星衛星探測器 MMX 發射成功。H3 十號機把探測器送上旅程，隨後完成正常分離。這讓一個長期停留在設計、製造與準備階段的取樣返回計劃，進入實際飛行階段；但當天確認的成績是發射和分離，並不是已經抵達火星，更不是已經帶回火衛一的樣本。",
+          "sections": [
+            {
+              "heading": "這次確認了什麼",
+              "paragraphs": [
+                "JAXA 的發射結果公告給出準確時間：日本時間 4:41:03，火箭從種子島宇宙中心升空；約 1 小時 11 分 13 秒後，MMX 正常分離並被投入軌道。上海時間比日本早一小時，所以升空對應當日 3:41:03。中央社的獨立報道也確認發射及分離，並將其描述為前往火星系統旅程的開始。",
+                "“投入軌道”在這裡不能理解成已經進入火星軌道。按任務設計，探測器還要飛行約一年才到達火星附近，然後在接近火衛一的路徑上進行詳細觀測。發射器完成交付與探測器完成後續深空任務，是兩個不同階段；本次訊息的實質進展是前者已經發生，後者仍需要多年執行。"
+              ]
+            },
+            {
+              "heading": "為什麼要把火衛一的材料帶回地球",
+              "paragraphs": [
+                "火衛一的起源尚有競爭解釋：它可能由撞擊火星後形成的碎片聚集而成，也可能原本是後來被火星捕獲的小行星。遠距離測量能提供形狀、光譜與成分線索，帶回真實顆粒則有機會用地面實驗室進一步檢查材料組成與形成歷史。MMX 計劃從火衛一取回至少 10 克物質，意在給這些問題增加直接證據，而不是預先選定某一種起源結論。",
+                "JAXA 選擇火衛一，也考慮到其較弱的引力和小天體環境，可以延續隼鳥系列積累的探測及取樣經驗。科學團隊還希望在樣本中識別由撞擊拋出、後來落到火衛一表面的火星物質，藉此研究火星系統的演變。這是科學目標與可能性，不能表述為已經發現火星生命或已確認樣本中包含某種關鍵成分。"
+              ]
+            },
+            {
+              "heading": "後續觀測與取樣仍是任務目標",
+              "paragraphs": [
+                "任務流程將遙感、近距離觀察和取樣連接起來：先勘察火衛一的整體形狀、地形與候選地點，再借助相機、光譜儀等觀測選擇適合著陸的位置。計劃中的漫遊車先於主探測器到達表面，隨後主探測器取樣。探測器還將觀察火衛二，完成火星附近的活動後啟程返回，最後由樣本艙再入地球大氣並回收。",
+                "JAXA 的任務概述把整個往返安排在約五年的尺度上，包含飛行、觀測、取樣和返回。每一步都仍受導航、通訊、著陸環境和樣本儲存等條件約束。發射成功提供了實施這些研究的機會，卻不保證取樣量、返回時間或最終科學發現。配圖中的 JAXA 標誌用於標明機構身份，下面的流程示意解釋任務階段，並不是發射現場照片或已經完成的任務清單。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據 JAXA 任務說明重繪的解釋性流程；僅發射與分離已由本次公告確認，後續步驟為計劃。",
+            "steps": [
+              "已確認：H3 發射與 MMX 分離",
+              "計劃：飛往火星並勘察衛星",
+              "計劃：選擇地點並採集火衛一樣本",
+              "計劃：返回地球並分析樣本"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "chrome-enhanced-protection-clickfix",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Google · Chrome scam protection announcement",
+          "url": "https://blog.google/security/our-latest-defenses-against-evolving-web-scams/"
+        },
+        {
+          "label": "BleepingComputer · independent coverage",
+          "url": "https://www.bleepingcomputer.com/news/google/google-chrome-adds-gemini-powered-scam-detection-warns-users-of-clickfix-attacks/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Google 在 2026 年 10 月 20 日介绍了 Chrome 增强型保护的三项变化：更细的站点警告、服务端 Gemini 诈骗识别，以及针对 ClickFix 诱导行为的提醒。它们处理的是网页如何欺骗人，而不仅是下载文件是否包含恶意程序；适用前提都是用户开启安全浏览的增强型保护。",
+          "sections": [
+            {
+              "heading": "可疑和危险，提示不再只有一种",
+              "paragraphs": [
+                "过去用户熟悉的是整页红色危险警告。此次加入的“可疑站点”提示面向另一类情况：页面出现与已知恶意网站相似的欺骗模式，但系统尚未达到把它判为已知危险站点的置信程度。两种提示会在颜色、图标、格式和文字上区分，让用户理解证据强弱，而不是把所有风险都描述成确定的攻击。",
+                "Google 的解释是，较低置信度的提示可以扩大预警覆盖，同时保留高风险站点原有的红色拦截页。这里的“可疑”并不证明网站已经实施诈骗；反过来，没有看到警告也不能证明页面可信。此次公告没有给出这套分级机制的独立误报或漏报测试。"
+              ]
+            },
+            {
+              "heading": "Gemini 分析移到服务端，数据处理条件也要看清",
+              "paragraphs": [
+                "此前 Chrome 在受支持设备上用端侧 Gemini 识别技术支持诈骗。现在 Google 将这一层检测转到更强的服务端模型，覆盖增强型保护用户，并扩展到假杀毒软件、假浏览器更新等骗局。模型分析页面声称代表的品牌、页面意图及诈骗可能性，安全浏览再把结果与域名信誉和其他安全信号合并，形成最终判断；并非由模型单独决定站点是否危险。",
+                "按照 Google 的说明，只有站点出现高置信度诈骗迹象时才分析页面文字；离开设备的页面内容采用短暂处理，不记录、不保留，也不用于训练模型。这是厂商对数据处理方式的说明，不能据此把功能称为“全部本地运行”，也不等于本站独立审计过其后端。"
+              ]
+            },
+            {
+              "heading": "在用户离开浏览器之前提醒",
+              "paragraphs": [
+                "ClickFix 会把恶意操作包装成修复错误或完成验证，诱导用户亲自执行系统操作。这样一来，危险内容可能绕过浏览器原有的下载检查。新增防护关注复制可疑指令这一环节：按 Google 描述，疑似内容先去除个人身份信息，再交给安全浏览分析，判为危险时显示警告。核心变化是把提醒放到用户可能把风险带出浏览器之前。"
+              ]
+            },
+            {
+              "heading": "多一道判断，仍有需要观察的边界",
+              "paragraphs": [
+                "这些机制说明浏览器防护正从已知恶意网址和文件，延伸到页面语义与社会工程行为。对用户而言，它有机会更早打断骗局，但仍不能替代对异常“修复”要求的判断。Google 强调系统追求较高精确度以减少对正常开发活动的干扰，公告却没有公开各语言、设备或骗局类型的完整效果分布。因此应把它理解为有条件的额外防线，而不是所有诈骗都会被识别的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开说明重绘的解释示意：站点判断与复制风险提醒是两条互补防线，不是检测效果图。",
+            "steps": [
+              "增强型保护识别页面风险信号",
+              "必要时由服务端模型分析页面含义",
+              "安全浏览结合信誉与其他信号分级提示",
+              "复制疑似恶意指令时另行分析并警告"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 20, 2026, Google described three changes to Chrome Enhanced Protection: graded site warnings, server-side Gemini scam detection, and alerts for ClickFix deception. These measures examine how a page misleads a person as well as the risk of downloaded files. All three belong to Safe Browsing’s Enhanced Protection mode.",
+          "sections": [
+            {
+              "heading": "Suspicion and confirmed danger get different warnings",
+              "paragraphs": [
+                "Chrome is adding a suspicious-site category alongside its familiar red danger page. The new category covers deceptive patterns resembling those on known malicious sites when confidence is not yet high enough for a dangerous-site verdict. Different colors, icons, presentation and wording communicate that distinction instead of treating every concern as a confirmed attack.",
+                "Google says this allows broader early warnings while retaining the full-page red warning for known dangerous pages. A suspicious label does not establish that fraud has occurred, and the absence of a warning is not proof of safety. The announcement does not provide independent false-positive or missed-detection testing for the new taxonomy."
+              ]
+            },
+            {
+              "heading": "Server analysis brings a data-handling tradeoff",
+              "paragraphs": [
+                "Previously, an on-device Gemini model detected tech-support scams on supported devices. Google has moved this layer to a more capable server-side model for Enhanced Protection users and expanded its scope to fake antivirus and browser-update scams. The model assesses the represented brand, page intent and likelihood of deception. Safe Browsing combines that analysis with domain reputation and other security signals; the model does not make the final decision alone.",
+                "Google says page text is analyzed only after high-confidence scam indicators appear. Content sent off the device is processed ephemerally, without logging, retention or model training. That is the company’s description of its processing practices, not an independent audit by this site. The feature therefore should not be described as entirely local."
+              ]
+            },
+            {
+              "heading": "A warning before the risk leaves the browser",
+              "paragraphs": [
+                "ClickFix presents a harmful action as a repair or verification task and persuades the victim to carry it out using system tools. That can evade the browser’s normal download checks. The new protection examines the copying of suspicious instructions: Google says personally identifiable information is removed before the suspected content goes to Safe Browsing, which displays a warning if it returns a dangerous verdict. The intervention moves to an earlier handoff between browsing and system activity."
+              ]
+            },
+            {
+              "heading": "An additional layer with unmeasured edges",
+              "paragraphs": [
+                "These changes extend protection from known addresses and files to page meaning and social engineering. They may interrupt a scam sooner, but do not remove the need to question unusual repair demands. Google says it aims for high precision to avoid disrupting legitimate development work; it does not publish complete effectiveness breakdowns across languages, devices or scam types here. The appropriate reading is an additional, conditional defense, rather than a guarantee that every scam will be caught."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from public descriptions. Site verdicts and copying alerts are complementary paths, not measured detection results.",
+            "steps": [
+              "Enhanced Protection identifies page risk signals",
+              "Server-side analysis examines meaning when needed",
+              "Safe Browsing combines reputation and signals for graded warnings",
+              "Suspicious copied instructions receive a separate check and warning"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Google は2026年10月20日、Chrome の拡張保護について、サイト警告の段階化、サーバー側 Gemini による詐欺検出、ClickFix の誘導に対する警告を説明した。ダウンロードされたファイルだけでなく、ページが人をどう欺くかに目を向けた変更で、いずれもセーフブラウジングの拡張保護を有効にした利用者が対象となる。",
+          "sections": [
+            {
+              "heading": "疑わしいサイトと危険なサイトを分ける",
+              "paragraphs": [
+                "従来の赤い全面警告に加え、「疑わしいサイト」という区分が設けられる。既知の悪質サイトに似た欺瞞的な特徴があるものの、危険と断定するほど確信度が高くないページが対象だ。色、アイコン、表示形式、文言を変え、兆候と強い証拠の違いを伝える。すべての懸念を確定した攻撃として扱うわけではない。",
+                "Google は、これにより予備的な警告の対象を広げつつ、既知の危険なページには赤い全面警告を維持できると説明する。「疑わしい」という判定だけで詐欺の発生が証明されるわけではなく、警告が出ないことも安全の証明にはならない。今回の発表には、この区分に関する独立した誤検知率や見逃し率の検証は示されていない。"
+              ]
+            },
+            {
+              "heading": "サーバー側への移行で変わる情報処理",
+              "paragraphs": [
+                "以前は対応端末上の Gemini が技術サポート詐欺を検出していた。今回はより高性能なサーバー側モデルへ移し、拡張保護の利用者を対象に、偽のウイルス対策ソフトやブラウザー更新の詐欺まで範囲を広げる。モデルはページが名乗るブランド、目的、詐欺の可能性を分析し、セーフブラウジングがドメインの評判などと組み合わせて判断する。モデル単独の判定ではない。",
+                "Google によると、確信度の高い詐欺の兆候がある場合に限ってページの文字情報を分析する。端末外に送る内容は一時的に処理し、記録、保持、学習には使わないという。これは事業者による説明であり、当サイトが裏側の処理を監査した結果ではない。「すべて端末内で処理する機能」と表現するのも誤りだ。"
+              ]
+            },
+            {
+              "heading": "ブラウザーの外へ危険が移る前に知らせる",
+              "paragraphs": [
+                "ClickFix は、有害な操作を不具合の修正や確認作業に見せかけ、利用者自身にシステム操作をさせる手口だ。通常のブラウザーのダウンロード検査を避けられる場合がある。新しい防御は、不審な指示をコピーする段階に注目する。Google の説明では、疑わしい内容から個人識別情報を除いてセーフブラウジングに送り、危険と判定されれば警告する。閲覧からシステム操作へ移る前に介入する点を押さえる。"
+              ]
+            },
+            {
+              "heading": "追加の防御であり、万能の判定ではない",
+              "paragraphs": [
+                "今回の変更は、既知のアドレスやファイルから、ページの意味と人を誘導する行動へ防御を広げるものだ。詐欺を早く中断できる可能性はあるが、不自然な修復要求への注意は引き続き必要になる。Google は通常の開発作業を妨げないよう高い精度を目指すとする一方、言語、端末、詐欺の種類別の詳細な効果を公開していない。条件付きの追加防御として捉えるべきで、すべての詐欺を見つける保証ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開説明を基に当サイトが描き直した解説図。サイト判定とコピー時の警告は補完的な経路で、検出性能の測定図ではない。",
+            "steps": [
+              "拡張保護がページのリスク兆候を検出",
+              "必要に応じてサーバー側で意味を分析",
+              "評判などの信号と合わせて段階別に警告",
+              "不審な指示のコピーを別途検査して警告"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "20 октября 2026 года Google описала три изменения Enhanced Protection в Chrome: разные уровни предупреждений о сайтах, выявление мошенничества серверной моделью Gemini и предупреждения о ClickFix. Защита рассматривает не только опасность скачанного файла, но и то, как страница вводит человека в заблуждение. Все три механизма относятся к расширенному режиму Safe Browsing.",
+          "sections": [
+            {
+              "heading": "Подозрение отделяют от уверенного вывода об опасности",
+              "paragraphs": [
+                "Рядом с привычной красной страницей появляется категория подозрительных сайтов. Она охватывает страницы с обманными признаками, похожими на известные вредоносные ресурсы, когда уверенности ещё недостаточно для более строгого вердикта. Цвет, значки, оформление и текст должны передавать эту разницу, не превращая любое подозрение в сообщение о доказанной атаке.",
+                "По объяснению Google, это расширяет раннее предупреждение, сохраняя красную страницу для известных опасных сайтов. Подозрительный статус сам по себе не доказывает состоявшееся мошенничество; отсутствие предупреждения тоже не доказывает безопасность. Независимые измерения ложных срабатываний и пропусков для новой классификации в объявлении не приведены."
+              ]
+            },
+            {
+              "heading": "Серверная модель и условия обработки данных",
+              "paragraphs": [
+                "Раньше Gemini на поддерживаемых устройствах распознавала мошенничество под видом технической поддержки. Теперь этот слой перенесён на более мощную серверную модель для пользователей Enhanced Protection, а круг угроз расширен до поддельных антивирусов и обновлений браузера. Модель оценивает представляемый бренд, назначение страницы и вероятность обмана. Safe Browsing объединяет анализ с репутацией домена и другими признаками безопасности; модель не выносит окончательный вердикт в одиночку.",
+                "Google утверждает, что текст страницы анализируется лишь при достаточно уверенных признаках мошенничества. Переданное с устройства содержимое обрабатывается кратковременно, без записи, хранения и использования для обучения. Это описание практики самой компании, а не результат независимого аудита нашего сайта. Поэтому называть функцию полностью локальной нельзя."
+              ]
+            },
+            {
+              "heading": "Предупреждение до перехода к действиям в системе",
+              "paragraphs": [
+                "ClickFix маскирует вредное действие под исправление ошибки или проверку и убеждает человека выполнить его системными средствами. Так может обходиться обычная проверка загрузок браузером. Новая защита рассматривает момент копирования подозрительных инструкций. По словам Google, из предполагаемого опасного содержимого удаляются персональные идентификаторы, после чего Safe Browsing анализирует его и предупреждает при опасном вердикте. Вмешательство переносится на границу между просмотром страницы и действиями в системе."
+              ]
+            },
+            {
+              "heading": "Дополнительная защита с открытыми вопросами",
+              "paragraphs": [
+                "Изменения расширяют защиту от известных адресов и файлов к смыслу страницы и социальной инженерии. Они могут раньше прервать обман, но не отменяют осторожности при необычных требованиях что-либо исправить. Google заявляет о стремлении к высокой точности, чтобы не мешать обычной работе разработчиков, однако не публикует здесь полную разбивку эффективности по языкам, устройствам и видам мошенничества. Это дополнительный слой с условиями применения, а не обещание распознать любую угрозу."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по публичному описанию. Проверка сайта и предупреждение при копировании дополняют друг друга; это не результаты измерения качества обнаружения.",
+            "steps": [
+              "Enhanced Protection замечает признаки риска",
+              "При необходимости серверная модель анализирует смысл",
+              "Safe Browsing объединяет репутацию и сигналы для предупреждения",
+              "Подозрительное копирование проверяется отдельно"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Google 在 2026 年 10 月 20 日介紹了 Chrome 增強型保護的三項變化：更細的站點警告、服務端 Gemini 詐騙識別，以及針對 ClickFix 誘導行為的提醒。它們處理的是網頁如何欺騙人，而不僅是下載檔案是否包含惡意程式；適用前提都是使用者開啟安全瀏覽的增強型保護。",
+          "sections": [
+            {
+              "heading": "可疑和危險，提示不再只有一種",
+              "paragraphs": [
+                "過去使用者熟悉的是整頁紅色危險警告。此次加入的“可疑站點”提示面向另一類情況：頁面出現與已知惡意網站相似的欺騙模式，但系統尚未達到把它判為已知危險站點的置信程度。兩種提示會在顏色、圖示、格式和文字上區分，讓使用者理解證據強弱，而不是把所有風險都描述成確定的攻擊。",
+                "Google 的解釋是，較低置信度的提示可以擴大預警覆蓋，同時保留高風險站點原有的紅色攔截頁。這裡的“可疑”並不證明網站已經實施詐騙；反過來，沒有看到警告也不能證明頁面可信。此次公告沒有給出這套分級機制的獨立誤報或漏報測試。"
+              ]
+            },
+            {
+              "heading": "Gemini 分析移到服務端，資料處理條件也要看清",
+              "paragraphs": [
+                "此前 Chrome 在受支援裝置上用端側 Gemini 識別技術支援詐騙。現在 Google 將這一層檢測轉到更強的服務端模型，覆蓋增強型保護使用者，並擴展到假防毒軟體、假瀏覽器更新等騙局。模型分析頁面聲稱代表的品牌、頁面意圖及詐騙可能性，安全瀏覽再把結果與域名信譽和其他安全訊號合併，形成最終判斷；並非由模型單獨決定站點是否危險。",
+                "按照 Google 的說明，只有站點出現高置信度詐騙跡象時才分析頁面文字；離開裝置的頁面內容採用短暫處理，不記錄、不保留，也不用於訓練模型。這是廠商對資料處理方式的說明，不能據此把功能稱為“全部本地執行”，也不等於本站獨立審計過其後端。"
+              ]
+            },
+            {
+              "heading": "在使用者離開瀏覽器之前提醒",
+              "paragraphs": [
+                "ClickFix 會把惡意操作包裝成修復錯誤或完成驗證，誘導使用者親自執行系統操作。這樣一來，危險內容可能繞過瀏覽器原有的下載檢查。新增防護關注複製可疑指令這一環節：按 Google 描述，疑似內容先去除個人身份資訊，再交給安全瀏覽分析，判為危險時顯示警告。核心變化是把提醒放到使用者可能把風險帶出瀏覽器之前。"
+              ]
+            },
+            {
+              "heading": "多一道判斷，仍有需要觀察的邊界",
+              "paragraphs": [
+                "這些機制說明瀏覽器防護正從已知惡意網址和檔案，延伸到頁面語義與社會工程行為。對使用者而言，它有機會更早打斷騙局，但仍不能替代對異常“修復”要求的判斷。Google 強調系統追求較高精確度以減少對正常開發活動的干擾，公告卻沒有公開各語言、裝置或騙局型別的完整效果分佈。因此應把它理解為有條件的額外防線，而不是所有詐騙都會被識別的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開說明重繪的解釋示意：站點判斷與複製風險提醒是兩條互補防線，不是檢測效果圖。",
+            "steps": [
+              "增強型保護識別頁面風險訊號",
+              "必要時由服務端模型分析頁面含義",
+              "安全瀏覽結合信譽與其他訊號分級提示",
+              "複製疑似惡意指令時另行分析並警告"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openbsd-80-release",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "OpenBSD · 8.0 release notes",
+          "url": "https://www.openbsd.org/80.html"
+        },
+        {
+          "label": "OpenBSD · 8.0 errata",
+          "url": "https://www.openbsd.org/errata80.html"
+        },
+        {
+          "label": "Phoronix · release coverage",
+          "url": "https://www.phoronix.com/news/OpenBSD-8.0-Released"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenBSD 8.0 于 2026 年 10 月 20 日发布，是这个操作系统的第 61 次发行。此次更新的重要变化包括虚拟机多处理器支持、图形与不同处理器架构的兼容改进，以及多项安全修复。它不是一项单独的性能升级：虚拟化能力、硬件可用性和维护要求，需要分开理解。",
+          "sections": [
+            {
+              "heading": "64 个 vCPU 是单台客户虚拟机的能力上限",
+              "paragraphs": [
+                "官方发行说明写明，VMM/VMD 为客户虚拟机加入多处理器支持，每台最多 64 个虚拟 CPU。vCPU 是分配给客户系统的处理器资源，不能直接读成宿主机新增了 64 个物理核心，更不能推出程序速度提高 64 倍。实际收益取决于宿主资源、客户系统以及工作负载是否能并行执行。",
+                "这一变化同时伴随虚拟中断、客户机网络校验和卸载和磁盘镜像处理等改进。官方还列出对异常可执行文件加载时越界读取的修复。它们说明该版本既扩大客户系统能使用的功能，也调整底层兼容性和边界检查；发行说明并没有给出覆盖所有应用的性能对比。"
+              ]
+            },
+            {
+              "heading": "地址空间扩大，为硬件支持提供空间",
+              "paragraphs": [
+                "在 amd64 上，内核虚拟地址空间由 4G 增至 512G，图形驱动因此能映射超过 4GB 的显存。这里讨论的是内核组织地址的能力，不是系统凭空增加了物理内存。图形部分还加入 Intel Arc A 系列显卡支持，并把 DRM 图形代码更新到 Linux 6.18.53 对应版本；这也不意味着 OpenBSD 变成了 Linux 内核，或所有显卡功能已经一致。",
+                "其他架构的变化各有对象：arm64 新增休眠支持，riscv64 加入 V 向量扩展和新的中断架构支持；sparc64 切换到 LLVM 工具链。与此同时，loongson 架构因无法配合 Clang 22 而退出支持。扩展与移除同时存在，评估升级应核对自己的架构和具体驱动，不能把某一平台的新增功能套到所有机器上。"
+              ]
+            },
+            {
+              "heading": "发行日之后，勘误仍是维护的一部分",
+              "paragraphs": [
+                "官方勘误页列出 10 月 20 日的网络服务与内核修复。其中一项 IPsec 问题只影响使用 AES-GMAC 的特定硬件组合：带 AES-NI 的 amd64 和带加密协处理器的 octeon，AES-GCM 不受该项影响。10 月 23 日又增加证书与时区数据更新工具，并附带更新后的证书集合。因此“已经升级到 8.0”和“已包含后续适用修复”是两个不同的检查点。"
+              ]
+            },
+            {
+              "heading": "适合怎样看待这次升级",
+              "paragraphs": [
+                "对需要在 OpenBSD 上运行客户系统的用户，多处理器支持是直接的能力变化；对使用新显卡或 ARM、RISC-V 设备的人，驱动和电源管理更值得逐项核对。本文据发行说明作出这一用途判断，不把它当独立基准测试。官方还说明完整二进制更新适用于 amd64、i386 和 arm64，其他架构的更新条件不同。兼容性、补丁渠道和真实负载的验证，仍决定新版本是否适合具体部署。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据发行说明重绘的解释示意：分别核对虚拟化、硬件和维护条件，不表示性能提升倍数。",
+            "steps": [
+              "确认处理器架构与现有硬件",
+              "核对客户虚拟机和驱动新增能力",
+              "阅读适用勘误与更新支持范围",
+              "在实际工作负载中验证兼容性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenBSD 8.0 was released on October 20, 2026, as the operating system’s 61st release. Its notable changes include multiprocessor guest virtual machines, graphics and architecture support, and security repairs. These are distinct changes to capability and maintenance, rather than one universal performance improvement.",
+          "sections": [
+            {
+              "heading": "64 vCPUs describes a guest limit",
+              "paragraphs": [
+                "The release notes add multiprocessor support in VMM/VMD for up to 64 virtual CPUs per guest. A vCPU is a resource presented to the guest operating system; it is not a new physical processor in the host and does not imply a 64-fold speedup. Benefits depend on available host resources, the guest and whether the workload can use parallel execution.",
+                "Related work improves virtual interrupts, guest network checksum offloading and disk-image handling. The notes also identify a repair for out-of-bounds reads when loading malformed executable files. The virtualization update therefore combines added capability with compatibility and boundary checks, without supplying performance comparisons for every application."
+              ]
+            },
+            {
+              "heading": "Larger address space enables more hardware use",
+              "paragraphs": [
+                "On amd64, kernel virtual address space rises from 4G to 512G, allowing graphics drivers to map more than 4GB of video memory. This is address-management capacity, not additional physical RAM. Graphics changes include Intel Arc A-Series support and DRM code updated to the Linux 6.18.53 level. That does not turn OpenBSD into a Linux kernel or establish feature parity for every graphics card.",
+                "Other changes have specific architectural scope: arm64 gains hibernation, riscv64 gains the V vector extension and new interrupt-architecture support, and sparc64 moves to LLVM. Conversely, loongson support is retired because it does not work with Clang 22. Support expands in some areas and contracts in another, so a feature listed for one architecture cannot be assumed to apply to every machine."
+              ]
+            },
+            {
+              "heading": "Release-day installation is not the end of maintenance",
+              "paragraphs": [
+                "The official errata list network-service and kernel repairs dated October 20. One IPsec issue affects AES-GMAC only on particular hardware: amd64 with AES-NI and octeon with a cryptographic coprocessor; AES-GCM is unaffected by that issue. An October 23 erratum adds a certificate and time-zone data updater and includes refreshed certificates. Installing 8.0 and applying later relevant corrections are therefore separate checks."
+              ]
+            },
+            {
+              "heading": "What the changes mean for deployments",
+              "paragraphs": [
+                "For users hosting guest systems on OpenBSD, multiprocessing is a direct capability change. For newer graphics, ARM or RISC-V devices, driver and power-management details deserve individual review. This is our interpretation of the release notes, not an independent benchmark. The project also limits full binary updates to amd64, i386 and arm64, with different conditions on other architectures. Hardware compatibility, the available update channel and testing on the actual workload still determine suitability for a deployment."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from release information. It separates virtualization, hardware and maintenance checks rather than showing speedup measurements.",
+            "steps": [
+              "Identify architecture and hardware",
+              "Check guest and driver capabilities",
+              "Review applicable errata and update support",
+              "Validate compatibility on the actual workload"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenBSD 8.0 は2026年10月20日に公開された、このOSの61回目のリリースだ。仮想マシンのマルチプロセッサー対応、グラフィックスや各種CPUアーキテクチャーの対応拡大、セキュリティ修正が主な変更となる。単一の性能向上としてではなく、使える機能と保守条件を分けて見る必要がある。",
+          "sections": [
+            {
+              "heading": "64 vCPU はゲスト1台当たりの上限",
+              "paragraphs": [
+                "公式リリースノートによると、VMM/VMD はゲスト仮想マシンのマルチプロセッサーをサポートし、1台当たり最大64個の仮想CPUを扱える。vCPU はゲストOSに提示する計算資源であり、ホストに物理コアが64個追加されるわけではない。アプリケーションが64倍速くなるという意味でもなく、効果はホストの余力、ゲスト、処理の並列性に左右される。",
+                "関連する変更には、仮想割り込み、ゲストのネットワークチェックサムのオフロード、ディスクイメージ処理の改善がある。不正な実行ファイルの読み込みによる範囲外読み取りも修正された。仮想化の機能を広げながら互換性や境界検査を整える更新で、すべての用途を網羅した性能比較が発表されたわけではない。"
+              ]
+            },
+            {
+              "heading": "アドレス空間の拡大と機種ごとの対応",
+              "paragraphs": [
+                "amd64 のカーネル仮想アドレス空間は4Gから512Gになり、グラフィックスドライバーが4GBを超えるビデオメモリーをマッピングできるようになる。これはアドレスを管理する容量で、物理メモリーの増設ではない。Intel Arc Aシリーズにも対応し、DRMコードはLinux 6.18.53相当に更新されたが、OpenBSDがLinuxカーネルになったり、全GPUの機能が同等になったりするわけではない。",
+                "arm64 は休止状態、riscv64 はVベクトル拡張と新しい割り込みアーキテクチャーに対応し、sparc64 はLLVMツールチェーンへ移行する。一方、loongson はClang 22で動かないためサポートを終了する。対応の追加と削除の両方があるため、ある機種の新機能を全機種へ一般化せず、アーキテクチャーとドライバーを個別に確認することが重要だ。"
+              ]
+            },
+            {
+              "heading": "公開後の訂正も保守に含まれる",
+              "paragraphs": [
+                "公式の訂正情報には、10月20日付のネットワークサービスやカーネルの修正がある。IPsecの一件はAES-GMACを使う特定の構成、すなわちAES-NI付きamd64と暗号コプロセッサー付きocteonが対象で、AES-GCMはこの問題の影響を受けない。10月23日には証明書とタイムゾーンの更新用ツール、更新された証明書群も追加された。8.0の導入と、その後の該当修正の適用は別の確認事項となる。"
+              ]
+            },
+            {
+              "heading": "導入判断に必要なこと",
+              "paragraphs": [
+                "OpenBSD上でゲストOSを動かす用途には、マルチプロセッサー対応が直接的な変化となる。新しいGPUやARM、RISC-V機器では、ドライバーと電源管理の対応内容が重要だ。これはリリースノートからの用途上の解釈で、独立したベンチマークではない。完全なバイナリー更新はamd64、i386、arm64に提供され、ほかのアーキテクチャーでは条件が異なる。実際の導入先に適するかは、互換性、更新経路、実負荷での検証によって決まる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "リリース情報を基に当サイトが描き直した解説図。仮想化、ハードウェア、保守の確認事項を示し、性能倍率は表していない。",
+            "steps": [
+              "アーキテクチャーと機器を確認",
+              "ゲストとドライバーの対応機能を確認",
+              "該当する訂正と更新条件を確認",
+              "実際の負荷で互換性を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "OpenBSD 8.0 вышла 20 октября 2026 года и стала 61-м выпуском этой операционной системы. Среди изменений — многопроцессорные гостевые виртуальные машины, поддержка графики и различных архитектур, а также исправления безопасности. Это несколько разных изменений возможностей и обслуживания, а не единое ускорение для всех задач.",
+          "sections": [
+            {
+              "heading": "64 vCPU — предел для одной гостевой машины",
+              "paragraphs": [
+                "В примечаниях к выпуску заявлена поддержка нескольких процессоров в VMM/VMD: до 64 виртуальных CPU на одну гостевую машину. vCPU — ресурс, предоставляемый гостевой ОС, а не новый физический процессор хоста. Из этого также не следует ускорение в 64 раза: результат зависит от ресурсов хоста, гостевой системы и способности приложения распараллеливать работу.",
+                "Сопутствующие изменения затрагивают виртуальные прерывания, разгрузку вычисления сетевых контрольных сумм и обработку дисковых образов. Исправлены также чтения за границами данных при загрузке некорректных исполняемых файлов. Обновление виртуализации сочетает новые возможности с совместимостью и проверками границ, но не содержит сравнения быстродействия для всех приложений."
+              ]
+            },
+            {
+              "heading": "Адресное пространство и поддержка оборудования",
+              "paragraphs": [
+                "В amd64 виртуальное адресное пространство ядра увеличено с 4G до 512G, что позволяет графическим драйверам отображать более 4GB видеопамяти. Речь идёт об управлении адресами, а не о появлении физической оперативной памяти. Добавлена поддержка Intel Arc A-Series, а графический код DRM обновлён до уровня Linux 6.18.53. Это не превращает OpenBSD в ядро Linux и не означает одинаковый набор функций на любых видеокартах.",
+                "Другие изменения имеют свои границы: arm64 получает гибернацию, riscv64 — векторное расширение V и поддержку новой архитектуры прерываний, sparc64 переходит на LLVM. Одновременно поддержка loongson прекращена из-за несовместимости с Clang 22. Расширение и сокращение поддержки происходят параллельно, поэтому возможности одной архитектуры нельзя переносить на все машины."
+              ]
+            },
+            {
+              "heading": "После выпуска остаются исправления",
+              "paragraphs": [
+                "Официальная страница errata перечисляет исправления сетевых служб и ядра от 20 октября. Одна проблема IPsec касается AES-GMAC на определённом оборудовании: amd64 с AES-NI и octeon с криптографическим сопроцессором; AES-GCM этой проблемой не затронут. Исправление от 23 октября добавляет средство обновления сертификатов и часовых поясов и обновлённый набор сертификатов. Установка версии 8.0 и получение последующих применимых исправлений — разные этапы проверки."
+              ]
+            },
+            {
+              "heading": "Как оценивать пригодность выпуска",
+              "paragraphs": [
+                "Для запуска гостевых ОС на OpenBSD многопроцессорная поддержка непосредственно расширяет возможности. Для новой графики, ARM и RISC-V важнее конкретные драйверы и управление питанием. Это наша интерпретация назначения изменений, а не независимое измерение скорости. Полные бинарные обновления проект предоставляет для amd64, i386 и arm64; на других архитектурах условия отличаются. Совместимость, канал исправлений и проверка на реальной нагрузке по-прежнему определяют пригодность выпуска для конкретного развёртывания."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по информации о выпуске. Она разделяет проверки виртуализации, оборудования и обслуживания, а не показывает измеренное ускорение.",
+            "steps": [
+              "Определить архитектуру и оборудование",
+              "Проверить возможности гостей и драйверов",
+              "Сопоставить применимые errata и поддержку обновлений",
+              "Проверить совместимость на реальной нагрузке"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenBSD 8.0 於 2026 年 10 月 20 日釋出，是這個作業系統的第 61 次發行。此次更新的重要變化包括虛擬機器多處理器支援、圖形與不同處理器架構的相容改進，以及多項安全修復。它不是一項單獨的效能升級：虛擬化能力、硬體可用性和維護要求，需要分開理解。",
+          "sections": [
+            {
+              "heading": "64 個 vCPU 是單臺客戶虛擬機器的能力上限",
+              "paragraphs": [
+                "官方發行說明寫明，VMM/VMD 為客戶虛擬機器加入多處理器支援，每臺最多 64 個虛擬 CPU。vCPU 是分配給客戶系統的處理器資源，不能直接讀成宿主機新增了 64 個物理核心，更不能推出程式速度提高 64 倍。實際收益取決於宿主資源、客戶系統以及工作負載是否能並行執行。",
+                "這一變化同時伴隨虛擬中斷、客戶機網路檢查碼卸載和磁碟映象處理等改進。官方還列出對異常可執行檔案載入時越界讀取的修復。它們說明該版本既擴大客戶系統能使用的功能，也調整底層相容性和邊界檢查；發行說明並沒有給出覆蓋所有應用的效能對比。"
+              ]
+            },
+            {
+              "heading": "地址空間擴大，為硬體支援提供空間",
+              "paragraphs": [
+                "在 amd64 上，核心虛擬地址空間由 4G 增至 512G，圖形驅動因此能對映超過 4GB 的視訊記憶體。這裡討論的是核心組織地址的能力，不是系統憑空增加了實體記憶體。圖形部分還加入 Intel Arc A 系列顯示卡支援，並把 DRM 圖形程式碼更新到 Linux 6.18.53 對應版本；這也不意味著 OpenBSD 變成了 Linux 核心，或所有顯示卡功能已經一致。",
+                "其他架構的變化各有對象：arm64 新增休眠支援，riscv64 加入 V 向量擴充和新的中斷架構支援；sparc64 切換到 LLVM 工具鏈。與此同時，loongson 架構因無法配合 Clang 22 而退出支援。擴展與移除同時存在，評估升級應核對自己的架構和具體驅動，不能把某一平臺的新增功能套到所有機器上。"
+              ]
+            },
+            {
+              "heading": "發行日之後，勘誤仍是維護的一部分",
+              "paragraphs": [
+                "官方勘誤頁列出 10 月 20 日的網路服務與核心修復。其中一項 IPsec 問題只影響使用 AES-GMAC 的特定硬體組合：帶 AES-NI 的 amd64 和帶加密協處理器的 octeon，AES-GCM 不受該項影響。10 月 23 日又增加證書與時區資料更新工具，並附帶更新後的證書集合。因此“已經升級到 8.0”和“已包含後續適用修復”是兩個不同的檢查點。"
+              ]
+            },
+            {
+              "heading": "適合怎樣看待這次升級",
+              "paragraphs": [
+                "對需要在 OpenBSD 上執行客戶系統的使用者，多處理器支援是直接的能力變化；對使用新顯示卡或 ARM、RISC-V 裝置的人，驅動和電源管理更值得逐項核對。本文據發行說明作出這一用途判斷，不把它當獨立基準測試。官方還說明完整二進位更新適用於 amd64、i386 和 arm64，其他架構的更新條件不同。相容性、補丁渠道和真實負載的驗證，仍決定新版本是否適合具體部署。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據發行說明重繪的解釋示意：分別核對虛擬化、硬體和維護條件，不表示效能提升倍數。",
+            "steps": [
+              "確認處理器架構與現有硬體",
+              "核對客戶虛擬機器和驅動新增能力",
+              "閱讀適用勘誤與更新支援範圍",
+              "在實際工作負載中驗證相容性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "qbittorrent-530-webui-security",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "qBittorrent · 5.3.0 announcement and changes",
+          "url": "https://www.qbittorrent.org/news"
+        },
+        {
+          "label": "qBittorrent · official 5.3.0 release",
+          "url": "https://github.com/qbittorrent/qBittorrent/releases/tag/release-5.3.0"
+        },
+        {
+          "label": "qBittorrent · authentication repair explanation",
+          "url": "https://github.com/qbittorrent/qBittorrent/pull/24889"
+        },
+        {
+          "label": "Linuxiac · independent release coverage",
+          "url": "https://linuxiac.com/qbittorrent-5-3-released-with-web-ui-improvements-security-fixes/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "qBittorrent 5.3.0 的官方新闻页标注发布日为 2026 年 10 月 19 日，GitHub 发行记录显示 20 日发布。此次更新既有日常管理功能，也修复了 Web UI 在特定反向代理配置下的认证绕过问题。对于通过浏览器管理客户端的人，理解访问身份如何判定，比只看到“界面更新”更重要。",
+          "sections": [
+            {
+              "heading": "风险出在代理链中的身份判断",
+              "paragraphs": [
+                "Web UI 是用浏览器操作客户端的管理界面。它可以部署在反向代理之后，由代理转发请求。原始修复说明指出，启用反向代理支持后，旧逻辑可能误信请求中可由外部影响的来源信息，导致错误识别客户端身份。这会影响基于地址的免认证规则，也可能削弱失败登录后的封禁。风险取决于相关配置和请求能否到达代理，并不是所有桌面安装都无条件受影响。",
+                "修复的要点是依据可信代理关系判断真实客户端，避免把不可信来源声明直接当成授权依据。维护者同时提醒，如果可信代理列表漏掉中间环节，升级后的地址识别结果会改变。对管理员的意义是，需要重新核对代理信任边界和认证行为，而不是为恢复旧行为随意放宽信任。"
+              ]
+            },
+            {
+              "heading": "跨站检查与管理功能一起调整",
+              "paragraphs": [
+                "变更记录还加强了跨站请求识别，并要求部分会改变状态的 Web API 操作使用 POST。其目的在于更严格地区分请求的来源和操作方式，不能单凭请求方法就宣称所有跨站攻击已被消除。其他修复涉及邮件通知内容的处理以及未经认证通告创建条目的问题；这些是各自独立的边界检查，不应合并成一个虚构漏洞编号。",
+                "日常操作方面，Web UI 可以导入导出 RSS 规则、暂停或恢复整个会话，并保留跨重启的搜索标签。默认启用的虚拟列表则改善大量条目的界面组织方式。这些变化方便远程管理，但不改变管理界面需要访问控制这一前提；RSS 配置迁移和会话控制也不应被误解为新增内容来源的推荐。"
+              ]
+            },
+            {
+              "heading": "默认后端变化伴随明确性能取舍",
+              "paragraphs": [
+                "5.3.0 默认改用 libtorrent 2.1 系列，官方仍提供基于 1.2 系列的版本。项目称 2.1 相比 2.0 应减少一些输入输出问题，同时特别提醒，大量做种时的读取性能已知可能弱于 1.2，并影响上传速度。也就是说，安全修复与后端性能是两件事：新版本不能概括为全面更快，实际吞吐还与磁盘、任务组合及所用构建有关。"
+              ]
+            },
+            {
+              "heading": "哪些结论可以确定，哪些不能",
+              "paragraphs": [
+                "可以确认的是，5.3.0 的公开变更明确包含上述认证修复，正式发行记录与独立报道相互印证。两个发布页面日期不同，应分别理解为各自记录的时间，不能因此推断所有平台都在 19 日同步交付。所读资料没有提供本漏洞的完整受害规模，也未证明所有部署都遭到攻击。合理的维护重点是确认所用版本、代理配置及更新后的行为，并结合自身负载评估后端选择。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开修复说明重绘的防御示意，仅展示身份校验与维护环节，不包含攻击方法。",
+            "steps": [
+              "管理请求经配置的代理到达客户端",
+              "依据信任关系识别访问者",
+              "分别执行认证和跨站检查",
+              "更新后核对访问行为与后端性能"
+            ]
+          }
+        },
+        "en": {
+          "lead": "The qBittorrent 5.3.0 news entry is dated October 19, 2026; its GitHub release record is dated October 20. Alongside everyday management features, the update repairs a Web UI authentication bypass involving particular reverse-proxy configurations. For people administering the client through a browser, the way access identity is established matters more than the label “interface update.”",
+          "sections": [
+            {
+              "heading": "Identity handling inside a proxy chain",
+              "paragraphs": [
+                "The Web UI is a browser-based administration interface and may sit behind a reverse proxy that forwards requests. The original repair explanation says that, with reverse-proxy support enabled, the old logic could trust externally influenced source information and identify the client incorrectly. This could undermine address-based authentication exemptions and failed-login bans. Exposure depends on the relevant configuration and access to the proxy; it is not an unconditional issue affecting every desktop installation.",
+                "The repair resolves client identity using trusted-proxy relationships rather than treating an untrusted source claim as authorization. The maintainer also notes that omitting an intermediate proxy from the trusted list changes address resolution after the update. Administrators therefore need to check trust boundaries and authentication behavior, rather than broadly expanding trust to recreate the old result."
+              ]
+            },
+            {
+              "heading": "Request checks and management features evolve together",
+              "paragraphs": [
+                "The changelog also strengthens cross-site request detection and requires POST for some state-changing Web API operations. These changes tighten how request origins and operation types are handled; the HTTP method alone does not establish immunity from all cross-site attacks. Separate fixes address email-notification content handling and creation of entries from unauthenticated announcements. They are different boundary checks, not grounds for inventing a single vulnerability identifier.",
+                "For ordinary administration, the Web UI can import and export RSS rules, pause or resume the whole session, and retain search tabs across restarts. Virtual lists are enabled by default to help organize large collections of entries. These conveniences do not remove the need for access control, and moving RSS settings or controlling sessions is not an endorsement of particular content sources."
+              ]
+            },
+            {
+              "heading": "A new default backend has a performance tradeoff",
+              "paragraphs": [
+                "Version 5.3.0 defaults to the libtorrent 2.1 series, while a 1.2-based build remains available. The project expects fewer I/O issues than with 2.0, but specifically warns that heavy seeding can encounter worse read performance than 1.2 and consequently lower upload speed. Security repairs and backend performance are separate considerations: this is not a universal speed upgrade. Storage, workload mix and the chosen build still affect throughput."
+              ]
+            },
+            {
+              "heading": "What the evidence establishes",
+              "paragraphs": [
+                "The public changes explicitly include the authentication repair, supported by the official release record and independent reporting. The two publication dates describe different records and do not establish that every platform received binaries on October 19. The sources read do not establish a complete victim count or show that all deployments were attacked. Maintenance should focus on the installed version, proxy configuration and post-update behavior, with backend choice assessed against the actual workload."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original defensive diagram redrawn by this site from the public repair explanation. It shows identity checks and maintenance steps, not exploitation instructions.",
+            "steps": [
+              "An administration request arrives through configured proxies",
+              "Trust relationships determine client identity",
+              "Authentication and cross-site checks apply separately",
+              "Review access behavior and backend performance after updating"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "qBittorrent 5.3.0の公式ニュースは2026年10月19日付で、GitHubのリリース記録は20日付となっている。日常の管理機能に加え、特定のリバースプロキシ構成で起きるWeb UIの認証回避を修正した。ブラウザーからクライアントを管理する利用者にとっては、画面の変更だけでなく、アクセス元をどう判定するかが重要な更新だ。",
+          "sections": [
+            {
+              "heading": "プロキシ経由の本人確認が問題だった",
+              "paragraphs": [
+                "Web UIはブラウザーで操作する管理画面で、リクエストを中継するリバースプロキシの背後に置くことができる。元の修正説明によると、プロキシ対応を有効にした場合、従来の処理は外部から影響を与えられる送信元情報を信頼し、クライアントを誤認する可能性があった。アドレスに基づく認証免除やログイン失敗後の制限が損なわれうる。関連設定とプロキシへの到達性に依存する問題で、すべてのデスクトップ環境が無条件に該当するわけではない。",
+                "修正では、信頼するプロキシの関係に沿ってアクセス元を判断し、信頼できない自己申告をそのまま認可の根拠にしない。管理者向けには、信頼リストから中間プロキシが抜けていると更新後の判定結果が変わるとも説明されている。以前の動作を取り戻すために信頼範囲をむやみに広げず、構成と認証動作を確認する必要がある。"
+              ]
+            },
+            {
+              "heading": "リクエスト検査と管理機能の変更",
+              "paragraphs": [
+                "変更履歴ではクロスサイトリクエストの検出も強化され、状態を変える一部のWeb API操作にPOSTが必須となる。送信元と操作方法をより厳密に扱う変更だが、HTTPメソッドだけで全クロスサイト攻撃への耐性を証明できるわけではない。メール通知の内容処理や未認証の通知から項目が作成される問題にも別々の修正があり、これらを一つの架空の脆弱性番号にまとめるべきではない。",
+                "通常の管理では、RSSルールのインポートとエクスポート、セッション全体の一時停止と再開、再起動をまたぐ検索タブの保持が利用できる。仮想リストも標準で有効になり、多数の項目を扱いやすくする。便利になっても管理画面のアクセス制御は必要で、設定の移行やセッション操作を特定コンテンツの推奨と受け取るべきではない。"
+              ]
+            },
+            {
+              "heading": "標準バックエンドには性能上の留意点",
+              "paragraphs": [
+                "5.3.0の標準はlibtorrent 2.1系となり、1.2系を使う版も提供される。プロジェクトは2.0系より入出力の問題が減るとする一方、大量のシードを行う場合には1.2系より読み取り性能が低く、アップロード速度に影響する可能性を明記した。セキュリティ修正とバックエンドの速度は別問題で、全面的な高速化とは言えない。ディスク、処理の組み合わせ、選んだビルドも転送性能を左右する。"
+              ]
+            },
+            {
+              "heading": "確認できる範囲を区別する",
+              "paragraphs": [
+                "認証の修正が5.3.0に含まれることは、公式変更履歴、正式なリリース記録、独立報道で確認できる。二つの公開日は別の記録の時刻であり、19日に全プラットフォームへ一斉提供された証拠にはならない。読んだ資料からは被害者の総数や全構成への攻撃も確認できない。保守では導入版、プロキシ設定、更新後の挙動を確かめ、実負荷に照らしてバックエンドを評価することが中心となる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開修正説明から当サイトが描き直した防御の解説図。本人確認と保守の流れのみを示し、攻撃手順は含まない。",
+            "steps": [
+              "設定したプロキシ経由で管理要求が届く",
+              "信頼関係に基づきアクセス元を判定",
+              "認証とクロスサイト検査をそれぞれ行う",
+              "更新後のアクセス動作と性能を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Официальная новость о qBittorrent 5.3.0 датирована 19 октября 2026 года, а запись релиза на GitHub — 20 октября. Наряду с повседневными функциями управления обновление исправляет обход аутентификации Web UI при определённых конфигурациях обратного прокси. Для пользователей браузерного управления важнее понять определение личности клиента, чем воспринимать выпуск просто как обновление интерфейса.",
+          "sections": [
+            {
+              "heading": "Ошибка определения клиента за прокси",
+              "paragraphs": [
+                "Web UI — интерфейс администрирования через браузер; перед ним может стоять обратный прокси, пересылающий запросы. В исходном описании исправления говорится, что при включённой поддержке прокси прежняя логика могла доверять сведениям об источнике, на которые влияет внешняя сторона, и неверно определять клиента. Это затрагивало освобождение от аутентификации по адресу и блокировки после неудачных входов. Риск зависит от конфигурации и доступности прокси, а не безусловно относится к любой настольной установке.",
+                "Исправление определяет клиента на основе отношений доверия к прокси, вместо использования недоверенного заявления об источнике как основания для доступа. Разработчик предупреждает, что отсутствие промежуточного прокси в списке доверенных меняет результат определения адреса после обновления. Администратору стоит проверить границы доверия и поведение аутентификации, а не произвольно расширять доверие ради прежнего результата."
+              ]
+            },
+            {
+              "heading": "Проверки запросов и удобство управления",
+              "paragraphs": [
+                "Журнал изменений также усиливает распознавание межсайтовых запросов и требует POST для некоторых изменяющих состояние операций Web API. Это более строгая обработка происхождения и типа действий, но один HTTP-метод не доказывает защиту от всех межсайтовых атак. Другие исправления касаются содержимого почтовых уведомлений и создания записей по неаутентифицированным объявлениям. Это отдельные проверки границ, а не основание приписывать им единый выдуманный номер уязвимости.",
+                "В обычном управлении появились импорт и экспорт правил RSS, остановка и возобновление всей сессии, сохранение поисковых вкладок после перезапуска. Виртуальные списки включены по умолчанию для удобства работы с большим количеством записей. Эти возможности не отменяют контроль доступа к панели; перенос настроек RSS и управление сессией не означают рекомендации конкретных источников содержимого."
+              ]
+            },
+            {
+              "heading": "Новый backend и компромисс производительности",
+              "paragraphs": [
+                "По умолчанию 5.3.0 использует libtorrent 2.1, при этом сборка на 1.2 остаётся доступной. Проект ожидает меньше проблем ввода-вывода, чем у 2.0, но отдельно предупреждает: при интенсивной раздаче чтение может быть медленнее, чем у 1.2, и снижать скорость отдачи. Исправление безопасности и быстродействие backend — разные вопросы. Это не универсальное ускорение; результат также зависит от дисков, набора задач и выбранной сборки."
+              ]
+            },
+            {
+              "heading": "Что подтверждено источниками",
+              "paragraphs": [
+                "Наличие исправления аутентификации в 5.3.0 подтверждается опубликованными изменениями, официальной записью релиза и независимым материалом. Разные даты относятся к разным публикациям и не доказывают доставку бинарных файлов всем платформам уже 19 октября. Прочитанные материалы не устанавливают полного числа пострадавших и не подтверждают атаки на все развёртывания. При обслуживании важны версия, настройки прокси и поведение после обновления, а выбор backend стоит оценивать на фактической нагрузке."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная защитная схема по публичному описанию исправления. Показаны проверка клиента и обслуживание, без способов эксплуатации.",
+            "steps": [
+              "Запрос управления проходит через настроенные прокси",
+              "Доверенные связи определяют клиента",
+              "Аутентификация и межсайтовая проверка выполняются отдельно",
+              "После обновления проверяются доступ и производительность"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "qBittorrent 5.3.0 的官方新聞頁標註釋出日為 2026 年 10 月 19 日，GitHub 發行記錄顯示 20 日釋出。此次更新既有日常管理功能，也修復了 Web UI 在特定反向代理配置下的認證繞過問題。對於透過瀏覽器管理客戶端的人，理解訪問身份如何判定，比只看到“介面更新”更重要。",
+          "sections": [
+            {
+              "heading": "風險出在代理鏈中的身份判斷",
+              "paragraphs": [
+                "Web UI 是用瀏覽器操作客戶端的管理介面。它可以部署在反向代理之後，由代理轉發請求。原始修復說明指出，啟用反向代理支援後，舊邏輯可能誤信請求中可由外部影響的來源資訊，導致錯誤識別客戶端身份。這會影響基於地址的免認證規則，也可能削弱失敗登入後的封禁。風險取決於相關配置和請求能否到達代理，並不是所有桌面安裝都無條件受影響。",
+                "修復的要點是依據可信代理關係判斷真實客戶端，避免把不可信來源宣告直接當成授權依據。維護者同時提醒，如果可信代理列表漏掉中間環節，升級後的地址識別結果會改變。對管理員的意義是，需要重新核對代理信任邊界和認證行為，而不是為恢復舊行為隨意放寬信任。"
+              ]
+            },
+            {
+              "heading": "跨站檢查與管理功能一起調整",
+              "paragraphs": [
+                "變更記錄還加強了跨站請求識別，並要求部分會改變狀態的 Web API 操作使用 POST。其目的在於更嚴格地區分請求的來源和操作方式，不能單憑請求方法就宣稱所有跨站攻擊已被消除。其他修復涉及郵件通知內容的處理以及未經認證通告建立條目的問題；這些是各自獨立的邊界檢查，不應合併成一個虛構漏洞編號。",
+                "日常操作方面，Web UI 可以匯入匯出 RSS 規則、暫停或恢復整個會話，並保留跨重啟的搜尋標籤。預設啟用的虛擬列表則改善大量條目的介面組織方式。這些變化方便遠端管理，但不改變管理介面需要訪問控制這一前提；RSS 配置遷移和會話控制也不應被誤解為新增內容來源的推薦。"
+              ]
+            },
+            {
+              "heading": "預設後端變化伴隨明確效能取捨",
+              "paragraphs": [
+                "5.3.0 預設改用 libtorrent 2.1 系列，官方仍提供基於 1.2 系列的版本。專案稱 2.1 相比 2.0 應減少一些輸入輸出問題，同時特別提醒，大量做種時的讀取效能已知可能弱於 1.2，並影響上傳速度。也就是說，安全修復與後端效能是兩件事：新版本不能概括為全面更快，實際吞吐還與磁碟、任務組合及所用構建有關。"
+              ]
+            },
+            {
+              "heading": "哪些結論可以確定，哪些不能",
+              "paragraphs": [
+                "可以確認的是，5.3.0 的公開變更明確包含上述認證修復，正式發行記錄與獨立報道相互印證。兩個釋出頁面日期不同，應分別理解為各自記錄的時間，不能因此推斷所有平臺都在 19 日同步交付。所讀資料沒有提供本漏洞的完整受害規模，也未證明所有部署都遭到攻擊。合理的維護重點是確認所用版本、代理配置及更新後的行為，並結合自身負載評估後端選擇。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開修復說明重繪的防禦示意，僅展示身份校驗與維護環節，不包含攻擊方法。",
+            "steps": [
+              "管理請求經配置的代理到達客戶端",
+              "依據信任關係識別訪問者",
+              "分別執行認證和跨站檢查",
+              "更新後核對訪問行為與後端效能"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
