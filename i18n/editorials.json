@@ -12914,6 +12914,2011 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "teamgym-distributed-information-decisions",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Original paper and version history",
+          "url": "https://arxiv.org/abs/2610.37571v1"
+        },
+        {
+          "label": "Full paper: methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.37571v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一组 Agent 合起来拥有回答问题所需的资料，却仍可能做出错误决定。10 月 27 日公开的 TeamGym 试图分清两种原因：成员没有把已知信息有效传给彼此，还是连各自资料里的关键证据都没找到。它把信息分配作为可以控制的实验条件，而不是只比较团队最终答对了多少。",
+          "sections": [
+            {
+              "heading": "先确定哪些证据不能少",
+              "paragraphs": [
+                "研究从法律、金融、医疗和软件资料中构造决策问题，再挑出有原文依据的关键证据单元。检查要求完整证据能支持参考答案，逐一移除任一单元后，答案便不再获得充分支持。这里的“最小”来自模型执行的检查，并不是对所有可能证据组合的数学证明；软件任务还采用受限的功能检查。作者也筛选了 GPT-5.5 获得全部关键证据时至少成功过一次的问题。",
+                "同一道题随后进入三个条件：单个 Agent 获得全部关键证据；多个成员分别直接获得关键证据；同一团队改为获得包含这些证据的原始资料。后两组保持信息分配、沟通方式和预算一致。这样，第一到第二组的差距主要反映信息共享困难，第二到第三组则检验成员从资料中提取证据的困难。"
+              ]
+            },
+            {
+              "heading": "有信息不代表能形成共同判断",
+              "paragraphs": [
+                "主实验覆盖 8 个语言模型、12 个来源语料，采用每名参与者持有一个关键单元、由协调者选择发言人的设置。按各类任务的成功判据统计，证据分散后，成功率相对单个 Agent 平均下降 22.9 个百分点；再要求团队自行检索，又下降 19.9 个百分点。这是绝对百分点变化，不是相对下降百分比，也不意味着任何多 Agent 设计都会有相同损失。",
+                "作者还用 Qwen2.5-7B-Instruct 演示强化学习训练，只奖励最终决策，不直接奖励发言或逐个询问。协调者与参与者联合训练后，36 个 CUAD 衍生验证问题的模型裁判得分由 11.97% 升至 22.38%，询问全部成员的比例由 80.6% 升至 100%。这说明沟通策略可以被学习，但裁判得分不能直接当成真实法律任务的正确率。"
+              ]
+            },
+            {
+              "heading": "诊断工具仍需要独立验证",
+              "paragraphs": [
+                "这些训练演示各只运行一次，CUAD 验证集还用于选择训练检查点；迁移到 MAUD 时，询问与传话方式的改善比最终决策质量的改善更清楚。关键证据构造和部分评分依赖模型，选择单个强模型可解的题目也限制了样本代表性，因此训练提升和平均差距都需要更多独立重复。",
+                "本次团队共享目标，未验证成员恶意、利益冲突或不可靠报告时的行为。论文写明代码将后续发布，不能视为已经提供完整可复现实现。对系统设计的直接启发是分别检查“证据是否找到”和“证据是否传到决策者”，而不是把增加成员数量当作提高可靠性的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程：保持问题与关键证据一致，比较三种信息条件，并非实验曲线。",
+            "steps": [
+              "从原始资料确定关键证据",
+              "单个 Agent 获得全部证据",
+              "团队成员分别获得关键证据",
+              "同一团队改从原始资料寻找证据",
+              "分别比较沟通与检索造成的差距"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A team of agents can collectively possess everything needed for a decision and still get it wrong. TeamGym, posted on October 27, asks whether members failed to communicate what they knew or failed to find the decisive evidence in their own materials. It makes information distribution an experimental control rather than reporting only a team’s final score.",
+          "sections": [
+            {
+              "heading": "Establish which evidence matters",
+              "paragraphs": [
+                "The researchers construct decision problems from legal, financial, medical and software sources, then identify source-grounded pivotal information units. A complete-set check asks whether all units support the reference decision; leave-one-out checks ask whether removing each unit makes that decision unsupported or unresolved. This is minimality under model-based checks, not a mathematical proof over all possible evidence combinations. Software tasks also use a bounded functional protocol. The selected problems must have been solved at least once by GPT-5.5 when supplied with all pivotal units.",
+                "Each problem is evaluated in three conditions: one agent receives all pivotal evidence; team members receive separate pivotal units directly; and the same team receives source material containing those units. Distribution, communication structure and budgets are matched between the two team conditions. The first contrast isolates difficulty sharing distributed information, while the second measures the additional difficulty extracting it from the materials."
+              ]
+            },
+            {
+              "heading": "Collective access does not ensure a shared decision",
+              "paragraphs": [
+                "The main experiment covers eight language models and 12 source corpora, with one pivotal unit per participant and a coordinator choosing the speaker. Using the task families’ decision-success criteria, distribution reduces success by an average of 22.9 percentage points relative to a single agent. Requiring source retrieval reduces it by a further 19.9 points. These are absolute percentage-point differences, not relative percentage declines, and not a forecast for every multi-agent architecture.",
+                "The authors also demonstrate reinforcement learning from Qwen2.5-7B-Instruct, rewarding the final decision rather than explicitly rewarding turn-taking or consultation. Joint coordinator-and-participant training raises the model-judged score on 36 CUAD-derived validation problems from 11.97% to 22.38%, while the share of cases in which the coordinator queries every participant rises from 80.6% to 100%. Communication behaviour can therefore change through training, but this judge score is not an accuracy estimate for real legal work."
+              ]
+            },
+            {
+              "heading": "What the controlled setting leaves open",
+              "paragraphs": [
+                "Each training demonstration uses only one run, and the CUAD validation set is also used for checkpoint selection. On transfer to MAUD, improvements in querying and message patterns are clearer than improvements in final decision quality. Model-based evidence construction and some scoring, together with selection for solvability by a strong single model, limit representativeness. Both the training gains and average gaps need independent replication.",
+                "The teams share a common payoff; the experiments do not establish behaviour under malicious members, conflicting incentives or unreliable reports. The paper says code will be released later, so a complete reproducible implementation should not be described as already available. The practical lesson is to inspect evidence discovery and evidence delivery separately, rather than assuming that adding more agents guarantees reliability."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: three conditions with the same question and pivotal evidence, not an experimental curve.",
+            "steps": [
+              "Identify pivotal evidence in source materials",
+              "Give one agent all pivotal evidence",
+              "Distribute pivotal units across the team",
+              "Ask the same team to retrieve them from sources",
+              "Compare communication and retrieval gaps separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "チーム全体では答えに必要な資料を持っていても、Agent が正しい判断に到達するとは限らない。10 月 27 日公開の TeamGym は、各自が知る情報を伝えられなかったのか、それとも手元の資料から重要な根拠を見つけられなかったのかを分けて調べる。最終スコアだけでなく、情報の配り方そのものを実験条件にする研究だ。",
+          "sections": [
+            {
+              "heading": "欠かせない根拠をそろえる",
+              "paragraphs": [
+                "法律、金融、医療、ソフトウェアの資料から意思決定課題を作り、原文に対応する重要情報単位を選ぶ。全単位があれば参照判断を支えられ、一つずつ除くと支持が不十分または未確定になることを確認する。ただし、この最小性はモデルによる検査の範囲であり、あらゆる根拠の組み合わせについての数学的証明ではない。ソフトウェア課題には限定した機能検査も使う。全単位を与えた GPT-5.5 が少なくとも一度解けた問題を選んでいる。",
+                "同じ問題を三条件で比べる。単一 Agent に全根拠を渡す条件、参加者に重要情報単位を分配する条件、同じチームにそれらを含む原資料を渡す条件である。二つのチーム条件では情報分配、通信方式、予算を一致させる。最初の差は情報共有の難しさを、次の差は資料から根拠を探し出す追加の難しさを測る。"
+              ]
+            },
+            {
+              "heading": "情報の合計と共同判断は別",
+              "paragraphs": [
+                "主実験は 8 言語モデルと 12 の資料群を対象とし、参加者ごとに重要情報単位を一つ配り、調整役が発言者を選ぶ。課題群ごとの成功基準で測ると、単一 Agent に比べて分配時の成功率は平均 22.9 ポイント低く、資料からの検索も必要になるとさらに 19.9 ポイント低かった。相対的な減少率ではなく絶対差であり、あらゆる複数 Agent 設計で同じ損失が出るという意味ではない。",
+                "Qwen2.5-7B-Instruct からの強化学習では、発言や全員への相談を直接報酬にせず、最終判断だけを報酬にした。調整役と参加者を共同訓練すると、CUAD 由来の検証問題 36 件のモデル採点は 11.97% から 22.38% に、全員に質問した割合は 80.6% から 100% に上がった。通信行動を学べる可能性を示すが、この採点を実際の法律業務の正答率とはみなせない。"
+              ]
+            },
+            {
+              "heading": "制御実験の外側は未解決",
+              "paragraphs": [
+                "各訓練例は一回の実行で、CUAD 検証集合はチェックポイント選択にも使われた。MAUD への移行では、質問・伝達パターンの改善ほど最終判断の改善は明瞭でなかった。重要情報の選定と一部の採点がモデルに依存し、強い単一モデルが解ける問題を選ぶため、標本の代表性にも制約がある。平均差と学習効果には独立した再検証が必要だ。",
+                "参加者は共通の目的を持ち、悪意、利害の対立、不正確な報告があるチームは検証していない。論文はコードを今後公開するとしており、再現可能な実装が既にそろったとは言えない。設計上の示唆は、人数を増やせば信頼性が上がると考える前に、根拠の発見と意思決定者への伝達を別々に点検することにある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。同じ問題と重要根拠による三条件の比較であり、実験曲線ではない。",
+            "steps": [
+              "原資料から重要根拠を確認",
+              "単一 Agent に全根拠を渡す",
+              "チームに重要根拠を分配",
+              "同じチームが原資料から検索",
+              "共有と検索による差を分けて比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Команда агентов может в сумме располагать всеми нужными сведениями и всё же принять неверное решение. TeamGym, опубликованный 27 октября, разделяет два объяснения: участники не передали друг другу известные факты либо не нашли решающие свидетельства в собственных материалах. Распределение информации становится контролируемым условием, а не скрытой причиной итогового балла.",
+          "sections": [
+            {
+              "heading": "Выделить действительно необходимые свидетельства",
+              "paragraphs": [
+                "Авторы строят задачи по юридическим, финансовым, медицинским и программным материалам и выделяют ключевые информационные единицы, связанные с первоисточником. Проверяется, что полный набор поддерживает эталонное решение, а удаление каждой единицы делает его неподтверждённым или неопределённым. Такая минимальность устанавливается модельными проверками, а не математическим доказательством для всех возможных наборов свидетельств. Для программных задач применяется также ограниченный функциональный протокол. Отбираются случаи, в которых GPT-5.5 хотя бы раз справилась при наличии всех ключевых единиц.",
+                "Каждая задача проходит три условия: один агент получает все ключевые свидетельства; участникам команды выдают разные единицы напрямую; та же команда получает исходные материалы, содержащие эти единицы. Между командными условиями совпадают распределение сведений, схема общения и бюджеты. Первый переход измеряет трудность обмена информацией, второй — дополнительную трудность её извлечения из материалов."
+              ]
+            },
+            {
+              "heading": "Общие сведения ещё не становятся общим решением",
+              "paragraphs": [
+                "Основной эксперимент охватывает восемь языковых моделей и 12 исходных корпусов. Каждый участник получает одну ключевую единицу, а координатор выбирает говорящего. По критериям успешности соответствующих семейств задач распределение снижает успешность в среднем на 22,9 процентного пункта относительно одного агента. Необходимость искать сведения снижает её ещё на 19,9 пункта. Это абсолютные разности, а не относительные проценты падения; результат нельзя переносить на любую многоагентную архитектуру.",
+                "Отдельная демонстрация обучения с подкреплением начинается с Qwen2.5-7B-Instruct. Вознаграждается итоговое решение, а не очередность реплик или обращение ко всем участникам. Совместное обучение координатора и участников повышает оценку модельного судьи на 36 проверочных задачах, полученных из CUAD с 11,97% до 22,38%, а долю случаев с опросом всех участников — с 80,6% до 100%. Поведение при общении можно изменять обучением, но эта оценка не является точностью реальной юридической работы."
+              ]
+            },
+            {
+              "heading": "Границы контролируемой проверки",
+              "paragraphs": [
+                "Каждая обучающая демонстрация выполнена один раз, причём проверочная выборка CUAD также использована для выбора контрольной точки. При переносе на MAUD улучшения запросов и передачи сообщений заметнее, чем улучшения конечных решений. Модельное выделение свидетельств, часть оценивания и отбор задач, решаемых сильной одиночной моделью, ограничивают представительность. Средние разрывы и эффект обучения нуждаются в независимом повторении.",
+                "У участников общий выигрыш; злонамеренность, конфликт интересов и ненадёжные сообщения не проверены. Статья обещает последующую публикацию кода, поэтому нельзя утверждать, что полный воспроизводимый инструмент уже доступен. Практический вывод состоит в раздельной проверке обнаружения свидетельств и их доставки принимающему решение участнику, а не в предположении, что больше агентов автоматически означает большую надёжность."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново составлена сайтом по статье: три условия с одинаковыми вопросом и ключевыми свидетельствами, не экспериментальная кривая.",
+            "steps": [
+              "Выделить ключевые свидетельства в материалах",
+              "Передать все свидетельства одному агенту",
+              "Распределить ключевые единицы по команде",
+              "Поручить той же команде поиск в источниках",
+              "Раздельно сравнить потери общения и поиска"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一組 Agent 合起來擁有回答問題所需的資料，卻仍可能做出錯誤決定。10 月 27 日公開的 TeamGym 試圖分清兩種原因：成員沒有把已知資訊有效傳給彼此，還是連各自資料裡的關鍵證據都沒找到。它把資訊分配作為可以控制的實驗條件，而不是隻比較團隊最終答對了多少。",
+          "sections": [
+            {
+              "heading": "先確定哪些證據不能少",
+              "paragraphs": [
+                "研究從法律、金融、醫療和軟體資料中構造決策問題，再挑出有原文依據的關鍵證據單元。檢查要求完整證據能支援參考答案，逐一移除任一單元后，答案便不再獲得充分支援。這裡的“最小”來自模型執行的檢查，並不是對所有可能證據組合的數學證明；軟體任務還採用受限的功能檢查。作者也篩選了 GPT-5.5 獲得全部關鍵證據時至少成功過一次的問題。",
+                "同一道題隨後進入三個條件：單個 Agent 獲得全部關鍵證據；多個成員分別直接獲得關鍵證據；同一團隊改為獲得包含這些證據的原始資料。後兩組保持資訊分配、溝通方式和預算一致。這樣，第一到第二組的差距主要反映資訊共享困難，第二到第三組則檢驗成員從資料中提取證據的困難。"
+              ]
+            },
+            {
+              "heading": "有資訊不代表能形成共同判斷",
+              "paragraphs": [
+                "主實驗覆蓋 8 個語言模型、12 個來源語料，採用每名參與者持有一個關鍵單元、由協調者選擇發言人的設定。按各類任務的成功判據統計，證據分散後，成功率相對單個 Agent 平均下降 22.9 個百分點；再要求團隊自行檢索，又下降 19.9 個百分點。這是絕對百分點變化，不是相對下降百分比，也不意味著任何多 Agent 設計都會有相同損失。",
+                "作者還用 Qwen2.5-7B-Instruct 演示強化學習訓練，只獎勵最終決策，不直接獎勵發言或逐個詢問。協調者與參與者聯合訓練後，36 個 CUAD 衍生驗證問題的模型裁判得分由 11.97% 升至 22.38%，詢問全部成員的比例由 80.6% 升至 100%。這說明溝通策略可以被學習，但裁判得分不能直接當成真實法律任務的正確率。"
+              ]
+            },
+            {
+              "heading": "診斷工具仍需要獨立驗證",
+              "paragraphs": [
+                "這些訓練演示各只執行一次，CUAD 驗證集還用於選擇訓練檢查點；遷移到 MAUD 時，詢問與傳話方式的改善比最終決策質量的改善更清楚。關鍵證據構造和部分評分依賴模型，選擇單個強模型可解的題目也限制了樣本代表性，因此訓練提升和平均差距都需要更多獨立重複。",
+                "本次團隊共享目標，未驗證成員惡意、利益衝突或不可靠報告時的行為。論文寫明程式碼將後續釋出，不能視為已經提供完整可復現實現。對系統設計的直接啟發是分別檢查“證據是否找到”和“證據是否傳到決策者”，而不是把增加成員數量當作提高可靠性的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程：保持問題與關鍵證據一致，比較三種資訊條件，並非實驗曲線。",
+            "steps": [
+              "從原始資料確定關鍵證據",
+              "單個 Agent 獲得全部證據",
+              "團隊成員分別獲得關鍵證據",
+              "同一團隊改從原始資料尋找證據",
+              "分別比較溝通與檢索造成的差距"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "tessera-structure-completed-rag-evidence",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Original paper and version history",
+          "url": "https://arxiv.org/abs/2610.37080v1"
+        },
+        {
+          "label": "Full paper: methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.37080v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG 找到正确网页后，答案仍可能丢在最后一步：表格里的数字被截出来了，说明数字属于谁、哪一年或什么单位的表头却没送到模型。10 月 27 日公开的 Tessera 针对这种证据交付问题，在检索之后、阅读之前补齐结构。它不重新训练模型，也不要求重建整个索引。",
+          "sections": [
+            {
+              "heading": "取回的是一段完整证据",
+              "paragraphs": [
+                "系统从排名前 10 的检索结果确定来源网页，读取与索引相同快照中的 HTML。它把段落、列表项、图注和表格行拆成证据单元，再补上页面标题、章节路径、表格标题与表头。对合并单元格和多层表头，先还原对应关系，避免让一个孤立数值脱离解释它的行列。这里不是抓取实时网页来更新旧索引。",
+                "查询先以词法匹配筛出 100 个候选单元，再用交叉编码器重排。原先交给阅读模型的三个证据片段中，前两个保留，第三个换成整理后的单元块；共用的标题按组组织，避免反复占用空间。新内容只能使用被替换片段的预算。因此实验考察的是同样阅读容量下怎样组织证据，而不是单纯多给模型看一些文字。"
+              ]
+            },
+            {
+              "heading": "改善取决于问题需要什么信息",
+              "paragraphs": [
+                "主实验索引 2025 年 8 月英文维基百科快照的 7,060,072 篇文章，测试 Natural Questions 的 3,336 问、NQ-Tables 的 1,068 问，以及引用英文维基百科的 3,447 个 SimpleQA 问题，共 7,851 问。默认阅读模型为关闭思考的 Qwen3.5-4B，答案由 GPT-5.6 Luna 对照参考答案评分。混合文本检索的合并准确率由 70.7% 升至 75.7%，PixelRAG 文本流程由 67.7% 升至 73.9%，截图流程由 69.6% 升至 75.2%；这些是所有问题汇总后的模型裁判结果。",
+                "在允许最多 8 次搜索的 Agent 实验中，启用思考的 Qwen3.5-4B 在全部 824 个 FRAMES 问题上的准确率由 59.2% 升至 64.4%。但在 1,000 个可回答的 MuSiQue 问题上，只提高 1.1 个百分点。后者多依赖段落正文，原有片段已带着所需信息，因此补结构的收益较小，不能把表格任务的改善直接套到所有检索任务。"
+              ]
+            },
+            {
+              "heading": "补齐结构解决不了所有错误",
+              "paragraphs": [
+                "保持阅读 token 预算并不代表免费：作者报告单核解析每页约需 15 毫秒，重排每个问题约耗 0.2 个 A100 GPU 秒，属于额外处理成本。候选网页以外的证据仍无法恢复，词法初筛也可能遗漏语义相关内容。替换第三个片段偶尔还会丢掉原本有用的答案片段。",
+                "实验范围是固定英文维基百科 HTML，尚不能证明对实时网页、PDF 或任意页面布局同样有效；评分也依赖模型而非逐题人工裁定。即使正确证据已送到阅读模型，它仍可能理解或推理错误。论文页面的会议模板不能作为录用凭据，本次按预印本收录。它给出的可靠启发是保留事实与表头、章节之间的关系，而不是承诺结构补全后答案必然正确。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，展示证据如何在既有阅读预算内补齐结构，不代表实验结果图。",
+            "steps": [
+              "定位已检索到的来源网页",
+              "还原段落、表格行及表头关系",
+              "按问题筛选并重排证据单元",
+              "在原有预算内替换一个片段",
+              "由阅读模型生成答案并核对"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Finding the correct page does not ensure that a RAG system delivers usable evidence. A number may reach the reader without the header saying whose value it is, which year it describes or what it measures. Tessera, posted on October 27, addresses this final delivery step by completing structure after retrieval and before reading. It requires neither model training nor a rebuilt corpus index.",
+          "sections": [
+            {
+              "heading": "Deliver a complete unit of evidence",
+              "paragraphs": [
+                "The system identifies source pages from the top 10 ranked retrieval items and reads HTML from the same snapshot as the index. It builds evidence units from paragraphs, list items, captions and table rows, attaching page titles, section paths, table captions and headers. Merged cells and multi-level headers are resolved so that a value retains its row and column interpretation. This is not live-page fetching to refresh an old index.",
+                "A lexical prefilter selects 100 candidate units, followed by cross-encoder reranking. Of the three evidence items normally sent to the reader, the first two remain; the third is replaced with a packed block of completed units. Shared context is grouped to avoid repeating headers. The replacement must fit the displaced item’s budget. The comparison therefore concerns evidence organisation within the same reading capacity, rather than simply supplying more text."
+              ]
+            },
+            {
+              "heading": "Gains depend on the information a question needs",
+              "paragraphs": [
+                "The main study indexes 7,060,072 articles from the August 2025 English Wikipedia snapshot. Evaluation comprises 3,336 Natural Questions items, 1,068 NQ-Tables items and 3,447 SimpleQA questions citing English Wikipedia: 7,851 in total. The default reader is Qwen3.5-4B with thinking disabled, and GPT-5.6 Luna grades answers against references. Pooled accuracy rises from 70.7% to 75.7% for hybrid text retrieval, from 67.7% to 73.9% for the PixelRAG text pipeline, and from 69.6% to 75.2% for screenshots. These are model-judged results pooled over questions.",
+                "An agent experiment enables thinking in Qwen3.5-4B and permits up to eight searches. On all 824 FRAMES questions, accuracy rises from 59.2% to 64.4%. On 1,000 answerable MuSiQue questions, however, the gain is only 1.1 percentage points. MuSiQue mostly uses paragraph prose already carried by the original chunks. Structural completion is less useful when that context is already present, so improvements on table-heavy tasks should not be extrapolated to every retrieval problem."
+              ]
+            },
+            {
+              "heading": "Structure does not eliminate every failure",
+              "paragraphs": [
+                "Keeping the reader token budget unchanged is not free computation. The authors report about 15 milliseconds per page for parsing on one CPU core and 0.2 A100 GPU-seconds per question for scoring, both additional processing. Evidence outside the anchor pages cannot be recovered, and lexical prefiltering can miss semantically relevant units. Replacing the third item can occasionally discard a useful answer-bearing chunk.",
+                "The evidence comes from a fixed English Wikipedia HTML snapshot; it does not establish equal effectiveness on live pages, PDFs or arbitrary layouts. Grading relies on a model rather than individual human adjudication. Readers can also misinterpret evidence or reason incorrectly even when the right material reaches them. A conference template on the paper is not acceptance evidence, so it is catalogued as a preprint. Its practical contribution is preserving facts together with the headers and sections that explain them, not guaranteeing correct answers."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper, showing structural completion within the existing reading budget; not an experimental plot.",
+            "steps": [
+              "Locate source pages already retrieved",
+              "Reconstruct paragraphs, table rows and headers",
+              "Filter and rerank units for the question",
+              "Replace one item within its existing budget",
+              "Let the reader answer and check the evidence"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "RAG が正しいページを検索できても、答えに使える根拠が届くとは限らない。表の数値だけが切り出され、誰の値か、何年か、何の単位かを示す見出しが消えることがある。10 月 27 日公開の Tessera は、検索後から読み取り前までの段階で構造を補い、この問題に取り組む。モデルの再訓練や索引全体の再構築は必要としない。",
+          "sections": [
+            {
+              "heading": "意味の通る根拠単位を渡す",
+              "paragraphs": [
+                "上位 10 件の検索結果から出典ページを特定し、索引と同じスナップショットの HTML を読む。段落、リスト項目、図の説明、表の行を根拠単位にし、ページ名、節の経路、表題、見出しを付ける。結合セルや多段見出しの対応を復元することで、数値が行と列の意味から切り離されるのを防ぐ。現在のウェブを取得して古い索引を更新する方式ではない。",
+                "まず語句の一致で 100 単位を選び、交差エンコーダーで再順位付けする。通常リーダーに渡す三つの根拠のうち、上位二つは残し、三つ目を補完済み単位の集合に置き換える。共通の文脈はまとめ、見出しの繰り返しを減らす。置換部分は元の予算内に収めるため、単に長い文章を追加するのでなく、同じ読み取り容量での整理方法を比較できる。"
+              ]
+            },
+            {
+              "heading": "必要な情報によって効果が違う",
+              "paragraphs": [
+                "主実験の索引は 2025 年 8 月の英語 Wikipedia 7,060,072 記事。Natural Questions 3,336 問、NQ-Tables 1,068 問、英語 Wikipedia を出典とする SimpleQA 3,447 問の計 7,851 問を評価した。標準のリーダーは思考を無効にした Qwen3.5-4B で、GPT-5.6 Luna が参照回答と照合して採点する。全質問をまとめた正答率は、混合テキスト検索で 70.7% から 75.7%、PixelRAG のテキスト処理で 67.7% から 73.9%、画像処理で 69.6% から 75.2% に上がった。いずれもモデル判定による値だ。",
+                "Agent 実験では Qwen3.5-4B の思考を有効にし、最大 8 回検索を許可した。FRAMES 全 824 問では 59.2% から 64.4% に改善したが、回答可能な MuSiQue 1,000 問では 1.1 ポイントの改善にとどまる。後者は段落の本文に依存し、元の断片に必要な情報が含まれやすい。既に文脈が届いている場合は補構造の効果が小さく、表を多く使う課題の改善を全検索課題に当てはめられない。"
+              ]
+            },
+            {
+              "heading": "構造がそろっても誤答は残る",
+              "paragraphs": [
+                "リーダーの token 予算を維持しても計算が無料になるわけではない。著者は単一 CPU コアで一ページの解析に約 15 ミリ秒、採点に一問あたり 0.2 A100 GPU 秒の追加処理を報告する。対象ページの外にある根拠は回復できず、語句による初期選別が意味上重要な単位を落とす可能性もある。三つ目の断片の置換が、元は有用だった根拠を捨てる場合もある。",
+                "対象は固定した英語 Wikipedia の HTML であり、現在のウェブ、PDF、任意のレイアウトに同じ効果があるとは未確認だ。全問を人間が判定したわけでもない。必要な根拠が届いても、リーダーの解釈や推論は誤り得る。また本文の会議用テンプレートは採択証拠ではないため、今回はプレプリントとして収録する。貢献は事実と見出し・節との関係を保つ点にあり、正答の保証ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した説明図。既存の読み取り予算内で構造を補う流れであり、実験グラフではない。",
+            "steps": [
+              "検索済みの出典ページを特定",
+              "段落・表の行・見出しの関係を復元",
+              "質問に応じて単位を選別・再順位付け",
+              "元の予算内で一つの断片を置換",
+              "リーダーが回答し根拠を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Правильно найденная страница ещё не означает, что RAG передаст модели понятные свидетельства. Число из таблицы может дойти без заголовка, объясняющего объект, год или единицу измерения. Tessera, опубликованная 27 октября, дополняет структуру между поиском и чтением. Подход не требует переобучать модель или перестраивать индекс всего корпуса.",
+          "sections": [
+            {
+              "heading": "Передавать целостную единицу свидетельства",
+              "paragraphs": [
+                "Система определяет исходные страницы по десяти верхним результатам поиска и читает HTML из того же снимка, что использован для индекса. Единицы строятся из абзацев, элементов списков, подписей и строк таблиц; к ним добавляются названия страниц, пути разделов, названия таблиц и заголовки. Восстанавливаются связи объединённых ячеек и многоуровневых заголовков, чтобы число сохраняло смысл строки и столбца. Это не загрузка текущего веба для обновления старого индекса.",
+                "Лексический предварительный фильтр выбирает 100 единиц, затем кросс-энкодер меняет их порядок. Из трёх фрагментов, обычно передаваемых читающей модели, первые два сохраняются, а третий заменяется блоком дополненных единиц. Общий контекст группируется, чтобы не повторять заголовки. Блок должен укладываться в бюджет заменённого фрагмента. Поэтому сравнивается организация свидетельств при той же ёмкости чтения, а не простое увеличение объёма текста."
+              ]
+            },
+            {
+              "heading": "Эффект зависит от нужного вида информации",
+              "paragraphs": [
+                "Основной опыт индексирует 7 060 072 статьи английской Wikipedia из снимка августа 2025 года. Проверены 3 336 вопросов Natural Questions, 1 068 NQ-Tables и 3 447 вопросов SimpleQA со ссылкой на английскую Wikipedia — всего 7 851. Стандартный читатель — Qwen3.5-4B с отключённым размышлением; GPT-5.6 Luna оценивает ответы по эталонам. Совокупная точность растёт с 70,7% до 75,7% для гибридного текстового поиска, с 67,7% до 73,9% для текстовой схемы PixelRAG и с 69,6% до 75,2% для снимков страниц. Это оценки модельного судьи, объединённые по вопросам.",
+                "В агентном опыте Qwen3.5-4B работает с включённым размышлением и может выполнить до восьми поисков. На всех 824 вопросах FRAMES точность повышается с 59,2% до 64,4%. Но на 1 000 вопросах MuSiQue с существующим ответом прибавка составляет только 1,1 процентного пункта. MuSiQue преимущественно использует обычные абзацы, которые уже присутствуют в исходных фрагментах. Когда контекст и так доставлен, дополнение структуры менее полезно: эффект на табличных задачах нельзя переносить на любой поиск."
+              ]
+            },
+            {
+              "heading": "Полная структура не устраняет все ошибки",
+              "paragraphs": [
+                "Сохранение бюджета токенов читателя не означает отсутствия вычислительных затрат. Авторы сообщают примерно 15 миллисекунд разбора страницы на одном ядре CPU и 0,2 GPU-секунды A100 на оценку единиц одного вопроса. Свидетельства за пределами найденных опорных страниц восстановить нельзя; лексический фильтр может отбросить смыслово важную единицу. Замена третьего фрагмента иногда также удаляет полезный фрагмент с ответом.",
+                "Эксперимент ограничен фиксированным английским HTML-снимком Wikipedia. Он не доказывает такую же эффективность для текущего веба, PDF или произвольной вёрстки; ответы оценивались моделью, а не поштучно людьми. Читатель способен ошибиться в понимании или рассуждении даже после доставки верного свидетельства. Конференционный шаблон в тексте не подтверждает принятие статьи, поэтому материал учтён как препринт. Его вклад — сохранение связи фактов с объясняющими их заголовками и разделами, а не гарантия правильного ответа."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново составлена сайтом по статье: дополнение структуры в исходном бюджете чтения, не график экспериментальных результатов.",
+            "steps": [
+              "Найти уже извлечённые исходные страницы",
+              "Восстановить абзацы, строки таблиц и заголовки",
+              "Отфильтровать и ранжировать единицы по вопросу",
+              "Заменить один фрагмент в его прежнем бюджете",
+              "Сформировать ответ и проверить свидетельства"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG 找到正確網頁後，答案仍可能丟在最後一步：表格裡的數字被截出來了，說明數字屬於誰、哪一年或什麼單位的表頭卻沒送到模型。10 月 27 日公開的 Tessera 針對這種證據交付問題，在檢索之後、閱讀之前補齊結構。它不重新訓練模型，也不要求重建整個索引。",
+          "sections": [
+            {
+              "heading": "取回的是一段完整證據",
+              "paragraphs": [
+                "系統從排名前 10 的檢索結果確定來源網頁，讀取與索引相同快照中的 HTML。它把段落、列表項、圖注和表格行拆成證據單元，再補上頁面標題、章節路徑、表格標題與表頭。對合並單元格和多層表頭，先還原對應關係，避免讓一個孤立數值脫離解釋它的行列。這裡不是抓取實時網頁來更新舊索引。",
+                "查詢先以詞法匹配篩出 100 個候選單元，再用交叉編碼器重排。原先交給閱讀模型的三個證據片段中，前兩個保留，第三個換成整理後的單元塊；共用的標題按組組織，避免反覆佔用空間。新內容只能使用被替換片段的預算。因此實驗考察的是同樣閱讀容量下怎樣組織證據，而不是單純多給模型看一些文字。"
+              ]
+            },
+            {
+              "heading": "改善取決於問題需要什麼資訊",
+              "paragraphs": [
+                "主實驗索引 2025 年 8 月英文維基百科快照的 7,060,072 篇文章，測試 Natural Questions 的 3,336 問、NQ-Tables 的 1,068 問，以及引用英文維基百科的 3,447 個 SimpleQA 問題，共 7,851 問。預設閱讀模型為關閉思考的 Qwen3.5-4B，答案由 GPT-5.6 Luna 對照參考答案評分。混合文字檢索的合併準確率由 70.7% 升至 75.7%，PixelRAG 文字流程由 67.7% 升至 73.9%，截圖流程由 69.6% 升至 75.2%；這些是所有問題彙總後的模型裁判結果。",
+                "在允許最多 8 次搜尋的 Agent 實驗中，啟用思考的 Qwen3.5-4B 在全部 824 個 FRAMES 問題上的準確率由 59.2% 升至 64.4%。但在 1,000 個可回答的 MuSiQue 問題上，只提高 1.1 個百分點。後者多依賴段落正文，原有片段已帶著所需資訊，因此補結構的收益較小，不能把表格任務的改善直接套到所有檢索任務。"
+              ]
+            },
+            {
+              "heading": "補齊結構解決不了所有錯誤",
+              "paragraphs": [
+                "保持閱讀 token 預算並不代表免費：作者報告單核解析每頁約需 15 毫秒，重排每個問題約耗 0.2 個 A100 GPU 秒，屬於額外處理成本。候選網頁以外的證據仍無法恢復，詞法初篩也可能遺漏語義相關內容。替換第三個片段偶爾還會丟掉原本有用的答案片段。",
+                "實驗範圍是固定英文維基百科 HTML，尚不能證明對實時網頁、PDF 或任意頁面佈局同樣有效；評分也依賴模型而非逐題人工裁定。即使正確證據已送到閱讀模型，它仍可能理解或推理錯誤。論文頁面的會議模板不能作為錄用憑據，本次按預印本收錄。它給出的可靠啟發是保留事實與表頭、章節之間的關係，而不是承諾結構補全後答案必然正確。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，展示證據如何在既有閱讀預算內補齊結構，不代表實驗結果圖。",
+            "steps": [
+              "定位已檢索到的來源網頁",
+              "還原段落、表格行及表頭關係",
+              "按問題篩選並重排證據單元",
+              "在原有預算內替換一個片段",
+              "由閱讀模型生成答案並核對"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "fog-kg-agent-evidence-coverage",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Authors · original abstract and version history",
+          "url": "https://arxiv.org/abs/2610.37405v1"
+        },
+        {
+          "label": "Authors · full paper, methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.37405v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "智能体答对问题，未必真的查到了足够的依据。它可能靠模型记忆说出答案，也可能只找到答案实体，却没有找到支持问题中各项条件的关系。FoG 把这种差别直接放进训练：既检查答案，也检查过程中实际取回了哪些知识图谱事实。论文于 10 月 27 日首次提交，按预印本介绍。",
+          "sections": [
+            {
+              "heading": "先构造带证据的问题",
+              "paragraphs": [
+                "知识图谱用“实体—关系—实体”的三元组表示事实。FoG 从 Wikidata 子图构造简单问题，再把问题中显式出现的实体替换成需要查询才能解开的子问题，逐步增加推理层数，同时保留所需三元组。生成结果还要通过可执行性和非冗余检查，减少答案过宽或条件无用的问题。",
+                "合成与示范依赖 Kimi-K2 教师模型。学生智能体在多轮图谱交互中记录实际返回的三元组；仅凭内部记忆说出的事实不算已检索证据。训练先做监督微调，再结合答案、操作有效性与证据覆盖三种奖励。证据只在首次被取回的步骤计分，重复查询同一事实不会反复得奖。"
+              ]
+            },
+            {
+              "heading": "看覆盖率，而不只看答案",
+              "paragraphs": [
+                "实验使用 Qwen2.5-3B 和 Qwen3-4B，评测 WikiWebQuestions、QALD10-en 和 GTSQA，每题单次推理，图谱交互最多十轮。Cov 指取回的参考支持三元组占全部参考支持三元组的比例；它与答案准确率是两个指标，也不等于整张图谱中事实的真实程度。",
+                "同一 Qwen3-4B 骨干、训练资料和预算下，完整方法在 GTSQA 的证据覆盖率为 58.64%，移除证据奖励后为 51.43%；对应 Hit@1 为 50.52% 与 46.97%。这些是作者三次训练种子的均值，说明显式奖励在该设置下有帮助，不能写成每次回答都已证据齐全。把重复取回也计奖时，重复查询比例升至 29.4%；首次计奖方案为 8.6%，分母是图谱查询次数。"
+              ]
+            },
+            {
+              "heading": "有检索记录，还需要核查来源",
+              "paragraphs": [
+                "GTSQA 自带参考支持事实，WikiWebQuestions 的参考路径则需要构造和模型验证；人工抽查的 200 条路径中，模型验证与人工判断一致率为 93.0%。因此，覆盖率也受参考证据质量影响，不是无误的审计认证。跨图谱迁移到 Freebase 的 WebQSP 取得 77.2% Hit@1，但论文明确其他在 Freebase 上开发的方法只是参照，不能当同条件对照宣称全面胜出。",
+                "研究限于有限轮数和一至四跳问题，且仍依赖教师生成质量。图谱缺少、过时或错误的事实不会因为取回了证据就变正确。本站认为，它对可追溯问答的启发是把“答对”和“找到支持事实”分别验收；它没有证明系统已能应对任意长链任务，也不能取代人工对来源与事实的判断。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文方法重绘的解释图，不是模型结构图或实测结果。",
+            "steps": [
+              "从图谱构造问题与支持事实",
+              "记录智能体实际检索的三元组",
+              "只奖励每条证据的首次取回",
+              "分别检查答案与证据覆盖"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An agent can produce the right answer without having retrieved enough evidence. It may recall a fact from its parameters or reach the answer entity while missing relations needed to support the question’s constraints. FoG makes that distinction part of training, checking both the answer and the graph facts actually returned during interaction. The paper was first submitted on October 27 and is presented as a preprint.",
+          "sections": [
+            {
+              "heading": "Build questions with their supporting facts",
+              "paragraphs": [
+                "A knowledge graph represents facts as entity–relation–entity triples. FoG starts with a simple question over a Wikidata subgraph, then replaces an explicit entity with a verifiable sub-question. Repeating this increases reasoning depth while preserving supporting triples. Executability and non-redundancy checks reject overly broad answers and unnecessary conditions.",
+                "Synthesis and demonstrations rely on the Kimi-K2 teacher. The student records triples returned during graph interaction; facts recalled only from internal memory do not count as retrieved evidence. Supervised fine-tuning precedes reinforcement learning with answer, valid-action and evidence-coverage rewards. A triple earns evidence credit only on its first retrieval, so repeating a query cannot repeatedly collect that reward."
+              ]
+            },
+            {
+              "heading": "Measure coverage separately from answer accuracy",
+              "paragraphs": [
+                "Experiments use Qwen2.5-3B and Qwen3-4B on WikiWebQuestions, QALD10-en and GTSQA, with one inference run per question and at most ten graph-interaction turns. Cov is the fraction of reference supporting triples retrieved. It is distinct from answer accuracy and says nothing by itself about the truth of the underlying graph.",
+                "With the same Qwen3-4B backbone, training data and budget, full FoG reaches 58.64% coverage on GTSQA versus 51.43% without evidence reward; Hit@1 is 50.52% versus 46.97%. These are author-reported means across three training seeds, not evidence that every answer is fully supported. Rewarding every repeated retrieval produces a 29.4% duplicate-query rate, versus 8.6% for first-retrieval credit; the denominator is graph queries."
+              ]
+            },
+            {
+              "heading": "A trace is useful, but its sources still matter",
+              "paragraphs": [
+                "GTSQA supplies reference facts, whereas WikiWebQuestions paths are constructed and model-verified. On 200 manually audited paths, verifier agreement with humans is 93.0%. Coverage therefore depends on reference quality and is not an error-free certification. Zero-shot transfer to Freebase’s WebQSP yields 77.2% Hit@1, but methods developed on Freebase are reference points rather than matched baselines.",
+                "The study covers bounded interaction and one-to-four-hop questions and still depends on teacher quality. Missing, stale or incorrect graph facts do not become true through retrieval. Our practical reading is to evaluate correct answers and supporting evidence separately. The work does not establish reliability for arbitrary long-horizon tasks or remove the need to check sources and facts."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Our explanatory redraw of the method, not an architecture diagram or measured result.",
+            "steps": [
+              "Construct questions with supporting triples",
+              "Record facts actually returned to the agent",
+              "Credit each fact only at first retrieval",
+              "Check answers and evidence coverage separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "エージェントが正解しても、十分な根拠を検索したとは限らない。学習済みの知識から答えたり、答えの実体だけを見つけて条件を裏付ける関係を取得していなかったりする。FoG はこの違いを学習に組み込み、回答と実際に返されたグラフ上の事実を別々に確認する。10 月 27 日に初版が投稿された論文で、ここではプレプリントとして紹介する。",
+          "sections": [
+            {
+              "heading": "根拠を伴う問題を先に作る",
+              "paragraphs": [
+                "知識グラフは「実体・関係・実体」の三つ組で事実を表す。FoG は Wikidata の部分グラフから簡単な問題を作り、明示された実体を検索で解ける小問題に置き換える。推論の段数を増やしながら、必要な三つ組を保持する。さらに実行可能性と非冗長性を確認し、答えが広すぎる問題や不要な条件を除く。",
+                "合成と模範軌跡には教師モデル Kimi-K2 を使う。学習するエージェントはグラフから実際に返された三つ組を記録し、内部記憶だけから出した事実は検索済み根拠に数えない。教師あり微調整の後、回答、操作の有効性、根拠の網羅率で強化学習する。根拠の報酬は最初の取得時だけ与え、同じ検索の繰り返しでは増えない。"
+              ]
+            },
+            {
+              "heading": "正答率とは別に網羅率を見る",
+              "paragraphs": [
+                "Qwen2.5-3B と Qwen3-4B を使い、WikiWebQuestions、QALD10-en、GTSQA で評価した。各問題の推論は一回、グラフとのやり取りは最大十ターンである。Cov は参照用の支持三つ組のうち取得できた割合で、回答精度とも、グラフ内の事実が真実である割合とも異なる。",
+                "同じ Qwen3-4B、学習データ、予算で比較すると、GTSQA の Cov は完全版が 58.64%、根拠報酬なしが 51.43%、Hit@1 はそれぞれ 50.52% と 46.97% だった。著者が三つの学習シードで報告した平均であり、すべての回答に完全な根拠があるという意味ではない。繰り返し取得も報酬にすると重複検索率は 29.4%、初回だけなら 8.6% で、分母はグラフ検索回数である。"
+              ]
+            },
+            {
+              "heading": "検索記録があっても出典の確認は必要",
+              "paragraphs": [
+                "GTSQA は参照根拠を備えるが、WikiWebQuestions の経路は構築とモデル検証が必要になる。人が確認した 200 経路での検証器と人間の一致率は 93.0% だった。網羅率も参照の品質に依存し、無誤の認証にはならない。Freebase の WebQSP へのゼロショット移行では Hit@1 が 77.2% だが、そこで開発された他方式は同条件の対照ではなく参考値である。",
+                "対象は有限ターンと一～四ホップの問題で、教師の生成品質にも依存する。グラフの欠落、古さ、誤りは根拠を取得しても解消しない。本サイトの見立てでは、正解と支持事実の取得を別々に検収する点が有用だ。任意の長い課題での信頼性や、人による出典確認が不要になることまでは示していない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の方法を基に本サイトが描き直した概念図。構造図や実測結果ではありません。",
+            "steps": [
+              "問題と支持三つ組を同時に構築",
+              "エージェントが実際に得た事実を記録",
+              "各根拠の初回取得だけに報酬",
+              "回答と根拠の網羅率を別々に確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Правильный ответ агента не гарантирует, что он нашёл достаточные основания. Модель может вспомнить факт или получить нужную сущность, не извлекая отношений, подтверждающих условия вопроса. FoG включает это различие в обучение: проверяет и ответ, и факты, действительно полученные из графа. Первая версия подана 27 октября; здесь работа представлена как препринт.",
+          "sections": [
+            {
+              "heading": "Создавать вопросы вместе с доказательствами",
+              "paragraphs": [
+                "Граф знаний хранит факты в тройках «сущность — отношение — сущность». FoG начинает с простого вопроса по подграфу Wikidata, затем заменяет явно названную сущность проверяемым подвопросом. Так растёт глубина рассуждения, а необходимые тройки сохраняются. Проверки исполнимости и отсутствия избыточности отсеивают слишком широкие ответы и ненужные условия.",
+                "Для синтеза и демонстраций используется учитель Kimi-K2. Обучаемый агент записывает тройки, возвращённые графом; факт, воспроизведённый лишь из памяти модели, не считается найденным свидетельством. После обучения на примерах применяется обучение с подкреплением: награды учитывают ответ, допустимость действий и покрытие свидетельств. Каждая тройка приносит награду только при первом извлечении."
+              ]
+            },
+            {
+              "heading": "Покрытие не равно точности ответа",
+              "paragraphs": [
+                "Qwen2.5-3B и Qwen3-4B оцениваются на WikiWebQuestions, QALD10-en и GTSQA: один запуск вывода на вопрос, не более десяти обращений к графу. Cov — доля извлечённых эталонных подтверждающих троек. Этот показатель отличается от точности ответа и сам по себе не измеряет истинность содержимого графа.",
+                "При одинаковых Qwen3-4B, данных и бюджете полная версия FoG получает на GTSQA покрытие 58.64% против 51.43% без награды за свидетельства; Hit@1 составляет 50.52% против 46.97%. Это средние авторских экспериментов с тремя начальными состояниями обучения, а не гарантия полного обоснования каждого ответа. Награда за каждое повторное извлечение повышает долю повторных запросов до 29.4%, тогда как награда только за первое даёт 8.6%; знаменатель — запросы к графу."
+              ]
+            },
+            {
+              "heading": "Источники нужно проверять и при наличии следа",
+              "paragraphs": [
+                "GTSQA предоставляет эталонные факты, а пути WikiWebQuestions создаются и проверяются моделью. На 200 вручную проверенных путях согласие проверяющей модели с людьми составило 93.0%. Значит, покрытие зависит и от качества эталона, а не служит безошибочной сертификацией. Перенос без дообучения на WebQSP в Freebase даёт 77.2% Hit@1, но методы, разработанные на Freebase, являются ориентирами, не сопоставимыми контрольными условиями.",
+                "Работа ограничена конечным числом шагов и вопросами с одним–четырьмя переходами, а также зависит от качества учителя. Извлечение не исправляет отсутствующие, устаревшие или неверные факты графа. Мы видим практическую ценность в раздельной проверке ответа и его оснований. Надёжность произвольно длинных задач и возможность отказаться от человеческой проверки источников не доказаны."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема метода; не схема архитектуры и не измерение.",
+            "steps": [
+              "Создать вопрос и подтверждающие тройки",
+              "Записать фактически полученные факты",
+              "Награждать только первое извлечение факта",
+              "Раздельно проверить ответ и покрытие оснований"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "智慧體答對問題，未必真的查到了足夠的依據。它可能靠模型記憶說出答案，也可能只找到答案實體，卻沒有找到支援問題中各項條件的關係。FoG 把這種差別直接放進訓練：既檢查答案，也檢查過程中實際取回了哪些知識圖譜事實。論文於 10 月 27 日首次提交，按預印本介紹。",
+          "sections": [
+            {
+              "heading": "先構造帶證據的問題",
+              "paragraphs": [
+                "知識圖譜用“實體—關係—實體”的三元組表示事實。FoG 從 Wikidata 子圖構造簡單問題，再把問題中顯式出現的實體替換成需要查詢才能解開的子問題，逐步增加推理層數，同時保留所需三元組。生成結果還要透過可執行性和非冗餘檢查，減少答案過寬或條件無用的問題。",
+                "合成與示範依賴 Kimi-K2 教師模型。學生智慧體在多輪圖譜互動中記錄實際返回的三元組；僅憑內部記憶說出的事實不算已檢索證據。訓練先做監督微調，再結合答案、操作有效性與證據覆蓋三種獎勵。證據只在首次被取回的步驟計分，重複查詢同一事實不會反覆得獎。"
+              ]
+            },
+            {
+              "heading": "看覆蓋率，而不只看答案",
+              "paragraphs": [
+                "實驗使用 Qwen2.5-3B 和 Qwen3-4B，評測 WikiWebQuestions、QALD10-en 和 GTSQA，每題單次推理，圖譜互動最多十輪。Cov 指取回的參考支援三元組佔全部參考支援三元組的比例；它與答案準確率是兩個指標，也不等於整張圖譜中事實的真實程度。",
+                "同一 Qwen3-4B 骨幹、訓練資料和預算下，完整方法在 GTSQA 的證據覆蓋率為 58.64%，移除證據獎勵後為 51.43%；對應 Hit@1 為 50.52% 與 46.97%。這些是作者三次訓練種子的均值，說明顯式獎勵在該設定下有幫助，不能寫成每次回答都已證據齊全。把重複取回也計獎時，重複查詢比例升至 29.4%；首次計獎方案為 8.6%，分母是圖譜查詢次數。"
+              ]
+            },
+            {
+              "heading": "有檢索記錄，還需要核查來源",
+              "paragraphs": [
+                "GTSQA 自帶參考支援事實，WikiWebQuestions 的參考路徑則需要構造和模型驗證；人工抽查的 200 條路徑中，模型驗證與人工判斷一致率為 93.0%。因此，覆蓋率也受參考證據質量影響，不是無誤的審計認證。跨圖譜遷移到 Freebase 的 WebQSP 取得 77.2% Hit@1，但論文明確其他在 Freebase 上開發的方法只是參照，不能當同條件對照宣稱全面勝出。",
+                "研究限於有限輪數和一至四跳問題，且仍依賴教師生成質量。圖譜缺少、過時或錯誤的事實不會因為取回了證據就變正確。本站認為，它對可追溯問答的啟發是把“答對”和“找到支援事實”分別驗收；它沒有證明系統已能應對任意長鏈任務，也不能取代人工對來源與事實的判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文方法重繪的解釋圖，不是模型結構圖或實測結果。",
+            "steps": [
+              "從圖譜構造問題與支援事實",
+              "記錄智慧體實際檢索的三元組",
+              "只獎勵每條證據的首次取回",
+              "分別檢查答案與證據覆蓋"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "m4bench-clinical-derivation-specifications",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "Authors · original abstract and version history",
+          "url": "https://arxiv.org/abs/2610.37459v1"
+        },
+        {
+          "label": "Authors · full paper, methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.37459v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "从电子病历算出研究变量，往往不能只看表名和字段名。时间窗口、缺失值处理和每一行代表什么，都会改变研究队列。M4Bench 评测编程智能体能否复现已声明的衍生规则，并用对照实验区分“规则讲完整了”与“装进技能文件”各自的作用。10 月 27 日的作者注释注明获 NeurIPS 2026 评测与数据集轨道录用，本文保留这一归因。",
+          "sections": [
+            {
+              "heading": "把隐含规则变成可审查的规格",
+              "paragraphs": [
+                "基准有 28 项任务、15 类任务家族，其中 26 项来自 MIMIC-IV，两项来自 eICU。任务覆盖评分、感染、器官功能及时间窗口等研究变量；标准模式可使用部分中间特征，原始模式则需从源表重建。智能体输出的结果要与隐藏参考表比较，检查列、记录范围和数值。",
+                "任务与配套技能由两名临床医生分别审查，但审查者来自作者团队，并非外部验证。技能说明定义、映射、单位、时间规则和输出粒度，不提供隐藏答案。这里的目标是复现研究约定；参考实现也可能包含有争议的处理方式，不能把一致性分数等同于临床正确性，更不是诊疗能力评测。"
+              ]
+            },
+            {
+              "heading": "主要改善来自什么",
+              "paragraphs": [
+                "主要实验使用 GPT 5.4 Mini 与 GPT 5.5，对同一任务比较有无技能，每个模型与条件各五次运行。先在任务内平均模型差异，再对 28 项任务等权汇总，带技能的奖励提高 0.136，26 项改善。奖励是各计分值列的平均匹配率，缺失、额外和重复记录都会影响分母，不是完成任务的比例。",
+                "在八项任务的专门对照中，完整操作规格本身比无技能基线提高 0.162，技能在此之上只增加 0.024，其 95% 区间为 -0.034 至 0.099，包含零。这个子集有意选择，较多包含收益大的任务，不能将机制结论直接推广到全部任务。十项任务的另一个对照中，不相关技能几乎没有收益，参考查询文本接近针对性技能，进一步提示内容比包装更重要。"
+              ]
+            },
+            {
+              "heading": "平均分提高，离可靠交付仍有距离",
+              "paragraphs": [
+                "主要对照中，有技能的 280 次运行仅 25 次通过所有严格检查，无技能为 13/280。反映返回记录范围的键 F1 只增加 0.003，说明改进主要集中在已有匹配记录上的值，而不是全面解决了输出粒度。另一个覆盖 28 项任务、560 次运行的 Claude Code 实验方向一致，平均差为 0.120，但运行框架与路由不完全一致，只作描述性复核，不能用来给厂商排名。",
+                "本基准以回顾性研究为目标，部分规则会用到事后信息，不适合直接当成实时临床预测。样本高度集中于 MIMIC-IV，改动表名和结构也不能证明没有记忆污染。原始医疗数据须按来源要求取得资格，未随公开成果重新分发。本站认为，实际价值是把规则、出处与检查条件一并交给智能体，同时继续审查中间结果；一个更高的平均分不能替代结果验收。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按论文评测设计重绘的解释图，不是患者流程或医疗建议。",
+            "steps": [
+              "明确变量规则、时间窗口与记录粒度",
+              "同一任务分别提供或不提供技能",
+              "对照隐藏参考值及记录范围",
+              "分别报告平均一致性与严格通过率"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Deriving research variables from electronic health records requires more than table and column names. Time windows, missing-value rules and what each row represents can change a cohort. M4Bench tests whether coding agents reproduce declared derivations, separating complete procedural specifications from their packaging as skills. The October 27 author comment reports acceptance to the NeurIPS 2026 Evaluations and Datasets Track; that attribution is retained here.",
+          "sections": [
+            {
+              "heading": "Make implicit rules inspectable",
+              "paragraphs": [
+                "The benchmark has 28 tasks across 15 families: 26 from MIMIC-IV and two from eICU. Tasks cover research variables such as scores, infection, organ function and rolling windows. Standard mode retains selected intermediate features; raw mode requires reconstruction from source tables. Outputs are checked against hidden reference tables for columns, record coverage and values.",
+                "Two clinicians independently reviewed each task and skill, but they belong to the author team rather than an external validation group. Skills describe definitions, mappings, units, timing and output grain without exposing hidden answers. The target is reproduction of declared research conventions. Reference implementations can themselves contain contestable choices, so agreement is not clinical correctness or a measure of diagnostic ability."
+              ]
+            },
+            {
+              "heading": "Where the gain comes from",
+              "paragraphs": [
+                "The primary experiment compares skills versus no skills for GPT 5.4 Mini and GPT 5.5, with five trials per model and condition. Model differences are averaged within each task, then tasks receive equal weight. Reward rises by 0.136, with 26 of 28 tasks improving. Reward is the mean match rate across scored value columns; missing, extra and duplicate records affect the denominator. It is not the fraction of completed tasks.",
+                "On a purposively selected eight-task control subset, a complete operational specification alone improves over the baseline by 0.162. Skills add only 0.024 beyond it, with a 95% interval of -0.034 to 0.099 that includes zero. The subset over-represents large gains, limiting generalisation to all tasks. A separate ten-task control finds little benefit from unrelated skills, while reference query text nearly matches targeted skills, suggesting that content matters more than packaging."
+              ]
+            },
+            {
+              "heading": "Better averages are not reliable completion",
+              "paragraphs": [
+                "Only 25 of 280 primary runs with skills pass every strict check, versus 13 of 280 without. Key F1, measuring agreement on which records are returned, moves by just 0.003. Much of the improvement concerns values on already matched records. A descriptive Claude Code replication covers 28 tasks and 560 runs with a 0.120 mean gain, but execution and routing differ across conditions; it is not a provider ranking.",
+                "The benchmark concerns retrospective research, and some rules use information unavailable at a real-time decision point. Most tasks come from MIMIC-IV; changing schemas does not establish freedom from memorisation. Source medical data require credentialed access and are not redistributed with the public release. Our practical reading is to supply definitions, provenance and checks together while inspecting intermediate results. A higher average score cannot replace acceptance of the actual output."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Our redraw of the evaluation design, not a patient workflow or medical advice.",
+            "steps": [
+              "Specify variables, windows and record grain",
+              "Compare the same task with and without skills",
+              "Check hidden reference values and record coverage",
+              "Report average agreement and strict passes separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "電子カルテから研究用の変数を作るには、表名や列名だけでは足りない。時間窓、欠損値の扱い、一行が何を表すかによって対象集団が変わる。M4Bench は、宣言された派生規則をエージェントが再現できるかを調べ、規則の完全性とスキルという形式を分けて評価する。10 月 27 日の著者注記は NeurIPS 2026 評価・データセットトラック採択を述べており、ここでも著者の記載として扱う。",
+          "sections": [
+            {
+              "heading": "暗黙の規則を確認できる形にする",
+              "paragraphs": [
+                "基準には 15 系統、28 課題があり、26 課題は MIMIC-IV、二つは eICU に由来する。スコア、感染、臓器機能、移動時間窓などの研究変数を対象とする。標準モードでは一部の中間特徴が残り、生データモードでは元の表から再構成する。出力は非公開の参照表と比較し、列、記録の範囲、値を検査する。",
+                "課題とスキルは二人の臨床医がそれぞれ確認したが、確認者は著者チーム内であり外部検証ではない。スキルには定義、対応付け、単位、時間規則、出力粒度を記し、隠された答えは含めない。再現対象は研究上の取り決めで、参照実装にも議論の余地がある。一致度を臨床的な正しさや診断能力と同一視できない。"
+              ]
+            },
+            {
+              "heading": "何が改善をもたらしたのか",
+              "paragraphs": [
+                "主要実験は GPT 5.4 Mini と GPT 5.5 を使い、同じ課題でスキルの有無を比較した。モデルと条件ごとに五回試行し、課題内でモデル差を平均してから 28 課題を等重みで集計する。報酬は 0.136 改善し、26 課題が向上した。報酬は採点する値列の平均一致率で、欠落、余分、重複した記録も分母に影響する。課題完了率ではない。",
+                "意図的に選んだ八課題の対照では、完全な操作仕様だけで基準より 0.162 改善し、スキルの追加分は 0.024 にとどまった。その 95% 区間は -0.034～0.099 でゼロを含む。この部分集合には効果の大きな課題が多く、全課題への一般化には制約がある。別の十課題では無関係なスキルにほぼ効果がなく、参照クエリの文章が対象スキルに近い結果を示し、形式より内容が重要だと示唆する。"
+              ]
+            },
+            {
+              "heading": "平均点の向上と完成は別",
+              "paragraphs": [
+                "主要比較のスキル付き 280 回のうち、すべての厳密な検査に通ったのは 25 回、なしでは 13/280 だった。返す記録範囲の一致を表すキー F1 は 0.003 しか増えず、主な改善は既に対応する記録の値に集中している。28 課題、560 回の Claude Code 追試も平均差 0.120 と同方向だが、実行環境とルーティングが条件間で完全には同じでなく、記述的な確認に限られる。提供者の順位には使えない。",
+                "回顧的な研究のための基準であり、事後にしか得られない情報を使う規則もあるので、リアルタイム臨床予測にそのまま使えない。MIMIC-IV への偏りがあり、スキーマ変更だけで記憶の混入がないとも証明できない。元の医療データには資格確認が必要で、公開成果と一緒には再配布されない。本サイトの見立てでは、定義、出典、検査条件をまとめて渡し、中間結果を点検することが要点だ。平均点だけで成果物の検収は済まない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の評価設計を本サイトが描き直した図。患者の処置手順や医療助言ではありません。",
+            "steps": [
+              "変数の規則・時間窓・記録粒度を明記",
+              "同じ課題をスキル有無で比較",
+              "参照値と記録範囲を照合",
+              "平均一致度と厳密な合格率を分ける"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Для вычисления исследовательских переменных из электронных медицинских записей недостаточно названий таблиц и столбцов. Временные окна, пропуски и смысл одной строки меняют состав выборки. M4Bench проверяет воспроизведение заданных правил агентами, отделяя полноту спецификации от упаковки в файл навыка. В комментарии к версии от 27 октября авторы сообщают о принятии в трек Evaluations and Datasets NeurIPS 2026; здесь это сохраняется как заявление авторов.",
+          "sections": [
+            {
+              "heading": "Сделать неявные правила проверяемыми",
+              "paragraphs": [
+                "Набор содержит 28 задач из 15 семейств: 26 на MIMIC-IV и две на eICU. Они охватывают исследовательские показатели, инфекцию, функции органов и временные окна. Стандартный режим сохраняет отдельные промежуточные признаки; режим исходных данных требует их восстановления. Результат сравнивают со скрытой эталонной таблицей по столбцам, охвату записей и значениям.",
+                "Каждую задачу и навык независимо проверили два клинициста, но они входят в авторскую команду: это не внешняя валидация. Навыки описывают определения, соответствия, единицы, время и детализацию строк, не раскрывая скрытые ответы. Цель — воспроизвести исследовательские соглашения, в которых тоже возможны спорные решения. Совпадение с эталоном не равно клинической правильности или способности ставить диагноз."
+              ]
+            },
+            {
+              "heading": "Откуда берётся улучшение",
+              "paragraphs": [
+                "Основной эксперимент сравнивает наличие и отсутствие навыка для GPT 5.4 Mini и GPT 5.5, по пять испытаний на модель и условие. Разницы сначала усредняют между моделями внутри задачи, затем между задачами с одинаковым весом. Награда возрастает на 0.136, улучшение есть в 26 из 28 задач. Награда — средняя доля совпадений в оцениваемых столбцах значений; пропущенные, лишние и повторные записи влияют на знаменатель. Это не доля завершённых задач.",
+                "На специально выбранных восьми задачах полная операционная спецификация сама даёт +0.162 к базовому условию. Навыки добавляют лишь 0.024, с 95%-ным интервалом от -0.034 до 0.099, включающим ноль. Поднабор содержит непропорционально много задач с большим эффектом, поэтому вывод о механизме нельзя автоматически обобщать. На другом поднаборе из десяти задач нерелевантные навыки почти не помогают, а текст эталонного запроса близок к целевым навыкам: важнее содержание, чем упаковка."
+              ]
+            },
+            {
+              "heading": "Средний балл ещё не означает готовый результат",
+              "paragraphs": [
+                "Все строгие проверки проходят только 25 из 280 основных запусков с навыками против 13 из 280 без них. Key F1, отражающий выбор возвращённых записей, растёт лишь на 0.003: выигрыш в основном относится к значениям уже сопоставленных строк. Описательное повторение в Claude Code охватывает 28 задач и 560 запусков с приростом 0.120, но исполнение и маршрутизация неодинаковы между условиями. Это не рейтинг поставщиков.",
+                "Бенчмарк предназначен для ретроспективных исследований; некоторые правила используют сведения, недоступные при решении в реальном времени. Преобладание MIMIC-IV ограничивает переносимость, а изменение схем не доказывает отсутствие запоминания данных. Исходные медицинские данные требуют подтверждённого доступа и не распространяются вместе с открытыми материалами. По нашей оценке, полезно передавать агенту определения, происхождение правил и проверки вместе, сохраняя контроль промежуточных результатов. Средний балл не заменяет приёмку конкретного результата."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша схема дизайна оценки; не порядок лечения пациента и не медицинская рекомендация.",
+            "steps": [
+              "Задать правила, временные окна и детализацию записей",
+              "Сравнить одну задачу с навыком и без него",
+              "Проверить эталонные значения и охват записей",
+              "Раздельно оценить среднее совпадение и строгие проходы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "從電子病歷算出研究變數，往往不能只看表名和欄位名。時間視窗、缺失值處理和每一行代表什麼，都會改變研究佇列。M4Bench 評測程式設計智慧體能否復現已宣告的衍生規則，並用對照實驗區分“規則講完整了”與“裝進技能檔案”各自的作用。10 月 27 日的作者註釋註明獲 NeurIPS 2026 評測與資料集軌道錄用，本文保留這一歸因。",
+          "sections": [
+            {
+              "heading": "把隱含規則變成可審查的規格",
+              "paragraphs": [
+                "基準有 28 項任務、15 類任務家族，其中 26 項來自 MIMIC-IV，兩項來自 eICU。任務覆蓋評分、感染、器官功能及時間視窗等研究變數；標準模式可使用部分中間特徵，原始模式則需從源表重建。智慧體輸出的結果要與隱藏參考表比較，檢查列、記錄範圍和數值。",
+                "任務與配套技能由兩名臨床醫生分別審查，但審查者來自作者團隊，並非外部驗證。技能說明定義、對映、單位、時間規則和輸出粒度，不提供隱藏答案。這裡的目標是復現研究約定；參考實現也可能包含有爭議的處理方式，不能把一致性分數等同於臨床正確性，更不是診療能力評測。"
+              ]
+            },
+            {
+              "heading": "主要改善來自什麼",
+              "paragraphs": [
+                "主要實驗使用 GPT 5.4 Mini 與 GPT 5.5，對同一任務比較有無技能，每個模型與條件各五次執行。先在任務內平均模型差異，再對 28 項任務等權彙總，帶技能的獎勵提高 0.136，26 項改善。獎勵是各計分值列的平均匹配率，缺失、額外和重複記錄都會影響分母，不是完成任務的比例。",
+                "在八項任務的專門對照中，完整操作規格本身比無技能基線提高 0.162，技能在此之上只增加 0.024，其 95% 區間為 -0.034 至 0.099，包含零。這個子集有意選擇，較多包含收益大的任務，不能將機制結論直接推廣到全部任務。十項任務的另一個對照中，不相關技能幾乎沒有收益，參考查詢文字接近針對性技能，進一步提示內容比包裝更重要。"
+              ]
+            },
+            {
+              "heading": "平均分提高，離可靠交付仍有距離",
+              "paragraphs": [
+                "主要對照中，有技能的 280 次執行僅 25 次透過所有嚴格檢查，無技能為 13/280。反映返回記錄範圍的鍵 F1 只增加 0.003，說明改進主要集中在已有匹配記錄上的值，而不是全面解決了輸出粒度。另一個覆蓋 28 項任務、560 次執行的 Claude Code 實驗方向一致，平均差為 0.120，但執行框架與路由不完全一致，只作描述性複核，不能用來給廠商排名。",
+                "本基準以回顧性研究為目標，部分規則會用到事後資訊，不適合直接當成實時臨床預測。樣本高度集中於 MIMIC-IV，改動表名和結構也不能證明沒有記憶汙染。原始醫療資料須按來源要求取得資格，未隨公開成果重新分發。本站認為，實際價值是把規則、出處與檢查條件一併交給智慧體，同時繼續審查中間結果；一個更高的平均分不能替代結果驗收。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按論文評測設計重繪的解釋圖，不是患者流程或醫療建議。",
+            "steps": [
+              "明確變數規則、時間視窗與記錄粒度",
+              "同一任務分別提供或不提供技能",
+              "對照隱藏參考值及記錄範圍",
+              "分別報告平均一致性與嚴格透過率"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "agar-microservice-counterfactual-analysis",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv: 2610.36636v1",
+          "url": "https://arxiv.org/abs/2610.36636v1"
+        },
+        {
+          "label": "Full paper · arXiv HTML",
+          "url": "https://arxiv.org/html/2610.36636v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "微服务变慢时，多分配几台机器未必能解决问题：真正的瓶颈可能在下游服务，也可能是新实例迟迟无法就绪。得克萨斯大学奥斯汀分校的 Agar 研究尝试在实际调整之前，估计不同流量、资源和延迟目标下的运行结果。它关心的是满足服务目标需要多少资源，而不是精确猜中每一次请求的耗时。",
+          "sections": [
+            {
+              "heading": "先建立范围，再判断是否够用",
+              "paragraphs": [
+                "论文将问题拆成三部分：请求量如何影响各服务的 CPU 和内存占用，怎样的占用范围能够满足延迟目标，以及新实例启动期间可能出现多大需求。利用已有观测，Agar 学习能够包含全部训练数据的范围，再组合这些范围，寻找足够而不过量的服务副本数。这里的“全部覆盖”只针对观测数据，并不是未来永不出错的保证。",
+                "服务目标 SLO 可以理解为运营者给出的响应速度要求。作者没有为每个组件训练复杂的精确预测器，而是用负载相关开销、固定开销和波动范围表达资源占用。选择各服务的安全阈值会产生组合优化问题；论文用贪心算法控制求解成本。运行中的新观测一旦超出边界，就触发相应模型的重新拟合。"
+              ]
+            },
+            {
+              "heading": "三个应用中的资源与延迟",
+              "paragraphs": [
+                "作者在两个各含 15 台实例的 AWS 集群上评估，一组使用独享宿主机，另一组使用共享环境。TeaStore、Online Boutique 和 Social Network 分别包含 7、11、20 个服务，负载由阿里巴巴生产轨迹改编并按测试容量缩放。前 6 小时用于学习，随后 2 小时用于测试，对照是手工调优的 Kubernetes HPA 和学习型横向扩容器 Erlang。",
+                "实验要求每个入口的第 95 百分位延迟不超过 300 毫秒。作者报告，Agar 在三个应用的测试中相对对照最多减少 36.8% 的 CPU 分配。这个最大值不是所有应用的固定收益。论文还展示了一个容易忽略的差别：某入口只占不足 0.6% 的流量，即便其延迟很高，也可能被全站汇总的第 95 百分位掩盖；按入口分别检查，才能看见这种局部违约。"
+              ]
+            },
+            {
+              "heading": "边界失效也是诊断线索",
+              "paragraphs": [
+                "在 CloudLab 的补充案例中，较慢的存储让服务启动检查过早超时，扩大副本数仍不能修复配置问题。Agar 的异常资源范围帮助作者定位原因。它还可估计缩短特定服务启动时间、放宽或收紧延迟目标的资源影响；这些是基于模型的反事实分析，需要与真实运行区分。",
+                "方法假定应用的基本行为相对稳定，作者建议修改应用或更换硬件后重新训练。测试覆盖三个应用，不含所有有状态组件的自动扩容，也没有验证纵向扩容。初始拟合并非免费：在报告的 1,000 个训练样本条件下，完整训练最长约 811 秒；局部占用范围重训最长约 14.95 秒。它提供可检查的资源决策依据，但仍需持续观测和处理超出已见条件的变化。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，展示范围建模与运行反馈，不代表实验曲线。",
+            "steps": [
+              "收集请求量与资源观测",
+              "拟合组件行为范围",
+              "组合范围计算副本需求",
+              "检查延迟与边界并更新"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Adding machines does not always fix a slow microservice application. A downstream bottleneck or an instance that never becomes ready can make extra capacity ineffective. Agar, from the University of Texas at Austin, asks what would happen under a different workload, resource allocation or latency target before operators make the change. Its aim is to estimate sufficient resources, rather than predict every request latency exactly.",
+          "sections": [
+            {
+              "heading": "Compose bounds instead of exact predictions",
+              "paragraphs": [
+                "Agar models three relationships: how endpoint request rates affect each service’s CPU and memory use; which utilization ranges are compatible with a latency objective; and the demand that may arrive while a new instance starts. It learns ranges that contain every training observation, then composes them to calculate sufficient replica counts. Coverage of observed data is not a guarantee that every future observation will fall inside the same bounds.",
+                "An SLO is an operational target for service quality. Instead of a complex exact predictor for each component, Agar describes workload-dependent cost, a fixed baseline and bounded variation. Selecting safe utilization thresholds is a combinatorial optimization problem, handled with a greedy algorithm. Runtime observations that violate a learned relationship trigger refitting of the relevant model."
+              ]
+            },
+            {
+              "heading": "What the three-application evaluation measures",
+              "paragraphs": [
+                "The authors evaluate TeaStore, Online Boutique and Social Network, containing 7, 11 and 20 services, on two AWS clusters with 15 instances each. One uses dedicated-host tenancy and the other shared tenancy. Workloads are adapted from Alibaba production traces and scaled to deployment capacity. The first six hours supply training data and the following two hours are used for testing, against manually tuned Kubernetes HPA and the learning-based horizontal autoscaler Erlang.",
+                "The target is a 300-millisecond 95th-percentile latency for each endpoint. Across the tested applications, the authors report up to 36.8% less allocated CPU than the comparison autoscalers; this maximum is not a uniform saving. A useful distinction appears in a rare endpoint handling less than 0.6% of traffic: severe slowness there can disappear inside an application-wide percentile. Checking endpoints separately exposes a violation that an aggregate latency signal may miss."
+              ]
+            },
+            {
+              "heading": "When a failed bound becomes useful evidence",
+              "paragraphs": [
+                "Additional CloudLab cases show how slower storage can make startup health checks time out too early. Adding replicas does not repair that configuration problem; unusual resource bounds helped the authors locate it. Agar also estimates the resource consequences of shorter startup delays or different latency targets. Those counterfactual estimates must be distinguished from measurements of an actually deployed change.",
+                "The method assumes reasonably stable application behavior, and the authors recommend retraining after application or hardware changes. Evidence covers three applications, excludes some stateful components from autoscaling and does not validate vertical scaling. Learning is not free: with 1,000 training samples, the longest reported full-training time is about 811 seconds, while a utilization-bound refit takes up to 14.95 seconds. The practical contribution is an inspectable basis for resource decisions, coupled to continued monitoring when conditions change."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper: model bounds and operational feedback, not an experimental plot.",
+            "steps": [
+              "Observe requests and resource use",
+              "Fit component behavior bounds",
+              "Compose bounds into replica requirements",
+              "Check latency and revise violated bounds"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "マイクロサービスが遅くなっても、マシンを増やせば直るとは限らない。下流サービスの混雑や、新しいインスタンスが起動を完了できない問題が原因の場合もある。テキサス大学オースティン校の Agar は、負荷、資源配分、応答時間の目標を変更したら何が起きるかを、変更前に検討する研究だ。すべての要求の所要時間を正確に当てるのではなく、目標を満たす資源量を推定する。",
+          "sections": [
+            {
+              "heading": "正確な予測値ではなく範囲を組み合わせる",
+              "paragraphs": [
+                "Agar は、入口ごとの要求数と各サービスの CPU・メモリー使用量の関係、応答時間目標を満たす使用量の範囲、そしてインスタンスの起動中に増え得る需要をモデル化する。学習時の観測をすべて含む範囲を求め、それらを組み合わせて必要なレプリカ数を計算する。観測済みデータを含むことは、将来も必ず範囲内になるという保証ではない。",
+                "SLO は運用者が定めるサービス品質の目標を意味する。Agar は複雑な精密予測器の代わりに、負荷に依存する費用、固定的な使用量、変動幅で資源利用を表す。安全な使用率のしきい値を選ぶ組合せ最適化には貪欲法を用いる。稼働中の観測が学習した関係から外れると、該当モデルを再学習する。"
+              ]
+            },
+            {
+              "heading": "三つのアプリケーションでの評価",
+              "paragraphs": [
+                "評価対象は、7 サービスの TeaStore、11 サービスの Online Boutique、20 サービスの Social Network。各 15 インスタンスの AWS クラスターを二つ用意し、専有ホストと共有環境を比較した。Alibaba の本番トレースをテスト容量に合わせて調整し、最初の 6 時間で学習、続く 2 時間で評価している。比較対象は手動調整した Kubernetes HPA と学習型の水平オートスケーラー Erlang だ。",
+                "各入口の応答時間の第 95 百分位を 300 ミリ秒以下にする条件で、著者は比較方式より CPU 割当量を最大 36.8% 削減したと報告する。これは全アプリケーション共通の削減率ではない。論文では、要求全体の 0.6% 未満しか占めない入口の大きな遅延が、全体集計の第 95 百分位では隠れる例も示す。入口別に測るかどうかで、目標違反の見え方が変わる。"
+              ]
+            },
+            {
+              "heading": "範囲を外れた観測が原因究明につながる",
+              "paragraphs": [
+                "CloudLab の追加事例では、遅いストレージによって起動時の健全性確認が早くタイムアウトし、レプリカを増やしても解決しない設定上の問題が現れた。資源利用の異常な範囲が原因の特定を助けた。起動時間の短縮や応答目標の変更が資源量に与える影響も推定できるが、こうした反実仮想の推定は、変更を実施して測った結果と区別する必要がある。",
+                "基本的なアプリケーション挙動が安定しているという前提があり、著者はアプリケーションやハードウェアを変更した場合の再学習を勧める。評価は三つのアプリケーションに限られ、一部の状態を持つ構成要素は自動拡張の対象外で、垂直拡張も未検証だ。学習サンプル数 1,000 の条件で完全学習は最大約 811 秒、使用量範囲だけの再学習は最大約 14.95 秒だった。判断根拠を確認しやすくする手法だが、環境変化に対する継続的な監視は必要となる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本站が描き直した説明図。範囲モデルと観測の循環を示し、実験グラフではない。",
+            "steps": [
+              "要求数と資源使用量を観測",
+              "構成要素の挙動範囲を学習",
+              "範囲を組み合わせ必要数を計算",
+              "応答時間を確認し範囲を更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Дополнительные машины не всегда устраняют задержки микросервисного приложения. Причиной может быть перегруженный нижележащий сервис или экземпляр, который не успевает запуститься. Agar, работа Техасского университета в Остине, оценивает последствия изменения нагрузки, ресурсов или целевой задержки до самого изменения. Задача системы — определить достаточный объём ресурсов, а не точно предсказать длительность каждого запроса.",
+          "sections": [
+            {
+              "heading": "Соединение диапазонов вместо точечных прогнозов",
+              "paragraphs": [
+                "Agar моделирует связь частоты запросов к отдельным точкам входа с потреблением CPU и памяти сервисов, диапазоны загрузки, совместимые с целевой задержкой, и возможный спрос за время запуска нового экземпляра. Диапазоны охватывают все обучающие наблюдения, после чего их объединяют для расчёта числа реплик. Соответствие наблюдённым данным не гарантирует, что любые будущие условия останутся внутри этих границ.",
+                "SLO — заданная оператором цель качества обслуживания. Вместо сложного точного предсказателя Agar использует зависимую от нагрузки составляющую, постоянные расходы и диапазон колебаний. Выбор безопасных порогов загрузки требует комбинаторной оптимизации; для него применяется жадный алгоритм. Если новое наблюдение нарушает изученную зависимость, соответствующую модель обучают заново."
+              ]
+            },
+            {
+              "heading": "Что проверили на трёх приложениях",
+              "paragraphs": [
+                "Авторы исследовали TeaStore, Online Boutique и Social Network с 7, 11 и 20 сервисами на двух кластерах AWS по 15 экземпляров. Один использует выделенные хосты, другой — совместное размещение. Нагрузка получена из производственных трасс Alibaba и масштабирована под тестовую конфигурацию. Первые шесть часов используются для обучения, следующие два — для проверки. Сравнение проводится с вручную настроенным Kubernetes HPA и обучаемым горизонтальным автомасштабировщиком Erlang.",
+                "Цель — 95-й процентиль задержки не выше 300 миллисекунд для каждой точки входа. В этих экспериментах авторы сообщают о сокращении выделенного CPU максимум на 36,8% относительно сравниваемых автомасштабировщиков; это не единый выигрыш для всех приложений. Отдельно показано, что сильная задержка точки входа с долей менее 0,6% запросов может скрываться в общем процентиле приложения. Измерение по точкам входа обнаруживает нарушение, которое агрегированная метрика пропускает."
+              ]
+            },
+            {
+              "heading": "Нарушенная граница помогает найти причину",
+              "paragraphs": [
+                "В дополнительных случаях на CloudLab медленное хранилище приводило к преждевременному завершению проверок готовности при запуске. Увеличение числа реплик не исправляло ошибку настройки; необычные диапазоны потребления помогли её локализовать. Agar также оценивает влияние сокращения времени запуска или изменения допустимой задержки на потребность в ресурсах. Такие контрфактические оценки следует отличать от измерений реально внесённого изменения.",
+                "Метод предполагает относительную стабильность поведения приложения, поэтому авторы рекомендуют повторное обучение после изменений приложения или оборудования. Проверены три приложения, некоторые компоненты с состоянием исключены из автомасштабирования, вертикальное масштабирование не исследовано. При 1 000 обучающих наблюдений полное обучение занимало до примерно 811 секунд, а обновление отдельного диапазона потребления — до 14,95 секунды. Практическая ценность состоит в проверяемом обосновании распределения ресурсов, но мониторинг новых условий остаётся необходимым."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: диапазоны модели и обратная связь, а не экспериментальный график.",
+            "steps": [
+              "Наблюдать запросы и потребление",
+              "Обучить диапазоны поведения",
+              "Рассчитать число реплик",
+              "Проверить задержку и обновить границы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "微服務變慢時，多分配幾臺機器未必能解決問題：真正的瓶頸可能在下游服務，也可能是新例項遲遲無法就緒。得克薩斯大學奧斯汀分校的 Agar 研究嘗試在實際調整之前，估計不同流量、資源和延遲目標下的執行結果。它關心的是滿足服務目標需要多少資源，而不是精確猜中每一次請求的耗時。",
+          "sections": [
+            {
+              "heading": "先建立範圍，再判斷是否夠用",
+              "paragraphs": [
+                "論文將問題拆成三部分：請求量如何影響各服務的 CPU 和記憶體佔用，怎樣的佔用範圍能夠滿足延遲目標，以及新例項啟動期間可能出現多大需求。利用已有觀測，Agar 學習能夠包含全部訓練資料的範圍，再組合這些範圍，尋找足夠而不過量的服務副本數。這裡的“全部覆蓋”只針對觀測資料，並不是未來永不出錯的保證。",
+                "服務目標 SLO 可以理解為運營者給出的響應速度要求。作者沒有為每個元件訓練複雜的精確預測器，而是用負載相關開銷、固定開銷和波動範圍表達資源佔用。選擇各服務的安全閾值會產生組合最佳化問題；論文用貪心演算法控制求解成本。執行中的新觀測一旦超出邊界，就觸發相應模型的重新擬合。"
+              ]
+            },
+            {
+              "heading": "三個應用中的資源與延遲",
+              "paragraphs": [
+                "作者在兩個各含 15 臺例項的 AWS 叢集上評估，一組使用獨享宿主機，另一組使用共享環境。TeaStore、Online Boutique 和 Social Network 分別包含 7、11、20 個服務，負載由阿里巴巴生產軌跡改編並按測試容量縮放。前 6 小時用於學習，隨後 2 小時用於測試，對照是手工調優的 Kubernetes HPA 和學習型橫向擴容器 Erlang。",
+                "實驗要求每個入口的第 95 百分位延遲不超過 300 毫秒。作者報告，Agar 在三個應用的測試中相對對照最多減少 36.8% 的 CPU 分配。這個最大值不是所有應用的固定收益。論文還展示了一個容易忽略的差別：某入口只佔不足 0.6% 的流量，即便其延遲很高，也可能被全站彙總的第 95 百分位掩蓋；按入口分別檢查，才能看見這種區域性違約。"
+              ]
+            },
+            {
+              "heading": "邊界失效也是診斷線索",
+              "paragraphs": [
+                "在 CloudLab 的補充案例中，較慢的儲存讓服務啟動檢查過早超時，擴大副本數仍不能修復配置問題。Agar 的異常資源範圍幫助作者定位原因。它還可估計縮短特定服務啟動時間、放寬或收緊延遲目標的資源影響；這些是基於模型的反事實分析，需要與真實執行區分。",
+                "方法假定應用的基本行為相對穩定，作者建議修改應用或更換硬體後重新訓練。測試覆蓋三個應用，不含所有有狀態元件的自動擴容，也沒有驗證縱向擴容。初始擬合併非免費：在報告的 1,000 個訓練樣本條件下，完整訓練最長約 811 秒；區域性佔用範圍重訓最長約 14.95 秒。它提供可檢查的資源決策依據，但仍需持續觀測和處理超出已見條件的變化。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，展示範圍建模與執行反饋，不代表實驗曲線。",
+            "steps": [
+              "收集請求量與資源觀測",
+              "擬合元件行為範圍",
+              "組合範圍計算副本需求",
+              "檢查延遲與邊界並更新"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "pace-four-bit-recurrent-state",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv: 2610.29545v1",
+          "url": "https://arxiv.org/abs/2610.29545v1"
+        },
+        {
+          "label": "Full paper · arXiv HTML",
+          "url": "https://arxiv.org/html/2610.29545v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "循环式语言模型会把历史信息压入一个不断更新的状态。将这个状态降为四位可以节省显存，但每生成一个词元都重新舍入，会让误差反复进入后续计算。PACE 研究的重点不是压缩整套模型参数，而是减少这份运行状态的存储，同时控制多次舍入带来的精度损失。",
+          "sections": [
+            {
+              "heading": "少舍入几次，也改变缩放方向",
+              "paragraphs": [
+                "PACE 先暂存近期词元的键、值等更新信息，再隔一段时间合并到压缩状态。论文的常用设置是每 8 个生成词元舍入一次。这样做减少了舍入次数，却新增缓冲区开销，因此作者将状态、缩放参数和缓冲区一并计入驻留内存，而不是只报“四位”这个名义宽度。",
+                "作者观察到较大数值聚集在与值通道对应的列中，因此在同一列内沿键轴分组缩放，避免将性质不同的列混在一起。PACE-4/8 还把每层四分之一、较敏感的注意力头保留为八位，其余使用四位。这是事后量化方案，不重新训练基础模型；选择哪些头需要更高精度则使用少量保留样本。"
+              ]
+            },
+            {
+              "heading": "节省的是哪部分内存",
+              "paragraphs": [
+                "实验覆盖 Qwen3.5 的 4B、9B、27B 和 Qwen3.6-35B-A3B 四个混合模型，考察数学、指令遵循、知识题、长上下文变量追踪与文本困惑度。PACE-4/8 每个状态值连同附带存储平均占 6.82 位，对照 DAMP INT8 为 9.90 位，约减少 31%。这个比例针对循环状态及相关缓冲，不等于整机显存或模型参数减少 31%。",
+                "精度并非全面无损。论文表格中，9B 的跨任务平均分与 DAMP INT8 相同，27B 接近，但 4B 和 35B 较低；部分指令遵循测试仍存在差距。全四位版本在相同驻留位数下优于论文重现的 Q-Mamba DSQ，不过该对照没有使用原方法的微调步骤，不能据此宣称超过其完整训练方案。"
+              ]
+            },
+            {
+              "heading": "速度结果与适用边界",
+              "paragraphs": [
+                "吞吐实验使用 Qwen3.5-4B、单张 H100 PCIe、512 词元上下文和 1—128 的批量。周期式四位状态从批量 16 起，比逐词元更新的 bf16 状态有更低的每输出词元耗时；大部分改善来自延迟更新缓冲，四位存储进一步贡献较小收益。计时对象是均匀四位实现，未计时 PACE 的按列分组和混合精度头配置。",
+                "因此，论文分别提供了精度与内存证据、以及简化实现的速度证据，不能将它们拼成未经测试的完整配置成绩。四个模型都采用门控 delta 规则，结论尚未证明能推广到其他模型家族、完全循环的模型或不同状态更新机制。基准的预填充块固定为 256 个词元，也未覆盖全部舍入周期选择。它更适合作为状态压缩的设计依据，实际部署仍需针对目标模型验证质量和速度。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性示意，说明周期合并与状态压缩，不是精度或速度实验图。",
+            "steps": [
+              "暂存近期词元更新",
+              "每 8 个词元合并状态",
+              "按列分组并保留敏感头精度",
+              "同时核算状态与缓冲开销"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A recurrent language model carries history in a state that is updated during generation. Storing that state in four bits can save memory, but rounding it after every token repeatedly introduces errors into later computation. PACE targets this running state rather than all model weights: it asks how to reduce storage while limiting accumulated rounding error.",
+          "sections": [
+            {
+              "heading": "Round less often and align the scales",
+              "paragraphs": [
+                "PACE buffers recent token updates, including keys and values, before merging them into the compressed state. The usual decoding setting rounds once every eight generated tokens. Fewer rounding operations require additional buffering, so the paper counts state storage, scale parameters and the buffer together as resident memory, rather than reporting only the nominal four-bit width.",
+                "Large state values concentrate in columns associated with value channels. PACE therefore groups values along the key axis within a column instead of mixing different columns. PACE-4/8 additionally retains one quarter of the more sensitive heads in each layer at eight bits and stores the rest at four bits. This is post-hoc quantization without retraining the base model; a small held-out sample helps choose which heads receive higher precision."
+              ]
+            },
+            {
+              "heading": "What the memory and accuracy results cover",
+              "paragraphs": [
+                "The evaluation covers Qwen3.5-4B, 9B and 27B, plus Qwen3.6-35B-A3B, on mathematics, instruction following, knowledge questions, long-context variable tracking and text perplexity. PACE-4/8 uses 6.82 resident bits per state value including associated storage, versus 9.90 for DAMP INT8, about 31% less. This saving concerns recurrent state and its supporting buffer, not total machine memory or model parameters.",
+                "Accuracy is not uniformly lossless. In the reported cross-task averages, the 9B configuration matches DAMP INT8 and 27B comes close, while 4B and 35B score lower; some instruction-following gaps remain. At equal resident bits, the all-four-bit configuration outperforms the paper’s reproduction of Q-Mamba DSQ. That reproduction omits the original method’s fine-tuning, so it does not establish superiority over the complete trained baseline."
+              ]
+            },
+            {
+              "heading": "The speed experiment is a separate configuration",
+              "paragraphs": [
+                "Throughput is measured with Qwen3.5-4B on one H100 PCIe GPU, a 512-token context and batch sizes from 1 to 128. Periodic four-bit state updates reduce time per output token relative to per-token bf16 updates from batch size 16 upward. Most of the improvement comes from deferred-update buffering; four-bit storage adds a smaller benefit. The timed implementation uses uniform four-bit states, not PACE’s key-axis grouping and mixed-precision head allocation.",
+                "The paper therefore supplies quality and memory evidence for one configuration family and timing evidence for a simpler implementation. These cannot be combined into an unmeasured full-system score. All four tested models use the gated delta rule; transfer to other families, fully recurrent models or different update mechanisms is unproven. Prefill uses a fixed 256-token chunk in the benchmarks. The work offers a design basis for state compression, but a deployment still needs model-specific quality and speed measurements."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper: periodic merging and state compression, not a measured accuracy or speed plot.",
+            "steps": [
+              "Buffer recent token updates",
+              "Merge every eight generated tokens",
+              "Group within columns and protect sensitive heads",
+              "Count both state and buffer storage"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "循環型の言語モデルは、履歴を更新し続ける状態にまとめて保持する。この状態を 4 ビットにするとメモリーを節約できるが、トークンごとに丸め直すと誤差が後の計算に繰り返し入り込む。PACE が対象とするのはモデル全体の重みではなく、この実行中の状態だ。保存量を抑えながら、丸めの累積誤差を小さくする方法を検討している。",
+          "sections": [
+            {
+              "heading": "丸める頻度とスケールの向きを変える",
+              "paragraphs": [
+                "PACE は直近のトークンのキーや値などをバッファーに置き、一定間隔で圧縮状態へまとめて反映する。代表的な設定では生成 8 トークンごとに丸める。丸め回数は減る一方でバッファーが増えるため、著者は状態、スケール情報、バッファーを合わせた常駐メモリーを計算しており、名目上の「4 ビット」だけを報告していない。",
+                "大きな状態値が値チャネルに対応する列に集まるという観測から、同じ列の中でキー軸に沿ってスケールを共有する。PACE-4/8 ではさらに、各層の敏感なヘッドの 4 分の 1 を 8 ビットに保ち、残りを 4 ビットにする。基本モデルを再学習しない事後量子化だが、高精度で残すヘッドの選択には少量の保留サンプルを使う。"
+              ]
+            },
+            {
+              "heading": "削減するメモリーの範囲",
+              "paragraphs": [
+                "評価したのは Qwen3.5 の 4B、9B、27B と Qwen3.6-35B-A3B。数学、指示への追従、知識問題、長文中の変数追跡、文章のパープレキシティを調べた。付随する記憶領域も含めた状態値当たりの常駐量は PACE-4/8 が 6.82 ビット、DAMP INT8 が 9.90 ビットで、約 31% 少ない。モデル全体や装置全体のメモリーが 31% 減るという意味ではない。",
+                "精度が一律に維持されるわけではない。課題間の平均では 9B が DAMP INT8 と同点、27B が近い一方、4B と 35B は下回り、指示追従には差が残った。全ヘッドを 4 ビットにした構成は同じ常駐量の Q-Mamba DSQ 再実装を上回るが、その対照には元の手法の微調整が含まれない。完全な学習手順まで含めた優越性を示す比較ではない。"
+              ]
+            },
+            {
+              "heading": "速度評価は別の構成で行われた",
+              "paragraphs": [
+                "速度評価は Qwen3.5-4B、H100 PCIe 1 枚、512 トークンの文脈、バッチ数 1—128 で行った。周期的に更新する 4 ビット状態は、バッチ数 16 以上で、トークンごとに更新する bf16 状態より出力トークン当たりの時間が短かった。改善の多くは更新を遅らせるバッファーによるもので、4 ビット化の追加効果は比較的小さい。計時対象は均一な 4 ビット実装であり、列方向のグループ化と混合精度ヘッドを備えた PACE 全構成ではない。",
+                "したがって、精度・メモリーの結果と簡略実装の速度結果を組み合わせて、未測定の総合性能を主張することはできない。四つのモデルはいずれも gated delta rule を使っており、別のモデル系列、完全循環型モデル、異なる更新機構への一般化は未確認だ。ベンチマークではプリフィルのブロック長も 256 トークンに固定されている。状態圧縮の設計指針にはなるが、導入時には対象モデルで品質と速度を確かめる必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本站が描き直した説明図。周期的な反映と状態圧縮を示し、精度や速度の実験図ではない。",
+            "steps": [
+              "直近の更新をバッファーに保持",
+              "生成 8 トークンごとに状態へ反映",
+              "列内でまとめ敏感なヘッドを保護",
+              "状態とバッファーの両方を計算"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Рекуррентная языковая модель хранит историю в состоянии, которое обновляется при генерации. Четырёхбитное хранение уменьшает память, но округление после каждого токена вновь вносит ошибку в последующие вычисления. PACE исследует сжатие этого рабочего состояния, а не всех весов модели: задача состоит в сокращении хранения без чрезмерного накопления ошибок округления.",
+          "sections": [
+            {
+              "heading": "Реже округлять и правильно группировать значения",
+              "paragraphs": [
+                "PACE сначала сохраняет обновления последних токенов, включая ключи и значения, в буфере, а затем объединяет их со сжатым состоянием. Типичный режим округляет состояние раз в восемь сгенерированных токенов. Буфер тоже занимает память, поэтому авторы считают состояние, масштабы квантования и буфер вместе, а не ограничиваются номинальным обозначением «четыре бита».",
+                "Большие значения концентрируются в столбцах, соответствующих каналам значений. Поэтому PACE группирует элементы вдоль оси ключей внутри одного столбца. В PACE-4/8 четверть более чувствительных голов каждого слоя остаётся восьмибитной, остальные становятся четырёхбитными. Базовую модель не переобучают; небольшой отложенный набор помогает выбрать головы, которым нужна повышенная точность."
+              ]
+            },
+            {
+              "heading": "Какая память сокращается и что происходит с качеством",
+              "paragraphs": [
+                "Проверены Qwen3.5-4B, 9B и 27B, а также Qwen3.6-35B-A3B: математические задачи, следование инструкциям, вопросы на знания, отслеживание переменных в длинном контексте и перплексия текста. PACE-4/8 занимает 6,82 бита на значение состояния с учётом сопутствующего хранения против 9,90 у DAMP INT8 — примерно на 31% меньше. Речь идёт о рекуррентном состоянии и его буфере, а не обо всей памяти устройства или параметрах модели.",
+                "Качество сохраняется не во всех случаях. В среднем по задачам вариант 9B совпадает с DAMP INT8, 27B близок к нему, а 4B и 35B уступают; остаются различия в следовании инструкциям. Полностью четырёхбитный вариант превосходит воспроизведённый в статье Q-Mamba DSQ при одинаковом объёме хранения, но это воспроизведение не включает дообучение исходного метода. Сравнение не доказывает преимущество над его полной обученной конфигурацией."
+              ]
+            },
+            {
+              "heading": "Скорость измерена для отдельной конфигурации",
+              "paragraphs": [
+                "Скорость измерялась на Qwen3.5-4B с одной H100 PCIe, контекстом 512 токенов и пакетами от 1 до 128. Начиная с пакета 16 периодическое четырёхбитное обновление уменьшает время на выходной токен относительно обновления bf16 после каждого токена. Большую часть ускорения даёт буфер отложенных обновлений, а четырёхбитное хранение добавляет меньший выигрыш. Измерена равномерная четырёхбитная реализация, без группировки PACE по оси ключей и без смешанной точности голов.",
+                "Таким образом, результаты качества и памяти нельзя механически соединять с измерением упрощённой реализации в несуществующий общий показатель скорости. Все четыре модели используют gated delta rule; перенос на другие семейства, полностью рекуррентные модели и иные механизмы обновления не доказан. В тестах блок предварительной обработки зафиксирован на 256 токенах. Работа даёт основу для проектирования сжатия состояния, но внедрение требует проверки качества и скорости конкретной модели."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: периодическое объединение и сжатие состояния, не график измерений.",
+            "steps": [
+              "Буферизовать обновления токенов",
+              "Объединять раз в восемь токенов",
+              "Группировать внутри столбцов и защищать головы",
+              "Учитывать состояние и буфер вместе"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "迴圈式語言模型會把歷史資訊壓入一個不斷更新的狀態。將這個狀態降為四位可以節省視訊記憶體，但每生成一個詞元都重新舍入，會讓誤差反覆進入後續計算。PACE 研究的重點不是壓縮整套模型引數，而是減少這份執行狀態的儲存，同時控制多次舍入帶來的精度損失。",
+          "sections": [
+            {
+              "heading": "少舍入幾次，也改變縮放方向",
+              "paragraphs": [
+                "PACE 先暫存近期詞元的鍵、值等更新資訊，再隔一段時間合併到壓縮狀態。論文的常用設定是每 8 個生成詞元舍入一次。這樣做減少了舍入次數，卻新增緩衝區開銷，因此作者將狀態、縮放引數和緩衝區一併計入駐留記憶體，而不是隻報“四位”這個名義寬度。",
+                "作者觀察到較大數值聚集在與值通道對應的列中，因此在同一列內沿鍵軸分組縮放，避免將性質不同的列混在一起。PACE-4/8 還把每層四分之一、較敏感的注意力頭保留為八位，其餘使用四位。這是事後量化方案，不重新訓練基礎模型；選擇哪些頭需要更高精度則使用少量保留樣本。"
+              ]
+            },
+            {
+              "heading": "節省的是哪部分記憶體",
+              "paragraphs": [
+                "實驗覆蓋 Qwen3.5 的 4B、9B、27B 和 Qwen3.6-35B-A3B 四個混合模型，考察數學、指令遵循、知識題、長上下文變數追蹤與文字困惑度。PACE-4/8 每個狀態值連同附帶儲存平均佔 6.82 位，對照 DAMP INT8 為 9.90 位，約減少 31%。這個比例針對迴圈狀態及相關緩衝，不等於整機視訊記憶體或模型引數減少 31%。",
+                "精度並非全面無損。論文表格中，9B 的跨任務平均分與 DAMP INT8 相同，27B 接近，但 4B 和 35B 較低；部分指令遵循測試仍存在差距。全四位版本在相同駐留位數下優於論文重現的 Q-Mamba DSQ，不過該對照沒有使用原方法的微調步驟，不能據此宣稱超過其完整訓練方案。"
+              ]
+            },
+            {
+              "heading": "速度結果與適用邊界",
+              "paragraphs": [
+                "吞吐實驗使用 Qwen3.5-4B、單張 H100 PCIe、512 詞元上下文和 1—128 的批次。週期式四位狀態從批次 16 起，比逐詞元更新的 bf16 狀態有更低的每輸出詞元耗時；大部分改善來自延遲更新緩衝，四位儲存進一步貢獻較小收益。計時物件是均勻四位實現，未計時 PACE 的按列分組和混合精度頭配置。",
+                "因此，論文分別提供了精度與記憶體證據、以及簡化實現的速度證據，不能將它們拼成未經測試的完整配置成績。四個模型都採用門控 delta 規則，結論尚未證明能推廣到其他模型家族、完全迴圈的模型或不同狀態更新機制。基準的預填充塊固定為 256 個詞元，也未覆蓋全部舍入週期選擇。它更適合作為狀態壓縮的設計依據，實際部署仍需針對目標模型驗證質量和速度。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性示意，說明週期合併與狀態壓縮，不是精度或速度實驗圖。",
+            "steps": [
+              "暫存近期詞元更新",
+              "每 8 個詞元合併狀態",
+              "按列分組並保留敏感頭精度",
+              "同時核算狀態與緩衝開銷"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "risk-kv-selective-cache-reconstruction",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv: 2610.29544v1",
+          "url": "https://arxiv.org/abs/2610.29544v1"
+        },
+        {
+          "label": "Full paper · arXiv HTML",
+          "url": "https://arxiv.org/html/2610.29544v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "语言模型暂停一个请求后，再继续生成时需要恢复历史键值缓存，也就是保存此前注意力计算结果的 KV cache。完整搬运缓存会占用存储和带宽，从头重算历史又耗时。RISK-KV 尝试只保存一部分精确缓存，在恢复时预测其余部分，并依据预测后对语言模型输出的影响决定哪些层可以省略。",
+          "sections": [
+            {
+              "heading": "保留两侧锚点，用实际损失选层",
+              "paragraphs": [
+                "方法在目标层组的前后保留精确 KV，作为同一历史位置的两个锚点。离线训练的岭回归映射据此预测缺失层的注意力投影输入，再通过原模型的固定投影得到 KV；基础模型参数不变。将映射与原投影合并，可缩小恢复预测器的存储。恢复后的后续解码仍使用完整 GPU 缓存，并不是一直省略那些层。",
+                "哪些层值得重建，不能只看数值误差或层编号。作者实际替换候选层的缓存，测量负对数似然增加量，即模型对正确后续文本的预测损失，再按风险排序并检查组合。质量门控利用校准样本的均值及置信上界筛选配置，没有合适配置时回退到精确缓存。这种平均风险控制并不保证每个新请求都不退化。"
+              ]
+            },
+            {
+              "heading": "缓存节省与质量控制的交换",
+              "paragraphs": [
+                "实验使用 Qwen2.5-0.5B、Qwen2.5-1.5B 和 TinyLlama-1.1B，在 WikiText-2 上恢复 512 词元历史，再以已知文本评估后续 512 词元。每个模型有 24 个成对测试请求，选层在独立的验证集完成。代表性配置分别省去原始历史 KV 的 33.3%、28.6%、18.2%，困惑度分别从 22.760 到 22.801、15.205 到 15.183、12.681 到 12.722。其中的小幅下降并不能证明近似缓存提高质量。",
+                "更严格的筛选会降低可节省的容量。在 TinyLlama 的平均损失预算 0.002、24 个独立评估请求中，仅按均值筛选有 10 个请求超预算；使用单侧 90% 上界后为 2 个，增加独立确认后为 0 个，但平均省下的缓存从 1.667 MiB 降至 0.667 和 0.333 MiB。有限样本中的零次违约，也不是未来零风险的承诺。"
+              ]
+            },
+            {
+              "heading": "恢复更快不等于已经验证跨节点迁移",
+              "paragraphs": [
+                "作者在单张 RTX 3060 Laptop GPU、批量 1、512 词元历史下，将恢复与完整重算历史比较。三个模型平均恢复时间分别从 60.66、125.41、114.07 毫秒降至 40.09、48.99、34.50 毫秒，即 1.51、2.56、3.31 倍加速。计时包含 CPU 到 GPU 的状态传输、恢复和下一步推理，但预测器已经提前驻留。尚未实际评估无线或跨节点迁移。",
+                "省去的原始 KV 字节也不等于净内存收益。论文一个 0.5B 配置的预测器参数约为单请求节省缓存的四倍，需要由多个请求共享，才能摊薄成本；重建和缓存组装也有额外开销。证据主要来自三个较小模型、单一文本数据集和短历史，长上下文、更大模型、真实网络条件及逐请求质量仍需验证。这项研究提供的是有条件的恢复优化，而不是无损压缩或普遍的分布式加速结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，说明风险筛选和缓存恢复，不是实测迁移或性能曲线。",
+            "steps": [
+              "保留目标层两侧精确缓存",
+              "离线测量重建后的预测损失",
+              "在质量预算内选择可省层组",
+              "恢复缺失缓存后继续完整解码"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Resuming a paused language-model request requires its historical key–value cache, which stores earlier attention computations. Moving the full cache consumes storage and bandwidth; recomputing the whole prefix costs time. RISK-KV retains selected exact caches and predicts the missing parts at restoration, choosing which layers to omit according to the effect on the model’s predictions.",
+          "sections": [
+            {
+              "heading": "Exact anchors and quality-based layer selection",
+              "paragraphs": [
+                "The method keeps exact KV on both sides of a target layer group as anchors for the same historical positions. An offline ridge-regression map predicts the missing layers’ attention-projection input, then the model’s frozen projections produce KV. Base-model parameters remain unchanged. Folding the recovery map into those projections reduces predictor storage. Subsequent decoding again holds a complete GPU cache; the selected layers do not remain absent throughout generation.",
+                "Layer indices or numerical reconstruction error alone do not determine safe choices. The author actually replaces candidate caches and measures the increase in negative log-likelihood, the loss for predicting the correct continuation, before ranking risks and checking combined groups. Calibration means and upper confidence bounds gate acceptable configurations, with exact-cache fallback when none qualifies. Control of average risk does not guarantee that every new request avoids degradation."
+              ]
+            },
+            {
+              "heading": "The trade-off between saved cache and quality risk",
+              "paragraphs": [
+                "Experiments use Qwen2.5-0.5B, Qwen2.5-1.5B and TinyLlama-1.1B on WikiText-2, restoring a 512-token history and assessing the following 512 tokens with the known continuation. Each model has 24 paired test requests, with configurations selected on separate validation data. Representative configurations omit 33.3%, 28.6% and 18.2% of raw historical KV. Perplexity changes from 22.760 to 22.801, 15.205 to 15.183 and 12.681 to 12.722 respectively. The small decrease in one case does not establish a general quality improvement.",
+                "Stricter gates save less cache. For TinyLlama, a mean-loss budget of 0.002 and 24 independent evaluation requests, a mean-only gate produces 10 budget violations; a one-sided 90% upper-bound gate produces two, and an additional independent confirmation step produces zero. Mean savings decline from 1.667 MiB to 0.667 and 0.333 MiB. Zero observed violations in this finite sample is not a promise of zero future risk."
+              ]
+            },
+            {
+              "heading": "Faster restoration is not a measured network migration",
+              "paragraphs": [
+                "On one RTX 3060 Laptop GPU, with batch size one and a 512-token history, average restoration times for the three models fall from 60.66, 125.41 and 114.07 milliseconds with full token replay to 40.09, 48.99 and 34.50 milliseconds. These are speedups of 1.51, 2.56 and 3.31 times. Timing includes CPU-to-GPU state transfer, cache restoration and the next inference step, but the predictor is already resident. Wireless or cross-node migration has not actually been evaluated.",
+                "Omitted raw KV bytes are not net memory savings. In one 0.5B configuration, predictor parameters occupy about four times the cache saved for a single request, requiring sharing across requests to amortize the cost. Prediction and cache assembly add work. Evidence remains limited to three smaller models, one text dataset and short histories; longer contexts, larger models, real networks and per-request quality need further testing. The result is a conditional restoration optimization, not lossless compression or a universal distributed speedup."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper: risk selection and cache restoration, not measured migration or performance data.",
+            "steps": [
+              "Retain exact caches around target layers",
+              "Measure reconstruction-induced prediction loss",
+              "Select groups within a quality budget",
+              "Restore missing KV and resume full decoding"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "言語モデルの中断した要求を再開するには、それまでの注意計算を保存したキーバリューキャッシュ、つまり KV cache を復元する必要がある。全量を移すと保存容量と帯域を使い、履歴を最初から計算し直すと時間がかかる。RISK-KV は一部の正確なキャッシュを残し、残りを再開時に予測する。省略する層は、復元がモデルの予測に与える影響を測って選ぶ。",
+          "sections": [
+            {
+              "heading": "両側の正確な情報から復元する",
+              "paragraphs": [
+                "対象の層グループの前後に正確な KV を残し、同じ履歴位置の二つの基準として使う。オフラインで学習したリッジ回帰が欠けた層の注意投影入力を予測し、元の固定投影で KV を生成する。基本モデルの重みは変更しない。回帰写像と投影を合成すると予測器の保存量を減らせる。復元後の生成では完全な GPU キャッシュを使うため、層を省略したまま動かす方式ではない。",
+                "層番号や復元値の誤差だけでは、安全な省略対象を決められない。候補のキャッシュを実際に置換し、正しい続きの予測損失である負の対数尤度がどれだけ増えるかを測り、リスク順に並べて組合せも確認する。校正サンプルの平均や信頼上限で採否を決め、適切な構成がなければ正確なキャッシュへ戻す。平均的なリスクの管理であり、すべての新しい要求の品質を保証するものではない。"
+              ]
+            },
+            {
+              "heading": "品質管理を厳しくすると削減量は小さくなる",
+              "paragraphs": [
+                "Qwen2.5-0.5B、Qwen2.5-1.5B、TinyLlama-1.1B を WikiText-2 で評価した。512 トークンの履歴を復元し、既知の続き 512 トークンで品質を測る。各モデルには対応のあるテスト要求が 24 件あり、構成は別の検証データで選んだ。代表的な構成では元の履歴 KV の 33.3%、28.6%、18.2% を省略し、パープレキシティは順に 22.760 から 22.801、15.205 から 15.183、12.681 から 12.722 へ変化した。一例のわずかな改善は、近似による一般的な品質向上を証明しない。",
+                "TinyLlama の平均損失予算 0.002、独立した評価要求 24 件では、平均値だけの判定で 10 件が予算を超えた。片側 90% 信頼上限を使うと 2 件、独立した追加確認も行うと 0 件になったが、平均削減量は 1.667 MiB から 0.667、0.333 MiB へ下がった。この有限サンプルで違反がなかったことは、将来の危険がゼロという意味ではない。"
+              ]
+            },
+            {
+              "heading": "復元速度とネットワーク移行を区別する",
+              "paragraphs": [
+                "RTX 3060 Laptop GPU 1 枚、バッチ数 1、履歴 512 トークンの条件で、全履歴を再計算する方式と比較した。三つのモデルの平均復元時間は 60.66、125.41、114.07 ミリ秒から、40.09、48.99、34.50 ミリ秒へ短縮し、1.51、2.56、3.31 倍の高速化となった。CPU から GPU への状態転送、復元、次の推論までを含むが、予測器は事前に常駐している。無線やノード間移行そのものは実測していない。",
+                "省いた KV のバイト数は、正味のメモリー削減量ではない。0.5B の一構成では予測器のパラメーターが単一要求で節約するキャッシュの約 4 倍を占め、複数要求で共有して費用を分担する必要がある。復元とキャッシュ組立てにも処理時間がかかる。検証は三つの小型モデル、単一テキストデータ、短い履歴が中心で、長文、大型モデル、実ネットワーク、要求ごとの品質は追加検証が必要だ。条件付きの復元最適化であり、無損失圧縮や分散推論全般の高速化を保証しない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本站が描き直した説明図。リスク判定と復元を示し、移行や速度の実測グラフではない。",
+            "steps": [
+              "対象層の両側に正確な KV を保持",
+              "復元による予測損失を測定",
+              "品質予算内の層グループを選択",
+              "欠けた KV を復元して生成を再開"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Для возобновления запроса языковой модели нужен исторический KV-кэш — сохранённые результаты предыдущих вычислений внимания. Передача всего кэша требует памяти и пропускной способности, а повторный расчёт префикса занимает время. RISK-KV сохраняет часть точного кэша и предсказывает остальное при восстановлении. Слои для пропуска выбираются по влиянию реконструкции на предсказания модели.",
+          "sections": [
+            {
+              "heading": "Точные опоры и отбор по реальной потере качества",
+              "paragraphs": [
+                "По обе стороны целевой группы слоёв сохраняется точный KV для тех же исторических позиций. Обученное заранее отображение гребневой регрессии предсказывает вход проекции внимания отсутствующих слоёв, затем исходные фиксированные проекции формируют KV. Веса базовой модели не меняются. Объединение отображения с проекциями сокращает размер предсказателя. При дальнейшей генерации GPU снова хранит полный кэш: выбранные слои не остаются пропущенными постоянно.",
+                "Номер слоя или численная ошибка сами по себе не определяют безопасный выбор. Автор действительно заменяет кэш кандидатов и измеряет прирост отрицательного логарифма правдоподобия — потери при предсказании правильного продолжения, — затем ранжирует риск и проверяет сочетания групп. Средние значения и верхние доверительные границы на калибровочных данных управляют допуском; если подходящего варианта нет, сохраняется точный кэш. Контроль среднего риска не гарантирует отсутствие ухудшения у каждого нового запроса."
+              ]
+            },
+            {
+              "heading": "Экономия кэша против риска для качества",
+              "paragraphs": [
+                "На WikiText-2 проверены Qwen2.5-0.5B, Qwen2.5-1.5B и TinyLlama-1.1B: восстанавливается история из 512 токенов, качество оценивается по следующим 512 известным токенам. Для каждой модели используются 24 парных тестовых запроса, а конфигурации выбираются на отдельной валидационной выборке. Представительные варианты исключают 33,3%, 28,6% и 18,2% исходного исторического KV. Перплексия меняется соответственно с 22,760 до 22,801, с 15,205 до 15,183 и с 12,681 до 12,722. Малое снижение в одном случае не доказывает общего улучшения качества.",
+                "При бюджете средней потери 0,002 у TinyLlama и 24 независимых оценочных запросах отбор только по среднему даёт 10 превышений бюджета. Односторонняя 90-процентная верхняя граница уменьшает их до двух, дополнительная независимая проверка — до нуля. Однако средняя экономия падает с 1,667 MiB до 0,667 и 0,333 MiB. Ноль наблюдаемых нарушений в небольшой выборке не обещает нулевого будущего риска."
+              ]
+            },
+            {
+              "heading": "Ускорение восстановления ещё не проверяет сетевую миграцию",
+              "paragraphs": [
+                "На одной RTX 3060 Laptop GPU, при пакете из одного запроса и истории в 512 токенов, среднее восстановление сокращается с 60,66, 125,41 и 114,07 миллисекунды при полном повторном расчёте до 40,09, 48,99 и 34,50 миллисекунды. Ускорения составляют 1,51, 2,56 и 3,31 раза. Измерение включает передачу состояния с CPU на GPU, восстановление кэша и следующий шаг вывода, но предсказатель уже находится в памяти. Беспроводная передача и миграция между узлами практически не проверены.",
+                "Исключённые байты KV не равны чистой экономии памяти. В одной конфигурации 0.5B параметры предсказателя занимают примерно в четыре раза больше кэша, чем экономится на одном запросе, поэтому расходы нужно разделять между запросами. Реконструкция и сборка полного кэша также требуют времени. Доказательства ограничены тремя небольшими моделями, одним текстовым набором и короткой историей. Длинные контексты, крупные модели, реальные сети и качество каждого запроса требуют дальнейшей проверки. Это условная оптимизация восстановления, а не сжатие без потерь или универсальное ускорение распределённого вывода."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: отбор по риску и восстановление кэша, не измерение миграции или скорости.",
+            "steps": [
+              "Сохранить точный KV по сторонам группы",
+              "Измерить потерю после реконструкции",
+              "Выбрать группы в пределах бюджета качества",
+              "Восстановить KV и продолжить полный вывод"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "語言模型暫停一個請求後，再繼續生成時需要恢復歷史鍵值快取，也就是儲存此前注意力計算結果的 KV cache。完整搬運快取會佔用儲存和頻寬，從頭重算曆史又耗時。RISK-KV 嘗試只儲存一部分精確快取，在恢復時預測其餘部分，並依據預測後對語言模型輸出的影響決定哪些層可以省略。",
+          "sections": [
+            {
+              "heading": "保留兩側錨點，用實際損失選層",
+              "paragraphs": [
+                "方法在目標層組的前後保留精確 KV，作為同一歷史位置的兩個錨點。離線訓練的嶺迴歸對映據此預測缺失層的注意力投影輸入，再透過原模型的固定投影得到 KV；基礎模型引數不變。將對映與原投影合併，可縮小恢復預測器的儲存。恢復後的後續解碼仍使用完整 GPU 快取，並不是一直省略那些層。",
+                "哪些層值得重建，不能只看數值誤差或層編號。作者實際替換候選層的快取，測量負對數似然增加量，即模型對正確後續文字的預測損失，再按風險排序並檢查組合。質量門控利用校準樣本的均值及置信上界篩選配置，沒有合適配置時回退到精確快取。這種平均風險控制並不保證每個新請求都不退化。"
+              ]
+            },
+            {
+              "heading": "快取節省與質量控制的交換",
+              "paragraphs": [
+                "實驗使用 Qwen2.5-0.5B、Qwen2.5-1.5B 和 TinyLlama-1.1B，在 WikiText-2 上恢復 512 詞元歷史，再以已知文字評估後續 512 詞元。每個模型有 24 個成對測試請求，選層在獨立的驗證集完成。代表性配置分別省去原始歷史 KV 的 33.3%、28.6%、18.2%，困惑度分別從 22.760 到 22.801、15.205 到 15.183、12.681 到 12.722。其中的小幅下降並不能證明近似快取提高質量。",
+                "更嚴格的篩選會降低可節省的容量。在 TinyLlama 的平均損失預算 0.002、24 個獨立評估請求中，僅按均值篩選有 10 個請求超預算；使用單側 90% 上界後為 2 個，增加獨立確認後為 0 個，但平均省下的快取從 1.667 MiB 降至 0.667 和 0.333 MiB。有限樣本中的零次違約，也不是未來零風險的承諾。"
+              ]
+            },
+            {
+              "heading": "恢復更快不等於已經驗證跨節點遷移",
+              "paragraphs": [
+                "作者在單張 RTX 3060 Laptop GPU、批次 1、512 詞元歷史下，將恢復與完整重算曆史比較。三個模型平均恢復時間分別從 60.66、125.41、114.07 毫秒降至 40.09、48.99、34.50 毫秒，即 1.51、2.56、3.31 倍加速。計時包含 CPU 到 GPU 的狀態傳輸、恢復和下一步推理，但預測器已經提前駐留。尚未實際評估無線或跨節點遷移。",
+                "省去的原始 KV 位元組也不等於淨記憶體收益。論文一個 0.5B 配置的預測器引數約為單請求節省快取的四倍，需要由多個請求共享，才能攤薄成本；重建和快取組裝也有額外開銷。證據主要來自三個較小模型、單一文字資料集和短歷史，長上下文、更大模型、真實網路條件及逐請求質量仍需驗證。這項研究提供的是有條件的恢復最佳化，而不是無失真壓縮或普遍的分散式加速結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，說明風險篩選和快取恢復，不是實測遷移或效能曲線。",
+            "steps": [
+              "保留目標層兩側精確快取",
+              "離線測量重建後的預測損失",
+              "在質量預算內選擇可省層組",
+              "恢復缺失快取後繼續完整解碼"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "fairamo-time-series-orchestration",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv · fixed first-version full paper",
+          "url": "https://arxiv.org/html/2610.29504v1"
+        },
+        {
+          "label": "arXiv · submission history and author comments",
+          "url": "https://arxiv.org/abs/2610.29504v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "用Agent为时间序列选择预测模型，结果变好了，究竟是编排更聪明，还是候选模型本来就更强？FairAMO把这两个因素拆开：先固定所有候选的预测，再让不同编排方法使用同样的历史证据做选择或加权。研究的重点是评测协议，并不把整个系统的进步自动归功于Agent。作者在arXiv注明获NeurIPS 2026的FMTS工作坊录用，不是主会录用证明。",
+          "sections": [
+            {
+              "heading": "先冻结预测，再决定怎么组合",
+              "paragraphs": [
+                "候选时间序列基础模型在GIFT-Eval上各运行一次，预测结果存入统一预测库，之后不再微调。训练回测和可用的验证回测提供真实值，测试区的真实值暂时隐藏。编排器只能根据允许的证据，预先提交选择哪个模型或采用什么权重；测试开始后不能看分数再调权重。",
+                "每个“数据集加预测时长”的配置只提交一次决定，并在该配置的多个滚动窗口中保持不变。这个限制使对比清楚，也限制了方法能利用的机会。论文把使用大模型、根据序列特征路由、根据历史误差选取等机制放到同一协议中；部分外部方法因训练过程未完整公开，使用了风格适配或重实现，不等于原系统逐项复刻。"
+              ]
+            },
+            {
+              "heading": "5.6%的改善以什么为分母",
+              "paragraphs": [
+                "主实验使用五个候选模型、验证回测加最近十个训练回测，对比11种可部署编排方法。MASE把预测绝对误差除以同一序列的季节性朴素预测误差，越低越好。最强编排TSOrchestra SLSQP为0.658，最佳单模型TiRex2为0.697，下降0.039，按0.697计算相对改善5.6%；它不是分类准确率提升5.6个百分点。",
+                "“最佳单模型”也是看完整测试结果后选出的强参照，不能假定部署前已知。只凭开发证据选一个模型的可部署对照为0.702。逐窗口偷看真实值选最优候选的oracle为0.580，仅表示候选互补性能提供的理想边界，不能上线使用；最强编排仍只实现约三分之一的可用提升空间。"
+              ]
+            },
+            {
+              "heading": "模型更多、历史更长都不保证更好",
+              "paragraphs": [
+                "增加候选主要增加不同错误模式的互补性，并不必然提高最强成员的水平。较弱模型也可能补上其他模型的盲区，重复的能力则未必有用。历史证据也有饱和点：Argmin Router加入三个最近训练回测时达到0.661，增加到100个反而回到0.664；SLSQP在十个回测时最好。结论针对这些候选、证据窗口和协议，不是普遍宣称旧数据没有价值。"
+              ]
+            },
+            {
+              "heading": "适合用来追问收益从哪里来",
+              "paragraphs": [
+                "这组实验中表现最好的方法是简单选择和加权，大模型参与编排的独立价值仍未得到清楚证明。单次固定决定、候选池组成和外部方法适配都会影响结果，尚不能覆盖利用额外业务上下文或逐窗口决策的系统。本站据此认为，比较Agent预测方案时应同时报告候选实力、互补性和可用证据；只看排行榜名次，无法分清收益来自哪一层。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的FairAMO评测流程，解释冻结与揭示标签的顺序，不是原论文实验图。",
+            "steps": [
+              "生成并冻结候选预测",
+              "仅提供允许的历史证据",
+              "提交并冻结选择或权重",
+              "揭示测试真实值并统一评分"
+            ]
+          }
+        },
+        "en": {
+          "lead": "If an agent improves time-series forecasting by choosing models, did orchestration improve or were the candidates simply stronger? FairAMO separates those effects by freezing candidate forecasts and giving competing orchestrators identical historical evidence. It is an evaluation protocol, not a reason to attribute every system gain to an agent. The authors report acceptance at the NeurIPS 2026 FMTS workshop; that is not evidence of main-conference acceptance.",
+          "sections": [
+            {
+              "heading": "Freeze the forecasts before choosing a combination",
+              "paragraphs": [
+                "Each candidate foundation model runs once on GIFT-Eval, with outputs cached and no subsequent fine-tuning. Training backtests and any permitted validation backtests include outcomes; test outcomes remain hidden. An orchestrator commits to a model or combination weights using only the allowed evidence. It cannot inspect test scores and revise its choice afterward.",
+                "One decision is made for each dataset-and-horizon configuration and retained across its rolling windows. This makes comparisons controlled but limits adaptation. The protocol compares language-model-mediated, feature-based and historical-error-based mechanisms. Some external methods lack complete public training procedures and are reproduced through style adaptations or reimplementations, not exact replicas of the original systems."
+              ]
+            },
+            {
+              "heading": "What the reported 5.6% means",
+              "paragraphs": [
+                "The main experiment uses five candidates, validation evidence plus ten recent training backtests, and eleven deployable orchestrators. MASE divides absolute forecast error by the seasonal-naive error on the same series; lower is better. TSOrchestra SLSQP scores 0.658 against 0.697 for the best single model, TiRex2: a decrease of 0.039, or 5.6% relative to 0.697. This is not a 5.6-percentage-point gain in classification accuracy.",
+                "The best single model is itself chosen after seeing aggregate test results, so it is a demanding hindsight reference. The deployable alternative chosen solely from development evidence scores 0.702. A window-level oracle scores 0.580 by reading test outcomes before choosing; it measures ideal candidate complementarity and cannot be deployed. The strongest orchestrator realizes only about one third of that available headroom."
+              ]
+            },
+            {
+              "heading": "More candidates or history need not help",
+              "paragraphs": [
+                "Additional members chiefly offer different error profiles rather than a stronger best member. A weaker model can fill another’s blind spot, while redundant capability may add little. Evidence also saturates: Argmin Router reaches 0.661 with three recent training backtests and slips to 0.664 with one hundred; SLSQP is best with ten. These findings concern the evaluated pools, windows and protocol, not a general claim that older data are useless."
+              ]
+            },
+            {
+              "heading": "Ask where the gain originates",
+              "paragraphs": [
+                "Simple selection and weighting methods lead this experiment, leaving the separate contribution of language-model orchestration unclear. Fixed decisions, candidate composition and adaptations of external methods affect the result. Systems using extra business context or window-specific decisions are not fully represented. Our reading is that agent-based forecasting comparisons should report candidate strength, complementarity and available evidence together; leaderboard position alone cannot identify the source of improvement."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of FairAMO’s evaluation order; not a reproduced experimental figure.",
+            "steps": [
+              "Generate and freeze forecasts",
+              "Provide permitted historical evidence",
+              "Commit and freeze the orchestration decision",
+              "Reveal test outcomes and score consistently"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agentが時系列予測のモデルを選んで成績が上がった場合、選び方が優れたのか、候補自体が強かったのか。FairAMOは候補の予測を固定し、同じ過去の証拠で編成方法を比較してこの二つを分ける。研究の中心は評価手順で、システム全体の改善をAgentの功績とみなすものではない。著者はNeurIPS 2026 FMTSワークショップ採択と記しており、本会議採択の証拠ではない。",
+          "sections": [
+            {
+              "heading": "予測を固定してから組み合わせを決める",
+              "paragraphs": [
+                "各候補モデルをGIFT-Evalで一度実行して結果を保存し、その後は微調整しない。学習用回顧評価と許可された検証部分には正解を付け、テスト正解は隠す。編成器は許された情報だけでモデルか重みを決め、テスト成績を見た後の再選択や重み変更を認めない。",
+                "データ集合と予測期間の組み合わせごとに一度決め、複数の移動窓に同じ決定を使う。比較を揃える一方で適応の自由度を制限する。言語モデル、特徴量、過去の誤差による方式を比較するが、外部方式の一部は学習手順が完全公開されておらず、設計を参考にした適応や再実装であり完全な複製ではない。"
+              ]
+            },
+            {
+              "heading": "5.6%は何に対する改善か",
+              "paragraphs": [
+                "主実験は五候補、検証部分と直近十回の学習用回顧評価を使い、実運用可能な十一方式を比較した。MASEは絶対予測誤差を同じ系列の季節的な単純予測誤差で割り、小さいほどよい。最良のTSOrchestra SLSQPは0.658、単一モデルの最良TiRex2は0.697で、差0.039は0.697に対して5.6%となる。分類正解率の5.6ポイント向上ではない。",
+                "最良の単一モデルもテスト全体を見て選ぶ強い比較対象で、事前に分かるとは限らない。開発情報だけで一つ選ぶ対照は0.702だった。窓ごとに正解を見て選ぶoracleは0.580だが運用できず、候補の補完性による理想的な余地を示す。最良の編成でもその余地の約三分の一しか回収していない。"
+              ]
+            },
+            {
+              "heading": "候補と履歴を増やせばよいわけではない",
+              "paragraphs": [
+                "候補追加は最強モデルを強くするより、誤り方の違いを加える。弱いモデルでも他の盲点を補え、重複した能力は役に立たない場合がある。Argmin Routerは直近三回の回顧評価で0.661となり、百回では0.664に戻った。SLSQPは十回で最良だった。これは対象の候補と評価窓での結果で、古い情報は常に無価値という主張ではない。"
+              ]
+            },
+            {
+              "heading": "改善の出どころを問う評価",
+              "paragraphs": [
+                "この比較では単純な選択や重み付けが上位で、言語モデルを使う独自の価値は明瞭ではない。固定決定、候補構成、外部方式の適応が結果を左右し、業務の追加情報や窓ごとの判断を使うシステム全体までは扱わない。当サイトは、Agent予測の比較では候補の強さ、補完性、使える証拠を併記すべきだと考える。順位だけでは改善を生んだ部分を識別できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "FairAMOの手順を当サイトが描き直した説明図。原論文の実験図ではない。",
+            "steps": [
+              "候補予測を生成して固定",
+              "許可された過去情報を提示",
+              "選択または重みを固定",
+              "テスト正解を開示して共通採点"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Если агент улучшает прогноз временного ряда выбором моделей, стал ли лучше сам выбор или просто сильнее кандидаты? FairAMO разделяет эти эффекты: прогнозы фиксируются, а способам оркестрации дают одинаковые исторические свидетельства. Это протокол оценки, а не основание приписывать агенту весь выигрыш системы. Авторы указывают принятие на семинар FMTS при NeurIPS 2026; подтверждения основного трека это не даёт.",
+          "sections": [
+            {
+              "heading": "Сначала зафиксировать прогнозы",
+              "paragraphs": [
+                "Каждая модель-кандидат один раз выполняется на GIFT-Eval, результаты сохраняются без последующего дообучения. Обучающие ретроспективные окна и разрешённая валидация содержат ответы, тестовые ответы скрыты. Оркестратор заранее выбирает модель или веса только по разрешённым данным. После просмотра тестовых оценок менять решение нельзя.",
+                "Для каждой пары набора данных и горизонта принимается одно решение на все скользящие окна. Это контролирует сравнение, но ограничивает адаптацию. Сопоставляются языковые, признаковые и основанные на прошлых ошибках механизмы. Некоторые внешние методы не раскрывают весь процесс обучения и воспроизводятся как адаптации подхода, а не точные копии исходных систем."
+              ]
+            },
+            {
+              "heading": "Что означает улучшение на 5,6%",
+              "paragraphs": [
+                "Основной опыт использует пять кандидатов, валидацию и десять последних обучающих окон, сравнивая одиннадцать применимых методов. MASE делит абсолютную ошибку на ошибку сезонного наивного прогноза того же ряда; меньше лучше. TSOrchestra SLSQP получает 0,658 против 0,697 у лучшей отдельной TiRex2: разница 0,039 составляет 5,6% от 0,697. Это не рост точности классификации на 5,6 процентного пункта.",
+                "Лучшая отдельная модель также определяется после просмотра всего теста и служит сильным ретроспективным ориентиром. Выбор только по разработочным данным даёт 0,702. Оракул, подсматривающий ответы каждого окна, достигает 0,580, но неприменим на практике: он показывает идеальный резерв взаимодополняемости. Лучший оркестратор использует лишь около трети этого резерва."
+              ]
+            },
+            {
+              "heading": "Больше моделей и истории не всегда лучше",
+              "paragraphs": [
+                "Новые кандидаты добавляют прежде всего иной профиль ошибок, а не усиливают лучшего участника. Слабая модель может закрыть чужое слабое место, а избыточная — мало помочь. Argmin Router достигает 0,661 с тремя последними обучающими окнами и ухудшается до 0,664 со ста; SLSQP лучше с десятью. Это вывод об исследованных пулах и протоколе, а не универсальная бесполезность старых данных."
+              ]
+            },
+            {
+              "heading": "Выяснять источник выигрыша",
+              "paragraphs": [
+                "В данном сравнении лидируют простые выбор и взвешивание, поэтому отдельный вклад языковой оркестрации остаётся неясным. Фиксированные решения, состав пула и адаптации внешних методов влияют на результат. Системы с дополнительным деловым контекстом или решением для каждого окна представлены не полностью. По нашей оценке, нужно вместе сообщать силу кандидатов, взаимодополняемость и доступные свидетельства: одно место в таблице не объясняет происхождение улучшения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема порядка FairAMO, не воспроизведённый график эксперимента.",
+            "steps": [
+              "Получить и зафиксировать прогнозы",
+              "Предоставить разрешённую историю",
+              "Зафиксировать выбор или веса",
+              "Открыть тестовые ответы и оценить"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "用Agent為時間序列選擇預測模型，結果變好了，究竟是編排更聰明，還是候選模型本來就更強？FairAMO把這兩個因素拆開：先固定所有候選的預測，再讓不同編排方法使用同樣的歷史證據做選擇或加權。研究的重點是評測協議，並不把整個系統的進步自動歸功於Agent。作者在arXiv註明獲NeurIPS 2026的FMTS工作坊錄用，不是主會錄用證明。",
+          "sections": [
+            {
+              "heading": "先凍結預測，再決定怎麼組合",
+              "paragraphs": [
+                "候選時間序列基礎模型在GIFT-Eval上各執行一次，預測結果存入統一預測庫，之後不再微調。訓練回測和可用的驗證回測提供真實值，測試區的真實值暫時隱藏。編排器只能根據允許的證據，預先提交選擇哪個模型或採用什麼權重；測試開始後不能看分數再調權重。",
+                "每個“資料集加預測時長”的配置只提交一次決定，並在該配置的多個滾動視窗中保持不變。這個限制使對比清楚，也限制了方法能利用的機會。論文把使用大模型、根據序列特徵路由、根據歷史誤差選取等機制放到同一協議中；部分外部方法因訓練過程未完整公開，使用了風格適配或重實現，不等於原系統逐項復刻。"
+              ]
+            },
+            {
+              "heading": "5.6%的改善以什麼為分母",
+              "paragraphs": [
+                "主實驗使用五個候選模型、驗證回測加最近十個訓練回測，對比11種可部署編排方法。MASE把預測絕對誤差除以同一序列的季節性樸素預測誤差，越低越好。最強編排TSOrchestra SLSQP為0.658，最佳單模型TiRex2為0.697，下降0.039，按0.697計算相對改善5.6%；它不是分類準確率提升5.6個百分點。",
+                "“最佳單模型”也是看完整測試結果後選出的強參照，不能假定部署前已知。只憑開發證據選一個模型的可部署對照為0.702。逐視窗偷看真實值選最優候選的oracle為0.580，僅表示候選互補效能提供的理想邊界，不能上線使用；最強編排仍只實現約三分之一的可用提升空間。"
+              ]
+            },
+            {
+              "heading": "模型更多、歷史更長都不保證更好",
+              "paragraphs": [
+                "增加候選主要增加不同錯誤模式的互補性，並不必然提高最強成員的水平。較弱模型也可能補上其他模型的盲區，重複的能力則未必有用。歷史證據也有飽和點：Argmin Router加入三個最近訓練回測時達到0.661，增加到100個反而回到0.664；SLSQP在十個回測時最好。結論針對這些候選、證據視窗和協議，不是普遍宣稱舊資料沒有價值。"
+              ]
+            },
+            {
+              "heading": "適合用來追問收益從哪裡來",
+              "paragraphs": [
+                "這組實驗中表現最好的方法是簡單選擇和加權，大模型參與編排的獨立價值仍未得到清楚證明。單次固定決定、候選池組成和外部方法適配都會影響結果，尚不能覆蓋利用額外業務上下文或逐視窗決策的系統。本站據此認為，比較Agent預測方案時應同時報告候選實力、互補性和可用證據；只看排行榜名次，無法分清收益來自哪一層。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的FairAMO評測流程，解釋凍結與揭示標籤的順序，不是原論文實驗圖。",
+            "steps": [
+              "生成並凍結候選預測",
+              "僅提供允許的歷史證據",
+              "提交併凍結選擇或權重",
+              "揭示測試真實值並統一評分"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "reflexivity-multi-agent-prediction-threshold",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv · fixed first-version full paper",
+          "url": "https://arxiv.org/html/2610.29577v1"
+        },
+        {
+          "label": "arXiv · submission history and author comments",
+          "url": "https://arxiv.org/abs/2610.29577v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "预测系统上线后会改变人的行为，也会改变下一轮训练看到的数据；多个系统相互影响时，反馈可能沿网络循环放大。这篇研究把问题写成数学模型：每个Agent根据共同环境重新选择自己的行动，怎样判断反复重训练会稳定下来？作者提出反身性矩阵，保留“谁影响谁”的结构。作者注明NeurIPS 2026录用，但未注明轨道，本文不将其称为主会论文。",
+          "sections": [
+            {
+              "heading": "把相互影响写进矩阵",
+              "paragraphs": [
+                "矩阵的每个元素描述一个Agent改变部署后，会多大程度扰动另一个Agent的最优选择。它由跨Agent梯度敏感度除以目标函数的曲率得到：影响越大、目标越容易被扰动，反馈系数就越高。谱半径可理解为这种网络反复传递影响时的长期放大尺度，比把所有联系压成一个总强度更细。",
+                "主要定理要求每个Agent的目标对自身行动强凸、梯度对部署变化满足给定敏感度上界，行动空间不受约束，交互矩阵固定。重复训练假定各方同步求出当前分布下的精确最优响应。这些是证明条件，不是说现实大模型或任意多Agent对话天然符合。"
+              ]
+            },
+            {
+              "heading": "低于阈值能保证什么",
+              "paragraphs": [
+                "谱半径小于1时，论文证明可以找到合适的加权距离，使每次重训练缩短系统之间的偏差，最终从任意初始状态几何收敛到唯一稳定均衡。若再加上目标光滑性，与每轮当前最优响应相比的累计额外损失有一个不随轮数增长的上界。这衡量的是适应自己造成的当前环境，不是所有业务目标都同时最优。"
+              ]
+            },
+            {
+              "heading": "高于阈值不是一律无法学习",
+              "paragraphs": [
+                "作者构造谱半径为1加一个正间隔的特殊带噪系统，证明局部信息学习者在与该间隔倒数同量级的有限轮数内，期望累计额外损失存在随轮数线性增长的下界。噪声方差也随间隔缩小而增大，信息约束和这种构造都不能省略。正向结果使用精确最优响应，困难结果使用带噪观测，不能当作同一实测系统跨过1就立即失控。",
+                "这个下界否定的是阈值以上仍有普遍保证，不是证明每个超阈值系统都不可学习。矩阵本身来自敏感度上界，也可能保守；无法证明谱半径小于1，不足以诊断实际不稳定。甚至低于1也可能先出现短期放大，再逐渐收敛，论文明确区分长期阈值与短期波动。"
+              ]
+            },
+            {
+              "heading": "证据是定理和合成轨迹",
+              "paragraphs": [
+                "模拟使用100个Agent。轨迹比较在0.50、0.99、1.01和1.50等谱半径下各取100次随机实例、运行200步，另设非正规矩阵展示暂时放大；接近阈值的收敛步数实验还设置10,000次迭代上限。这些不是金融市场或真实Agent产品的效果测试。现实中估计跨Agent影响需要因果识别，非凸目标、随时间变化的网络与有限样本仍需研究。本站将它理解为分析反馈稳定性的框架，而非可直接套用的故障报警阈值。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的反身性反馈机制，表示论文分析对象，不是实验曲线或现实系统预警器。",
+            "steps": [
+              "部署各Agent的行动",
+              "行动共同改变数据分布",
+              "各方据新分布重新优化",
+              "反馈沿网络传递，再检查稳定条件"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Deployed predictions change behavior and therefore the data available for the next training round. With interacting systems, feedback can circulate through a network. This paper formalizes agents repeatedly optimizing their actions in a shared environment and asks when retraining settles down. Its reflexivity matrix retains who influences whom. The authors report NeurIPS 2026 acceptance without a track; we do not describe it as main-track acceptance.",
+          "sections": [
+            {
+              "heading": "Represent influence as a matrix",
+              "paragraphs": [
+                "Each entry bounds how one agent’s deployment can move another’s best response. It divides cross-agent gradient sensitivity by curvature: stronger influence or a less resistant objective produces larger feedback. The spectral radius describes the network’s long-run amplification scale, retaining structure lost when all links are collapsed into one scalar strength.",
+                "The main theorem requires objectives strongly convex in each agent’s own action, bounded gradient sensitivity, unconstrained action domains and a fixed interaction matrix. Retraining synchronously computes exact best responses to the current population distribution. These are proof assumptions, not properties automatically possessed by real language models or arbitrary multi-agent conversations."
+              ]
+            },
+            {
+              "heading": "The guarantee below one",
+              "paragraphs": [
+                "When the spectral radius is below one, the authors construct a weighted distance in which retraining contracts. From any initialization it converges geometrically to a unique stable equilibrium. With additional objective smoothness, cumulative excess loss relative to each round’s current best response has a bound independent of the number of rounds. This measures adaptation to the environment the system has caused, not simultaneous optimality for every business objective."
+              ]
+            },
+            {
+              "heading": "Above one does not mean every system fails",
+              "paragraphs": [
+                "The lower bound uses a specially constructed noisy family with spectral radius one plus a positive gap. Every local-information learner faces expected cumulative excess loss growing at least linearly over a finite horizon of order the inverse gap. Noise variance also rises as that gap shrinks; neither this construction nor the information restriction can be dropped. The positive theorem uses exact responses and the hard case noisy observations, rather than one measured system suddenly failing when it crosses one.",
+                "The result rules out a universal guarantee above the threshold, not learning in every supercritical system. Sensitivity bounds can make the matrix conservative, so failure to certify a radius below one does not diagnose instability. Even a subcritical system can amplify deviations temporarily before converging. The paper separates the asymptotic threshold from short-term behavior."
+              ]
+            },
+            {
+              "heading": "The evidence is theoretical and synthetic",
+              "paragraphs": [
+                "Simulations use one hundred agents. Trajectory comparisons at radii including 0.50, 0.99, 1.01 and 1.50 use one hundred random instances each over two hundred steps, with a separate non-normal matrix illustrating transient growth. The convergence-time experiment caps computation at ten thousand iterations. These are not financial-market or deployed-agent trials. Estimating cross-agent influence requires causal identification; nonconvex objectives, changing networks and finite samples remain challenges. We read the work as a framework for analyzing feedback, not a ready-made incident alarm threshold."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the modeled feedback loop, not an experimental curve or operational warning system.",
+            "steps": [
+              "Deploy agents’ actions",
+              "Actions change the shared data distribution",
+              "Optimize against the changed environment",
+              "Feedback propagates; assess stability assumptions"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "予測を公開すると人の行動が変わり、次回の学習データも変わる。複数のシステムが相互作用すれば、そのフィードバックはネットワークを循環する。本論文は、共有環境に応じて各Agentが行動を再最適化する過程を数理化し、再学習が安定する条件を調べる。誰が誰に影響するかを反身性行列に残す。著者はNeurIPS 2026採択と記すが、トラック不明のため本会議とは呼ばない。",
+          "sections": [
+            {
+              "heading": "相互作用を行列にする",
+              "paragraphs": [
+                "各要素は、一方の配備変更が他方の最適応答をどれだけ動かせるかの上界を表す。Agent間の勾配感度を目的関数の曲率で割り、影響が強く、目的が変化に弱いほど係数が大きい。スペクトル半径はネットワークが繰り返し影響を伝える際の長期的な増幅尺度で、単一の総強度より構造を残せる。",
+                "主定理は、自分の行動についての強凸性、勾配感度の上界、制約のない行動空間、固定の相互作用行列を仮定する。各Agentは現在の母集団分布への正確な最適応答を同期的に求める。これは証明の条件で、実際の大規模モデルや任意のAgent会話が当然満たす性質ではない。"
+              ]
+            },
+            {
+              "heading": "1未満で保証されること",
+              "paragraphs": [
+                "半径が1未満なら、再学習が偏差を縮める重み付き距離を構成でき、どの初期状態からも一意の安定均衡へ幾何級数的に収束する。さらに目的の滑らかさを仮定すると、各時点の最適応答との差で測る累積超過損失は、反復回数によらない上界を持つ。自ら変えた環境への適応の尺度であり、すべての業務目的を同時に最適化する保証ではない。"
+              ]
+            },
+            {
+              "heading": "1以上なら全部失敗という意味ではない",
+              "paragraphs": [
+                "下界は、半径が1より正の幅だけ大きい特別な雑音付き系で示す。局所情報しか使えない学習者は、その幅の逆数程度までの有限期間で、期待累積超過損失が少なくとも線形に増える。幅が小さくなると雑音分散も大きくなるため、その構成と情報条件を省けない。正の定理は正確な応答、困難例は雑音観測であり、同一実システムが1を超えた瞬間に壊れた実験ではない。",
+                "否定するのは閾値を超えた領域全体への保証で、全超臨界系が学べないとは証明していない。感度上界は保守的になり得るため、1未満と証明できないだけで不安定とは判断できない。1未満でも短期には偏差が増えてから収束する場合があり、長期の閾値と短期変動を区別する。"
+              ]
+            },
+            {
+              "heading": "定理と合成データが根拠",
+              "paragraphs": [
+                "模擬系は100 Agent。0.50、0.99、1.01、1.50などの半径で各100のランダム例を200ステップ比較し、別の非正規行列で一時増幅を示す。収束時間の試験には10,000反復の計算上限もある。市場や運用中Agentの実験ではない。実際の影響推定には因果識別が必要で、非凸目的、時間変化する網、有限標本は今後の課題だ。当サイトはフィードバック解析の枠組みと捉え、そのまま使える障害警報値とは考えない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "対象のフィードバックを当サイトが描き直した説明図。実験曲線や運用警報ではない。",
+            "steps": [
+              "Agentの行動を配備",
+              "共有データ分布が変化",
+              "変化した環境で再最適化",
+              "網を伝わる影響の安定条件を調べる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Развёрнутый прогноз меняет поведение людей и тем самым данные следующего обучения. В нескольких связанных системах обратная связь циркулирует по сети. Работа моделирует агентов, заново оптимизирующих действия в общей среде, и спрашивает, когда переобучение стабилизируется. Матрица рефлексивности сохраняет структуру влияния. Авторы указывают принятие на NeurIPS 2026 без трека; оснований называть его основным нет.",
+          "sections": [
+            {
+              "heading": "Записать влияние в матрицу",
+              "paragraphs": [
+                "Элемент ограничивает, насколько развёртывание одного агента меняет лучший ответ другого. Он делит чувствительность градиента между агентами на кривизну: сильное влияние и менее устойчивый к возмущению критерий дают большую обратную связь. Спектральный радиус описывает долгосрочное усиление сети, сохраняя связи, потерянные в одной общей константе.",
+                "Основная теорема предполагает сильную выпуклость по собственному действию, ограниченную чувствительность градиента, неограниченную область действий и постоянную матрицу. Все агенты синхронно находят точные лучшие ответы для текущего распределения. Это условия доказательства, не автоматические свойства реальных языковых моделей или произвольного диалога агентов."
+              ]
+            },
+            {
+              "heading": "Что гарантируется ниже единицы",
+              "paragraphs": [
+                "При радиусе меньше единицы существует взвешенное расстояние, в котором переобучение сжимает отклонения. Из любого начального состояния достигается единственное устойчивое равновесие с геометрической скоростью. Дополнительная гладкость даёт ограничение суммарной избыточной потери относительно текущего лучшего ответа, не растущее с числом раундов. Это адаптация к созданной системой среде, а не одновременная оптимальность всех деловых целей."
+              ]
+            },
+            {
+              "heading": "Выше единицы не все системы обречены",
+              "paragraphs": [
+                "Нижняя граница построена на особом шумном семействе с радиусом один плюс положительный зазор. Любой учащийся с локальной информацией получает ожидаемую суммарную избыточную потерю не ниже линейной по времени на конечном горизонте порядка обратного зазора. При уменьшении зазора растёт дисперсия шума; эту конструкцию и ограничения сведений нельзя опустить. Положительная теорема использует точные ответы, сложный случай — шумные наблюдения, а не один реальный объект, внезапно сломавшийся при пересечении единицы.",
+                "Это исключает всеобщую гарантию выше порога, но не обучаемость каждого надкритического случая. Верхние оценки чувствительности могут быть консервативными, поэтому отсутствие сертификата ниже единицы не диагностирует нестабильность. Даже ниже порога отклонения способны временно расти перед сходимостью. Долгосрочный порог отличается от краткосрочной динамики."
+              ]
+            },
+            {
+              "heading": "Доказательства и синтетические траектории",
+              "paragraphs": [
+                "Симуляции содержат сто агентов. Для радиусов 0,50, 0,99, 1,01 и 1,50 сравниваются по сто случайных экземпляров на двухстах шагах; отдельная ненормальная матрица показывает временное усиление. Опыт со временем сходимости ограничен десятью тысячами итераций. Это не испытания финансового рынка или работающих продуктов. Реальное влияние требует причинной идентификации; невыпуклость, меняющиеся сети и конечные выборки остаются задачами. Мы рассматриваем результат как основу анализа обратной связи, а не готовый порог аварийной сигнализации."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема моделируемой обратной связи, не экспериментальная кривая или рабочая сигнализация.",
+            "steps": [
+              "Развернуть действия агентов",
+              "Изменить общее распределение данных",
+              "Заново оптимизировать действия",
+              "Проследить обратную связь и условия устойчивости"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "預測系統上線後會改變人的行為，也會改變下一輪訓練看到的資料；多個系統相互影響時，反饋可能沿網路迴圈放大。這篇研究把問題寫成數學模型：每個Agent根據共同環境重新選擇自己的行動，怎樣判斷反覆重訓練會穩定下來？作者提出反身性矩陣，保留“誰影響誰”的結構。作者註明NeurIPS 2026錄用，但未註明軌道，本文不將其稱為主會論文。",
+          "sections": [
+            {
+              "heading": "把相互影響寫進矩陣",
+              "paragraphs": [
+                "矩陣的每個元素描述一個Agent改變部署後，會多大程度擾動另一個Agent的最優選擇。它由跨Agent梯度敏感度除以目標函式的曲率得到：影響越大、目標越容易被擾動，反饋係數就越高。譜半徑可理解為這種網路反覆傳遞影響時的長期放大尺度，比把所有聯絡壓成一個總強度更細。",
+                "主要定理要求每個Agent的目標對自身行動強凸、梯度對部署變化滿足給定敏感度上界，行動空間不受約束，互動矩陣固定。重複訓練假定各方同步求出當前分佈下的精確最優響應。這些是證明條件，不是說現實大模型或任意多Agent對話天然符合。"
+              ]
+            },
+            {
+              "heading": "低於閾值能保證什麼",
+              "paragraphs": [
+                "譜半徑小於1時，論文證明可以找到合適的加權距離，使每次重訓練縮短系統之間的偏差，最終從任意初始狀態幾何收斂到唯一穩定均衡。若再加上目標光滑性，與每輪當前最優響應相比的累計額外損失有一個不隨輪數增長的上界。這衡量的是適應自己造成的當前環境，不是所有業務目標都同時最優。"
+              ]
+            },
+            {
+              "heading": "高於閾值不是一律無法學習",
+              "paragraphs": [
+                "作者構造譜半徑為1加一個正間隔的特殊帶噪系統，證明區域性資訊學習者在與該間隔倒數同量級的有限輪數內，期望累計額外損失存在隨輪數線性增長的下界。噪聲方差也隨間隔縮小而增大，資訊約束和這種構造都不能省略。正向結果使用精確最優響應，困難結果使用帶噪觀測，不能當作同一實測系統跨過1就立即失控。",
+                "這個下界否定的是閾值以上仍有普遍保證，不是證明每個超閾值系統都不可學習。矩陣本身來自敏感度上界，也可能保守；無法證明譜半徑小於1，不足以診斷實際不穩定。甚至低於1也可能先出現短期放大，再逐漸收斂，論文明確區分長期閾值與短期波動。"
+              ]
+            },
+            {
+              "heading": "證據是定理和合成軌跡",
+              "paragraphs": [
+                "模擬使用100個Agent。軌跡比較在0.50、0.99、1.01和1.50等譜半徑下各取100次隨機例項、執行200步，另設非正規矩陣展示暫時放大；接近閾值的收斂步數實驗還設定10,000次迭代上限。這些不是金融市場或真實Agent產品的效果測試。現實中估計跨Agent影響需要因果識別，非凸目標、隨時間變化的網路與有限樣本仍需研究。本站將它理解為分析反饋穩定性的框架，而非可直接套用的故障報警閾值。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的反身性反饋機制，表示論文分析物件，不是實驗曲線或現實系統預警器。",
+            "steps": [
+              "部署各Agent的行動",
+              "行動共同改變資料分佈",
+              "各方據新分佈重新最佳化",
+              "反饋沿網路傳遞，再檢查穩定條件"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "real-time-dnn-certified-scheduling",
+      "written_at": "2026-10-29",
+      "sources": [
+        {
+          "label": "arXiv · fixed first-version full paper",
+          "url": "https://arxiv.org/html/2610.29503v1"
+        },
+        {
+          "label": "arXiv · submission history and author comments",
+          "url": "https://arxiv.org/abs/2610.29503v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "同一组AI加速器可能同时处理两类推理：一类必须按时完成，错过期限就不满足系统要求；另一类允许偶尔延迟，但仍希望响应及时。论文把强化学习调度和确定性检查分开，让学习策略争取更好的服务质量，让安全层负责硬期限。这不是给学习模型加一个大惩罚就称为保证。作者注明获RTNS 2026报告录用，本文按该口径解读10月21日的v1。",
+          "sections": [
+            {
+              "heading": "先有兜底安排，再允许在线调整",
+              "paragraphs": [
+                "系统先根据每个任务在各加速器上的最坏执行时间，建立只含硬实时任务的可行参考调度。新硬任务只有能加入一份仍满足全部期限的参考安排时才被接纳。DNN按层拆成带先后依赖的计算图，层不能随意并行或跨过前置计算；不同加速器运行同一层所需时间也不同。",
+                "在线策略使用DDPG强化学习，结合待执行任务、期限、客户服务目标和加速器占用情况，提出接下来一小段的顺序与分配。确定性检查比较各机器上的进度切面，确认执行候选段后，剩余硬任务仍能接回参考调度。如果不能证明这一点，就回退到参考段，并丢弃该被拒段的软任务工作；这不是暂停后无成本续跑。"
+              ]
+            },
+            {
+              "heading": "比较在共同的安全条件下进行",
+              "paragraphs": [
+                "评估采用六个异构加速器的层级模拟设置，三台接近Eyeriss的数据流、三台接近Simba，每类两小一大。推理网络包括AlexNet、InceptionV3、ResNet50和YOLO-v2；执行成本来自逐层剖析。软请求用重尾到达过程生成，平均间隔40毫秒和10毫秒，后者请求频率为前者四倍。原本没有硬期限保证的对照也包在同一检查与回退机制内，比较的是相同安全条件下的调度质量。"
+              ]
+            },
+            {
+              "heading": "高压力下改善多少",
+              "paragraphs": [
+                "主结果使用在10毫秒到达间隔下训练的策略，分别测试两种压力。软任务命中率的分母是全部请求，分子是在软期限内完成的请求：40毫秒条件为98.29%；10毫秒条件为81.41%，最佳竞争对照为59.50%，差21.91个百分点。不能把这些比例当作模型预测准确率。",
+                "最弱客户在高压力下的按时完成率为62.05%，优于最佳对照的30.19%，但仍低于设置中的最低70%客户目标，不能说所有服务目标都已满足。所有带检查的实验没有已接纳硬任务超时；移除安全层后，学习策略仍有99.8%的硬期限命中率，却不再构成硬实时保证。后者说明经验上接近满分与形式保证的区别。"
+              ]
+            },
+            {
+              "heading": "保证不能脱离时间模型",
+              "paragraphs": [
+                "定理依赖可行参考、可靠的最坏执行时间、依赖关系和调度开销上界。数据搬运的保守成本被计入时间界，不能依靠未保证的缓存复用来证明按时。5毫秒调度周期下，37.9微秒只对应特定64项队列、1GHz条件下的策略推理成本，不是整个调度器的全部开销。本站认为，方案的价值是把优化与可验证约束分开；模拟结果并不等于任意真实硬件和工作负载都已获得安全认证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的候选调度与认证流程，解释论文机制，不是硬件实测图或认证证书。",
+            "steps": [
+              "构建可行的硬实时参考调度",
+              "学习策略提出候选执行段",
+              "检查能否保留可行后续",
+              "通过则执行，否则回退参考段"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A shared group of AI accelerators may serve both requests that must meet every deadline and requests whose occasional delay reduces service quality. This paper separates a reinforcement-learning scheduler from deterministic certification: learning seeks better service, while the safety layer enforces hard deadlines. A large training penalty alone is not a guarantee. The authors report presentation acceptance at RTNS 2026; this article covers the October 21 first version on that basis.",
+          "sections": [
+            {
+              "heading": "A feasible fallback comes first",
+              "paragraphs": [
+                "The system constructs a hard-task-only reference schedule using each task’s worst-case execution time on eligible accelerators. A new hard task is admitted only if a new feasible reference can include it. DNNs are layer-level dependency graphs; layers cannot disregard predecessors or run arbitrarily in parallel, and their costs differ across accelerators.",
+                "A DDPG policy observes ready tasks, deadlines, client targets and occupancy, then proposes ordering and assignment for a short future prefix. Deterministic checks compare progress at machine-wise cuts and establish that unfinished hard work can continue with the reference suffix. If that cannot be certified, execution falls back to the reference prefix and soft work in the rejected prefix is discarded. This is not cost-free pause-and-resume."
+              ]
+            },
+            {
+              "heading": "Compare policies under a common safety mechanism",
+              "paragraphs": [
+                "Evaluation uses a layer-level simulation with six heterogeneous accelerators: three resemble Eyeriss dataflow and three Simba, each family with two small and one large instance. Workloads include AlexNet, InceptionV3, ResNet50 and YOLO-v2, using profiled layer costs. Soft arrivals follow a heavy-tailed process with mean gaps of forty or ten milliseconds, the latter four times as frequent. Baselines lacking native hard-deadline guarantees are enclosed in the same certification-and-fallback mechanism, so policy quality is compared under common safety conditions."
+              ]
+            },
+            {
+              "heading": "The gains under higher pressure",
+              "paragraphs": [
+                "The main results use a policy trained at ten-millisecond arrivals and tested at both pressures. The soft hit ratio divides requests completed by their soft deadline by all requested soft jobs. It is 98.29% at forty milliseconds and 81.41% at ten, versus 59.50% for the strongest competing baseline in the high-pressure case: 21.91 percentage points. These are not prediction-accuracy scores.",
+                "The worst client reaches 62.05% on-time completion under high pressure, versus 30.19% for the strongest baseline. It remains below even the lowest configured client target of 70%, so not every service objective is satisfied. No admitted hard job misses a deadline in certified experiments. Removing the safety layer still gives the policy 99.8% hard-deadline satisfaction, but no hard guarantee: near-perfect empirical behavior differs from proof."
+              ]
+            },
+            {
+              "heading": "The guarantee depends on the timing model",
+              "paragraphs": [
+                "The theorem requires a feasible reference, trustworthy worst-case execution bounds, dependency constraints and bounded scheduling overhead. Conservative data-transfer costs enter those bounds; unguaranteed cache reuse cannot establish timeliness. With a five-millisecond scheduling period, the reported 37.9 microseconds covers only policy inference for a particular sixty-four-item queue at one gigahertz, not the whole scheduler. We see value in separating optimization from verifiable constraints; simulation results do not certify arbitrary hardware and workloads."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of candidate scheduling and certification, not a hardware measurement or safety certificate.",
+            "steps": [
+              "Construct a feasible hard-task reference",
+              "Propose a learned schedule prefix",
+              "Certify a feasible continuation",
+              "Execute if accepted; otherwise use the reference"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じAIアクセラレーター群が、必ず期限を守る推論と、多少の遅延は許されるが応答品質が大切な推論を同時に扱うことがある。本論文は強化学習による最適化と決定的な認証を分け、前者にサービス改善、後者にハード期限を任せる。学習時の大きな罰則だけを保証とは呼ばない。著者はRTNS 2026での発表採択と記しており、ここでは10月21日のv1をその口径で読む。",
+          "sections": [
+            {
+              "heading": "まず実行可能な代替計画を用意する",
+              "paragraphs": [
+                "各タスクのアクセラレーター別最悪実行時間から、ハードタスクだけの実行可能な参照計画を作る。新しいハードタスクは、全期限を守る計画を再構成できる場合だけ受け入れる。DNNを層ごとの依存グラフにし、前段を飛ばしたり自由に並列化したりしない。同じ層の所要時間も装置によって異なる。",
+                "DDPG方策は待ちタスク、期限、顧客目標、装置占有を見て短い将来区間の順序と配置を提案する。決定的な確認は機械ごとの切断点で進捗を比べ、残るハード作業を参照の後半につなげられるか証明する。できなければ参照区間へ戻り、不採用区間のソフト作業を破棄する。無コストで一時停止後に再開する方式ではない。"
+              ]
+            },
+            {
+              "heading": "共通の安全条件で比較する",
+              "paragraphs": [
+                "評価は六つの異種アクセラレーターを使う層単位のシミュレーションで、Eyerissに近い流れ三つ、Simbaに近い流れ三つを各二小一大とする。AlexNet、InceptionV3、ResNet50、YOLO-v2を対象に、層別計測コストを使う。ソフト到着は裾の重い分布で平均40ミリ秒と10ミリ秒、後者は四倍頻繁だ。元々ハード期限を保証しない比較方式にも同じ認証と代替実行を適用し、共通条件で方策を比べる。"
+              ]
+            },
+            {
+              "heading": "負荷が高いときの改善",
+              "paragraphs": [
+                "主結果は10ミリ秒間隔で学習した方策を両負荷で試す。ソフト命中率は全要求を分母、期限内完了を分子にし、40ミリ秒で98.29%、10ミリ秒で81.41%となる。高負荷の最良対照59.50%との差は21.91ポイントで、予測正解率ではない。",
+                "高負荷で最も弱い顧客の期限内率は62.05%、最良対照は30.19%だった。それでも設定した最低目標70%未満なので、全顧客目標を達成したとは言えない。認証付き実験では受入済みハードタスクの期限超過はゼロだが、安全層を外すと99.8%にとどまり、保証は失われる。経験的にほぼ満点でも証明とは違う。"
+              ]
+            },
+            {
+              "heading": "時間モデルから切り離せない保証",
+              "paragraphs": [
+                "定理は実行可能な参照、信頼できる最悪時間、依存制約、スケジューリング負荷の上界を必要とする。データ転送を保守的に時間へ含め、保証のないキャッシュ再利用を根拠にしない。5ミリ秒周期での37.9マイクロ秒は、64項目の待ち行列と1GHzという条件の方策推論だけで、スケジューラー全体の処理時間ではない。当サイトは最適化と検証可能な制約を分ける点に価値を見るが、任意の実機と負荷が安全認証済みという結果ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "候補計画と認証を当サイトが描き直した説明図。実機測定や認証証書ではない。",
+            "steps": [
+              "実行可能な参照計画を作る",
+              "学習方策が候補区間を提案",
+              "実行可能な後続を確認",
+              "合格なら実行、不合格なら参照へ"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Одни и те же ИИ-ускорители могут обслуживать задачи с обязательными сроками и задачи, где задержка ухудшает качество, но допускается. Работа отделяет обучение с подкреплением от детерминированной проверки: первое улучшает обслуживание, вторая обеспечивает жёсткие сроки. Большой штраф при обучении сам по себе гарантией не является. Авторы сообщают о принятии доклада на RTNS 2026; здесь рассматривается первая версия от 21 октября.",
+          "sections": [
+            {
+              "heading": "Сначала допустимый резервный план",
+              "paragraphs": [
+                "По худшему времени выполнения на подходящих ускорителях строится эталон только для жёстких задач. Новая такая задача принимается лишь при возможности построить новый допустимый план. DNN представлены графами зависимостей слоёв: нельзя пропускать предшественников или произвольно исполнять слои параллельно. Стоимость одного слоя зависит от ускорителя.",
+                "Политика DDPG видит готовые задачи, сроки, цели клиентов и занятость, предлагая порядок и размещение для ближайшего фрагмента. Детерминированная проверка сопоставляет прогресс на срезах отдельных машин и доказывает, что остаток жёсткой работы можно продолжить по эталону. Иначе используется эталонный фрагмент, а мягкая работа отвергнутого фрагмента отбрасывается. Это не бесплатная остановка с последующим продолжением."
+              ]
+            },
+            {
+              "heading": "Общие условия безопасности для сравнения",
+              "paragraphs": [
+                "Послойная симуляция использует шесть разнородных ускорителей: три близки к потоку данных Eyeriss, три — Simba, по два малых и одному большому в семье. Рассматриваются AlexNet, InceptionV3, ResNet50 и YOLO-v2 с профилированной стоимостью слоёв. Мягкие запросы имеют тяжёлохвостые интервалы со средними сорок и десять миллисекунд, второй поток вчетверо чаще. Методы без собственной жёсткой гарантии получают тот же механизм проверки и возврата, что выравнивает условия сравнения политик."
+              ]
+            },
+            {
+              "heading": "Что улучшилось под высокой нагрузкой",
+              "paragraphs": [
+                "Основная политика обучена при интервале десять миллисекунд и проверена при обеих нагрузках. Доля мягких попаданий делит число завершённых в срок запросов на все запрошенные: 98,29% при сорока миллисекундах и 81,41% при десяти. Лучший соперник под высокой нагрузкой получает 59,50%, разница — 21,91 процентного пункта. Это не точность предсказаний.",
+                "Худший клиент при высокой нагрузке сохраняет 62,05% своевременных завершений против 30,19% у лучшего соперника. Но это ниже минимальной заданной клиентской цели 70%, поэтому не все цели достигнуты. В проверяемых опытах принятые жёсткие задачи не опаздывают. Без защитного слоя политика даёт 99,8%, однако жёсткой гарантии уже нет: почти идеальный опыт не заменяет доказательство."
+              ]
+            },
+            {
+              "heading": "Гарантия привязана к модели времени",
+              "paragraphs": [
+                "Теорема требует допустимого эталона, достоверных худших времён, зависимостей и ограниченных накладных расходов. Передача данных консервативно включена в границы, а негарантированное повторное использование кеша не служит основанием своевременности. При периоде пять миллисекунд оценка 37,9 микросекунды относится только к выводу политики для очереди из шестидесяти четырёх элементов на одном гигагерце, не ко всему планировщику. Мы видим ценность в разделении оптимизации и проверяемых ограничений; симуляция не сертифицирует любое реальное оборудование и нагрузку."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема планирования и проверки, не аппаратное измерение или сертификат безопасности.",
+            "steps": [
+              "Построить допустимый эталон",
+              "Предложить фрагмент обученной политикой",
+              "Проверить допустимое продолжение",
+              "Исполнить принятый фрагмент либо эталон"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "同一組AI加速器可能同時處理兩類推理：一類必須按時完成，錯過期限就不滿足系統要求；另一類允許偶爾延遲，但仍希望響應及時。論文把強化學習排程和確定性檢查分開，讓學習策略爭取更好的服務質量，讓安全層負責硬期限。這不是給學習模型加一個大懲罰就稱為保證。作者註明獲RTNS 2026報告錄用，本文按該口徑解讀10月21日的v1。",
+          "sections": [
+            {
+              "heading": "先有兜底安排，再允許線上調整",
+              "paragraphs": [
+                "系統先根據每個任務在各加速器上的最壞執行時間，建立只含硬實時任務的可行參考排程。新硬任務只有能加入一份仍滿足全部期限的參考安排時才被接納。DNN按層拆成帶先後依賴的計算圖，層不能隨意並行或跨過前置計算；不同加速器執行同一層所需時間也不同。",
+                "線上策略使用DDPG強化學習，結合待執行任務、期限、客戶服務目標和加速器佔用情況，提出接下來一小段的順序與分配。確定性檢查比較各機器上的進度切面，確認執行候選段後，剩餘硬任務仍能接回參考排程。如果不能證明這一點，就回退到參考段，並丟棄該被拒段的軟任務工作；這不是暫停後無成本續跑。"
+              ]
+            },
+            {
+              "heading": "比較在共同的安全條件下進行",
+              "paragraphs": [
+                "評估採用六個異構加速器的層級模擬設定，三臺接近Eyeriss的資料流、三臺接近Simba，每類兩小一大。推理網路包括AlexNet、InceptionV3、ResNet50和YOLO-v2；執行成本來自逐層剖析。軟請求用重尾到達過程生成，平均間隔40毫秒和10毫秒，後者請求頻率為前者四倍。原本沒有硬期限保證的對照也包在同一檢查與回退機制內，比較的是相同安全條件下的排程質量。"
+              ]
+            },
+            {
+              "heading": "高壓力下改善多少",
+              "paragraphs": [
+                "主結果使用在10毫秒到達間隔下訓練的策略，分別測試兩種壓力。軟任務命中率的分母是全部請求，分子是在軟期限內完成的請求：40毫秒條件為98.29%；10毫秒條件為81.41%，最佳競爭對照為59.50%，差21.91個百分點。不能把這些比例當作模型預測準確率。",
+                "最弱客戶在高壓力下的按時完成率為62.05%，優於最佳對照的30.19%，但仍低於設定中的最低70%客戶目標，不能說所有服務目標都已滿足。所有帶檢查的實驗沒有已接納硬任務超時；移除安全層後，學習策略仍有99.8%的硬期限命中率，卻不再構成硬實時保證。後者說明經驗上接近滿分與形式保證的區別。"
+              ]
+            },
+            {
+              "heading": "保證不能脫離時間模型",
+              "paragraphs": [
+                "定理依賴可行參考、可靠的最壞執行時間、依賴關係和排程開銷上界。資料搬運的保守成本被計入時間界，不能依靠未保證的快取複用來證明按時。5毫秒排程週期下，37.9微秒只對應特定64項佇列、1GHz條件下的策略推理成本，不是整個排程器的全部開銷。本站認為，方案的價值是把最佳化與可驗證約束分開；模擬結果並不等於任意真實硬體和工作負載都已獲得安全認證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的候選排程與認證流程，解釋論文機制，不是硬體實測圖或認證證書。",
+            "steps": [
+              "構建可行的硬實時參考排程",
+              "學習策略提出候選執行段",
+              "檢查能否保留可行後續",
+              "透過則執行，否則回退參考段"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

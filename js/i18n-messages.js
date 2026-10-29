@@ -653,7 +653,17 @@ window.SITE_MESSAGES = {
     "news.google-genie4-interactive-world-preview.title": "Genie 4 开始研究预览：可边探索边改写场景，并生成声音",
     "news.google-genie4-interactive-world-preview.summary": "Google DeepMind 将实时世界模拟交给少量可信测试者，加入原生音频与 Gemini 引导。Project Genie 和开发者入口仍待开放，长时间一致性及物理准确性也未解决。",
     "news.microsoft-emudhra-offline-trust-update.title": "微软扩大 eMudhra 证书撤信任范围，并为离线设备提供更新",
-    "news.microsoft-emudhra-offline-trust-update.summary": "Windows 10 月 26 日移除七张相关证书，Edge 于 27 日跟进。带外更新帮助无法接收自动信任列表的设备获得保护；这比此前封禁八个已受影响中间 CA 的范围更广。"
+    "news.microsoft-emudhra-offline-trust-update.summary": "Windows 10 月 26 日移除七张相关证书，Edge 于 27 日跟进。带外更新帮助无法接收自动信任列表的设备获得保护；这比此前封禁八个已受影响中间 CA 的范围更广。",
+    "research.teamgym-distributed-information-decisions.title": "TeamGym：把多 Agent 的沟通困难与检索困难分开测",
+    "research.teamgym-distributed-information-decisions.summary": "TeamGym 用同一组关键证据比较单个模型、直接获得证据的团队和自行查找证据的团队。在 8 个模型、12 个来源语料的主实验中，分散证据带来平均 22.9 个百分点的成功率损失，自行检索又损失 19.9 个百分点；结果针对受控协作任务。",
+    "research.tessera-structure-completed-rag-evidence.title": "Tessera：检索到网页后，把表头和上下文一起交给 RAG",
+    "research.tessera-structure-completed-rag-evidence.summary": "Tessera 在查询时把网页段落、列表和表格行补齐标题、章节及表头，再放进原有证据预算。在 7,851 个维基百科相关问题上，三条检索流程准确率提高 5.0—6.2 个百分点；实验限于固定英文资料快照，保持 token 预算不等于没有额外计算。",
+    "research.fog-kg-agent-evidence-coverage.title": "FoG：让知识图谱智能体找齐答案背后的证据",
+    "research.fog-kg-agent-evidence-coverage.summary": "把支持事实随训练问题一起构造，并奖励首次检索到证据的步骤。三项图谱问答实验同时考察答案与证据覆盖；图谱本身不完整或过时，仍会限制结论。",
+    "research.m4bench-clinical-derivation-specifications.title": "M4Bench：临床数据智能体需要的是完整规则，不只是技能文件",
+    "research.m4bench-clinical-derivation-specifications.summary": "28 项电子病历衍生任务把规则完整度与技能格式分开比较。明确规格提高参考结果一致性，但带技能的 280 次主要实验中仅 25 次通过全部严格检查；作者注明获 NeurIPS 2026 评测与数据集轨道录用。",
+    "research.agar-microservice-counterfactual-analysis.title": "Agar：用可检查的范围模型分析微服务资源需求",
+    "research.agar-microservice-counterfactual-analysis.summary": "组合各服务的负载、资源占用和延迟目标关系，估计不同配置所需的副本数。在三个微服务应用上比较横向扩容策略；观测范围不是未来保证，应用或硬件改变后需要重新验证。"
   },
   "en": {
     "nav.about": "About",
@@ -1308,7 +1318,17 @@ window.SITE_MESSAGES = {
     "news.google-genie4-interactive-world-preview.title": "Genie 4 enters research preview with live scene editing and native audio",
     "news.google-genie4-interactive-world-preview.summary": "Google DeepMind is testing interactive world simulation with a small trusted group, combining native audio with Gemini guidance. Broader access is still pending; long-term consistency and physical accuracy remain limitations.",
     "news.microsoft-emudhra-offline-trust-update.title": "Microsoft broadens eMudhra distrust and supplies updates for offline devices",
-    "news.microsoft-emudhra-offline-trust-update.summary": "Windows removed seven related certificates on October 26; Edge followed on October 27. Out-of-band packages cover devices missing automatic trust-list updates, extending beyond the earlier blocking of eight affected intermediate CAs."
+    "news.microsoft-emudhra-offline-trust-update.summary": "Windows removed seven related certificates on October 26; Edge followed on October 27. Out-of-band packages cover devices missing automatic trust-list updates, extending beyond the earlier blocking of eight affected intermediate CAs.",
+    "research.teamgym-distributed-information-decisions.title": "TeamGym separates communication failures from retrieval failures in agent teams",
+    "research.teamgym-distributed-information-decisions.summary": "TeamGym compares one model with all pivotal evidence, a team given distributed evidence, and the same team searching source material. Across eight models and 12 source corpora, the main experiment reports mean success-rate losses of 22.9 percentage points from distribution and a further 19.9 points from retrieval, under controlled cooperative conditions.",
+    "research.tessera-structure-completed-rag-evidence.title": "Tessera gives RAG readers table headers and context, not isolated fragments",
+    "research.tessera-structure-completed-rag-evidence.summary": "Tessera completes paragraphs, list items and table rows with titles, section paths and headers at query time, then packs them into the existing evidence budget. Across 7,851 Wikipedia-related questions, three pipelines gain 5.0–6.2 percentage points in accuracy. The study uses a fixed English snapshot; unchanged token budgets do not mean zero additional computation.",
+    "research.fog-kg-agent-evidence-coverage.title": "FoG trains knowledge-graph agents to retrieve the evidence behind an answer",
+    "research.fog-kg-agent-evidence-coverage.summary": "Training questions carry supporting facts, and the first retrieval of each fact earns a process reward. Three graph-QA benchmarks assess both answers and evidence coverage; missing or outdated graph facts remain a limitation.",
+    "research.m4bench-clinical-derivation-specifications.title": "M4Bench separates complete specifications from the skill-file format",
+    "research.m4bench-clinical-derivation-specifications.summary": "Across 28 EHR derivation tasks, explicit rules improve agreement with reference outputs, but only 25 of 280 primary runs with skills pass every strict check. Authors report acceptance to the NeurIPS 2026 Evaluations and Datasets Track.",
+    "research.agar-microservice-counterfactual-analysis.title": "Agar models microservice resource needs with inspectable bounds",
+    "research.agar-microservice-counterfactual-analysis.summary": "Composes workload, utilization and latency-target relationships to estimate replica needs under alternative configurations. Evaluated against horizontal autoscalers on three applications; observed bounds do not guarantee future behavior and require revalidation after application or hardware changes."
   },
   "ja": {
     "nav.about": "私について",
@@ -1963,7 +1983,17 @@ window.SITE_MESSAGES = {
     "news.google-genie4-interactive-world-preview.title": "Genie 4、場面のリアルタイム編集と音声生成を備え研究プレビューへ",
     "news.google-genie4-interactive-world-preview.summary": "Google DeepMind は少数の信頼できるテスターに世界シミュレーションを提供。ネイティブ音声と Gemini による誘導を組み合わせる。一般向け公開は今後で、長時間の一貫性や物理的な正確さには課題が残る。",
     "news.microsoft-emudhra-offline-trust-update.title": "Microsoft、eMudhra の信頼除外を拡大しオフライン機器にも更新を提供",
-    "news.microsoft-emudhra-offline-trust-update.summary": "Windows は 10 月 26 日に関連する 7 証明書を信頼一覧から削除し、Edge も 27 日に対応。自動更新を受け取れない機器向けの帯域外更新も用意し、先行した中間 CA 8 件の遮断より広い措置を取った。"
+    "news.microsoft-emudhra-offline-trust-update.summary": "Windows は 10 月 26 日に関連する 7 証明書を信頼一覧から削除し、Edge も 27 日に対応。自動更新を受け取れない機器向けの帯域外更新も用意し、先行した中間 CA 8 件の遮断より広い措置を取った。",
+    "research.teamgym-distributed-information-decisions.title": "TeamGym：複数 Agent の情報共有と検索の失敗を分けて測る",
+    "research.teamgym-distributed-information-decisions.summary": "同じ重要な根拠を単一モデルに渡す場合、チームに分配する場合、各参加者が資料から探す場合を比較。8 モデル・12 の資料群を使う主実験では、分配により成功率が平均 22.9 ポイント、検索も必要になるとさらに 19.9 ポイント下がった。協調的な制御課題での結果。",
+    "research.tessera-structure-completed-rag-evidence.title": "Tessera：表の見出しや文脈も一緒に RAG へ渡す",
+    "research.tessera-structure-completed-rag-evidence.summary": "検索時に段落、リスト、表の行へページ名・節・表見出しを補い、既存の根拠予算に収める。Wikipedia 関連の 7,851 問では三つの検索処理の正答率が 5.0〜6.2 ポイント改善。固定した英語資料での実験であり、token 予算が同じでも追加計算は必要になる。",
+    "research.fog-kg-agent-evidence-coverage.title": "FoG：知識グラフのエージェントに回答の根拠を探させる",
+    "research.fog-kg-agent-evidence-coverage.summary": "学習問題と根拠となる事実を同時に作り、各根拠を初めて取得した手順に報酬を与える。三つのグラフ質問応答で回答と根拠の網羅率を評価するが、グラフの欠落や古さは解消しない。",
+    "research.m4bench-clinical-derivation-specifications.title": "M4Bench：臨床データのエージェントに必要な規則と技能形式を分ける",
+    "research.m4bench-clinical-derivation-specifications.summary": "電子カルテの派生値を作る 28 課題で、規則の完全性とスキル形式を比較。参照結果との一致は改善したが、スキル付き主要実験 280 回のうち厳密な全検査に合格したのは 25 回。著者は NeurIPS 2026 評価・データセットトラック採択と記載。",
+    "research.agar-microservice-counterfactual-analysis.title": "Agar：範囲モデルでマイクロサービスの必要資源を分析",
+    "research.agar-microservice-counterfactual-analysis.summary": "負荷、資源使用量、応答目標の関係を組み合わせ、構成変更後の必要レプリカ数を推定。三つのアプリケーションで水平拡張方式と比較したが、観測範囲は将来の保証ではなく、環境変更後の再検証が必要。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2618,7 +2648,17 @@ window.SITE_MESSAGES = {
     "news.google-genie4-interactive-world-preview.title": "Genie 4: исследовательский доступ к интерактивным мирам со звуком",
     "news.google-genie4-interactive-world-preview.summary": "Google DeepMind тестирует генерацию миров с небольшой группой партнёров. Модель добавляет звук и управление через Gemini. Более широкий доступ ещё впереди; длительная согласованность и физическая точность остаются нерешёнными задачами.",
     "news.microsoft-emudhra-offline-trust-update.title": "Microsoft расширила исключение сертификатов eMudhra из доверенных",
-    "news.microsoft-emudhra-offline-trust-update.summary": "Windows исключила семь связанных сертификатов 26 октября, Edge — 27 октября. Внеплановые пакеты предназначены также для устройств без автоматического обновления списков доверия. Это шире прежней блокировки восьми затронутых промежуточных CA."
+    "news.microsoft-emudhra-offline-trust-update.summary": "Windows исключила семь связанных сертификатов 26 октября, Edge — 27 октября. Внеплановые пакеты предназначены также для устройств без автоматического обновления списков доверия. Это шире прежней блокировки восьми затронутых промежуточных CA.",
+    "research.teamgym-distributed-information-decisions.title": "TeamGym разделяет сбои общения и поиска в командах агентов",
+    "research.teamgym-distributed-information-decisions.summary": "TeamGym сравнивает модель со всеми ключевыми свидетельствами, команду с распределёнными свидетельствами и команду, ищущую их в материалах. В основном опыте с восемью моделями и 12 корпусами распределение снизило успешность в среднем на 22,9 процентного пункта, а поиск — ещё на 19,9 пункта. Вывод относится к контролируемым совместным задачам.",
+    "research.tessera-structure-completed-rag-evidence.title": "Tessera передаёт RAG заголовки таблиц и контекст вместе с фактами",
+    "research.tessera-structure-completed-rag-evidence.summary": "Tessera при запросе дополняет абзацы, списки и строки таблиц названиями страниц, разделами и заголовками, сохраняя бюджет свидетельств. На 7 851 вопросе о Wikipedia три поисковые схемы прибавляют 5,0–6,2 процентного пункта точности. Проверка ограничена фиксированным английским снимком; тот же бюджет токенов не исключает дополнительных вычислений.",
+    "research.fog-kg-agent-evidence-coverage.title": "FoG: агент должен найти факты, подтверждающие его ответ",
+    "research.fog-kg-agent-evidence-coverage.summary": "Учебные вопросы создаются вместе с подтверждающими фактами, а первое извлечение каждого факта получает награду. Три теста вопросов к графам оценивают ответы и покрытие доказательств; неполнота и устаревание графа остаются ограничениями.",
+    "research.m4bench-clinical-derivation-specifications.title": "M4Bench отделяет полноту правил от формата файла навыка",
+    "research.m4bench-clinical-derivation-specifications.summary": "В 28 задачах вывода переменных из медицинских записей явные правила улучшают совпадение с эталоном, но лишь 25 из 280 основных запусков с навыками проходят все строгие проверки. Авторы сообщают о принятии в трек Evaluations and Datasets NeurIPS 2026.",
+    "research.agar-microservice-counterfactual-analysis.title": "Agar оценивает ресурсы микросервисов через проверяемые диапазоны",
+    "research.agar-microservice-counterfactual-analysis.summary": "Связывает нагрузку, потребление ресурсов и целевую задержку для оценки числа реплик. Проверен на трёх приложениях против горизонтальных автомасштабировщиков; наблюдённые границы не гарантируют будущего поведения и требуют проверки при изменении приложения или оборудования."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3273,6 +3313,16 @@ window.SITE_MESSAGES = {
     "news.google-genie4-interactive-world-preview.title": "Genie 4 開始研究預覽：可邊探索邊改寫場景，並生成聲音",
     "news.google-genie4-interactive-world-preview.summary": "Google DeepMind 將實時世界模擬交給少量可信測試者，加入原生音訊與 Gemini 引導。Project Genie 和開發者入口仍待開放，長時間一致性及物理準確性也未解決。",
     "news.microsoft-emudhra-offline-trust-update.title": "微軟擴大 eMudhra 證書撤信任範圍，併為離線裝置提供更新",
-    "news.microsoft-emudhra-offline-trust-update.summary": "Windows 10 月 26 日移除七張相關證書，Edge 於 27 日跟進。帶外更新幫助無法接收自動信任列表的裝置獲得保護；這比此前封禁八個已受影響中間 CA 的範圍更廣。"
+    "news.microsoft-emudhra-offline-trust-update.summary": "Windows 10 月 26 日移除七張相關證書，Edge 於 27 日跟進。帶外更新幫助無法接收自動信任列表的裝置獲得保護；這比此前封禁八個已受影響中間 CA 的範圍更廣。",
+    "research.teamgym-distributed-information-decisions.title": "TeamGym：把多 Agent 的溝通困難與檢索困難分開測",
+    "research.teamgym-distributed-information-decisions.summary": "TeamGym 用同一組關鍵證據比較單個模型、直接獲得證據的團隊和自行查詢證據的團隊。在 8 個模型、12 個來源語料的主實驗中，分散證據帶來平均 22.9 個百分點的成功率損失，自行檢索又損失 19.9 個百分點；結果針對受控協作任務。",
+    "research.tessera-structure-completed-rag-evidence.title": "Tessera：檢索到網頁後，把表頭和上下文一起交給 RAG",
+    "research.tessera-structure-completed-rag-evidence.summary": "Tessera 在查詢時把網頁段落、列表和表格行補齊標題、章節及表頭，再放進原有證據預算。在 7,851 個維基百科相關問題上，三條檢索流程準確率提高 5.0—6.2 個百分點；實驗限於固定英文資料快照，保持 token 預算不等於沒有額外計算。",
+    "research.fog-kg-agent-evidence-coverage.title": "FoG：讓知識圖譜智慧體找齊答案背後的證據",
+    "research.fog-kg-agent-evidence-coverage.summary": "把支援事實隨訓練問題一起構造，並獎勵首次檢索到證據的步驟。三項圖譜問答實驗同時考察答案與證據覆蓋；圖譜本身不完整或過時，仍會限制結論。",
+    "research.m4bench-clinical-derivation-specifications.title": "M4Bench：臨床資料智慧體需要的是完整規則，不只是技能檔案",
+    "research.m4bench-clinical-derivation-specifications.summary": "28 項電子病歷衍生任務把規則完整度與技能格式分開比較。明確規格提高參考結果一致性，但帶技能的 280 次主要實驗中僅 25 次透過全部嚴格檢查；作者註明獲 NeurIPS 2026 評測與資料集軌道錄用。",
+    "research.agar-microservice-counterfactual-analysis.title": "Agar：用可檢查的範圍模型分析微服務資源需求",
+    "research.agar-microservice-counterfactual-analysis.summary": "組合各服務的負載、資源佔用和延遲目標關係，估計不同配置所需的副本數。在三個微服務應用上比較橫向擴容策略；觀測範圍不是未來保證，應用或硬體改變後需要重新驗證。"
   }
 };

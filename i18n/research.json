@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28",
+  "updated_at": "2026-10-29",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,77 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "teamgym-distributed-information-decisions",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Park, Jeong et al. · arXiv:2610.37571v1",
+      "url": "https://arxiv.org/abs/2610.37571v1"
+    },
+    {
+      "id": "tessera-structure-completed-rag-evidence",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "tags": [
+        "ai",
+        "rag",
+        "agents",
+        "papers",
+        "results"
+      ],
+      "source": "Hua, Sun et al. · arXiv:2610.37080v1",
+      "url": "https://arxiv.org/abs/2610.37080v1"
+    },
+    {
+      "id": "fog-kg-agent-evidence-coverage",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Sun, Zongyuan et al. · arXiv:2610.37405v1",
+      "url": "https://arxiv.org/abs/2610.37405v1"
+    },
+    {
+      "id": "m4bench-clinical-derivation-specifications",
+      "kind": "conference-paper",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "papers",
+        "conferences"
+      ],
+      "source": "Ill, Hannes et al. · arXiv:2610.37459v1",
+      "url": "https://arxiv.org/abs/2610.37459v1",
+      "venue": "NeurIPS 2026 · Evaluations and Datasets Track (author-reported acceptance)"
+    },
+    {
+      "id": "agar-microservice-counterfactual-analysis",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-29",
+      "tags": [
+        "systems",
+        "papers"
+      ],
+      "source": "Deshpande, Saarth et al. · arXiv:2610.36636v1",
+      "url": "https://arxiv.org/abs/2610.36636v1"
+    },
     {
       "id": "cohortflow-localized-agent-correction",
       "kind": "preprint",
@@ -600,7 +671,7 @@
         "systems",
         "papers"
       ],
-      "source": "Yuekai, Wang et al. · arXiv:2610.29544v1",
+      "source": "Wang Yuekai · arXiv:2610.29544v1",
       "url": "https://arxiv.org/abs/2610.29544v1",
       "collected_at": "2026-10-22"
     },
