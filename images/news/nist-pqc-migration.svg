@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Post-quantum migration: two different schedules</title><desc id="desc">An original explanatory diagram based on NIST IR 8547. Priority federal systems migrate key establishment by the end of 2030 and signatures by the end of 2031. General NIST deprecation follows 2030 and disallowance follows 2035. This is not a certification.</desc>
+<rect width="1200" height="630" rx="28" fill="#edf3f7"/>
+<g font-family="Arial, sans-serif" fill="#203947">
+<text x="65" y="73" font-size="22" letter-spacing="3" fill="#247d90">NIST IR 8547 · FINAL ROADMAP</text>
+<text x="65" y="130" font-size="39" font-weight="700">Different risks. Different deadlines.</text>
+<text x="65" y="172" font-size="22">Migration spans protocols, certificates, hardware and applications.</text>
+<rect x="65" y="210" width="1070" height="142" rx="18" fill="#fff"/>
+<text x="95" y="249" font-size="23" font-weight="700">Priority US federal systems</text>
+<path d="M110 310H1090" stroke="#2a8b8c" stroke-width="5"/>
+<circle cx="395" cy="310" r="10" fill="#2a8b8c"/><circle cx="820" cy="310" r="10" fill="#2a8b8c"/>
+<text x="285" y="285" font-size="21">Keys: by end of 2030</text><text x="695" y="285" font-size="21">Signatures: by end of 2031</text>
+<rect x="65" y="372" width="1070" height="142" rx="18" fill="#fff"/>
+<text x="95" y="411" font-size="23" font-weight="700">General NIST public-key transition</text>
+<path d="M110 472H1090" stroke="#7084b9" stroke-width="5"/>
+<circle cx="395" cy="472" r="10" fill="#7084b9"/><circle cx="910" cy="472" r="10" fill="#7084b9"/>
+<text x="278" y="447" font-size="21">Deprecated after 2030</text><text x="785" y="447" font-size="21">Disallowed after 2035</text>
+<text x="65" y="559" font-size="20">The general window does not override earlier priority-system deadlines.</text>
+<text x="65" y="596" font-size="17" fill="#526a78">Tech Daily · Explanatory redraw, not a compliance certificate or a quantum-computer forecast.</text>
+</g></svg>
