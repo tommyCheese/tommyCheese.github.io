@@ -669,7 +669,17 @@ window.SITE_MESSAGES = {
     "news.github-actions-workflow-lockfiles-ga.title": "GitHub Actions 依赖锁文件正式可用，固定自动化流程执行的版本",
     "news.github-actions-workflow-lockfiles-ga.summary": "GitHub 10 月 28 日将工作流依赖锁文件转为正式可用，可固定直接及间接引用的 action，并与 Dependabot 更新联动。它减少版本引用被改动带来的风险，但不覆盖可复用工作流调用、容器镜像等所有输入，也不能证明依赖本身安全。",
     "news.nist-pqc-transition-final-roadmap.title": "NIST 发布后量子密码迁移最终指南，明确风险排序与过渡期限",
-    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最终版列出公钥密码的替代方案与迁移条件。一般弃用和禁用节点为 2030 年后、2035 年后；美国联邦高敏感系统须更早完成密钥建立和签名迁移，不能把所有系统视为同一期限。"
+    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最终版列出公钥密码的替代方案与迁移条件。一般弃用和禁用节点为 2030 年后、2035 年后；美国联邦高敏感系统须更早完成密钥建立和签名迁移，不能把所有系统视为同一期限。",
+    "research.cost-aware-rag-incremental-evidence.title": "额外检索值得吗？一项 RAG 实验把证据命中与回答可靠性分开",
+    "research.cost-aware-rag-incremental-evidence.summary": "研究用初次检索信号决定是否追加混合检索，在 188 个问题中只触发 46 次，并保持始终混合检索的证据命中率。但统计区间包含零，回答正确性和忠实度也未显示可靠改善；调用次数减少不能当成整体耗时下降。",
+    "research.crossprofile-agent-memory-evidence-balance.title": "CrossProfile：多 Agent 的记忆不能只保留稀有或相关信息",
+    "research.crossprofile-agent-memory-evidence-balance.summary": "研究在 60 个模板、480 个信息分配任务中发现，优先保留少数 Agent 持有的事实，平均不优于随机选择；按主题相关性筛选也会保留误导性证据。结果取决于支持与反对证据的平衡，以及决策模型如何理解来源标签，而非记忆策略名称。",
+    "research.coveragebench-negate-retrieval-contradictions.title": "CoverageBench-Negate：检索器能分清只改了一个结论的文档吗？",
+    "research.coveragebench-negate-retrieval-contradictions.summary": "研究在六个数据集上构造 63,372 对原文与否定改写证据，测试检索对含义翻转的敏感度。两个稠密检索器区分近似文档的能力偏弱，但数据由模型生成，人工抽查也暴露质量分歧，结果不能直接等同于真实 RAG 的答案准确率。",
+    "research.constraint-indexes-data-integrity-governance.title": "约束索引：把跨表数据完整性规则放回数据库",
+    "research.constraint-indexes-data-integrity-governance.summary": "研究把跨表唯一性、关系数量上限等规则表示为事务内共享索引，在 PostgreSQL 原型中减少维护开销。组合工作负载达到 44.4K 次事务/秒，但原型仍要求所有相关写入主动调用约束操作，不能拦截绕过操作的直接写入，自动治理器也尚未实现。",
+    "research.pipelink-contract-guided-gpu-components.title": "PipeLink：用契约连接独立编译的 GPU 组件",
+    "research.pipelink-contract-guided-gpu-components.summary": "作者以资源与同步契约组合不同来源的 GPU 组件，51 个配置中吞吐与相同源码整体编译相差不超过 0.2%。组件替换的收益随负载变化，契约一致也不替代实现正确性检查。"
   },
   "en": {
     "nav.about": "About",
@@ -1340,7 +1350,17 @@ window.SITE_MESSAGES = {
     "news.github-actions-workflow-lockfiles-ga.title": "GitHub Actions workflow lockfiles reach general availability",
     "news.github-actions-workflow-lockfiles-ga.summary": "GitHub made workflow dependency lockfiles generally available on October 28. They pin direct and transitive actions and integrate with Dependabot updates, reducing unexpected reference changes. Reusable workflow calls and container images remain outside this coverage, and locking is not proof that a dependency is safe.",
     "news.nist-pqc-transition-final-roadmap.title": "NIST finalizes its post-quantum migration roadmap with risk-based deadlines",
-    "news.nist-pqc-transition-final-roadmap.summary": "Final NIST IR 8547 identifies public-key replacements and migration conditions. General deprecation follows 2030 and disallowance follows 2035, while sensitive US federal systems face earlier key-establishment and signature deadlines. The dates do not apply uniformly to every system."
+    "news.nist-pqc-transition-final-roadmap.summary": "Final NIST IR 8547 identifies public-key replacements and migration conditions. General deprecation follows 2030 and disallowance follows 2035, while sensitive US federal systems face earlier key-establishment and signature deadlines. The dates do not apply uniformly to every system.",
+    "research.cost-aware-rag-incremental-evidence.title": "When is extra retrieval worthwhile? Separating evidence hits from reliable RAG answers",
+    "research.cost-aware-rag-incremental-evidence.summary": "A policy uses initial retrieval signals to decide whether to add hybrid search. It triggers on 46 of 188 questions while matching always-hybrid evidence Hit@10, but uncertainty intervals include zero and answer correctness or faithfulness does not reliably improve. Fewer calls do not establish lower total latency.",
+    "research.crossprofile-agent-memory-evidence-balance.title": "CrossProfile: rarity and relevance are unreliable defaults for agent-group memory",
+    "research.crossprofile-agent-memory-evidence-balance.summary": "Across 60 templates and 480 ownership variants, rarest-first memory is no better than random selection on average, while relevance filtering can retain misleading evidence. Decisions depend on the balance of retained evidence and how the model interprets source tags, not simply on the memory policy’s name.",
+    "research.coveragebench-negate-retrieval-contradictions.title": "CoverageBench-Negate tests retrieval when a small edit reverses a claim",
+    "research.coveragebench-negate-retrieval-contradictions.summary": "The benchmark creates 63,372 original–negated evidence pairs across six datasets to test sensitivity to changed meaning. Two dense retrievers weakly distinguish near-twin documents. Model-generated data and disagreements in human auditing limit interpretation; these scores are not real-world RAG answer accuracy.",
+    "research.constraint-indexes-data-integrity-governance.title": "Constraint indexes bring cross-table data-integrity rules back to the database",
+    "research.constraint-indexes-data-integrity-governance.summary": "The study represents cross-table uniqueness and relationship bounds as shared transactional indexes in a PostgreSQL prototype. A combined workload reaches 44.4K transactions per second. However, relevant writes must explicitly invoke the constraint operations; bypassing writes are not intercepted, and automated governance remains future work.",
+    "research.pipelink-contract-guided-gpu-components.title": "PipeLink links separately compiled GPU components through contracts",
+    "research.pipelink-contract-guided-gpu-components.summary": "Resource and synchronization contracts combine GPU components from different sources. Across 51 configurations, throughput stays within 0.2% of compiling the same sources together. Replacement gains depend on workload, and contract agreement does not prove implementation correctness."
   },
   "ja": {
     "nav.about": "私について",
@@ -2011,7 +2031,17 @@ window.SITE_MESSAGES = {
     "news.github-actions-workflow-lockfiles-ga.title": "GitHub Actions の依存ロックファイルが正式提供、実行する版を固定",
     "news.github-actions-workflow-lockfiles-ga.summary": "GitHub は 10 月 28 日、直接・間接に使う action の版を固定するロックファイルを正式提供した。Dependabot の更新にも連動するが、再利用可能なワークフローの呼び出しやコンテナイメージまで固定するものではなく、依存自体の安全性も保証しない。",
     "news.nist-pqc-transition-final-roadmap.title": "NIST、耐量子暗号への移行指針を確定：リスクに応じた期限を整理",
-    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最終版は公開鍵方式の代替と移行条件を示す。一般には2030年後に非推奨、2035年後に不許可となる一方、米国連邦の高感度システムは鍵確立と署名を前倒しで移行する。全システム共通の期限ではない。"
+    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最終版は公開鍵方式の代替と移行条件を示す。一般には2030年後に非推奨、2035年後に不許可となる一方、米国連邦の高感度システムは鍵確立と署名を前倒しで移行する。全システム共通の期限ではない。",
+    "research.cost-aware-rag-incremental-evidence.title": "追加検索は必要か：RAG の証拠ヒットと回答の信頼性を分けて評価",
+    "research.cost-aware-rag-incremental-evidence.summary": "初回検索の信号から混合検索の追加を判断し、188 問中 46 回だけ実行して常時混合検索と同じ証拠 Hit@10 を得た。ただし統計区間はゼロを含み、回答の正確性・忠実性の改善も確認されない。呼び出し削減は全体の時間短縮とは異なる。",
+    "research.crossprofile-agent-memory-evidence-balance.title": "CrossProfile：複数 Agent の記憶は希少性や関連性だけでは選べない",
+    "research.crossprofile-agent-memory-evidence-balance.summary": "60 テンプレート・480 の情報分配課題では、少数の Agent が持つ事実を優先しても平均では無作為選択を上回らない。関連性のある情報にも判断を誤らせる証拠が含まれる。保持する証拠の均衡と出典ラベルの解釈が結果を左右した。",
+    "research.coveragebench-negate-retrieval-contradictions.title": "CoverageBench-Negate：結論だけが反転した文書を検索器は区別できるか",
+    "research.coveragebench-negate-retrieval-contradictions.summary": "六データセットから原文と否定改変の証拠 63,372 組を作り、意味の反転への感度を測る。二つの密な検索器はよく似た文書の識別が弱かった。ただし生成データには人手確認でも品質判断の差があり、実環境の RAG 回答正解率とは異なる。",
+    "research.constraint-indexes-data-integrity-governance.title": "制約インデックス：テーブルをまたぐ整合性規則をデータベースへ",
+    "research.constraint-indexes-data-integrity-governance.summary": "複数表の一意性や関係数上限を共有のトランザクション索引に表現し、PostgreSQL 原型の複合負荷で毎秒 44.4K トランザクションを得た。ただし全書き込みが制約操作を呼ぶ必要があり、迂回した直接更新は阻止できない。自動ガバナーも将来課題だ。",
+    "research.pipelink-contract-guided-gpu-components.title": "PipeLink：契約で個別コンパイル済みGPU部品を組み合わせる",
+    "research.pipelink-contract-guided-gpu-components.summary": "資源と同期の契約で異なるGPU部品を接続。51構成で同一ソースの一括コンパイルとのスループット差は0.2%以内だった。部品交換の効果は負荷に依存し、契約一致は実装の正しさを保証しない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2682,7 +2712,17 @@ window.SITE_MESSAGES = {
     "news.github-actions-workflow-lockfiles-ga.title": "Файлы фиксации зависимостей GitHub Actions стали общедоступны",
     "news.github-actions-workflow-lockfiles-ga.summary": "28 октября GitHub перевела файлы фиксации зависимостей процессов Actions в общий доступ. Они закрепляют прямые и транзитивные actions и обновляются вместе с Dependabot. Вызовы повторно используемых процессов и образы контейнеров остаются за пределами покрытия; фиксация версии не доказывает безопасность зависимости.",
     "news.nist-pqc-transition-final-roadmap.title": "NIST утвердил дорожную карту постквантовой миграции с приоритетами по риску",
-    "news.nist-pqc-transition-final-roadmap.summary": "Окончательный NIST IR 8547 описывает замены публично-ключевых схем и условия перехода. Общие рубежи — нежелательное использование после 2030 года и запрет после 2035-го; чувствительные федеральные системы США должны раньше перевести ключи и подписи. Сроки различаются по системам."
+    "news.nist-pqc-transition-final-roadmap.summary": "Окончательный NIST IR 8547 описывает замены публично-ключевых схем и условия перехода. Общие рубежи — нежелательное использование после 2030 года и запрет после 2035-го; чувствительные федеральные системы США должны раньше перевести ключи и подписи. Сроки различаются по системам.",
+    "research.cost-aware-rag-incremental-evidence.title": "Когда нужен дополнительный поиск: совпадение с доказательством еще не делает RAG надежнее",
+    "research.cost-aware-rag-incremental-evidence.summary": "Политика по сигналам начального поиска включает гибридный поиск лишь для 46 из 188 вопросов, сохраняя Hit@10 постоянного гибридного режима. Но интервалы неопределенности включают ноль, а надежного улучшения правильности и верности ответов нет. Меньше вызовов не означает доказанного сокращения задержки.",
+    "research.crossprofile-agent-memory-evidence-balance.title": "CrossProfile: редкость и релевантность не гарантируют хорошую память группы агентов",
+    "research.crossprofile-agent-memory-evidence-balance.summary": "В 60 шаблонах и 480 вариантах распределения фактов приоритет редких сведений в среднем не лучше случайного выбора. Релевантный материал тоже может вводить в заблуждение. Решение зависит от баланса сохраненных доказательств и интерпретации меток источников, а не названия стратегии памяти.",
+    "research.coveragebench-negate-retrieval-contradictions.title": "CoverageBench-Negate проверяет поиск при изменении смысла почти одинаковых документов",
+    "research.coveragebench-negate-retrieval-contradictions.summary": "Тест содержит 63 372 пары исходного и отрицающего доказательства из шести наборов. Два плотных поисковика слабо различают близкие тексты. Генерация данных моделями и расхождения человеческой проверки ограничивают выводы: это не точность ответов реальной RAG-системы.",
+    "research.constraint-indexes-data-integrity-governance.title": "Индексы ограничений возвращают межтабличную целостность в базу данных",
+    "research.constraint-indexes-data-integrity-governance.summary": "Работа представляет межтабличную уникальность и ограничения числа связей общими транзакционными индексами. Прототип PostgreSQL достигает 44.4 тыс. транзакций в секунду на составной нагрузке. Однако записи обязаны явно вызывать проверки: обходящие их изменения не перехватываются, автоматическое управление еще не реализовано.",
+    "research.pipelink-contract-guided-gpu-components.title": "PipeLink соединяет отдельно скомпилированные GPU-компоненты по контрактам",
+    "research.pipelink-contract-guided-gpu-components.summary": "Контракты ресурсов и синхронизации объединяют компоненты разных источников. В 51 конфигурации пропускная способность отличается от совместной компиляции тех же исходников не более чем на 0,2%. Выигрыш замены зависит от нагрузки, а контракты не доказывают корректность реализации."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3353,6 +3393,16 @@ window.SITE_MESSAGES = {
     "news.github-actions-workflow-lockfiles-ga.title": "GitHub Actions 依賴鎖定檔正式可用，固定自動化流程執行的版本",
     "news.github-actions-workflow-lockfiles-ga.summary": "GitHub 10 月 28 日將工作流依賴鎖定檔轉為正式可用，可固定直接及間接引用的 action，並與 Dependabot 更新聯動。它減少版本引用被改動帶來的風險，但不覆蓋可複用工作流呼叫、容器映像等所有輸入，也不能證明依賴本身安全。",
     "news.nist-pqc-transition-final-roadmap.title": "NIST 釋出後量子密碼遷移最終指南，明確風險排序與過渡期限",
-    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最終版列出公鑰密碼的替代方案與遷移條件。一般棄用和禁用節點為 2030 年後、2035 年後；美國聯邦高敏感系統須更早完成金鑰建立和簽名遷移，不能把所有系統視為同一期限。"
+    "news.nist-pqc-transition-final-roadmap.summary": "NIST IR 8547 最終版列出公鑰密碼的替代方案與遷移條件。一般棄用和禁用節點為 2030 年後、2035 年後；美國聯邦高敏感系統須更早完成金鑰建立和簽名遷移，不能把所有系統視為同一期限。",
+    "research.cost-aware-rag-incremental-evidence.title": "額外檢索值得嗎？一項 RAG 實驗把證據命中與回答可靠性分開",
+    "research.cost-aware-rag-incremental-evidence.summary": "研究用初次檢索訊號決定是否追加混合檢索，在 188 個問題中只觸發 46 次，並保持始終混合檢索的證據命中率。但統計區間包含零，回答正確性和忠實度也未顯示可靠改善；呼叫次數減少不能當成整體耗時下降。",
+    "research.crossprofile-agent-memory-evidence-balance.title": "CrossProfile：多 Agent 的記憶不能只保留稀有或相關資訊",
+    "research.crossprofile-agent-memory-evidence-balance.summary": "研究在 60 個模板、480 個資訊分配任務中發現，優先保留少數 Agent 持有的事實，平均不優於隨機選擇；按主題相關性篩選也會保留誤導性證據。結果取決於支援與反對證據的平衡，以及決策模型如何理解來源標籤，而非記憶策略名稱。",
+    "research.coveragebench-negate-retrieval-contradictions.title": "CoverageBench-Negate：檢索器能分清只改了一個結論的文件嗎？",
+    "research.coveragebench-negate-retrieval-contradictions.summary": "研究在六個資料集上構造 63,372 對原文與否定改寫證據，測試檢索對含義翻轉的敏感度。兩個稠密檢索器區分近似文件的能力偏弱，但資料由模型生成，人工抽查也暴露質量分歧，結果不能直接等同於真實 RAG 的答案準確率。",
+    "research.constraint-indexes-data-integrity-governance.title": "約束索引：把跨表資料完整性規則放回資料庫",
+    "research.constraint-indexes-data-integrity-governance.summary": "研究把跨表唯一性、關係數量上限等規則表示為事務內共享索引，在 PostgreSQL 原型中減少維護開銷。組合工作負載達到 44.4K 次事務/秒，但原型仍要求所有相關寫入主動呼叫約束操作，不能攔截繞過操作的直接寫入，自動治理器也尚未實現。",
+    "research.pipelink-contract-guided-gpu-components.title": "PipeLink：用契約連線獨立編譯的 GPU 元件",
+    "research.pipelink-contract-guided-gpu-components.summary": "作者以資源與同步契約組合不同來源的 GPU 元件，51 個配置中吞吐與相同原始碼整體編譯相差不超過 0.2%。元件替換的收益隨負載變化，契約一致也不替代實現正確性檢查。"
   }
 };
