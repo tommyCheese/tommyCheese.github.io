@@ -16592,6 +16592,2046 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "cost-aware-rag-incremental-evidence",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.37358v1"
+        },
+        {
+          "label": "Original paper · methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.37358v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG 系统先找资料、再让模型回答，常见优化是把向量搜索和关键词搜索一起用。然而，多找一轮既可能补上证据，也可能把无关段落挤进前列。这项研究不提出新的搜索算法，而是问一个更窄的问题：能否根据第一次检索的结果，判断这道题是否值得追加混合检索，并把证据收益与回答质量分别验证。",
+          "sections": [
+            {
+              "heading": "只在预计有增益时追加检索",
+              "paragraphs": [
+                "两种方案都只搜索问题对应的那篇论文，不跨文档检索。基线以 MiniLM 向量表示选出候选，再用交叉编码器对前 30 个片段重排，留下 10 个。混合方案额外加入 BM25 关键词排名，通过倒数排名融合合并结果，之后使用相同的重排器和输出数量，使比较主要落在候选证据的差别上。",
+                "路由器是带正则化的线性模型，输入六种初次检索信号，包括最高相似度、前两名差距、重排前后的重叠及图表说明占比。训练目标是追加检索能否增加证据命中，而不是预测答案正确率。模型和阈值在开发集按论文分组交叉验证后冻结；成本项是人为设定的单位惩罚，并非实测金钱、时间或能耗。"
+              ]
+            },
+            {
+              "heading": "少调用了多少，命中了什么",
+              "paragraphs": [
+                "作者从 QASPER 官方训练划分中另取 240 篇论文开发、60 篇留出评估，未使用官方测试集。留出部分有 188 个问题，其中 169 个可以评估证据。自适应策略在全部问题中触发 46 次混合检索，少于始终触发的 188 次；可评估问题的 Hit@10 均为 78.70%，只用基线则为 76.92%。这里的命中只要求前十段中出现至少一段对齐的参考证据。",
+                "策略实现四次补救和一次损害，始终混合则有五次补救和两次损害，净增量相同。按论文聚类的成对自助法区间没有排除零，因此不能说效用优势已被统计确认。减少 142 次额外调用是可观察结果，但系统仍然要执行初次搜索和答案生成；论文并未证明总体速度提升约四倍或总运行时间下降四分之三。"
+              ]
+            },
+            {
+              "heading": "检索更省，回答未必更好",
+              "paragraphs": [
+                "生成实验固定使用四位量化 Qwen3-4B，输入前十条证据。经部分辅助复核后，在 181 个可成对比较的问题上，自适应和基线的正确性均为 1.127 分，量表范围为 0—2。忠实度只在 128 个共同可评分且非纯拒答的问题上计算，自适应也未优于基线；它不是所有请求的无条件可靠性比例。",
+                "回答评分主要依赖同一模型家族的评判器，没有独立盲评人工验证。图表只保留说明文字，可能缺少回答需要的数值；样本小、有效补救事件少，也未测试第二个独立基准。研究的价值在于把“找到一段证据”“值得多搜一次”“最终答得可靠”分开：本次证据支持更少的额外搜索，不支持更可靠答案的结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释图：区分检索决策、证据指标与答案评估，不是原论文实验图。",
+            "steps": [
+              "先完成基线检索与重排",
+              "从现有结果估计额外收益",
+              "必要时调用混合检索",
+              "分别统计证据命中和调用数",
+              "独立审视答案正确性与支持程度"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A RAG system retrieves material before generating an answer. Combining semantic and keyword search may recover missing evidence, but it can also introduce irrelevant passages. Rather than inventing another retriever, this study asks whether the first search contains enough information to decide if extra retrieval is worthwhile. It evaluates evidence recovery and answer reliability as separate outcomes.",
+          "sections": [
+            {
+              "heading": "Route according to expected evidence gain",
+              "paragraphs": [
+                "Both alternatives search only the article associated with the question. The baseline uses MiniLM embeddings, reranks its top 30 candidates with a cross-encoder, and returns ten evidence units. The hybrid alternative adds BM25 keyword retrieval through reciprocal-rank fusion, then uses the same reranker and output count. The comparison therefore primarily concerns which evidence candidates are available.",
+                "A regularized linear router uses six signals from baseline retrieval, including the top similarity, ranking margins, reranking overlap, and the share of figure or table captions. Its target is the change in evidence-hit success, not answer correctness. Article-grouped development validation selects the model and threshold before they are frozen. The cost term is an abstract penalty, not measured money, latency, or energy."
+              ]
+            },
+            {
+              "heading": "Fewer extra searches with the same observed hit rate",
+              "paragraphs": [
+                "The author samples 240 development articles and 60 held-out articles from QASPER’s official training split; the official test set is not used. The held-out set contains 188 questions, of which 169 have evaluable evidence. Adaptive routing invokes hybrid retrieval 46 times rather than 188. Both adaptive and always-hybrid policies reach 78.70% Hit@10 on evaluable questions, compared with 76.92% for the baseline. A hit means at least one aligned reference evidence unit appears among the first ten.",
+                "Adaptive routing rescues four questions and harms one; always-hybrid rescues five and harms two, producing the same net gain. Paired article-cluster bootstrap intervals include zero, so the utility advantage is not statistically established. Avoiding 142 extra calls is an observed result, but initial retrieval and answer generation still run. The study does not demonstrate a fourfold overall speedup or a 75% reduction in total execution time."
+              ]
+            },
+            {
+              "heading": "Evidence gains do not establish better answers",
+              "paragraphs": [
+                "Generation uses a fixed four-bit Qwen3-4B model and the top ten evidence units. After partial assisted review, adaptive routing and the baseline both score 1.127 on the 0–2 correctness scale across 181 paired questions. Faithfulness is assessed on 128 jointly scorable questions excluding pure abstentions, and adaptive routing does not outperform the baseline. That conditional score is not an unconditional reliability rate for all requests.",
+                "Answer labels mainly come from a judge in the same model family, without independent blinded human validation. Captions can omit the numerical contents of figures; the sample and number of rescue events are small, and no second independent benchmark is tested. The useful distinction is between finding evidence, justifying an extra search, and producing a reliable answer. These results support fewer extra retrieval calls, not improved answer reliability."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: retrieval decisions, evidence metrics and answer evaluation, not a reproduced experimental figure.",
+            "steps": [
+              "Run baseline retrieval and reranking",
+              "Estimate benefit from existing signals",
+              "Invoke hybrid retrieval only when selected",
+              "Measure evidence hits and call counts",
+              "Assess answer correctness and support separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "RAG は資料を検索してから回答を生成する。意味による検索にキーワード検索を加えると証拠を補える一方、不要な段落が上位に入ることもある。この研究は新しい検索器を作るのではなく、初回検索の情報だけで追加検索の価値を判断できるかを調べる。証拠の発見と回答の信頼性を別々の成果として評価した。",
+          "sections": [
+            {
+              "heading": "追加で得られる証拠を予測する",
+              "paragraphs": [
+                "両方式とも質問に対応する一つの論文内だけを検索する。基線は MiniLM の埋め込みで候補を探し、上位 30 件を交差エンコーダーで再順位付けして 10 件を返す。混合方式は BM25 のキーワード順位を逆順位融合で加え、同じ再順位付け器と出力件数を使う。主な違いは候補となる証拠だ。",
+                "判断器は正則化した線形モデルで、最高類似度、上位の点差、再順位付け前後の重なり、図表説明の割合など、基線だけから得る六つの信号を使う。学習対象は証拠ヒットの増減であり、回答の正解率ではない。論文単位の交差検証後にモデルと閾値を固定した。費用は仮定した単位ペナルティで、実測の時間・料金・電力ではない。"
+              ]
+            },
+            {
+              "heading": "追加呼び出しとヒット率の結果",
+              "paragraphs": [
+                "QASPER の公式訓練区分から開発用 240 論文、保留評価用 60 論文を取り、公式テスト区分は使っていない。保留側には 188 問があり、証拠を評価できるのは 169 問。適応方式は混合検索を 46 回だけ行い、常時方式の 188 回を下回った。評価可能な問題の Hit@10 は両者とも 78.70%、基線は 76.92%。これは上位十件に対応する参照証拠が一つでも入った割合だ。",
+                "適応方式は四問を救済し一問を悪化させ、常時混合は五問を救済し二問を悪化させた。純増は同じで、論文単位の対応付きブートストラップ区間はゼロを含み、効用の優位は統計的に確立していない。追加呼び出し 142 回の削減は観測されたが、初回検索と回答生成は残る。全体が四倍速い、総時間が約 75% 減るという結果ではない。"
+              ]
+            },
+            {
+              "heading": "回答の改善までは示していない",
+              "paragraphs": [
+                "生成には四ビット量子化 Qwen3-4B と上位十件の証拠を用いた。部分的な補助付き再確認後、対応比較可能な 181 問の正確性は、適応方式も基線も 0—2 点尺度で 1.127 点だった。忠実性は純粋な回答拒否を除く共通の 128 問で計算され、適応方式の優位はない。全リクエストに対する無条件の信頼性を表す値ではない。",
+                "回答判定は主に同じモデル系列の評価器に依存し、独立した盲検の人手検証はない。図表の説明文だけでは必要な数値が欠ける場合があり、標本や救済例も少なく、第二の独立ベンチマークは未検証だ。証拠が見つかること、追加検索が見合うこと、正しく答えられることは異なる。今回裏付けられたのは追加検索回数の削減であり、回答の信頼性向上ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に本站が描き直した解説図。検索判断・証拠指標・回答評価を区別し、原論文の実験図ではない。",
+            "steps": [
+              "基線の検索と再順位付け",
+              "既存信号から追加利益を推定",
+              "選択時だけ混合検索",
+              "証拠ヒットと呼び出し数を測定",
+              "回答の正確性と根拠を別途評価"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "В RAG ответ формируется после поиска материалов. Сочетание семантического и ключевого поиска может добавить доказательства, но также поднять нерелевантные фрагменты. Работа не предлагает новый поисковик: она проверяет, позволяют ли результаты первого поиска решить, стоит ли искать дополнительно. Нахождение доказательств и надежность ответа оцениваются раздельно.",
+          "sections": [
+            {
+              "heading": "Предсказывать добавочную пользу",
+              "paragraphs": [
+                "Оба режима ищут только внутри статьи, связанной с вопросом. Базовый использует представления MiniLM, повторно ранжирует 30 кандидатов перекрестным энкодером и возвращает десять фрагментов. Гибридный добавляет BM25 через объединение обратных рангов, сохраняя тот же повторный ранжировщик и число результатов. Поэтому основное отличие — набор кандидатов в доказательства.",
+                "Линейный маршрутизатор с регуляризацией использует шесть сигналов базового поиска: максимальное сходство, разрывы оценок, пересечение результатов до и после повторного ранжирования и долю подписей к иллюстрациям. Цель обучения — изменение попадания в доказательство, а не правильность ответа. Модель и порог фиксируются после проверки с группировкой по статьям. Стоимость задана условным штрафом, а не измерением денег, времени или энергии."
+              ]
+            },
+            {
+              "heading": "Меньше вызовов при той же наблюдаемой полноте",
+              "paragraphs": [
+                "Из официальной обучающей части QASPER взяты 240 статей для разработки и 60 отложенных статей; официальный тест не использован. Отложенная часть содержит 188 вопросов, для 169 можно оценить доказательства. Адаптивный режим запускает гибридный поиск 46 раз вместо 188. Его Hit@10, как и у постоянного гибридного поиска, равен 78.70%, против 76.92% у базового. Попадание означает наличие хотя бы одного согласованного эталонного фрагмента среди первых десяти.",
+                "Адаптивный выбор исправляет четыре случая и ухудшает один; постоянный гибридный — пять и два соответственно. Чистый прирост одинаков. Парные бутстреп-интервалы с группировкой по статьям включают ноль, поэтому преимущество полезности статистически не установлено. Отсутствие 142 дополнительных вызовов наблюдается непосредственно, но первоначальный поиск и генерация остаются. Четырехкратное ускорение всей системы или сокращение общего времени на 75% не доказано."
+              ]
+            },
+            {
+              "heading": "Лучшие доказательства не гарантируют лучший ответ",
+              "paragraphs": [
+                "Генерация использует фиксированную четырехбитную Qwen3-4B и десять верхних фрагментов. После частичной проверки с помощью ассистента правильность обоих режимов на 181 парном вопросе составляет 1.127 по шкале 0–2. Верность предоставленным доказательствам сравнивается на 128 совместно оцениваемых вопросах без чистых отказов; преимущества адаптивного режима нет. Это условная оценка, а не надежность всех запросов.",
+                "Метки ответов преимущественно дает судья того же семейства моделей; независимой слепой человеческой проверки нет. Подписи могут не содержать чисел из таблиц, выборка и число спасенных вопросов малы, второй независимый тест не проведен. Работа полезна разделением трех целей: найти доказательство, оправдать дополнительный поиск и получить надежный ответ. Результаты подтверждают меньше дополнительных вызовов, но не более надежные ответы."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема сайта по статье: решения о поиске, метрики доказательств и оценка ответов; не воспроизведение экспериментальной иллюстрации.",
+            "steps": [
+              "Выполнить базовый поиск",
+              "Оценить пользу по имеющимся сигналам",
+              "При необходимости добавить гибридный поиск",
+              "Раздельно считать попадания и вызовы",
+              "Отдельно проверить правильность и обоснованность"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG 系統先找資料、再讓模型回答，常見最佳化是把向量搜尋和關鍵詞搜尋一起用。然而，多找一輪既可能補上證據，也可能把無關段落擠進前列。這項研究不提出新的搜尋演算法，而是問一個更窄的問題：能否根據第一次檢索的結果，判斷這道題是否值得追加混合檢索，並把證據收益與回答質量分別驗證。",
+          "sections": [
+            {
+              "heading": "只在預計有增益時追加檢索",
+              "paragraphs": [
+                "兩種方案都只搜尋問題對應的那篇論文，不跨文件檢索。基線以 MiniLM 向量表示選出候選，再用交叉編碼器對前 30 個片段重排，留下 10 個。混合方案額外加入 BM25 關鍵詞排名，透過倒數排名融合合併結果，之後使用相同的重排器和輸出數量，使比較主要落在候選證據的差別上。",
+                "路由器是帶正則化的線性模型，輸入六種初次檢索訊號，包括最高相似度、前兩名差距、重排前後的重疊及圖表說明佔比。訓練目標是追加檢索能否增加證據命中，而不是預測答案正確率。模型和閾值在開發集按論文分組交叉驗證後凍結；成本項是人為設定的單位懲罰，並非實測金錢、時間或能耗。"
+              ]
+            },
+            {
+              "heading": "少呼叫了多少，命中了什麼",
+              "paragraphs": [
+                "作者從 QASPER 官方訓練劃分中另取 240 篇論文開發、60 篇留出評估，未使用官方測試集。留出部分有 188 個問題，其中 169 個可以評估證據。自適應策略在全部問題中觸發 46 次混合檢索，少於始終觸發的 188 次；可評估問題的 Hit@10 均為 78.70%，只用基線則為 76.92%。這裡的命中只要求前十段中出現至少一段對齊的參考證據。",
+                "策略實現四次補救和一次損害，始終混合則有五次補救和兩次損害，淨增量相同。按論文聚類的成對自助法區間沒有排除零，因此不能說效用優勢已被統計確認。減少 142 次額外呼叫是可觀察結果，但系統仍然要執行初次搜尋和答案生成；論文並未證明總體速度提升約四倍或總執行時間下降四分之三。"
+              ]
+            },
+            {
+              "heading": "檢索更省，回答未必更好",
+              "paragraphs": [
+                "生成實驗固定使用四位量化 Qwen3-4B，輸入前十條證據。經部分輔助複核後，在 181 個可成對比較的問題上，自適應和基線的正確性均為 1.127 分，量表範圍為 0—2。忠實度只在 128 個共同可評分且非純拒答的問題上計算，自適應也未優於基線；它不是所有請求的無條件可靠性比例。",
+                "回答評分主要依賴同一模型家族的評判器，沒有獨立盲評人工驗證。圖表只保留說明文字，可能缺少回答需要的數值；樣本小、有效補救事件少，也未測試第二個獨立基準。研究的價值在於把“找到一段證據”“值得多搜一次”“最終答得可靠”分開：本次證據支援更少的額外搜尋，不支援更可靠答案的結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋圖：區分檢索決策、證據指標與答案評估，不是原論文實驗圖。",
+            "steps": [
+              "先完成基線檢索與重排",
+              "從現有結果估計額外收益",
+              "必要時呼叫混合檢索",
+              "分別統計證據命中和呼叫數",
+              "獨立審視答案正確性與支援程度"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "crossprofile-agent-memory-evidence-balance",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.37624v1"
+        },
+        {
+          "label": "Original paper · methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.37624v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一组 Agent 讨论后，通常需要把长对话压缩成短记忆，再交给最后的决策模型。保留少数人知道的信息，或只保留与题目相关的信息，看起来都合理。CrossProfile 刻意把“谁知道事实”和“事实是否帮助判断”分开，发现这些简单规则的优势常来自任务里的信息分布，而不是普遍有效的记忆能力。",
+          "sections": [
+            {
+              "heading": "用同样的事实改变持有者",
+              "paragraphs": [
+                "基准包含十二个决策领域的 60 个主模板。每个模板有四个 Agent、三个选项和十二条事实：五条支持正确选择、三条形成诱导、四条与标准无关。诱导事实并非假话，而是与判断标准有关、但只呈现片面优势的信息。研究保持文字不变，分别把三类事实设为所有人共有或一人私有，组合成八种分配、共 480 个任务。",
+                "答案依据预设的等权事实计分自动检查，模型不会看到答案或事实角色标签。研究比较稀有优先、首次出现优先、随机选择、证据摘要和相关性优先等记忆方案。主要实验给记忆的预算是完整带持有者标签事实文本的 60%，不是固定六成事实；标签长短不同，同一预算能装下的条目数也会变化。"
+              ]
+            },
+            {
+              "heading": "稀有和相关各有失效场景",
+              "paragraphs": [
+                "在 60 个模板、八种分配和三个随机种子平均后，Qwen2.5-7B 的稀有优先准确率为 64.0%，随机选择为 64.5%；Llama-3.1-8B 则为 63.0% 和 63.4%。当关键证据恰好私有时，稀有优先很强；把误导事实变成私有后，优势反转。研究还用两个 DeepSeek 模型进行探索性验证，其中 Pro 只覆盖 30 个模板。",
+                "主题相关并不等于有利于完整判断，因为诱导事实本身也相关。在“支持事实私有、诱导事实共有、无关事实私有”的经典条件下，即便使用准确的相关性标签，Qwen 和 Llama 仍分别比稀有优先低 23.3 和 31.1 个百分点。这不是说过滤器永远不好，而是它只能排除离题内容，不能保证留下的支持与反对证据保持平衡。"
+              ]
+            },
+            {
+              "heading": "最后的决策模型也会误读来源",
+              "paragraphs": [
+                "完整事实记忆仍会受持有者标签影响：同一条事实被标成多人说过，模型更容易赋予它较高可信度。在上述经典条件且无关事实私有时，移除标签使 Qwen、Llama 和 DeepSeek Flash 的准确率分别提高 14.4、13.3、24.4 个百分点。这里多人持有是人为分配，不能当成多个独立来源相互验证。",
+                "自然讨论另在 HiddenBench 的 65 个任务上测试，每模型有 195 次讨论。完整对话有时比不给笔记还差，说明关键私有事实可能根本没被说出，后续摘要无法找回。结论仍限于这些合成决策、选定模型与提示；正确答案也由等权规则定义，不代表所有真实协作。对工程的启发是先检查证据有没有进入讨论，再检查记忆保留了怎样的证据平衡，而不是默认“稀有优先”就更聪明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文设计重绘的解释图：用于理解对照变量与记忆评测，不是原始实验结果图。",
+            "steps": [
+              "保持事实文字与答案规则不变",
+              "交叉改变支持和诱导信息的持有者",
+              "在固定预算下构建记忆",
+              "单独让决策模型读记忆",
+              "检查证据平衡与来源标签影响"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Agent teams often compress a discussion into a short memory for a final decision model. Keeping unusual information or filtering for relevance sounds sensible. CrossProfile separates who possesses a fact from whether that fact helps the decision. It finds that apparent advantages can come from the task’s information distribution rather than a generally effective memory strategy.",
+          "sections": [
+            {
+              "heading": "Change ownership while keeping the facts fixed",
+              "paragraphs": [
+                "The benchmark has 60 main templates across twelve decision domains. Each contains four agents, three options and twelve facts: five supporting the keyed option, three decoys, and four irrelevant facts. Decoys are true, criterion-related statements whose partial implication is misleading, not fabricated facts. Each group is either shared by everyone or private to one agent. Crossing these assignments produces eight variants per template and 480 tasks without changing the fact text.",
+                "A predefined equal-weight scoring rule supplies automatically checked answer keys, hidden from models and ordinary memory policies. The study compares rarest-first, first-mention, random selection, evidence summaries and relevance-first memories. The primary budget is 60% of the token length of the complete fact set with all holder tags, not 60% of the facts. Different tag lengths mean that the same token allowance can hold different numbers of items."
+              ]
+            },
+            {
+              "heading": "Where rarity and relevance fail",
+              "paragraphs": [
+                "Averaging over 60 templates, eight ownership variants and three seeds, rarest-first reaches 64.0% accuracy on Qwen2.5-7B versus 64.5% for random selection; Llama-3.1-8B scores 63.0% versus 63.4%. Rarity works when useful evidence happens to be private. Making misleading facts private reverses that advantage. Exploratory checks use two DeepSeek models, with the Pro evaluation limited to 30 templates.",
+                "Relevance does not ensure a balanced decision because decoys concern the decision criteria too. In the classic arrangement with private support, shared decoys and private irrelevant facts, even accurate relevance labels trail rarest-first by 23.3 percentage points on Qwen and 31.1 on Llama. This is not a universal indictment of filtering: a relevance filter separates on-topic from off-topic information, but does not ensure the right balance of evidence for competing options."
+              ]
+            },
+            {
+              "heading": "The final reader can misinterpret attribution",
+              "paragraphs": [
+                "Even an all-facts memory is influenced by holder tags. Models give extra weight to a claim attributed to many agents. In the classic configuration with private irrelevant facts, removing tags increases accuracy by 14.4, 13.3 and 24.4 points on Qwen, Llama and DeepSeek Flash respectively. Ownership is assigned by the benchmark, so several agents holding the same fact are not independent corroborating sources.",
+                "A separate natural-discussion study uses 65 HiddenBench tasks and 195 discussions per model. Full transcripts sometimes perform worse than empty notes: important private evidence may never be voiced, leaving nothing for a summary to recover. The findings remain limited to constructed decisions, selected models and prompts, with correctness defined by an equal-weight rule. The engineering lesson is to check whether evidence enters discussion and which balance survives compression, rather than treating rarity as a default sign of useful knowledge."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the study: experimental controls and memory evaluation, not a plot of measured results.",
+            "steps": [
+              "Keep fact text and answer rules fixed",
+              "Cross ownership of supporting and decoy facts",
+              "Construct memories under a fixed budget",
+              "Give memory to a separate decision call",
+              "Inspect evidence balance and attribution effects"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "複数の Agent が議論した後、長い会話を短い記憶に圧縮し、最後の判断モデルへ渡すことがある。珍しい情報を残す、関連情報を優先する、という方針は直感的だ。CrossProfile は「誰が事実を知るか」と「判断に役立つか」を分け、方針の優位が課題の情報配置に依存する場合を示した。",
+          "sections": [
+            {
+              "heading": "事実を変えず、持つ人だけを変える",
+              "paragraphs": [
+                "十二の意思決定領域から 60 の主テンプレートを作る。各テンプレートには四 Agent、三選択肢、十二の事実があり、正解を支える五件、誘導する三件、無関係な四件に分かれる。誘導情報は虚偽ではなく、判断基準には関係していても部分的な優位を示す事実だ。三群をそれぞれ全員共有か一人だけの情報にし、文面を固定したまま八通り、合計 480 課題を作った。",
+                "事前の等重み採点で正解を自動検証し、正解や役割ラベルは通常のモデル・記憶方針には見せない。希少優先、初出優先、無作為、証拠要約、関連性優先を比較する。主条件の予算は全保持者ラベル付き全文のトークン数の 60% で、事実件数の六割ではない。ラベル長により同じ予算で残せる件数も変わる。"
+              ]
+            },
+            {
+              "heading": "希少性にも関連性にも弱点がある",
+              "paragraphs": [
+                "60 テンプレート、八配置、三シード平均で、Qwen2.5-7B の希少優先は 64.0%、無作為は 64.5%。Llama-3.1-8B は 63.0% と 63.4% だった。役立つ証拠が私有なら希少優先は強いが、誘導情報を私有にすると優位が逆転する。二つの DeepSeek モデルでも探索的に確認したが、Pro は 30 テンプレートのみだ。",
+                "誘導事実も判断基準には関係するため、関連性だけでは均衡が取れない。支持情報と無関係情報が私有、誘導情報が共有の典型条件では、正確な関連ラベルを使っても希少優先に対して Qwen で 23.3、Llama で 31.1 ポイント低い。関連フィルターが常に悪いという意味ではない。離題情報は除けても、選択肢ごとの証拠の均衡までは保証しない。"
+              ]
+            },
+            {
+              "heading": "判断側も出典の人数に影響される",
+              "paragraphs": [
+                "全事実を渡しても保持者ラベルが判断を変え、多くの Agent が述べた情報が重く扱われた。典型配置で無関係情報も私有の場合、ラベル削除により Qwen、Llama、DeepSeek Flash はそれぞれ 14.4、13.3、24.4 ポイント改善した。共有は人工的に割り当てられており、人数を独立した裏付けの数と見なすことはできない。",
+                "自然な議論は別に HiddenBench の 65 課題、各モデル 195 回で調べた。全会話が空の記憶より悪い場合もあり、重要な私有事実が発言されなければ後の要約でも戻せない。結論は構成された課題、選択したモデルと指示に限られ、正解も等重み規則で定義する。実務への示唆は、証拠が議論に出たか、圧縮後にどの均衡が残ったかを調べ、希少性を有用性の代用にしないことだ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "研究設計を基に本站が描き直した解説図。比較変数と記憶評価を示し、実測結果の図ではない。",
+            "steps": [
+              "事実の文面と正解規則を固定",
+              "支持・誘導情報の保持者を交差変更",
+              "一定予算で記憶を作成",
+              "別の判断呼び出しに記憶を渡す",
+              "証拠の均衡と出典ラベルを分析"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "После обсуждения группа агентов часто сжимает разговор в короткую память для итоговой модели. Кажется разумным сохранять редкие сведения или только релевантные факты. CrossProfile разделяет вопрос о владельцах информации и вопрос о ее пользе. Выясняется, что выигрыш простого правила может объясняться распределением сведений в задаче, а не универсальной способностью формировать память.",
+          "sections": [
+            {
+              "heading": "Менять владельцев, сохраняя содержание",
+              "paragraphs": [
+                "В тесте 60 основных шаблонов из двенадцати областей решений. В каждом четыре агента, три варианта и двенадцать фактов: пять поддерживающих правильный вариант, три отвлекающих и четыре нерелевантных. Отвлекающие факты истинны и относятся к критериям, но создают ошибочное частичное впечатление. Каждая группа либо известна всем, либо только одному агенту. Восемь сочетаний дают 480 задач с неизменным текстом фактов.",
+                "Ответы автоматически проверяются по заданному правилу равных весов; ключи и роли фактов не показываются моделям и обычным стратегиям памяти. Сравниваются приоритет редкости, первого упоминания, случайный выбор, сводка доказательств и приоритет релевантности. Основной бюджет — 60% токенов полного набора с метками всех владельцев, а не 60% фактов. Разная длина меток позволяет уместить разное число элементов."
+              ]
+            },
+            {
+              "heading": "Границы редкости и релевантности",
+              "paragraphs": [
+                "В среднем по 60 шаблонам, восьми вариантам и трем начальным состояниям rarest-first дает 64.0% правильных решений Qwen2.5-7B против 64.5% случайного выбора; для Llama-3.1-8B значения составляют 63.0% и 63.4%. Редкость помогает, когда полезные сведения частные. Если частными становятся отвлекающие факты, преимущество обращается. Дополнительные исследования двух моделей DeepSeek носят поисковый характер; Pro проверена только на 30 шаблонах.",
+                "Релевантность не означает сбалансированность: отвлекающие факты тоже относятся к критериям. При частных поддерживающих и нерелевантных, но общих отвлекающих фактах даже точные метки релевантности уступают приоритету редкости на 23.3 пункта для Qwen и 31.1 для Llama. Это не означает бесполезности любого фильтра. Он исключает посторонние темы, но не гарантирует сохранение баланса доказательств между вариантами."
+              ]
+            },
+            {
+              "heading": "Итоговая модель ошибается в оценке источников",
+              "paragraphs": [
+                "Даже память со всеми фактами зависит от меток владельцев: сообщение нескольких агентов получает больший вес. В классическом случае с частными нерелевантными фактами удаление меток повышает точность Qwen, Llama и DeepSeek Flash на 14.4, 13.3 и 24.4 пункта. Но владение задано искусственно, поэтому несколько агентов с одним фактом не являются независимыми подтверждающими источниками.",
+                "Отдельно естественные обсуждения проверены на 65 задачах HiddenBench, по 195 обсуждений на модель. Полная стенограмма иногда хуже отсутствия заметок: важное частное доказательство могло вообще не прозвучать, и сводка его не восстановит. Выводы ограничены сконструированными решениями, моделями и подсказками; правильность определяется равновесным правилом счета. Практический урок — проверять появление доказательств в разговоре и баланс после сжатия, а не считать редкость гарантией полезности."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема сайта по дизайну исследования: контроль переменных и проверка памяти, не график экспериментальных результатов.",
+            "steps": [
+              "Сохранить текст фактов и правила ответа",
+              "Варьировать владельцев полезных и отвлекающих фактов",
+              "Создать память в заданном бюджете",
+              "Передать ее отдельному вызову принятия решения",
+              "Проверить баланс доказательств и метки источников"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一組 Agent 討論後，通常需要把長對話壓縮成短記憶，再交給最後的決策模型。保留少數人知道的資訊，或只保留與題目相關的資訊，看起來都合理。CrossProfile 刻意把“誰知道事實”和“事實是否幫助判斷”分開，發現這些簡單規則的優勢常來自任務裡的資訊分佈，而不是普遍有效的記憶能力。",
+          "sections": [
+            {
+              "heading": "用同樣的事實改變持有者",
+              "paragraphs": [
+                "基準包含十二個決策領域的 60 個主模板。每個模板有四個 Agent、三個選項和十二條事實：五條支援正確選擇、三條形成誘導、四條與標準無關。誘導事實並非假話，而是與判斷標準有關、但只呈現片面優勢的資訊。研究保持文字不變，分別把三類事實設為所有人共有或一人私有，組合成八種分配、共 480 個任務。",
+                "答案依據預設的等權事實計分自動檢查，模型不會看到答案或事實角色標籤。研究比較稀有優先、首次出現優先、隨機選擇、證據摘要和相關性優先等記憶方案。主要實驗給記憶的預算是完整帶持有者標籤事實文字的 60%，不是固定六成事實；標籤長短不同，同一預算能裝下的條目數也會變化。"
+              ]
+            },
+            {
+              "heading": "稀有和相關各有失效場景",
+              "paragraphs": [
+                "在 60 個模板、八種分配和三個隨機種子平均後，Qwen2.5-7B 的稀有優先準確率為 64.0%，隨機選擇為 64.5%；Llama-3.1-8B 則為 63.0% 和 63.4%。當關鍵證據恰好私有時，稀有優先很強；把誤導事實變成私有後，優勢反轉。研究還用兩個 DeepSeek 模型進行探索性驗證，其中 Pro 只覆蓋 30 個模板。",
+                "主題相關並不等於有利於完整判斷，因為誘導事實本身也相關。在“支援事實私有、誘導事實共有、無關事實私有”的經典條件下，即便使用準確的相關性標籤，Qwen 和 Llama 仍分別比稀有優先低 23.3 和 31.1 個百分點。這不是說過濾器永遠不好，而是它只能排除離題內容，不能保證留下的支援與反對證據保持平衡。"
+              ]
+            },
+            {
+              "heading": "最後的決策模型也會誤讀來源",
+              "paragraphs": [
+                "完整事實記憶仍會受持有者標籤影響：同一條事實被標成多人說過，模型更容易賦予它較高可信度。在上述經典條件且無關事實私有時，移除標籤使 Qwen、Llama 和 DeepSeek Flash 的準確率分別提高 14.4、13.3、24.4 個百分點。這裡多人持有是人為分配，不能當成多個獨立來源相互驗證。",
+                "自然討論另在 HiddenBench 的 65 個任務上測試，每模型有 195 次討論。完整對話有時比不給筆記還差，說明關鍵私有事實可能根本沒被說出，後續摘要無法找回。結論仍限於這些合成決策、選定模型與提示；正確答案也由等權規則定義，不代表所有真實協作。對工程的啟發是先檢查證據有沒有進入討論，再檢查記憶保留了怎樣的證據平衡，而不是預設“稀有優先”就更聰明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文設計重繪的解釋圖：用於理解對照變數與記憶評測，不是原始實驗結果圖。",
+            "steps": [
+              "保持事實文字與答案規則不變",
+              "交叉改變支援和誘導資訊的持有者",
+              "在固定預算下構建記憶",
+              "單獨讓決策模型讀記憶",
+              "檢查證據平衡與來源標籤影響"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "coveragebench-negate-retrieval-contradictions",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.37162v1"
+        },
+        {
+          "label": "Original paper · methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.37162v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "检索到“同一主题”的文档，并不意味着找到了支持同一结论的证据。例如一段话只改动一个关系，主体、关键词和大部分句子都可能保持不变。CoverageBench-Negate 为这种情况提供成对测试材料，研究检索器是否注意到结论翻转，以及加入矛盾证据后，返回结果还能覆盖多少回答所需的信息。",
+          "sections": [
+            {
+              "heading": "保留上下文，只改变支持的断言",
+              "paragraphs": [
+                "研究基于 CoverageBench 六个数据集的 284 个主题，把回答需要覆盖的最小事实称为信息点。系统先用 Llama 生成相反信息点，再定位支持原信息点的句段，只改写这一部分，让文档支持相反结论，同时尽量保留其他背景。不是简单在原句前加一个“不”，还包括关系反转、数量反转和反义替换。",
+                "原始材料包含 116,842 条信息点与文档的支持关系。经过冲突过滤、支撑句定位和改写检查，最终保留 63,372 对证据，涉及 2,975 个原始信息点。单位是支持关系而非唯一文档，同一文档可以为不同信息点形成不同改写。研究公开编辑幅度、相似度和验证结果，便于按质量要求筛选。"
+              ]
+            },
+            {
+              "heading": "含义变了，排序是否跟着变",
+              "paragraphs": [
+                "作者比较 BM25、Qwen3-Embedding-8B 和 Jina 小型文本嵌入模型，并把改写文档加入原集合。前二十项的信息覆盖总体下降。考虑原先得分后，兼顾覆盖与重复惩罚的 α-nDCG 相对下降均值为 16.8%、22.3% 和 24.5%。但只看覆盖信息点比例的另一项指标时，差距明显缩小，因此不能概括成稠密检索在所有指标上同样差。",
+                "在改动不足 2% 的近似文档对上，BM25 给原文更高分的比例为 83.90%，Qwen3 和 Jina 则为 58.10% 与 56.30%。这描述的是对原文与改写文的评分偏好，不是事实判真率。分析只包含各检索器能在前一千项中取得双方得分的配对，三个子集也不同，不能当成全语料的统一准确率或最终回答效果。"
+              ]
+            },
+            {
+              "heading": "数据质量和知识冲突仍有边界",
+              "paragraphs": [
+                "生成与初始检查主要使用同一 Llama 模型，作者因此另外用 Gemma 复核全量配对，并让两位标注者独立审阅分层抽取的 120 对。Gemma 同时认可三项文档条件的比例为 78%；两位人类对“确实形成矛盾”的认可率分别为 90% 和 78%。这些差异说明自动检查并不等于完美样本，公开质量标签是使用基准的重要前提。",
+                "研究没有直接证明每个否定事实都与检索器预训练知识冲突，也没有分析被删除配对是否有系统偏差；分别改写还可能引入更高层的矛盾。它适合诊断检索对细小语义变化的敏感度，不能证明 BM25 在真实 RAG 中普遍更好。作者注明论文获 CIKM 2026 录用，公开元数据没有写明具体轨道。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释图：展示受控矛盾构造与检索诊断流程，不是原文实验图表。",
+            "steps": [
+              "从原基准取得信息点与支持关系",
+              "生成相反信息点并局部改写证据",
+              "记录自动验证与人工抽查结果",
+              "比较覆盖变化和成对评分",
+              "结合质量标签解释检索边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Two documents can discuss the same topic while supporting opposite conclusions. A small relational edit may leave entities, keywords and most sentences intact. CoverageBench-Negate supplies paired test material for this situation. It examines whether retrieval reacts to the changed claim and how adding contradictory evidence affects coverage of the information needed for an answer.",
+          "sections": [
+            {
+              "heading": "Change the supported claim while preserving context",
+              "paragraphs": [
+                "The study starts from 284 topics across six CoverageBench datasets. Small facts required for answer coverage are called nuggets. Llama first creates an opposing nugget, locates the original supporting passage, and rewrites that span to support the new claim while retaining surrounding context. Edits include reversed relationships, quantities and antonyms rather than only inserting a negation word.",
+                "The source material contains 116,842 nugget–document support links. Collision filtering, supporting-span detection and edit validation leave 63,372 evidence pairs covering 2,975 original nuggets. A pair corresponds to a support link, not a unique document; one document may receive different edits for different nuggets. Edit size, similarity and validation metadata are released so researchers can apply quality filters."
+              ]
+            },
+            {
+              "heading": "Does ranking notice the semantic change?",
+              "paragraphs": [
+                "The authors compare BM25, Qwen3-Embedding-8B and Jina’s small text embedding model after adding edited documents to the original collections. Top-20 information coverage generally deteriorates. Relative mean drops in α-nDCG, which accounts for coverage and redundant evidence, are 16.8%, 22.3% and 24.5%. The gap is much smaller on the separate metric measuring the fraction of nuggets covered, so the result is not an equally large failure across all metrics.",
+                "Among near-twin pairs with under 2% character changes, BM25 scores the original higher in 83.90% of cases; Qwen3 and Jina do so in 58.10% and 56.30%. This is a preference between original and edited text, not truth-detection accuracy. The analysis uses retriever-specific subsets where both scores are available among the top thousand results. The subsets differ, and the numbers are not a common full-corpus accuracy measure or downstream answer evaluation."
+              ]
+            },
+            {
+              "heading": "Quality controls do not remove every uncertainty",
+              "paragraphs": [
+                "Llama performs both generation and initial checking. The authors therefore re-evaluate all pairs with Gemma and ask two people to independently audit a stratified sample of 120 pairs. Gemma accepts all three document criteria for 78% of pairs; the two human raters accept genuine contradiction in 90% and 78% respectively. Automatic approval does not make every pair flawless, and the released quality labels matter when using the resource.",
+                "The paper does not directly establish that every negated claim conflicts with each retriever’s pretrained knowledge, or whether discarded links introduce selection bias. Separate edits may create higher-order contradictions. The benchmark diagnoses sensitivity to small semantic changes; it does not prove BM25 generally produces better real-world RAG answers. The authors report acceptance at CIKM 2026; the available public metadata does not specify the track."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: controlled contradictions and retrieval diagnostics, not a reproduced experimental chart.",
+            "steps": [
+              "Take nuggets and support links from the original benchmark",
+              "Negate claims and edit supporting spans",
+              "Record automatic checks and human audits",
+              "Compare coverage and paired retrieval scores",
+              "Interpret results with quality metadata"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じ話題の文書でも、支持する結論は逆になり得る。一つの関係を変えるだけなら、登場する対象やキーワード、文章の大半は残る。CoverageBench-Negate はこのような対の資料を作り、検索器が意味の反転を捉えるか、矛盾する証拠を追加した際に回答に必要な情報をどこまで網羅できるかを調べる。",
+          "sections": [
+            {
+              "heading": "周辺文脈を残して断言を反転",
+              "paragraphs": [
+                "CoverageBench の六データセット、284 トピックを基にする。回答に必要な小さな事実を nugget と呼び、Llama が反対の nugget を作る。続いて原文でそれを支える箇所を特定し、その部分だけを改変して反対の結論を支えさせる。単に否定語を挿入するだけでなく、関係・数量の反転や反義語への置換も含む。",
+                "元の情報点と文書の支持関係は 116,842 件。情報点間の衝突、支える文の検出、編集チェックを経て、2,975 の原情報点に対応する 63,372 組が残った。単位は一意の文書ではなく支持関係で、同じ文書も情報点ごとに異なる改変を持ち得る。編集量、類似度、検証結果も公開し、利用者が品質条件で絞れるようにした。"
+              ]
+            },
+            {
+              "heading": "意味の変化と検索順位",
+              "paragraphs": [
+                "BM25、Qwen3-Embedding-8B、Jina の小型テキスト埋め込みを比較し、改変文書を元の集合に追加した。上位二十件の情報網羅は全般に低下した。網羅と重複を考慮する α-nDCG の相対低下平均は 16.8%、22.3%、24.5%。ただし情報点の被覆率を見る別指標では差が縮まり、すべての指標で同程度の劣化とはいえない。",
+                "文字の変更量が 2% 未満の近似文書対で、原文を高く評価する割合は BM25 が 83.90%、Qwen3 が 58.10%、Jina が 56.30% だった。これは原文と改変文の得点上の好みであって、真偽判定の正解率ではない。各検索器の上位千件で両方の得点を得られる組だけを比較し、対象集合も異なる。全コーパス共通の精度や最終回答の結果に読み替えられない。"
+              ]
+            },
+            {
+              "heading": "品質評価にも残る不確かさ",
+              "paragraphs": [
+                "生成と初期確認には同じ Llama を使うため、全組を Gemma で再確認し、層化抽出した 120 組を二人が独立に評価した。Gemma が文書の三条件すべてを認めたのは 78%。人間が真の矛盾と認めた割合はそれぞれ 90% と 78% で、判断には差がある。自動合格が完全な品質を意味するわけではなく、公開ラベルによる選別が重要だ。",
+                "否定文が各検索器の事前学習知識と本当に衝突するかは直接検証していない。除外した関係の偏りも未分析で、個別編集が別の矛盾を生む可能性もある。細かな意味変化への感度を診断する資源であり、BM25 が実環境の RAG で常に優れる証明ではない。著者は CIKM 2026 採択を記載しているが、公開メタデータでは具体的なトラックは不明だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に本站が描き直した解説図。受制御の矛盾生成と検索診断を示し、原文の実験図ではない。",
+            "steps": [
+              "原基準から情報点と支持関係を取得",
+              "断言を反転し支持箇所だけ編集",
+              "自動確認と人手監査を記録",
+              "網羅と対ごとの得点を比較",
+              "品質情報とともに結果を解釈"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Документы на одну тему могут поддерживать противоположные выводы. Небольшое изменение связи оставляет прежними сущности, ключевые слова и большую часть текста. CoverageBench-Negate создает такие пары и проверяет, реагирует ли поиск на новый смысл и как добавление противоречащих материалов меняет охват информации, необходимой для ответа.",
+          "sections": [
+            {
+              "heading": "Менять утверждение, сохраняя контекст",
+              "paragraphs": [
+                "Основа — 284 темы из шести наборов CoverageBench. Минимальные факты, нужные для полноты ответа, называются nuggets. Llama создает противоположный факт, находит исходный подтверждающий фрагмент и переписывает только его, сохраняя окружающий контекст. Изменения включают обращение отношений, количеств и замену антонимами, а не только добавление отрицания.",
+                "Исходные данные содержат 116 842 связи между фактами и поддерживающими документами. После проверки конфликтов, поиска нужных фрагментов и валидации правок остаются 63 372 пары для 2 975 исходных фактов. Единица — связь, а не уникальный документ: один текст может иметь разные правки для разных фактов. Опубликованы размер изменения, сходство и результаты проверок для последующей фильтрации качества."
+              ]
+            },
+            {
+              "heading": "Реагирует ли ранжирование на изменение смысла",
+              "paragraphs": [
+                "Авторы сравнивают BM25, Qwen3-Embedding-8B и малую текстовую модель Jina после добавления измененных документов. Охват в первых двадцати результатах в целом снижается. Среднее относительное падение α-nDCG, учитывающего охват и повторяемость доказательств, составляет 16.8%, 22.3% и 24.5%. Для отдельной метрики доли охваченных фактов разрыв существенно меньше: одинаково сильного ухудшения по всем показателям нет.",
+                "На почти одинаковых парах с изменением менее 2% символов BM25 ставит оригиналу больший балл в 83.90% случаев, Qwen3 — в 58.10%, Jina — в 56.30%. Это предпочтение исходного текста, а не точность установления истины. Сравниваются разные подмножества каждого поисковика, где оба результата доступны в первой тысяче. Числа не являются общей точностью на всем корпусе или качеством конечных ответов."
+              ]
+            },
+            {
+              "heading": "Проверка качества оставляет ограничения",
+              "paragraphs": [
+                "Генерацию и начальную проверку выполняет одна Llama. Поэтому все пары повторно проверены Gemma, а два человека независимо оценили стратифицированную выборку из 120 пар. Gemma одобряет все три условия для документов в 78% случаев. Люди признают настоящее противоречие в 90% и 78% соответственно. Автоматическое одобрение не делает каждую пару безупречной; опубликованные метки качества необходимы для осмысленного использования.",
+                "Работа прямо не проверяет, противоречит ли каждый новый факт знаниям конкретного поисковика, и не анализирует систематические отличия исключенных связей. Отдельные правки могут создавать дополнительные противоречия. Это диагностика чувствительности к смыслу, а не доказательство универсального превосходства BM25 в реальном RAG. Авторы указывают принятие на CIKM 2026; доступные публичные метаданные не уточняют трек."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема сайта по статье: создание контролируемых противоречий и диагностика поиска, не экспериментальная иллюстрация.",
+            "steps": [
+              "Взять факты и связи поддержки из исходного теста",
+              "Инвертировать утверждения и изменить подтверждающие фрагменты",
+              "Записать автоматические и человеческие проверки",
+              "Сравнить охват и парные оценки",
+              "Интерпретировать результат с учетом качества"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "檢索到“同一主題”的文件，並不意味著找到了支援同一結論的證據。例如一段話只改動一個關係，主體、關鍵詞和大部分句子都可能保持不變。CoverageBench-Negate 為這種情況提供成對測試材料，研究檢索器是否注意到結論翻轉，以及加入矛盾證據後，返回結果還能覆蓋多少回答所需的資訊。",
+          "sections": [
+            {
+              "heading": "保留上下文，只改變支援的斷言",
+              "paragraphs": [
+                "研究基於 CoverageBench 六個資料集的 284 個主題，把回答需要覆蓋的最小事實稱為資訊點。系統先用 Llama 生成相反資訊點，再定位支援原資訊點的句段，只改寫這一部分，讓文件支援相反結論，同時儘量保留其他背景。不是簡單在原句前加一個“不”，還包括關係反轉、數量反轉和反義替換。",
+                "原始材料包含 116,842 條資訊點與文件的支援關係。經過沖突過濾、支撐句定位和改寫檢查，最終保留 63,372 對證據，涉及 2,975 個原始資訊點。單位是支援關係而非唯一文件，同一文件可以為不同資訊點形成不同改寫。研究公開編輯幅度、相似度和驗證結果，便於按質量要求篩選。"
+              ]
+            },
+            {
+              "heading": "含義變了，排序是否跟著變",
+              "paragraphs": [
+                "作者比較 BM25、Qwen3-Embedding-8B 和 Jina 小型文字嵌入模型，並把改寫文件加入原集合。前二十項的資訊覆蓋總體下降。考慮原先得分後，兼顧覆蓋與重複懲罰的 α-nDCG 相對下降均值為 16.8%、22.3% 和 24.5%。但只看覆蓋資訊點比例的另一項指標時，差距明顯縮小，因此不能概括成稠密檢索在所有指標上同樣差。",
+                "在改動不足 2% 的近似文件對上，BM25 給原文更高分的比例為 83.90%，Qwen3 和 Jina 則為 58.10% 與 56.30%。這描述的是對原文與改寫文的評分偏好，不是事實判真率。分析只包含各檢索器能在前一千項中取得雙方得分的配對，三個子集也不同，不能當成全語料的統一準確率或最終回答效果。"
+              ]
+            },
+            {
+              "heading": "資料質量和知識衝突仍有邊界",
+              "paragraphs": [
+                "生成與初始檢查主要使用同一 Llama 模型，作者因此另外用 Gemma 複核全量配對，並讓兩位標註者獨立審閱分層抽取的 120 對。Gemma 同時認可三項文件條件的比例為 78%；兩位人類對“確實形成矛盾”的認可率分別為 90% 和 78%。這些差異說明自動檢查並不等於完美樣本，公開質量標籤是使用基準的重要前提。",
+                "研究沒有直接證明每個否定事實都與檢索器預訓練知識衝突，也沒有分析被刪除配對是否有系統偏差；分別改寫還可能引入更高層的矛盾。它適合診斷檢索對細小語義變化的敏感度，不能證明 BM25 在真實 RAG 中普遍更好。作者註明論文獲 CIKM 2026 錄用，公開後設資料沒有寫明具體軌道。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋圖：展示受控矛盾構造與檢索診斷流程，不是原文實驗圖表。",
+            "steps": [
+              "從原基準取得資訊點與支援關係",
+              "生成相反資訊點並區域性改寫證據",
+              "記錄自動驗證與人工抽查結果",
+              "比較覆蓋變化和成對評分",
+              "結合質量標籤解釋檢索邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "constraint-indexes-data-integrity-governance",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.36418v1"
+        },
+        {
+          "label": "Original paper · methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.36418v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "许多数据规则并不局限于一张表：不同身份表中的邮箱不能重复，一个关系两端的成员数不能超限，删除主对象时也必须处理从属对象。传统系统常把这些规则交给应用程序。论文关注应用代码越来越容易被临时生成、替换甚至绕过的情况，提出把长期有效的数据规则放回数据库，并以“约束索引”验证部分机制是否可行。",
+          "sections": [
+            {
+              "heading": "索引存的是规则所需的最小状态",
+              "paragraphs": [
+                "约束索引不复制整张业务表，而是保存验证规则所需的身份、唯一值、归属关系或计数。例如学生与教师分在不同表，仍可通过同一身份索引检查概念上的重复。不同事务只要争用同一个逻辑身份或受限值，就需要相互同步，而不是因为写入不同物理表就各自通过。",
+                "更新时，系统先取得逻辑锁、检查并预留约束状态，再修改业务数据；提交则保留修改，回滚则撤销预留。原型把这些辅助状态放在共享内存中，关系表仍是持久事实来源，重启后从表重建。完整的约束治理器将来还应决定何时检查、是否拒绝或隔离数据，但当前只手工实现了实验中的约束模板，不能自动编译任意业务规则。"
+              ]
+            },
+            {
+              "heading": "实验比较了正确性相当的方案",
+              "paragraphs": [
+                "作者用 PostgreSQL 16，在约 570 万实体及数百万嵌入关系和从属值上测试，客户端数从 1 到 1024。论文重点报告接近饱和的 256 客户端结果，比较不检查、查询检查、触发器、辅助关系表及约束索引。部分查询式方案在并发下会漏掉违规，所以速度优势主要以能保持正确性的两种辅助表方案中更快者为参照。",
+                "组合任务同时维护身份、邮箱、关系、从属对象和级联删除，操作比例为插入 40%、更新 30%、删除 20%、读取 10%。约束索引达到每秒 44.4K 事务，对照为 37.1K，不设约束为 52.6K，即比正确性对照快约 1.20 倍、保留无约束吞吐的 84.3%。最高 2.41 倍来自特定的双端数量上限插入任务，不是所有负载或数据库的普遍加速。"
+              ]
+            },
+            {
+              "heading": "完整性防线还没有闭合",
+              "paragraphs": [
+                "当前扩展要求每次相关写入都在同一事务中显式调用约束索引操作；直接绕过这些操作的写入不会被拦截。这是核心边界：原型证明一种执行机制的成本与并发管理可行，并未交付能够自动约束任意 Agent 写入的数据库安全层。它也只讨论整笔事务的提交和中止，保存点或子事务回滚尚未由本文建立。",
+                "自动生成约束、嵌入数据库执行器、从现有数据重建的成本，以及试运行规则怎样升级为强制规则，都是后续问题。湖仓等缺乏共同提交点的环境，可能只能事后告警或阻止下游发布，不能据此宣称原写入已被阻止。研究的意义是把数据质量规则当成需要设计、维护和治理的持久对象，而非只给生成代码加一段“请遵守规则”的说明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文原型重绘的解释图：描述约束状态与事务流程，不表示已经实现全量写入拦截或自动治理。",
+            "steps": [
+              "明确跨表身份和数量等规则",
+              "建立精简的共享约束状态",
+              "事务内同步并检查相关写入",
+              "提交保留或回滚撤销状态",
+              "验证覆盖边界后再扩大治理"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Many data rules cross table boundaries: an email must be unique across different identity tables, relationships must respect count limits, and deleting an owner must account for dependents. Applications often enforce these rules. This paper asks what happens when application code is generated, replaced or bypassed, and argues for persistent database-level rules. Constraint indexes provide a proof of concept for part of that agenda.",
+          "sections": [
+            {
+              "heading": "Store only the state needed for enforcement",
+              "paragraphs": [
+                "A constraint index stores identities, unique values, ownership information or counts rather than copying complete business rows. Students and instructors stored in separate tables can share a conceptual identity index. Transactions that compete for the same logical identity or restricted value synchronize, even when they update different physical tables.",
+                "An update acquires logical locks, validates and reserves constraint state, then changes relational data. Commit preserves the change; abort undoes the reservation. The prototype keeps auxiliary state in shared memory while relational tables remain durable truth and supply reconstruction after restart. A future governor would choose checking times and rejection or quarantine policies. The current implementation instead uses hand-written templates for evaluated constraints, not automatic compilation of arbitrary business rules."
+              ]
+            },
+            {
+              "heading": "Compare performance against sound enforcement",
+              "paragraphs": [
+                "The authors evaluate PostgreSQL 16 on about 5.7 million entities and millions of embedded relationships and dependent values, using 1–1024 clients. The highlighted table reports 256 clients near observed saturation. Alternatives include no checking, query checks, triggers, auxiliary relational tables and constraint indexes. Some query-based alternatives admit violations under concurrency, so reported speedups mainly use the faster of two correctness-preserving auxiliary-table baselines.",
+                "The combined workload maintains identities, unique emails, relationships, dependent objects and cascading deletions. Its operation mix is 40% inserts, 30% updates, 20% deletes and 10% reads. Constraint indexes reach 44.4K transactions per second versus 37.1K for the sound baseline and 52.6K without constraints: about 1.20 times the baseline and 84.3% of unconstrained throughput. The maximum 2.41-times result comes from a specific insertion workload with count bounds at both relationship endpoints, not every workload or database."
+              ]
+            },
+            {
+              "heading": "The enforcement boundary is not complete",
+              "paragraphs": [
+                "Every relevant write must explicitly invoke the prototype’s constraint-index operations in the same transaction. Direct writes that bypass those operations are not intercepted. This distinction is central: the prototype demonstrates the cost and synchronization of an enforcement mechanism, not a deployed layer that automatically constrains arbitrary agent writes. The description establishes whole-transaction commit and abort, not savepoint or subtransaction rollback handling.",
+                "Automatic constraint generation, deeper engine integration, reconstruction costs and promotion of provisional rules to blocking enforcement remain open. In lakehouse settings without a common commit point, a monitor may only alert later or prevent downstream publication; it cannot necessarily stop the original write. The contribution is to treat data-quality rules as durable objects that require design, maintenance and governance, rather than relying on instructions asking generated application code to obey them."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the prototype: constraint state and transaction flow, not a claim of complete write interception or automated governance.",
+            "steps": [
+              "Specify cross-table identity and count rules",
+              "Maintain compact shared constraint state",
+              "Synchronize and check writes within transactions",
+              "Preserve changes at commit or undo on abort",
+              "Check coverage before extending governance"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "データの規則は一つの表に収まらない。異なる身分の表を通じてメールを一意にする、関係の人数上限を守る、所有者の削除時に従属対象を処理する、といった条件がある。通常はアプリケーションが担うが、そのコードが一時的に生成・交換されたり迂回されたりする場合はどうか。論文は永続的な規則をデータベースへ戻す構想と、その一部を実証する制約インデックスを示す。",
+          "sections": [
+            {
+              "heading": "検証に必要な状態だけを保持",
+              "paragraphs": [
+                "制約インデックスは業務行全体を複製せず、識別子、一意な値、所有関係、件数などを持つ。学生と教員が別表でも、一つの概念的な識別索引を共有できる。同じ論理的識別や制限値を使うトランザクションは、物理表が異なっても同期し、それぞれ独立に確認を通過することを防ぐ。",
+                "更新は論理ロックを取得し、制約状態を検証・予約してから表を変更する。コミットで確定し、中止では予約を戻す。補助状態は共有メモリに置き、永続的な正本は関係表に残して再起動後に再構築する。将来のガバナーは確認時点や拒否・隔離の方針も選ぶ構想だが、現原型は評価対象のテンプレートを手作業で実装し、任意規則の自動コンパイルではない。"
+              ]
+            },
+            {
+              "heading": "正しさを保つ方式との性能比較",
+              "paragraphs": [
+                "PostgreSQL 16 と約 570 万エンティティ、数百万の埋め込み関係・従属値を用い、1—1024 クライアントで評価した。中心となる表は飽和点に近い 256 クライアントの結果で、無制約、問い合わせ確認、トリガー、補助関係表、制約索引を比較する。一部の問い合わせ方式は並行時に違反を許すため、加速率は主として正しさを保つ二つの補助表方式の速い方を基準にする。",
+                "複合負荷は識別、メール一意性、関係、従属対象、連鎖削除を組み合わせ、挿入 40%、更新 30%、削除 20%、読み取り 10%。制約索引は毎秒 44.4K トランザクション、正しい対照は 37.1K、無制約は 52.6K だった。約 1.20 倍で無制約の 84.3% を維持する。最大 2.41 倍は関係の両端に件数上限を設ける特定の挿入負荷で、すべての処理やデータベースの加速率ではない。"
+              ]
+            },
+            {
+              "heading": "全書き込みへの防護ではない",
+              "paragraphs": [
+                "関連する書き込みは、同じトランザクションで原型の制約操作を明示的に呼ぶ必要がある。それを迂回する直接更新は捕捉されない。つまり、同期と実施機構の費用を示した概念実証であって、任意の Agent 更新を自動制御する完成済みの層ではない。本文が扱うのはトランザクション全体の確定・中止であり、保存点や子トランザクションの巻き戻しは確立していない。",
+                "制約生成の自動化、実行エンジンへの統合、再構築の費用、試行ルールを強制へ昇格する条件は今後の課題だ。共通の確定点がないレイクハウスでは、事後警告や下流への公開停止しかできない可能性もある。データ品質規則を持続的に設計・維持・統治する対象と捉えることに意義があり、生成コードへ規則遵守を頼むだけの仕組みとは異なる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の原型に基づき本站が描き直した解説図。全書き込み捕捉や自動統治の実装完了を示すものではない。",
+            "steps": [
+              "表をまたぐ識別・件数規則を定義",
+              "小さな共有制約状態を構築",
+              "トランザクション内で同期・検査",
+              "確定時に保持し中止時に戻す",
+              "適用範囲を確認して統治を拡張"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Многие правила данных выходят за пределы одной таблицы: адрес должен быть уникальным между разными категориями пользователей, число связей ограничено, а удаление владельца требует учета зависимых объектов. Обычно правила обеспечивает приложение. Работа рассматривает ситуацию, когда его код временно генерируется, заменяется или обходится, и предлагает вернуть долговременные правила в базу данных. Индексы ограничений проверяют осуществимость части этого замысла.",
+          "sections": [
+            {
+              "heading": "Хранить минимум состояния для проверки",
+              "paragraphs": [
+                "Индекс ограничения хранит идентификаторы, уникальные значения, владельцев или счетчики, а не копии полных бизнес-строк. Студенты и преподаватели из разных таблиц могут использовать единое концептуальное пространство идентичности. Транзакции, претендующие на одинаковое логическое имя или ограниченное значение, синхронизируются даже при изменении разных физических таблиц.",
+                "Обновление получает логические блокировки, проверяет и резервирует состояние, затем меняет данные. Фиксация сохраняет изменения, отмена снимает резервирование. Прототип размещает вспомогательное состояние в общей памяти; долговременный источник истины — таблицы, из которых оно восстанавливается после перезапуска. Будущий управляющий компонент должен выбирать момент проверки и реакцию на нарушение. Сейчас шаблоны реализованы вручную, автоматической компиляции произвольных правил нет."
+              ]
+            },
+            {
+              "heading": "Сравнивать с корректным обеспечением целостности",
+              "paragraphs": [
+                "Авторы используют PostgreSQL 16, около 5.7 млн сущностей и миллионы вложенных связей и зависимых значений при 1–1024 клиентах. Основная таблица показывает 256 клиентов вблизи наблюдаемого насыщения. Сравниваются отсутствие проверок, проверки запросами, триггеры, вспомогательные таблицы и индексы ограничений. Некоторые запросные методы пропускают нарушения при параллельной работе, поэтому ускорение главным образом отсчитывается от более быстрого из двух корректных вариантов со вспомогательными таблицами.",
+                "Составная нагрузка поддерживает идентичность, уникальность адресов, связи, зависимые объекты и каскадные удаления. В ней 40% вставок, 30% обновлений, 20% удалений и 10% чтений. Индексы дают 44.4 тыс. транзакций в секунду против 37.1 тыс. у корректного сравнения и 52.6 тыс. без ограничений: примерно 1.20 раза и 84.3% исходной пропускной способности. Максимальные 2.41 раза относятся к конкретным вставкам с ограничением числа связей на обоих концах, а не ко всем нагрузкам."
+              ]
+            },
+            {
+              "heading": "Граница принуждения пока неполна",
+              "paragraphs": [
+                "Каждая значимая запись обязана явно вызвать операции индекса в той же транзакции. Прямые изменения в обход этих операций не перехватываются. Прототип показывает цену и синхронизацию механизма, но не готовую защиту от произвольных записей агента. Описание также обосновывает фиксацию и отмену целой транзакции, а не обработку отката к точке сохранения или вложенной транзакции.",
+                "Автоматическое создание правил, интеграция в движок, стоимость восстановления и перевод пробных правил в обязательные остаются открытыми вопросами. В lakehouse без общего момента фиксации монитор может лишь позднее предупредить или остановить дальнейшую публикацию, но не исходную запись. Смысл работы — рассматривать качество данных как долговременные правила, требующие проектирования, обслуживания и управления, а не полагаться на текстовую просьбу к генерируемому коду соблюдать ограничения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема сайта по прототипу: состояние ограничений и транзакции, не заявление о полном перехвате записей или готовом автоматическом управлении.",
+            "steps": [
+              "Задать межтабличные правила идентичности и количества",
+              "Создать компактное общее состояние",
+              "Синхронизировать и проверить запись в транзакции",
+              "Сохранить при фиксации или отменить при откате",
+              "Проверить охват перед расширением управления"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "許多資料規則並不侷限於一張表：不同身份表中的郵箱不能重複，一個關係兩端的成員數不能超限，刪除主物件時也必須處理從屬物件。傳統系統常把這些規則交給應用程式。論文關注應用程式碼越來越容易被臨時生成、替換甚至繞過的情況，提出把長期有效的資料規則放回資料庫，並以“約束索引”驗證部分機制是否可行。",
+          "sections": [
+            {
+              "heading": "索引存的是規則所需的最小狀態",
+              "paragraphs": [
+                "約束索引不復制整張業務表，而是儲存驗證規則所需的身份、唯一值、歸屬關係或計數。例如學生與教師分在不同表，仍可透過同一身份索引檢查概念上的重複。不同事務只要爭用同一個邏輯身份或受限值，就需要相互同步，而不是因為寫入不同物理表就各自透過。",
+                "更新時，系統先取得邏輯鎖、檢查並預留約束狀態，再修改業務資料；提交則保留修改，回滾則撤銷預留。原型把這些輔助狀態放在共享記憶體中，關係表仍是持久事實來源，重啟後從表重建。完整的約束治理器將來還應決定何時檢查、是否拒絕或隔離資料，但當前隻手工實現了實驗中的約束模板，不能自動編譯任意業務規則。"
+              ]
+            },
+            {
+              "heading": "實驗比較了正確性相當的方案",
+              "paragraphs": [
+                "作者用 PostgreSQL 16，在約 570 萬實體及數百萬嵌入關係和從屬值上測試，客戶端數從 1 到 1024。論文重點報告接近飽和的 256 客戶端結果，比較不檢查、查詢檢查、觸發器、輔助關係表及約束索引。部分查詢式方案在併發下會漏掉違規，所以速度優勢主要以能保持正確性的兩種輔助表方案中更快者為參照。",
+                "組合任務同時維護身份、郵箱、關係、從屬物件和級聯刪除，操作比例為插入 40%、更新 30%、刪除 20%、讀取 10%。約束索引達到每秒 44.4K 事務，對照為 37.1K，不設約束為 52.6K，即比正確性對照快約 1.20 倍、保留無約束吞吐的 84.3%。最高 2.41 倍來自特定的雙端數量上限插入任務，不是所有負載或資料庫的普遍加速。"
+              ]
+            },
+            {
+              "heading": "完整性防線還沒有閉合",
+              "paragraphs": [
+                "當前擴充套件要求每次相關寫入都在同一事務中顯式呼叫約束索引操作；直接繞過這些操作的寫入不會被攔截。這是核心邊界：原型證明一種執行機制的成本與併發管理可行，並未交付能夠自動約束任意 Agent 寫入的資料庫安全層。它也只討論整筆事務的提交和中止，儲存點或子事務回滾尚未由本文建立。",
+                "自動生成約束、嵌入資料庫執行器、從現有資料重建的成本，以及試執行規則怎樣升級為強制規則，都是後續問題。湖倉等缺乏共同提交點的環境，可能只能事後告警或阻止下游釋出，不能據此宣稱原寫入已被阻止。研究的意義是把資料質量規則當成需要設計、維護和治理的持久物件，而非只給生成程式碼加一段“請遵守規則”的說明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文原型重繪的解釋圖：描述約束狀態與事務流程，不表示已經實現全量寫入攔截或自動治理。",
+            "steps": [
+              "明確跨表身份和數量等規則",
+              "建立精簡的共享約束狀態",
+              "事務內同步並檢查相關寫入",
+              "提交保留或回滾撤銷狀態",
+              "驗證覆蓋邊界後再擴大治理"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "pipelink-contract-guided-gpu-components",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "PipeLink · version history and abstract",
+          "url": "https://arxiv.org/abs/2610.37200v1"
+        },
+        {
+          "label": "PipeLink · full manuscript, methods, evaluation and limitations",
+          "url": "https://arxiv.org/html/2610.37200v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把几个快的 GPU 算子放在一起，并不一定得到一个快而正确的程序。它们可能争用同一片片上内存，也可能对同步方式作出不同假设。北京大学的 Jize Guo 与 Xupeng Miao 提出 PipeLink，尝试让不同团队分别编译的组件在同一个 GPU 内核中协作，同时保留接近整体编译的执行效率。",
+          "sections": [
+            {
+              "heading": "组件复用为什么会碰到硬件边界",
+              "paragraphs": [
+                "融合内核把加载、矩阵计算、激活或通信等步骤放在一起，减少反复启动和数据搬运。但高性能组件往往把自己使用的内存位置、线程分组、同步资源和寄存器预算写死。来自不同库的组件直接拼接，可能资源冲突或等待不一致。传统链接器只检查名称能否对应，未必知道一方改变了数据块大小，而另一方仍按旧大小工作。"
+              ]
+            },
+            {
+              "heading": "先约定接口，再一起安排资源",
+              "paragraphs": [
+                "PipeLink 要求每个组件带一份契约，说明它需要哪些资源、提供什么数据，以及与邻居如何同步。这里的契约是机器可检查的接口约定，不是对整个程序正确性的证明。组件独立编译后，链接器检查双方约定是否一致，再用约束求解器统一安排片上资源；生命周期不重叠的缓冲区可以共享空间。",
+                "组件之间传递张量时，生产者说明数据在哪里，消费者说明需要哪些元素。链接器优先寻找直接传递的方式，不合适时再使用共享内存中转，并检查元素是否送到正确位置。最终安排交给厂商的链接时优化后端，尽量把资源位置折叠成常量，避免每次执行都重新查找。组件原有的计算调度仍由组件自己决定。"
+              ]
+            },
+            {
+              "heading": "低组合开销，与换用更快组件是两件事",
+              "paragraphs": [
+                "作者在 H200、B300 和 RTX 5090 上评估四类组合，共 51 个计时配置。比较对象是相同组件、相同连接方式与资源布局整体编译的版本，而不是任意现有程序。两者在同一进程、相同输入下交替运行，吞吐差异均在 0.2% 以内。这个结果支持“拆开编译再组合，额外执行开销很小”，并不表示所有任务都获得相同加速。",
+                "更快的收益来自具体组件替换。B300 上的 Llama-1B 解码案例把 ThunderKittens 的注意力组件换成 CuTe 实现；4096 词元上下文时，每词元耗时由 3.516 毫秒降到 1.630 毫秒，即 2.16 倍速度，但 16 词元时反而约慢 5%。作者还对比较两侧都修复了原始内核的五处缺陷。这说明组合让替换更容易，效果仍取决于负载和被选组件，不能只摘录最大倍数。"
+              ]
+            },
+            {
+              "heading": "契约检查仍需要实际正确性验证",
+              "paragraphs": [
+                "论文明确说，PipeLink 检查的是契约彼此是否一致，不验证组件实现是否遵守自己的承诺。如果实现访问了未申报的内存，依然可能出错；数值测试与错误检测工具仍然必要。自动生成的传递只覆盖单个线程块内的数据移动，算术、精度转换及跨块或跨 GPU 通信仍由组件实现。旧内核需要迁移接口，编译包也绑定具体架构和工具链，不能跨 CUDA 大版本直接通用。本文将它理解为降低高性能组件协作成本的研究，而非万能加速器；原文自称预印本、处于审稿中，未提供会议录用证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文方法重绘的解释图：展示组件组合流程，不是性能或正确性实测图。",
+            "steps": [
+              "组件独立编译并声明契约",
+              "检查数据与同步约定",
+              "联合安排片上资源和传递",
+              "优化链接后验证数值与性能"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Combining several fast GPU operators does not automatically produce a fast, correct program. They may compete for on-chip storage or assume incompatible synchronization rules. Jize Guo and Xupeng Miao of Peking University propose PipeLink to let separately compiled components cooperate inside one GPU kernel while retaining execution efficiency close to compiling everything together.",
+          "sections": [
+            {
+              "heading": "Why reuse reaches a hardware boundary",
+              "paragraphs": [
+                "Fused kernels combine loading, matrix operations, activations or communication to avoid repeated launches and data movement. High-performance components often hard-code their memory positions, thread groups, synchronization resources and register budgets. Combining independently developed components can create collisions or inconsistent waits. An ordinary linker checks that names resolve, but may not know that one component changed its tile size while another still schedules work using the old size."
+              ]
+            },
+            {
+              "heading": "Declare the interface, then place resources jointly",
+              "paragraphs": [
+                "Each PipeLink component carries a contract describing required resources, exported data and synchronization agreements. This is a machine-checkable interface, not a proof that the whole program is correct. After separate compilation, the linker checks compatibility and uses a constraint solver to place on-chip resources jointly. Buffers whose lifetimes do not overlap can share storage.",
+                "For tensor transfers, the producer describes where values are held and the consumer specifies which elements it needs. The linker tries direct transfers first, then shared-memory staging when necessary, checking that elements reach the right destinations. The vendor’s link-time optimizer folds the chosen placements into constants where possible, avoiding repeated runtime lookups. Each component keeps its own computation schedule."
+              ]
+            },
+            {
+              "heading": "Small composition overhead is different from a faster component",
+              "paragraphs": [
+                "The authors evaluate four composition case studies across 51 timed configurations on H200, B300 and RTX 5090 GPUs. The control compiles the same components, connecting logic and placement together; it is not an arbitrary existing application. Linked and control kernels alternate in one process on identical inputs. Throughput differs by at most 0.2%, supporting low execution overhead from separate compilation and recombination rather than a universal application speedup.",
+                "One benefit comes from replacing a particular component. In Llama-1B decoding on B300, substituting CuTe attention for the ThunderKittens component reduces time per token from 3.516 to 1.630 milliseconds at a 4096-token context, a 2.16-fold speedup. At 16 tokens it is about 5% slower. The authors repaired five defects in the original kernel on both sides of the comparison. Composition makes substitution easier, but workload and component choice determine the outcome; the largest speedup does not describe every setting."
+              ]
+            },
+            {
+              "heading": "Contract agreement does not prove implementation correctness",
+              "paragraphs": [
+                "PipeLink checks contracts against each other, not whether implementations honor them. A component that touches undeclared memory can still fail, so numerical tests and error-detection tools remain necessary. Generated transfers only move data inside one thread block; arithmetic, precision conversion and communication across blocks or GPUs stay in component implementations. Existing kernels need interface adaptations, and packages depend on an architecture and toolchain rather than being portable across CUDA major versions. We read this as research into reducing collaboration costs for high-performance components, not a universal accelerator. The manuscript identifies itself as a preprint under review and provides no acceptance evidence."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw by this site from the paper: component composition, not measured performance or a correctness result.",
+            "steps": [
+              "Compile components with declared contracts",
+              "Check data and synchronization agreements",
+              "Place resources and transfers jointly",
+              "Optimize the linked kernel and test results"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "高速なGPU演算を組み合わせても、全体が速く正しく動くとは限らない。オンチップメモリーを奪い合ったり、同期の前提が食い違ったりするからだ。北京大学のJize GuoとXupeng MiaoによるPipeLinkは、別々にコンパイルした部品を一つのGPUカーネル内で協調させ、まとめてコンパイルした場合に近い実行効率を保つことを目指す。",
+          "sections": [
+            {
+              "heading": "再利用を妨げるハードウェア上の前提",
+              "paragraphs": [
+                "融合カーネルは読み込み、行列演算、活性化、通信などをまとめ、起動やデータ移動を減らす。ただし高性能な部品は、使うメモリー位置、スレッド群、同期資源、レジスター予算を固定していることが多い。異なるライブラリーの部品をそのまま接続すると衝突や待機条件の不一致が起こり得る。通常のリンカーは名前の対応を調べても、一方がタイルの大きさを変え、他方が古い大きさで動くことまでは把握しない。"
+              ]
+            },
+            {
+              "heading": "インターフェースを宣言してから資源を配置する",
+              "paragraphs": [
+                "PipeLinkの部品には、必要な資源、渡すデータ、同期方法を示す契約を添える。これは機械的に検査できるインターフェースであり、プログラム全体の正しさの証明ではない。個別コンパイル後、リンカーが契約の整合性を調べ、制約ソルバーでオンチップ資源をまとめて配置する。生存期間が重ならないバッファーは同じ領域を使える。",
+                "テンソルの受け渡しでは、生産側が値の位置を示し、消費側が必要な要素を示す。リンカーは直接転送を優先し、必要なら共有メモリーを経由させ、要素が正しい場所に届くか確認する。決まった配置はメーカーのリンク時最適化で定数に畳み込み、実行時の参照を減らす。一方、各部品内の計算順序はその部品が維持する。"
+              ]
+            },
+            {
+              "heading": "組み合わせの負担と部品交換の効果を分ける",
+              "paragraphs": [
+                "著者はH200、B300、RTX 5090で四種類の事例、計51構成を計測した。対照は同じ部品、接続処理、配置をまとめてコンパイルしたもので、任意の既存アプリとの比較ではない。同じ入力とプロセスで交互に実行し、スループットの差はすべて0.2%以内だった。個別コンパイルによる追加の実行負担が小さい証拠であり、全用途が同じだけ高速化するという意味ではない。",
+                "具体的な速度向上は部品の交換から生まれる。B300上のLlama-1B復号でThunderKittensの注意機構をCuTeに置き換えると、4096トークンの文脈では1トークン当たり3.516ミリ秒から1.630ミリ秒となり、2.16倍速くなった。しかし16トークンでは約5%遅い。元のカーネルの五つの不具合は比較の両側で修正されている。交換を容易にすることと、どの負荷でも速くすることは別で、最大倍率だけでは効果を判断できない。"
+              ]
+            },
+            {
+              "heading": "契約が一致しても実装の検証は残る",
+              "paragraphs": [
+                "PipeLinkは契約同士を検査するが、実装が契約を守るかは検証しない。宣言外のメモリーに触れる部品は誤動作し得るため、数値テストやエラー検出は引き続き必要だ。自動生成するのは一つのスレッドブロック内のデータ移動で、演算、精度変換、ブロック間やGPU間の通信は部品が実装する。既存カーネルにはインターフェースの移行が必要で、パッケージはアーキテクチャーとツールチェーンに依存し、CUDAのメジャー版を越えてそのまま使えるわけではない。当サイトは高性能部品を共同開発・再利用する負担を減らす研究と捉える。原稿は査読中のプレプリントと明記し、会議採択の証拠は示していない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の方法に基づき当サイトが描き直した説明図。部品の組み合わせ手順であり、性能や正しさの実測結果ではない。",
+            "steps": [
+              "契約付きの部品を個別コンパイル",
+              "データと同期の約束を確認",
+              "資源と転送をまとめて配置",
+              "リンク後に最適化し数値と性能を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Соединение быстрых GPU-операторов не обязательно даёт быструю и корректную программу. Компоненты могут занять одну и ту же память или предполагать разные правила синхронизации. Jize Guo и Xupeng Miao из Пекинского университета предлагают PipeLink: отдельно скомпилированные компоненты работают внутри одного GPU-ядра с эффективностью, близкой к совместной компиляции.",
+          "sections": [
+            {
+              "heading": "Почему повторное использование упирается в оборудование",
+              "paragraphs": [
+                "Слитые ядра объединяют загрузку, матричные операции, активации или обмен данными, сокращая запуски и перемещения. Однако быстрые компоненты часто фиксируют размещение памяти, группы потоков, средства синхронизации и бюджет регистров. Соединение частей из разных библиотек способно вызвать конфликты или несовместимые ожидания. Обычный компоновщик проверяет соответствие имён, но может не заметить, что один компонент изменил размер блока данных, а другой продолжает использовать прежний размер."
+              ]
+            },
+            {
+              "heading": "Сначала договориться об интерфейсе, затем разместить ресурсы",
+              "paragraphs": [
+                "Компонент PipeLink сопровождается контрактом: какие ресурсы ему нужны, какие данные он предоставляет и как синхронизируется с соседями. Это проверяемый интерфейс, а не доказательство корректности всей программы. После раздельной компиляции компоновщик проверяет согласованность контрактов и решает общую задачу размещения ресурсов. Буферы с непересекающимся временем жизни могут занимать одну область.",
+                "При передаче тензора производитель описывает расположение значений, а потребитель — нужные элементы. Компоновщик сначала пробует прямую передачу, затем при необходимости промежуточную общую память, проверяя доставку элементов. Выбранное размещение оптимизатор поставщика сворачивает в константы при компоновке, чтобы не искать его заново при выполнении. Расписание вычислений внутри каждого компонента остаётся его собственным."
+              ]
+            },
+            {
+              "heading": "Малые накладные расходы и ускорение замены — разные результаты",
+              "paragraphs": [
+                "Авторы измерили четыре сценария композиции, всего 51 конфигурацию на H200, B300 и RTX 5090. Контрольный вариант совместно компилирует те же компоненты, соединения и размещение, а не представляет произвольное приложение. Оба варианта поочерёдно работают в одном процессе на одинаковых входах; разница пропускной способности не превышает 0,2%. Это свидетельство малых дополнительных расходов раздельной компиляции, но не одинакового ускорения любых задач.",
+                "Конкретное ускорение даёт замена компонента. В декодировании Llama-1B на B300 замена внимания ThunderKittens на CuTe сокращает время на токен с 3,516 до 1,630 мс при контексте 4096 токенов — ускорение 2,16 раза. При 16 токенах вариант примерно на 5% медленнее. Авторы исправили пять дефектов исходного ядра в обеих сторонах сравнения. Композиция облегчает замену, но результат определяется нагрузкой и выбранными компонентами, поэтому максимальный коэффициент нельзя распространять на все случаи."
+              ]
+            },
+            {
+              "heading": "Совместимые контракты не доказывают корректность реализации",
+              "paragraphs": [
+                "PipeLink проверяет контракты друг против друга, но не соблюдение контрактов реализациями. Компонент, обращающийся к незаявленной памяти, всё ещё может ошибаться; численные тесты и средства выявления ошибок необходимы. Автоматически создаётся только перемещение данных внутри одного блока потоков. Арифметика, изменение точности и обмен между блоками или GPU остаются в компонентах. Старые ядра требуют адаптации интерфейсов; пакеты привязаны к архитектуре и инструментарию и не переносимы напрямую между основными версиями CUDA. Мы рассматриваем работу как снижение затрат на совместное использование высокопроизводительных частей, а не универсальный ускоритель. Рукопись обозначена как препринт на рецензировании; подтверждения принятия на конференцию нет."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по методу статьи: композиция компонентов, а не измерение производительности или доказательство корректности.",
+            "steps": [
+              "Отдельно скомпилировать компоненты с контрактами",
+              "Проверить данные и синхронизацию",
+              "Совместно разместить ресурсы и передачи",
+              "Оптимизировать и проверить численные результаты"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把幾個快的 GPU 運算核心放在一起，並不一定得到一個快而正確的程式。它們可能爭用同一片片上記憶體，也可能對同步方式作出不同假設。北京大學的 Jize Guo 與 Xupeng Miao 提出 PipeLink，嘗試讓不同團隊分別編譯的元件在同一個 GPU 核心中協作，同時保留接近整體編譯的執行效率。",
+          "sections": [
+            {
+              "heading": "元件複用為什麼會碰到硬體邊界",
+              "paragraphs": [
+                "融合核心把載入、矩陣計算、激活函數或通訊等步驟放在一起，減少反覆啟動和資料搬運。但高效能元件往往把自己使用的記憶體位置、執行緒分組、同步資源和暫存器預算寫死。來自不同庫的元件直接拼接，可能資源衝突或等待不一致。傳統連結器只檢查名稱能否對應，未必知道一方改變了資料區塊大小，而另一方仍按舊大小工作。"
+              ]
+            },
+            {
+              "heading": "先約定介面，再一起安排資源",
+              "paragraphs": [
+                "PipeLink 要求每個元件帶一份契約，說明它需要哪些資源、提供什麼資料，以及與鄰居如何同步。這裡的契約是機器可檢查的介面約定，不是對整個程式正確性的證明。元件獨立編譯後，連結器檢查雙方約定是否一致，再用約束求解器統一安排片上資源；生命週期不重疊的緩衝區可以共享空間。",
+                "元件之間傳遞張量時，生產者說明資料在哪裡，消費者說明需要哪些元素。連結器優先尋找直接傳遞的方式，不合適時再使用共享記憶體中轉，並檢查元素是否送到正確位置。最終安排交給廠商的連結時最佳化後端，儘量把資源位置摺疊成常量，避免每次執行都重新查詢。元件原有的計算排程仍由元件自己決定。"
+              ]
+            },
+            {
+              "heading": "低組合開銷，與換用更快元件是兩件事",
+              "paragraphs": [
+                "作者在 H200、B300 和 RTX 5090 上評估四類組合，共 51 個計時配置。比較對象是相同元件、相同連線方式與資源佈局整體編譯的版本，而不是任意現有程式。兩者在同一程序、相同輸入下交替執行，吞吐差異均在 0.2% 以內。這個結果支援“拆開編譯再組合，額外執行開銷很小”，並不表示所有任務都獲得相同加速。",
+                "更快的收益來自具體元件替換。B300 上的 Llama-1B 解碼案例把 ThunderKittens 的注意力元件換成 CuTe 實現；4096 詞元上下文時，每詞元耗時由 3.516 毫秒降到 1.630 毫秒，即 2.16 倍速度，但 16 詞元時反而約慢 5%。作者還對比較兩側都修復了原始核心的五處缺陷。這說明組合讓替換更容易，效果仍取決於負載和被選元件，不能只摘錄最大倍數。"
+              ]
+            },
+            {
+              "heading": "契約檢查仍需要實際正確性驗證",
+              "paragraphs": [
+                "論文明確說，PipeLink 檢查的是契約彼此是否一致，不驗證元件實現是否遵守自己的承諾。如果實現訪問了未申報的記憶體，依然可能出錯；數值測試與錯誤檢測工具仍然必要。自動生成的傳遞只覆蓋單個執行緒塊內的資料移動，算術、精度轉換及跨塊或跨 GPU 通訊仍由元件實現。舊核心需要遷移介面，編譯套件也繫結具體架構和工具鏈，不能跨 CUDA 大版本直接通用。本文將它理解為降低高效能元件協作成本的研究，而非萬能加速器；原文自稱預印本、處於審稿中，未提供會議錄用證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文方法重繪的解釋圖：展示元件組合流程，不是效能或正確性實測圖。",
+            "steps": [
+              "元件獨立編譯並宣告契約",
+              "檢查資料與同步約定",
+              "聯合安排片上資源和傳遞",
+              "最佳化連結後驗證數值與效能"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "swatcher-dynamic-cardinality-estimation",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "SWatcher+ · original paper v1",
+          "url": "https://arxiv.org/html/2610.28270v1"
+        },
+        {
+          "label": "arXiv · version and publication record",
+          "url": "https://arxiv.org/abs/2610.28270v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "数据库在执行查询之前，需要估计筛选和连接后还剩多少行，才能选择合适的执行计划。机器学习可以帮助估计，但数据持续更新时，旧模型会逐渐失准。SWatcher+ 研究的不是再训练一个更大的模型，而是怎样决定哪些误差值得立即修正，以及什么时候重训练才划算。",
+          "sections": [
+            {
+              "heading": "为什么更准确也可能更慢",
+              "paragraphs": [
+                "所谓基数，就是某一步操作会产生的结果行数。估计错误可能让优化器选错连接顺序或计算方式，但提高某一步的准确度并不保证整个计划更好：其他步骤仍有偏差时，局部修正反而可能引向更差的计划。与此同时，实时维护真实行数、收集反馈和重新训练都有开销，节省的查询时间可能还抵不过维护成本。"
+              ]
+            },
+            {
+              "heading": "先修正真正影响计划的估计",
+              "paragraphs": [
+                "SWatcher+ 在估计模型与数据库优化器之间加入监测层。它只保留预计会影响查询效率的单表筛选子查询，依据数据插入、删除持续维护其真实行数，随后在规划新查询时直接修正模型输出，不必等到下一次训练。是否纳入或移出监测集合，要参考执行反馈和计划收益，而不是只看估计误差大不大。",
+                "连接多个表的真实行数维护更昂贵，因此系统不为所有连接做精确追踪，而是缓存近期执行中观察到的连接修正系数，与单表修正一起使用。当需要重点监测的条目变得太多，系统才触发模型刷新。这把重训练的理由从“整体误差超过某值”，改为“已有太多会影响实际查询的重要错误”。"
+              ]
+            },
+            {
+              "heading": "实验比较的是查询加维护的总时间",
+              "paragraphs": [
+                "作者在 PostgreSQL 16.2 上测试 MSCN、JGMP、Naru 三种估计模型，使用 DSB 和 IMDB/JOB-light。DSB 通过 60 天滑动窗口插入新数据、删除旧数据，模拟分布变化；测试主要按单一查询模板分别组织，时间取三次重复的中位数。对照包括不更新模型、定期重训练、LEO 反馈修正和不同监测方案，评估同时计入推理、监测与维护成本。",
+                "在 MSCN 的 Q013a、Q013b、Q100 模板上，作者报告 SWatcher+ 的端到端时间低于这些对照。另一个更有启发性的结果来自 Q018、Q040、Q072：即使免费给出精确的单表筛选行数，仍分别有 16.2%、33%、19.87% 的查询至少慢了 50 毫秒。这里的分母是各模板中的查询，不是所有数据库请求；它说明局部精确不能替代对整个计划的判断。"
+              ]
+            },
+            {
+              "heading": "结论适用于哪些范围",
+              "paragraphs": [
+                "这项工作的价值在于把“估计质量”与“实际付出的总时间”放到一起衡量。不过，测试删除了部分复杂谓词，并限制筛选条件数量，主要结果也不是混合生产流量的长期部署。连接修正系数依赖近期反馈，数据变化方式和模型成本都会影响收益。所读版本是 2026 年 10 月 20 日提交的 v1，元数据没有会议录用说明；现有实验支持有选择地适配模型，不支持所有负载都会加速的结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释流程，展示监测、修正与重训练的取舍，不是原论文性能图。",
+            "steps": [
+              "观察数据变化与查询反馈",
+              "筛选会影响执行计划的子查询",
+              "合并单表行数与连接修正系数",
+              "重要修正积累过多时刷新模型"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Before running a query, a database estimates how many rows will survive filters and joins so it can choose an execution plan. Learned estimators can help, but changing data makes their predictions stale. SWatcher+ asks which errors deserve immediate correction and when retraining is worth its cost, rather than simply building a larger predictor.",
+          "sections": [
+            {
+              "heading": "More accurate does not always mean faster",
+              "paragraphs": [
+                "Cardinality is the number of rows produced by an operation. An error can lead an optimizer to choose a poor join order or execution method. Yet correcting one estimate need not improve the whole plan when other estimates remain wrong. Maintaining exact counts, collecting feedback and retraining also consume time; their cost can exceed the query time saved."
+              ]
+            },
+            {
+              "heading": "Correct estimates that matter to the plan",
+              "paragraphs": [
+                "SWatcher+ places a monitoring layer between the estimator and optimizer. It selectively tracks single-table filter subqueries expected to affect query efficiency, maintaining their true counts as rows are inserted or deleted. It then corrects predictions during planning without waiting for retraining. Admission and removal from this watchset consider execution feedback and expected plan benefit, rather than estimation error alone.",
+                "Exact counts for multi-table joins are more expensive to maintain. Instead of tracking every join precisely, the system caches correction factors from recent executions and applies them alongside single-table corrections. Too many important watched subqueries trigger a model refresh. Retraining is thus tied to consequential mistakes and monitoring burden, rather than only an aggregate error threshold."
+              ]
+            },
+            {
+              "heading": "The experiment counts maintenance as well as execution",
+              "paragraphs": [
+                "The authors test MSCN, JGMP and Naru on PostgreSQL 16.2 using DSB and IMDB/JOB-light. A 60-day sliding window introduces new DSB rows and deletes old ones. Workloads are mainly organized separately by query template, with timing reported as the median of three repetitions. Comparisons include an unchanged model, periodic refresh, LEO feedback correction and alternative monitoring schemes; inference and maintenance overhead are included.",
+                "For the MSCN Q013a, Q013b and Q100 workloads, SWatcher+ has the lowest end-to-end time among those alternatives. A revealing counterexample concerns Q018, Q040 and Q072: even supplying exact single-table filter counts at no maintenance cost makes 16.2%, 33% and 19.87% of queries, respectively, at least 50 milliseconds slower. Each percentage is within its template, not a share of all database traffic. Local accuracy cannot replace reasoning about the complete plan."
+              ]
+            },
+            {
+              "heading": "What the evidence supports",
+              "paragraphs": [
+                "The contribution is evaluating estimation quality together with the total time paid for it. However, the experiments remove some complex predicates, restrict filter counts and largely avoid mixed production traffic. Cached join corrections depend on recent feedback; data drift and model cost affect the balance. The October 20, 2026 v1 record supplies no conference-acceptance statement. Results support selective adaptation in the tested workloads, not a universal speedup."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper. It shows monitoring and refresh choices, not measured performance.",
+            "steps": [
+              "Observe updates and execution feedback",
+              "Select subqueries that affect plan quality",
+              "Combine filter counts with join corrections",
+              "Refresh when consequential corrections accumulate"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "データベースは問い合わせの実行前に、絞り込みや結合で残る行数を予測し、処理計画を選ぶ。学習型の推定器は役立つが、データが変わると予測は古くなる。SWatcher+ が考えるのはモデルの大型化ではなく、どの誤差をすぐ直し、いつ再学習の費用を払うべきかという運用上の問題だ。",
+          "sections": [
+            {
+              "heading": "正確になっても速くなるとは限らない",
+              "paragraphs": [
+                "カーディナリティとは、ある操作が返す行数を指す。推定を誤ると結合順序や実行方法を間違える可能性がある。ただし、ほかの推定が不正確なまま一部だけを直すと、かえって悪い計画を選ぶこともある。正確な件数の維持、フィードバック収集、再学習にも時間がかかるため、短縮した実行時間より維持費用が大きくなる場合もある。"
+              ]
+            },
+            {
+              "heading": "計画に影響する推定を選んで補正する",
+              "paragraphs": [
+                "SWatcher+ は推定器と最適化器の間に監視層を置く。効率に影響する単一テーブルの絞り込み部分を選び、挿入と削除に合わせて実際の件数を維持する。新しい問い合わせを計画する際は、その情報でモデルの予測を直接補正し、再学習を待たない。監視対象への追加や除外は誤差の大きさだけでなく、実行結果と計画上の利益を考慮する。",
+                "複数テーブルの結合結果を常に正確に維持するのは高価だ。このため最近の実行で観測した結合の補正係数を保存し、単一テーブルの補正と併用する。重要な監視対象が増えすぎたときにモデルを更新する仕組みで、全体的な誤差だけではなく、実行に響く間違いと維持負担に再学習の判断を結び付ける。"
+              ]
+            },
+            {
+              "heading": "実行時間と維持費用を合わせて比較",
+              "paragraphs": [
+                "著者らは PostgreSQL 16.2 上で MSCN、JGMP、Naru を使い、DSB と IMDB/JOB-light を評価した。DSB は60日間のスライド窓で新しい行を挿入し、古い行を削除する。主に問い合わせテンプレートごとに負荷を分け、時間は3回の中央値を報告する。モデルを固定する方式、定期更新、LEO、別の監視方式と比べ、推論や維持の費用も計上した。",
+                "MSCN の Q013a、Q013b、Q100 では、SWatcher+ の総所要時間が比較対象より短かった。一方、Q018、Q040、Q072 では、単一テーブルの真の行数を費用なしで与えても、それぞれ16.2%、33%、19.87%の問い合わせが少なくとも50ミリ秒遅くなった。分母は各テンプレート内の問い合わせであり、全データベースの通信ではない。局所的な正確さと全体の計画品質の違いを示す結果だ。"
+              ]
+            },
+            {
+              "heading": "適用範囲と残る課題",
+              "paragraphs": [
+                "推定の良さと実際に支払う総時間を一緒に評価する点に意義がある。ただし、一部の複雑な条件を除き、絞り込み条件数も制限した実験で、混在する本番負荷の長期運用そのものではない。結合の補正係数は最近のフィードバックに依存し、データ変化やモデルの費用で効果は変わる。2026年10月20日のv1記録には会議採択の記載がない。対象負荷での選択的な適応を支持するが、すべての処理が速くなるとは言えない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した解説図。監視・補正・再学習の判断を示し、性能の測定図ではない。",
+            "steps": [
+              "更新と実行結果を観察",
+              "計画に効く部分問い合わせを選択",
+              "行数と結合補正を組み合わせる",
+              "重要な補正が増えたら再学習"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "До выполнения запроса база данных оценивает, сколько строк останется после фильтрации и соединений, чтобы выбрать план. Обучаемые оценщики помогают, но изменения данных делают прогнозы устаревшими. SWatcher+ исследует, какие ошибки стоит исправлять немедленно и когда окупается переобучение, вместо простого увеличения модели.",
+          "sections": [
+            {
+              "heading": "Точнее не всегда означает быстрее",
+              "paragraphs": [
+                "Кардинальность — число строк, создаваемых операцией. Ошибка способна привести к неудачному порядку соединений или способу выполнения. Однако исправление одного значения при ошибках в остальных иногда ухудшает весь план. Поддержание точных счётчиков, сбор обратной связи и переобучение тоже стоят времени; затраты могут превысить выигрыш выполнения."
+              ]
+            },
+            {
+              "heading": "Исправлять то, что влияет на план",
+              "paragraphs": [
+                "SWatcher+ размещает слой наблюдения между оценщиком и оптимизатором. Он выбирает значимые подзапросы с фильтрацией одной таблицы и поддерживает их точные количества строк при вставках и удалениях. При планировании нового запроса эти сведения сразу корректируют прогноз, не дожидаясь обучения. Включение в набор наблюдения и исключение учитывают результаты выполнения и ожидаемую пользу для плана, а не только величину ошибки.",
+                "Поддерживать точные размеры соединений нескольких таблиц гораздо дороже. Поэтому система сохраняет поправочные коэффициенты из недавних выполнений и использует их вместе с коррекцией фильтров. Когда значимых наблюдаемых подзапросов становится слишком много, запускается обновление модели. Решение связано с существенными ошибками и стоимостью наблюдения, а не исключительно с общим порогом неточности."
+              ]
+            },
+            {
+              "heading": "Сравнение включает обслуживание",
+              "paragraphs": [
+                "Авторы проверяют MSCN, JGMP и Naru на PostgreSQL 16.2 с DSB и IMDB/JOB-light. В DSB скользящее окно на 60 дней добавляет новые строки и удаляет старые. Нагрузки преимущественно разделены по шаблонам запросов; время — медиана трёх повторений. Сравниваются неизменяемая модель, периодическое обновление, LEO и другие варианты наблюдения, с учётом вывода модели и обслуживания.",
+                "В нагрузках MSCN Q013a, Q013b и Q100 SWatcher+ показывает наименьшее суммарное время среди этих вариантов. Примечателен обратный пример: бесплатная передача точных размеров фильтров в Q018, Q040 и Q072 замедляет соответственно 16,2%, 33% и 19,87% запросов как минимум на 50 миллисекунд. Знаменатель — запросы каждого шаблона, а не весь трафик баз данных. Локальная точность не заменяет оценку полного плана."
+              ]
+            },
+            {
+              "heading": "Границы результата",
+              "paragraphs": [
+                "Работа связывает качество оценки с общими затратами времени. Но эксперименты исключают некоторые сложные условия, ограничивают число фильтров и не воспроизводят длительную смешанную производственную нагрузку. Поправки соединений зависят от недавней обратной связи; характер изменений и стоимость модели влияют на пользу. В записи v1 от 20 октября 2026 года нет заявления о принятии на конференцию. Подтверждена полезность выборочной адаптации на исследованных нагрузках, а не всеобщее ускорение."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: выбор наблюдений, поправок и обновления, не график измеренной производительности.",
+            "steps": [
+              "Наблюдать изменения и результаты",
+              "Выбрать подзапросы, важные для плана",
+              "Объединить счётчики и поправки соединений",
+              "Обновить модель при накоплении значимых исправлений"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "資料庫在執行查詢之前，需要估計篩選和聯結後還剩多少行，才能選擇合適的執行計劃。機器學習可以幫助估計，但資料持續更新時，舊模型會逐漸失準。SWatcher+ 研究的不是再訓練一個更大的模型，而是怎樣決定哪些誤差值得立即修正，以及什麼時候重新訓練才划算。",
+          "sections": [
+            {
+              "heading": "為什麼更準確也可能更慢",
+              "paragraphs": [
+                "所謂基數，就是某一步操作會產生的結果行數。估計錯誤可能讓最佳化器選錯聯結順序或計算方式，但提高某一步的準確度並不保證整個計劃更好：其他步驟仍有偏差時，區域性修正反而可能引向更差的計劃。與此同時，實時維護真實行數、收集回饋和重新訓練都有開銷，節省的查詢時間可能還抵不過維護成本。"
+              ]
+            },
+            {
+              "heading": "先修正真正影響計劃的估計",
+              "paragraphs": [
+                "SWatcher+ 在估計模型與資料庫最佳化器之間加入監測層。它只保留預計會影響查詢效率的單表篩選子查詢，依據資料插入、刪除持續維護其真實行數，隨後在規劃新查詢時直接修正模型輸出，不必等到下一次訓練。是否納入或移出監測集合，要參考執行回饋和計劃收益，而不是隻看估計誤差大不大。",
+                "聯結多個表的真實行數維護更昂貴，因此係統不為所有聯結做精確追蹤，而是快取近期執行中觀察到的聯結修正係數，與單表修正一起使用。當需要重點監測的條目變得太多，系統才觸發模型更新。這把重新訓練的理由從“整體誤差超過某值”，改為“已有太多會影響實際查詢的重要錯誤”。"
+              ]
+            },
+            {
+              "heading": "實驗比較的是查詢加維護的總時間",
+              "paragraphs": [
+                "作者在 PostgreSQL 16.2 上測試 MSCN、JGMP、Naru 三種估計模型，使用 DSB 和 IMDB/JOB-light。DSB 透過 60 天滑動時間窗插入新資料、刪除舊資料，模擬分佈變化；測試主要按單一查詢模板分別組織，時間取三次重複的中位數。對照包括不更新模型、定期重新訓練、LEO 回饋修正和不同監測方案，評估同時計入推理、監測與維護成本。",
+                "在 MSCN 的 Q013a、Q013b、Q100 模板上，作者報告 SWatcher+ 的端到端時間低於這些對照。另一個更有啟發性的結果來自 Q018、Q040、Q072：即使免費給出精確的單表篩選行數，仍分別有 16.2%、33%、19.87% 的查詢至少慢了 50 毫秒。這裡的分母是各模板中的查詢，不是所有資料庫請求；它說明區域性精確不能替代對整個計劃的判斷。"
+              ]
+            },
+            {
+              "heading": "結論適用於哪些範圍",
+              "paragraphs": [
+                "這項工作的價值在於把“估計質量”與“實際付出的總時間”放到一起衡量。不過，測試刪除了部分複雜謂詞，並限制篩選條件數量，主要結果也不是混合生產流量的長期部署。聯結修正係數依賴近期回饋，資料變化方式和模型成本都會影響收益。所讀版本是 2026 年 10 月 20 日提交的 v1，後設資料沒有會議錄用說明；現有實驗支援有選擇地適配模型，不支援所有負載都會加速的結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋流程，展示監測、修正與重新訓練的取捨，不是原論文效能圖。",
+            "steps": [
+              "觀察資料變化與查詢回饋",
+              "篩選會影響執行計劃的子查詢",
+              "合併單表行數與聯結修正係數",
+              "重要修正積累過多時更新模型"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "koala-stateful-dataflow-reconfiguration",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Koala · original paper v1",
+          "url": "https://arxiv.org/html/2610.28939v1"
+        },
+        {
+          "label": "arXiv · version and publication record",
+          "url": "https://arxiv.org/abs/2610.28939v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "持续运行的流处理系统不仅接收事件，还保存累计计数、窗口和连接等状态。增加工作节点或重新分配任务时，这些状态往往要一起搬走，处理就可能停顿。Koala 尝试把“谁负责处理这个键”与“它的数据暂时放在哪里”分开，让任务先调整，真正需要的状态再按需迁移。",
+          "sections": [
+            {
+              "heading": "搬走全部状态未必有必要",
+              "paragraphs": [
+                "把状态放在计算任务旁边，平时访问很快，但重配置容易被大量数据搬迁拖住。把状态始终放在外部存储，又会让日常访问承担远程开销。Koala 利用另一种现象：很多长期任务只有少量键在某一时段频繁访问，其余冷状态暂时用不到。如果每次扩容都完整搬迁，就会付出大量没有即时收益的传输成本。"
+              ]
+            },
+            {
+              "heading": "先交接所有权，再取用数据",
+              "paragraphs": [
+                "协议先转移键的所有权与位置元数据，更新上游事件路由。新任务需要某个状态时，再从原位置读取；冷状态可以暂时留在原任务。位置表随所有权一起交接，因此连续重配置后，当前所有者仍可直接找到数据，不必沿历史任务层层追问。它不是允许多个任务随意同时改写同一个键，而是用明确的所有权维持隔离。",
+                "正在传输的事件通过任务间通道转发；事件时间的水位也随通道协调，以免窗口提前关闭或重复产生结果。论文将重配置完成定义为所有权交接和路由切换完成，并不要求所有状态此时已到新位置。如果任务真的要被移除，冷状态最终仍须搬走，系统会在后台逐步附带迁移额外键，迁移速度与处理干扰需要权衡。"
+              ]
+            },
+            {
+              "heading": "实验衡量的是积压恢复和迁移量",
+              "paragraphs": [
+                "作者在自建数据流运行时上实现 Koala、停止再启动、DRRS 和外部状态对照，使用 AWS 与 CloudLab 两个环境。负载包括 Twitch、纽约出租车、Azure、Borg 的公开数据以及 Nexmark。论文报告，相比 DRRS，最好的积压恢复时间比值达到 23 倍，重配置期间平均迁移量约为对照的 1/8.7。恢复时间从重配置开始计到 Kafka 积压清零，不是每条消息端到端延迟缩短 23 倍。",
+                "在固定活跃集合、将总状态从 10GB 增到 80GB 的微基准中，四任务扩到八任务，各次按需迁移量都在约 1.43GB。这解释了收益为什么依赖工作集，而非仅由总数据量决定。相反，任务移除实验必须搬完 10GB 状态：默认渐进策略约五分钟完成，更积极的策略约减半，但出现轻微吞吐下降。"
+              ]
+            },
+            {
+              "heading": "冷状态能留下，才有相应收益",
+              "paragraphs": [
+                "高局部性和访问偏斜有利于 Koala；如果整个键空间都被均匀访问，节省迁移的空间会收窄。外部状态对照关闭了数据复制，各方案共用研究运行时，不能把数字直接当作任意生产产品的表现。论文也没有报告单条记录的端到端延迟。2026 年 10 月 20 日的 v1 元数据没有会议录用声明；它提供的是协议与所测实现的证据，不是任何扩缩容都零成本的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意，区分所有权切换与实际数据迁移，不是实验测量曲线。",
+            "steps": [
+              "交接键的所有权和位置记录",
+              "切换路由并协调在途事件与水位",
+              "首次访问时按需获取状态",
+              "移除任务时逐步补齐冷状态迁移"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Long-running stream processors keep counts, windows and join state while consuming events. Adding workers or moving tasks can require moving that state too, interrupting processing. Koala separates responsibility for a key from the place where its data temporarily resides, allowing task assignments to change before all the data moves.",
+          "sections": [
+            {
+              "heading": "Why moving every byte is wasteful",
+              "paragraphs": [
+                "Keeping state beside computation makes normal access fast but complicates reconfiguration. An external store avoids that move while imposing remote-access costs during ordinary operation. Koala exploits the fact that many workloads repeatedly touch a small active set while much of their state stays cold. Moving everything during each scale-out can therefore spend bandwidth on data with no immediate use."
+              ]
+            },
+            {
+              "heading": "Transfer responsibility before fetching state",
+              "paragraphs": [
+                "The protocol transfers key ownership and location metadata, then changes upstream routing. A new owner fetches state when it first needs it; cold state may remain at an older task. Location records move with ownership, so repeated reconfigurations still let the current owner reach the actual data directly rather than follow a growing chain of previous owners. Explicit ownership preserves isolation rather than allowing arbitrary concurrent writers.",
+                "Peer channels forward in-flight events and coordinate event-time watermarks so windows do not close prematurely or emit results twice. Reconfiguration is considered complete when ownership and routing have changed, not when all state has reached its new location. If a task must actually be removed, its cold state must eventually move too. Background requests gradually carry additional keys, trading migration speed against processing disruption."
+              ]
+            },
+            {
+              "heading": "Recovery and transfer volume, not per-record latency",
+              "paragraphs": [
+                "The authors implement Koala, stop-and-restart, DRRS and remote-state baselines in their own runtime, evaluated on AWS and CloudLab. Workloads use public Twitch, New York taxi, Azure and Borg data plus Nexmark. Against DRRS, the reported best backlog-recovery ratio reaches 23×, with mean transferred state about 1/8.7 of the baseline. Recovery runs from reconfiguration start until Kafka backlog returns to zero; this is not a 23× reduction in every record’s end-to-end latency.",
+                "In a microbenchmark holding the active set fixed while total state grows from 10GB to 80GB, scaling four tasks to eight moves about 1.43GB in each run. Savings follow the working set, not simply total size. Conversely, a task-removal experiment must move all 10GB: the default progressive policy finishes in roughly five minutes, while a more aggressive policy roughly halves that time with a slight throughput drop."
+              ]
+            },
+            {
+              "heading": "Where the benefit narrows",
+              "paragraphs": [
+                "Temporal locality and skew help; uniform access to the entire key space reduces the opportunity to leave cold state behind. The remote baseline disables replication, and all main comparisons share a research runtime, so the ratios cannot be assigned to arbitrary production products. The paper does not report per-record end-to-end latency. Its October 20, 2026 v1 metadata states no conference acceptance. This is evidence for a protocol and tested implementation, not cost-free scaling under all conditions."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site. It distinguishes ownership changes from physical migration and is not an experimental curve.",
+            "steps": [
+              "Transfer ownership and location metadata",
+              "Change routing while coordinating events and watermarks",
+              "Fetch state when first accessed",
+              "Progressively drain cold state when retiring a task"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "長く動き続けるストリーム処理は、イベントを受け取るだけでなく、累積値、窓、結合の状態を保存する。ワーカーの追加やタスクの移動でこの状態も移すと、処理が止まりうる。Koala は「キーを処理する責任」と「データの現在地」を分離し、割り当て変更を先に行って、必要な状態を後から取得する。",
+          "sections": [
+            {
+              "heading": "すべての状態を運ぶ必要はあるか",
+              "paragraphs": [
+                "計算の近くに状態を置けば通常のアクセスは速いが、再構成時の移動が重くなる。外部ストレージなら移動は避けられても、日常のアクセスに遠隔通信が加わる。Koala は、多くの負荷で短期間に繰り返し使うキーは少数で、大半が使われない状態にあることを利用する。拡張のたびに全量を移すと、すぐには役立たない転送が増える。"
+              ]
+            },
+            {
+              "heading": "所有権を先に渡し、状態は後で取る",
+              "paragraphs": [
+                "キーの所有権と所在情報を渡した後、上流のイベント経路を切り替える。新しい所有者は必要になった状態だけを取得し、未使用の状態は古いタスクに残せる。所在情報も所有権と共に受け渡すため、再構成を繰り返しても過去の所有者を順にたどらず、現在地から直接取れる。複数タスクが勝手に同じキーを書き換えるのではなく、明確な所有権で隔離を保つ。",
+                "移動中のイベントはタスク間チャネルで転送し、イベント時刻のウォーターマークも調整して、窓を早く閉じたり結果を重複させたりしない。再構成の完了は所有権と経路が切り替わった時点で、状態の全量移動を意味しない。ただしタスクを廃止するときは未使用状態も最後には移す必要があり、追加キーを背景で段階的に運ぶ。速度と処理への影響には取捨選択がある。"
+              ]
+            },
+            {
+              "heading": "評価対象は滞留の解消と転送量",
+              "paragraphs": [
+                "著者らは自作ランタイムに Koala、停止再起動、DRRS、外部状態方式を実装し、AWS と CloudLab で評価した。Twitch、ニューヨークのタクシー、Azure、Borg の公開データと Nexmark を使う。DRRS比の滞留解消時間の最大比率は23倍、平均転送量は約1/8.7と報告する。時間は再構成開始からKafkaの滞留がゼロになるまでで、各レコードの端から端までの遅延が23分の1になった意味ではない。",
+                "活発なキー集合を固定し、全状態を10GBから80GBへ変えた実験では、4タスクから8タスクへの拡張で、いずれも約1.43GBを移した。利益を決めるのは総量だけでなく作業集合だ。一方、タスク廃止では10GB全量の移動が必要で、標準の段階方式は約5分、積極的な方式は約半分の時間だが、スループットが少し下がった。"
+              ]
+            },
+            {
+              "heading": "利益を期待できる条件",
+              "paragraphs": [
+                "時間的局所性と偏りがあると有利だが、全キーを均一に使う場合、残せる未使用状態は減る。外部状態の対照は複製を無効にし、主比較は研究用ランタイムを共有するため、数字を任意の実製品へそのまま移せない。レコード単位のエンドツーエンド遅延も報告していない。2026年10月20日のv1には会議採択の記載がない。特定プロトコルと実装の証拠であり、あらゆる拡縮が無負担になる保証ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文から当サイトが描き直した解説図。所有権の変更と物理的な状態移動を分けており、実験曲線ではない。",
+            "steps": [
+              "所有権と所在情報を引き継ぐ",
+              "経路・移動中イベント・時刻を調整",
+              "初回アクセス時に状態を取得",
+              "タスク廃止時は残りも段階的に移動"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Длительная потоковая обработка хранит счётчики, окна и состояние соединений вместе с обработкой событий. При добавлении работников или перемещении задач перенос этого состояния может прерывать работу. Koala разделяет ответственность за ключ и текущее физическое место данных, чтобы изменить назначения раньше полного переноса.",
+          "sections": [
+            {
+              "heading": "Зачем переносить холодные данные",
+              "paragraphs": [
+                "Состояние рядом с вычислением ускоряет обычный доступ, но усложняет перестройку. Внешнее хранилище избегает такого переноса ценой постоянных удалённых обращений. Koala использует локальность: многие нагрузки активно обращаются лишь к небольшой части ключей, а остальные временно не нужны. Перенос всего при каждом расширении тратит пропускную способность без немедленной пользы."
+              ]
+            },
+            {
+              "heading": "Сначала ответственность, затем данные",
+              "paragraphs": [
+                "Протокол передаёт владение ключами и сведения об их расположении, после чего меняет маршрутизацию. Новый владелец получает состояние при первом обращении, оставляя холодные данные у прежней задачи. Карта расположения передаётся вместе с владением, поэтому повторные перестройки не создают цепочку обращений к прошлым владельцам: данные можно найти непосредственно. Изоляцию обеспечивает определённый владелец, а не свободная одновременная запись разных задач.",
+                "Каналы между задачами пересылают уже отправленные события и согласуют метки времени, чтобы окна не закрывались раньше срока и не выдавали повторные результаты. Завершение перестройки означает изменение владения и маршрутов, не окончание переноса всех данных. При удалении задачи холодное состояние всё равно надо вывезти. Фоновые запросы постепенно переносят дополнительные ключи, обменивая скорость миграции на влияние на обработку."
+              ]
+            },
+            {
+              "heading": "Восстановление очереди и объём переноса",
+              "paragraphs": [
+                "Авторы реализуют Koala, остановку с перезапуском, DRRS и внешний backend в собственной среде, проверенной на AWS и CloudLab. Используются открытые данные Twitch, нью-йоркских такси, Azure, Borg и Nexmark. Максимальное отношение времени восстановления очереди к DRRS достигает 23, а средний объём переноса составляет около 1/8,7 от сравниваемого варианта. Время измеряется от начала перестройки до исчезновения очереди Kafka, а не как сквозная задержка каждой записи.",
+                "При фиксированном активном наборе и росте всего состояния с 10GB до 80GB расширение с четырёх задач до восьми переносит примерно 1,43GB в каждом опыте. Выигрыш зависит от рабочего набора. При удалении задачи, напротив, требуется перенести все 10GB: обычная постепенная стратегия заканчивает примерно за пять минут, более агрессивная — примерно вдвое быстрее, но с небольшим падением пропускной способности."
+              ]
+            },
+            {
+              "heading": "Когда преимущество сокращается",
+              "paragraphs": [
+                "Локальность и перекос доступа помогают, а равномерное обращение ко всем ключам уменьшает объём данных, который можно оставить. Внешний baseline работает без репликации; основные варианты используют общую исследовательскую среду, поэтому числа нельзя переносить на любой промышленный продукт. Сквозная задержка отдельной записи не измеряется. В метаданных v1 от 20 октября 2026 года нет принятия на конференцию. Проверены протокол и реализация, а не бесплатное масштабирование в любых условиях."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: владение и физический перенос разделены; это не экспериментальный график.",
+            "steps": [
+              "Передать владение и карту расположения",
+              "Согласовать маршруты, события и временные метки",
+              "Получать состояние при первом обращении",
+              "При удалении задачи постепенно перенести остаток"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "持續執行的流處理系統不僅接收事件，還儲存累計計數、時間窗和聯結等狀態。增加工作節點或重新分配任務時，這些狀態往往要一起搬走，處理就可能停頓。Koala 嘗試把“誰負責處理這個鍵”與“它的資料暫時放在哪裡”分開，讓任務先調整，真正需要的狀態再按需遷移。",
+          "sections": [
+            {
+              "heading": "搬走全部狀態未必有必要",
+              "paragraphs": [
+                "把狀態放在計算任務旁邊，平時訪問很快，但重配置容易被大量資料搬遷拖住。把狀態始終放在外部儲存，又會讓日常訪問承擔遠端開銷。Koala 利用另一種現象：很多長期任務只有少量鍵在某一時段頻繁訪問，其餘冷狀態暫時用不到。如果每次擴容都完整搬遷，就會付出大量沒有即時收益的傳輸成本。"
+              ]
+            },
+            {
+              "heading": "先交接所有權，再取用資料",
+              "paragraphs": [
+                "協議先轉移鍵的所有權與位置後設資料，更新上游事件路由。新任務需要某個狀態時，再從原位置讀取；冷狀態可以暫時留在原任務。位置表隨所有權一起交接，因此連續重配置後，當前所有者仍可直接找到資料，不必沿歷史任務層層追問。它不是允許多個任務隨意同時改寫同一個鍵，而是用明確的所有權維持隔離。",
+                "正在傳輸的事件透過任務間通道轉發；事件時間的水位也隨通道協調，以免時間窗提前關閉或重複產生結果。論文將重配置完成定義為所有權交接和路由切換完成，並不要求所有狀態此時已到新位置。如果任務真的要被移除，冷狀態最終仍須搬走，系統會在後臺逐步附帶遷移額外來鍵，遷移速度與處理干擾需要權衡。"
+              ]
+            },
+            {
+              "heading": "實驗衡量的是積壓恢復和遷移量",
+              "paragraphs": [
+                "作者在自建資料流執行時上實現 Koala、停止再啟動、DRRS 和外部狀態對照，使用 AWS 與 CloudLab 兩個環境。負載包括 Twitch、紐約計程車、Azure、Borg 的公開資料以及 Nexmark。論文報告，相比 DRRS，最好的積壓恢復時間比值達到 23 倍，重配置期間平均遷移量約為對照的 1/8.7。恢復時間從重配置開始計到 Kafka 積壓清零，不是每條訊息端到端延遲縮短 23 倍。",
+                "在固定活躍集合、將總狀態從 10GB 增到 80GB 的微基準中，四任務擴到八任務，各次按需遷移量都在約 1.43GB。這解釋了收益為什麼依賴工作集，而非僅由總資料量決定。相反，任務移除實驗必須搬完 10GB 狀態：預設漸進策略約五分鐘完成，更積極的策略約減半，但出現輕微吞吐下降。"
+              ]
+            },
+            {
+              "heading": "冷狀態能留下，才有相應收益",
+              "paragraphs": [
+                "高區域性性和訪問偏斜有利於 Koala；如果整個鍵空間都被均勻訪問，節省遷移的空間會收窄。外部狀態對照關閉了資料複製，各方案共用研究執行時，不能把數字直接當作任意生產產品的表現。論文也沒有報告單條記錄的端到端延遲。2026 年 10 月 20 日的 v1 後設資料沒有會議錄用宣告；它提供的是協議與所測實現的證據，不是任何擴縮容都零成本的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意，區分所有權切換與實際資料遷移，不是實驗測量曲線。",
+            "steps": [
+              "交接鍵的所有權和位置記錄",
+              "切換路由並協調在途事件與水位",
+              "首次訪問時按需獲取狀態",
+              "移除任務時逐步補齊冷狀態遷移"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "flashattention-long-vector-processors",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Reorienting the Vector Axis · original paper v1",
+          "url": "https://arxiv.org/html/2610.29489v1"
+        },
+        {
+          "label": "arXiv · version and publication record",
+          "url": "https://arxiv.org/abs/2610.29489v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "FlashAttention 通过分块计算注意力，避免把庞大的中间矩阵完整写入内存，但面向 GPU 或短向量 CPU 的遍历方式未必适合长向量处理器。这篇研究在具有 2KB 向量寄存器的 RISC-V 芯片上重新安排数据方向，讨论的是怎样让一次指令真正用满硬件，而不是改动模型或注意力定义。",
+          "sections": [
+            {
+              "heading": "寄存器很长，实际使用却很短",
+              "paragraphs": [
+                "实验机器的一个向量寄存器能容纳 512 个单精度数。移植的 PyTorch CPU FlashAttention 内核在部分计算中沿注意力头维度展开，而测试的头维度只有 64，相当于很多容量闲置。softmax 还要反复把一整行归约成最大值和总和；软件指数计算的多项式系数占用向量寄存器，挤出其他数据，造成额外内存访问。"
+              ]
+            },
+            {
+              "heading": "改变遍历方向，而非删减计算",
+              "paragraphs": [
+                "作者把分块分数矩阵和持续累积的输出转置，让不同查询沿连续方向排列。这样，各主要阶段的向量长度由查询块大小统一控制，可设为 512 以匹配机器；最大值和求和也变成跨键行的逐元素更新，不再需要原来的行内归约。论文强调计算定义不变，并不靠稀疏化、删掉注意力项或降低精度获得收益。",
+                "另一项调整把指数近似中的多项式系数放进标量寄存器，减少它们与矩阵数据争抢向量空间。作者报告这一步使 softmax 区域的向量内存指令减少 78.7%。该百分比仅描述一个区域的一类指令，不能改写成整机内存流量或整个模型运行时间下降 78.7%。"
+              ]
+            },
+            {
+              "heading": "实机周期与 FPGA 结果需要分开看",
+              "paragraphs": [
+                "主要测量使用 EPAC 芯片单核、单注意力头和 FP32，默认头维度 64、序列长度 1024；各方案均已向量化，并各自选择最优分块，不是拿优化版与纯标量版本比较。序列长度为 1024、2048、4096 时，作者报告完整注意力内核的周期加速比分别为 1.84、2.02、2.08。这里的比值是原内核周期数除以新内核周期数，不是完整语言模型吞吐。",
+                "同设计的 FPGA 给出更大的 2.71 倍结果，但其每周期可持续内存带宽与实芯片不同，论文没有混合两组测量。实芯片的浮点利用率从峰值的 16.2% 升至 29.7%，仍离峰值有明显距离。结果说明改变数据方向解决了部分瓶颈，却不等于其他计算与存储成本已经消失。"
+              ]
+            },
+            {
+              "heading": "长查询块是成立条件",
+              "paragraphs": [
+                "方法需要足够长的查询块：论文中块长 128 时，重排版本甚至慢于融合优化版本；到 512 才能发挥长寄存器的优势。作者把适用情形指向预填充和训练中的长查询块，不包括每次只处理少量新查询的自回归解码。头维度增大也会缩小部分收益。2026 年 10 月 21 日的 v1 没有会议录用声明；这是一项特定架构上的内核研究，没有证明胜过 GPU、通用 CPU，也没有给出完整训练流程的同等加速。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的机制示意，说明向量方向与寄存器使用，不是芯片结构图或实测性能图。",
+            "steps": [
+              "识别短向量、归约与寄存器挤占",
+              "让查询维度成为连续向量方向",
+              "将指数系数放入标量寄存器",
+              "按各自最优分块比较实机内核周期"
+            ]
+          }
+        },
+        "en": {
+          "lead": "FlashAttention tiles attention to avoid storing its huge intermediate matrix in full. However, traversal designed for GPUs or short-vector CPUs need not suit long-vector processors. This study reorganizes data on a RISC-V chip with 2KB vector registers, asking how to fill the hardware’s capacity without changing the model or attention definition.",
+          "sections": [
+            {
+              "heading": "Wide registers, narrow use",
+              "paragraphs": [
+                "One vector register on the tested machine holds 512 single-precision values. Parts of the ported PyTorch CPU kernel vectorize across the attention head dimension, which is only 64 in the main tests. Much of the capacity is therefore unused. Softmax also repeatedly reduces rows to a maximum and sum, while polynomial coefficients for software exponentials compete for vector registers and cause additional memory traffic through spilling."
+              ]
+            },
+            {
+              "heading": "Reorient traversal rather than remove work",
+              "paragraphs": [
+                "The authors transpose the score tile and accumulating output so different queries occupy the contiguous axis. A single query-block size then determines vector length across the main regions and can be set to 512. Maximum and sum become elementwise updates down key rows instead of horizontal reductions. The mathematical operation is retained: gains do not come from sparse attention, omitted terms or reduced precision.",
+                "A second change puts exponential-polynomial coefficients in scalar registers, reducing their competition with matrix data. The authors report 78.7% fewer vector memory instructions within the softmax region from this change. That figure concerns one instruction class in one region, not a 78.7% drop in whole-machine traffic or total model runtime."
+              ]
+            },
+            {
+              "heading": "Silicon measurements are distinct from FPGA results",
+              "paragraphs": [
+                "Main measurements use one EPAC chip core, one attention head and FP32, by default head dimension 64 and sequence length 1024. Every alternative is vectorized and evaluated at its own best tile; the baseline is not scalar code. At sequence lengths 1024, 2048 and 4096, reported whole-attention-kernel cycle speedups are 1.84×, 2.02× and 2.08×. The ratio divides baseline cycles by optimized cycles, rather than measuring complete language-model throughput.",
+                "An FPGA of the same design reports 2.71×, but sustained bandwidth per cycle differs from silicon, and the measurements are not pooled. Chip floating-point utilization rises from 16.2% to 29.7% of peak, still leaving substantial headroom. Reorientation removes some bottlenecks without eliminating remaining computation and memory costs."
+              ]
+            },
+            {
+              "heading": "Long query blocks are a condition",
+              "paragraphs": [
+                "At a query-block length of 128, the reoriented version can be slower than the fused optimization; reaching 512 exploits the long register. The paper identifies prefill and training with long query blocks as relevant settings, not autoregressive decoding with very few new queries. Larger head dimensions also reduce part of the benefit. The October 21, 2026 v1 record has no conference-acceptance statement. This is architecture-specific kernel evidence, not proof of superiority over GPUs or general CPUs, or an equivalent speedup for a complete training run."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original mechanism diagram redrawn by this site from the paper. It explains vector orientation and register use, not chip circuitry or measured performance.",
+            "steps": [
+              "Identify short vectors, reductions and register pressure",
+              "Place queries along the contiguous vector axis",
+              "Keep exponential coefficients in scalar registers",
+              "Compare silicon kernel cycles at each best tile"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "FlashAttention は注意力を分割計算し、大きな中間行列を全量メモリーへ書くことを避ける。ただしGPUや短ベクトルCPU向けの巡回順序が、長ベクトル機にも適するとは限らない。この研究は2KBのベクトルレジスターを持つRISC-Vチップでデータの向きを変え、モデルや注意力の定義を変えずに命令の容量を活用する。",
+          "sections": [
+            {
+              "heading": "長いレジスターを短く使っていた",
+              "paragraphs": [
+                "評価機の1レジスターには単精度数512個が入る。移植したPyTorch CPUカーネルの一部はヘッド次元に沿ってベクトル化するが、主実験の次元は64で、多くの容量が空く。softmaxでは行全体を最大値や和へ縮約する処理が繰り返される。ソフトウェア指数計算の多項式係数もベクトルレジスターを占め、ほかのデータを追い出して追加のメモリーアクセスを起こす。"
+              ]
+            },
+            {
+              "heading": "計算を省かず、巡回方向を変える",
+              "paragraphs": [
+                "著者らはスコアタイルと累積出力を転置し、異なるクエリーを連続する方向に配置する。主要部分のベクトル長をクエリーブロック長で統一し、機械に合わせて512に設定できる。最大値と和はキーの行をまたぐ要素ごとの更新となり、従来の行内縮約を不要にする。数式上の演算は維持し、疎な注意力、項の省略、精度低下による高速化ではない。",
+                "もう一つの変更は指数近似の多項式係数をスカラーレジスターに置き、行列データとの競合を減らすことだ。この変更でsoftmax領域のベクトルメモリー命令は78.7%減ったと報告する。割合は一領域の一種の命令についてであり、機械全体の転送量やモデル全体の実行時間が78.7%減ったわけではない。"
+              ]
+            },
+            {
+              "heading": "実チップとFPGAの結果を混ぜない",
+              "paragraphs": [
+                "主測定はEPACの1コア、1ヘッド、FP32で、標準設定はヘッド次元64、系列長1024。全方式をベクトル化し、それぞれ最良のタイルを選んで比べるため、単純なスカラー実装との比較ではない。系列長1024、2048、4096で注意力カーネル全体のサイクル比は1.84、2.02、2.08倍だった。元のサイクル数を新方式で割った値で、言語モデル全体の処理速度ではない。",
+                "同設計のFPGAでは2.71倍となるが、1サイクル当たりの持続メモリー帯域が実チップと異なり、結果は平均化していない。実チップの浮動小数点利用率はピークの16.2%から29.7%へ上がったが、余力は残る。方向変更が一部の制約を解く一方、ほかの計算と転送費用が消えたわけではない。"
+              ]
+            },
+            {
+              "heading": "長いクエリーブロックが必要",
+              "paragraphs": [
+                "ブロック長128では転置版が融合最適化版より遅い場合があり、512で長いレジスターを生かせる。論文が想定するのはプリフィルや学習中の長いブロックで、新しいクエリーが少ない自己回帰デコードではない。ヘッド次元が大きくなると利益の一部も小さくなる。2026年10月21日のv1には会議採択の記載がない。特定構成のカーネル研究で、GPUや一般CPUへの優位、学習全体の同倍率の高速化を証明してはいない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文から当サイトが描き直した仕組みの図。ベクトル方向とレジスター利用を説明し、回路図や性能測定図ではない。",
+            "steps": [
+              "短いベクトル・縮約・レジスター不足を特定",
+              "クエリーを連続するベクトル軸へ配置",
+              "指数係数をスカラーレジスターへ移す",
+              "各方式の最適タイルで実チップを比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "FlashAttention вычисляет внимание блоками, не сохраняя целиком огромную промежуточную матрицу. Но обход, удобный для GPU или коротковекторного CPU, не обязательно подходит длинным векторам. Работа перестраивает данные на RISC-V с векторными регистрами по 2KB, чтобы заполнить возможности аппаратуры без изменения модели или определения внимания.",
+          "sections": [
+            {
+              "heading": "Длинный регистр используется лишь частично",
+              "paragraphs": [
+                "Регистр исследованной машины вмещает 512 чисел одинарной точности. Части перенесённого CPU-ядра PyTorch векторизуются по размерности головы, которая в основных тестах равна 64, оставляя значительную ёмкость незадействованной. Softmax многократно сводит строки к максимуму и сумме. Коэффициенты полинома программной экспоненты также занимают векторные регистры, вытесняют данные и вызывают дополнительный обмен с памятью."
+              ]
+            },
+            {
+              "heading": "Изменить направление, а не убрать вычисления",
+              "paragraphs": [
+                "Авторы транспонируют блок оценок и накапливаемый результат, располагая разные запросы по непрерывной оси. Размер блока запросов определяет векторную длину основных участков и может быть равен 512. Максимум и сумма становятся поэлементными обновлениями вдоль строк ключей вместо горизонтальных редукций. Математика сохраняется: выигрыш не основан на разреженности, удалении элементов внимания или снижении точности.",
+                "Второе изменение помещает коэффициенты полинома экспоненты в скалярные регистры, уменьшая конкуренцию с матричными данными. Авторы сообщают о сокращении векторных инструкций памяти в области softmax на 78,7%. Это один класс инструкций в одном участке, а не уменьшение всего трафика машины или времени модели на 78,7%."
+              ]
+            },
+            {
+              "heading": "Результаты чипа и FPGA различаются",
+              "paragraphs": [
+                "Основные измерения используют одно ядро EPAC, одну голову внимания и FP32, обычно размерность головы 64 и длину последовательности 1024. Все варианты векторизованы и сравниваются при собственном лучшем разбиении; исходный вариант не является скалярным. При длинах 1024, 2048 и 4096 ускорение полного ядра внимания по циклам равно 1,84, 2,02 и 2,08. Это исходные циклы, делённые на новые, не производительность всей языковой модели.",
+                "FPGA той же конструкции показывает 2,71 раза, но её устойчивая пропускная способность памяти на цикл отличается от чипа; результаты не объединяются. Использование пиковой вычислительной мощности чипа повышается с 16,2% до 29,7%, оставляя значительный резерв. Перестройка устраняет часть ограничений, не уничтожая остальные вычислительные и память-зависимые затраты."
+              ]
+            },
+            {
+              "heading": "Условие — длинный блок запросов",
+              "paragraphs": [
+                "При длине блока 128 перестроенный вариант может уступать варианту со слиянием проходов; длина 512 позволяет использовать длинный регистр. Авторы указывают на prefill и обучение с длинными блоками, но не на авторегрессионное декодирование с малым числом новых запросов. Большая размерность головы тоже сокращает часть выигрыша. В метаданных v1 от 21 октября 2026 года нет принятия на конференцию. Это исследование ядра для определённой архитектуры, не доказательство превосходства над GPU и обычными CPU или такого же ускорения полного обучения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная схема механизма по статье. Она объясняет направление векторов и регистры, не является схемой чипа или графиком измерений.",
+            "steps": [
+              "Найти короткие векторы, редукции и нехватку регистров",
+              "Разместить запросы по непрерывной оси",
+              "Перенести коэффициенты экспоненты в скалярные регистры",
+              "Сравнить циклы чипа при оптимальном разбиении"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "FlashAttention 透過分塊計算注意力，避免把龐大的中間矩陣完整寫入記憶體，但面向 GPU 或短向量 CPU 的遍歷方式未必適合長向量處理器。這篇研究在具有 2KB 向量暫存器的 RISC-V 晶片上重新安排資料方向，討論的是怎樣讓一次指令真正用滿硬體，而不是改動模型或注意力定義。",
+          "sections": [
+            {
+              "heading": "暫存器很長，實際使用卻很短",
+              "paragraphs": [
+                "實驗機器的一個向量暫存器能容納 512 個單精度數。移植的 PyTorch CPU FlashAttention 核心在部分計算中沿注意力頭維度展開，而測試的頭維度只有 64，相當於很多容量閒置。softmax 還要反覆把一整行歸約成最大值和總和；軟體指數計算的多項式係數佔用向量暫存器，擠出其他資料，造成額外記憶體訪問。"
+              ]
+            },
+            {
+              "heading": "改變遍歷方向，而非刪減計算",
+              "paragraphs": [
+                "作者把分塊分數矩陣和持續累積的輸出轉置，讓不同查詢沿連續方向排列。這樣，各主要階段的向量長度由查詢塊大小統一控制，可設為 512 以匹配機器；最大值和求和也變成跨鍵行的逐元素更新，不再需要原來的行內歸約。論文強調計算定義不變，並不靠稀疏化、刪掉注意力項或降低精度獲得收益。",
+                "另一項調整把指數近似中的多項式係數放進純量暫存器，減少它們與矩陣資料爭搶向量空間。作者報告這一步使 softmax 區域的向量記憶體指令減少 78.7%。該百分比僅描述一個區域的一類指令，不能改寫成整機記憶體流量或整個模型執行時間下降 78.7%。"
+              ]
+            },
+            {
+              "heading": "實機週期與 FPGA 結果需要分開看",
+              "paragraphs": [
+                "主要測量使用 EPAC 晶片單核、單注意力頭和 FP32，預設頭維度 64、序列長度 1024；各方案均已向量化，並各自選擇最優分塊，不是拿最佳化版與純純量版本比較。序列長度為 1024、2048、4096 時，作者報告完整注意力核心的週期加速比分別為 1.84、2.02、2.08。這裡的比值是原核心週期數除以新核心週期數，不是完整語言模型吞吐。",
+                "同設計的 FPGA 給出更大的 2.71 倍結果，但其每週期可持續記憶體頻寬與實晶片不同，論文沒有混合兩組測量。實晶片的浮點利用率從峰值的 16.2% 升至 29.7%，仍離峰值有明顯距離。結果說明改變資料方向解決了部分瓶頸，卻不等於其他計算與儲存成本已經消失。"
+              ]
+            },
+            {
+              "heading": "長查詢塊是成立條件",
+              "paragraphs": [
+                "方法需要足夠長的查詢塊：論文中塊長 128 時，重排版本甚至慢於融合最佳化版本；到 512 才能發揮長暫存器的優勢。作者把適用情形指向預填充和訓練中的長查詢塊，不包括每次只處理少量新查詢的自迴歸解碼。頭維度增大也會縮小部分收益。2026 年 10 月 21 日的 v1 沒有會議錄用宣告；這是一項特定架構上的核心研究，沒有證明勝過 GPU、通用 CPU，也沒有給出完整訓練流程的同等加速。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的機制示意，說明向量方向與暫存器使用，不是晶片結構圖或實測效能圖。",
+            "steps": [
+              "識別短向量、歸約與暫存器擠佔",
+              "讓查詢維度成為連續向量方向",
+              "將指數係數放入純量暫存器",
+              "按各自最優分塊比較實機核心週期"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "client-led-consensus-inclusion-safety",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "arXiv · version metadata",
+          "url": "https://arxiv.org/abs/2610.29497v1"
+        },
+        {
+          "label": "arXiv · full paper",
+          "url": "https://arxiv.org/html/2610.29497v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把一笔合法交易发出去，并不意味着它一定会进入最终保留的账本。有些共识研究从验证节点已经拿到交易开始讨论，用户如何把交易送进去反而被省略了。这篇论文把客户端也纳入协议：客户端主动传播交易和此前区块的认证信息，研究它在什么通信条件下，才能让自己的交易不被最终存续的分支排除。",
+          "sections": [
+            {
+              "heading": "把“被收到”和“最终留下”分开",
+              "paragraphs": [
+                "作者将“纳入安全性”拆成三项要求：交易在提交轮次的至少一个合适区块中出现；不进入对它无效的前序状态对应的区块；随着轮次推进，所有仍然活跃的分支最终都保留这笔交易。因此，某个区块暂时包含交易还不够，还要避免包含它的分支后来被全部放弃。这里的轮次是协议交换消息的周期，不是现实时间的固定单位。",
+                "协议没有固定领导节点。客户端的提案附带上一轮区块的投票证书，副本汇总收到的提案、交换见证并投票；足够多的投票形成认证区块。同一轮可以产生多个有序的认证区块。客户端还能继续转发包含自己交易的分支证书，让后续区块继承该历史，而不只是重复提交原始交易。"
+              ]
+            },
+            {
+              "heading": "连接更多节点，能缩短所需等待",
+              "paragraphs": [
+                "理论模型设有 3f+1 个副本，最多 f 个任意作恶的拜占庭副本，要求签名不可伪造。若客户端能在已知延迟上限 Δ 内直接双向联系至少 f+1 个诚实副本，且提案收集窗口 A 至少为 2Δ，可保证交易进入该轮每个认证区块。这一窗口要容纳获知新一轮开始和把提案送达两个过程。",
+                "直接连接不足时，可靠互联的诚实副本可以代为传播；客户端必须能可靠接触其中至少一个，并经直接或转发路径合计触及至少 f+1 个诚实副本。此时充分条件提高为 A 至少 4Δ。反之，若可靠触及的诚实副本不超过 f 个，论文证明存在让该轮交易完全无法纳入的对手策略；不能把“能连上一个节点”单独当作保证。"
+              ]
+            },
+            {
+              "heading": "仿真说明了什么，又没有说明什么",
+              "paragraphs": [
+                "论文另模拟了延迟独立随机变化的情况：7 个副本中有 2 个拜占庭副本，消息延迟在 1—3 个抽象时间单位间均匀采样，每个窗口设置模拟 6,000 轮。该设置下，转发恢复到所有认证区块都保留交易的概率，在 A 约为 4 时已接近 1，低于保守确定保证的 6。但这是特定随机模型与代表性对手的结果，不是秒数、吞吐成绩或最坏情况下的实网保证。",
+                "保证还依赖客户端及时获知提交窗口、遵循单一提案与持续有效性要求，并假定区块永远装得下所有合格交易。真实系统若有容量竞争、费用筛选、永久断连或不同故障比例，就超出了这些结论。仿真的对手也未覆盖所有作恶方式。研究的价值在于明确用户连接性与副本连接性的取舍，以及等待时间的代价；它没有给任意现有区块链提供现成的抗审查承诺。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，展示纳入与后续保留的区别，不是实网性能图。",
+            "steps": [
+              "客户端传播交易与上一轮证书",
+              "副本收集提案并形成认证区块",
+              "客户端转发包含交易的历史",
+              "在假设成立时排除遗漏交易的分支"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Submitting a valid transaction does not ensure that it survives in the final ledger. Some consensus analyses start after validators already possess transactions, leaving the user’s path into the ledger outside the model. This paper makes clients active participants: they propagate transactions and certificates for earlier blocks, and it asks which communication conditions keep their transactions from being excluded by the surviving branches.",
+          "sections": [
+            {
+              "heading": "Receipt and lasting inclusion are different",
+              "paragraphs": [
+                "Inclusion safety has three requirements: a transaction appears in at least one suitable block of its submission epoch; it is excluded from blocks whose predecessor state makes it invalid; and eventually every active branch retains it. Temporary presence in one block is insufficient if all branches carrying it are later abandoned. An epoch here is one protocol cycle, not a fixed amount of wall-clock time.",
+                "The protocol has no fixed leader. A client proposal includes a vote certificate for a block from the previous epoch. Replicas collect proposals, exchange supporting witnesses and vote; a sufficient quorum creates a certified block. Several ordered certified blocks can exist in one epoch. Clients can relay a certificate whose history contains their transaction, helping later blocks preserve that history rather than merely resubmitting the original transaction."
+              ]
+            },
+            {
+              "heading": "Connectivity changes the waiting requirement",
+              "paragraphs": [
+                "The model has 3f+1 replicas, at most f of which may behave arbitrarily, and assumes unforgeable signatures. If the client has reliable two-way links to at least f+1 honest replicas with known delay bound Δ, a proposal-collection window A of at least 2Δ guarantees inclusion in every certified block of that epoch. The window must accommodate both learning that the epoch has opened and delivering the proposal.",
+                "When direct connectivity is weaker, a reliably interconnected group of honest replicas can relay messages. The client must reliably reach at least one member and reach at least f+1 honest replicas in total through direct or relayed paths. A sufficient window then grows to at least 4Δ. Conversely, if reliable reach covers no more than f honest replicas, the paper proves that an adversary can prevent all inclusion in that epoch. Reaching one node alone is not the guarantee."
+              ]
+            },
+            {
+              "heading": "What the simulation establishes—and its limits",
+              "paragraphs": [
+                "A separate simulation studies independently random delays: seven replicas, two Byzantine replicas, delays uniformly sampled between one and three abstract time units, and 6,000 epochs for each window setting. Under this setup, the chance that relaying restores the transaction to every certified block is already near one around A=4, below the conservative certainty bound of six. These are results for a particular random model and representative adversary, not seconds, throughput measurements or worst-case guarantees on a live network.",
+                "The guarantees also require clients to learn the submission window promptly, send one compliant proposal and keep the transaction valid as the predecessor changes. Blocks are assumed to have room for all admissible transactions. Capacity competition, fee-based exclusion, permanent disconnection or different fault proportions fall outside those conclusions. The simulated adversary does not cover every malicious behavior. The contribution is a precise connectivity-versus-waiting trade-off, not a ready-made censorship-resistance promise for arbitrary existing blockchains."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper: inclusion versus lasting preservation, not live-network performance.",
+            "steps": [
+              "Client spreads transaction and previous certificate",
+              "Replicas collect proposals and certify blocks",
+              "Client relays history containing the transaction",
+              "Under the assumptions, omitting branches disappear"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "有効な取引を送信しても、それが最終的に残る台帳に入るとは限らない。合意形成の研究には、検証ノードがすでに取引を持っているところから議論を始め、利用者がそこへ届ける過程を省くものがある。この論文はクライアントを能動的な参加者にし、取引と過去のブロックの証明情報を広めることで、どの通信条件なら最終的に残る分岐から取引が除外されないかを調べる。",
+          "sections": [
+            {
+              "heading": "受信と最終的な保持を分ける",
+              "paragraphs": [
+                "「包含安全性」は三つの条件からなる。提出したエポックの適切なブロックに取引が含まれること、直前の状態に対して無効な取引をそのブロックに入れないこと、そして最終的にすべての活動中の分岐が取引を保持することだ。一時的に含むブロックがあっても、その分岐がすべて捨てられれば不十分である。エポックとは通信手順の一周期であり、固定された実時間ではない。",
+                "固定リーダーを置かず、クライアントの提案には前エポックのブロックに対する投票証明書を付ける。レプリカは提案を集め、根拠となる情報を交換して投票し、定足数が認証ブロックを成立させる。同じエポックに順序づけられた複数の認証ブロックが存在し得る。クライアントは自分の取引を含む履歴の証明書を中継でき、単に元の取引を再送する以上の役割を持つ。"
+              ]
+            },
+            {
+              "heading": "接続性によって必要な待機時間が変わる",
+              "paragraphs": [
+                "モデルは 3f+1 個のレプリカのうち最大 f 個が任意に不正を行い、署名は偽造できないと仮定する。クライアントが少なくとも f+1 個の正直なレプリカと、遅延上限 Δ 以内で双方向に通信できる場合、提案収集窓 A が 2Δ 以上ならそのエポックの全認証ブロックへの包含を保証する。開始を知る過程と提案を届ける過程の両方に時間を確保するためだ。",
+                "直接の接続が弱い場合には、互いに信頼できる通信を行う正直なレプリカ群が中継できる。クライアントはその群の少なくとも一つと確実に通信でき、直接・中継を合わせて f+1 個以上の正直なレプリカに届く必要がある。この場合の十分条件は A が 4Δ 以上となる。確実に届く正直なレプリカが f 個以下なら、そのエポックへの包含をすべて妨げる相手方の戦略が存在するため、一つにつながるだけでは保証にならない。"
+              ]
+            },
+            {
+              "heading": "シミュレーションの結果と適用限界",
+              "paragraphs": [
+                "別のシミュレーションでは、7 レプリカ中 2 個をビザンチンとし、遅延を 1—3 の抽象時間単位の一様分布から独立に選び、各窓設定を 6,000 エポック試した。この設定では、中継によってすべての認証ブロックが取引を保持する状態へ回復する確率が A 約 4 で 1 に近づき、保守的な確実保証の 6 より短かった。ただし、特定の確率モデルと代表的な相手方での結果であり、秒数、処理量、実ネットワークの最悪時保証ではない。",
+                "保証には、クライアントが提出窓を適時に知り、一つの提案を送り、直前のブロックが変わっても取引が有効であり続ける条件がある。また、全適格取引が入るだけのブロック容量を仮定する。容量競争、手数料による選別、永久的切断、異なる故障比率は適用範囲外だ。模擬した不正動作も網羅的ではない。接続性と待機時間の交換関係を明確にする研究であり、任意の既存ブロックチェーンにそのまま耐検閲性を保証するものではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき本站が描き直した説明図。取引の包含とその後の保持を区別し、実ネットワークの性能図ではない。",
+            "steps": [
+              "取引と前エポックの証明書を送信",
+              "提案を集めブロックを認証",
+              "取引を含む履歴を中継",
+              "仮定の下で取引を欠く分岐を除く"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Отправка допустимой транзакции ещё не означает, что она останется в итоговом реестре. Некоторые модели консенсуса начинают анализ с момента, когда валидаторы уже получили транзакции, не рассматривая путь пользователя к ним. Эта работа делает клиентов активными участниками: они распространяют транзакции и сертификаты предыдущих блоков. Исследуется, при каких условиях связи сохраняющиеся ветви не смогут исключить их транзакцию.",
+          "sections": [
+            {
+              "heading": "Получить транзакцию и сохранить её — разные условия",
+              "paragraphs": [
+                "Безопасность включения состоит из трёх требований: транзакция появляется хотя бы в одном подходящем блоке своей эпохи, не включается в блоки с предшествующим состоянием, где она недопустима, и со временем присутствует во всех активных ветвях. Временного появления недостаточно, если все содержащие её ветви впоследствии отброшены. Эпоха здесь означает цикл протокола, а не фиксированное число секунд.",
+                "Постоянного лидера нет. Предложение клиента содержит сертификат голосования за блок предыдущей эпохи. Реплики собирают предложения, обмениваются подтверждающими сведениями и голосуют; кворум создаёт сертифицированный блок. В одной эпохе возможны несколько упорядоченных сертифицированных блоков. Клиент может передавать сертификат истории со своей транзакцией, помогая сохранить её в следующих блоках, а не просто повторять исходный запрос."
+              ]
+            },
+            {
+              "heading": "Связность определяет необходимое ожидание",
+              "paragraphs": [
+                "Модель содержит 3f+1 реплику, не более f из них могут действовать произвольно; подписи считаются неподделываемыми. Если клиент надёжно общается в обе стороны хотя бы с f+1 честной репликой при известной верхней задержке Δ, окно сбора предложений A не короче 2Δ гарантирует включение во все сертифицированные блоки эпохи. Время требуется и на получение известия об открытии эпохи, и на доставку предложения.",
+                "При слабой прямой связи помогает группа честных реплик с надёжной связью между собой. Клиент должен достигать хотя бы одного её участника, а прямые и ретранслируемые пути вместе — хотя бы f+1 честной реплики. Тогда достаточное окно возрастает до 4Δ. Если надёжно достижимы не более f честных реплик, существует стратегия противника, полностью предотвращающая включение в этой эпохе. Сам по себе контакт с одним узлом гарантии не даёт."
+              ]
+            },
+            {
+              "heading": "Результат симуляции и границы применимости",
+              "paragraphs": [
+                "Отдельная симуляция использует семь реплик, две византийские, независимые равномерные задержки от одной до трёх условных единиц и 6 000 эпох для каждого окна. При этих условиях вероятность восстановления транзакции во всех сертифицированных блоках близка к единице уже около A=4, ниже консервативной границы достоверной гарантии, равной шести. Это конкретная случайная модель и представительный противник, а не секунды, пропускная способность или худший случай в реальной сети.",
+                "Гарантии требуют, чтобы клиент своевременно узнавал окно подачи, посылал одно согласованное предложение и сохранял допустимость транзакции при смене предшествующего блока. Предполагается также, что блок вмещает все допустимые транзакции. Конкуренция за объём, отбор по комиссиям, постоянный разрыв связи и другие доли неисправных участников выходят за эти условия. Симуляция не охватывает все действия противника. Работа уточняет компромисс между связностью и ожиданием, но не даёт готовой защиты от цензуры для любой существующей цепочки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: включение и последующее сохранение, не измерение реальной сети.",
+            "steps": [
+              "Клиент передаёт транзакцию и сертификат",
+              "Реплики собирают предложения и сертифицируют блоки",
+              "Клиент ретранслирует нужную историю",
+              "При выполнении условий исчезают исключающие ветви"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把一筆合法交易發出去，並不意味著它一定會進入最終保留的賬本。有些共識研究從驗證節點已經拿到交易開始討論，使用者如何把交易送進去反而被省略了。這篇論文把客戶端也納入協議：客戶端主動傳播交易和此前區塊的認證資訊，研究它在什麼通訊條件下，才能讓自己的交易不被最終存續的分支排除。",
+          "sections": [
+            {
+              "heading": "把“被收到”和“最終留下”分開",
+              "paragraphs": [
+                "作者將“納入安全性”拆成三項要求：交易在提交輪次的至少一個合適區塊中出現；不進入對它無效的前序狀態對應的區塊；隨著輪次推進，所有仍然活躍的分支最終都保留這筆交易。因此，某個區塊暫時包含交易還不夠，還要避免包含它的分支後來被全部放棄。這裡的輪次是協議交換訊息的週期，不是現實時間的固定單位。",
+                "協議沒有固定領導節點。客戶端的提案附帶上一輪區塊的投票證書，副本彙總收到的提案、交換見證並投票；足夠多的投票形成認證區塊。同一輪可以產生多個有序的認證區塊。客戶端還能繼續轉發包含自己交易的分支證書，讓後續區塊繼承該歷史，而不只是重複提交原始交易。"
+              ]
+            },
+            {
+              "heading": "連線更多節點，能縮短所需等待",
+              "paragraphs": [
+                "理論模型設有 3f+1 個副本，最多 f 個任意作惡的拜占庭副本，要求籤名不可偽造。若客戶端能在已知延遲上限 Δ 內直接雙向聯絡至少 f+1 個誠實副本，且提案收集視窗 A 至少為 2Δ，可保證交易進入該輪每個認證區塊。這一視窗要容納獲知新一輪開始和把提案送達兩個過程。",
+                "直接連線不足時，可靠互聯的誠實副本可以代為傳播；客戶端必須能可靠接觸其中至少一個，並經直接或轉發路徑合計觸及至少 f+1 個誠實副本。此時充分條件提高為 A 至少 4Δ。反之，若可靠觸及的誠實副本不超過 f 個，論文證明存在讓該輪交易完全無法納入的對手策略；不能把“能連上一個節點”單獨當作保證。"
+              ]
+            },
+            {
+              "heading": "模擬說明了什麼，又沒有說明什麼",
+              "paragraphs": [
+                "論文另模擬了延遲獨立隨機變化的情況：7 個副本中有 2 個拜占庭副本，訊息延遲在 1—3 個抽象時間單位間均勻取樣，每個視窗設定模擬 6,000 輪。該設定下，轉發恢復到所有認證區塊都保留交易的機率，在 A 約為 4 時已接近 1，低於保守確定保證的 6。但這是特定隨機模型與代表性對手的結果，不是秒數、吞吐成績或最壞情況下的實網保證。",
+                "保證還依賴客戶端及時獲知提交視窗、遵循單一提案與持續有效性要求，並假定區塊永遠裝得下所有合格交易。真實系統若有容量競爭、費用篩選、永久斷連或不同故障比例，就超出了這些結論。模擬的對手也未覆蓋所有作惡方式。研究的價值在於明確使用者連線性與副本連線性的取捨，以及等待時間的代價；它沒有給任意現有區塊鏈提供現成的抗審查承諾。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，展示納入與後續保留的區別，不是實網效能圖。",
+            "steps": [
+              "客戶端傳播交易與上一輪證書",
+              "副本收集提案並形成認證區塊",
+              "客戶端轉發包含交易的歷史",
+              "在假設成立時排除遺漏交易的分支"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "memderive-evolving-data-agent-memory",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "arXiv · version metadata",
+          "url": "https://arxiv.org/abs/2610.25373v1"
+        },
+        {
+          "label": "arXiv · full paper",
+          "url": "https://arxiv.org/html/2610.25373v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Agent 记得某次预订被修改，不代表它会自动更新“还有几项待报销”这样的答案。后者不是从某一句话里直接摘出来的事实，而是结合多条记录与规则得到的派生状态。MemDerive 因此不只给记忆系统打总分，还追问错误从哪一步开始，以及新事件到来后，过去正确的结论是否仍然正确。",
+          "sections": [
+            {
+              "heading": "先确定事实与推导，再生成问题",
+              "paragraphs": [
+                "基准覆盖旅行预订及报销、订单退货、课程先修条件三个领域的 10 个合成场景，共 4,692 条事件、1,503 个问题。作者先用符号形式描述事件、修改和规则，再用 Datalog 规则系统计算答案及其依赖图，最后写成自然语言记录。实体名称是虚构的，并加入干扰项和词汇差异，让系统必须依据给定历史，而不能凭常识猜出答案。",
+                "依赖图不仅记录最终数值，还指出用到了哪些事实、规则和中间结果。评分据此区分有答案、能够证明结果为空，以及资料不足而未知，并检查引用是否支持答案。历史变化时，同一问题的标准答案会重新计算。这使“看起来答得通”与“证据确实足够”成为可分别检查的事情。"
+              ]
+            },
+            {
+              "heading": "分清没取齐、取不到与算错",
+              "paragraphs": [
+                "主实验比较 Mem0、Cognee、LightMem、MemoryOS 与 BM25、向量检索。各系统每题返回 15 个条目，回答模型统一为关闭推理、温度为零的 GPT-5.6 Sol。对全部 1,503 题，四个记忆系统准确率为 30.41%—48.30%，BM25 为 58.28%；给回答模型完整历史为 79.84%，直接给出支持事件为 96.01%。最后一个数字是预先提供正确证据的参考条件，不是任何端到端记忆系统的成绩。",
+                "诊断会沿依赖图继续提问：单独问某个中间状态能答对，但原问题没有带回它，属于“没取齐”；直接追问事实或规则仍失败，是“取不到”；输入齐全却推导错误，则是“算错”。记忆系统错误答案中，61%—85% 含有没取齐的状态。类别可能在同一题并存，比例不能相加。把系统自己能找到的中间证据重新组合，能修复一部分错误，但这依赖基准提供的分解，不是系统自主获得了相同能力。"
+              ]
+            },
+            {
+              "heading": "更新能力与真实应用的边界",
+              "paragraphs": [
+                "更新评估在历史的五个检查点追踪 132 个问题。对于此前答对、而标准答案发生变化的情况，作者报告记忆系统对显式变化的平均刷新率为 82.4%，对没有新记录直接写出新答案的隐式变化仅为 41.1%。这不是所有新事件的成功率：分母要求上一检查点已经答对。它揭示的是规则或输入改变后，相关结论未必跟着刷新。",
+                "作者据此建议保留规则版本、证据完整性与依赖关系，按推导需要收集材料，并在依赖改变时重算结论。这些是由诊断结果提出的设计方向，并非论文已经实现的通用解决方案。场景虽可精确核验，却不覆盖主观偏好和开放式规划；统一回答模型、固定检索设置和合成领域也限制了外推。结果说明这组任务上的瓶颈，不能推成所有记忆产品都不如关键词检索，或所有真实工作流都会出现同样排名。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，展示基准如何诊断与追踪状态，不是新增实验数据。",
+            "steps": [
+              "用事件与规则生成标准答案",
+              "记录答案的事实与推导依赖",
+              "逐步提问定位记忆错误",
+              "随历史变化检查结论是否更新"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An agent may remember that a booking changed without updating an answer such as how many expenses remain outstanding. That answer is a derived state, computed from several records and rules rather than quoted from one sentence. MemDerive goes beyond a single memory score: it asks where an incorrect derivation starts and whether previously correct conclusions remain correct as new events arrive.",
+          "sections": [
+            {
+              "heading": "Build the reference derivation before the questions",
+              "paragraphs": [
+                "The benchmark contains ten synthetic scenarios across travel booking and reimbursement, orders and returns, and course prerequisites: 4,692 events and 1,503 queries. Events, revisions and rules are specified symbolically. Datalog computes reference answers and dependency graphs before the histories are rendered into natural language. Invented entity names, distractors and vocabulary gaps require systems to use the supplied history rather than rely on familiar facts.",
+                "The graph records contributing facts, rules and intermediate results, not just a final value. Scoring distinguishes an answer, a justified empty result and insufficient information, and checks whether citations support the answer. As the history changes, the reference answer is recomputed. This separates a plausible response from one supported by sufficient evidence."
+              ]
+            },
+            {
+              "heading": "Separate missing collection, failed retrieval and wrong inference",
+              "paragraphs": [
+                "The main experiment compares Mem0, Cognee, LightMem and MemoryOS with BM25 and dense retrieval. Each system returns 15 items per query; all use GPT-5.6 Sol with reasoning disabled and temperature zero for answering. Across all 1,503 queries, the four memory systems achieve 30.41–48.30% accuracy versus 58.28% for BM25. Supplying the whole history gives 79.84%; directly supplying the supporting events gives 96.01%. The last number is a reference condition with correct evidence provided, not an end-to-end memory-system result.",
+                "Diagnosis asks additional questions along the reference graph. If a state is correct when requested directly but absent from the original question’s evidence, it is ungathered. A fact or rule that still cannot be returned is unretrievable; an incorrect result with its inputs available is misderived. Between 61% and 85% of the memory systems’ wrong answers contain an ungathered state. Classes can coexist in one answer, so their shares must not be added. Recombining evidence the system can itself recover repairs some failures, but relies on the benchmark’s supplied decomposition."
+              ]
+            },
+            {
+              "heading": "Updating conclusions and the limits of generalization",
+              "paragraphs": [
+                "Maintenance evaluation tracks 132 queries at five checkpoints. Among transitions with a correct previous answer and a changed reference answer, the authors report average refresh rates of 82.4% for explicit changes and 41.1% for implicit ones, where no new record directly states the new answer. These percentages do not cover all arriving events: their denominator requires the earlier answer to have been correct. They expose failures to propagate changed inputs or rules into dependent conclusions.",
+                "The authors recommend retaining rule versions, completeness information and dependencies, gathering evidence along the derivation and recomputing conclusions when inputs change. These are design lessons, not an implemented universal solution. Executable synthetic scenarios support precise checking but exclude subjective preferences and open-ended planning. A shared answer model, fixed retrieval setup and limited domains constrain generalization. The result diagnoses this workload; it does not establish that every memory product loses to keyword retrieval or that real workflows will preserve the same ranking."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper: benchmark diagnosis and state maintenance, not new experimental data.",
+            "steps": [
+              "Generate reference answers from events and rules",
+              "Record facts and derivation dependencies",
+              "Probe intermediate states to locate errors",
+              "Track whether conclusions update with history"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "エージェントが予約の変更を覚えていても、「未精算の項目はいくつか」という答えを更新できるとは限らない。その答えは一文から抜き出す事実ではなく、複数の記録とルールから計算する派生状態だからだ。MemDerive は記憶システムの総合点だけでなく、導出のどこで誤りが生じ、新しい出来事によって過去の正しい結論が古くならないかを調べる。",
+          "sections": [
+            {
+              "heading": "質問の前に正解と依存関係を作る",
+              "paragraphs": [
+                "旅行予約・精算、注文・返品、授業の履修条件という三領域の 10 の合成シナリオに、4,692 件のイベントと 1,503 問を用意した。まず出来事、訂正、ルールを記号で定義し、Datalog で正解と依存グラフを計算してから自然言語の履歴へ変換する。名称は架空で、妨害記録や語彙のずれも加えるため、既知の常識ではなく与えられた履歴を使う必要がある。",
+                "グラフは最終値だけでなく、それに使う事実、ルール、中間結果を記録する。評価では答えがある場合、空であると証明できる場合、情報不足で不明な場合を区別し、引用が回答を支えるかも確認する。履歴が変われば正解も再計算する。もっともらしい答えと、十分な根拠を持つ答えを分けて検査できる。"
+              ]
+            },
+            {
+              "heading": "集め損ね、取得不能、推論誤りを分ける",
+              "paragraphs": [
+                "主実験では Mem0、Cognee、LightMem、MemoryOS を BM25 と密ベクトル検索に比較した。各方式は 1 問につき 15 項目を返し、回答モデルは推論無効、温度ゼロの GPT-5.6 Sol に統一した。全 1,503 問で記憶システムの正解率は 30.41—48.30%、BM25 は 58.28%。全履歴を渡すと 79.84%、必要な根拠イベントを直接渡すと 96.01% だった。最後の数値は正しい根拠を与えた参照条件であり、一貫した記憶システムの性能ではない。",
+                "診断は依存グラフに沿って追加質問する。単独で聞けば返せる状態が元の質問では集まらなければ「集め損ね」、事実やルールを直接聞いても返せなければ「取得不能」、入力がそろっているのに計算を誤れば「導出誤り」とする。記憶システムの誤答の 61—85% は集め損ねを含んだ。複数分類が一問に併存するので割合は足し合わせられない。自身で取得できる根拠の再構成で一部は直るが、基準データが提供する問題分解を使った結果である。"
+              ]
+            },
+            {
+              "heading": "結論の更新能力と一般化の限界",
+              "paragraphs": [
+                "更新評価では 132 問を五つの時点で追跡した。前時点で正解し、その後に正解が変わったケースに対し、記憶システムの平均更新率は、新しい答えが記録に明記される変化で 82.4%、明記されない暗黙の変化で 41.1% と報告された。すべての新イベントに対する成功率ではなく、前の回答が正しかったことを分母の条件にする。入力やルールが変わっても、それに依存する結論に反映されない弱点を示している。",
+                "著者はルールの版、情報の完全性、依存関係を保持し、導出に沿って根拠を集め、入力変更時に結論を再計算する設計を提案する。これは診断から得た指針で、万能な解決策を実装した結果ではない。厳密に検査できる合成場面は、主観的な好みや自由な計画を含まない。共通の回答モデル、固定した検索設定、限られた領域にも依存する。すべての記憶製品がキーワード検索より劣る、現実でも同じ順位になる、と一般化することはできない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき本站が描き直した説明図。診断と状態更新の評価手順を示し、新しい実験結果ではない。",
+            "steps": [
+              "イベントとルールから正解を計算",
+              "事実と導出の依存関係を記録",
+              "中間状態への質問で誤りを特定",
+              "履歴の変化に結論が追従するか確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Агент может помнить изменение бронирования, но не обновить ответ о числе расходов, ожидающих возмещения. Это производное состояние: оно вычисляется из нескольких записей и правил, а не извлекается из одного предложения. MemDerive исследует не только итоговую точность памяти, но и место возникновения ошибки, а также сохранение правильности выводов при поступлении новых событий.",
+          "sections": [
+            {
+              "heading": "Сначала эталонный вывод, затем вопросы",
+              "paragraphs": [
+                "Набор содержит десять синтетических сценариев в трёх областях: бронирование и возмещение поездок, заказы и возвраты, требования к учебным курсам. Всего 4 692 события и 1 503 запроса. События, исправления и правила задаются символически; Datalog рассчитывает ответы и графы зависимостей, после чего история переводится в естественный язык. Вымышленные названия, отвлекающие записи и различия словаря заставляют использовать данную историю, а не знакомые факты.",
+                "Граф фиксирует не только итоговое значение, но и факты, правила и промежуточные результаты. Оценка различает наличие ответа, обоснованный пустой результат и нехватку информации, а также проверяет подтверждающие ссылки. При изменении истории эталон пересчитывается. Благодаря этому правдоподобный ответ отделяется от ответа, обеспеченного достаточными доказательствами."
+              ]
+            },
+            {
+              "heading": "Различить несобранные сведения, недоступные факты и ошибочный вывод",
+              "paragraphs": [
+                "Основной эксперимент сравнивает Mem0, Cognee, LightMem и MemoryOS с BM25 и плотным поиском. Каждый вариант возвращает 15 элементов на запрос; отвечающая модель одинакова — GPT-5.6 Sol с отключённым рассуждением и нулевой температурой. На всех 1 503 вопросах системы памяти дают 30,41–48,30% правильных ответов против 58,28% у BM25. Вся история даёт 79,84%, непосредственно предоставленные подтверждающие события — 96,01%. Последнее число относится к условию с заранее выданными доказательствами, а не к готовой системе памяти.",
+                "Диагностика задаёт дополнительные вопросы по графу. Если состояние доступно при прямом вопросе, но не собрано для исходного, это несобранное свидетельство. Если факт или правило не возвращается даже напрямую, оно недоступно; неверный результат при наличии входных данных считается ошибкой вывода. Несобранные состояния встречаются в 61–85% неправильных ответов систем памяти. Классы могут пересекаться, их доли нельзя складывать. Повторная сборка доступных системе свидетельств исправляет часть ошибок, но использует разложение задачи, данное самим тестом."
+              ]
+            },
+            {
+              "heading": "Обновление состояния и границы переноса результатов",
+              "paragraphs": [
+                "Проверка поддержки состояния отслеживает 132 вопроса на пяти контрольных точках. Среди переходов с ранее правильным ответом и изменившимся эталоном среднее обновление у систем памяти составляет 82,4% для явных изменений и 41,1% для неявных, где новая запись прямо не сообщает новый ответ. Знаменатель требует правильности предыдущего ответа: это не успех на всех новых событиях. Показатель выявляет неприменение изменившихся входов или правил к зависимым выводам.",
+                "Авторы рекомендуют хранить версии правил, сведения о полноте и зависимости, собирать доказательства по структуре вывода и пересчитывать состояние при изменении входов. Это выводы для проектирования, а не реализованное универсальное решение. Исполняемые синтетические сценарии позволяют точную проверку, но не охватывают субъективные предпочтения и открытое планирование. Общая отвечающая модель, фиксированные настройки поиска и ограниченные области сдерживают обобщение. Работа не доказывает, что любой продукт памяти уступает поиску по словам или что реальные процессы сохранят такое же ранжирование."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: диагностика и поддержка состояния, не новые экспериментальные данные.",
+            "steps": [
+              "Рассчитать эталон из событий и правил",
+              "Зафиксировать факты и зависимости вывода",
+              "Проверить промежуточные состояния",
+              "Отследить обновление выводов вместе с историей"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Agent 記得某次預訂被修改，不代表它會自動更新“還有幾項待報銷”這樣的答案。後者不是從某一句話裡直接摘出來的事實，而是結合多條記錄與規則得到的派生狀態。MemDerive 因此不只給記憶系統打總分，還追問錯誤從哪一步開始，以及新事件到來後，過去正確的結論是否仍然正確。",
+          "sections": [
+            {
+              "heading": "先確定事實與推導，再生成問題",
+              "paragraphs": [
+                "基準覆蓋旅行預訂及報銷、訂單退貨、課程先修條件三個領域的 10 個合成場景，共 4,692 條事件、1,503 個問題。作者先用符號形式描述事件、修改和規則，再用 Datalog 規則系統計算答案及其依賴圖，最後寫成自然語言記錄。實體名稱是虛構的，並加入干擾項和詞彙差異，讓系統必須依據給定歷史，而不能憑常識猜出答案。",
+                "依賴圖不僅記錄最終數值，還指出用到了哪些事實、規則和中間結果。評分據此區分有答案、能夠證明結果為空，以及資料不足而未知，並檢查引用是否支援答案。歷史變化時，同一問題的標準答案會重新計算。這使“看起來答得通”與“證據確實足夠”成為可分別檢查的事情。"
+              ]
+            },
+            {
+              "heading": "分清沒取齊、取不到與算錯",
+              "paragraphs": [
+                "主實驗比較 Mem0、Cognee、LightMem、MemoryOS 與 BM25、向量檢索。各系統每題返回 15 個條目，回答模型統一為關閉推理、溫度為零的 GPT-5.6 Sol。對全部 1,503 題，四個記憶系統準確率為 30.41%—48.30%，BM25 為 58.28%；給回答模型完整歷史為 79.84%，直接給出支援事件為 96.01%。最後一個數字是預先提供正確證據的參考條件，不是任何端到端記憶系統的成績。",
+                "診斷會沿依賴圖繼續提問：單獨問某個中間狀態能答對，但原問題沒有帶回它，屬於“沒取齊”；直接追問事實或規則仍失敗，是“取不到”；輸入齊全卻推導錯誤，則是“算錯”。記憶系統錯誤答案中，61%—85% 含有沒取齊的狀態。類別可能在同一題並存，比例不能相加。把系統自己能找到的中間證據重新組合，能修復一部分錯誤，但這依賴基準提供的分解，不是系統自主獲得了相同能力。"
+              ]
+            },
+            {
+              "heading": "更新能力與真實應用的邊界",
+              "paragraphs": [
+                "更新評估在歷史的五個檢查點追蹤 132 個問題。對於此前答對、而標準答案發生變化的情況，作者報告記憶系統對顯式變化的平均重新整理率為 82.4%，對沒有新記錄直接寫出新答案的隱式變化僅為 41.1%。這不是所有新事件的成功率：分母要求上一檢查點已經答對。它揭示的是規則或輸入改變後，相關結論未必跟著重新整理。",
+                "作者據此建議保留規則版本、證據完整性與依賴關係，按推導需要收集材料，並在依賴改變時重算結論。這些是由診斷結果提出的設計方向，並非論文已經實現的通用解決方案。場景雖可精確核驗，卻不覆蓋主觀偏好和開放式規劃；統一回答模型、固定檢索設定和合成領域也限制了外推。結果說明這組任務上的瓶頸，不能推成所有記憶產品都不如關鍵詞檢索，或所有真實工作流都會出現同樣排名。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，展示基準如何診斷與追蹤狀態，不是新增實驗資料。",
+            "steps": [
+              "用事件與規則生成標準答案",
+              "記錄答案的事實與推導依賴",
+              "逐步提問定位記憶錯誤",
+              "隨歷史變化檢查結論是否更新"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
