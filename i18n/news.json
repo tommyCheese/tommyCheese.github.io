@@ -1,6 +1,50 @@
 {
-  "updated_at": "2026-10-29",
+  "updated_at": "2026-10-30",
   "items": [
+    {
+      "id": "openai-model-spec-intent-context-update",
+      "category": "ai",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-30",
+      "source": "OpenAI / Reuters",
+      "url": "https://openai.com/index/updated-model-spec/",
+      "image": "https://tommycheese.github.io/images/news/openai-model-spec-intent.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-layered-misalignment-monitoring",
+      "category": "ai",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-30",
+      "source": "OpenAI / METR / Reuters",
+      "url": "https://openai.com/index/how-we-detect-frontier-model-misalignment/",
+      "image": "https://tommycheese.github.io/images/news/openai-layered-monitoring.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "cisco-asa-ftd-ssl-vpn-dos-fix",
+      "category": "security",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-30",
+      "source": "Cisco PSIRT / BleepingComputer",
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75",
+      "image": "https://tommycheese.github.io/images/news/cisco-ssl-vpn-remediation.svg",
+      "image_credit": "Original explanatory diagram",
+      "image_fit": "contain"
+    },
+    {
+      "id": "microsoft-rdp-admin-protection-fix",
+      "published_at": "2026-10-28",
+      "collected_at": "2026-10-30",
+      "category": "software",
+      "source": "Microsoft / BleepingComputer",
+      "url": "https://support.microsoft.com/en-us/servicing/os/windows-11/2026/10/kb5127936-windows-11-25h2-26h2-update",
+      "image": "https://tommycheese.github.io/images/news/windows-rdp-protection-fix.svg",
+      "image_credit": "本站原创解释图 · Original explanatory diagram",
+      "image_fit": "contain"
+    },
     {
       "id": "google-gemini4-carbon-defender-preview",
       "published_at": "2026-10-28",
@@ -382,8 +426,8 @@
       "collected_at": "2026-10-21",
       "source": "Quantinuum",
       "url": "https://www.quantinuum.com/blog/quantinuum-closes-in-on-one-million-error-free-operations",
-      "image": "https://cdn.prod.website-files.com/669960f53cd73aedb80c8f0e/6ad274e976d3e3d01de0af62_Figure%201%20Logical%20Qubits.png",
-      "image_credit": "Quantinuum · color-code experiment diagram",
+      "image": "https://tommycheese.github.io/images/news/quantinuum-logical-memory.svg",
+      "image_credit": "Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -393,8 +437,8 @@
       "collected_at": "2026-10-20",
       "source": "PyTorch / AWS",
       "url": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/",
-      "image": "https://pytorch.org/wp-content/uploads/2026/10/AWS-TorchNeuron-image-1.png",
-      "image_credit": "AWS / PyTorch · architecture diagram",
+      "image": "https://tommycheese.github.io/images/news/torchneuron-native-backend.svg",
+      "image_credit": "Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -404,8 +448,8 @@
       "collected_at": "2026-10-20",
       "source": "BleepingComputer / Rank Math",
       "url": "https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/",
-      "image": "https://www.bleepstatic.com/content/hl-images/2026/06/18/WordPress.jpg",
-      "image_credit": "BleepingComputer · WordPress illustration",
+      "image": "https://tommycheese.github.io/images/news/rankmath-supply-chain-response.svg",
+      "image_credit": "Original explanatory diagram",
       "image_fit": "contain"
     },
     {
