@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">Windows Remote Desktop and Administrator protection</title>
+<desc id="desc">Original explanatory diagram. Check the host and Windows release, apply an applicable fix, and retain Administrator protection. KB5127936 applies to Windows 11 25H2 and 26H2, not every affected release.</desc>
+<rect width="1200" height="675" fill="#111e30"/>
+<g font-family="Arial,Helvetica,sans-serif">
+<text x="70" y="88" fill="#8ccee9" font-size="21" letter-spacing="3">WINDOWS 11 · COMPATIBILITY FIX</text>
+<text x="70" y="155" fill="#f4f8fd" font-size="45" font-weight="700">Remote access, protection retained</text>
+<text x="70" y="204" fill="#b2c4d8" font-size="25">KB5127936 preview · October 28, 2026</text>
+<g fill="#20344c" stroke="#527b9f" stroke-width="2"><rect x="70" y="280" width="310" height="190" rx="18"/><rect x="445" y="280" width="310" height="190" rx="18"/><rect x="820" y="280" width="310" height="190" rx="18"/></g>
+<g stroke="#8ccee9" stroke-width="4" fill="none"><path d="M394 375h36m-11-10 11 10-11 10"/><path d="M769 375h36m-11-10 11 10-11 10"/></g>
+<g fill="#8ccee9" font-size="20"><text x="95" y="320">01 · SCOPE</text><text x="470" y="320">02 · UPDATE</text><text x="845" y="320">03 · VERIFY</text></g>
+<g fill="#f4f8fd" font-size="29" font-weight="700"><text x="95" y="370">Check the host</text><text x="470" y="370">Match the release</text><text x="845" y="370">Keep protection</text></g>
+<g fill="#b2c4d8" font-size="21"><text x="95" y="417">Non-admin RDP access</text><text x="470" y="417">25H2 / 26H2 package</text><text x="845" y="417">Confirm connection</text></g>
+<rect x="70" y="509" width="1060" height="66" rx="12" fill="#30384a"/>
+<text x="95" y="550" fill="#e6d5ae" font-size="23">Affected releases and package applicability are different lists.</text>
+<text x="70" y="623" fill="#91a9c1" font-size="19">Original explanatory diagram · Not a benchmark, installation guide, or guarantee for every RDP issue.</text>
+</g></svg>

@@ -18632,6 +18632,1794 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-model-spec-intent-context-update",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "OpenAI · October 29 announcement",
+          "url": "https://openai.com/index/updated-model-spec/"
+        },
+        {
+          "label": "OpenAI · Model Spec dated October 29, 2026",
+          "url": "https://model-spec.openai.com/2026-10-29.html"
+        },
+        {
+          "label": "Reuters · Model Spec report via Y94",
+          "url": "https://y94.com/2026/10/29/openai-says-human-intent-at-center-of-updated-ai-model-guidelines/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "当 AI 不再只是回答问题，而是能替人完成工作，规则就需要说明：遇到没有明确交代的情况，它该怎样判断，又必须把哪些决定留给人。OpenAI 在 10 月 29 日更新公开的 Model Spec，重新组织行为规范，重点是理解人的意图、合理使用上下文和接受监督。它不是一款新模型，也不是一份已经达标的成绩单。",
+          "sections": [
+            {
+              "heading": "五项价值如何落到具体行为",
+              "paragraphs": [
+                "新版围绕忠于人的意图、减少伤害、诚实透明、人的自主性和关怀组织规则。OpenAI 负责设定边界，开发者在边界内决定应用行为，用户再指示具体任务。所谓理解意图，并不是让模型自行替人决定什么更好；规范仍保留指令优先级，要求模型接受合法监督、纠正、替换和停止。",
+                "相比逐条覆盖所有情境，这种结构试图解释规则背后的理由，让模型面对陌生任务时也能作出有依据的判断。Reuters 将此次变化放在 AI 对齐受到关注的背景下报道。不过，价值描述本身不能证明模型更可靠，实际表现仍需通过具体任务和部署反馈检验。"
+              ]
+            },
+            {
+              "heading": "记住上下文，也要知道何时不用",
+              "paragraphs": [
+                "新增的上下文章节要求保留与当前任务有关的指示、偏好、事实和项目进度，减少让用户反复解释。但旧偏好可能只适用于某一次任务，旧事实可能过时，模型推测的偏好也不能压过同级或更高优先级的明确指示。个性化应帮助完成眼前工作，而不是因为知道一件事就把它带进所有回答。",
+                "规范还区分用户说过的话与模型自行推断，要求解释上下文如何影响答案，并考虑内容将交给谁。用户要求不再使用某段信息后，后续回答应避免继续依赖它；这不等于模型可以声称已经永久删除数据。对使用记忆的产品而言，这给出了可观察的行为要求，而不是对底层存储方式的新承诺。"
+              ]
+            },
+            {
+              "heading": "更少固定文风，更明确行动边界",
+              "paragraphs": [
+                "此次删去大部分细碎文风规则，转而根据语言、文化、当前场景及用户偏好调整表达；客观呈现等较强默认要求仍保留。新版也强调自主决策支持、相关社会规范，以及行动的附带影响：超出任务合理预期的重要成本或对他人的重大不利影响，需要具体授权；能达到目的时，应优先考虑容易撤销、影响较小的做法。",
+                "这些变化对能调用工具的 Agent 尤其重要，因为一次错误理解可能不止产生一句错误回答，还会改变外部状态。本文的判断是，新规范提供了更清楚的评估依据，但是否做到必须逐项验证。OpenAI 明确表示现有模型尚未完全符合新版规范，相关训练方法的结果还会另行公布；不能把文档更新写成所有产品当天完成行为升级。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开规范重绘的解释图：展示意图、上下文、行动和纠正之间的关系，不是模型能力评测。",
+            "steps": [
+              "明确意图与适用指示",
+              "选择相关且合适的上下文",
+              "在授权范围内行动",
+              "让人能够检查与纠正"
+            ]
+          }
+        },
+        "en": {
+          "lead": "As AI moves from answering questions to carrying out work, a behavior policy must explain how it should act when instructions leave something unsaid—and which decisions must remain with people. OpenAI updated its public Model Spec on October 29, emphasizing human intent, appropriate use of context and oversight. This is a revision of intended behavior, not a new model or evidence that every product has already met the standard.",
+          "sections": [
+            {
+              "heading": "Turning five values into observable behavior",
+              "paragraphs": [
+                "The revision groups guidance around fidelity to human intent, reducing harm, honesty and transparency, human agency, and care. OpenAI sets boundaries, developers shape applications within them, and users direct particular tasks. Understanding intent does not authorize a model to substitute its own idea of what is best. The document retains instruction priorities and requires cooperation with legitimate oversight, correction, replacement and stopping.",
+                "Rather than trying to enumerate every possible situation, the structure explains the reasons behind rules so they can guide unfamiliar tasks. Reuters reported the change against a background of increased attention to AI alignment. A statement of values is not itself evidence of greater reliability: behavior still needs to be assessed in concrete tasks and through deployment feedback."
+              ]
+            },
+            {
+              "heading": "Useful memory requires selective use",
+              "paragraphs": [
+                "The new context section asks models to carry forward relevant instructions, preferences, facts and project state, reducing repeated explanations. But a preference may have applied to one task, an old fact may be stale, and inferred preferences cannot override explicit instructions of equal or greater authority. Personalization should help with the present work, rather than insert every available detail into an answer.",
+                "The Spec distinguishes what a user actually said from what the model inferred. It calls for explainable use of context and attention to the audience receiving the output. After a request not to use a detail, later answers should avoid relying on it; that does not justify claiming the data was permanently deleted. For products with memory, these are observable behavior requirements, not new promises about storage mechanisms."
+              ]
+            },
+            {
+              "heading": "Less prescribed style, clearer limits on action",
+              "paragraphs": [
+                "Most fine-grained style guidance is retired, with expression instead adapting to language, culture, situation and user preferences; stronger defaults such as objective presentation remain. The revision also emphasizes agency, relevant social norms and side effects. Significant costs beyond what a task reasonably implies, or substantial adverse effects on others, require specific authorization. Reversible, less disruptive ways of achieving an authorized objective should be considered.",
+                "These distinctions matter especially for agents using tools: a misunderstanding can alter the outside world, not merely produce a poor answer. Our assessment is that the revision makes evaluation criteria clearer, while compliance must still be tested. OpenAI explicitly says its current models do not fully reflect the revised Spec and that results from related training methods will be shared later. Updating the document does not mean every product changed behavior that day."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on the public Spec: intent, context, action and correction—not a capability evaluation.",
+            "steps": [
+              "Establish intent and applicable instructions",
+              "Select relevant, appropriate context",
+              "Act within authorized scope",
+              "Enable human review and correction"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "AI が質問に答えるだけでなく仕事を実行するようになると、指示に書かれていない場面でどう判断し、どの決定を人に委ねるかが重要になる。OpenAI は 10 月 29 日、公開の Model Spec を改訂した。人の意図、文脈の適切な利用、監督を中心に行動規範を整理したもので、新モデルの発表でも、全製品が基準を満たしたという報告でもない。",
+          "sections": [
+            {
+              "heading": "五つの価値を行動につなげる",
+              "paragraphs": [
+                "新版は、人の意図への忠実さ、害の低減、誠実さと透明性、人の主体性、配慮という五つの価値を軸にする。OpenAI が境界を設け、開発者がその内側でアプリを設計し、利用者が個別の仕事を指示する。意図を理解することは、モデルが勝手に「本人のため」を決める許可ではない。指示の優先順位を維持し、正当な監督、訂正、置き換え、停止に協力することも求める。",
+                "あらゆる状況を列挙する代わりに、規則の理由を説明し、未知の仕事にも判断の根拠を与える構成だ。Reuters は AI のアラインメントへの関心が高まる中での改訂として報じた。ただし、価値を宣言しただけで信頼性が上がったとはいえず、具体的な仕事や運用時の反応を通じた確認が必要になる。"
+              ]
+            },
+            {
+              "heading": "文脈を覚えることと、使い分けること",
+              "paragraphs": [
+                "新設された文脈の章は、現在の仕事に関係する指示、好み、事実、プロジェクトの進捗を引き継ぎ、利用者が同じ説明を繰り返さずに済むよう求める。一方、過去の好みは一度の作業だけに適用され、古い事実は変わっている可能性がある。推定した好みで、同等以上の権限を持つ明示的な指示を覆すこともできない。知っている情報を毎回出すのではなく、今の仕事に役立つかが基準になる。",
+                "利用者が実際に述べた内容とモデルの推測を区別し、文脈が回答にどう影響したかを説明し、出力を受け取る相手にも配慮する。ある情報を使わないよう頼まれた後は、それに依存する回答を避けるべきだが、データが永久に削除されたと断言してよいわけではない。これは記憶機能のある製品に対する行動上の要件であり、保存方式の新たな保証ではない。"
+              ]
+            },
+            {
+              "heading": "文体の指定を減らし、行動の境界を明確に",
+              "paragraphs": [
+                "細かな文体の規則は大部分を削り、言語、文化、状況、利用者の好みに合わせる方向へ移した。客観的な説明など、より強い既定の要求は残る。主体性の支援、社会的規範、行動の副作用も重視する。仕事から通常想定される範囲を超える大きな費用や、他者への重大な不利益には個別の許可が必要で、目的を達成できるなら取り消しやすく影響の小さい手段を検討する。",
+                "ツールを使う Agent では、誤解が悪い回答にとどまらず外部の状態を変えるため、この区別が重要だ。本稿では評価の基準が明確になったと捉えるが、実際の適合は項目ごとに確かめる必要がある。OpenAI 自身も現行モデルが新版を完全には反映していないと説明し、関連する訓練手法の結果は今後公表するとしている。文書の更新を、同日に全製品の行動が変わったことと混同してはいけない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開規範を基に本站で描き直した説明図。意図、文脈、行動、訂正の関係であり、能力評価ではない。",
+            "steps": [
+              "意図と適用する指示を確認",
+              "関連し適切な文脈を選ぶ",
+              "許可された範囲で行動",
+              "人が確認し訂正できるようにする"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Когда ИИ не только отвечает на вопросы, но и выполняет работу, правила должны объяснять, как поступать в неоговоренных ситуациях и какие решения оставлять человеку. 29 октября OpenAI обновила публичный Model Spec, сделав акцент на намерениях людей, уместном использовании контекста и надзоре. Это пересмотр желаемого поведения, а не новая модель и не подтверждение того, что все продукты уже соответствуют стандарту.",
+          "sections": [
+            {
+              "heading": "От пяти ценностей к проверяемому поведению",
+              "paragraphs": [
+                "Рекомендации сгруппированы вокруг верности человеческим намерениям, уменьшения вреда, честности и прозрачности, самостоятельности человека и заботы. OpenAI задает границы, разработчики определяют поведение приложений внутри них, пользователи поручают конкретную работу. Понимание намерения не дает модели права самой решать, что человеку лучше. Сохраняется приоритет инструкций и требование сотрудничать при законном надзоре, исправлении, замене и остановке.",
+                "Вместо перечисления всех возможных случаев структура объясняет причины правил, чтобы они помогали в незнакомых задачах. Reuters осветило пересмотр на фоне повышенного внимания к согласованию ИИ с человеческими целями. Однако декларация ценностей сама по себе не доказывает надежность: поведение необходимо проверять на конкретных задачах и по результатам эксплуатации."
+              ]
+            },
+            {
+              "heading": "Помнить контекст — значит уметь его отбирать",
+              "paragraphs": [
+                "Новый раздел предлагает сохранять относящиеся к текущей работе инструкции, предпочтения, факты и состояние проекта, чтобы человеку не приходилось повторяться. Но прежнее предпочтение могло касаться только одной задачи, а факт — устареть. Предполагаемые предпочтения не могут отменять явные указания того же или более высокого уровня. Персонализация должна помогать текущей работе, а не включать в ответ любую доступную подробность.",
+                "Документ различает слова пользователя и выводы модели, требует объяснимого использования контекста и учета аудитории результата. После просьбы не использовать некоторую информацию последующие ответы должны избегать опоры на нее; это не позволяет утверждать, что данные навсегда удалены. Для продуктов с памятью это наблюдаемые требования к поведению, а не новые обещания об устройстве хранения."
+              ]
+            },
+            {
+              "heading": "Меньше предписаний о стиле, четче границы действий",
+              "paragraphs": [
+                "Большая часть подробных стилевых указаний убрана: манера изложения должна учитывать язык, культуру, ситуацию и предпочтения человека. Более сильные требования по умолчанию, включая объективность, остаются. Усилено внимание к самостоятельности, социальным нормам и побочным эффектам. Значительные расходы сверх разумно подразумеваемых задачей или существенный ущерб другим требуют отдельного разрешения; следует рассматривать обратимые и менее разрушительные способы достижения разрешенной цели.",
+                "Для агентов с инструментами это особенно важно: неверное понимание может изменить внешний мир, а не только испортить ответ. По нашей оценке, критерии проверки стали яснее, но соответствие им еще нужно устанавливать. OpenAI прямо признает, что нынешние модели не полностью отражают новую редакцию, а результаты связанных методов обучения будут опубликованы позже. Обновление документа не означает одновременного изменения поведения всех продуктов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по публичному стандарту: намерение, контекст, действие и исправление. Это не оценка возможностей модели.",
+            "steps": [
+              "Установить намерение и применимые указания",
+              "Выбрать уместный контекст",
+              "Действовать в разрешенных пределах",
+              "Обеспечить проверку и исправление человеком"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "當 AI 不再只是回答問題，而是能替人完成工作，規則就需要說明：遇到沒有明確交代的情況，它該怎樣判斷，又必須把哪些決定留給人。OpenAI 在 10 月 29 日更新公開的 Model Spec，重新組織行為規範，重點是理解人的意圖、合理使用上下文和接受監督。它不是一款新模型，也不是一份已經達標的成績單。",
+          "sections": [
+            {
+              "heading": "五項價值如何落到具體行為",
+              "paragraphs": [
+                "新版圍繞忠於人的意圖、減少傷害、誠實透明、人的自主性和關懷組織規則。OpenAI 負責設定邊界，開發者在邊界內決定應用行為，使用者再指示具體任務。所謂理解意圖，並不是讓模型自行替人決定什麼更好；規範仍保留指令優先順序，要求模型接受合法監督、糾正、替換和停止。",
+                "相比逐條覆蓋所有情境，這種結構試圖解釋規則背後的理由，讓模型面對陌生任務時也能作出有依據的判斷。Reuters 將此次變化放在 AI 對齊受到關注的背景下報道。不過，價值描述本身不能證明模型更可靠，實際表現仍需透過具體任務和部署回饋檢驗。"
+              ]
+            },
+            {
+              "heading": "記住上下文，也要知道何時不用",
+              "paragraphs": [
+                "新增的上下文章節要求保留與當前任務有關的指示、偏好、事實和專案進度，減少讓使用者反覆解釋。但舊偏好可能只適用於某一次任務，舊事實可能過時，模型推測的偏好也不能壓過同級或更高優先順序的明確指示。個人化應幫助完成眼前工作，而不是因為知道一件事就把它帶進所有回答。",
+                "規範還區分使用者說過的話與模型自行推斷，要求解釋上下文如何影響答案，並考慮內容將交給誰。使用者要求不再使用某段資訊後，後續回答應避免繼續依賴它；這不等於模型可以聲稱已經永久刪除資料。對使用記憶的產品而言，這給出了可觀察的行為要求，而不是對底層儲存方式的新承諾。"
+              ]
+            },
+            {
+              "heading": "更少固定文風，更明確行動邊界",
+              "paragraphs": [
+                "此次刪去大部分細碎文風規則，轉而根據語言、文化、當前場景及使用者偏好調整表達；客觀呈現等較強預設要求仍保留。新版也強調自主決策支援、相關社會規範，以及行動的附帶影響：超出任務合理預期的重要成本或對他人的重大不利影響，需要具體授權；能達到目的時，應優先考慮容易撤銷、影響較小的做法。",
+                "這些變化對能呼叫工具的 Agent 尤其重要，因為一次錯誤理解可能不止產生一句錯誤回答，還會改變外部狀態。本文的判斷是，新規範提供了更清楚的評估依據，但是否做到必須逐項驗證。OpenAI 明確表示現有模型尚未完全符合新版規範，相關訓練方法的結果還會另行公佈；不能把文件更新寫成所有產品當天完成行為升級。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開規範重繪的解釋圖：展示意圖、上下文、行動和糾正之間的關係，不是模型能力評測。",
+            "steps": [
+              "明確意圖與適用指示",
+              "選擇相關且合適的上下文",
+              "在授權範圍內行動",
+              "讓人能夠檢查與糾正"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-layered-misalignment-monitoring",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "OpenAI · expanded monitoring disclosure",
+          "url": "https://openai.com/index/how-we-detect-frontier-model-misalignment/"
+        },
+        {
+          "label": "OpenAI · API monitoring coverage and limits",
+          "url": "https://developers.openai.com/api/docs/guides/safety-checks/misalignment-monitoring"
+        },
+        {
+          "label": "METR · pilot review with October 29 update",
+          "url": "https://metr.org/blog/2026-10-22-red-teaming-openai-agent-monitoring/"
+        },
+        {
+          "label": "Reuters · earlier independent review via MarketScreener",
+          "url": "https://www.marketscreener.com/news/ai-safety-group-metr-finds-flaws-in-openai-s-internal-monitoring-system-ce785cdedc8ff127"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Agent 获得工具后，安全问题不只是它会说什么，还包括它是否越过授权边界、谁能发现并中止。OpenAI 在 10 月 29 日公开了扩大后的模型失配监测机制，说明如何从初筛走到调查，以及外部 API 在什么条件下能够暂停任务。这里的失配指行为偏离人的预期；触发告警并不等于已经证明用户违规或模型有意作恶。",
+          "sections": [
+            {
+              "heading": "四层检查，把计算用在值得追查的地方",
+              "paragraphs": [
+                "OpenAI 描述的内部系统先用轻量分类器检查模型激活中的可疑模式，再由模型审查近期对话、推理和工具使用。被标记的情况交给调查 Agent，结合任务目的和可取得的更完整上下文判断严重性；敏感工作还会进一步结合环境证据核查，决定是否通知人类处置。前面宁可多报一些，后面再花更多计算区分真问题与误报。",
+                "公司称会随机复查初筛未标记流量中的 5%，用于发现漏报；前沿强化学习与内部 Codex 流量则直接进入模型审查层。监测不等于全天有人接警：前沿强化学习的最高优先级告警可全天通知人员，大部分其他流量限工作时间，内部 Codex 的呼叫通知目前关闭。部分严重告警能自动暂停工作，更广泛的超时暂停安排仍在推进。"
+              ]
+            },
+            {
+              "heading": "外部 API 的检测和停止是两件事",
+              "paragraphs": [
+                "外部部署采用调整后的版本，遵守既有数据隐私及零数据保留承诺，不例行将标记内容转交 OpenAI 人工审阅。企业可把告警送给自己的安全团队。API 文档明确，在适用模型上，Responses API 的会话是否能自动停止，取决于系统能否识别后续请求属于同一段工作。",
+                "保留推理状态、使用 WebSocket 或采用 OpenAI 上下文压缩的请求可被监测并阻止继续执行；未使用这些关联方式的请求仍受监测，配置好的回调也能收到告警，但不会因此自动停止。Chat Completions 不在这套监测覆盖内，其他安全检查仍适用。由于检查是异步的，告警前动作可能已经完成，停止后续请求也不会自动撤销既有影响。"
+              ]
+            },
+            {
+              "heading": "公布机制，不等于证明所有风险已被挡住",
+              "paragraphs": [
+                "OpenAI 用已记录事件、模拟攻击、抽样复核和红队测试评估监测。它称，回放 Hugging Face 事件时，新系统在逃出隔离环境约 30 分钟后发出告警，比真实事件中外部系统遭入侵早 30 多小时。这是事后回放的厂商结果，不是当时实际阻止了事故，也不能推出对新攻击同样有效。",
+                "独立评估方 METR 的公开说明提供了关键限制：其与 Redwood 的三周试验评估的是 7 月 21 日及此前的历史系统，没有验证后来扩大的覆盖。METR 在 10 月 29 日更新称，多数漏洞已修复、仍有一项修复进行中，这一状态也来自 OpenAI，而非独立复测。Reuters 对早期试验的报道说明了独立审查的价值，但不能替新系统背书。本文据此将此次增量理解为机制和边界更透明；误报、漏报、响应覆盖和真实干预效果仍需持续检验。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开说明重绘的解释图：展示监测与处置流程，不是检测率或成功防御的实验结果。",
+            "steps": [
+              "初筛并抽查可能的漏报",
+              "结合任务上下文复核",
+              "区分安全调查与人工处置",
+              "按会话能力告警或停止"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Once agents can use tools, safety concerns include not just their words but whether they exceed authorization—and who can detect and interrupt that behavior. On October 29, OpenAI described its expanded misalignment monitoring, from initial screening to investigation, and the conditions under which an external API task can be stopped. A monitoring flag is a request for review, not proof that a user violated policy or that an agent acted maliciously.",
+          "sections": [
+            {
+              "heading": "Four layers allocate scrutiny to concerning cases",
+              "paragraphs": [
+                "OpenAI describes an internal system that first uses lightweight classifiers to detect suspicious activation patterns, then a model reviewer to examine recent conversation, reasoning and tool use. Flagged activity moves to an investigative agent that considers the task and fuller available context. Sensitive workloads receive further checks against environmental evidence before a decision about human response. Early stages accept more false alarms so later stages can spend more compute separating problems from benign activity.",
+                "The company says a random 5% of traffic not flagged at the first stage is also reviewed to look for misses; frontier reinforcement learning and internal Codex traffic go directly to the model-review stage. Coverage does not mean round-the-clock human paging: highest-priority frontier-training alerts can page at any time, most other traffic is limited to business hours, and paging for internal Codex is currently disabled. Some critical alerts can pause work automatically; a broader timeout-based pause remains in development."
+              ]
+            },
+            {
+              "heading": "Detection and stopping are different API capabilities",
+              "paragraphs": [
+                "External deployments use an adapted version under existing privacy and Zero Data Retention commitments. Flagged material is not routinely escalated to OpenAI human reviewers, and enterprises can route alerts to their own security teams. The API documentation says automatic stopping for covered models depends on recognizing later requests as continuations of the same work.",
+                "Responses API requests using persisted reasoning, WebSockets or OpenAI compaction can be monitored and blocked from continuing. Requests without those mechanisms are still monitored, and configured webhooks can receive alerts, but this does not automatically stop the conversation. Chat Completions is outside this monitoring system, although other safety checks still apply. Because review is asynchronous, an action may finish before a concern is detected; blocking later requests does not undo earlier effects."
+              ]
+            },
+            {
+              "heading": "A disclosed design is not proof that every risk is contained",
+              "paragraphs": [
+                "OpenAI evaluates the system with recorded incidents, simulated attacks, random audits and red-teaming. It reports that replaying the Hugging Face episode produced an alert about 30 minutes after the sandbox escape, more than 30 hours before the external breach in the actual event. This is a company-reported retrospective simulation, not a claim that the real incident was stopped, nor evidence that unfamiliar attacks will be detected equally well.",
+                "Independent evaluator METR supplies an important qualification: its three-week exercise with Redwood examined the historical system as it existed on or before July 21, not the expanded coverage. Its October 29 update says most vulnerabilities are patched and one fix remains in progress, a status supplied by OpenAI rather than independently retested. Reuters coverage of the earlier exercise illustrates the importance of outside scrutiny but cannot validate the newer system. We see the new disclosure as greater clarity about mechanisms and boundaries; false alarms, missed cases, response coverage and actual intervention outcomes still need continued evaluation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on public documentation: monitoring and response, not a measured detection rate or successful-defense result.",
+            "steps": [
+              "Screen and sample for possible misses",
+              "Review activity in task context",
+              "Separate investigation from human response",
+              "Alert or stop where conversation support permits"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ツールを使う Agent の安全性では、発言だけでなく、許可された範囲を越えた行動を誰が発見し停止できるかが問題になる。OpenAI は 10 月 29 日、拡大したミスアラインメント監視の仕組みを公開した。初期検査から調査までの流れと、外部 API で仕事を停止できる条件を説明している。警告は確認が必要という意味で、利用者の違反やモデルの悪意が証明されたわけではない。",
+          "sections": [
+            {
+              "heading": "四段階で、調査が必要な活動に計算を振り向ける",
+              "paragraphs": [
+                "内部システムでは、まず軽量な分類器がモデルの活性化に現れる疑わしいパターンを調べ、その後モデルが直近の会話、推論、ツール使用を確認する。検知された活動は調査 Agent に渡り、目的と取得可能な広い文脈を合わせて深刻さを判断する。機微な仕事では環境側の証拠も確認し、人への通知を決める。前段で多少の誤報を許し、後段でより多くの計算を使って見分ける設計だ。",
+                "同社によると初段が検知しなかった活動も 5% を無作為に抽出して再確認する。先端モデルの強化学習と内部 Codex の活動は、モデルによる審査から始める。ただし監視対象であることと、人が常時通知を受けることは異なる。強化学習の最優先警告は終日通知できるが、他の多くは営業時間内で、内部 Codex の呼び出し通知は現在無効だ。一部の重大警告は自動停止できるが、より広い時間制限付き停止は整備中という。"
+              ]
+            },
+            {
+              "heading": "外部 API での検知と停止は別の能力",
+              "paragraphs": [
+                "外部向けには、既存のプライバシーと Zero Data Retention の約束を守るよう調整した仕組みを使い、検知内容を通常の手順で OpenAI の人間の審査員へ渡すことはしない。企業は自社の安全担当へ警告を送れる。API 文書では、対象モデルの会話を自動停止するには、後続の要求が同じ仕事の続きだと識別できる必要がある。",
+                "推論状態を保持する、WebSocket を使う、または OpenAI の文脈圧縮を使う Responses API の要求は、監視に加えて継続を阻止できる。これらを使わない要求も監視され、設定した webhook に警告を送れるが、会話は自動停止されない。Chat Completions はこの監視の対象外で、別の安全確認は引き続き適用される。確認は非同期なので、発見前に行動が完了する場合があり、後続要求の停止は過去の影響を取り消さない。"
+              ]
+            },
+            {
+              "heading": "仕組みの公開は全面的な安全の証明ではない",
+              "paragraphs": [
+                "OpenAI は記録済みの事例、模擬攻撃、無作為監査、レッドチームで評価する。Hugging Face の事例を再生すると、新システムは隔離環境からの脱出後およそ 30 分で警告し、実際の事件で外部システムが侵入されるより 30 時間以上早かったという。これは同社による事後シミュレーションで、現実の事故を防いだことでも、未知の攻撃にも同じ効果がある証明でもない。",
+                "独立評価者 METR は、Redwood と行った三週間の試験が 7 月 21 日以前の歴史的システムを対象とし、その後の拡大範囲を検証していないと明記する。10 月 29 日の更新では大半を修復済み、一件は進行中としたが、その状態も OpenAI の説明であり独立した再試験ではない。Reuters の以前の試験に関する報道は外部審査の意義を示す一方、新システムのお墨付きにはならない。本稿では今回の増分を仕組みと境界の透明化と捉える。誤報、見逃し、対応範囲、実際の介入効果は今後も確認が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料を基に本站で描き直した説明図。監視と対応の流れであり、検知率や防御成功率の実測ではない。",
+            "steps": [
+              "初期検査と見逃しの抽出確認",
+              "仕事の文脈で再審査",
+              "調査と人の対応を区別",
+              "会話の対応範囲に応じ警告・停止"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Когда агент получает инструменты, вопрос безопасности касается не только его слов, но и выхода за пределы разрешенного: кто это заметит и сможет остановить работу? 29 октября OpenAI описала расширенный мониторинг несоответствия поведения намерениям человека — от первичного отбора до расследования и условий остановки внешних API-задач. Сигнал требует проверки, но сам по себе не доказывает нарушение пользователем правил или злой умысел агента.",
+          "sections": [
+            {
+              "heading": "Четыре уровня направляют вычисления на подозрительные случаи",
+              "paragraphs": [
+                "Во внутренней системе легкие классификаторы сначала ищут подозрительные паттерны активаций, затем модель проверяет недавний разговор, рассуждения и использование инструментов. Отмеченные случаи получает агент-расследователь: он учитывает цель задачи и доступный расширенный контекст. Для чувствительных нагрузок добавляется проверка по данным среды, после которой решается вопрос об обращении к человеку. Ранние этапы допускают больше ложных тревог, чтобы последующие могли потратить больше вычислений на различение опасной и допустимой активности.",
+                "Компания сообщает о случайной перепроверке 5% активности, которую первый этап не отметил. Передовое обучение с подкреплением и внутренний Codex сразу проходят проверку моделью. Наличие мониторинга не означает круглосуточного вызова людей: самые срочные сигналы обучения могут передаваться в любое время, большинство остальных — в рабочие часы, а вызовы по внутреннему Codex сейчас отключены. Некоторые критические сигналы могут автоматически приостановить работу; более широкая остановка по тайм-ауту еще разрабатывается."
+              ]
+            },
+            {
+              "heading": "Обнаружение и остановка — разные возможности API",
+              "paragraphs": [
+                "Внешние развертывания используют адаптированную версию с сохранением действующих обязательств по приватности и Zero Data Retention. Отмеченные материалы не передаются сотрудникам OpenAI для проверки в обычном порядке; предприятия могут направлять сигналы собственным специалистам. Согласно API-документации, автоматическая остановка у охваченных моделей зависит от возможности распознать последующие запросы как продолжение одной работы.",
+                "Запросы Responses API с сохранением состояния рассуждений, WebSockets или сжатием контекста OpenAI отслеживаются и могут быть заблокированы при продолжении. Остальные запросы тоже проверяются, а настроенные webhook могут получать сигналы, но разговор автоматически не останавливается. Chat Completions не входит в эту систему мониторинга, хотя другие проверки безопасности сохраняются. Проверка асинхронна: действие может завершиться до обнаружения проблемы, а блокирование последующих запросов не отменяет прежних последствий."
+              ]
+            },
+            {
+              "heading": "Описание механизма не доказывает отсутствие риска",
+              "paragraphs": [
+                "OpenAI оценивает систему на записанных инцидентах, имитированных атаках, случайных аудитах и проверках красной командой. По ее данным, при воспроизведении случая Hugging Face новая система подняла тревогу примерно через 30 минут после выхода из изолированной среды — более чем за 30 часов до взлома внешней системы в реальном событии. Это сообщенная компанией ретроспективная симуляция, а не предотвращенный тогда инцидент и не гарантия такого же результата на неизвестных атаках.",
+                "Независимый оценщик METR уточняет: трехнедельная работа с Redwood касалась системы в состоянии на 21 июля и ранее, а расширенный охват не проверялся. В обновлении от 29 октября говорится, что большинство уязвимостей исправлено, одна правка продолжается; этот статус сообщила OpenAI, независимого повторного испытания не было. Репортаж Reuters о прежней проверке показывает значение внешней экспертизы, но не подтверждает качество новой системы. Мы рассматриваем публикацию как большую прозрачность механизмов и границ; ложные тревоги, пропуски, охват реагирования и реальные результаты вмешательства требуют дальнейшей проверки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по публичным материалам: мониторинг и реагирование, а не измеренные показатели обнаружения или защиты.",
+            "steps": [
+              "Первичная проверка и поиск пропусков",
+              "Оценка в контексте задачи",
+              "Разделение расследования и реакции человека",
+              "Сигнал или остановка в поддерживаемой беседе"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Agent 獲得工具後，安全問題不只是它會說什麼，還包括它是否越過授權邊界、誰能發現並中止。OpenAI 在 10 月 29 日公開了擴大後的模型失配監測機制，說明如何從初篩走到調查，以及外部 API 在什麼條件下能夠暫停任務。這裡的失配指行為偏離人的預期；觸發告警並不等於已經證明使用者違規或模型有意作惡。",
+          "sections": [
+            {
+              "heading": "四層檢查，把計算用在值得追查的地方",
+              "paragraphs": [
+                "OpenAI 描述的內部系統先用輕量分類器檢查模型活化中的可疑模式，再由模型審查近期對話、推理和工具使用。被標記的情況交給調查 Agent，結合任務目的和可取得的更完整上下文判斷嚴重性；敏感工作還會進一步結合環境證據核查，決定是否通知人類處置。前面寧可多報一些，後面再花更多計算區分真問題與誤報。",
+                "公司稱會隨機複查初篩未標記流量中的 5%，用於發現漏報；前沿強化學習與內部 Codex 流量則直接進入模型審查層。監測不等於全天有人接警：前沿強化學習的最高優先順序告警可全天通知人員，大部分其他流量限工作時間，內部 Codex 的呼叫通知目前關閉。部分嚴重告警能自動暫停工作，更廣泛的超時暫停安排仍在推進。"
+              ]
+            },
+            {
+              "heading": "外部 API 的檢測和停止是兩件事",
+              "paragraphs": [
+                "外部部署採用調整後的版本，遵守既有資料隱私及零資料保留承諾，不例行將標記內容轉交 OpenAI 人工審閱。企業可把告警送給自己的安全團隊。API 文件明確，在適用模型上，Responses API 的會話是否能自動停止，取決於系統能否識別後續請求屬於同一段工作。",
+                "保留推理狀態、使用 WebSocket 或採用 OpenAI 上下文壓縮的請求可被監測並阻止繼續執行；未使用這些關聯方式的請求仍受監測，配置好的回呼也能收到告警，但不會因此自動停止。Chat Completions 不在這套監測覆蓋內，其他安全檢查仍適用。由於檢查是非同步的，告警前動作可能已經完成，停止後續請求也不會自動撤銷既有影響。"
+              ]
+            },
+            {
+              "heading": "公佈機制，不等於證明所有風險已被擋住",
+              "paragraphs": [
+                "OpenAI 用已記錄事件、模擬攻擊、抽樣複核和紅隊測試評估監測。它稱，回放 Hugging Face 事件時，新系統在逃出隔離環境約 30 分鐘後發出告警，比真實事件中外部系統遭入侵早 30 多小時。這是事後回放的廠商結果，不是當時實際阻止了事故，也不能推出對新攻擊同樣有效。",
+                "獨立評估方 METR 的公開說明提供了關鍵限制：其與 Redwood 的三週試驗評估的是 7 月 21 日及此前的歷史系統，沒有驗證後來擴大的覆蓋。METR 在 10 月 29 日更新稱，多數漏洞已修復、仍有一項修復進行中，這一狀態也來自 OpenAI，而非獨立複測。Reuters 對早期試驗的報道說明了獨立審查的價值，但不能替新系統背書。本文據此將此次增量理解為機制和邊界更透明；誤報、漏報、響應覆蓋和真實干預效果仍需持續檢驗。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開說明重繪的解釋圖：展示監測與處置流程，不是檢測率或成功防禦的實驗結果。",
+            "steps": [
+              "初篩並抽查可能的漏報",
+              "結合任務上下文複核",
+              "區分安全調查與人工處置",
+              "按會話能力告警或停止"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "cisco-asa-ftd-ssl-vpn-dos-fix",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Cisco PSIRT · original advisory",
+          "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75"
+        },
+        {
+          "label": "BleepingComputer · independent report",
+          "url": "https://www.bleepingcomputer.com/news/security/cisco-warns-of-firewall-zero-day-exploited-to-crash-ssl-vpn-devices/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Cisco 10 月 28 日发布安全公告，确认部分 ASA 和 FTD 防火墙的远程访问 SSL VPN 存在已被实际利用的拒绝服务漏洞。它影响的是设备能否持续提供服务：攻击者不必先成功登录，就可能使设备意外重启。公告同时提供修复版本，但没有披露受害组织数量或攻击者身份，因此不能把网络上所有同类设备都算成受害者。",
+          "sections": [
+            {
+              "heading": "风险取决于版本和认证配置",
+              "paragraphs": [
+                "编号 CVE-2026-76418 的漏洞来自隧道组配置了二次认证时的逻辑错误。SSL VPN 是让远程用户通过加密连接访问组织网络的入口；这里的二次认证是连接配置中的额外认证环节。问题发生在特定处理路径，不能仅凭“使用 Cisco”或“有 VPN”判断已经受到影响。",
+                "Cisco 列出的条件包括受影响的 ASA 或 FTD 软件、可访问的远程登录服务，以及相关隧道组中的二次认证配置。检查不能只看登录页展示的连接选项，还要考虑默认连接组；关闭组选单也不一定消除默认组带来的风险。公告确认 Cloud-delivered Firewall、Secure Access 和 Secure FMC 等产品不在此次影响范围。"
+              ]
+            },
+            {
+              "heading": "已观察到利用，不等于已证实数据失窃",
+              "paragraphs": [
+                "Cisco 的安全响应团队称在 10 月获悉实际利用，公告于 28 日 19:15 GMT 首次公开，BleepingComputer 次日跟进。厂商给出的 CVSS 3.1 基础分为 8.6，描述的主要后果是可用性受损和设备重启。这个分值是严重性评估，不是被攻击概率；本次公告也没有建立数据被读取、权限被接管或代码执行的证据。",
+                "对于依赖同一防火墙接入的远程工作，重启可能中断连接，这是由拒绝服务机制可以推知的业务影响。实际中断多久、哪些组织受到攻击以及攻击规模，公开材料没有给出。其他年份的 Cisco 攻击活动也不能直接用来推断本次攻击的归属。"
+              ]
+            },
+            {
+              "heading": "修复与临时缓解必须分开看",
+              "paragraphs": [
+                "公告按版本线列出补丁，例如 ASA 9.20 的首个修复版本是 9.20.4.50，FTD 7.4 对应 7.4.9；这些只是两条分支的例子，不是适用于全部设备的统一升级目标。运维团队需要结合官方版本表、设备兼容性和现有配置选择更新，确认修复真正进入运行中的设备。",
+                "Cisco 明确没有能够修复漏洞的绕行方案。调整组选单或关闭相关二次认证只能作为有条件的临时缓解，其中关闭认证会降低远程访问的防护水平。厂商仅说明在测试环境验证过缓解，要求评估各自部署中的有效性和功能影响。本文的重点是修复已被利用的入口缺陷，而不是建议普遍关闭认证；仍须以持续更新的原始公告为准。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据 Cisco 公告重绘的解释图：展示风险核对与修复顺序，不是攻击演示或实测结果。",
+            "steps": [
+              "核对软件版本",
+              "确认 VPN 与认证条件",
+              "选择对应修复分支",
+              "验证更新及服务恢复"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Cisco disclosed an actively exploited denial-of-service flaw in the remote-access SSL VPN service of some ASA and FTD firewalls on October 28. The immediate concern is service availability: an attacker need not complete a successful login to make an affected device reload. Fixed releases are available, but the advisory does not identify the victims or quantify the campaign. Internet exposure alone is not evidence of compromise.",
+          "sections": [
+            {
+              "heading": "Exposure depends on both software and authentication",
+              "paragraphs": [
+                "CVE-2026-76418 arises from logic errors when secondary authentication is configured for a tunnel group. An SSL VPN provides an encrypted entry point for remote users; secondary authentication is an additional authentication stage in its connection configuration. Using a Cisco product, or simply enabling a VPN, is not enough to establish that this specific condition exists.",
+                "Cisco requires a vulnerable ASA or FTD release, a reachable remote-login service and secondary authentication in the relevant tunnel-group scope. Administrators must consider the default group as well as profiles visible on the login page. Hiding the group list does not necessarily remove exposure through the default group. Cisco explicitly excludes Cloud-delivered Firewall, Secure Access and Secure FMC, among other listed products."
+              ]
+            },
+            {
+              "heading": "Observed exploitation does not establish data theft",
+              "paragraphs": [
+                "Cisco PSIRT says it learned of active exploitation during October. Its initial advisory is dated October 28 at 19:15 GMT, followed by BleepingComputer reporting the next day. The CVSS 3.1 base score is 8.6, and the stated impact is loss of availability through an unexpected reload. That severity score is not an attack probability; this advisory does not establish data disclosure, takeover or remote code execution.",
+                "A firewall restart can interrupt remote connections that depend on it, a practical consequence inferred from the denial-of-service mechanism. Public material does not quantify outage duration, the number of affected organizations or the scale of attacks. Earlier campaigns against other Cisco flaws cannot establish who is responsible for this one."
+              ]
+            },
+            {
+              "heading": "A patch and a temporary mitigation are different",
+              "paragraphs": [
+                "The advisory maps fixes to release branches. For example, ASA 9.20 first receives the fix in 9.20.4.50, and FTD 7.4 in 7.4.9. These are examples for two branches, not universal upgrade targets. Operators need the official release table, hardware compatibility and deployment configuration to select an update and confirm that the corrected software is actually running.",
+                "Cisco states that no workaround fixes the vulnerability. Changing group-list behavior or removing relevant secondary authentication offers only conditional, temporary mitigation; removing authentication weakens remote-access security. Cisco tested the mitigation in a test environment and asks customers to assess effectiveness and operational impact in their own deployments. The takeaway is to remediate an exploited entry-point defect, not to disable authentication indiscriminately; the original advisory remains the authoritative, evolving reference."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the Cisco advisory: exposure checks and remediation, not an attack demonstration or measured result.",
+            "steps": [
+              "Check software release",
+              "Review VPN and authentication",
+              "Select the branch-specific fix",
+              "Verify recovery and protection"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Cisco は10月28日、一部の ASA と FTD ファイアウォールのリモートアクセス SSL VPN に、実際に悪用されているサービス拒否の脆弱性があると公表した。問題はサービスの継続性にある。攻撃者はログインに成功しなくても装置を予期せず再起動させられる。修正版は提供されたが、被害組織数や攻撃者は公表されておらず、インターネットに公開された同種装置をすべて被害対象と数えることはできない。",
+          "sections": [
+            {
+              "heading": "ソフトウェアと認証設定の両方が条件",
+              "paragraphs": [
+                "CVE-2026-76418 は、トンネルグループに二次認証を設定した場合の論理エラーに起因する。SSL VPN は遠隔利用者が組織へ暗号化接続する入口で、二次認証はその接続設定に含まれる追加認証段階だ。Cisco 製品を使っている、あるいは VPN を有効にしているだけで、この問題の該当性は確定しない。",
+                "条件は脆弱な ASA または FTD の版、到達可能なリモートログインサービス、該当グループの二次認証設定である。ログイン画面に表示される接続候補だけでなく、既定グループも確認する必要がある。候補一覧を隠しても既定グループの危険が残る場合がある。Cloud-delivered Firewall、Secure Access、Secure FMC などは非該当と明記されている。"
+              ]
+            },
+            {
+              "heading": "悪用の確認と情報流出の証明は別",
+              "paragraphs": [
+                "Cisco PSIRT は10月中に実際の悪用を把握し、最初の公告を28日19時15分 GMT に公開した。翌日には BleepingComputer が報じた。CVSS 3.1 基本値は8.6で、説明された影響は装置の再起動による可用性の喪失である。この値は攻撃される確率ではなく、本公告は情報流出、装置の乗っ取り、遠隔コード実行を証明していない。",
+                "同じ装置に依存する遠隔接続は再起動で切断され得る。これはサービス拒否の仕組みから推測できる業務上の影響だが、停止時間、被害組織数、攻撃規模は公開資料から分からない。過去年の別の Cisco 攻撃を根拠に、今回の実行者を同一とみなすこともできない。"
+              ]
+            },
+            {
+              "heading": "修正と一時的な軽減策を区別する",
+              "paragraphs": [
+                "修正版は系統ごとに示され、例えば ASA 9.20 では9.20.4.50、FTD 7.4 では7.4.9が最初の修正版となる。この二例を全装置共通の更新先にしてはいけない。運用担当者は公式表、機器の互換性、現在の設定を合わせて更新先を選び、修正版が実際に稼働しているか確認する必要がある。",
+                "Cisco は脆弱性自体を修正する回避策はないとしている。一覧設定の変更や該当する二次認証の解除は条件付きの一時軽減策にすぎず、認証の解除は保護を弱める。軽減策の確認は試験環境で行われており、各環境で有効性と機能への影響を評価する必要がある。ここで重要なのは悪用された入口の修正であって、認証の一律無効化ではない。最新の原公告が判断の基準となる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Cisco 公告をもとに当サイトが描き直した説明図。確認と修正の流れであり、攻撃例や実測結果ではない。",
+            "steps": [
+              "ソフトウェア版を確認",
+              "VPN と認証条件を確認",
+              "系統に合う修正版を選択",
+              "更新と復旧を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "28 октября Cisco сообщила об активно эксплуатируемой уязвимости отказа в обслуживании в SSL VPN для удаленного доступа на части межсетевых экранов ASA и FTD. Речь прежде всего о доступности: атакующему не обязательно успешно войти, чтобы вызвать неожиданную перезагрузку устройства. Исправленные версии доступны, но компания не назвала пострадавших и не оценила масштаб кампании. Само наличие устройства в интернете не доказывает взлом.",
+          "sections": [
+            {
+              "heading": "Важны и версия, и настройки аутентификации",
+              "paragraphs": [
+                "CVE-2026-76418 связана с логической ошибкой при настройке вторичной аутентификации для туннельной группы. SSL VPN обеспечивает зашифрованный вход удаленных пользователей в сеть организации; вторичная аутентификация добавляет этап проверки в профиль подключения. Одного использования продукции Cisco или включенного VPN недостаточно, чтобы признать конкретную конфигурацию уязвимой.",
+                "Cisco указывает сочетание уязвимой версии ASA либо FTD, доступной службы удаленного входа и соответствующих настроек вторичной аутентификации. Проверять нужно не только профили, видимые на странице входа, но и группу по умолчанию. Скрытие списка групп не обязательно устраняет риск через эту группу. Cloud-delivered Firewall, Secure Access и Secure FMC, среди прочих перечисленных продуктов, исключены из области воздействия."
+              ]
+            },
+            {
+              "heading": "Эксплуатация не равна доказанной краже данных",
+              "paragraphs": [
+                "Cisco PSIRT узнала об эксплуатации в октябре. Первое уведомление опубликовано 28 октября в 19:15 GMT; на следующий день о нем сообщила BleepingComputer. Базовая оценка CVSS 3.1 составляет 8,6, а заявленное последствие — потеря доступности из-за перезагрузки. Оценка тяжести не означает вероятность атаки. Уведомление не доказывает раскрытие данных, захват устройства или удаленное выполнение кода.",
+                "Перезагрузка может оборвать удаленные подключения, зависящие от этого экрана: это практический вывод из механизма отказа в обслуживании. Однако длительность простоев, число организаций и масштаб атак не раскрыты. Предыдущие кампании против других уязвимостей Cisco не позволяют приписать эту атаку тем же участникам."
+              ]
+            },
+            {
+              "heading": "Исправление и временная мера — разные вещи",
+              "paragraphs": [
+                "Таблица производителя привязывает исправления к веткам. Например, для ASA 9.20 первая исправленная версия — 9.20.4.50, для FTD 7.4 — 7.4.9. Это два примера, а не универсальные цели обновления. Операторам необходимо сопоставить официальную таблицу, совместимость оборудования и конфигурацию развертывания, затем проверить, что исправленное ПО действительно работает.",
+                "Cisco подчеркивает, что обходного решения, устраняющего уязвимость, нет. Изменение поведения списка групп либо отключение соответствующей вторичной аутентификации — лишь условная временная мера; отключение проверки ослабляет защиту удаленного доступа. Производитель проверил ее в тестовой среде и требует оценить эффективность и побочные последствия в конкретной сети. Смысл сообщения — исправить эксплуатируемый дефект точки входа, а не повсеместно отключать аутентификацию. Принимать решения следует по актуальному исходному уведомлению."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема сайта по уведомлению Cisco: проверка условий и исправление, не демонстрация атаки и не результат измерений.",
+            "steps": [
+              "Проверить версию ПО",
+              "Уточнить VPN и аутентификацию",
+              "Выбрать исправление для ветки",
+              "Проверить обновление и доступность"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Cisco 10 月 28 日釋出安全公告，確認部分 ASA 和 FTD 防火牆的遠端存取 SSL VPN 存在已被實際利用的拒絕服務漏洞。它影響的是裝置能否持續提供服務：攻擊者不必先成功登入，就可能使裝置意外重啟。公告同時提供修復版本，但沒有披露受害組織數量或攻擊者身分，因此不能把網路上所有同類裝置都算成受害者。",
+          "sections": [
+            {
+              "heading": "風險取決於版本和認證配置",
+              "paragraphs": [
+                "編號 CVE-2026-76418 的漏洞來自隧道組配置了二次認證時的邏輯錯誤。SSL VPN 是讓遠端使用者透過加密連線訪問組織網路的入口；這裡的二次認證是連線配置中的額外認證環節。問題發生在特定處理路徑，不能僅憑“使用 Cisco”或“有 VPN”判斷已經受到影響。",
+                "Cisco 列出的條件包括受影響的 ASA 或 FTD 軟體、可訪問的遠端登入服務，以及相關隧道組中的二次認證配置。檢查不能只看登入頁展示的連線選項，還要考慮預設連線組；關閉組選單也不一定消除預設組帶來的風險。公告確認 Cloud-delivered Firewall、Secure Access 和 Secure FMC 等產品不在此次影響範圍。"
+              ]
+            },
+            {
+              "heading": "已觀察到利用，不等於已證實資料失竊",
+              "paragraphs": [
+                "Cisco 的安全響應團隊稱在 10 月獲悉實際利用，公告於 28 日 19:15 GMT 首次公開，BleepingComputer 次日跟進。廠商給出的 CVSS 3.1 基礎分為 8.6，描述的主要後果是可用性受損和裝置重啟。這個分值是嚴重性評估，不是被攻擊機率；本次公告也沒有建立資料被讀取、權限被接管或程式碼執行的證據。",
+                "對於依賴同一防火牆接入的遠端工作，重啟可能中斷連線，這是由拒絕服務機制可以推知的業務影響。實際中斷多久、哪些組織受到攻擊以及攻擊規模，公開材料沒有給出。其他年份的 Cisco 攻擊活動也不能直接用來推斷本次攻擊的歸屬。"
+              ]
+            },
+            {
+              "heading": "修復與臨時緩解必須分開看",
+              "paragraphs": [
+                "公告按版本線列出修補程式，例如 ASA 9.20 的首個修復版本是 9.20.4.50，FTD 7.4 對應 7.4.9；這些只是兩條分支的例子，不是適用於全部裝置的統一升級目標。維運團隊需要結合官方版本表、裝置相容性和現有配置選擇更新，確認修復真正進入執行中的裝置。",
+                "Cisco 明確沒有能夠修復漏洞的繞行方案。調整組選單或關閉相關二次認證只能作為有條件的臨時緩解，其中關閉認證會降低遠端存取的防護水平。廠商僅說明在測試環境驗證過緩解，要求評估各自部署中的有效性和功能影響。本文的重點是修復已被利用的入口缺陷，而不是建議普遍關閉認證；仍須以持續更新的原始公告為準。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據 Cisco 公告重繪的解釋圖：展示風險核對與修復順序，不是攻擊演示或實測結果。",
+            "steps": [
+              "核對軟體版本",
+              "確認 VPN 與認證條件",
+              "選擇對應修復分支",
+              "驗證更新及服務恢復"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "microsoft-rdp-admin-protection-fix",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Microsoft · KB5127936 release and applicability",
+          "url": "https://support.microsoft.com/en-us/servicing/os/windows-11/2026/10/kb5127936-windows-11-25h2-26h2-update"
+        },
+        {
+          "label": "Microsoft · Windows 11 release-health issue history",
+          "url": "https://learn.microsoft.com/en-us/windows/release-health/status-windows-11-25h2"
+        },
+        {
+          "label": "Microsoft · Administrator protection mechanism and defaults",
+          "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/administrator-protection/"
+        },
+        {
+          "label": "BleepingComputer · independent report, 29 October 2026",
+          "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-fixes-remote-desktop-failures-caused-by-recent-windows-updates/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Windows 的安全设置不应让有权远程工作的普通用户无法登录。Microsoft 在 10 月 28 日发布的 Windows 11 预览更新中修复了一项兼容性问题：非管理员账户连接已启用“管理员保护”的远程主机时，可能收到 0xC000000D 错误。修复的价值是恢复这类连接，同时保留保护机制；它不是放宽所有用户的管理权限。",
+          "sections": [
+            {
+              "heading": "故障只在特定连接条件下出现",
+              "paragraphs": [
+                "Microsoft 的发布运行状况记录将问题追溯到 9 月 22 日的 KB5124010 非安全预览更新及其后的更新，10 月 13 日公开确认。主要受影响的是企业管理的 Windows 11 远程桌面主机：主机开启管理员保护，连接者使用非管理员账户，连接可能因无效权限令牌而失败。公告没有说所有远程桌面连接都会失败，也未给出受影响设备比例。",
+                "10 月 28 日的 KB5127936 说明明确列出这一修复，BleepingComputer 在 29 日独立报道了问题转为已解决的状态。前者是补丁发布日期，后者是媒体报道日期。公开资料说明了修复状态和适用范围，但没有提供跨企业环境的独立复测数据。"
+              ]
+            },
+            {
+              "heading": "管理员保护隔离的是提权操作",
+              "paragraphs": [
+                "管理员保护让具有管理员身份的用户日常以较低权限工作。某个操作确实需要更高权限时，系统要求明确授权，再为请求进程提供隔离的管理员令牌；进程结束后令牌销毁，不让高权限一直跟随日常会话。这是一种按需提权和隔离安排，与是否允许普通账户通过远程桌面登录是不同问题。",
+                "默认状态也要分开看：功能文档称该功能一般默认关闭；采用 Windows 安全基线的组织，在 10 月安全更新对应的 24H2、25H2、26H2 基线中默认启用，组织仍可用策略调整。因此不能因为企业环境出现此故障，就推断所有 Windows 11 电脑都已经开启保护。"
+              ]
+            },
+            {
+              "heading": "先分清受影响版本和补丁适用版本",
+              "paragraphs": [
+                "发布运行状况把受影响客户端列为 24H2、25H2、26H1 和 26H2，并注明 Windows Server 不在此问题的受影响范围。但 KB5127936 自己的适用栏只列 25H2 和 26H2。24H2 从 10 月起不再接收非安全预览更新，Enterprise 与 Education 仍继续每月安全更新。问题涉及哪些版本，与某个补丁可安装在哪些版本，是两张不同清单。",
+                "仍在旧版本更新上且遇到该故障的管理员，曾可临时停用管理员保护缓解连接失败；这也移除了相应的保护层，不应被写成一般性的优化建议。官方表示应用适用于设备的修复更新后，不再需要这一临时变通。部署时应按实际版本核对更新说明，不能把同一个补丁推荐给全部受影响系统，也不能把本次修复当成解决所有远程桌面或服务器故障的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方修复范围重绘的解释图，表示版本核对与保护状态，不是实测成功率或操作指南。",
+            "steps": [
+              "确认主机保护与连接账户",
+              "核对系统版本和适用补丁",
+              "应用对应修复并验证连接",
+              "保留管理员保护"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A security setting should not prevent an authorized standard user from connecting to a remote PC. Microsoft’s October 28 Windows 11 preview update fixes a compatibility problem in which non-admin Remote Desktop connections to a host with Administrator protection enabled can fail with error 0xC000000D. The change aims to restore those connections while keeping the protection, not to grant everyone administrator rights.",
+          "sections": [
+            {
+              "heading": "A failure with specific prerequisites",
+              "paragraphs": [
+                "Microsoft’s release-health record traces the issue to the September 22 KB5124010 non-security preview and later updates, and records its public acknowledgment on October 13. It mainly affects enterprise-managed Windows 11 Remote Desktop hosts with Administrator protection enabled, when the connecting account is not an administrator. The failure concerns an invalid authorization token. Microsoft does not say every Remote Desktop session fails or report a proportion of affected devices.",
+                "The October 28 KB5127936 release notes explicitly include this fix; BleepingComputer reported the resolved status on October 29. The former is the update release date and the latter the reporting date. The available material documents resolution and applicability, but does not supply independent retesting across enterprise environments."
+              ]
+            },
+            {
+              "heading": "What Administrator protection isolates",
+              "paragraphs": [
+                "Administrator protection keeps an administrator’s everyday session deprivileged. When an action genuinely requires elevated rights, Windows asks for explicit authorization and supplies an isolated administrator token to the requesting process. That token is destroyed when the process ends, instead of leaving elevated privileges attached to routine activity. This just-in-time elevation is a different question from whether a standard account may connect through Remote Desktop.",
+                "Defaults also depend on context. The feature documentation says protection is generally off by default. For organizations adopting Windows security baselines, the October security update’s 24H2, 25H2 and 26H2 baselines enable it by default, subject to organizational policy. An enterprise incident therefore does not establish that every Windows 11 PC already has the feature enabled."
+              ]
+            },
+            {
+              "heading": "Affected versions and update applicability differ",
+              "paragraphs": [
+                "Release health lists affected clients as 24H2, 25H2, 26H1 and 26H2, with no Windows Server versions affected by this issue. But KB5127936 itself applies only to 25H2 and 26H2. From October, 24H2 no longer receives non-security previews, while its Enterprise and Education editions continue monthly security updates. The list of affected releases is not the same as the list that can install a particular package.",
+                "For affected machines still on earlier updates, administrators previously had the option of temporarily disabling Administrator protection. That removes the corresponding protective layer and should not be treated as a general optimization. Microsoft says the workaround is unnecessary once an applicable fixing update is installed. Deployment should follow each device’s actual release and update notes; one package is not a solution for every affected version, and this fix is not a guarantee against all Remote Desktop or server failures."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the documented scope; it shows version checks and protection, not measured success rates or an operating procedure.",
+            "steps": [
+              "Identify host protection and account type",
+              "Check OS release and applicable update",
+              "Apply the matching fix and verify access",
+              "Retain Administrator protection"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "適切な権限を持つ一般ユーザーのリモート接続が、セキュリティ設定のために失敗しては困る。Microsoft は 10 月 28 日の Windows 11 プレビュー更新で、管理者保護を有効にしたホストへ非管理者アカウントが接続すると 0xC000000D で失敗する互換性問題を修正した。目的は保護を維持して接続を回復することで、全利用者に管理者権限を与える変更ではない。",
+          "sections": [
+            {
+              "heading": "特定の組み合わせで発生する障害",
+              "paragraphs": [
+                "Microsoft のリリース正常性情報は、原因となる更新を 9 月 22 日の非セキュリティプレビュー KB5124010 と以降の更新にさかのぼり、10 月 13 日に公表したと記録する。主な対象は企業管理の Windows 11 リモートデスクトップホストだ。ホストで管理者保護が有効で、接続するアカウントが非管理者の場合、権限トークンが無効として接続できないことがある。すべての接続が失敗するとはされておらず、影響台数の割合も示されていない。",
+                "10 月 28 日の KB5127936 の説明にこの修正が明記され、BleepingComputer は 29 日に解決済みへの移行を報じた。前者はパッチの公開日、後者は報道日だ。公開資料は修正状態と適用範囲を説明しているが、複数の企業環境で独立に再検証したデータは示していない。"
+              ]
+            },
+            {
+              "heading": "管理者保護が隔離するもの",
+              "paragraphs": [
+                "管理者保護では、管理者であるユーザーも日常の処理を低い権限で行う。高い権限が必要な操作だけ明示的な承認を求め、要求したプロセスに分離した管理者トークンを渡す。プロセス終了時にトークンを破棄し、通常の活動に高権限を残さない。この必要時だけの権限昇格は、一般アカウントによるリモートデスクトップ接続の可否とは別の問題だ。",
+                "既定値も環境によって異なる。機能の公式説明では一般には既定でオフだが、Windows セキュリティベースラインを採用する組織では、10 月のセキュリティ更新に対応する 24H2、25H2、26H2 のベースラインで既定がオンになる。組織のポリシーで変更できるため、企業の障害から全 Windows 11 PC が有効化済みと推定することはできない。"
+              ]
+            },
+            {
+              "heading": "影響範囲と更新の適用範囲を分ける",
+              "paragraphs": [
+                "正常性情報の影響対象は 24H2、25H2、26H1、26H2 のクライアントで、Windows Server は対象外とされる。一方、KB5127936 の適用欄は 25H2 と 26H2 のみだ。24H2 は 10 月から非セキュリティプレビューを受け取らず、Enterprise と Education は月例セキュリティ更新を継続する。影響を受ける版と、特定パッケージを導入できる版は同じ一覧ではない。",
+                "古い更新状態でこの障害が起きる機器には、管理者が管理者保護を一時的に無効化する回避策があった。しかし保護層も失われるため、一般的な最適化策として扱うべきではない。適用可能な修正更新を導入すれば回避策は不要と Microsoft は説明する。実際の OS 版と更新説明を照合する必要があり、一つのパッチを全対象へ勧めたり、すべてのリモートデスクトップやサーバー障害を解消すると見なしたりすることはできない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式の適用範囲を基に当サイトが描き直した説明図。版の確認と保護状態を示し、実測成功率や操作手順ではない。",
+            "steps": [
+              "ホストの保護と接続アカウントを確認",
+              "OS 版と適用できる更新を照合",
+              "対応する修正後に接続を検証",
+              "管理者保護を維持"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Настройка безопасности не должна мешать разрешенному подключению обычного пользователя к удаленному ПК. В предварительном обновлении Windows 11 от 28 октября Microsoft исправила несовместимость: подключения Remote Desktop от пользователей без прав администратора к узлу с включенной Administrator protection могли завершаться ошибкой 0xC000000D. Изменение восстанавливает такие подключения, сохраняя защиту, а не раздает всем административные права.",
+          "sections": [
+            {
+              "heading": "Сбой при определенном сочетании условий",
+              "paragraphs": [
+                "Журнал состояния выпусков Microsoft связывает проблему с предварительным несекьюрным обновлением KB5124010 от 22 сентября и более поздними обновлениями; публичное подтверждение датировано 13 октября. Главный сценарий — управляемый организацией узел Remote Desktop на Windows 11 с включенной Administrator protection, к которому подключается неадминистративная учетная запись. Сбой связан с недействительным токеном полномочий. Microsoft не утверждает, что отказывают все сеансы, и не сообщает долю затронутых устройств.",
+                "В описании KB5127936 от 28 октября прямо указан этот фикс; 29 октября BleepingComputer сообщил о статусе «решено». Первая дата относится к выпуску пакета, вторая — к сообщению СМИ. Доступные материалы описывают устранение проблемы и применимость, но не содержат независимых повторных испытаний в разных корпоративных средах."
+              ]
+            },
+            {
+              "heading": "Что изолирует Administrator protection",
+              "paragraphs": [
+                "Administrator protection оставляет повседневный сеанс администратора с пониженными привилегиями. Когда операция требует повышения, Windows запрашивает явное разрешение и выдает запрашивающему процессу изолированный административный токен. После завершения процесса токен уничтожается, поэтому повышенные права не сохраняются для обычной деятельности. Такое временное повышение — отдельный вопрос от разрешения стандартной учетной записи подключаться через Remote Desktop.",
+                "Настройки по умолчанию зависят от контекста. Документация функции говорит, что в общем случае она выключена. В организациях, применяющих базовые политики безопасности Windows, соответствующие октябрьскому обновлению безопасности наборы для 24H2, 25H2 и 26H2 включают ее по умолчанию, если организация не изменила политику. Корпоративный сбой не означает, что защита уже активна на каждом ПК с Windows 11."
+              ]
+            },
+            {
+              "heading": "Затронутые версии и применимость пакета различаются",
+              "paragraphs": [
+                "Журнал состояния перечисляет затронутые клиентские версии 24H2, 25H2, 26H1 и 26H2 и не относит к этой проблеме Windows Server. Но сам KB5127936 применим только к 25H2 и 26H2. С октября 24H2 больше не получает предварительные обновления, не связанные с безопасностью; редакции Enterprise и Education продолжают получать ежемесячные обновления безопасности. Перечень затронутых систем отличается от перечня получателей конкретного пакета.",
+                "Для затронутых устройств со старыми обновлениями существовал временный обход: администратор мог отключить Administrator protection. При этом исчезает соответствующий защитный слой, поэтому это не общая рекомендация по оптимизации. Microsoft указывает, что после установки подходящего исправляющего обновления обход больше не нужен. При развертывании следует сверять фактический выпуск ОС и его документацию: один пакет не подходит всем затронутым версиям и не обещает устранить любые сбои Remote Desktop или серверов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема сайта по документированной области действия: версии и защита, а не измеренная успешность или инструкция по настройке.",
+            "steps": [
+              "Проверить защиту узла и тип учетной записи",
+              "Сопоставить выпуск ОС и пакет",
+              "Установить подходящий фикс и проверить связь",
+              "Сохранить защиту администратора"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Windows 的安全設定不應讓有權遠端工作的一般使用者無法登入。Microsoft 在 10 月 28 日釋出的 Windows 11 預覽更新中修復了一項相容性問題：非系統管理員帳戶連線已啟用“系統管理員保護”的遠端主機時，可能收到 0xC000000D 錯誤。修復的價值是恢復這類連線，同時保留保護機制；它不是放寬所有使用者的管理權限。",
+          "sections": [
+            {
+              "heading": "故障只在特定連線條件下出現",
+              "paragraphs": [
+                "Microsoft 的版本健康狀態記錄將問題追溯到 9 月 22 日的 KB5124010 非安全預覽更新及其後的更新，10 月 13 日公開確認。主要受影響的是企業管理的 Windows 11 遠端桌面主機：主機開啟系統管理員保護，連線者使用非系統管理員帳戶，連線可能因無效權限權杖而失敗。公告沒有說所有遠端桌面連線都會失敗，也未給出受影響裝置比例。",
+                "10 月 28 日的 KB5127936 說明明確列出這項修正，BleepingComputer 在 29 日獨立報導問題已解決。前者是修補程式發布日期，後者是媒體報導日期。公開資料說明了修正狀態和適用範圍，但沒有提供跨企業環境的獨立複測資料。"
+              ]
+            },
+            {
+              "heading": "系統管理員保護隔離的是提權操作",
+              "paragraphs": [
+                "系統管理員保護讓具有系統管理員身分的使用者日常以較低權限工作。某個操作確實需要更高權限時，系統要求明確授權，再為提出要求的處理程序提供隔離的系統管理員權杖；處理程序結束後權杖銷毀，不讓高權限一直跟隨日常會話。這是一種按需提權和隔離安排，與是否允許一般帳戶透過遠端桌面登入是不同問題。",
+                "預設狀態也要分開看：功能文件稱該功能一般預設關閉；採用 Windows 安全基線的組織，在 10 月安全更新對應的 24H2、25H2、26H2 基線中預設啟用，組織仍可用策略調整。因此不能因為企業環境出現此故障，就推斷所有 Windows 11 電腦都已經開啟保護。"
+              ]
+            },
+            {
+              "heading": "先分清受影響版本和修補程式適用版本",
+              "paragraphs": [
+                "版本健康狀態把受影響客戶端列為 24H2、25H2、26H1 和 26H2，並註明 Windows Server 不在此問題的受影響範圍。但 KB5127936 自己的適用欄只列 25H2 和 26H2。24H2 從 10 月起不再接收非安全預覽更新，Enterprise 與 Education 仍繼續每月安全更新。問題涉及哪些版本，與某個修補程式可安裝在哪些版本，是兩張不同清單。",
+                "仍在舊版本更新上且遇到該故障的系統管理員，曾可臨時停用系統管理員保護緩解連線失敗；這也移除了相應的保護層，不應被寫成一般性的最佳化建議。官方表示應用適用於裝置的修復更新後，不再需要這一臨時變通。部署時應按實際版本核對更新說明，不能把同一個修補程式推薦給全部受影響系統，也不能把本次修復當成解決所有遠端桌面或伺服器故障的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方修復範圍重繪的解釋圖，表示版本核對與保護狀態，不是實測成功率或操作指南。",
+            "steps": [
+              "確認主機保護與連線帳戶",
+              "核對系統版本和適用修補程式",
+              "應用對應修復並驗證連線",
+              "保留系統管理員保護"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "quantinuum-helios-color-code-memory",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Quantinuum · October 19 research announcement",
+          "url": "https://www.quantinuum.com/blog/quantinuum-closes-in-on-one-million-error-free-operations"
+        },
+        {
+          "label": "Lavasani et al. · original paper, version 1",
+          "url": "https://arxiv.org/html/2610.24077v1"
+        },
+        {
+          "label": "Quantum Brief · independent report",
+          "url": "https://quantum-brief.com/blog/news-2026-10-20-quantinuum-color-code-threshold/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "量子纠错的关键不只是增加量子比特，而是增加保护后，错误真的变少。Quantinuum 在 10 月 19 日公布 Helios 彩色码实验，比较三种保护规模，观察到逻辑存储误差随规模扩大下降。它提供了硬件进入有效纠错区间的证据，但并没有运行一个连续百万步、完全无错的通用量子算法。",
+          "sections": [
+            {
+              "heading": "把脆弱的状态交给一组量子比特保护",
+              "paragraphs": [
+                "物理量子比特会受噪声影响。纠错把一个逻辑量子比特的信息分散到多个物理量子比特，再反复测量检查信号，推断是否发生错误，而不直接读出所保护的信息。编码距离可理解为抵抗错误的保护强度；距离增大要用更多硬件，也会增加操作。因此，只有底层噪声足够低，增加保护才会净降低错误。",
+                "研究在 Helios 离子阱处理器上测试距离 3、5、7 的三角彩色码。每个存储实验分别占用 13、37、73 个量子比特，包含数据与检查所需的辅助量子比特，不能只数数据比特。团队同时使用硬件措施把泄漏出计算空间的状态带回，以及电路中的交换、测量和重置，避免泄漏错误持续传播。"
+              ]
+            },
+            {
+              "heading": "每百万轮约五次错误来自怎样的实验",
+              "paragraphs": [
+                "论文每次先准备六种逻辑基底状态之一，进行 20 轮检查，再读出结果。距离 7 的 Tesseract 解码结果来自 29,000 次实验，其中 3 次最终读出出现逻辑错误。根据实验次数、检查轮数与状态准备修正估计，每轮逻辑存储误差约为 5×10⁻⁶；68% 置信区间约为 3×10⁻⁶ 至 9×10⁻⁶。它不是直接观察到一条长达百万轮且零失败的运行记录。",
+                "三种距离的每轮误差依次约为 5.5×10⁻⁴、3.8×10⁻⁵ 和 5×10⁻⁶。作者拟合得到距离每增加两级，误差平均缩小约 12 倍。这比只报告最好一次的保真度更有意义，因为它检验增加保护是否持续有效。不过实验只覆盖三个距离，不能把这一趋势无条件外推到任意规模。"
+              ]
+            },
+            {
+              "heading": "低存储误差与完整容错计算之间还有距离",
+              "paragraphs": [
+                "研究还用距离 3 和 5 测试双逻辑量子比特 Clifford 操作，报告距离 5 每个逻辑 Clifford 的误差约为 7×10⁻⁵。这个分母是逻辑门，不能与存储实验的每轮检查直接互换。两类实验分别说明保存状态与执行一类逻辑操作的可靠性，没有覆盖通用算法的全部组成。",
+                "所有解码均在实验后离线完成。团队把检查信号逐轮输入流式与神经网络解码器，测试其处理速度，说明实时接入有可能，但这仍不同于已经闭合反馈回路。更大规模的硬件、实时解码，以及通用计算所需的其他资源还要共同验证。本文将这次结果看作纠错可扩展性的具体进展，不采用品牌标题中的“百万次无错运算”作为已实现结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释流程：说明存储实验与离线分析，不是实测误差曲线。",
+            "steps": [
+              "扩大编码保护",
+              "重复 20 轮检查",
+              "最终读出并离线解码",
+              "比较误差与不确定性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Quantum error correction must do more than add qubits: stronger protection must actually reduce failures. On October 19, Quantinuum reported Helios experiments with three sizes of color code and declining logical-memory error. This is evidence that the hardware operates in a useful error-correction regime. It is not a demonstration of a universal quantum algorithm completing a million consecutive operations without error.",
+          "sections": [
+            {
+              "heading": "Protecting one state with many physical qubits",
+              "paragraphs": [
+                "Noise can disturb a physical qubit. Error correction spreads one logical qubit across several physical qubits and repeatedly measures diagnostic signals, called syndromes, without directly reading the protected information. Code distance describes the strength of that protection. Increasing it uses more hardware and more operations, so it helps only when the underlying noise is low enough.",
+                "The team tested triangular color codes of distance 3, 5 and 7 on the Helios trapped-ion processor. Each memory experiment occupied 13, 37 or 73 qubits, including both data and measurement ancillas; counting data qubits alone understates the requirement. Hardware repumping brought leaked states back into the computational space, while circuit-level swapping, measurement and reset prevented residual leakage from spreading."
+              ]
+            },
+            {
+              "heading": "What five errors per million actually measures",
+              "paragraphs": [
+                "Each experiment prepared one of six logical basis states, performed 20 rounds of syndrome extraction and then read out the state. At distance 7, Tesseract decoding identified three logical readout failures in 29,000 experiments. Accounting for rounds and state preparation gives an estimated memory error of about 5×10⁻⁶ per round, with a 68% confidence interval of roughly 3×10⁻⁶ to 9×10⁻⁶. No million-round, zero-failure run was directly observed.",
+                "The reported per-round rates were approximately 5.5×10⁻⁴, 3.8×10⁻⁵ and 5×10⁻⁶ at the three distances. A fit suggests an average twelvefold reduction when distance increases by two. This tests whether added protection keeps helping, rather than merely highlighting the best fidelity. However, three tested distances do not establish that the trend will continue unchanged at any scale."
+              ]
+            },
+            {
+              "heading": "Memory reliability is not a complete fault-tolerant computer",
+              "paragraphs": [
+                "The work also tested two-logical-qubit Clifford operations at distances 3 and 5. At distance 5, the reported error was about 7×10⁻⁵ per logical Clifford. A logical gate is a different denominator from a memory-check round. These experiments address state storage and one family of logical operations, not every component required by a universal algorithm.",
+                "All decoding was performed offline after the experiments. Feeding syndromes one round at a time to streaming and neural decoders measured processing speed and supported the possibility of real-time integration; it did not close that feedback loop in the experiment. Larger hardware, live decoding and the other resources required for universal computation still need joint validation. Our reading is a concrete advance in scalable error correction, not an achieved million-operation error-free computer."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper: the memory experiment and offline analysis, not a measured error curve.",
+            "steps": [
+              "Increase code protection",
+              "Run 20 checking rounds",
+              "Read out and decode offline",
+              "Compare errors and uncertainty"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "量子誤り訂正では、量子ビットを増やすだけでは足りない。保護を強めた結果、実際に誤りが減る必要がある。Quantinuum が 10 月 19 日に公表した Helios のカラーコード実験は、三つの保護規模で論理メモリー誤りが減少することを示した。ただし、汎用量子アルゴリズムが連続 100 万操作を無誤りで実行したという結果ではない。",
+          "sections": [
+            {
+              "heading": "一つの状態を複数の量子ビットで守る",
+              "paragraphs": [
+                "物理量子ビットは雑音の影響を受ける。誤り訂正では一つの論理量子ビットの情報を複数の物理量子ビットに分散し、保護する情報そのものを読み出さずに、シンドロームという検査信号を繰り返し測る。符号距離は保護の強さを表す。距離を増やすと装置と操作も増えるため、基礎となる雑音が十分に低い場合に初めて誤りを減らせる。",
+                "チームはイオントラップ型 Helios で距離 3、5、7 の三角形カラーコードを調べた。一つのメモリー実験が使う量子ビットはそれぞれ 13、37、73 個で、データだけでなく検査用の補助量子ビットも含む。計算空間から漏れた状態をハードウェアで戻す処理と、回路内の交換・測定・リセットを組み合わせ、漏れ誤りの波及を抑えた。"
+              ]
+            },
+            {
+              "heading": "100 万回当たり約 5 回という値の分母",
+              "paragraphs": [
+                "各実験では六つの論理基底状態の一つを準備し、20 回の検査を行ってから読み出した。距離 7 では 29,000 回の実験を Tesseract で復号し、最後の読み出しに論理誤りがあったのは 3 回だった。検査回数と状態準備を補正した一検査当たりのメモリー誤りは約 5×10⁻⁶、68% 信頼区間はおよそ 3×10⁻⁶〜9×10⁻⁶ となる。100 万回連続して失敗しない実行を直接観測したわけではない。",
+                "距離ごとの誤り率は約 5.5×10⁻⁴、3.8×10⁻⁵、5×10⁻⁶。著者の当てはめでは距離が二つ増えるごとに平均約 12 分の 1 になる。最良の忠実度だけでなく、保護を増やす効果を検査する点が重要である。ただし測定したのは三つの距離で、任意の規模でも同じ傾向が続くとは限らない。"
+              ]
+            },
+            {
+              "heading": "完全な耐故障計算に残る条件",
+              "paragraphs": [
+                "距離 3 と 5 では二つの論理量子ビットに対する Clifford 操作も調べ、距離 5 で論理 Clifford 当たり約 7×10⁻⁵ の誤りを報告した。論理ゲート一つとメモリー検査一回は異なる分母である。状態の保存と一群の論理操作を検証しても、汎用アルゴリズムに必要な全要素を検証したことにはならない。",
+                "復号はすべて実験後のオフライン処理だった。検査信号を一回ずつストリーミング型やニューラル型の復号器に送り、処理速度を測ったことはリアルタイム統合の可能性を示すが、閉ループの動作実証ではない。より大きな装置、リアルタイム復号、汎用計算の他の資源を組み合わせて検証する必要がある。本稿は誤り訂正の拡張性の進展として捉え、100 万操作の無誤り計算機が完成したとは扱わない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文から当サイトが描き直した説明図。メモリー実験とオフライン解析の流れを示し、実測の誤り曲線ではない。",
+            "steps": [
+              "符号の保護を強める",
+              "20 回の検査を行う",
+              "読み出してオフライン復号",
+              "誤りと不確実性を比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Квантовая коррекция ошибок должна не просто добавлять кубиты: усиление защиты обязано снижать число сбоев. 19 октября Quantinuum представила эксперименты Helios с тремя размерами цветового кода и уменьшением ошибок логической памяти. Это свидетельство полезного режима коррекции, но не демонстрация универсального алгоритма, выполнившего миллион последовательных операций без ошибок.",
+          "sections": [
+            {
+              "heading": "Как несколько физических кубитов защищают одно состояние",
+              "paragraphs": [
+                "Шум нарушает состояние физического кубита. Коррекция распределяет информацию одного логического кубита по нескольким физическим и многократно измеряет диагностические сигналы — синдромы, не считывая саму защищаемую информацию. Кодовое расстояние характеризует силу защиты. Его увеличение требует дополнительных кубитов и операций, поэтому помогает только при достаточно низком исходном шуме.",
+                "На ионном процессоре Helios проверяли треугольные цветовые коды с расстояниями 3, 5 и 7. Один опыт с памятью занимал соответственно 13, 37 или 73 кубита, включая данные и измерительные вспомогательные кубиты. Подсчет только кубитов данных занижает потребность. Аппаратная накачка возвращала состояния, вышедшие из вычислительного подпространства, а обмен, измерение и сброс на уровне схемы ограничивали распространение остаточной утечки."
+              ]
+            },
+            {
+              "heading": "Что означает пять ошибок на миллион",
+              "paragraphs": [
+                "В каждом опыте готовили одно из шести логических базисных состояний, выполняли 20 раундов извлечения синдромов и считывали результат. Для расстояния 7 декодер Tesseract выявил три логических сбоя считывания в 29 000 опытах. С учетом числа раундов и подготовки состояния оценка составляет около 5×10⁻⁶ на раунд, с 68-процентным доверительным интервалом примерно от 3×10⁻⁶ до 9×10⁻⁶. Миллион последовательных раундов без сбоев непосредственно не наблюдался.",
+                "Для трех расстояний получены примерно 5.5×10⁻⁴, 3.8×10⁻⁵ и 5×10⁻⁶ ошибки на раунд. Аппроксимация авторов дает в среднем двенадцатикратное снижение при увеличении расстояния на два. Это проверяет пользу усиления защиты, а не просто выделяет лучший показатель точности. Однако три измеренных расстояния не доказывают сохранение той же зависимости при любом масштабе."
+              ]
+            },
+            {
+              "heading": "До полной отказоустойчивой машины остаются другие задачи",
+              "paragraphs": [
+                "Авторы также проверяли операции Клиффорда над двумя логическими кубитами при расстояниях 3 и 5. Для расстояния 5 сообщается примерно 7×10⁻⁵ ошибки на логическую операцию Клиффорда. Это иной знаменатель, чем один раунд проверки памяти. Эксперименты охватывают хранение состояния и одно семейство операций, а не все составляющие универсального алгоритма.",
+                "Все декодирование выполнялось после экспериментов, офлайн. Последовательная подача синдромов потоковым и нейросетевым декодерам позволила измерить скорость и оценить возможность работы в реальном времени, но не замкнула контур обратной связи в самом опыте. Более крупное оборудование, оперативное декодирование и остальные ресурсы универсальных вычислений еще требуют совместной проверки. Мы рассматриваем результат как конкретный прогресс в масштабируемой коррекции, а не как готовую машину для миллиона безошибочных операций."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема сайта по статье: опыт с памятью и последующий анализ, а не измеренная кривая ошибок.",
+            "steps": [
+              "Усилить кодовую защиту",
+              "Выполнить 20 проверок",
+              "Считать и декодировать офлайн",
+              "Сопоставить ошибки и неопределенность"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "量子糾錯的關鍵不只是增加量子位元，而是增加保護後，錯誤真的變少。Quantinuum 在 10 月 19 日公佈 Helios 彩色碼實驗，比較三種保護規模，觀察到邏輯儲存誤差隨規模擴大下降。它提供了硬體進入有效糾錯區間的證據，但並沒有執行一個連續百萬步、完全無錯的通用量子演算法。",
+          "sections": [
+            {
+              "heading": "把脆弱的狀態交給一組量子位元保護",
+              "paragraphs": [
+                "物理量子位元會受噪聲影響。糾錯把一個邏輯量子位元的資訊分散到多個物理量子位元，再反覆測量檢查訊號，推斷是否發生錯誤，而不直接讀出所保護的資訊。編碼距離可理解為抵抗錯誤的保護強度；距離增大要用更多硬體，也會增加操作。因此，只有底層噪聲足夠低，增加保護才會淨降低錯誤。",
+                "研究在 Helios 離子阱處理器上測試距離 3、5、7 的三角彩色碼。每個儲存實驗分別佔用 13、37、73 個量子位元，包含資料與檢查所需的輔助量子位元，不能只數資料位元。團隊同時使用硬體措施把洩漏出計算空間的狀態帶回，以及電路中的交換、測量和重置，避免洩漏錯誤持續傳播。"
+              ]
+            },
+            {
+              "heading": "每百萬輪約五次錯誤來自怎樣的實驗",
+              "paragraphs": [
+                "論文每次先準備六種邏輯基底狀態之一，進行 20 輪檢查，再讀出結果。距離 7 的 Tesseract 解碼結果來自 29,000 次實驗，其中 3 次最終讀出出現邏輯錯誤。根據實驗次數、檢查輪數與狀態準備修正估計，每輪邏輯儲存誤差約為 5×10⁻⁶；68% 信賴區間約為 3×10⁻⁶ 至 9×10⁻⁶。它不是直接觀察到一條長達百萬輪且零失敗的執行記錄。",
+                "三種距離的每輪誤差依次約為 5.5×10⁻⁴、3.8×10⁻⁵ 和 5×10⁻⁶。作者擬合得到距離每增加兩級，誤差平均縮小約 12 倍。這比只報告最好一次的保真度更有意義，因為它檢驗增加保護是否持續有效。不過實驗只覆蓋三個距離，不能把這一趨勢無條件外推到任意規模。"
+              ]
+            },
+            {
+              "heading": "低儲存誤差與完整容錯計算之間還有距離",
+              "paragraphs": [
+                "研究還用距離 3 和 5 測試雙邏輯量子位元 Clifford 操作，報告距離 5 每個邏輯 Clifford 的誤差約為 7×10⁻⁵。這個分母是邏輯閘，不能與儲存實驗的每輪檢查直接互換。兩類實驗分別說明儲存狀態與執行一類邏輯操作的可靠性，沒有覆蓋通用演算法的全部組成。",
+                "所有解碼均在實驗後離線完成。團隊把檢查訊號逐輪輸入流式與神經網路解碼器，測試其處理速度，說明即時接入有可能，但這仍不同於已經閉合回饋迴路。更大規模的硬體、即時解碼，以及通用計算所需的其他資源還要共同驗證。本文將這次結果看作糾錯可擴展性的具體進展，不採用品牌標題中的“百萬次無錯運算”作為已實現結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋流程：說明儲存實驗與離線分析，不是實測誤差曲線。",
+            "steps": [
+              "擴大編碼保護",
+              "重複 20 輪檢查",
+              "最終讀出並離線解碼",
+              "比較誤差與不確定性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "torchneuron-native-pytorch-trainium-beta",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "PyTorch · October 19 announcement",
+          "url": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/"
+        },
+        {
+          "label": "AWS · public beta launch on October 20",
+          "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-announce-native-pytorch-support-trainium/"
+        },
+        {
+          "label": "AWS Neuron 2.33.0 · TorchNeuron release notes",
+          "url": "https://awsdocs-neuron.readthedocs-hosted.com/en/v2.33.0/release-notes/components/torchneuron.html"
+        },
+        {
+          "label": "AWS Neuron · official repository and compatibility limits",
+          "url": "https://github.com/aws-neuron/torch-neuronx"
+        },
+        {
+          "label": "ITPro · independent launch report",
+          "url": "https://www.itpro.com/software/development/amazon-targets-trainium-gains-with-new-torchneuron-developer-tool"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把模型搬到另一种芯片，困难往往不在模型公式，而在执行、调试和分布式工具是否仍能配合。10 月 19 日的 PyTorch 公告介绍了 TorchNeuron；AWS 随后确认 10 月 20 日推出公开测试版。它把 Trainium2 和 Trainium3 接入 PyTorch 的原生设备体系，减少另起一套工作流程的需要，但“原生”并不等于所有模型无需检查就能迁移。",
+          "sections": [
+            {
+              "heading": "从专门适配走向框架内的设备选择",
+              "paragraphs": [
+                "TorchNeuron 使用 PyTorch 为外部硬件提供的正式扩展机制，让模型、张量、自动求导、性能分析和分布式接口面对同一种设备。开发者熟悉的框架操作因此可以由 Trainium 后端承接，而不是先把整个训练过程改写成另一套框架。项目代码已在官方仓库提供，许可为 Apache 2.0；它仍处于公开测试阶段，不能把开源状态理解成全部能力已稳定。",
+                "这次变化的价值在于缩短实验到部署之间的衔接。即时执行适合逐步检查模型和定位问题；编译执行则把一段计算汇成图，交由编译器统一优化。两种方式可以组合使用。公告还介绍了用于编写定制算子的 Neuron Kernel Interface，但这些低层优化仍需要开发者理解硬件，并不是任意代码自动获得最佳效率。"
+              ]
+            },
+            {
+              "heading": "同一套接口背后仍有不同执行成本",
+              "paragraphs": [
+                "即时执行并不意味着硬件完全不编译。普通即时模式会为操作生成可执行单元，首次遇到操作或计算图时可能有明显编译成本，后续相同情况可复用缓存。实验性的自适应即时模式尝试合并适合的操作，减少启动和中间数据搬运，但默认关闭；不能把这一优化写成所有用户已经自动享有。",
+                "分布式方面，官方说明支持数据并行、参数分片、张量与流水线并行等常用机制，集体通信接入 Trainium 节点内专门资源和节点间网络。这里的重点是保留框架语义，而非保证原有 GPU 配置直接达到同等吞吐。模型规模、输入形状、分片布局和通信开销仍会决定实际表现，公告中的采用案例不是独立性能基准。"
+              ]
+            },
+            {
+              "heading": "迁移前需要验证的具体边界",
+              "paragraphs": [
+                "固定版本的 2.33.0 发行说明列出：编译模式需要静态输入形状，新形状可能触发重新编译；部分稀疏、函数变换、嵌套张量和概率分布接口尚不支持，部分操作会回退 CPU。仓库还提醒，某些双精度输入实际以单精度运行，可能改变需要高精度的结果。因此，“能执行”与“数值一致、速度合适”是不同验收项目。",
+                "公告提到的 TorchAO 和 FP8 能力尚属私测或后续计划；该公开版本没有 TorchAO 集成和组合 MXFP8 类型支持。对使用者而言，合理的下一步是检查算子与数据类型覆盖、验证输出，再分别测量首次编译和稳定运行表现。本站将此视为硬件选择更灵活的软件基础设施进展，不据厂商表述承诺零改动迁移、普遍加速或成本下降。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据官方资料重绘的解释流程：展示后端接入和兼容性验证，不是性能测试结果。",
+            "steps": [
+              "PyTorch 模型与接口",
+              "即时或编译后端执行",
+              "Trainium2 / Trainium3",
+              "核对数值、兼容性与性能"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Moving a model to another chip is often less about changing its mathematics than preserving execution, debugging and distributed tools. A PyTorch announcement on October 19 introduced TorchNeuron, and AWS confirmed its public-beta launch on October 20. It connects Trainium2 and Trainium3 to PyTorch’s native device system. That reduces workflow changes, but “native” does not mean every model can migrate without validation.",
+          "sections": [
+            {
+              "heading": "Making another accelerator a framework device",
+              "paragraphs": [
+                "TorchNeuron uses PyTorch’s official extension mechanism for external hardware. Models, tensors, automatic differentiation, profiling and distributed interfaces can address the same device, with the Trainium backend carrying out familiar operations. Users need not first rewrite an entire training workflow in another framework. The official repository provides the code under Apache 2.0, while the public-beta status remains: open source does not imply that every capability is stable.",
+                "The practical change is a shorter bridge between experimentation and deployment. Eager execution supports stepwise inspection and debugging. Compiled execution combines a region of computation into a graph for coordinated optimization, and the two can be mixed. The Neuron Kernel Interface also permits custom operators, but such low-level optimization still requires hardware knowledge; arbitrary code does not automatically reach peak efficiency."
+              ]
+            },
+            {
+              "heading": "Familiar interfaces still have execution costs",
+              "paragraphs": [
+                "Eager execution does not mean the hardware never compiles. Ordinary eager mode produces executable units for operations. The first use of an operation or graph can incur substantial compilation time, with matching artifacts reused from a cache later. Experimental adaptive eager mode tries to fuse eligible operations to reduce launches and intermediate transfers. It is disabled by default, not an optimization every user already receives automatically.",
+                "The official description supports common distributed patterns including data parallelism, parameter sharding, tensor parallelism and pipelines. Collective communication uses Trainium’s dedicated within-node resources and inter-node networking. Preserving framework semantics is different from guaranteeing the throughput of an existing GPU configuration. Model size, shapes, sharding and communication still matter; adoption testimonials are not independent performance benchmarks."
+              ]
+            },
+            {
+              "heading": "Compatibility must be checked before migration",
+              "paragraphs": [
+                "The fixed 2.33.0 release notes require static input shapes for compiled mode; a new shape can trigger another compilation. Some sparse, function-transform, nested-tensor and probability-distribution interfaces remain unsupported, and some operations fall back to the CPU. The repository also warns that some double-precision values execute as single precision, potentially changing precision-sensitive results. Running successfully and preserving numerical behavior at suitable speed are separate acceptance tests.",
+                "TorchAO and FP8 features mentioned in the announcement were private-beta or future work; this public release does not include TorchAO integration or composite MXFP8 support. Users therefore need to check operator and data-type coverage, validate outputs and measure first-run compilation separately from steady-state execution. We view this as infrastructure that broadens hardware choice, not evidence for universal zero-change migration, acceleration or cost savings."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from official documentation: backend integration and compatibility validation, not benchmark results.",
+            "steps": [
+              "PyTorch models and interfaces",
+              "Eager or compiled backend",
+              "Trainium2 / Trainium3",
+              "Check numerics, compatibility and speed"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "モデルを別のチップへ移す際の難しさは、数式よりも実行・デバッグ・分散処理の道具を引き続き使えるかにある。10 月 19 日の PyTorch 発表は TorchNeuron を紹介し、AWS は 20 日の公開ベータ開始を確認した。Trainium2 と Trainium3 を PyTorch のネイティブなデバイス体系に接続するが、「ネイティブ」は全モデルが検証不要で移行できるという意味ではない。",
+          "sections": [
+            {
+              "heading": "別のアクセラレーターをフレームワークのデバイスにする",
+              "paragraphs": [
+                "TorchNeuron は外部ハードウェア向けの正式な拡張機構を利用する。モデル、テンソル、自動微分、プロファイリング、分散処理の各インターフェースが同じデバイスを扱い、慣れた操作を Trainium バックエンドが実行する。学習手順全体を別のフレームワークに書き換える必要を減らす。公式リポジトリでコードが Apache 2.0 の下に公開されているが、公開ベータであり、全機能が安定したという意味ではない。",
+                "意義は実験から配備までのつながりを短くすることにある。即時実行はモデルを段階的に調べる用途に向き、コンパイル実行は計算の一部をグラフにまとめて最適化する。両方を組み合わせられる。独自演算子を作る Neuron Kernel Interface も用意されるが、低水準の最適化にはハードウェアの理解が必要で、任意の処理が自動的に最高効率になるわけではない。"
+              ]
+            },
+            {
+              "heading": "共通インターフェースでも実行コストは残る",
+              "paragraphs": [
+                "即時実行でもコンパイルがなくなるわけではない。通常の即時モードは操作ごとに実行単位を生成し、初回の操作や計算グラフには大きなコンパイル時間が生じ得る。以後は一致する成果物をキャッシュから再利用できる。実験的な適応型即時モードは適切な操作を融合し、起動や中間データ転送を減らすが、標準では無効である。",
+                "公式説明ではデータ並列、パラメーター分割、テンソル並列、パイプラインなどをサポートし、集合通信にはノード内の専用資源とノード間ネットワークを使う。ただしフレームワークの意味を維持することと、既存 GPU 構成と同じスループットを保証することは異なる。モデル規模、入力形状、分割と通信が性能を左右し、採用企業の紹介は独立したベンチマークではない。"
+              ]
+            },
+            {
+              "heading": "移行前に確かめるべき互換性",
+              "paragraphs": [
+                "固定版 2.33.0 のリリースノートではコンパイル時の入力形状は静的で、新しい形状は再コンパイルを招く場合がある。疎な演算、関数変換、入れ子テンソル、確率分布の一部インターフェースは未対応で、CPU に戻る操作もある。リポジトリは一部の倍精度値が単精度で実行され、精度に敏感な結果が変わり得るとも警告している。動作することと、数値の一致や適切な速度は別々に検証する必要がある。",
+                "発表で触れられた TorchAO と FP8 は非公開ベータまたは今後の計画で、この公開版には TorchAO 統合と複合 MXFP8 型の対応はない。演算子と型の対応、出力の正しさを確認し、初回コンパイルと定常実行の時間も分けて測るべきだ。本稿は選べるハードウェアを広げる基盤の進展として扱い、無変更の移行や普遍的な高速化・費用削減を約束するものとは捉えない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式資料から当サイトが描き直した説明図。バックエンド接続と互換性検証を示し、性能測定結果ではない。",
+            "steps": [
+              "PyTorch のモデルとインターフェース",
+              "即時またはコンパイル実行",
+              "Trainium2 / Trainium3",
+              "数値・互換性・性能を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "При переносе модели на другой чип важны не только формулы, но и привычные средства исполнения, отладки и распределенной работы. 19 октября PyTorch представил TorchNeuron, а AWS подтвердил запуск публичной бета-версии 20 октября. Новый backend подключает Trainium2 и Trainium3 к штатной системе устройств PyTorch. Однако «нативный» не означает, что любую модель можно переносить без проверки.",
+          "sections": [
+            {
+              "heading": "Еще один ускоритель становится устройством PyTorch",
+              "paragraphs": [
+                "TorchNeuron использует официальный механизм расширения для внешнего оборудования. Модели, тензоры, автоматическое дифференцирование, профилирование и распределенные интерфейсы обращаются к одному устройству, а знакомые операции исполняет backend Trainium. Не требуется сначала переписывать весь процесс обучения под другой фреймворк. Код доступен в официальном репозитории по Apache 2.0, но сохраняет статус публичной бета-версии: открытая лицензия не гарантирует зрелость всех возможностей.",
+                "Практическое изменение — более короткий переход от эксперимента к развертыванию. Непосредственное исполнение удобно для пошаговой проверки и отладки; компилируемый режим объединяет участок вычислений в граф для совместной оптимизации. Режимы можно сочетать. Neuron Kernel Interface позволяет создавать специальные операторы, однако низкоуровневая оптимизация по-прежнему требует знания оборудования и не делает произвольный код автоматически оптимальным."
+              ]
+            },
+            {
+              "heading": "За знакомыми интерфейсами остаются затраты исполнения",
+              "paragraphs": [
+                "Непосредственный режим не исключает компиляцию. Обычный eager создает исполняемые единицы для отдельных операций. Первый запуск операции или графа может требовать значительного времени, после чего подходящие артефакты повторно используются из кэша. Экспериментальный адаптивный eager объединяет подходящие операции, сокращая запуски и перемещение промежуточных данных, но по умолчанию выключен.",
+                "Официальное описание поддерживает параллелизм данных, разделение параметров, тензорный и конвейерный параллелизм. Коллективные обмены используют специальные ресурсы Trainium внутри узла и сеть между узлами. Сохранение семантики фреймворка не гарантирует пропускную способность прежней конфигурации GPU. Размер модели, формы входов, разбиение и коммуникация остаются существенными; отзывы внедривших систему компаний не являются независимым тестом производительности."
+              ]
+            },
+            {
+              "heading": "Что проверять перед переносом",
+              "paragraphs": [
+                "Примечания к фиксированной версии 2.33.0 требуют статических форм входа в компилируемом режиме: новая форма может вызвать новую компиляцию. Часть интерфейсов разреженных данных, преобразований функций, вложенных тензоров и распределений вероятностей еще не поддерживается; отдельные операции возвращаются на CPU. Репозиторий также предупреждает, что некоторые значения двойной точности исполняются с одинарной, изменяя чувствительные к точности результаты. Возможность запустить модель, численная корректность и подходящая скорость — разные проверки.",
+                "TorchAO и FP8 из анонса относились к закрытому тестированию или планам; данная публичная версия не содержит интеграции TorchAO и составного типа MXFP8. Поэтому нужно проверить операторы и типы данных, сравнить результаты и отдельно измерить первичную компиляцию и установившееся исполнение. Мы рассматриваем новость как развитие инфраструктуры выбора оборудования, а не доказательство универсального переноса без изменений, ускорения или экономии."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема сайта по официальным материалам: подключение backend и проверка совместимости, не результаты теста скорости.",
+            "steps": [
+              "Модели и интерфейсы PyTorch",
+              "Непосредственное или компилируемое исполнение",
+              "Trainium2 / Trainium3",
+              "Проверка чисел, совместимости и скорости"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把模型搬到另一種晶片，困難往往不在模型公式，而在執行、除錯和分散式工具是否仍能配合。10 月 19 日的 PyTorch 公告介紹了 TorchNeuron；AWS 隨後確認 10 月 20 日推出公開測試版。它把 Trainium2 和 Trainium3 接入 PyTorch 的原生裝置體系，減少另起一套工作流程的需要，但“原生”並不等於所有模型無需檢查就能遷移。",
+          "sections": [
+            {
+              "heading": "從專門適配走向框架內的裝置選擇",
+              "paragraphs": [
+                "TorchNeuron 使用 PyTorch 為外部硬體提供的正式擴充機制，讓模型、張量、自動求導、效能分析和分散式介面面對同一種裝置。開發者熟悉的框架操作因此可以由 Trainium 後端承接，而不是先把整個訓練過程改寫成另一套框架。專案程式碼已在官方倉庫提供，許可為 Apache 2.0；它仍處於公開測試階段，不能把開源狀態理解成全部能力已穩定。",
+                "這次變化的價值在於縮短實驗到部署之間的銜接。即時執行適合逐步檢查模型和定位問題；編譯執行則把一段計算匯成圖，交由編譯器統一最佳化。兩種方式可以組合使用。公告還介紹了用於編寫自訂運算子的 Neuron Kernel Interface，但這些低層最佳化仍需要開發者理解硬體，並不是任意程式碼自動獲得最佳效率。"
+              ]
+            },
+            {
+              "heading": "同一套介面背後仍有不同執行成本",
+              "paragraphs": [
+                "即時執行並不意味著硬體完全不編譯。普通即時模式會為操作生成可執行單元，首次遇到操作或計算圖時可能有明顯編譯成本，後續相同情況可複用快取。實驗性的自適應即時模式嘗試合併適合的操作，減少啟動和中間資料搬運，但預設關閉；不能把這一最佳化寫成所有使用者已經自動享有。",
+                "分散式方面，官方說明支援資料並行、參數分片、張量與流水線並行等常用機制，集體通訊接入 Trainium 節點內專門資源和節點間網路。這裡的重點是保留框架語義，而非保證原有 GPU 配置直接達到同等吞吐。模型規模、輸入形狀、分片佈局和通訊開銷仍會決定實際表現，公告中的採用案例不是獨立效能基準。"
+              ]
+            },
+            {
+              "heading": "遷移前需要驗證的具體邊界",
+              "paragraphs": [
+                "固定版本的 2.33.0 發行說明列出：編譯模式需要靜態輸入形狀，新形狀可能觸發重新編譯；部分稀疏、函式變換、巢狀張量和機率分佈介面尚不支援，部分操作會回退 CPU。倉庫還提醒，某些雙精度輸入實際以單精度執行，可能改變需要高精度的結果。因此，“能執行”與“數值一致、速度合適”是不同驗收專案。",
+                "公告提到的 TorchAO 和 FP8 能力尚屬私測或後續計劃；該公開版本沒有 TorchAO 整合和組合 MXFP8 型別支援。對使用者而言，合理的下一步是檢查運算子與資料型別覆蓋、驗證輸出，再分別測量首次編譯和穩定執行表現。本站將此視為硬體選擇更靈活的軟體基礎設施進展，不據廠商表述承諾零改動遷移、普遍加速或成本下降。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據官方資料重繪的解釋流程：展示後端接入和相容性驗證，不是效能測試結果。",
+            "steps": [
+              "PyTorch 模型與介面",
+              "即時或編譯後端執行",
+              "Trainium2 / Trainium3",
+              "核對數值、相容性與效能"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "rankmath-pro-supply-chain-incident",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "Rank Math · incident and recovery advisory",
+          "url": "https://rankmath.com/kb/pro-3-0-123-security-incident/"
+        },
+        {
+          "label": "Wordfence · affected-package assessment",
+          "url": "https://www.wordfence.com/blog/2026/10/rank-math-seo-pro-3-0-123-malware/"
+        },
+        {
+          "label": "BleepingComputer · October 19 incident report",
+          "url": "https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "从厂商官网下载软件，也可能遇到被污染的安装包。10 月 19 日的报道披露，WordPress 插件 Rank Math PRO 在一段限定时间内提供的部分安装包含有恶意程序。事件的重点是确认自己取得了哪一批文件，以及它是否曾运行：升级到干净版本能替换插件，却不能自动清除已经留下的其他入口。",
+          "sections": [
+            {
+              "heading": "影响的是特定下载窗口，而非所有同版本用户",
+              "paragraphs": [
+                "厂商确认的范围是 PRO 3.0.123，下载或更新取得文件的时间为 UTC 2026 年 10 月 15 日 20:02 至 16 日 07:12，约 11 小时 10 分钟。恶意文件在插件被激活后可能入侵网站。厂商移除了受影响文件，并提供干净的 3.0.124。只看到版本号不足以断定遭到入侵，还需结合下载记录、安装时间与激活情况。",
+                "WordPress.org 提供的免费版不在这次受污染安装包事件范围内。免费版的普及数量也不能当成受害网站数量。BleepingComputer 报道时，具体受影响网站数和攻击者最初如何进入发布环节尚未得到厂商答复，因而不能把“供应链攻击”进一步写成已查明的账户失窃或构建系统漏洞。"
+              ]
+            },
+            {
+              "heading": "为什么删除或升级插件还不够",
+              "paragraphs": [
+                "供应链攻击绕过了用户对来源的基本判断：取得文件的入口看似可信，文件本身却可能已被修改。厂商和 Wordfence 的告警说明，恶意程序可能在插件之外创建文件、额外管理员账户或定时任务，并在网站被访问时重建隐藏后门。插件不是唯一需要检查的位置；把它停用，并不证明其他持久化机制已消失。",
+                "风险还包括网站进程有权读取的数据库凭据、服务密钥和其他秘密。因此恢复不仅是修复页面文件，还要重新建立对访问权限的信任。报道另外分析了一份与本事件指标相符的恶意样本，但没有确认该样本就是通过受污染插件分发的文件；本文不把这条线索当成已经查明的完整攻击链，也不展示可执行载荷。"
+              ]
+            },
+            {
+              "heading": "按实际暴露情况区分恢复路径",
+              "paragraphs": [
+                "已经激活受影响安装包的网站，厂商建议按已入侵处理，优先恢复事件开始前的干净网站及数据库备份，随后扫描并更换可能暴露的密码与密钥，再安装干净版本。没有可靠备份时，需要排查额外文件、未知管理员和计划任务等持久化变化，由有能力的维护人员完成清理；单纯更新插件不足以完成恢复。",
+                "若安装过但从未激活，告警建议删除受影响文件、换用干净版本并扫描；只下载而未安装或激活，本事件本身没有证明网站已被入侵。即使当前版本已改变，也不能忽略曾激活恶意包的事实。这个事件提醒软件维护者同时保存来源、取得时间和版本记录：版本更新回答的是“现在装了什么”，恢复核验还要回答“此前运行过什么、留下了什么”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开告警重绘的处置分流示意，不展示攻击载荷，也不替代对具体网站的检查。",
+            "steps": [
+              "核对版本与下载窗口",
+              "确认是否安装并激活",
+              "按暴露情况恢复与清理",
+              "更换凭据并复核持久化入口"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Even a download from a vendor’s own website can contain a compromised package. Reporting on October 19 described malware in some Rank Math PRO packages supplied during a limited period. The important questions are which files a site received and whether they ever ran. Installing a clean replacement changes the plugin, but does not automatically remove other access mechanisms left behind.",
+          "sections": [
+            {
+              "heading": "A download window, not every user of the same version",
+              "paragraphs": [
+                "The vendor-confirmed scope is PRO 3.0.123 downloaded or obtained through an update between October 15, 2026 at 20:02 UTC and October 16 at 07:12 UTC: about eleven hours and ten minutes. Activating a malicious copy could compromise the site. Rank Math removed the affected files and supplied clean version 3.0.124. The version number alone is insufficient evidence of compromise; download records, installation timing and activation history also matter.",
+                "The free edition distributed through WordPress.org was not part of this package-contamination incident. Its installation count is not a victim count. At the time of BleepingComputer’s report, the vendor had not answered questions about the number of potentially affected sites or the initial intrusion route. “Supply-chain attack” therefore does not establish a stolen publishing account or a specific build-system vulnerability."
+              ]
+            },
+            {
+              "heading": "Why removing or updating the plugin is insufficient",
+              "paragraphs": [
+                "A supply-chain compromise defeats a basic source check: the delivery point appears trustworthy while the files may already have been modified. Rank Math and Wordfence warn that the malware could create files, additional administrator accounts or scheduled tasks outside the plugin and recreate hidden backdoors when visitors access the site. Disabling the plugin does not demonstrate that those persistence mechanisms are gone.",
+                "The possible exposure includes database credentials, service keys and other secrets accessible to the website process. Recovery therefore means more than repairing visible pages; trust in access permissions must also be restored. The report examined another malicious sample with matching indicators, but did not confirm that the sample itself had been distributed through the compromised plugin. We do not present that lead as a proven complete attack chain or reproduce executable payloads."
+              ]
+            },
+            {
+              "heading": "Recovery depends on actual exposure",
+              "paragraphs": [
+                "For sites that activated an affected package, the vendor recommends treating the site as compromised. Its preferred route is restoring clean website and database backups from before the incident, scanning, replacing potentially exposed passwords and keys, and installing the clean release. Without a reliable backup, qualified maintainers need to investigate extra files, unknown administrators and scheduled persistence. A plugin update alone is not recovery.",
+                "If the package was installed but never activated, the advisory recommends removing it, installing the clean replacement and scanning. Downloading without installation or activation does not by itself show a compromised site. A newer version today also does not erase an earlier malicious activation. The broader lesson is to retain provenance, acquisition times and versions: an update tells you what is installed now, while recovery must establish what previously ran and what it left behind."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "A response-flow diagram redrawn by this site from public advisories; it shows no attack payload and does not replace a site-specific investigation.",
+            "steps": [
+              "Check version and download window",
+              "Establish installation and activation",
+              "Recover according to exposure",
+              "Rotate credentials and verify persistence removal"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "開発元の公式サイトから取得したファイルでも、汚染された配布物である可能性はある。10 月 19 日の報道は、限られた時間帯に配布された Rank Math PRO の一部にマルウェアが含まれていたと伝えた。重要なのは取得したファイルと実行の有無である。正常版への更新はプラグインを置き換えるが、すでに作られた別の侵入口を自動的に消すものではない。",
+          "sections": [
+            {
+              "heading": "同じバージョンの全利用者が対象ではない",
+              "paragraphs": [
+                "開発元が確認した範囲は、UTC の 2026 年 10 月 15 日 20:02 から 16 日 07:12 まで、約 11 時間 10 分にダウンロードまたは更新で取得された PRO 3.0.123 である。悪意あるコピーを有効化するとサイトが侵害される可能性がある。該当ファイルは削除され、正常版 3.0.124 が提供された。バージョン番号だけでは侵害を断定できず、取得記録、導入時刻、有効化の履歴も必要になる。",
+                "WordPress.org の無料版は、この配布パッケージ汚染の対象ではない。無料版の導入数を被害サイト数に置き換えてはならない。BleepingComputer の報道時点では、影響し得るサイト数と最初の侵入経路について開発元の回答はなかった。サプライチェーン攻撃という分類だけから、配布用アカウントの盗難やビルドシステムの特定の欠陥が確定したとは言えない。"
+              ]
+            },
+            {
+              "heading": "削除や更新だけで復旧しない理由",
+              "paragraphs": [
+                "配布元が信頼できそうでも、そのファイル自体が改変されていれば、入手元の確認だけでは防げない。開発元と Wordfence は、マルウェアがプラグイン外のファイル、追加の管理者、定期実行タスクを作り、訪問時に隠れたバックドアを再生成する可能性を警告している。プラグインを無効にしても、それらの永続化手段が消えた証明にはならない。",
+                "サイトのプロセスが読めるデータベース認証情報、サービスキー、その他の秘密も露出し得る。復旧は画面の修復にとどまらず、アクセス権への信頼を取り戻す作業となる。報道は同じ侵害指標を持つ別の悪意あるサンプルも分析したが、そのファイルが汚染プラグイン経由で配布されたかは確認していない。本稿はその手掛かりを完全な攻撃経路の確定証拠にせず、実行可能な攻撃内容も掲載しない。"
+              ]
+            },
+            {
+              "heading": "実際の露出に応じて復旧を分ける",
+              "paragraphs": [
+                "対象パッケージを有効化したサイトは侵害済みとして扱うよう開発元は勧める。推奨経路は、事件開始前の正常なサイトとデータベースのバックアップを復元し、スキャンと露出し得るパスワード・キーの交換を行って正常版を導入することだ。信頼できるバックアップがなければ、追加ファイル、未知の管理者、定期タスクなどを保守担当者が調べる必要がある。更新だけでは復旧にならない。",
+                "導入したものの一度も有効化していない場合は、対象ファイルを除去して正常版を導入し、スキャンする。ダウンロードのみで導入も有効化もしていなければ、この事件だけでサイト侵害を示すものではない。現在のバージョンが新しくても、以前の有効化を無視してはいけない。配布元・取得時刻・版を記録する意味はここにある。今何が入っているかに加え、過去に何が動き何を残したかを復旧で確かめる必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開告警から当サイトが描き直した対応の分岐図。攻撃内容を示さず、個別サイトの調査に代わるものではない。",
+            "steps": [
+              "版と取得時間を確認",
+              "導入と有効化を確認",
+              "露出状況に応じて復旧",
+              "認証情報と永続化を再確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Даже загрузка с официального сайта поставщика может содержать зараженный пакет. 19 октября сообщалось о вредоносном коде в части пакетов Rank Math PRO, распространявшихся в ограниченный период. Главное — установить, какие файлы получил сайт и запускались ли они. Чистая новая версия заменяет плагин, но не удаляет автоматически другие оставленные злоумышленником точки доступа.",
+          "sections": [
+            {
+              "heading": "Ограниченное окно загрузки, а не все пользователи версии",
+              "paragraphs": [
+                "Поставщик подтвердил затронутую группу: PRO 3.0.123, полученный загрузкой или обновлением с 20:02 UTC 15 октября 2026 года до 07:12 UTC 16 октября, то есть примерно за одиннадцать часов десять минут. Активация зараженной копии могла привести к взлому сайта. Rank Math удалил такие файлы и предоставил чистую версию 3.0.124. Сам номер версии не доказывает компрометацию: важны записи о получении, установке и активации.",
+                "Бесплатная редакция с WordPress.org не относится к этому случаю загрязнения пакетов. Число ее установок нельзя выдавать за число пострадавших. На момент публикации BleepingComputer поставщик не ответил на вопросы о количестве потенциально затронутых сайтов и первоначальном способе проникновения. Термин «атака на цепочку поставок» сам по себе не подтверждает кражу учетной записи публикации или конкретную уязвимость сборочной системы."
+              ]
+            },
+            {
+              "heading": "Почему удаления или обновления плагина недостаточно",
+              "paragraphs": [
+                "Такая атака обходит простую проверку происхождения: источник выглядит надежным, но файл уже может быть изменен. Rank Math и Wordfence предупреждают о возможности создания файлов, дополнительных администраторов и запланированных задач вне плагина, а также восстановления скрытых бэкдоров при посещении сайта. Отключение плагина не доказывает исчезновения этих механизмов закрепления.",
+                "Под угрозой находятся учетные данные базы, ключи сервисов и другие секреты, доступные процессу сайта. Поэтому восстановление означает не только ремонт страниц, но и возвращение доверия к правам доступа. В сообщении рассмотрен другой вредоносный образец с совпадающими индикаторами, однако не подтверждено, что именно этот файл распространялся через зараженный плагин. Мы не превращаем такую зацепку в доказанную полную цепочку атаки и не публикуем исполняемую вредоносную нагрузку."
+              ]
+            },
+            {
+              "heading": "Путь восстановления определяется фактическим воздействием",
+              "paragraphs": [
+                "Сайт, активировавший затронутый пакет, поставщик рекомендует считать скомпрометированным. Предпочтительный путь — восстановить чистые резервные копии сайта и базы, созданные до начала инцидента, выполнить проверку, заменить потенциально раскрытые пароли и ключи и установить чистый выпуск. Без надежной копии компетентным специалистам необходимо искать дополнительные файлы, неизвестных администраторов и запланированные механизмы закрепления. Одно обновление не завершает восстановление.",
+                "Если пакет установили, но никогда не активировали, рекомендуется удалить его, поставить чистую версию и проверить сайт. Одна загрузка без установки или активации не свидетельствует о взломе в рамках этого инцидента. Более новая текущая версия тоже не отменяет прежнего запуска вредоносного пакета. Поэтому важны источник, время получения и версия: обновление показывает, что установлено сейчас, а расследование должно выяснить, что исполнялось раньше и что оставило после себя."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема реагирования по публичным уведомлениям. Без вредоносной нагрузки; она не заменяет проверку конкретного сайта.",
+            "steps": [
+              "Проверить версию и время получения",
+              "Установить факт установки и активации",
+              "Восстановить с учетом воздействия",
+              "Заменить секреты и проверить закрепление"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "從廠商官網下載軟體，也可能遇到被汙染的安裝包。10 月 19 日的報道披露，WordPress 外掛 Rank Math PRO 在一段限定時間內提供的部分安裝包含有惡意程式。事件的重點是確認自己取得了哪一批檔案，以及它是否曾執行：升級到乾淨版本能替換外掛，卻不能自動清除已經留下的其他入口。",
+          "sections": [
+            {
+              "heading": "影響的是特定下載時段，而非所有同版本使用者",
+              "paragraphs": [
+                "廠商確認的範圍是 PRO 3.0.123，下載或更新取得檔案的時間為 UTC 2026 年 10 月 15 日 20:02 至 16 日 07:12，約 11 小時 10 分鐘。惡意檔案在外掛被啟用後可能入侵網站。廠商移除了受影響檔案，並提供乾淨的 3.0.124。只看到版本號不足以斷定遭到入侵，還需結合下載記錄、安裝時間與啟用情況。",
+                "WordPress.org 提供的免費版不在這次受汙染安裝包事件範圍內。免費版的普及數量也不能當成受害網站數量。BleepingComputer 報道時，具體受影響網站數和攻擊者最初如何進入釋出環節尚未得到廠商答覆，因而不能把“供應鏈攻擊”進一步寫成已查明的帳戶失竊或構建系統漏洞。"
+              ]
+            },
+            {
+              "heading": "為什麼刪除或升級外掛還不夠",
+              "paragraphs": [
+                "供應鏈攻擊繞過了使用者對來源的基本判斷：取得檔案的入口看似可信，檔案本身卻可能已被修改。廠商和 Wordfence 的告警說明，惡意程式可能在外掛之外建立檔案、額外管理員帳戶或定時任務，並在網站被訪問時重建隱藏後門。外掛不是唯一需要檢查的位置；把它停用，並不證明其他持久化機制已消失。",
+                "風險還包括網站程序有權讀取的資料庫憑據、服務金鑰和其他秘密。因此恢復不僅是修復頁面檔案，還要重新建立對訪問許可權的信任。報道另外分析了一份與本事件指標相符的惡意樣本，但沒有確認該樣本就是透過受汙染外掛分發的檔案；本文不把這條線索當成已經查明的完整攻擊鏈，也不展示可執行載荷。"
+              ]
+            },
+            {
+              "heading": "按實際暴露情況區分恢復路徑",
+              "paragraphs": [
+                "已經啟用受影響安裝包的網站，廠商建議按已入侵處理，優先恢復事件開始前的乾淨網站及資料庫備份，隨後掃描並更換可能暴露的密碼與金鑰，再安裝乾淨版本。沒有可靠備份時，需要排查額外檔案、未知管理員和計劃任務等持久化變化，由有能力的維護人員完成清理；單純更新外掛不足以完成恢復。",
+                "若安裝過但從未啟用，告警建議刪除受影響檔案、換用乾淨版本並掃描；只下載而未安裝或啟用，本事件本身沒有證明網站已被入侵。即使當前版本已改變，也不能忽略曾啟用惡意包的事實。這個事件提醒軟體維護者同時儲存來源、取得時間和版本記錄：版本更新回答的是“現在裝了什麼”，恢復核驗還要回答“此前執行過什麼、留下了什麼”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開告警重繪的處置分流示意，不展示攻擊載荷，也不替代對具體網站的檢查。",
+            "steps": [
+              "核對版本與下載時段",
+              "確認是否安裝並啟用",
+              "按暴露情況恢復與清理",
+              "更換憑據並複核持久化入口"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nasa-standardized-shock-vibration-analysis",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "NASA · engineering account, 19 October 2026",
+          "url": "https://www.nasa.gov/centers-and-facilities/kennedy/nasa-improves-shock-vibration-analysis/"
+        },
+        {
+          "label": "NASA · image and media usage conditions",
+          "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "火箭上的设备不仅要经受持续振动，还要承受短促冲击；运输阶段也可能留下不能忽略的风险。NASA 于 10 月 19 日介绍，肯尼迪航天中心发射服务项目的动态环境团队，把已有商业软件用于一套标准化有限元建模流程，并已在一次商业火箭认证中使用。这里的新进展是分析与复核方式的改变，不是发明了一种全新的物理理论。",
+          "sections": [
+            {
+              "heading": "把经验估计变成可以反复检查的模型",
+              "paragraphs": [
+                "过去，工程师常根据经验规则或以往任务的数据，推算新火箭和航天器部件会受到多强的振动与冲击。这些方法并非没有价值，但判断较依赖个人经验和简化假设。对并不经常使用有限元工具的动态环境工程师而言，每次重拾复杂流程也会消耗时间。",
+                "有限元建模把复杂结构划分为许多较小部分，再计算它们在指定载荷下如何响应。此次团队在商业软件中建立统一模板，引导分析振动条件、冲击条件和结构表现。模板的工程意义在于让同类问题沿一致步骤展开，便于共享经验和比较假设，而不是让模型自动知道真实硬件的全部情况。"
+              ]
+            },
+            {
+              "heading": "认证案例暴露出不同环境的缺口",
+              "paragraphs": [
+                "NASA 披露的首个使用案例，是为承担 NASA 任务的一家商业发射商认证火箭。供应商提供了振动试验，却没有提供冲击试验。团队判断仍需要冲击试验，并利用模板比较不同假设、显示结构响应，处理过去需要大量手工建模的问题。公告没有公开供应商名称或具体火箭型号，因此不能据此猜测某一型号存在缺陷。",
+                "这次工作既复核了供应商关于飞行环境的试验结果，也让团队看到了运输冲击方面的新问题。飞行振动与运输冲击不是同一种条件，已有一项试验并不能自然覆盖另一项。本文将其理解为补全验证范围的案例，而不是证明所有发射系统都存在相同隐患。"
+              ]
+            },
+            {
+              "heading": "节省时间不等于取消实物验证",
+              "paragraphs": [
+                "项目团队表示，能够自行开展分析，减少了索要和等待外部报告或数据的时间，已经节省数月。这个说法是 NASA 对自身工程实践的描述；公告没有给出统一计时方法、项目数量或对照组，不能换算为普遍的效率提升比例，也没有公布准确率或事故率改善数值。",
+                "团队仍要确定足够严格的振动与冲击等级，并确认部件接受相应等级的测试。标准化模型可以帮助提前发现风险、解释不直观的结构行为，并随新增飞行数据修正判断；它与试验、数据和工程审查相互配合。对读者最有用的结论是，复用分析流程能让独立复核更容易，但这则报道并未证明数字模型已替代全部实物试验。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开工程案例重绘的解释流程，表示分析与验证的关系，不是实测性能曲线。",
+            "steps": [
+              "整理振动与冲击条件",
+              "按统一模板建立结构模型",
+              "比较假设并复核试验",
+              "补查风险与更新验证要求"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Launch hardware faces both sustained vibration and brief shocks, and transport can introduce risks before a rocket ever flies. On October 19, NASA described a standardized finite-element modeling workflow developed by its Launch Services Program’s Dynamic Environments Group at Kennedy Space Center. The team has already used it in a commercial rocket certification. The advance concerns how engineers analyze and review evidence, rather than a new physical theory.",
+          "sections": [
+            {
+              "heading": "Making engineering estimates easier to revisit",
+              "paragraphs": [
+                "Engineers have long estimated shock and vibration environments using rules of thumb and scaled data from earlier missions. Those approaches remain useful, but depend heavily on engineering judgment and simplified assumptions. Dynamic-environments specialists who use finite-element tools only occasionally also spend time relearning complicated workflows.",
+                "Finite-element modeling divides a complex structure into smaller parts and calculates their responses to specified loads. The team created a common template in commercial software to guide work on vibration, shock and structural behavior. Its practical value is a consistent route through comparable questions, making assumptions and experience easier to share. A template does not give a model complete knowledge of real hardware."
+              ]
+            },
+            {
+              "heading": "One certification exposed a gap between environments",
+              "paragraphs": [
+                "The first application described by NASA involved certifying a commercial provider’s rocket selected for a NASA mission. The provider supplied vibration tests but not shock tests. The team determined that shock testing was needed and used its template to compare scenarios and visualize structural responses, addressing questions that previously demanded extensive manual modeling. The announcement does not identify the provider or rocket, so it cannot establish a defect in any named vehicle.",
+                "Engineers checked the provider’s results for flight environments and gained additional insight into shocks during transport. Flight vibration and transport shock are different conditions: evidence for one does not automatically cover the other. Our interpretation is that this illustrates how to close a verification gap, not that every launch system has the same hidden problem."
+              ]
+            },
+            {
+              "heading": "Time savings do not eliminate physical verification",
+              "paragraphs": [
+                "The project team says independent analysis has already saved months by reducing requests for, and waiting on, outside reports or data. That is NASA’s account of its own engineering experience. No common timing protocol, project count or control group is published, so the claim cannot be converted into a universal percentage gain. The announcement also supplies no numerical improvement in prediction accuracy or accident rates.",
+                "Engineers still define suitably severe vibration and shock levels and check that components have been tested to those levels. A standardized model can reveal risks earlier, explain unintuitive structural behavior and support revisions as flight data accumulates. It works alongside tests, measurements and engineering review. The useful lesson is that reusable workflows make independent scrutiny easier; this report does not demonstrate that digital models replace all physical testing."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from the public engineering account; it shows analysis and verification, not measured performance.",
+            "steps": [
+              "Define vibration and shock conditions",
+              "Build a model with a shared template",
+              "Compare scenarios and check tests",
+              "Investigate risks and revise verification"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "打ち上げ機器は持続的な振動だけでなく、短時間の衝撃にも耐える必要がある。輸送中の衝撃も無視できない。NASA は 10 月 19 日、ケネディ宇宙センターの打ち上げサービス計画に属する動的環境チームが、市販ソフトを使う有限要素モデリングを標準化し、商業ロケットの認証で実際に利用したと紹介した。新しい物理理論ではなく、解析と検証の進め方を改善した事例だ。",
+          "sections": [
+            {
+              "heading": "経験的な見積もりを見直しやすくする",
+              "paragraphs": [
+                "従来は経験則や過去の飛行データを補正して、部品が受ける振動や衝撃を見積もることが多かった。この方法にも価値はあるが、技術者の判断と単純化した仮定に依存する。有限要素ツールを時々しか使わない担当者は、複雑な手順を覚え直す時間も必要だった。",
+                "有限要素モデリングでは複雑な構造を小さな部分に分け、指定した荷重に対する応答を計算する。チームは市販ソフトに共通テンプレートを用意し、振動、衝撃、構造の挙動を一貫した手順で検討できるようにした。同種の問題を比較し、経験や仮定を共有しやすくする仕組みであり、モデルが実機の全状態を自動的に把握するわけではない。"
+              ]
+            },
+            {
+              "heading": "認証で見えた環境条件の違い",
+              "paragraphs": [
+                "NASA が示した最初の事例は、NASA の任務に選ばれた商業事業者のロケット認証だった。事業者は振動試験を提供したが、衝撃試験は提供していなかった。チームは衝撃試験が必要だと判断し、テンプレートで条件を変えて比較し、構造応答を可視化した。従来は大きな手作業を要した解析である。事業者名と機種は公開されておらず、特定のロケットの欠陥を推測する根拠にはならない。",
+                "解析は飛行環境に関する事業者の試験結果を確認するとともに、輸送時の衝撃について新たな知見をもたらした。飛行振動と輸送衝撃は別の条件で、一方の試験だけで他方まで確認できたとは言えない。本稿では検証範囲の穴を埋める事例と捉えており、すべての打ち上げシステムに同じ問題があると解釈しない。"
+              ]
+            },
+            {
+              "heading": "時間短縮は実物試験の廃止を意味しない",
+              "paragraphs": [
+                "チームは、自力で解析できるため外部の報告やデータを依頼して待つ時間が減り、すでに数か月を節約したと説明する。これは NASA の実務上の自己報告だ。共通の計測方法、対象件数、比較群は示されておらず、一般的な効率向上率へ換算できない。予測精度や事故率の改善値も公表されていない。",
+                "担当者は引き続き十分に厳しい振動・衝撃レベルを定め、部品がそのレベルで試験されたか確認する。標準モデルは早期のリスク発見、直感に反する挙動の説明、追加の飛行データに基づく見直しを助けるが、試験や測定、技術審査と組み合わせて使うものだ。再利用できる手順は独立した検証を容易にする。今回の報告は、すべての実物試験を数値モデルで置き換えられるという証明ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開された事例を基に当サイトが描き直した説明図。解析と検証の関係を示し、実測性能を表すものではない。",
+            "steps": [
+              "振動・衝撃条件を整理",
+              "共通テンプレートでモデル化",
+              "条件比較と試験の照合",
+              "リスク確認と検証条件の更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Оборудование ракеты должно выдерживать длительную вибрацию и короткие удары; риски возникают и при перевозке. 19 октября NASA рассказало о стандартизированном процессе конечно-элементного моделирования, созданном группой динамических сред программы пусковых услуг в Космическом центре Кеннеди. Его уже применили при сертификации коммерческой ракеты. Новизна здесь в организации анализа и проверки, а не в новой физической теории.",
+          "sections": [
+            {
+              "heading": "Как сделать инженерные оценки воспроизводимее",
+              "paragraphs": [
+                "Раньше ударные и вибрационные воздействия часто оценивали по практическим правилам или масштабировали данные прежних миссий. Эти подходы полезны, но существенно зависят от опыта инженера и упрощений. Специалистам по динамическим средам, редко работающим с конечно-элементными инструментами, приходилось заново осваивать сложные процедуры.",
+                "Конечно-элементная модель разбивает конструкцию на небольшие части и рассчитывает их отклик на заданную нагрузку. Команда создала общий шаблон в коммерческом ПО для анализа вибраций, ударов и поведения конструкции. Единая последовательность облегчает сопоставление предположений и передачу опыта. Она не означает, что модель автоматически знает все свойства реального оборудования."
+              ]
+            },
+            {
+              "heading": "Сертификация выявила пробел между условиями",
+              "paragraphs": [
+                "Первое описанное применение касалось сертификации ракеты коммерческого поставщика, выбранной для миссии NASA. Поставщик предоставил вибрационные испытания, но не ударные. Инженеры сочли ударные испытания необходимыми и использовали шаблон для сравнения сценариев и визуализации структурных откликов, которые раньше требовали большого объема ручного моделирования. Названия компании и ракеты не раскрыты, поэтому сообщение не позволяет приписать дефект конкретному аппарату.",
+                "Команда проверила результаты испытаний для условий полета и получила новые сведения об ударах при перевозке. Полетная вибрация и транспортный удар — разные условия: подтверждение одного не покрывает автоматически другое. Мы рассматриваем этот пример как устранение пробела в проверке, а не как свидетельство одинаковой скрытой проблемы у всех пусковых систем."
+              ]
+            },
+            {
+              "heading": "Экономия времени не отменяет испытания",
+              "paragraphs": [
+                "Команда сообщает, что самостоятельный анализ уже сэкономил месяцы благодаря уменьшению ожидания внешних отчетов и данных. Это описание собственной инженерной практики NASA. В публикации нет единой методики измерения времени, числа проектов или контрольной группы, поэтому результат нельзя превратить в универсальный процент повышения эффективности. Численного улучшения точности прогнозов или аварийности также не приведено.",
+                "Инженеры по-прежнему определяют достаточно строгие уровни вибрации и ударов и проверяют, что компоненты испытаны на этих уровнях. Общая модель помогает раньше замечать риски, объяснять неочевидное поведение конструкции и уточнять оценки по новым полетным данным. Она дополняет испытания, измерения и инженерную экспертизу. Практический вывод: повторно используемый процесс облегчает независимую проверку; сообщение не доказывает возможность заменить им все физические испытания."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема сайта по опубликованному инженерному примеру; показывает связь анализа и проверки, а не измеренную производительность.",
+            "steps": [
+              "Определить вибрационные и ударные условия",
+              "Построить модель по общему шаблону",
+              "Сопоставить сценарии и испытания",
+              "Проверить риски и уточнить требования"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "火箭上的裝置不僅要經受持續振動，還要承受短促衝擊；運輸階段也可能留下不能忽略的風險。NASA 於 10 月 19 日介紹，肯尼迪航天中心發射服務專案的動態環境團隊，把已有商業軟體用於一套標準化有限元素建模流程，並已在一次商業火箭認證中使用。這裡的新進展是分析與複核方式的改變，不是發明了一種全新的物理理論。",
+          "sections": [
+            {
+              "heading": "把經驗估計變成可以反覆檢查的模型",
+              "paragraphs": [
+                "過去，工程師常根據經驗規則或以往任務的資料，推算新火箭和航天器部件會受到多強的振動與衝擊。這些方法並非沒有價值，但判斷較依賴個人經驗和簡化假設。對並不經常使用有限元素工具的動態環境工程師而言，每次重拾複雜流程也會消耗時間。",
+                "有限元素建模把複雜結構劃分為許多較小部分，再計算它們在指定負載下如何反應。此次團隊在商業軟體中建立統一範本，引導分析振動條件、衝擊條件和結構表現。範本的工程意義在於讓同類問題沿一致步驟展開，便於共享經驗和比較假設，而不是讓模型自動知道真實硬體的全部情況。"
+              ]
+            },
+            {
+              "heading": "認證案例暴露出不同環境的缺口",
+              "paragraphs": [
+                "NASA 披露的首個使用案例，是為承擔 NASA 任務的一家商業發射商認證火箭。供應商提供了振動試驗，卻沒有提供衝擊試驗。團隊判斷仍需要衝擊試驗，並利用範本比較不同假設、顯示結構反應，處理過去需要大量手工建模的問題。公告沒有公開供應商名稱或具體火箭型號，因此不能據此猜測某一型號存在缺陷。",
+                "這次工作既複核了供應商關於飛行環境的試驗結果，也讓團隊看到了運輸衝擊方面的新問題。飛行振動與運輸衝擊不是同一種條件，已有一項試驗並不能自然覆蓋另一項。本文將其理解為補全驗證範圍的案例，而不是證明所有發射系統都存在相同隱患。"
+              ]
+            },
+            {
+              "heading": "節省時間不等於取消實物驗證",
+              "paragraphs": [
+                "專案團隊表示，能夠自行開展分析，減少了索要和等待外部報告或資料的時間，已經節省數月。這個說法是 NASA 對自身工程實踐的描述；公告沒有給出統一計時方法、專案數量或對照組，不能換算為普遍的效率提升比例，也沒有公佈準確率或事故率改善數值。",
+                "團隊仍要確定足夠嚴格的振動與衝擊等級，並確認部件接受相應等級的測試。標準化模型可以幫助提前發現風險、解釋不直觀的結構行為，並隨新增飛行資料修正判斷；它與試驗、資料和工程審查相互配合。對讀者最有用的結論是，重複使用分析流程能讓獨立複核更容易，但這則報道並未證明數值模型已替代全部實物試驗。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開工程案例重繪的解釋流程，表示分析與驗證的關係，不是實測效能曲線。",
+            "steps": [
+              "整理振動與衝擊條件",
+              "按統一範本建立結構模型",
+              "比較假設並複核試驗",
+              "補查風險與更新驗證要求"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "euclid-first-new-comet",
+      "written_at": "2026-10-30",
+      "sources": [
+        {
+          "label": "ESA · discovery announcement, 19 October 2026",
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Euclid/Euclid_discovers_new_comet"
+        },
+        {
+          "label": "Euclid Consortium · moving-object discovery account",
+          "url": "https://www.euclid-ec.org/euclids-first-comet-discovery/"
+        },
+        {
+          "label": "ESA · context image and exposure details",
+          "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Comet_C_2026_S1_Euclid_observations_in_context"
+        },
+        {
+          "label": "ESA · eight-exposure composite and processing",
+          "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/A_composite_of_eight_Euclid_VIS_exposures_of_Comet_C_2026_S1_Euclid"
+        },
+        {
+          "label": "ESA · step-and-stare survey method",
+          "url": "https://www.esa.int/ESA_Multimedia/Videos/2023/01/How_Euclid_scans_the_sky"
+        },
+        {
+          "label": "ESA · Euclid science goals",
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Euclid/Top_five_mysteries_Euclid_will_help_solve"
+        },
+        {
+          "label": "ESA · Comet Interceptor mission concept",
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Comet_Interceptor"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Euclid 主要为遥远星系拍摄清晰图像，却在这些背景中找到了一个此前没有登记的太阳系天体。ESA 于 10 月 19 日公布 C/2026 S1（Euclid）：这是该望远镜首次发现未知彗星，而非第一次拍到彗星。发现来自 9 月 16—24 日的数据，小行星中心在 10 月 8 日确认；观测、确认和新闻公布是三个不同时间。",
+          "sections": [
+            {
+              "heading": "从移动痕迹到一个新的天体身份",
+              "paragraphs": [
+                "赫尔辛基大学的 Mikko Pöntinen 与 Euclid 联盟太阳系天体工作组，利用移动目标检测软件寻找星空背景中的短条纹。望远镜保持星星和星系在图像中的位置稳定时，较近天体在曝光过程中移动，就可能留下拉长的痕迹。软件标记只是发现线索，不能单凭一条亮线认定新彗星。",
+                "团队预测目标位置，在北部深场五个视场中找到了共 16 次曝光，并观察到周围的弥散云团。对照已知小行星和彗星目录未发现匹配后，观测被上报小行星中心，地面天文学家补充了后续数据。最终确认与命名依靠这条观测和核对链条，而非某一次图片识别的分数。"
+              ]
+            },
+            {
+              "heading": "长条和模糊云团怎样看",
+              "paragraphs": [
+                "页面配图拍摄于 9 月 20 日，单次曝光为 560.52 秒。右侧放大区域里的长条主要反映天体在这段曝光中的移动，不能直接把条纹长度当作彗尾长度。围绕目标的模糊光晕称为彗发，是活动彗星周围尘埃和气体的表现；这里的图像解释以 ESA 的原图说明为依据。",
+                "ESA 另外发布了一幅更清晰的近景：把八次各 89.5 秒的曝光按移动彗星对齐后合成，遮去受污染区域并移除背景天体。它不是一张未经处理的快照。八次叠加描述这幅特定图像的制作，16 次曝光描述发现数据的总量，两者并不矛盾。阅读天文图像时，同时看曝光时间和处理方式，才能理解形状为何不同。"
+              ]
+            },
+            {
+              "heading": "一次发现检验了后续协作方式",
+              "paragraphs": [
+                "这项发现并没有改变 Euclid 的主要使命。它以星系的形状和分布研究暗物质、暗能量及宇宙演化，观测方式是稳定凝视一片天空后再转向下一片，并避开会干扰深空测量的高亮恒星与太阳系尘埃区域。这样的巡天并非专门追逐彗星；识别移动目标也有助于区分星系测量中的额外信号。",
+                "ESA 与 JAXA 合作的 Comet Interceptor 计划先让航天器在太空等待，再飞向合适的原始彗星，并由主航天器和两个探测器多角度观测。C/2026 S1 并不是它的合适目标，但发现、报告和跟进的过程提供了协作实例。彗星轨道仍需更多数据约束，不能把早期周期估计写成精确回归日期，也不能把一次成功发现推广为 Euclid 会大量发现此类天体。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据观测与确认过程重绘的解释流程，不是轨道预测或原始观测图。",
+            "steps": [
+              "巡天图像标记移动痕迹",
+              "跨曝光定位并查看彗发",
+              "排查目录并报告观测",
+              "结合地面跟进确认身份"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Euclid was built to make sharp images of distant galaxies, yet one moving object in those images had no known Solar System identity. On October 19, ESA announced C/2026 S1 (Euclid), the telescope’s first discovery of a previously unknown comet—not its first comet observation. The images date from September 16–24, and the Minor Planet Center confirmed the object on October 8. Observation, confirmation and public announcement are distinct dates.",
+          "sections": [
+            {
+              "heading": "From a moving mark to a new identity",
+              "paragraphs": [
+                "Mikko Pöntinen at the University of Helsinki and the Euclid Consortium’s Solar System Objects Science Working Group used moving-object software to search for small streaks against the sky. When the telescope holds stars and galaxies steady, a nearer object can move during an exposure and leave an elongated mark. A software flag starts an investigation; one bright line alone does not establish a new comet.",
+                "The team predicted the object’s position and recovered it in 16 exposures across five fields in the northern deep survey, with a diffuse cloud around it. No known comet or asteroid matched the catalog checks. Reporting the observations to the Minor Planet Center enabled additional ground-based follow-up. Recognition and naming followed this chain of observations and checks, rather than a score from a single image classifier."
+              ]
+            },
+            {
+              "heading": "Why the images look streaky or fuzzy",
+              "paragraphs": [
+                "The illustration on this page was recorded on September 20 with a 560.52-second exposure. The streak in the enlarged area mainly records movement during that exposure; its length should not simply be read as the length of a comet’s tail. The diffuse light surrounding the object is the coma, associated with dust and gas around an active comet. This interpretation follows ESA’s original image description.",
+                "ESA also published a clearer close-up made by aligning eight exposures of 89.5 seconds each on the moving comet. Contaminated regions were masked and background objects removed before combination. It is not an untouched snapshot. Eight refers to the inputs used for that particular composite; 16 refers to the discovery data as a whole. Both exposure time and processing explain why astronomical images of the same object can look different."
+              ]
+            },
+            {
+              "heading": "A discovery that tests future coordination",
+              "paragraphs": [
+                "The discovery does not change Euclid’s principal task. It measures galaxy shapes and distributions to investigate dark matter, dark energy and cosmic evolution. Its step-and-stare survey holds one field steady before moving on, avoiding dense bright-star regions and Solar System dust that interfere with deep imaging. This is not a dedicated comet chase. Identifying moving sources also helps distinguish extra signals in galaxy observations.",
+                "ESA’s Comet Interceptor, developed with JAXA, is intended to wait in space and then intercept a suitable pristine comet, using a main spacecraft and two probes for observations from different directions. C/2026 S1 is not an appropriate target, but its discovery, reporting and follow-up provide a coordination example. More observations are needed to constrain the orbit: an early period estimate is not an exact return date, and one successful discovery does not imply that Euclid will find many similar objects."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from the discovery and confirmation process; not an orbital prediction or an original observation.",
+            "steps": [
+              "Flag motion in survey images",
+              "Recover exposures and inspect the coma",
+              "Check catalogs and report observations",
+              "Combine follow-up to confirm identity"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "遠方の銀河を鮮明に撮る Euclid の画像から、まだ登録されていない太陽系天体が見つかった。ESA が 10 月 19 日に公表した C/2026 S1（Euclid）は、この望遠鏡が発見した初の未知の彗星であり、彗星を撮影したこと自体が初めてという意味ではない。観測は 9 月 16～24 日、小惑星センターの確認は 10 月 8 日で、観測日、確認日、発表日は区別する必要がある。",
+          "sections": [
+            {
+              "heading": "移動の痕跡を新しい天体へ結び付ける",
+              "paragraphs": [
+                "ヘルシンキ大学の Mikko Pöntinen と Euclid 共同研究体の太陽系天体作業部会は、移動天体検出ソフトで背景の星空に重なる短い線を探した。星や銀河を同じ位置に保って露光する間に、近い天体が動けば像が伸びる。ソフトの検出は手掛かりであり、一本の明るい線だけで未知の彗星と確定できるわけではない。",
+                "チームは位置を予測し、北部深宇宙サーベイの五つの視野にある計 16 回の露光で対象を見つけ、周囲の拡散した雲も確認した。既知の彗星・小惑星カタログと一致しなかったため、小惑星センターへ観測を報告し、地上からの追観測が加わった。確認と命名はこの観測・照合の連鎖に基づき、一枚の画像分類の点数から決まったものではない。"
+              ]
+            },
+            {
+              "heading": "細長い像とぼんやりした雲の読み方",
+              "paragraphs": [
+                "このページの画像は 9 月 20 日の 560.52 秒露光だ。拡大部分の細長い像は主に露光中の移動を表し、その長さをそのまま彗星の尾の長さと読むことはできない。周囲の淡い光はコマと呼ばれ、活動する彗星の周囲にある塵とガスに対応する。ここでの説明は ESA の原画像の注記に基づく。",
+                "ESA は別途、各 89.5 秒の露光八枚を移動する彗星に合わせて重ねた鮮明な近接像も公開した。汚染領域をマスクし、背景天体を取り除いて合成したもので、無加工の一枚撮りではない。八枚はその合成画像の材料、16 回は発見に使った観測全体を指す。露光時間と画像処理を併せて確認すると、同じ天体の形が違って見える理由が分かる。"
+              ]
+            },
+            {
+              "heading": "今後の連携を試す実例に",
+              "paragraphs": [
+                "この発見で Euclid の主目的が変わるわけではない。銀河の形や分布から暗黒物質、暗黒エネルギー、宇宙進化を調べるミッションであり、一つの領域を静止して観測してから次へ向かう。明るい星が密集した領域や太陽系の塵は深宇宙観測を妨げるため避ける。彗星追跡専用ではないが、移動天体を識別すれば銀河測定に混ざる別の信号も区別しやすくなる。",
+                "ESA と JAXA が協力する Comet Interceptor は、まず宇宙で待機し、適切な原始的彗星へ向かい、主探査機と二つの小型探査機で異なる方向から観測する構想だ。C/2026 S1 は適切な対象ではないものの、発見、報告、追観測の手順は連携の実例になった。軌道は追加データで絞り込む必要があり、初期の周期推定を正確な再来日に読み替えられない。一度の成功から Euclid が大量の彗星を発見すると一般化することもできない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトが発見・確認の過程を描き直した説明図。軌道予測や原観測画像ではない。",
+            "steps": [
+              "巡天画像で移動の痕跡を検出",
+              "複数露光で位置とコマを確認",
+              "カタログ照合と観測報告",
+              "追観測を合わせて天体を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Euclid создан для четких снимков далеких галактик, но на их фоне обнаружился движущийся объект без известного имени. 19 октября ESA объявило об открытии C/2026 S1 (Euclid) — первой ранее неизвестной кометы, найденной телескопом, а не первой вообще снятой им кометы. Изображения получены 16–24 сентября, подтверждение Центра малых планет датировано 8 октября. Даты наблюдения, подтверждения и объявления различаются.",
+          "sections": [
+            {
+              "heading": "От движущегося следа к новому объекту",
+              "paragraphs": [
+                "Микко Пёнтинен из Хельсинкского университета и рабочая группа объектов Солнечной системы консорциума Euclid искали короткие полосы специальной программой обнаружения движущихся объектов. Пока телескоп удерживает звезды и галактики на месте, близкий объект движется во время экспозиции и оставляет вытянутый след. Программная отметка — начало проверки: одной яркой линии недостаточно, чтобы объявить новую комету.",
+                "Предсказав положение объекта, исследователи нашли его на 16 экспозициях в пяти полях северного глубокого обзора и заметили окружающее рассеянное облако. Совпадений с каталогами известных комет и астероидов не оказалось. Сообщение в Центр малых планет позволило добавить наземные наблюдения. Подтверждение и обозначение стали результатом этой цепочки наблюдений и сверок, а не оценки одного классификатора изображений."
+              ]
+            },
+            {
+              "heading": "Почему изображения вытянутые или размытые",
+              "paragraphs": [
+                "Иллюстрация на странице снята 20 сентября с выдержкой 560.52 секунды. Полоса в увеличенной области главным образом отражает движение за время экспозиции; ее длину нельзя просто считать длиной хвоста кометы. Рассеянное свечение вокруг объекта — кома, связанная с пылью и газом активной кометы. Такая интерпретация следует исходному описанию изображения ESA.",
+                "ESA также опубликовало более четкий крупный план, совместив по движущейся комете восемь экспозиций по 89.5 секунды. Загрязненные области замаскированы, фоновые объекты удалены перед объединением. Это не необработанный одиночный снимок. Восемь — число кадров конкретной композиции, а 16 — общий объем наблюдений открытия. Время экспозиции и обработка объясняют различие внешнего вида одного объекта."
+              ]
+            },
+            {
+              "heading": "Проверка будущего взаимодействия миссий",
+              "paragraphs": [
+                "Открытие не меняет основную задачу Euclid: изучать темную материю, темную энергию и эволюцию Вселенной по форме и распределению галактик. Телескоп фиксируется на участке неба, затем переходит к следующему, избегая плотных скоплений ярких звезд и пыли Солнечной системы, мешающих глубоким снимкам. Это не специализированная погоня за кометами. Распознавание движущихся источников также помогает отделять лишние сигналы в измерениях галактик.",
+                "Миссия ESA Comet Interceptor, создаваемая совместно с JAXA, должна сначала ждать в космосе, затем направиться к подходящей первозданной комете и наблюдать ее главным аппаратом и двумя зондами с разных направлений. C/2026 S1 для этого не подходит, но процесс открытия, сообщения и последующих наблюдений дает пример взаимодействия. Орбита нуждается в дополнительных данных: предварительный период не задает точную дату возвращения. Один успех также не означает, что Euclid будет находить много таких комет."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема сайта по процессу открытия и подтверждения; это не прогноз орбиты и не исходное наблюдение.",
+            "steps": [
+              "Найти движение на обзорных снимках",
+              "Сопоставить кадры и проверить кому",
+              "Сверить каталоги и сообщить данные",
+              "Подтвердить объект последующими наблюдениями"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Euclid 主要為遙遠星系拍攝清晰影像，卻在這些背景中找到了一個此前沒有登記的太陽系天體。ESA 於 10 月 19 日公佈 C/2026 S1（Euclid）：這是該望遠鏡首次發現未知彗星，而非第一次拍到彗星。發現來自 9 月 16—24 日的資料，小行星中心在 10 月 8 日確認；觀測、確認和新聞公佈是三個不同時間。",
+          "sections": [
+            {
+              "heading": "從移動痕跡到一個新的天體身分",
+              "paragraphs": [
+                "赫爾辛基大學的 Mikko Pöntinen 與 Euclid 聯盟太陽系天體工作組，利用移動目標檢測軟體尋找星空背景中的短條紋。望遠鏡保持星星和星系在影像中的位置穩定時，較近天體在曝光過程中移動，就可能留下拉長的痕跡。軟體標記只是發現線索，不能單憑一條亮線認定新彗星。",
+                "團隊預測目標位置，在北部深場五個視場中找到了共 16 次曝光，並觀察到周圍的彌散雲團。對照已知小行星和彗星目錄未發現匹配後，觀測被上報小行星中心，地面天文學家補充了後續資料。最終確認與命名依靠這條觀測和核對鏈條，而非某一次圖片識別的分數。"
+              ]
+            },
+            {
+              "heading": "長條和模糊雲團怎樣看",
+              "paragraphs": [
+                "頁面配圖拍攝於 9 月 20 日，單次曝光為 560.52 秒。右側放大區域裡的長條主要反映天體在這段曝光中的移動，不能直接把條紋長度當作彗尾長度。圍繞目標的模糊光暈稱為彗發，是活動彗星周圍塵埃和氣體的表現；這裡的影像解釋以 ESA 的原圖說明為依據。",
+                "ESA 另外發布了一幅更清晰的近景：把八次各 89.5 秒的曝光按移動彗星對齊後合成，遮去受汙染區域並移除背景天體。它不是一張未經處理的快照。八次疊加描述這幅特定影像的製作，16 次曝光描述發現資料的總量，兩者並不矛盾。閱讀天文影像時，同時看曝光時間和處理方式，才能理解形狀為何不同。"
+              ]
+            },
+            {
+              "heading": "一次發現檢驗了後續協作方式",
+              "paragraphs": [
+                "這項發現並沒有改變 Euclid 的主要使命。它以星系的形狀和分佈研究暗物質、暗能量及宇宙演化，觀測方式是穩定凝視一片天空後再轉向下一片，並避開會干擾深空測量的高亮恆星與太陽系塵埃區域。這樣的巡天並非專門追逐彗星；識別移動目標也有助於區分星系測量中的額外訊號。",
+                "ESA 與 JAXA 合作的 Comet Interceptor 計劃先讓航天器在太空等待，再飛向合適的原始彗星，並由主航天器和兩個探測器多角度觀測。C/2026 S1 並不是它的合適目標，但發現、報告和跟進的過程提供了協作實例。彗星軌道仍需更多資料約束，不能把早期週期估計寫成精確迴歸日期，也不能把一次成功發現推廣為 Euclid 會大量發現此類天體。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據觀測與確認過程重繪的解釋流程，不是軌道預測或原始觀測圖。",
+            "steps": [
+              "巡天影像標記移動痕跡",
+              "跨曝光定位並檢視彗發",
+              "排查目錄並報告觀測",
+              "結合地面跟進確認身分"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

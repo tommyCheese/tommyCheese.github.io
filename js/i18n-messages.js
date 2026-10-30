@@ -679,7 +679,15 @@ window.SITE_MESSAGES = {
     "research.constraint-indexes-data-integrity-governance.title": "约束索引：把跨表数据完整性规则放回数据库",
     "research.constraint-indexes-data-integrity-governance.summary": "研究把跨表唯一性、关系数量上限等规则表示为事务内共享索引，在 PostgreSQL 原型中减少维护开销。组合工作负载达到 44.4K 次事务/秒，但原型仍要求所有相关写入主动调用约束操作，不能拦截绕过操作的直接写入，自动治理器也尚未实现。",
     "research.pipelink-contract-guided-gpu-components.title": "PipeLink：用契约连接独立编译的 GPU 组件",
-    "research.pipelink-contract-guided-gpu-components.summary": "作者以资源与同步契约组合不同来源的 GPU 组件，51 个配置中吞吐与相同源码整体编译相差不超过 0.2%。组件替换的收益随负载变化，契约一致也不替代实现正确性检查。"
+    "research.pipelink-contract-guided-gpu-components.summary": "作者以资源与同步契约组合不同来源的 GPU 组件，51 个配置中吞吐与相同源码整体编译相差不超过 0.2%。组件替换的收益随负载变化，契约一致也不替代实现正确性检查。",
+    "news.openai-model-spec-intent-context-update.title": "OpenAI 更新 Model Spec：强调人的意图、上下文与监督",
+    "news.openai-model-spec-intent-context-update.summary": "10 月 29 日新版以五项价值重组模型行为规范，增加上下文和自主性指引，并删去大部分细碎文风规则。它规定的是目标行为；OpenAI 承认现有模型尚未完全符合，不能等同于所有产品已同步升级。",
+    "news.openai-layered-misalignment-monitoring.title": "OpenAI 公开分层监测机制：API 告警不一定能停止 Agent",
+    "news.openai-layered-misalignment-monitoring.summary": "新说明披露初筛、模型审查、调查和处置的分层流程。Responses API 是否能自动停止取决于会话关联机制，Chat Completions 不在该监测范围内；异步检测也不会撤销先前动作。独立评估尚未验证扩大后的系统。",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.title": "Cisco 修复已遭利用的 SSL VPN 拒绝服务漏洞",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.summary": "CVE-2026-76418 可使特定 ASA、FTD 配置意外重启，无需成功登录。Cisco 已发布分支补丁；二次认证相关缓解可能降低安全性，不能代替升级。",
+    "news.microsoft-rdp-admin-protection-fix.title": "Microsoft 修复管理员保护导致的远程桌面连接失败",
+    "news.microsoft-rdp-admin-protection-fix.summary": "10 月 28 日的 KB5127936 修复非管理员连接启用管理员保护的主机时可能出现的 0xC000000D 错误。该补丁适用 Windows 11 25H2、26H2；故障涉及的版本范围更广，不能据此给所有系统安装同一补丁。"
   },
   "en": {
     "nav.about": "About",
@@ -1360,7 +1368,15 @@ window.SITE_MESSAGES = {
     "research.constraint-indexes-data-integrity-governance.title": "Constraint indexes bring cross-table data-integrity rules back to the database",
     "research.constraint-indexes-data-integrity-governance.summary": "The study represents cross-table uniqueness and relationship bounds as shared transactional indexes in a PostgreSQL prototype. A combined workload reaches 44.4K transactions per second. However, relevant writes must explicitly invoke the constraint operations; bypassing writes are not intercepted, and automated governance remains future work.",
     "research.pipelink-contract-guided-gpu-components.title": "PipeLink links separately compiled GPU components through contracts",
-    "research.pipelink-contract-guided-gpu-components.summary": "Resource and synchronization contracts combine GPU components from different sources. Across 51 configurations, throughput stays within 0.2% of compiling the same sources together. Replacement gains depend on workload, and contract agreement does not prove implementation correctness."
+    "research.pipelink-contract-guided-gpu-components.summary": "Resource and synchronization contracts combine GPU components from different sources. Across 51 configurations, throughput stays within 0.2% of compiling the same sources together. Replacement gains depend on workload, and contract agreement does not prove implementation correctness.",
+    "news.openai-model-spec-intent-context-update.title": "OpenAI revises Model Spec around human intent, context and oversight",
+    "news.openai-model-spec-intent-context-update.summary": "The October 29 revision organizes behavior around five values, expands guidance on context and agency, and retires most detailed style rules. It describes intended behavior; OpenAI says current models do not yet fully comply, so this is not a simultaneous upgrade of every product.",
+    "news.openai-layered-misalignment-monitoring.title": "OpenAI details layered monitoring: an API alert may not stop an agent",
+    "news.openai-layered-misalignment-monitoring.summary": "The disclosure explains screening, model review, investigation and response. Automatic stopping in Responses API depends on conversation tracking; Chat Completions is outside this monitor. Asynchronous detection cannot undo earlier actions, and independent evaluators have not validated the expanded system.",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.title": "Cisco patches an exploited SSL VPN denial-of-service flaw",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.summary": "CVE-2026-76418 can reload affected ASA and FTD configurations without a successful login. Branch-specific fixes are available; authentication-related mitigations can weaken protection and do not replace patching.",
+    "news.microsoft-rdp-admin-protection-fix.title": "Microsoft fixes Remote Desktop failures with Administrator protection",
+    "news.microsoft-rdp-admin-protection-fix.summary": "The October 28 KB5127936 update fixes error 0xC000000D that can block non-admin connections to protected hosts. The package applies to Windows 11 25H2 and 26H2; the issue affects a wider set of releases, so one package is not applicable to every affected system."
   },
   "ja": {
     "nav.about": "私について",
@@ -2041,7 +2057,15 @@ window.SITE_MESSAGES = {
     "research.constraint-indexes-data-integrity-governance.title": "制約インデックス：テーブルをまたぐ整合性規則をデータベースへ",
     "research.constraint-indexes-data-integrity-governance.summary": "複数表の一意性や関係数上限を共有のトランザクション索引に表現し、PostgreSQL 原型の複合負荷で毎秒 44.4K トランザクションを得た。ただし全書き込みが制約操作を呼ぶ必要があり、迂回した直接更新は阻止できない。自動ガバナーも将来課題だ。",
     "research.pipelink-contract-guided-gpu-components.title": "PipeLink：契約で個別コンパイル済みGPU部品を組み合わせる",
-    "research.pipelink-contract-guided-gpu-components.summary": "資源と同期の契約で異なるGPU部品を接続。51構成で同一ソースの一括コンパイルとのスループット差は0.2%以内だった。部品交換の効果は負荷に依存し、契約一致は実装の正しさを保証しない。"
+    "research.pipelink-contract-guided-gpu-components.summary": "資源と同期の契約で異なるGPU部品を接続。51構成で同一ソースの一括コンパイルとのスループット差は0.2%以内だった。部品交換の効果は負荷に依存し、契約一致は実装の正しさを保証しない。",
+    "news.openai-model-spec-intent-context-update.title": "OpenAI が Model Spec を改訂、人の意図・文脈・監督を重視",
+    "news.openai-model-spec-intent-context-update.summary": "10 月 29 日版は五つの価値を軸に規範を整理し、文脈と主体性の指針を追加、細かな文体規則の大部分を削った。これは目標とする行動であり、現行モデルが完全に適合した、または全製品が同時に更新されたという意味ではない。",
+    "news.openai-layered-misalignment-monitoring.title": "OpenAI が段階的な監視を説明、API の警告だけでは Agent は止まらない",
+    "news.openai-layered-misalignment-monitoring.summary": "初期検査、モデル審査、調査、対応の仕組みを公開した。Responses API の自動停止は会話の関連付けに依存し、Chat Completions は対象外。非同期検知は過去の行動を取り消せず、拡大後の仕組みは独立評価で未確認だ。",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.title": "Cisco、悪用中の SSL VPN サービス拒否脆弱性を修正",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.summary": "CVE-2026-76418 は特定設定の ASA・FTD をログイン成功なしで再起動させ得る。系統別の修正版が提供された。二次認証に関する軽減策は保護を弱める可能性があり、更新の代わりにはならない。",
+    "news.microsoft-rdp-admin-protection-fix.title": "Microsoft、管理者保護に伴うリモートデスクトップ接続障害を修正",
+    "news.microsoft-rdp-admin-protection-fix.summary": "10 月 28 日の KB5127936 は、管理者保護を有効にしたホストへ非管理者が接続する際の 0xC000000D を修正する。パッケージは Windows 11 25H2・26H2 用で、障害の影響範囲はそれより広い。全対象へ同じ更新を適用できるわけではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2722,7 +2746,15 @@ window.SITE_MESSAGES = {
     "research.constraint-indexes-data-integrity-governance.title": "Индексы ограничений возвращают межтабличную целостность в базу данных",
     "research.constraint-indexes-data-integrity-governance.summary": "Работа представляет межтабличную уникальность и ограничения числа связей общими транзакционными индексами. Прототип PostgreSQL достигает 44.4 тыс. транзакций в секунду на составной нагрузке. Однако записи обязаны явно вызывать проверки: обходящие их изменения не перехватываются, автоматическое управление еще не реализовано.",
     "research.pipelink-contract-guided-gpu-components.title": "PipeLink соединяет отдельно скомпилированные GPU-компоненты по контрактам",
-    "research.pipelink-contract-guided-gpu-components.summary": "Контракты ресурсов и синхронизации объединяют компоненты разных источников. В 51 конфигурации пропускная способность отличается от совместной компиляции тех же исходников не более чем на 0,2%. Выигрыш замены зависит от нагрузки, а контракты не доказывают корректность реализации."
+    "research.pipelink-contract-guided-gpu-components.summary": "Контракты ресурсов и синхронизации объединяют компоненты разных источников. В 51 конфигурации пропускная способность отличается от совместной компиляции тех же исходников не более чем на 0,2%. Выигрыш замены зависит от нагрузки, а контракты не доказывают корректность реализации.",
+    "news.openai-model-spec-intent-context-update.title": "OpenAI обновила Model Spec: намерения человека, контекст и надзор",
+    "news.openai-model-spec-intent-context-update.summary": "Редакция от 29 октября строится вокруг пяти ценностей, расширяет правила контекста и самостоятельности, убирая большую часть мелких стилевых указаний. Это целевое поведение: OpenAI признает, что нынешние модели еще не полностью ему соответствуют.",
+    "news.openai-layered-misalignment-monitoring.title": "OpenAI раскрыла уровни мониторинга: сигнал API не всегда останавливает агента",
+    "news.openai-layered-misalignment-monitoring.summary": "Описание охватывает первичную проверку, оценку моделью, расследование и реакцию. Автоостановка Responses API зависит от связи запросов в беседу; Chat Completions вне этой системы. Асинхронная проверка не отменяет прежних действий, расширение независимо не проверено.",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.title": "Cisco исправила эксплуатируемый отказ в обслуживании SSL VPN",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.summary": "CVE-2026-76418 может перезагрузить ASA и FTD при определенных настройках без успешного входа. Выпущены исправления для отдельных веток; меры, меняющие аутентификацию, могут ослабить защиту и не заменяют обновление.",
+    "news.microsoft-rdp-admin-protection-fix.title": "Microsoft исправила сбой Remote Desktop при защите администратора",
+    "news.microsoft-rdp-admin-protection-fix.summary": "KB5127936 от 28 октября устраняет ошибку 0xC000000D при подключении неадминистративных пользователей к защищенным узлам. Пакет предназначен для Windows 11 25H2 и 26H2; затронутых выпусков больше, поэтому он подходит не всем системам."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3403,6 +3435,14 @@ window.SITE_MESSAGES = {
     "research.constraint-indexes-data-integrity-governance.title": "約束索引：把跨表資料完整性規則放回資料庫",
     "research.constraint-indexes-data-integrity-governance.summary": "研究把跨表唯一性、關係數量上限等規則表示為事務內共享索引，在 PostgreSQL 原型中減少維護開銷。組合工作負載達到 44.4K 次事務/秒，但原型仍要求所有相關寫入主動呼叫約束操作，不能攔截繞過操作的直接寫入，自動治理器也尚未實現。",
     "research.pipelink-contract-guided-gpu-components.title": "PipeLink：用契約連線獨立編譯的 GPU 元件",
-    "research.pipelink-contract-guided-gpu-components.summary": "作者以資源與同步契約組合不同來源的 GPU 元件，51 個配置中吞吐與相同原始碼整體編譯相差不超過 0.2%。元件替換的收益隨負載變化，契約一致也不替代實現正確性檢查。"
+    "research.pipelink-contract-guided-gpu-components.summary": "作者以資源與同步契約組合不同來源的 GPU 元件，51 個配置中吞吐與相同原始碼整體編譯相差不超過 0.2%。元件替換的收益隨負載變化，契約一致也不替代實現正確性檢查。",
+    "news.openai-model-spec-intent-context-update.title": "OpenAI 更新 Model Spec：強調人的意圖、上下文與監督",
+    "news.openai-model-spec-intent-context-update.summary": "10 月 29 日新版以五項價值重組模型行為規範，增加上下文和自主性指引，並刪去大部分細碎文風規則。它規定的是目標行為；OpenAI 承認現有模型尚未完全符合，不能等同於所有產品已同步升級。",
+    "news.openai-layered-misalignment-monitoring.title": "OpenAI 公開分層監測機制：API 告警不一定能停止 Agent",
+    "news.openai-layered-misalignment-monitoring.summary": "新說明披露初篩、模型審查、調查和處置的分層流程。Responses API 是否能自動停止取決於會話關聯機制，Chat Completions 不在該監測範圍內；非同步檢測也不會撤銷先前動作。獨立評估尚未驗證擴大後的系統。",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.title": "Cisco 修復已遭利用的 SSL VPN 拒絕服務漏洞",
+    "news.cisco-asa-ftd-ssl-vpn-dos-fix.summary": "CVE-2026-76418 可使特定 ASA、FTD 配置意外重啟，無需成功登入。Cisco 已釋出分支補丁；二次認證相關緩解可能降低安全性，不能代替升級。",
+    "news.microsoft-rdp-admin-protection-fix.title": "Microsoft 修復系統管理員保護導致的遠端桌面連線失敗",
+    "news.microsoft-rdp-admin-protection-fix.summary": "10 月 28 日的 KB5127936 修復非系統管理員連線啟用系統管理員保護的主機時可能出現的 0xC000000D 錯誤。該修補程式適用 Windows 11 25H2、26H2；故障涉及的版本範圍更廣，不能據此給所有系統安裝同一修補程式。"
   }
 };
