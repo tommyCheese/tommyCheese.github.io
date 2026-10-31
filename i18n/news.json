@@ -1,6 +1,50 @@
 {
-  "updated_at": "2026-10-30",
+  "updated_at": "2026-10-31",
   "items": [
+    {
+      "id": "openai-shared-training-preference-signal-plan",
+      "category": "ai",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-10-31",
+      "source": "OpenAI / IETF",
+      "url": "https://openai.com/index/helping-websites-express-ai-training-preferences/",
+      "image": "https://tommycheese.github.io/images/news/openai-training-preferences.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-teen-safeguards-safety-report-plan",
+      "category": "ai",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-10-31",
+      "source": "OpenAI / Reuters",
+      "url": "https://openai.com/index/community-safety-report-and-new-protections-for-teens/",
+      "image": "https://tommycheese.github.io/images/news/openai-teen-safety-plan.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "linux-ipv4-race-patch-response",
+      "category": "security",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-10-31",
+      "source": "Red Hat / Debian / Anthropic / BleepingComputer",
+      "url": "https://access.redhat.com/security/vulnerabilities/RHSB-2026-016",
+      "image": "https://tommycheese.github.io/images/news/linux-ipv4-patch-response.svg",
+      "image_credit": "Original explanatory diagram",
+      "image_fit": "contain"
+    },
+    {
+      "id": "cursor-claude-extension-compromise",
+      "category": "security",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-31",
+      "source": "Cursor / Phorion / BleepingComputer",
+      "url": "https://cursor.com/blog/claude-code-extension-security-notice",
+      "image": "https://tommycheese.github.io/images/news/cursor-extension-incident-response.svg",
+      "image_credit": "Original explanatory diagram",
+      "image_fit": "contain"
+    },
     {
       "id": "openai-model-spec-intent-context-update",
       "category": "ai",
@@ -481,8 +525,8 @@
       "collected_at": "2026-10-20",
       "source": "BleepingComputer / JPCERT/CC",
       "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/",
-      "image": "https://www.bleepstatic.com/content/hl-images/2026/05/05/hacker.jpg",
-      "image_credit": "BleepingComputer · cybersecurity illustration",
+      "image": "https://tommycheese.github.io/images/news/siteguard-evidence-before-patch.svg",
+      "image_credit": "Original explanatory diagram · Tech Daily",
       "image_fit": "contain"
     },
     {
@@ -491,8 +535,8 @@
       "published_at": "2026-10-17",
       "source": "Notebookcheck / OpenCode",
       "url": "https://www.notebookcheck.net/OpenCode-hacked-users-urged-to-revoke-their-API-keys.1426957.0.html",
-      "image": "https://opencode.ai/social-share.png",
-      "image_credit": "OpenCode",
+      "image": "https://tommycheese.github.io/images/news/opencode-provider-key-response.svg",
+      "image_credit": "Original explanatory diagram · Tech Daily",
       "image_fit": "contain"
     },
     {
@@ -511,8 +555,8 @@
       "published_at": "2026-10-16",
       "source": "GitHub Changelog",
       "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/",
-      "image": "https://github.blog/wp-content/uploads/2026/10/613833573-be40bdee-f6b9-49d6-945d-68ff04006833.jpg?resize=2064%2C1096",
-      "image_credit": "GitHub",
+      "image": "https://tommycheese.github.io/images/news/github-license-policy-checks.svg",
+      "image_credit": "Original explanatory diagram · Tech Daily",
       "image_fit": "contain"
     },
     {
