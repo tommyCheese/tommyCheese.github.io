@@ -20420,6 +20420,1802 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-shared-training-preference-signal-plan",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "OpenAI · October 30 training-preference announcement",
+          "url": "https://openai.com/index/helping-websites-express-ai-training-preferences/"
+        },
+        {
+          "label": "IETF · Training Preference Signal, individual draft 00",
+          "url": "https://www.ietf.org/archive/id/draft-kelley-aipref-training-preference-signal-00.html"
+        },
+        {
+          "label": "IETF · AI usage preference vocabulary, draft 08",
+          "url": "https://www.ietf.org/archive/id/draft-ietf-aipref-vocab-08.html"
+        },
+        {
+          "label": "OpenAI · crawler roles and independent controls",
+          "url": "https://developers.openai.com/api/docs/bots"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "网站愿意让搜索引擎发现自己的文章，不一定意味着也愿意让文章成为模型训练材料。OpenAI 在 10 月 30 日表示，计划支持一种通用的训练用途偏好信号，让网站不必逐家维护相同的声明。它承诺的是未来数月内实施，具体细节仍待公布；今天已有的爬虫控制仍然有效。",
+          "sections": [
+            {
+              "heading": "从逐家声明，转向共同理解的用途偏好",
+              "paragraphs": [
+                "目前，网站可以通过 robots.txt 说明不同爬虫的访问偏好，但面对多家 AI 服务商时，往往要分别维护规则。此次计划希望把“是否愿意用于生成式 AI 训练”写成参与方都能理解的共同信号，减少重复配置。它关注的是内容被取得以后怎样使用，与是否允许爬虫访问网站不是同一个问题。",
+                "OpenAI 链接的方案是 10 月 30 日发布的训练偏好信号第 00 版 Internet-Draft，作者来自 Anthropic。它沿用现有网站规则文件的结构，可以给网站不同部分表达不同偏好，不要求重新发明一套文件格式。不过，这是仍在讨论的草案，不是已经通过的 IETF 标准，也不能据此推断所有 AI 厂商都已加入或会按同一时间表实施。"
+              ]
+            },
+            {
+              "heading": "拒绝训练，不等于退出搜索",
+              "paragraphs": [
+                "草案把训练界定为利用内容改变生成式模型已经学到的参数，区别于单纯的分类、排名或评分。它把训练用途声明与访问控制分开：网站可以表达反对训练的意愿，同时维持原来的访问规则；如果确实需要限制抓取，仍应使用对应的爬虫控制。正文中这些语义来自草案，不代表 OpenAI 已宣布最终产品配置。",
+                "现有 OpenAI 文档也将用于训练的 GPTBot 与用于搜索的 OAI-SearchBot 分开管理，网站可以允许搜索而拒绝训练爬虫。新计划明确保留这些控制，不是让站长立即放弃旧设置。草案还区分“没有表达共同偏好”和“明确同意”：没有对应的用途声明，不能当作网站已经主动选择支持训练。"
+              ]
+            },
+            {
+              "heading": "减少沟通成本，不能代替实施和验证",
+              "paragraphs": [
+                "这项计划的新闻价值在于跨厂商表达偏好的可能性，而不是新增一个不可绕过的技术屏障。能否生效，取决于参与方是否实现并正确解释信号；现有文件解析器不认识新用途时，仍会按原有方式工作。草案还允许更具体的声明或协议影响优先关系，因此一个公开信号本身不能解决所有内容授权争议。",
+                "OpenAI 没有给出确定上线日，也没有公布覆盖全部产品的实施细节。本站的理解是，网站经营者现在需要分清三件事：现有访问控制、拟议的训练用途声明，以及各服务商实际执行的范围。后续值得观察的是正式实现说明和可验证的执行情况，而不是把“将会尊重偏好”提前写成“已经阻止所有训练”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公告和草案重绘的解释图：区分访问控制与训练用途偏好，表示计划中的机制，不是已上线功能或合规测试。",
+            "steps": [
+              "网站表达训练用途偏好",
+              "参与方解释共同信号",
+              "原有爬虫控制继续独立适用",
+              "实施时间和覆盖范围仍待确认"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A website may want its articles to appear in search without wanting them used to train a model. On October 30, OpenAI said it plans to honor a shared training-preference signal so publishers need not maintain equivalent declarations for each provider. Implementation is targeted for the coming months, with details still to follow. Existing crawler controls remain in place.",
+          "sections": [
+            {
+              "heading": "One usage preference instead of repeated declarations",
+              "paragraphs": [
+                "Websites already use robots.txt to express preferences for different crawlers, but dealing with several AI providers can mean maintaining separate rules. The proposed shared signal would let participating services understand the same preference about generative AI training. This concerns how retrieved content is used; it is a different question from whether a crawler may visit a website.",
+                "The proposal linked by OpenAI is version 00 of an Internet-Draft on training preferences, published October 30 by an author affiliated with Anthropic. It retains the existing structure of website rules and can associate different preferences with different parts of a site. This remains a draft under discussion, not an approved IETF standard. Its publication does not establish that every AI provider has joined or will implement it on the same schedule."
+              ]
+            },
+            {
+              "heading": "Declining training does not mean leaving search",
+              "paragraphs": [
+                "The draft defines training as using content to change a generative model’s learned parameters, distinguishing it from exclusively non-generative classification, ranking or scoring. Usage preferences and crawler access rules are separate: a site can object to training while retaining its existing access settings. Restricting retrieval still requires the relevant crawler controls. These semantics come from the draft, rather than a finalized OpenAI implementation announcement.",
+                "OpenAI’s current documentation already separates GPTBot, used for training-related crawling, from OAI-SearchBot, used for search. A website can allow search while disallowing the training crawler. The new plan explicitly preserves those controls rather than asking publishers to discard them now. The draft also distinguishes an absent shared preference from explicit support: without the relevant usage declaration, a website has not affirmatively opted in through this mechanism."
+              ]
+            },
+            {
+              "heading": "Lower coordination costs still require implementation",
+              "paragraphs": [
+                "The news is the prospect of expressing preferences across providers, not a new technical barrier that cannot be bypassed. Its effect depends on participants implementing and interpreting it correctly. Existing parsers that do not recognize the usage signal continue their previous behavior. The draft also allows more specific declarations or agreements to affect precedence, so a public signal alone cannot settle every content-authorization dispute.",
+                "OpenAI has not specified a firm launch date or implementation details covering all its products. Our reading is that publishers should distinguish existing access controls, the proposed training-use signal, and each provider’s actual enforcement coverage. The next meaningful evidence will be implementation documentation and verifiable behavior—not treating a promise to honor preferences as proof that all training is already prevented."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on the announcement and draft: access controls and training preferences are separate; this depicts a plan, not a live feature or compliance test.",
+            "steps": [
+              "Website expresses a training preference",
+              "Participants interpret the shared signal",
+              "Existing crawler controls apply independently",
+              "Implementation timing and coverage remain open"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "記事を検索で見つけてもらいたいことと、その記事をモデルの訓練に使ってほしいことは同じではない。OpenAI は 10 月 30 日、サイト運営者が各社向けに同じ意思表示を繰り返さずに済む、共通の訓練用途の選好シグナルに対応する計画を発表した。実装の目標は今後数カ月で、詳細は後日公表する。現在のクローラー制御も引き続き有効だ。",
+          "sections": [
+            {
+              "heading": "各社への個別指定から、共通の用途表示へ",
+              "paragraphs": [
+                "ウェブサイトは robots.txt でクローラーごとのアクセス方針を示せるが、AI 事業者が増えると別々の規則を保守する負担も増える。今回の計画は、生成 AI の訓練に使われることへの希望を、参加する事業者が共通に理解できる形にするものだ。取得した内容をどう利用するかという問題であり、クローラーがサイトを訪問してよいかとは別である。",
+                "OpenAI がリンクしたのは、Anthropic 所属の著者が 10 月 30 日に公開した訓練選好シグナルの Internet-Draft 第 00 版だ。既存のサイト規則ファイルの構造を使い、サイト内の部分ごとに異なる希望を示せる。ただし議論中の草案であり、承認済みの IETF 標準ではない。全 AI 事業者の参加や、同じ日程での実装を意味するものでもない。"
+              ]
+            },
+            {
+              "heading": "訓練を断ることと、検索に出ないことは別",
+              "paragraphs": [
+                "草案での訓練は、内容を使って生成モデルの学習済みパラメータを変えることを指し、非生成の分類、順位付け、採点だけを行う用途とは区別される。利用目的の希望とアクセス規則は独立しているため、既存のアクセス設定を維持したまま訓練への反対を表明できる。取得自体を制限するには、引き続き対応するクローラー制御が必要だ。これらは草案の意味付けであって、OpenAI の最終的な実装仕様ではない。",
+                "現在の OpenAI 文書も、訓練向けの GPTBot と検索向けの OAI-SearchBot を別々に扱っている。検索を許可しながら訓練クローラーを拒否することは可能だ。新計画はこの制御を残すと明記しており、今すぐ従来の設定を捨てるよう求めてはいない。また、共通の用途表示がないことは、明示的な賛成とは異なる。表示がなければ、この仕組みによって訓練に同意したとは扱えない。"
+              ]
+            },
+            {
+              "heading": "意思表示を簡単にしても、実行の確認は必要",
+              "paragraphs": [
+                "意義は事業者をまたぐ意思表示の可能性にあり、回避できない技術的な防壁が完成したことではない。効果は参加者の実装と解釈に依存する。新しい用途シグナルを認識しない既存の解析器は、従来どおり動く。草案ではより具体的な表示や契約が優先関係に影響し得るため、公開されたシグナルだけで内容の許諾を巡るすべての問題を解決することもできない。",
+                "OpenAI は確定した開始日や全製品を網羅する実装詳細を示していない。本稿では、既存のアクセス制御、提案中の訓練用途表示、各社が実際に適用する範囲を区別する必要があると考える。次に確かめるべきなのは正式な実装説明と検証できる動作だ。「希望を尊重する予定」を「すべての訓練をすでに防いだ」と読み替えるべきではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公告と草案を基に本站で描き直した説明図。アクセス制御と訓練用途の希望を区別した計画図であり、提供済み機能や遵守テストではない。",
+            "steps": [
+              "サイトが訓練用途の希望を示す",
+              "参加者が共通信号を解釈する",
+              "既存のクローラー制御は独立して適用",
+              "実装時期と対象範囲は今後確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Желание показывать статьи в поиске не обязательно означает согласие использовать их для обучения модели. 30 октября OpenAI объявила о плане учитывать общий сигнал предпочтений по обучению, чтобы владельцам сайтов не приходилось повторять одинаковые заявления для каждого поставщика. Реализация намечена на ближайшие месяцы, подробности появятся позже. Действующие средства управления обходом сайтов сохраняются.",
+          "sections": [
+            {
+              "heading": "Общее предпочтение вместо множества отдельных правил",
+              "paragraphs": [
+                "Сайты уже выражают предпочтения для разных роботов через robots.txt, но работа с несколькими поставщиками ИИ требует поддерживать отдельные правила. Общий сигнал должен позволить участникам одинаково понимать пожелание относительно обучения генеративного ИИ. Речь идет об использовании уже полученного материала, а не о том, разрешено ли роботу посещать сайт.",
+                "OpenAI ссылается на версию 00 проекта Internet-Draft о предпочтениях по обучению, опубликованную 30 октября автором из Anthropic. Предложение сохраняет структуру существующих правил сайта и позволяет назначать разные предпочтения отдельным его частям. Это обсуждаемый проект, а не принятый стандарт IETF. Публикация не доказывает, что все поставщики ИИ участвуют или внедрят механизм одновременно."
+              ]
+            },
+            {
+              "heading": "Отказ от обучения не равен отказу от поиска",
+              "paragraphs": [
+                "В проекте обучение означает использование материала для изменения выученных параметров генеративной модели. Оно отделено от исключительно негенеративных задач классификации, ранжирования и оценки. Предпочтения по использованию и правила доступа независимы: сайт может возражать против обучения, сохраняя прежние настройки обхода. Для ограничения самого получения материалов по-прежнему нужны соответствующие настройки роботов. Это положения проекта, а не окончательная спецификация реализации OpenAI.",
+                "Нынешняя документация OpenAI уже разделяет GPTBot для обхода, связанного с обучением, и OAI-SearchBot для поиска. Сайт может разрешить поиск и запретить обучающего робота. Новый план прямо сохраняет эти средства, а не предлагает немедленно отказаться от них. Проект также различает отсутствие общего предпочтения и явно выраженную поддержку: отсутствие соответствующего заявления не означает добровольного согласия через этот механизм."
+              ]
+            },
+            {
+              "heading": "Меньше согласований, но реализацию еще надо проверить",
+              "paragraphs": [
+                "Новость заключается в перспективе общего выражения предпочтений для разных компаний, а не в создании непреодолимого технического барьера. Результат зависит от реализации и правильного понимания сигнала участниками. Старые обработчики, не распознающие новое назначение, продолжают работать как прежде. Более конкретные заявления или соглашения могут влиять на приоритет, поэтому публичный сигнал сам по себе не разрешает все споры об использовании материалов.",
+                "OpenAI не назвала точную дату запуска и не раскрыла детали реализации для всех продуктов. По нашей оценке, издателям важно различать действующие правила доступа, предложенное обозначение учебного использования и фактический охват исполнения у каждого поставщика. Следующие значимые подтверждения — документация реализации и проверяемое поведение, а не превращение обещания уважать предпочтения в утверждение, что любое обучение уже предотвращено."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по объявлению и проекту: доступ и предпочтения по обучению независимы. Это план, а не действующая функция или проверка соблюдения.",
+            "steps": [
+              "Сайт выражает предпочтение по обучению",
+              "Участники интерпретируют общий сигнал",
+              "Существующие правила обхода действуют отдельно",
+              "Сроки и охват реализации еще предстоит уточнить"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "網站願意讓搜尋引擎發現自己的文章，不一定意味著也願意讓文章成為模型訓練材料。OpenAI 在 10 月 30 日表示，計劃支援一種通用的訓練用途偏好訊號，讓網站不必逐家維護相同的宣告。它承諾的是未來數月內實施，具體細節仍待公佈；今天已有的爬蟲控制仍然有效。",
+          "sections": [
+            {
+              "heading": "從逐家宣告，轉向共同理解的用途偏好",
+              "paragraphs": [
+                "目前，網站可以透過 robots.txt 說明不同爬蟲的存取偏好，但面對多家 AI 服務商時，往往要分別維護規則。此次計劃希望把“是否願意用於生成式 AI 訓練”寫成參與方都能理解的共同訊號，減少重複配置。它關注的是內容被取得以後怎樣使用，與是否允許爬蟲存取網站不是同一個問題。",
+                "OpenAI 連結的方案是 10 月 30 日釋出的訓練偏好訊號第 00 版 Internet-Draft，作者來自 Anthropic。它沿用現有網站規則檔案的結構，可以給網站不同部分表達不同偏好，不要求重新發明一套檔案格式。不過，這是仍在討論的草案，不是已經通過的 IETF 標準，也不能據此推斷所有 AI 廠商都已加入或會按同一時間表實施。"
+              ]
+            },
+            {
+              "heading": "拒絕訓練，不等於退出搜尋",
+              "paragraphs": [
+                "草案把訓練界定為利用內容改變生成式模型已經學到的參數，區別於單純的分類、排名或評分。它把訓練用途宣告與存取控制分開：網站可以表達反對訓練的意願，同時維持原來的存取規則；如果確實需要限制抓取，仍應使用對應的爬蟲控制。正文中這些語義來自草案，不代表 OpenAI 已宣佈最終產品配置。",
+                "現有 OpenAI 文件也將用於訓練的 GPTBot 與用於搜尋的 OAI-SearchBot 分開管理，網站可以允許搜尋而拒絕訓練爬蟲。新計劃明確保留這些控制，不是讓站長立即放棄舊設定。草案還區分“沒有表達共同偏好”和“明確同意”：沒有對應的用途宣告，不能當作網站已經主動選擇支援訓練。"
+              ]
+            },
+            {
+              "heading": "減少溝通成本，不能代替實施和驗證",
+              "paragraphs": [
+                "這項計劃的新聞價值在於跨廠商表達偏好的可能性，而不是新增一個不可繞過的技術屏障。能否生效，取決於參與方是否實現並正確解釋訊號；現有檔案解析器不認識新用途時，仍會按原有方式工作。草案還允許更具體的宣告或協議影響優先關係，因此一個公開訊號本身不能解決所有內容授權爭議。",
+                "OpenAI 沒有給出確定上線日，也沒有公佈覆蓋全部產品的實施細節。本站的理解是，網站經營者現在需要分清三件事：現有存取控制、擬議的訓練用途宣告，以及各服務商實際執行的範圍。後續值得觀察的是正式實現說明和可驗證的執行情況，而不是把“將會尊重偏好”提前寫成“已經阻止所有訓練”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公告和草案重繪的解釋圖：區分存取控制與訓練用途偏好，表示計劃中的機制，不是已上線功能或合規測試。",
+            "steps": [
+              "網站表達訓練用途偏好",
+              "參與方解釋共同訊號",
+              "原有爬蟲控制繼續獨立適用",
+              "實施時間和覆蓋範圍仍待確認"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-teen-safeguards-safety-report-plan",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "OpenAI · October 30 safety announcement",
+          "url": "https://openai.com/index/community-safety-report-and-new-protections-for-teens/"
+        },
+        {
+          "label": "OpenAI · age prediction and its limits",
+          "url": "https://openai.com/index/our-approach-to-age-prediction/"
+        },
+        {
+          "label": "Reuters · October 30 report via Investing.com",
+          "url": "https://www.investing.com/news/stock-market-news/openai-to-limit-weapons-information-for-teens-on-chatgpt-in-violenceprevention-push-4988471"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 在 10 月 30 日公布一组面向暴力风险的 ChatGPT 防护计划，并预告定期发布社区安全报告。新增措施包括更严格的未成年人回答边界、根据持续对话中的风险信号采取限制，以及在部分情形下临时暂停账户。公司说这些防护将在未来几周开始推出，并非当天已向所有人完整开放。",
+          "sections": [
+            {
+              "heading": "新的限制关注连续行为，而不只看一次提问",
+              "paragraphs": [
+                "公司计划让所有年龄用户得到的历史大规模暴力事件信息更侧重理解背景、受害者与社区影响及预防，减少可能帮助模仿的细节。对未满 18 岁用户，武器及安保系统相关实用信息会受到更严格限制，即使没有明确表达伤害意图。这里的变化不是把相关历史或公共议题一律禁谈，而是收紧回答能提供的具体程度。",
+                "另一项方向是利用近期对话判断风险：单条问题看似普通，连续交流却可能显示对严重伤害的持续执着。OpenAI 正在开发自动结束此类对话的能力，反复触发后可能临时暂停账户。新的临时暂停家长通知也仍在开发中。不能把这些计划写成已经覆盖全部会话的功能，更不能把所有谈论困难话题的用户都描述为会被停用。"
+              ]
+            },
+            {
+              "heading": "年龄判断和家长设置各有边界",
+              "paragraphs": [
+                "现有年龄预测结合账户和使用行为等多种信号判断用户是否可能未满 18 岁，十月公告强调会持续重新评估。这是估计，不等于已核实身份。被误判为未成年人的成年人可以通过 Persona 确认年龄；公告没有给出年龄预测准确率，因此不能据此声称错误识别已解决。",
+                "家长已经可以连接青少年账户，管理部分设置并接收某些安全通知。OpenAI 说，自七月起，因违反暴力相关政策而停用账户的通知已在提供；针对本次计划中的临时暂停通知则是另一项尚待完成的能力。区分已有家长控制与即将推出的限制，才能看清这次更新真正增加了什么。"
+              ]
+            },
+            {
+              "heading": "报告将公开处理过程，但转交数量不是成效证明",
+              "paragraphs": [
+                "OpenAI 计划在 2027 年初发布首份社区安全报告，覆盖 2026 年下半年，此后每六个月发布一次。内容拟包括匿名案例、政策、缓解措施及发现、调查和响应风险的方式。报告尚未发布，因此现在无法用它验证这些新措施的覆盖率、误报率或长期结果。Reuters 已报道此次计划；这证明它受到外部报道关注，并不构成对防护效果的独立测试。",
+                "公司称 2026 年第三季度向执法部门转交了超过 200 次事项。这是厂商报告的转交次数，不是经确认的犯罪数量、拘捕人数或成功阻止的事件数；公告没有给出足以计算有效率的分母和后续结果。本站的判断是，新措施提供了更清楚的干预方向，但仍需观察实际推出范围、年龄误判处理、暂停的纠正途径和后续透明度报告，才能评价是否真正减少风险。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开公告重绘的解释图：说明拟议防护与未来报告的关系，不展示危险行为细节，也不是防护有效率实测。",
+            "steps": [
+              "近期对话与年龄信号辅助判断",
+              "按风险调整回答或结束对话",
+              "部分重复触发可能临时暂停",
+              "2027 年初开始披露半年报告"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 30, OpenAI announced additional ChatGPT safeguards addressing violence risks and plans for a recurring Community Safety Report. The changes include stricter boundaries for minors, responses informed by patterns across conversations, and temporary account pauses in some circumstances. The company says rollout will begin over the coming weeks; this is not a claim that every safeguard is already available to everyone.",
+          "sections": [
+            {
+              "heading": "Looking beyond an isolated question",
+              "paragraphs": [
+                "For users of all ages, OpenAI plans to limit detail about past mass-violence events and emphasize background, victims and community impact, and prevention. Under-18 users face stricter limits on practical information about weapons and security systems, even without an explicit statement of harmful intent. The change concerns the specificity of assistance, rather than a blanket ban on discussing history or public issues.",
+                "Another focus is recent conversational context: an apparently ordinary question can sit within a longer pattern of fixation on serious harm. OpenAI is developing automated termination of such conversations, with repeated triggers potentially leading to a temporary account pause. New parental notifications for these pauses are also being developed. These plans should not be described as already covering every conversation, nor as suspending everyone who discusses difficult subjects."
+              ]
+            },
+            {
+              "heading": "Age estimates and parental controls have different limits",
+              "paragraphs": [
+                "Existing age prediction combines account and behavioral signals to estimate whether someone may be under 18; the October announcement emphasizes continued reassessment. An estimate is not a verified identity. Adults incorrectly classified as minors can confirm their age through Persona. The announcement provides no accuracy figure for age prediction, so it does not establish that misclassification has been solved.",
+                "Parents can already link teen accounts, manage some settings and receive certain safety notifications. OpenAI says notifications for account deactivation following violence-policy violations have been available since July. Notifications for the newly planned temporary pauses are a separate capability still in development. Distinguishing existing controls from upcoming restrictions is necessary to understand what this announcement actually adds."
+              ]
+            },
+            {
+              "heading": "A reporting commitment is not evidence of effectiveness",
+              "paragraphs": [
+                "The first Community Safety Report is planned for early 2027, covering the second half of 2026, with reports every six months afterward. It is intended to include anonymized cases, policies, mitigations and how risks are detected, investigated and addressed. It has not been published, so it cannot yet establish the new measures’ coverage, false-positive rates or long-term outcomes. Reuters has reported the plans; that provides external news coverage, not an independent test of effectiveness.",
+                "OpenAI says it made over 200 law-enforcement referrals in the third quarter of 2026. That is a company-reported referral count, not confirmed crimes, arrests or incidents successfully prevented. The announcement supplies neither the denominator nor follow-up outcomes needed to infer an effectiveness rate. Our assessment is that the plans clarify the intended interventions, but rollout coverage, handling of age errors, ways to correct pauses and subsequent transparency reports will be needed to judge whether risk actually declines."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on public announcements: planned safeguards and future reporting, without harmful operational details or measured effectiveness claims.",
+            "steps": [
+              "Recent context and age signals inform assessment",
+              "Responses are limited or conversations ended",
+              "Some repeated triggers may lead to temporary pauses",
+              "Six-month reporting starts in early 2027"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は 10 月 30 日、暴力のリスクに対応する ChatGPT の追加保護策と、定期的なコミュニティ安全報告の計画を公表した。未成年者への回答をより厳しく制限し、継続的な会話の兆候を踏まえて対応し、一部ではアカウントを一時停止する方針だ。提供開始は今後数週間としており、すべての対策がすでに全員に利用可能という発表ではない。",
+          "sections": [
+            {
+              "heading": "一度の質問だけでなく、続く行動を見る",
+              "paragraphs": [
+                "全利用者に対して、過去の大規模な暴力事件についての詳細を抑え、背景の理解、被害者と地域への影響、予防に重点を置く計画だ。18 歳未満では、危害を加える意図を明示していなくても、武器や保安システムに関する実用的な情報の制限を強める。歴史や公共の問題を一律に議論できなくするという意味ではなく、提供する情報の具体性を制限する変更である。",
+                "最近の会話を使った判断も重視する。一つの質問は普通に見えても、連続したやり取りが深刻な危害への固執を示す場合があるためだ。OpenAI はそのような会話を自動終了する機能を開発中で、繰り返す場合にはアカウントが一時停止される可能性がある。一時停止を保護者に通知する新機能も開発中だ。これらを全会話に適用済みとしたり、難しい話題を話す人が皆停止されると説明したりしてはいけない。"
+              ]
+            },
+            {
+              "heading": "年齢の推定と保護者向け設定は別の仕組み",
+              "paragraphs": [
+                "既存の年齢予測はアカウント情報や利用行動など複数の兆候から、18 歳未満の可能性を推定する。今回の公告は継続的な再評価を強調している。これは推定であり本人確認ではない。未成年と誤判定された成人は Persona を通じて年齢を確認できるが、予測の正確さを示す数値は公表されておらず、誤判定が解決したとはいえない。",
+                "保護者はすでに青少年のアカウントを連携し、一部の設定を管理し、特定の安全通知を受け取れる。OpenAI によれば、暴力関連の規則違反でアカウントが無効化された際の通知は七月から提供している。一方、今回計画する一時停止の通知は別の開発中の能力だ。既存の保護者機能と今後の制限を分けることで、今回何が加わるかが明確になる。"
+              ]
+            },
+            {
+              "heading": "件数の公表だけでは効果を証明できない",
+              "paragraphs": [
+                "最初のコミュニティ安全報告は 2027 年初頭に公開し、2026 年後半を対象とする予定だ。その後は半年ごとに発行し、匿名化した事例、方針、緩和策、リスクの検知・調査・対応方法などを含める。報告は未公開であり、新対策の適用範囲、誤検知率、長期的な結果をまだ確認できない。Reuters は計画を報じているが、外部報道であることと効果を独立に試験したことは異なる。",
+                "OpenAI は 2026 年第三四半期に法執行機関へ 200 件超を照会・通報したとしている。これは企業が報告した件数で、確認された犯罪数、逮捕者数、未然に防いだ事件数ではない。公告には有効率を計算する分母や、その後の結果が示されていない。本稿では介入の方向は明確になったと考えるが、実際の展開範囲、年齢誤判定への対応、停止を訂正する手段、今後の透明性報告を見なければ、リスク低減の効果は判断できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開公告を基に本站で描き直した説明図。計画中の保護と将来の報告の関係であり、危険行為の手順や効果の実測を示すものではない。",
+            "steps": [
+              "最近の会話と年齢の兆候を評価",
+              "回答を制限し必要なら会話を終了",
+              "繰り返す一部のケースで一時停止",
+              "2027 年初頭から半年報告"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "30 октября OpenAI представила планы дополнительных мер ChatGPT против рисков насилия и регулярного отчета о безопасности сообщества. Предусмотрены более строгие ограничения для несовершеннолетних, учет последовательности разговоров и временная приостановка аккаунта в некоторых обстоятельствах. Развертывание должно начаться в ближайшие недели: объявление не означает, что все меры уже доступны всем пользователям.",
+          "sections": [
+            {
+              "heading": "Оценка последовательности, а не одного вопроса",
+              "paragraphs": [
+                "Для всех возрастов OpenAI планирует сокращать подробности о прошлых случаях массового насилия, уделяя внимание контексту, пострадавшим, влиянию на сообщества и профилактике. Для пользователей младше 18 лет ограничения практической информации об оружии и системах охраны будут строже даже без явно выраженного намерения причинить вред. Изменение касается конкретности предоставляемой помощи, а не полного запрета обсуждать историю или общественные вопросы.",
+                "Еще одно направление — учитывать недавний разговор: обычный на вид вопрос может быть частью устойчивой фиксации на серьезном вреде. OpenAI разрабатывает автоматическое завершение таких бесед; повторные срабатывания могут привести к временной приостановке аккаунта. Новые уведомления родителей о таких паузах также разрабатываются. Нельзя описывать эти планы как уже действующие во всех беседах или утверждать, что любого, кто обсуждает трудные темы, отключат."
+              ]
+            },
+            {
+              "heading": "Прогноз возраста и родительские настройки имеют разные границы",
+              "paragraphs": [
+                "Действующая система использует признаки аккаунта и поведения, чтобы оценить вероятность возраста до 18 лет; октябрьское объявление подчеркивает постоянную переоценку. Это предположение, а не подтвержденная личность. Совершеннолетние, ошибочно отнесенные к несовершеннолетним, могут подтвердить возраст через Persona. Точность прогноза в объявлении не указана, поэтому считать ошибочную классификацию решенной проблемой нельзя.",
+                "Родители уже могут связывать подростковые аккаунты, управлять частью настроек и получать определенные уведомления. По словам OpenAI, уведомления об отключении за нарушения правил, связанных с насилием, доступны с июля. Уведомления о новых временных приостановках — другая, еще разрабатываемая возможность. Разделение существующих средств и будущих ограничений показывает, что именно добавляет нынешнее объявление."
+              ]
+            },
+            {
+              "heading": "Количество обращений не доказывает эффективность",
+              "paragraphs": [
+                "Первый отчет о безопасности сообщества запланирован на начало 2027 года и охватит вторую половину 2026 года; затем отчеты будут выходить каждые шесть месяцев. Предполагаются обезличенные примеры, правила, меры снижения риска и описание обнаружения, расследования и реагирования. Отчет пока не опубликован и не подтверждает охват новых мер, долю ложных срабатываний или долгосрочные результаты. Reuters сообщило о планах, но внешняя публикация не равна независимому испытанию эффективности.",
+                "OpenAI заявляет о более чем 200 обращениях в правоохранительные органы за третий квартал 2026 года. Это сообщенное компанией число обращений, а не подтвержденные преступления, аресты или предотвращенные происшествия. Нет ни необходимого для расчета эффективности знаменателя, ни результатов последующего рассмотрения. По нашей оценке, направление вмешательства стало понятнее, однако реальный охват, исправление ошибок определения возраста, способы пересмотра пауз и будущие отчеты еще нужны для оценки снижения риска."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по публичным объявлениям: планируемая защита и будущая отчетность, без опасных практических деталей и заявлений об измеренной эффективности.",
+            "steps": [
+              "Контекст и признаки возраста помогают оценке",
+              "Ограничение ответов или завершение беседы",
+              "Некоторые повторные случаи ведут к временной паузе",
+              "Полугодовая отчетность с начала 2027 года"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 在 10 月 30 日公佈一組面向暴力風險的 ChatGPT 防護計劃，並預告定期釋出社群安全報告。新增措施包括更嚴格的未成年人回答邊界、根據持續對話中的風險訊號採取限制，以及在部分情形下臨時暫停帳號。公司說這些防護將在未來幾周開始推出，並非當天已向所有人完整開放。",
+          "sections": [
+            {
+              "heading": "新的限制關注連續行為，而不只看一次提問",
+              "paragraphs": [
+                "公司計劃讓所有年齡使用者得到的歷史大規模暴力事件資訊更側重理解背景、受害者與社群影響及預防，減少可能幫助模仿的細節。對未滿 18 歲使用者，武器及安全防護系統相關實用資訊會受到更嚴格限制，即使沒有明確表達傷害意圖。這裡的變化不是把相關歷史或公共議題一律禁談，而是收緊回答能提供的具體程度。",
+                "另一項方向是利用近期對話判斷風險：單條問題看似普通，連續交流卻可能顯示對嚴重傷害的持續執著。OpenAI 正在開發自動結束此類對話的能力，反覆觸發後可能臨時暫停帳號。新的臨時暫停家長通知也仍在開發中。不能把這些計劃寫成已經覆蓋全部會話的功能，更不能把所有談論困難話題的使用者都描述為會被停用。"
+              ]
+            },
+            {
+              "heading": "年齡判斷和家長設定各有邊界",
+              "paragraphs": [
+                "現有年齡預測結合帳號和使用行為等多種訊號判斷使用者是否可能未滿 18 歲，十月公告強調會持續重新評估。這是估計，不等於已核實身份。被誤判為未成年人的成年人可以透過 Persona 確認年齡；公告沒有給出年齡預測準確率，因此不能據此聲稱錯誤識別已解決。",
+                "家長已經可以連結青少年帳號，管理部分設定並接收某些安全通知。OpenAI 說，自七月起，因違反暴力相關政策而停用帳號的通知已在提供；針對本次計劃中的臨時暫停通知則是另一項尚待完成的能力。區分已有家長控制與即將推出的限制，才能看清這次更新真正增加了什麼。"
+              ]
+            },
+            {
+              "heading": "報告將公開處理過程，但轉交數量不是成效證明",
+              "paragraphs": [
+                "OpenAI 計劃在 2027 年初發布首份社群安全報告，覆蓋 2026 年下半年，此後每六個月釋出一次。內容擬包括匿名案例、政策、緩解措施及發現、調查和回應風險的方式。報告尚未釋出，因此現在無法用它驗證這些新措施的覆蓋率、誤報率或長期結果。Reuters 已報道此次計劃；這證明它受到外部報道關注，並不構成對防護效果的獨立測試。",
+                "公司稱 2026 年第三季度向執法部門轉交了超過 200 次事項。這是廠商報告的轉交次數，不是經確認的犯罪數量、拘捕人數或成功阻止的事件數；公告沒有給出足以計算有效率的分母和後續結果。本站的判斷是，新措施提供了更清楚的干預方向，但仍需觀察實際推出範圍、年齡誤判處理、暫停的糾正途徑和後續透明度報告，才能評價是否真正減少風險。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開公告重繪的解釋圖：說明擬議防護與未來報告的關係，不展示危險行為細節，也不是防護有效率實測。",
+            "steps": [
+              "近期對話與年齡訊號輔助判斷",
+              "按風險調整回答或結束對話",
+              "部分重複觸發可能臨時暫停",
+              "2027 年初開始披露半年報告"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "linux-ipv4-race-patch-response",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "Red Hat · critical bulletin, October 30",
+          "url": "https://access.redhat.com/security/vulnerabilities/RHSB-2026-016"
+        },
+        {
+          "label": "Red Hat · current CVE assessment",
+          "url": "https://access.redhat.com/security/cve/cve-2026-98432"
+        },
+        {
+          "label": "Debian · affected and fixed packages",
+          "url": "https://security-tracker.debian.org/tracker/CVE-2026-98432"
+        },
+        {
+          "label": "Anthropic · demonstration and its conditions",
+          "url": "https://www.anthropic.com/research/discovering-vulnerabilities-with-claude"
+        },
+        {
+          "label": "BleepingComputer · independent reporting, October 30",
+          "url": "https://www.bleepingcomputer.com/news/security/critical-linux-kernel-flaw-allows-remote-root-attacks-on-mptcp-servers/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "10 月 30 日，Red Hat 针对 Linux 内核漏洞 CVE-2026-98432 发布严重级别公告，表示正在加快提供修复。问题出在 IPv4 TCP 连接处理，风险并不限于某个应用。此次值得关注的进展，是上游修复、发行版更新与远程利用演示已能相互对照；“内核已有修复”仍不代表每台服务器都已获得并运行修复版本。",
+          "sections": [
+            {
+              "heading": "连接处理为何会碰到已释放的内存",
+              "paragraphs": [
+                "服务器建立 TCP 连接时，多个处理任务可能同时访问同一份连接选项。如果一项任务提前释放这块内存，另一项仍在读取，就会出现释放后使用。这类竞态取决于任务执行顺序，可能导致内核崩溃或内存损坏；上游修复的思路是等仍在读取的任务完成后再回收相关对象。",
+                "Red Hat 公告列出 RHEL 8、9、10 及 OpenShift 等受影响产品，强调接受传入 IPv4 TCP 连接的系统更直接暴露。补丁是否适用应看发行版的具体内核包，不能只按应用名称判断，也不能因为没有主动开启多路径连接就认为底层缺陷不存在。"
+              ]
+            },
+            {
+              "heading": "已演示的能力有明确条件",
+              "paragraphs": [
+                "Anthropic 在 10 月 27 日的研究报告中称，一个尚未发布的内部模型在初始提示后构造了利用程序，针对运行 MPTCP 监听服务的 Linux 环境获得远程最高权限执行能力。MPTCP 让同一连接可以使用多条网络路径。这是该报告演示环境的条件，不是所有 TCP 服务器的统一配置。",
+                "报告给出的约 53 分钟，是其概念验证中 48 分钟获得内核地址信息、再用 5 分钟达到执行阶段的总耗时，并非模型开发利用程序的耗时，也不是互联网上所有主机被攻破的时间。它显示这个缺陷可超出拒绝服务的影响，但不能据此推出普通 TCP 环境已被同样验证，或已经出现实际攻击。"
+              ]
+            },
+            {
+              "heading": "修复和临时措施不能混为一谈",
+              "paragraphs": [
+                "本次核对时，Debian 安全跟踪器将 Bookworm 的 6.1.190-1、Trixie 的 6.12.113-1 标为已修复，同时仍列出受影响的较旧包。Red Hat 最新 CVE 页显示 9.8 分和严重级别；部分早期报道中的 5.9 分已不适合作为当前口径。发行版可能回移补丁，所以仅比较上游版本数字也不够。",
+                "Red Hat 说明，过滤特定 IPv4 流量可以减少暴露，但可能影响业务，不能替代内核安全更新。运营方需要按自身发行版公告确认修复包和实际运行状态。独立报道截至 10 月 30 日未确认野外利用；这是当时的证据边界，不是没有风险的保证。本站的解释图只梳理评估和修复关系，不展示攻击步骤。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘：从漏洞评估到发行版修复的处理关系，不是攻击流程或实测结果。",
+            "steps": [
+              "确认内核包与网络暴露",
+              "核对发行版安全公告",
+              "采用适用修复及必要临时缓解",
+              "确认正在运行修复后的内核"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 30, Red Hat issued a critical advisory for Linux kernel flaw CVE-2026-98432 and said it was accelerating fixes. The defect is in IPv4 TCP connection handling rather than one application. Upstream changes, distribution packages and a remote-exploitation demonstration now provide distinct pieces of evidence: an upstream fix does not mean every server has received it or is running it.",
+          "sections": [
+            {
+              "heading": "When concurrent work outlives its memory",
+              "paragraphs": [
+                "During TCP connection setup, concurrent tasks can access the same connection options. If one frees that memory while another still reads it, a use-after-free occurs. This timing-dependent race can crash the kernel or corrupt memory. The upstream repair delays reclamation until existing readers have finished.",
+                "Red Hat lists RHEL 8, 9 and 10 and products including OpenShift as affected, highlighting systems that accept incoming IPv4 TCP connections. Exposure and remediation depend on the distribution kernel package, not simply the application name. Not deliberately enabling multipath connections does not remove the underlying defect."
+              ]
+            },
+            {
+              "heading": "What the demonstration establishes",
+              "paragraphs": [
+                "In its October 27 research report, Anthropic says an unreleased internal model built an exploit after initial prompting and achieved remote root execution on a Linux system with an MPTCP listener. MPTCP allows one connection to use multiple network paths. That listener is a condition of the demonstrated environment, not a universal TCP configuration.",
+                "The approximately 53 minutes in the report combines 48 minutes to obtain kernel-address information and five more to reach execution in its proof of concept. It is not the time the model spent developing the exploit or a universal time to compromise an internet host. The demonstration establishes impact beyond denial of service under those conditions; it does not establish the same result for ordinary TCP configurations or attacks in the wild."
+              ]
+            },
+            {
+              "heading": "Package availability still matters",
+              "paragraphs": [
+                "At review, Debian lists Bookworm package 6.1.190-1 and Trixie package 6.12.113-1 as fixed, alongside vulnerable older packages. Red Hat’s current CVE page shows a 9.8 score and critical impact; an earlier 5.9 assessment in some reporting is no longer the current position. Distributions can backport a repair, so upstream version numbers alone are insufficient.",
+                "Red Hat says filtering selected IPv4 traffic can reduce exposure but may affect workloads and cannot replace kernel updates. Operators need their distribution’s advisory and confirmation of the kernel actually running. Independent reporting had not confirmed exploitation in the wild as of October 30; that describes available evidence, not a guarantee of safety. Our diagram explains assessment and remediation, without reproducing exploitation steps."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw: assessing exposure and applying distribution fixes, not an attack sequence or measured result.",
+            "steps": [
+              "Identify kernel package and exposure",
+              "Check the distribution advisory",
+              "Apply suitable fixes and necessary mitigation",
+              "Confirm the fixed kernel is running"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Red Hatは10月30日、LinuxカーネルのCVE-2026-98432を重大とする警告を公表し、修正の提供を急いでいると説明した。問題は特定アプリではなくIPv4 TCPの接続処理にある。上流の修正、配布元の更新、遠隔利用の実証はそれぞれ別の証拠であり、上流で直ったことだけでは各サーバーが修正版を実行しているとはいえない。",
+          "sections": [
+            {
+              "heading": "並行処理とメモリの寿命が食い違う",
+              "paragraphs": [
+                "TCP接続を作る際、複数の処理が同じ接続オプションにアクセスすることがある。一方がメモリを解放した後も他方が読み続けると、解放後使用が起きる。実行順序に依存するこの競合は、カーネルの停止やメモリ破損につながる。上流の修正は、既存の読み取りが終わるまで回収を待つ考え方だ。",
+                "Red HatはRHEL 8、9、10とOpenShiftなどを影響対象に挙げ、外からのIPv4 TCP接続を受ける環境を特に重視している。判断には配布元の具体的なカーネルパッケージが必要で、アプリ名だけでは足りない。多経路接続を意図的に有効にしていなくても、基礎となる不具合が消えるわけではない。"
+              ]
+            },
+            {
+              "heading": "実証の条件を分けて読む",
+              "paragraphs": [
+                "Anthropicは10月27日の研究報告で、未公開の内部モデルが初期指示後に利用プログラムを作り、MPTCPで待ち受けるLinux環境で遠隔から最高権限の実行に到達したと述べた。MPTCPは一つの接続に複数のネットワーク経路を使う仕組みだ。この待受条件を、すべてのTCPサーバーにそのまま広げることはできない。",
+                "報告の約53分は、概念実証でカーネルのアドレス情報を得るまでの48分と、その後実行に至る5分の合計である。モデルが利用プログラムを開発した時間でも、あらゆる公開サーバーを侵害する所要時間でもない。拒否サービス以上の影響を示す一方、通常のTCP構成で同じ結果が確認されたことや、実際の攻撃発生は示していない。"
+              ]
+            },
+            {
+              "heading": "更新パッケージと実行状態を確認する",
+              "paragraphs": [
+                "今回の確認時、DebianはBookwormの6.1.190-1とTrixieの6.12.113-1を修正済みとし、古い未修正パッケージも掲載していた。Red Hatの現行CVEページは9.8点・重大であり、一部の初期報道にある5.9点は現在の評価ではない。配布元は修正を旧系統に取り込むこともあるため、上流の番号だけでは判断できない。",
+                "Red Hatによると特定のIPv4通信の制限は露出を減らせるが、業務への影響があり、カーネル更新の代わりにはならない。配布元の公告に従い、実際に動いているカーネルまで確認する必要がある。独立報道は10月30日時点で実環境の悪用を確認していないが、それは証拠の範囲であり安全の保証ではない。本図は評価と修正の関係を説明し、攻撃手順は再現しない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站による説明図：影響評価と配布元の修正対応。攻撃手順や測定結果ではない。",
+            "steps": [
+              "カーネルパッケージと露出を把握",
+              "配布元の安全情報を確認",
+              "適切な更新と必要な緩和策を適用",
+              "修正版カーネルの実行を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "30 октября Red Hat выпустила критическое предупреждение о CVE-2026-98432 в ядре Linux и сообщила об ускоренной подготовке исправлений. Дефект находится в обработке соединений IPv4 TCP, а не в отдельном приложении. Исправление основного ядра, пакеты дистрибутивов и демонстрация эксплуатации дают разные сведения: наличие патча в upstream не означает, что каждый сервер уже получил и использует его.",
+          "sections": [
+            {
+              "heading": "Почему обработчик обращается к освобождённой памяти",
+              "paragraphs": [
+                "При установлении TCP-соединения несколько задач могут одновременно читать одни параметры. Если одна задача освобождает память, пока другая ещё использует её, возникает use-after-free. Такая гонка зависит от порядка выполнения и может вызвать сбой ядра или повреждение памяти. Исправление откладывает освобождение до завершения уже начавшихся чтений.",
+                "Red Hat относит к затронутым RHEL 8, 9, 10 и продукты, включая OpenShift; особенно непосредственно уязвимы системы, принимающие входящие соединения IPv4 TCP. Проверять нужно пакет ядра конкретного дистрибутива, а не только название приложения. Отсутствие намеренно включённого многопутевого режима не устраняет базовый дефект."
+              ]
+            },
+            {
+              "heading": "Что именно показала демонстрация",
+              "paragraphs": [
+                "В исследовательском отчёте от 27 октября Anthropic утверждает, что неопубликованная внутренняя модель после начального задания создала эксплойт и добилась удалённого исполнения с правами root в Linux с MPTCP-слушателем. MPTCP позволяет одному соединению использовать несколько сетевых путей. Это условие демонстрации, а не описание любого TCP-сервера.",
+                "Около 53 минут в отчёте — сумма 48 минут получения сведений об адресах ядра и ещё пяти минут до исполнения в демонстрационном опыте. Это не время разработки эксплойта моделью и не универсальный срок взлома сервера. Результат показывает последствия серьёзнее отказа в обслуживании в указанных условиях, но не доказывает тот же результат для обычных конфигураций TCP или наличие реальных атак."
+              ]
+            },
+            {
+              "heading": "Исправление должно дойти до работающего ядра",
+              "paragraphs": [
+                "На момент проверки Debian отмечает пакеты Bookworm 6.1.190-1 и Trixie 6.12.113-1 как исправленные, одновременно показывая уязвимые старые пакеты. На текущей странице Red Hat указаны 9,8 балла и критический уровень; встречавшаяся в ранних публикациях оценка 5,9 уже не отражает её позицию. Дистрибутивы переносят патчи в старые ветки, поэтому одного номера upstream недостаточно.",
+                "Red Hat поясняет, что фильтрация определённого IPv4-трафика сокращает доступность уязвимого пути, но может мешать работе и не заменяет обновление ядра. Нужны рекомендации своего дистрибутива и проверка действительно работающего ядра. Независимая публикация не подтверждала эксплуатацию в реальных атаках по состоянию на 30 октября; это предел свидетельств, а не гарантия безопасности. Наша схема объясняет оценку и исправление, не воспроизводя шаги атаки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема: оценка риска и обновления дистрибутива, не инструкция атаки и не результат измерений.",
+            "steps": [
+              "Уточнить пакет ядра и сетевую доступность",
+              "Проверить бюллетень дистрибутива",
+              "Применить исправления и нужные временные меры",
+              "Убедиться, что запущено исправленное ядро"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "10 月 30 日，Red Hat 針對 Linux 核心漏洞 CVE-2026-98432 釋出嚴重級別公告，表示正在加快提供修復。問題出在 IPv4 TCP 連線處理，風險並不限於某個應用。此次值得關注的進展，是上游修復、發行版更新與遠端利用演示已能相互對照；“核心已有修復”仍不代表每臺伺服器都已獲得並執行修復版本。",
+          "sections": [
+            {
+              "heading": "連線處理為何會碰到已釋放的記憶體",
+              "paragraphs": [
+                "伺服器建立 TCP 連線時，多個處理任務可能同時訪問同一份連線選項。如果一項任務提前釋放這塊記憶體，另一項仍在讀取，就會出現釋放後使用。這類競態取決於任務執行順序，可能導致核心崩潰或記憶體損壞；上游修復的思路是等仍在讀取的任務完成後再回收相關物件。",
+                "Red Hat 公告列出 RHEL 8、9、10 及 OpenShift 等受影響產品，強調接受傳入 IPv4 TCP 連線的系統更直接暴露。修補程式是否適用應看發行版的具體核心包，不能只按應用名稱判斷，也不能因為沒有主動開啟多路徑連線就認為底層缺陷不存在。"
+              ]
+            },
+            {
+              "heading": "已演示的能力有明確條件",
+              "paragraphs": [
+                "Anthropic 在 10 月 27 日的研究報告中稱，一個尚未釋出的內部模型在初始提示後構造了利用程式，針對執行 MPTCP 監聽服務的 Linux 環境獲得遠端最高權限執行能力。MPTCP 讓同一連線可以使用多條網路路徑。這是該報告演示環境的條件，不是所有 TCP 伺服器的統一配置。",
+                "報告給出的約 53 分鐘，是其概念驗證中 48 分鐘獲得核心地址資訊、再用 5 分鐘達到執行階段的總耗時，並非模型開發利用程式的耗時，也不是網際網路上所有主機被攻破的時間。它顯示這個缺陷可超出拒絕服務的影響，但不能據此推出普通 TCP 環境已被同樣驗證，或已經出現實際攻擊。"
+              ]
+            },
+            {
+              "heading": "修復和臨時措施不能混為一談",
+              "paragraphs": [
+                "本次核對時，Debian 安全跟蹤器將 Bookworm 的 6.1.190-1、Trixie 的 6.12.113-1 標為已修復，同時仍列出受影響的較舊包。Red Hat 最新 CVE 頁顯示 9.8 分和嚴重級別；部分早期報道中的 5.9 分已不適合作為當前口徑。發行版可能回移修補程式，所以僅比較上游版本數字也不夠。",
+                "Red Hat 說明，過濾特定 IPv4 流量可以減少暴露，但可能影響業務，不能替代核心安全更新。運營方需要按自身發行版公告確認修復包和實際執行狀態。獨立報道截至 10 月 30 日未確認野外利用；這是當時的證據邊界，不是沒有風險的保證。本站的解釋圖只梳理評估和修復關係，不展示攻擊步驟。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪：從漏洞評估到發行版修復的處理關係，不是攻擊流程或實測結果。",
+            "steps": [
+              "確認核心包與網路暴露",
+              "核對發行版安全公告",
+              "採用適用修復及必要臨時緩解",
+              "確認正在執行修復後的核心"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "cursor-claude-extension-compromise",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "Cursor · original notice and October 30 version update",
+          "url": "https://cursor.com/blog/claude-code-extension-security-notice"
+        },
+        {
+          "label": "Phorion · sample analysis, updated October 31",
+          "url": "https://phorion.io/blog/offical-claude-code-vsx-compromise/"
+        },
+        {
+          "label": "BleepingComputer · independent report, October 30",
+          "url": "https://www.bleepingcomputer.com/news/security/malicious-claude-code-extension-on-cursor-planted-ssh-backdoors/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Cursor 在 10 月 29 日披露扩展市场安全事件，随后于 30 日更新受影响版本：macOS 和 Windows 的 Claude Code 扩展包 2.1.312、2.1.313 都被列入排查范围。事件发生在插件分发环节，不能把它写成 Claude 模型本身遭到入侵，也不能仅凭扩展显示 Anthropic 名称就认为恶意改动出自 Anthropic。",
+          "sections": [
+            {
+              "heading": "哪些安装属于已确认范围",
+              "paragraphs": [
+                "Cursor 给出的分发窗口是 10 月 29 日太平洋时间约 02:27—13:35，约 11 小时。受影响范围须同时结合来源市场、平台、版本和安装时间判断；只看到电脑里装有 Claude Code，并不足以认定受影响。较早报道只提到 2.1.313，最新官方公告和 Phorion 的更新已补充 2.1.312。",
+                "Cursor 称恶意版本并非 Anthropic 开发，调查未发现其他扩展或官方分发渠道受同样影响。这个结论应保留调查归因，不能扩大成所有软件渠道均已独立证明安全。攻击者如何把修改后的包放入市场，公开材料尚未给出完整答案。"
+              ]
+            },
+            {
+              "heading": "为什么卸载插件可能不够",
+              "paragraphs": [
+                "Phorion 对样本的分析表明，恶意逻辑在扩展被加载时便运行，不需要使用者再向助手发出指令。它会报告设备与用户相关信息，尝试加入未经授权的远程登录能力，并建立可在之后继续运行的后台机制。插件原有界面仍可能正常，因此正常使用体验不能证明安装包可信。",
+                "Cursor 和 Phorion 都指出，权限不足与恶意程序自身错误，会使不少普通 macOS、Windows 环境中的远程登录启用步骤失败。这限制了部分攻击效果，却不意味着信息没有外传、异常授权没有留下，或后台机制不会继续存在。不能把“某一步失败”概括成“整起事件无害”。"
+              ]
+            },
+            {
+              "heading": "平台已采取措施，受影响环境仍需处理",
+              "paragraphs": [
+                "Cursor 表示已移除恶意包，曾暂时关闭整个扩展市场进行审计，轮换访问密钥、重建后恢复服务，并协调托管商下线攻击服务器。这些措施能阻断已知分发和连接通道，但不能替用户清除已经落在设备上的残留。",
+                "官方建议对有执行或后门迹象的设备进行隔离，检查并清理残留，评估是否重建，再从可信环境轮换可能暴露的凭据和会话。具体核查以其持续更新的安全公告为准。本站据此认为，本次事件的关键教训是同时核对插件身份与分发来源，并把市场恢复和终端恢复分开看；这属于防御上的解释，不是对攻击入口已查明的宣称。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘：分发处置与终端恢复是两条相关工作线，不表示所有安装都已被远程控制。",
+            "steps": [
+              "核对市场、平台、版本与时间",
+              "平台下架并审计分发渠道",
+              "排查已安装环境的执行与残留",
+              "隔离清理并评估凭据和环境恢复"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Cursor disclosed an extension-marketplace incident on October 29 and updated the affected-version guidance on October 30: Claude Code packages 2.1.312 and 2.1.313 for macOS and Windows both require attention. This is a software-distribution incident, not evidence that the Claude model was compromised. An Anthropic name on an extension is also not evidence that Anthropic produced the malicious modifications.",
+          "sections": [
+            {
+              "heading": "Scope depends on the distribution channel",
+              "paragraphs": [
+                "Cursor gives an exposure window of approximately 02:27–13:35 Pacific Time on October 29, about eleven hours. Assessing an installation requires its marketplace, platform, version and installation time together. Having Claude Code installed alone is insufficient. Earlier reporting named only 2.1.313; the current official notice and Phorion’s update also identify 2.1.312.",
+                "Cursor says Anthropic did not develop the malicious packages and its investigation found no evidence that other extensions or the official distribution were affected. This remains an attributed investigation result, not independent proof about every channel. The public accounts do not yet fully explain how the modified packages entered the marketplace."
+              ]
+            },
+            {
+              "heading": "Why removing an extension may leave a problem",
+              "paragraphs": [
+                "Phorion’s sample analysis finds that the malicious logic runs as the extension loads, without a further user instruction to the assistant. It reports host and user information, attempts to establish unauthorized remote-login access, and creates background mechanisms intended to persist. The original extension interface can still work, so normal-looking behaviour is not proof of package integrity.",
+                "Both Cursor and Phorion describe permission limits and errors in the malware that can prevent its remote-login setup on many ordinary macOS and Windows installations. That limits part of the attack, but does not establish that information was never sent, unauthorized access material was never installed, or background persistence is absent. Failure at one stage does not make the whole incident harmless."
+              ]
+            },
+            {
+              "heading": "Marketplace recovery and endpoint recovery differ",
+              "paragraphs": [
+                "Cursor says it removed the packages, temporarily shut the marketplace for an audit, rotated access keys, rebuilt and reopened the service, and worked with the hosting provider to take the attacker’s server offline. These actions interrupt known distribution and connection routes; they do not remove material already placed on users’ devices.",
+                "The official notice calls for isolating hosts with execution or backdoor evidence, investigating and removing persistence, assessing whether to rebuild, and rotating potentially exposed credentials and sessions from a trusted environment. Its evolving advisory is the reference for detailed checks. Our defensive interpretation is that package identity and distribution source must be considered together, and restored marketplace service must not be mistaken for restored endpoints. This does not claim the attackers’ initial entry point has been established."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw: marketplace containment and endpoint recovery are related tasks, not proof that every installation was remotely controlled.",
+            "steps": [
+              "Check marketplace, platform, version and time",
+              "Remove packages and audit distribution",
+              "Investigate execution and endpoint persistence",
+              "Contain, clean and assess credential recovery"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Cursorは10月29日に拡張機能市場の安全問題を公表し、30日に対象バージョンを更新した。macOSとWindows向けClaude Codeの2.1.312、2.1.313の両方が確認対象である。これはソフトウェア配布経路の事件であり、Claudeモデル自体への侵入を示すものではない。拡張にAnthropicの名前が表示されても、悪意ある改変を同社が作ったことにはならない。",
+          "sections": [
+            {
+              "heading": "配布元と時間を合わせて判断する",
+              "paragraphs": [
+                "Cursorが示す配布期間は10月29日太平洋時間の約02:27～13:35、約11時間だ。対象かどうかは市場、OS、バージョン、導入時刻を合わせて判断する必要がある。Claude Codeが入っているだけでは十分ではない。初期報道は2.1.313のみだったが、現行の公式公告とPhorionの更新は2.1.312も挙げている。",
+                "Cursorは悪意ある版をAnthropicが開発したわけではなく、他の拡張や公式配布に影響する証拠は見つかっていないと説明した。これは同社の調査結果として読むべきで、すべての経路の安全が独立に証明されたという意味ではない。改ざんしたパッケージが市場に入った経緯は、公開資料ではまだ全容が明らかになっていない。"
+              ]
+            },
+            {
+              "heading": "拡張の削除だけでは終わらない理由",
+              "paragraphs": [
+                "Phorionの検体分析によると、悪意ある処理は拡張を読み込むだけで動き、助手への追加の操作指示は不要だった。端末と利用者に関する情報を送信し、無許可の遠隔ログイン経路を作ろうとし、その後も動くバックグラウンドの仕組みを残す。本来の画面が動いてもパッケージが正常とは限らない。",
+                "CursorとPhorionは、権限の不足や悪意あるプログラムの不具合により、多くの通常のmacOS・Windows環境では遠隔ログインの有効化に失敗すると説明している。一部の攻撃効果は制限されるが、情報送信や不正な認証設定、残存処理まで否定するものではない。一段階の失敗を事件全体の無害性と取り違えてはいけない。"
+              ]
+            },
+            {
+              "heading": "市場の復旧と端末の復旧は別の作業",
+              "paragraphs": [
+                "Cursorは該当パッケージを削除し、いったん市場全体を止めて監査したうえで、アクセス用の鍵を交換し、再構築して再開したと述べた。またホスティング事業者と攻撃側サーバーを停止した。既知の配布・接続経路を断つ処置だが、既に端末に残ったものを取り除くわけではない。",
+                "公式公告は、実行や侵入口の痕跡がある端末を隔離し、残存物を調べて除去し、再構築の要否を判断したうえで、信頼できる環境から露出した可能性のある認証情報やセッションを更新するよう求めている。詳細は更新される公告を参照したい。本站の防御上の解釈は、拡張の名前と配布元を同時に確認し、市場の再開と利用端末の回復を分けて考えることだ。攻撃の侵入口が確定したという主張ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站による説明図：配布停止と端末復旧の関係。全導入環境で遠隔操作が成功したことを示さない。",
+            "steps": [
+              "市場・OS・版・時間を照合",
+              "配布停止と経路の監査",
+              "端末での実行と残存物を調査",
+              "隔離・除去と認証情報の回復を評価"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Cursor сообщила об инциденте в магазине расширений 29 октября, а 30 октября уточнила версии: проверке подлежат пакеты Claude Code 2.1.312 и 2.1.313 для macOS и Windows. Речь идёт о распространении программного обеспечения, а не о доказанном взломе модели Claude. Имя Anthropic на расширении также не означает, что компания создала вредоносные изменения.",
+          "sections": [
+            {
+              "heading": "Важны источник, платформа и время установки",
+              "paragraphs": [
+                "Cursor указывает окно распространения примерно с 02:27 до 13:35 по тихоокеанскому времени 29 октября — около одиннадцати часов. Оценивать установку следует по магазину, платформе, версии и времени вместе. Одного наличия Claude Code недостаточно. Ранние публикации называли лишь 2.1.313, но действующее предупреждение и обновление Phorion включают 2.1.312.",
+                "По заявлению Cursor, вредоносные версии не были разработаны Anthropic, а расследование не выявило признаков воздействия на другие расширения или официальное распространение. Это вывод компании, а не независимое доказательство безопасности всех каналов. Публичные материалы пока не объясняют полностью, как изменённые пакеты попали в магазин."
+              ]
+            },
+            {
+              "heading": "Почему удаление расширения может не решить всё",
+              "paragraphs": [
+                "Анализ образца Phorion показывает, что вредоносная логика выполняется при загрузке расширения, без дополнительной команды помощнику. Она отправляет сведения об устройстве и пользователе, пытается организовать неразрешённый удалённый вход и оставить фоновые механизмы для дальнейшей работы. Обычный интерфейс расширения при этом может функционировать, поэтому привычное поведение не доказывает целостность пакета.",
+                "Cursor и Phorion описывают ограничения прав и ошибки вредоносной программы, из-за которых включение удалённого входа не срабатывает на многих обычных установках macOS и Windows. Это ограничивает часть последствий, но не исключает отправку информации, оставленные настройки доступа или фоновые механизмы. Неудача одного этапа не делает весь инцидент безвредным."
+              ]
+            },
+            {
+              "heading": "Восстановление магазина не очищает устройства",
+              "paragraphs": [
+                "Cursor заявляет, что удалила пакеты, временно остановила магазин для аудита, сменила ключи доступа, перестроила и вновь открыла сервис. Вместе с провайдером хостинга она отключила сервер атакующих. Это пресекает известные каналы распространения и связи, но не удаляет уже оставленные на устройствах компоненты.",
+                "Официальное предупреждение рекомендует изолировать устройства со следами исполнения или бэкдора, исследовать и удалить закрепление, оценить необходимость пересоздания среды и менять потенциально доступные учётные данные и сеансы из доверенной среды. Подробности следует сверять с обновляемым бюллетенем. Наша защитная интерпретация: проверять нужно и идентичность пакета, и источник распространения, а восстановление магазина отделять от восстановления устройств. Это не утверждение, что первоначальный путь проникновения уже установлен."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема: остановка распространения и восстановление устройств; не утверждение об успешном захвате каждой установки.",
+            "steps": [
+              "Сверить магазин, платформу, версию и время",
+              "Удалить пакеты и проверить канал распространения",
+              "Исследовать исполнение и закрепление на устройствах",
+              "Изолировать, очистить и оценить восстановление доступа"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Cursor 在 10 月 29 日披露擴充套件市場安全事件，隨後於 30 日更新受影響版本：macOS 和 Windows 的 Claude Code 擴充套件包 2.1.312、2.1.313 都被列入排查範圍。事件發生在外掛分發環節，不能把它寫成 Claude 模型本身遭到入侵，也不能僅憑擴充套件顯示 Anthropic 名稱就認為惡意改動出自 Anthropic。",
+          "sections": [
+            {
+              "heading": "哪些安裝屬於已確認範圍",
+              "paragraphs": [
+                "Cursor 給出的分發視窗是 10 月 29 日太平洋時間約 02:27—13:35，約 11 小時。受影響範圍須同時結合來源市場、平臺、版本和安裝時間判斷；只看到電腦裡裝有 Claude Code，並不足以認定受影響。較早報道只提到 2.1.313，最新官方公告和 Phorion 的更新已補充 2.1.312。",
+                "Cursor 稱惡意版本並非 Anthropic 開發，調查未發現其他擴充套件或官方分發渠道受同樣影響。這個結論應保留調查歸因，不能擴大成所有軟體渠道均已獨立證明安全。攻擊者如何把修改後的包放入市場，公開材料尚未給出完整答案。"
+              ]
+            },
+            {
+              "heading": "為什麼解除安裝外掛可能不夠",
+              "paragraphs": [
+                "Phorion 對樣本的分析表明，惡意邏輯在擴充套件被載入時便執行，不需要使用者再向助手發出指令。它會報告裝置與使用者相關資訊，嘗試加入未經授權的遠端登入能力，並建立可在之後繼續執行的後臺機制。外掛原有介面仍可能正常，因此正常使用體驗不能證明安裝包可信。",
+                "Cursor 和 Phorion 都指出，權限不足與惡意程式自身錯誤，會使不少普通 macOS、Windows 環境中的遠端登入啟用步驟失敗。這限制了部分攻擊效果，卻不意味著資訊沒有外傳、異常授權沒有留下，或後臺機制不會繼續存在。不能把“某一步失敗”概括成“整起事件無害”。"
+              ]
+            },
+            {
+              "heading": "平臺已採取措施，受影響環境仍需處理",
+              "paragraphs": [
+                "Cursor 表示已移除惡意包，曾暫時關閉整個擴充套件市場進行審計，輪換訪問金鑰、重建後恢復服務，並協調託管商下線攻擊伺服器。這些措施能阻斷已知分發和連線通道，但不能替使用者清除已經落在裝置上的殘留。",
+                "官方建議對有執行或後門跡象的裝置進行隔離，檢查並清理殘留，評估是否重建，再從可信環境輪換可能暴露的憑據和會話。具體核查以其持續更新的安全公告為準。本站據此認為，本次事件的關鍵教訓是同時核對外掛身分與分發來源，並把市場恢復和終端恢復分開看；這屬於防禦上的解釋，不是對攻擊入口已查明的宣稱。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪：分發處置與終端恢復是兩條相關工作線，不表示所有安裝都已被遠端控制。",
+            "steps": [
+              "核對市場、平臺、版本與時間",
+              "平臺下架並審計分發渠道",
+              "排查已安裝環境的執行與殘留",
+              "隔離清理並評估憑據和環境恢復"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "siteguard-statistics-exploitation",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "EG Secure Solutions · October 14 security advisory",
+          "url": "https://www.eg-secure.co.jp/siteguard/news/alert-202610-1"
+        },
+        {
+          "label": "JVN · vulnerability scope and assessment",
+          "url": "https://jvn.jp/en/jp/JVN88474777/index.html"
+        },
+        {
+          "label": "JPCERT/CC · exploitation warning and response",
+          "url": "https://www.jpcert.or.jp/at/2026/at260032.html"
+        },
+        {
+          "label": "BleepingComputer · October 18 independent report",
+          "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "用来保护网站的防火墙，本身也需要修补。10 月 18 日的报道指出，SiteGuard Server Edition 的统计功能存在命令注入漏洞，且已出现实际利用。厂商与 JPCERT/CC 早在 10 月 14 日公开告警。此次事件的重点不仅是安装修复，还包括在更新前保存诊断资料，避免清掉调查入侵所需的线索。",
+          "sections": [
+            {
+              "heading": "确认利用，并不等于所有网站都已受害",
+              "paragraphs": [
+                "漏洞编号为 CVE-2026-106931，出现在默认启用的统计功能中。正常情况下，这项功能汇总防护活动；漏洞则可能让不应作为系统操作执行的输入被当作命令处理，并以 SYSTEM 或 root 等高权限运行。厂商确认存在利用事件，但没有公开受害数量、攻击者身份或完整攻击链。因此，产品覆盖的网站数不能直接当作本次事件的受害规模。",
+                "官方评估同时包含访问前提：CVSS 4.0 为 8.5 分，其向量标注本地攻击条件与低权限要求；CVSS 3.0 为 7.8 分。这里的“高权限命令执行”描述成功利用后的后果，不意味着任意未登录的互联网访客都能直接取得服务器控制权。仅凭新闻标题不能省略这些限制，也不能推断它已成为所有安装实例的远程入口。"
+              ]
+            },
+            {
+              "heading": "版本、平台和功能状态共同决定排查范围",
+              "paragraphs": [
+                "公告将受影响范围起点列为 2.20。非 FreeBSD 的 Apache、Nginx 和 IIS 版本需要对照 8.00 Update 5 这一修复界线；FreeBSD 的 Apache、Nginx 则对照 7.00 Update 6。官方另明确排除了 IIS 3.10 至 4.00 Update 4。可见，只判断“使用 SiteGuard”或只看主版本号，都不足以确定一台服务器是否受影响。",
+                "管理员还要确认统计功能是否启用，并结合平台、完整版本与官方例外判断。厂商提供更新和修补文件，也为部分已结束支持的版本准备了对应措施。JPCERT/CC 提到，暂时关闭统计功能可作为安排修复时的缓解办法。它是减少暴露的临时选择，不等于产品已更新，更不能证明此前没有发生入侵。"
+              ]
+            },
+            {
+              "heading": "先保留证据，再修补与调查",
+              "paragraphs": [
+                "厂商特别要求在应用修补前取得并保存诊断信息，因为修补过程可能删除有助于识别攻击的痕迹。直接支持合同客户在 9 月 29 日已收到通知；公开告警与后续报道则让更广泛的维护者获知风险。保存资料有助于判断是否发生过入侵及其影响。",
+                "修复解决的是漏洞本身，受影响系统是否曾被控制是另一个问题。若已有异常，应把更新与入侵调查分开核验：检查可用证据、评估高权限访问可能造成的影响，再确认服务恢复。现有公开资料足以说明漏洞真实、已有利用且修复可用，但不足以量化攻击规模或保证每个修补后的环境都已清理干净。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据官方告警重绘的处置顺序示意；不包含攻击载荷，也不是受害规模统计。",
+            "steps": [
+              "核对平台、版本和统计功能",
+              "更新前保存诊断资料",
+              "应用修复或临时缓解",
+              "结合证据调查既往入侵"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A firewall that protects websites still needs protection of its own. Reporting on October 18 described active exploitation of a command-injection flaw in the statistics feature of SiteGuard Server Edition. The vendor and JPCERT/CC had published warnings on October 14. The response involves more than installing a fix: diagnostic information should be preserved first, because remediation can remove evidence needed to investigate an intrusion.",
+          "sections": [
+            {
+              "heading": "Confirmed exploitation does not establish a victim count",
+              "paragraphs": [
+                "CVE-2026-106931 concerns the statistics feature, which is enabled by default. Instead of merely summarizing protection activity, vulnerable processing can cause input to be interpreted as operating-system commands with privileges such as SYSTEM or root. The vendor confirmed exploitation but did not publish a victim count, attacker identity or complete attack chain. Product adoption figures are therefore not a measure of this incident’s impact.",
+                "The official severity assessment includes prerequisites. Its CVSS 4.0 score is 8.5, with a vector specifying local attack conditions and low privileges; the CVSS 3.0 score is 7.8. High-privilege command execution describes the consequence of successful exploitation. It does not mean that any unauthenticated internet visitor can directly take over a server. Those constraints should remain visible even when a headline emphasizes the possible privilege level."
+              ]
+            },
+            {
+              "heading": "Platform, full version and configuration matter together",
+              "paragraphs": [
+                "The advisory starts the affected range at version 2.20. For non-FreeBSD Apache, Nginx and IIS editions, the relevant fixed-release boundary is 8.00 Update 5; for FreeBSD Apache and Nginx editions, it is 7.00 Update 6. The vendor specifically excludes IIS versions 3.10 through 4.00 Update 4. Merely knowing that a server uses SiteGuard, or knowing its major version, is insufficient to establish exposure.",
+                "Administrators also need to establish whether statistics is enabled and apply the documented platform and version exceptions. The vendor supplies updates or patch files, including measures for some releases past normal support. JPCERT/CC identifies disabling statistics as a possible temporary workaround while remediation is arranged. That reduces exposure; it does not turn an old release into a fixed one or establish that no earlier compromise occurred."
+              ]
+            },
+            {
+              "heading": "Preserve evidence before repairing and investigating",
+              "paragraphs": [
+                "The vendor specifically asks operators to obtain and retain diagnostic information before applying the patch, because remediation may remove traces useful for detecting attacks. Direct-support customers had been notified on September 29, ahead of the public warning and later reporting. Preserving evidence helps establish whether an intrusion occurred and what it affected.",
+                "Closing the vulnerability and determining whether a system was already controlled are separate questions. Where suspicious activity exists, operators need to assess available evidence and the consequences of privileged access alongside the update. Public evidence establishes a real vulnerability, observed exploitation and available remediation. It does not quantify the campaign or guarantee that every patched environment has also been fully cleaned."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory response diagram based on official advisories; it contains no attack payload and does not depict victim numbers.",
+            "steps": [
+              "Check platform, version and statistics",
+              "Preserve diagnostic evidence first",
+              "Apply remediation or temporary mitigation",
+              "Investigate earlier access using evidence"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ウェブサイトを守るファイアウォールにも、脆弱性への対処は必要だ。10 月 18 日の報道は、SiteGuard Server Edition の統計機能にあるコマンドインジェクションの悪用を伝えた。開発元と JPCERT/CC は 10 月 14 日に警告を公開している。今回は更新するだけでなく、調査に必要な痕跡を失わないよう、修正前に診断情報を保存することも重要になる。",
+          "sections": [
+            {
+              "heading": "悪用の確認と被害規模は別の話",
+              "paragraphs": [
+                "CVE-2026-106931 は、標準で有効な統計機能に関する問題である。本来は防御の状況を集計する機能だが、入力が OS のコマンドとして処理され、SYSTEM や root などの高い権限で実行される可能性がある。開発元は悪用を確認したものの、被害件数、攻撃者、攻撃経路の全体は公表していない。製品の導入規模を、そのまま今回の被害数と見なすことはできない。",
+                "公式評価には攻撃の前提もある。CVSS 4.0 は 8.5 点で、評価ベクトルにはローカルの攻撃条件と低い権限の必要性が記載されている。CVSS 3.0 は 7.8 点である。高権限での実行とは悪用に成功した場合の結果であり、認証されていない一般の閲覧者がインターネット経由で直ちにサーバーを支配できる、という意味ではない。"
+              ]
+            },
+            {
+              "heading": "OS と完全な版番号、設定を確認する",
+              "paragraphs": [
+                "告知が示す影響範囲の起点は 2.20 である。FreeBSD 以外の Apache、Nginx、IIS 版では 8.00 Update 5、FreeBSD の Apache、Nginx 版では 7.00 Update 6 が修正版の境界となる。一方、IIS の 3.10 から 4.00 Update 4 までは例外として除外されている。製品名やメジャーバージョンだけでは、個々の環境への影響は確定できない。",
+                "管理者は統計機能の有効状態も確認し、プラットフォーム、詳細な版番号、公式の例外を合わせて判断する必要がある。開発元は更新版や修正ファイルを提供し、一部のサポート終了版にも対応策を用意した。JPCERT/CC は、修正までの間に統計機能を無効にする回避策も案内している。ただしこれは一時的な緩和策であり、更新の完了や過去の侵入がなかったことを証明するものではない。"
+              ]
+            },
+            {
+              "heading": "証拠を残してから修正し、侵入の有無を調べる",
+              "paragraphs": [
+                "開発元は、修正処理によって攻撃の痕跡が消える場合があるため、先に診断情報を取得して保存するよう求めている。直接サポート契約の利用者には 9 月 29 日に通知済みで、その後の公開告知と報道でより広く注意が促された。証拠の保存は、侵入の有無とその影響を調べるために役立つ。",
+                "脆弱性を塞ぐことと、すでに侵害されていないかを確かめることは別の作業になる。異常がある場合は、残された証拠と高権限アクセスの影響を、更新と並行して評価する必要がある。公開情報から確認できるのは、脆弱性が存在し悪用が観測され、修正手段があることまでだ。攻撃全体の規模や、更新後のすべての環境が完全に復旧したことまでは示されていない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式告知をもとに本サイトが描き直した対応手順。攻撃コードや被害件数を表す図ではない。",
+            "steps": [
+              "環境・版番号・統計機能を確認",
+              "修正前に診断情報を保存",
+              "修正または一時的な緩和を適用",
+              "証拠から過去の侵入を調査"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Межсетевой экран, защищающий сайт, тоже нуждается в исправлениях. В публикации от 18 октября сообщалось об эксплуатации уязвимости выполнения команд в функции статистики SiteGuard Server Edition. Разработчик и JPCERT/CC выпустили предупреждения 14 октября. Важная часть реакции — сохранить диагностические данные до исправления: установка патча может убрать следы, необходимые для расследования.",
+          "sections": [
+            {
+              "heading": "Подтверждённая эксплуатация ещё не означает известный масштаб",
+              "paragraphs": [
+                "CVE-2026-106931 затрагивает функцию статистики, включённую по умолчанию. Вместо обработки данных только как сведений о защите уязвимый компонент может интерпретировать ввод как команды операционной системы и выполнить их с правами SYSTEM или root. Разработчик подтвердил эксплуатацию, но не раскрыл число жертв, личность атакующих и полную цепочку атаки. Число пользователей продукта нельзя выдавать за число пострадавших.",
+                "Официальная оценка учитывает условия атаки. Оценка CVSS 4.0 составляет 8,5, а её вектор указывает локальные условия атаки и необходимость низких привилегий; CVSS 3.0 — 7,8. Выполнение с высокими правами описывает последствие успешной эксплуатации, а не возможность для любого неавторизованного посетителя интернета немедленно захватить сервер. Эти ограничения нельзя терять при пересказе заголовка."
+              ]
+            },
+            {
+              "heading": "Нужны платформа, полный номер версии и состояние функции",
+              "paragraphs": [
+                "Начало затронутого диапазона в предупреждении — версия 2.20. Для Apache, Nginx и IIS вне FreeBSD границей исправления служит 8.00 Update 5; для Apache и Nginx на FreeBSD — 7.00 Update 6. Отдельно исключены версии IIS от 3.10 до 4.00 Update 4 включительно. Одного названия SiteGuard или номера основной версии недостаточно, чтобы определить риск конкретного сервера.",
+                "Необходимо также проверить, включена ли статистика, и учесть официальные исключения для платформ и версий. Разработчик предоставляет обновления или файлы исправлений, включая меры для некоторых выпусков с завершённой поддержкой. JPCERT/CC указывает отключение статистики как временный обходной путь на период подготовки исправления. Это снижает воздействие, но не равнозначно обновлению и не доказывает отсутствие прежнего проникновения."
+              ]
+            },
+            {
+              "heading": "Сначала сохранить свидетельства, затем исправлять и расследовать",
+              "paragraphs": [
+                "Разработчик просит получить и сохранить диагностическую информацию перед установкой патча: исправление способно удалить полезные следы эксплуатации. Клиентов с прямой поддержкой уведомили 29 сентября, до публичного предупреждения и последующих сообщений прессы. Сохранение данных помогает установить, произошло ли проникновение и что оно затронуло.",
+                "Устранить уязвимость и установить, был ли сервер уже захвачен, — разные задачи. При подозрительной активности требуется оценить имеющиеся свидетельства и последствия доступа с высокими правами наряду с обновлением. Публичные данные подтверждают наличие уязвимости, факты эксплуатации и доступность исправлений. Они не позволяют определить масштаб кампании или гарантировать полную очистку каждой обновлённой системы."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по официальным предупреждениям; без атакующего кода и без изображения числа жертв.",
+            "steps": [
+              "Проверить платформу, версию и статистику",
+              "Сначала сохранить диагностические данные",
+              "Установить исправление или временную защиту",
+              "Расследовать прежний доступ по свидетельствам"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "用來保護網站的防火牆，本身也需要修補。10 月 18 日的報道指出，SiteGuard Server Edition 的統計功能存在命令注入漏洞，且已出現實際利用。廠商與 JPCERT/CC 早在 10 月 14 日公開告警。此次事件的重點不僅是安裝修復，還包括在更新前儲存診斷資料，避免清掉調查入侵所需的線索。",
+          "sections": [
+            {
+              "heading": "確認利用，並不等於所有網站都已受害",
+              "paragraphs": [
+                "漏洞編號為 CVE-2026-106931，出現在預設啟用的統計功能中。正常情況下，這項功能彙總防護活動；漏洞則可能讓不應作為系統操作執行的輸入被當作命令處理，並以 SYSTEM 或 root 等高許可權執行。廠商確認存在利用事件，但沒有公開受害數量、攻擊者身份或完整攻擊鏈。因此，產品覆蓋的網站數不能直接當作本次事件的受害規模。",
+                "官方評估同時包含訪問前提：CVSS 4.0 為 8.5 分，其向量標註本地攻擊條件與低許可權要求；CVSS 3.0 為 7.8 分。這裡的“高許可權命令執行”描述成功利用後的後果，不意味著任意未登入的網際網路訪客都能直接取得伺服器控制權。僅憑新聞標題不能省略這些限制，也不能推斷它已成為所有安裝例項的遠端入口。"
+              ]
+            },
+            {
+              "heading": "版本、平臺和功能狀態共同決定排查範圍",
+              "paragraphs": [
+                "公告將受影響範圍起點列為 2.20。非 FreeBSD 的 Apache、Nginx 和 IIS 版本需要對照 8.00 Update 5 這一修復界線；FreeBSD 的 Apache、Nginx 則對照 7.00 Update 6。官方另明確排除了 IIS 3.10 至 4.00 Update 4。可見，只判斷“使用 SiteGuard”或只看主版本號，都不足以確定一臺伺服器是否受影響。",
+                "管理員還要確認統計功能是否啟用，並結合平臺、完整版本與官方例外判斷。廠商提供更新和修補檔案，也為部分已結束支援的版本準備了對應措施。JPCERT/CC 提到，暫時關閉統計功能可作為安排修復時的緩解辦法。它是減少暴露的臨時選擇，不等於產品已更新，更不能證明此前沒有發生入侵。"
+              ]
+            },
+            {
+              "heading": "先保留證據，再修補與調查",
+              "paragraphs": [
+                "廠商特別要求在應用修補前取得並儲存診斷資訊，因為修補過程可能刪除有助於識別攻擊的痕跡。直接支援合同客戶在 9 月 29 日已收到通知；公開告警與後續報道則讓更廣泛的維護者獲知風險。保存資料有助於判斷是否發生過入侵及其影響。",
+                "修復解決的是漏洞本身，受影響系統是否曾被控制是另一個問題。若已有異常，應把更新與入侵調查分開核驗：檢查可用證據、評估高許可權訪問可能造成的影響，再確認服務恢復。現有公開資料足以說明漏洞真實、已有利用且修復可用，但不足以量化攻擊規模或保證每個修補後的環境都已清理乾淨。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據官方告警重繪的處置順序示意；不包含攻擊載荷，也不是受害規模統計。",
+            "steps": [
+              "核對平臺、版本和統計功能",
+              "更新前儲存診斷資料",
+              "應用修復或臨時緩解",
+              "結合證據調查既往入侵"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "opencode-console-provider-key-breach",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "OpenCode · October 17 incident statement",
+          "url": "https://x.com/opencode/status/2111519637049319818"
+        },
+        {
+          "label": "Notebookcheck · October 17 report and initial notification",
+          "url": "https://www.notebookcheck.net/OpenCode-hacked-users-urged-to-revoke-their-API-keys.1426957.0.html"
+        },
+        {
+          "label": "BleepingComputer · October 19 report and follow-up customer notice",
+          "url": "https://www.bleepingcomputer.com/news/security/opencode-hack-exposes-api-keys-amid-ai-distillation-attacks/"
+        },
+        {
+          "label": "OpenCode · Console overview",
+          "url": "https://opencode.ai/v2/docs/console/"
+        },
+        {
+          "label": "OpenCode · provider credential model",
+          "url": "https://opencode.ai/v2/docs/console/providers/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把模型服务商的 API 密钥交给一个托管工具，意味着这个工具也进入了凭据的信任范围。OpenCode 在 10 月 17 日披露 Console 安全事件，称部分用户保存在旧系统中的第三方服务商密钥可能泄露。事件涉及托管 Console 的特定用户，不应扩大为所有安装 OpenCode 的本地用户都遭到入侵。",
+          "sections": [
+            {
+              "heading": "1.4% 指向哪一群用户",
+              "paragraphs": [
+                "OpenCode 的公开声明称，受影响者占 Console 用户的 1.4%，属于关联外部模型服务商的一个子集，并表示已向他们发送邮件。Notebookcheck 当日报道把原因描述为对一个正在退役的旧系统的未授权访问。这个比例的分母不是全部开发者、全部 OpenCode 安装量，也不是全部第三方密钥；现有资料没有给出可据此计算的总人数或损失规模。",
+                "10 月 19 日，BleepingComputer 展示了进一步的客户通知：厂商把最早可能暴露时间列为 10 月 17 日 00:30 UTC，并表示无法确认通知中涉及的密钥是否已被未经授权使用。公司将事件与“大规模蒸馏攻击”联系起来，这是其对动机的判断，公开报道没有提供足以独立复现完整攻击链的证据。初始调查中“未发现其他数据暴露”的说法也应保留时间和归因，不能改写为已证明没有其他影响。"
+              ]
+            },
+            {
+              "heading": "泄露的是调用权限，而不只是登录信息",
+              "paragraphs": [
+                "API 密钥让持有者可以向相应模型服务发起请求，并在密钥允许的权限与额度内消耗资源。OpenCode 当前的官方 Console 文档解释，用户可以在托管工作区中保存服务商凭据，由网关转发请求，工作区成员不必直接看到底层密钥。文档有助于理解这种信任关系，但当前版本的说明不是证明旧系统具体漏洞的取证报告。",
+                "这也解释了为何处置要同时关注工具和服务商：只从一个界面移除或停用配置，并不能据此证明已经泄露的密钥在签发方失效。若攻击者持有的凭据仍有效，风险并不会因为本地工具已关闭而自动消失。这是凭据生命周期带来的直接后果，不是对本次攻击手法的额外推断；具体入口及控制失效环节仍以进一步调查为准。"
+              ]
+            },
+            {
+              "heading": "撤销、替换与核账是不同的步骤",
+              "paragraphs": [
+                "后续通知要求受影响用户到相应服务商撤销并替换密钥，再更新依赖这些密钥的应用，同时检查近期调用和账单。撤销旧密钥是取消原有权限，替换是恢复正常使用，核对调用则是判断是否存在异常消耗。如果此前已经撤销通知涉及的密钥，不需要仅因为再次收到说明而把同一把失效密钥重新处理。",
+                "报道还称 OpenCode 正与 OpenAI、Anthropic 和 Google 沟通可能的异常费用处理。这不能写成已承诺对所有用户退款。个别用户在网上报告的账单金额，也不是经过核验的整体损失。厂商通知的范围、凭据可能造成的后果与已经确认的滥用证据，是三个不同层面；仅凭“可能暴露”既不能断言每个账户被盗刷，也不能让受影响者忽略密钥轮换。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据事件通知与官方凭据说明重绘的响应流程；不展示真实密钥，也不还原攻击方法。",
+            "steps": [
+              "确认是否属于通知范围",
+              "在签发方撤销并替换密钥",
+              "更新依赖该凭据的应用",
+              "核对调用记录与费用"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Giving a hosted tool an API key also places that tool inside the credential’s trust boundary. On October 17, OpenCode disclosed a Console incident in which third-party provider keys stored in a legacy system may have been exposed. The reported scope concerns a subset of hosted Console users. It does not establish that everyone running OpenCode locally was compromised.",
+          "sections": [
+            {
+              "heading": "Who is included in the reported 1.4%",
+              "paragraphs": [
+                "OpenCode’s public statement put the affected group at 1.4% of Console users, specifically a subset connected to external providers, and said it had emailed them. Notebookcheck’s initial report described unauthorized access to a legacy system being decommissioned. The denominator is not all developers, all OpenCode installations or all provider keys. Public information does not supply the totals needed to calculate a victim count or aggregate financial loss.",
+                "On October 19, BleepingComputer reproduced a follow-up customer notice identifying October 17 at 00:30 UTC as the earliest possible exposure. The notice said the company could not confirm whether the listed keys had been used without authorization. OpenCode connected the incident to a large-scale distillation attack; that is the company’s account of motive, not an independently reconstructed attack chain. Its early statement that no other data appeared exposed is likewise a time-specific assessment, not proof that every possible consequence was excluded."
+              ]
+            },
+            {
+              "heading": "An API key conveys usable permissions",
+              "paragraphs": [
+                "An API key can authorize requests to a model provider and consume resources within its permissions and limits. OpenCode’s current Console documentation explains that hosted workspaces can store provider credentials and route requests through a gateway, so members need not see the underlying key. This clarifies the trust relationship. Current documentation is not a forensic description of the particular defect in the legacy system.",
+                "That distinction explains why both the tool and the issuing provider matter to the response. Removing or disabling a configuration in one interface does not, by itself, establish that an exposed key has become invalid at its issuer. If the credential remains valid, closing a local application does not automatically remove the risk. This follows from the credential’s lifecycle; it does not identify the still-undisclosed intrusion route or failed control in this incident."
+              ]
+            },
+            {
+              "heading": "Revocation, replacement and billing review solve different problems",
+              "paragraphs": [
+                "The follow-up notice instructed affected users to revoke and replace keys at the relevant providers, update applications using those keys, and inspect recent usage and billing. Revocation withdraws the old permission, replacement restores legitimate access, and usage review checks for abnormal consumption. A key already revoked in response to the incident does not need to be revoked again merely because a further notice arrives.",
+                "Reporting also described discussions with OpenAI, Anthropic and Google about potentially fraudulent charges. It did not establish a universal refund commitment. Individual amounts reported online are not a verified total loss. The notified population, what exposed credentials could permit, and evidence of actual misuse are distinct: possible exposure neither proves unauthorized spending on every account nor removes the need for affected users to rotate credentials."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original response diagram based on incident notices and official credential documentation; no real keys or attack procedure are shown.",
+            "steps": [
+              "Confirm whether the notice applies",
+              "Revoke and replace keys at the issuer",
+              "Update applications using the credential",
+              "Review usage and charges"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "モデル提供元の API キーをホスト型ツールに預けると、そのツールも認証情報を守る信頼の範囲に入る。OpenCode は 10 月 17 日、旧システムに保存された外部サービスのキーが流出した可能性のある Console の事件を公表した。対象はホスト型 Console の一部利用者であり、ローカルで OpenCode を使う全員の侵害が確認されたわけではない。",
+          "sections": [
+            {
+              "heading": "1.4% の分母を取り違えない",
+              "paragraphs": [
+                "OpenCode の公式声明は、影響を受けたのは Console 利用者の 1.4% で、外部提供元に接続していた利用者の一部だと説明し、メールで通知したとしている。Notebookcheck の当日の報道は、廃止作業中の旧システムへの不正アクセスと伝えた。この割合は開発者全体、OpenCode の全インストール、第三者のキー全体を指さない。被害人数や損失総額を算出できる母数も公表されていない。",
+                "10 月 19 日に BleepingComputer が掲載した追加通知では、最も早い流出可能時刻は 10 月 17 日 00:30 UTC とされた。一方、通知されたキーが不正利用されたかは確認できないと説明している。OpenCode は大規模な蒸留攻撃との関連を述べたが、これは動機についての会社側の説明であり、攻撃経路全体が独立に検証されたという意味ではない。当初の「ほかのデータの流出は見当たらない」という説明も、その時点の見解として扱う必要がある。"
+              ]
+            },
+            {
+              "heading": "キーの流出は、呼び出す権限の流出でもある",
+              "paragraphs": [
+                "API キーを持つ者は、許可された権限と上限の範囲でモデル提供元にリクエストし、リソースを消費できる。OpenCode の現行 Console 文書では、ホスト型ワークスペースに提供元の認証情報を保存し、ゲートウェイを通じてリクエストを転送する仕組みが説明されている。メンバーが元のキーを直接見る必要はない。この説明は信頼関係の理解に役立つが、旧システムの欠陥を特定する調査報告ではない。",
+                "そのため、対処ではツール側とキーの発行元の双方を考える必要がある。ある画面で設定を削除、無効化しただけでは、流出したキーが発行元でも失効したと証明できない。キーが有効なら、ローカルのアプリを閉じてもリスクは自動的にはなくならない。これは認証情報の有効期間から説明できることであり、今回の侵入口や機能不全の原因を推測して追加したものではない。"
+              ]
+            },
+            {
+              "heading": "失効、交換、利用確認を分けて進める",
+              "paragraphs": [
+                "追加通知は、該当利用者に提供元でキーを失効・交換し、そのキーを使うアプリを更新して、直近の利用と請求を確認するよう求めた。失効は旧権限を止め、交換は正規の利用を再開し、利用履歴の確認は異常な消費の有無を調べるためである。事件を受けてすでに対象キーを失効させた場合、追加通知だけを理由に同じ無効なキーを再処理する必要はない。",
+                "報道では OpenAI、Anthropic、Google と不正な請求の扱いについて協議しているとも説明された。ただし、全利用者への返金保証が成立したとは書けない。ネット上の個人の請求額も、検証された被害総額ではない。通知された対象範囲、キー流出が可能にすること、実際に確認された不正利用を区別する必要がある。流出の可能性は全アカウントの不正請求を証明せず、該当者のキー交換を不要にするものでもない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "事件通知と公式文書をもとに本サイトが描き直した対応図。実際のキーや攻撃方法は示していない。",
+            "steps": [
+              "通知の対象かを確認",
+              "発行元でキーを失効・交換",
+              "認証情報を使うアプリを更新",
+              "利用履歴と請求を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Передавая API-ключ облачному инструменту, пользователь включает этот инструмент в границу доверия к своим учётным данным. 17 октября OpenCode сообщил об инциденте Console: ключи сторонних провайдеров в устаревшей системе могли стать доступны посторонним. Заявленный охват относится к части пользователей облачной Console, а не ко всем, кто запускает OpenCode локально.",
+          "sections": [
+            {
+              "heading": "К какой группе относятся заявленные 1,4%",
+              "paragraphs": [
+                "В официальном сообщении OpenCode указал 1,4% пользователей Console: подмножество тех, кто подключал внешних провайдеров. Компания сообщила, что отправила им письма. Первоначальная публикация Notebookcheck описала несанкционированный доступ к старой системе, выводившейся из эксплуатации. Знаменатель здесь — не все разработчики, установки OpenCode или сторонние ключи. Публичных данных недостаточно для вычисления числа пострадавших или совокупного финансового ущерба.",
+                "19 октября BleepingComputer воспроизвёл дополнительное уведомление клиентам. Самым ранним возможным временем раскрытия названо 17 октября, 00:30 UTC; компания не могла подтвердить, использовались ли указанные ключи без разрешения. OpenCode связал событие с масштабной атакой для дистилляции моделей. Это объяснение мотива со стороны компании, а не независимо восстановленная цепочка проникновения. Раннее заявление об отсутствии признаков раскрытия других данных также остаётся оценкой на конкретный момент, а не доказательством отсутствия любых иных последствий."
+              ]
+            },
+            {
+              "heading": "API-ключ даёт реальные полномочия",
+              "paragraphs": [
+                "Обладатель API-ключа может обращаться к провайдеру модели и расходовать ресурсы в пределах разрешений и лимитов ключа. Актуальная документация Console объясняет хранение учётных данных провайдера в облачной рабочей области и передачу запросов через шлюз: участникам не обязательно видеть сам ключ. Документация проясняет доверительные отношения, но не является экспертизой конкретной ошибки старой системы.",
+                "Поэтому реагирование касается и инструмента, и организации, выпустившей ключ. Удаление или отключение настройки в одном интерфейсе само по себе не доказывает, что раскрытый ключ перестал действовать у провайдера. Пока он действителен, закрытие локального приложения не устраняет риск автоматически. Это следствие жизненного цикла учётных данных, а не дополнительное утверждение о неизвестном пути проникновения или отказавшем механизме защиты."
+              ]
+            },
+            {
+              "heading": "Отзыв, замена и проверка расходов решают разные задачи",
+              "paragraphs": [
+                "Дополнительное уведомление предписывало затронутым пользователям отозвать и заменить ключи у соответствующих провайдеров, обновить использующие их приложения и проверить недавние обращения и счета. Отзыв прекращает старые полномочия, замена восстанавливает законную работу, а проверка истории выявляет необычное потребление. Уже отозванный из-за этого инцидента ключ не требуется отзывать повторно лишь потому, что пришло новое письмо.",
+                "Также сообщалось о переговорах с OpenAI, Anthropic и Google по поводу возможных неправомерных расходов. Это не подтверждение гарантированного возврата средств всем пользователям. Отдельные суммы из сообщений в интернете не являются проверенным общим ущербом. Важно разделять круг уведомлённых лиц, возможности раскрытых ключей и доказанную злоупотребляющую активность: возможное раскрытие не доказывает незаконные расходы на каждом аккаунте, но не отменяет необходимость замены ключей для затронутых пользователей."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по уведомлениям об инциденте и официальной документации; без настоящих ключей и способа атаки.",
+            "steps": [
+              "Проверить, относится ли уведомление к аккаунту",
+              "Отозвать и заменить ключи у провайдера",
+              "Обновить приложения с этими данными",
+              "Проверить обращения и расходы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把模型服務商的 API 金鑰交給一個託管工具，意味著這個工具也進入了憑據的信任範圍。OpenCode 在 10 月 17 日披露 Console 安全事件，稱部分使用者儲存在舊系統中的第三方服務商金鑰可能洩露。事件涉及託管 Console 的特定使用者，不應擴大為所有安裝 OpenCode 的本地使用者都遭到入侵。",
+          "sections": [
+            {
+              "heading": "1.4% 指向哪一群使用者",
+              "paragraphs": [
+                "OpenCode 的公開宣告稱，受影響者佔 Console 使用者的 1.4%，屬於關聯外部模型服務商的一個子集，並表示已向他們傳送郵件。Notebookcheck 當日報道把原因描述為對一個正在退役的舊系統的未授權訪問。這個比例的分母不是全部開發者、全部 OpenCode 安裝量，也不是全部第三方金鑰；現有資料沒有給出可據此計算的總人數或損失規模。",
+                "10 月 19 日，BleepingComputer 展示了進一步的客戶通知：廠商把最早可能暴露時間列為 10 月 17 日 00:30 UTC，並表示無法確認通知中涉及的金鑰是否已被未經授權使用。公司將事件與“大規模蒸餾攻擊”聯絡起來，這是其對動機的判斷，公開報道沒有提供足以獨立復現完整攻擊鏈的證據。初始調查中“未發現其他資料暴露”的說法也應保留時間和歸因，不能改寫為已證明沒有其他影響。"
+              ]
+            },
+            {
+              "heading": "洩露的是呼叫許可權，而不只是登入資訊",
+              "paragraphs": [
+                "API 金鑰讓持有者可以向相應模型服務發起請求，並在金鑰允許的許可權與額度內消耗資源。OpenCode 當前的官方 Console 文件解釋，使用者可以在託管工作區中儲存服務商憑據，由閘道器轉發請求，工作區成員不必直接看到底層金鑰。文件有助於理解這種信任關係，但當前版本的說明不是證明舊系統具體漏洞的取證報告。",
+                "這也解釋了為何處置要同時關注工具和服務商：只從一個介面移除或停用配置，並不能據此證明已經洩露的金鑰在簽發方失效。若攻擊者持有的憑據仍有效，風險並不會因為本地工具已關閉而自動消失。這是憑據生命週期帶來的直接後果，不是對本次攻擊手法的額外推斷；具體入口及控制失效環節仍以進一步調查為準。"
+              ]
+            },
+            {
+              "heading": "撤銷、替換與核賬是不同的步驟",
+              "paragraphs": [
+                "後續通知要求受影響使用者到相應服務商撤銷並替換金鑰，再更新依賴這些金鑰的應用，同時檢查近期呼叫和賬單。撤銷舊金鑰是取消原有許可權，替換是恢復正常使用，核對呼叫則是判斷是否存在異常消耗。如果此前已經撤銷通知涉及的金鑰，不需要僅因為再次收到說明而把同一把失效金鑰重新處理。",
+                "報道還稱 OpenCode 正與 OpenAI、Anthropic 和 Google 溝通可能的異常費用處理。這不能寫成已承諾對所有使用者退款。個別使用者在網上報告的賬單金額，也不是經過核驗的整體損失。廠商通知的範圍、憑據可能造成的後果與已經確認的濫用證據，是三個不同層面；僅憑“可能暴露”既不能斷言每個賬戶被盜刷，也不能讓受影響者忽略金鑰輪換。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據事件通知與官方憑據說明重繪的響應流程；不展示真實金鑰，也不還原攻擊方法。",
+            "steps": [
+              "確認是否屬於通知範圍",
+              "在簽發方撤銷並替換金鑰",
+              "更新依賴該憑據的應用",
+              "核對呼叫記錄與費用"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "github-license-compliance-ga",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "GitHub · October 16 general availability announcement",
+          "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/"
+        },
+        {
+          "label": "GitHub · June 30 public preview announcement",
+          "url": "https://github.blog/changelog/2026-06-30-open-source-license-compliance-is-in-public-preview/"
+        },
+        {
+          "label": "GitHub Docs · license-compliance checks and limitations",
+          "url": "https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance"
+        },
+        {
+          "label": "GitHub Docs · policy configuration and exceptions",
+          "url": "https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-license-policies"
+        },
+        {
+          "label": "CodeGangsta · October 19 independent report",
+          "url": "https://codegangsta.io/coding/github-open-source-license-compliance-ga/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "软件依赖有没有已知漏洞，与它的许可证是否符合项目要求，是两类不同的问题。GitHub 在 10 月 16 日宣布开源许可证合规检查正式可用，让企业把许可证策略放到代码合并之前检查。它适用于启用 Code Security 的 GitHub Enterprise Cloud 仓库，并支持数据驻留版本；不是面向所有仓库自动开启的普遍法律认证。",
+          "sections": [
+            {
+              "heading": "把许可要求放进依赖变更的流程",
+              "paragraphs": [
+                "一个项目引入开源包时，也引入了相应许可证的使用条件。等到发布前再人工整理依赖，容易把发现问题的时间推迟到替换成本较高的阶段。GitHub 的方案把企业策略与合并规则连接起来：当拉取请求新增或改变依赖时，系统比较变更前后的依赖信息，对不符合所配置许可证政策的项目给出标记。",
+                "判断依赖于 dependency graph 提供的包和许可证数据，其中可以包含已识别的传递依赖，即某个依赖进一步引入的包。管理员需要启用依赖图，并配置对应规则。这里的“可以检查传递依赖”不等于能识别任意构建方式下的所有软件组件；若依赖或许可证元数据不完整，检查的可见范围也会受限。"
+              ]
+            },
+            {
+              "heading": "正式可用相较预览增加了什么",
+              "paragraphs": [
+                "这项功能在 6 月 30 日已进入公开预览。企业策略和许可证管理角色当时就存在，不能都写成 10 月首次出现。正式可用公告列出的新增能力包括数据驻留环境的许可证信息与软件物料清单支持、策略相关审计事件，以及获取、更新和替换策略的接口。另有按包查询合规状态的接口，可供自动化系统在作出依赖选择前查询。",
+                "这些接口扩展了接入方式，但不代表所有编码 Agent 会自动使用检查结果，也不等于系统已经替组织决定了正确的许可证政策。策略由企业维护，审计记录帮助追踪策略改变。公告与文档说明的是功能的可用性与处理机制，并没有给出独立测得的违规减少比例、检测准确率或节省时间的数据。"
+              ]
+            },
+            {
+              "heading": "阻止合并、提示问题与批准例外各有边界",
+              "paragraphs": [
+                "在 Active 模式下，规则可阻止不合规的变更合并；Evaluate 模式会标注问题，本身不按该许可证规则拦截。不过，如果仓库的其他保护规则要求先解决评审注释，Evaluate 产生的标记仍可能影响合并，不能笼统理解为所有情况下都毫无阻碍。开发者可以移除或更换依赖，也可以依据流程申请例外；出现标记并不会自动生成例外申请。",
+                "企业的开源许可证管理者负责审查这类申请。批准某个包的例外，属于组织对自身策略的处理，不会改变开源许可证原有条款。官方文档也明确将风险分类视作信息提示，而非法律意见。绿色检查结果说明已识别的数据通过了配置的政策，不证明任意分发、修改或商业使用情境都没有义务；发布方式和组织实际要求仍需单独判断。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据 GitHub 公告与文档重绘的策略检查流程；展示产品机制，不表示法律结论或检测准确率。",
+            "steps": [
+              "识别依赖与许可证",
+              "与组织配置的策略比较",
+              "标注问题或阻止合并",
+              "人工审查替换与例外"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A dependency’s security vulnerabilities and its licensing obligations are different questions. On October 16, GitHub made open-source license compliance generally available, allowing enterprises to check their policies before code is merged. Availability covers GitHub Enterprise Cloud repositories with Code Security enabled, including data-residency deployments. It is neither automatically enabled for every repository nor a universal legal certification.",
+          "sections": [
+            {
+              "heading": "Checking licenses when dependencies change",
+              "paragraphs": [
+                "Adding an open-source package also introduces the conditions attached to its license. Waiting until release to inventory dependencies can leave problems to be discovered when replacing a package is expensive. GitHub connects enterprise policy to merge rules: when a pull request adds or changes dependencies, the service compares dependency information across the change and flags packages that do not meet the configured license policy.",
+                "The check relies on package and license information from the dependency graph, which can include detected transitive dependencies: packages pulled in by other packages. Operators need the dependency graph and the relevant rules enabled. Support for transitive dependencies does not establish visibility into every component under every build mechanism. Missing or incomplete dependency and license metadata limits what a check can evaluate."
+              ]
+            },
+            {
+              "heading": "What changed between preview and general availability",
+              "paragraphs": [
+                "The public preview began on June 30. Enterprise policies and the license-management role already existed then, so they should not be presented as entirely new in October. The general-availability announcement adds license information and software-bill-of-materials support for data-residency environments, policy-related audit events, and interfaces to retrieve, update and replace policies. A package-compliance interface also lets automation query status before choosing a dependency.",
+                "These interfaces extend integration options; they do not mean every coding agent automatically consults the checks or that GitHub has chosen the right policy for an organization. Enterprises maintain their own policies, while audit records help trace changes. The announcement and documentation establish availability and mechanics, not an independently measured reduction in violations, detection accuracy or time saved."
+              ]
+            },
+            {
+              "heading": "Blocking, annotation and exception approval have separate meanings",
+              "paragraphs": [
+                "In Active mode, a rule can block a noncompliant merge. Evaluate mode annotates issues without blocking under that license rule itself. Other repository protections can still matter: a requirement to resolve review comments may make Evaluate annotations relevant to merging. Developers can remove or replace a dependency or request an exception through the workflow. An annotation does not automatically create an exception request.",
+                "An enterprise open-source license manager reviews those requests. Approving a package exception changes the organization’s treatment under its policy; it does not rewrite the underlying license. Official documentation also treats license-risk categories as information rather than legal advice. A passing check means the recognized data met the configured policy, not that every possible distribution, modification or commercial-use scenario is free of obligations. The actual release context and organizational requirements still need separate consideration."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory diagram redrawn from GitHub announcements and documentation; it shows policy mechanics, not a legal conclusion or accuracy measurement.",
+            "steps": [
+              "Identify dependencies and licenses",
+              "Compare with organizational policy",
+              "Annotate issues or block a merge",
+              "Review replacements and exceptions"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "依存パッケージに既知の脆弱性があるかという問題と、ライセンスがプロジェクトの要件に合うかという問題は異なる。GitHub は 10 月 16 日、オープンソースライセンスのコンプライアンスチェックを一般提供した。Code Security を有効にした GitHub Enterprise Cloud のリポジトリが対象で、データレジデンシー環境も含む。全リポジトリで自動的に有効になる機能でも、あらゆる利用の法的適合性を認証する仕組みでもない。",
+          "sections": [
+            {
+              "heading": "依存関係を変更する時点で条件を確かめる",
+              "paragraphs": [
+                "オープンソースのパッケージを追加すれば、そのライセンスの条件も考慮する必要がある。公開直前に依存関係をまとめて調べる運用では、置き換えが難しくなってから問題が見つかりやすい。GitHub は企業の方針とマージ規則を結び付け、プルリクエストで依存関係が追加・変更された際、変更前後の情報を比較して設定した方針に合わないパッケージを示す。",
+                "判定には dependency graph のパッケージとライセンス情報を使う。そこには、ある依存がさらに呼び込むパッケージである、検出済みの推移的依存関係も含められる。依存関係グラフと該当ルールを有効にする必要がある。ただし、あらゆるビルド方式のすべての部品を把握できるとは限らない。依存関係やライセンスのメタデータが不足すれば、チェックの範囲も制約される。"
+              ]
+            },
+            {
+              "heading": "プレビューから正式提供への追加点",
+              "paragraphs": [
+                "公開プレビューは 6 月 30 日に始まっており、企業のポリシーとライセンス管理者の役割はその時点で存在した。これらをすべて 10 月の新機能と説明するのは正確ではない。正式提供の告知では、データレジデンシー環境のライセンス情報とソフトウェア部品表への対応、ポリシー関連の監査イベント、方針の取得・更新・置換用インターフェースが追加点として挙げられている。パッケージごとの適合状態を自動化システムから問い合わせることもできる。",
+                "インターフェースの追加は連携方法を増やすが、すべてのコーディング Agent が自動で照会することや、組織に適切な方針を GitHub が決めてくれることは意味しない。方針は企業が維持し、監査記録はその変更を追うために使う。告知と文書が示すのは提供範囲と仕組みであり、違反の削減率、検出精度、短縮時間の独立した測定結果は示されていない。"
+              ]
+            },
+            {
+              "heading": "ブロック、注釈、例外承認を区別する",
+              "paragraphs": [
+                "Active モードでは不適合な変更のマージを阻止できる。Evaluate モードは問題を注記し、ライセンス規則そのものではブロックしない。ただし、別の保護規則でレビューコメントの解決が必須なら、その注釈がマージに影響する場合はある。開発者は依存を削除・交換するか、手順に沿って例外を申請できるが、注釈から自動的に例外申請が作られるわけではない。",
+                "企業のオープンソースライセンス管理者が申請を審査する。特定パッケージの例外承認は組織の方針上の扱いを変えるもので、元のライセンス条項を書き換えない。公式文書もリスク分類を情報提供と位置付け、法的助言とはしていない。チェックの合格は、把握できた情報が設定した方針を満たしたという意味であり、あらゆる配布、改変、商用利用に義務がない証明ではない。実際の公開形態と組織の要件は別に検討する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "GitHub の告知と文書をもとに本サイトが描き直した説明図。法的結論や検出精度を示すものではない。",
+            "steps": [
+              "依存関係とライセンスを特定",
+              "組織の方針と比較",
+              "問題を注記またはマージを停止",
+              "交換と例外を人が審査"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Уязвимости зависимости и условия её лицензии — разные вопросы. 16 октября GitHub объявил общую доступность проверки соответствия лицензий открытого ПО, позволяющей предприятиям применять собственную политику до слияния изменений. Функция доступна репозиториям GitHub Enterprise Cloud с включённым Code Security, в том числе в средах с резидентностью данных. Она не включается автоматически повсюду и не выдаёт универсальное юридическое подтверждение.",
+          "sections": [
+            {
+              "heading": "Проверять условия в момент изменения зависимостей",
+              "paragraphs": [
+                "Добавляя пакет с открытым исходным кодом, проект принимает во внимание и условия его лицензии. Инвентаризация непосредственно перед выпуском может обнаружить проблему тогда, когда замена уже обходится дорого. GitHub связывает корпоративную политику с правилами слияния: при добавлении или изменении зависимостей в запросе на слияние сравниваются сведения до и после изменения, а пакеты, не соответствующие настроенной политике лицензий, получают отметки.",
+                "Проверка использует данные о пакетах и лицензиях из графа зависимостей. В них могут входить обнаруженные транзитивные зависимости — пакеты, привлечённые другими пакетами. Требуется включить граф и соответствующие правила. Поддержка транзитивных связей не означает, что известны все компоненты при любом способе сборки. Неполные сведения о зависимостях и лицензиях ограничивают охват проверки."
+              ]
+            },
+            {
+              "heading": "Что добавилось после предварительной версии",
+              "paragraphs": [
+                "Публичная предварительная версия появилась 30 июня. Корпоративные политики и роль менеджера лицензий существовали уже тогда: нельзя представлять их как полностью новые возможности октября. Объявление общей доступности добавляет лицензионные сведения и поддержку перечня компонентов ПО для сред с резидентностью данных, события аудита политик, а также интерфейсы получения, обновления и замены политики. Отдельный интерфейс проверки пакета позволяет автоматизации запросить его статус перед выбором зависимости.",
+                "Новые интерфейсы расширяют способы интеграции. Они не означают, что любой агент программирования автоматически обращается к проверке или что GitHub выбрал правильную политику за организацию. Политики поддерживает предприятие, а аудит помогает прослеживать изменения. Объявление и документация описывают доступность и механизм, но не дают независимо измеренных показателей уменьшения нарушений, точности обнаружения или экономии времени."
+              ]
+            },
+            {
+              "heading": "Блокировка, замечание и одобрение исключения — разные действия",
+              "paragraphs": [
+                "В режиме Active правило может блокировать слияние несоответствующего изменения. Evaluate оставляет замечания, не блокируя слияние непосредственно этим правилом лицензий. Однако другие защиты репозитория могут требовать закрытия комментариев проверки, и тогда замечания Evaluate тоже способны влиять на слияние. Разработчик может удалить или заменить зависимость либо запросить исключение. Само замечание автоматически такого запроса не создаёт.",
+                "Запросы рассматривает корпоративный менеджер лицензий открытого ПО. Одобрение исключения для пакета меняет отношение организации к собственной политике, но не переписывает условия исходной лицензии. Официальная документация также называет категории риска информацией, а не юридической консультацией. Успешная проверка означает соответствие распознанных данных настроенной политике, а не отсутствие обязательств при любом распространении, изменении или коммерческом использовании. Контекст выпуска и реальные требования организации нужно учитывать отдельно."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по объявлениям и документации GitHub; она показывает механизм политики, а не юридическое заключение или точность проверки.",
+            "steps": [
+              "Определить зависимости и лицензии",
+              "Сравнить с политикой организации",
+              "Отметить проблему или остановить слияние",
+              "Рассмотреть замену и исключения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "軟體依賴有沒有已知漏洞，與它的許可證是否符合專案要求，是兩類不同的問題。GitHub 在 10 月 16 日宣佈開源許可證合規檢查正式可用，讓企業把許可證策略放到程式碼合併之前檢查。它適用於啟用 Code Security 的 GitHub Enterprise Cloud 倉庫，並支援資料駐留版本；不是面向所有倉庫自動開啟的普遍法律認證。",
+          "sections": [
+            {
+              "heading": "把許可要求放進依賴變更的流程",
+              "paragraphs": [
+                "一個專案引入開源包時，也引入了相應許可證的使用條件。等到釋出前再人工整理依賴，容易把發現問題的時間推遲到替換成本較高的階段。GitHub 的方案把企業策略與合併規則連線起來：當拉取請求新增或改變依賴時，系統比較變更前後的依賴資訊，對不符合所配置許可證政策的專案給出標記。",
+                "判斷依賴於 dependency graph 提供的包和許可證資料，其中可以包含已識別的傳遞依賴，即某個依賴進一步引入的包。管理員需要啟用依賴圖，並配置對應規則。這裡的“可以檢查傳遞依賴”不等於能識別任意構建方式下的所有軟體元件；若依賴或許可證後設資料不完整，檢查的可見範圍也會受限。"
+              ]
+            },
+            {
+              "heading": "正式可用相較預覽增加了什麼",
+              "paragraphs": [
+                "這項功能在 6 月 30 日已進入公開預覽。企業策略和許可證管理角色當時就存在，不能都寫成 10 月首次出現。正式可用公告列出的新增能力包括資料駐留環境的許可證資訊與軟體物料清單支援、策略相關審計事件，以及獲取、更新和替換策略的介面。另有按包查詢合規狀態的介面，可供自動化系統在作出依賴選擇前查詢。",
+                "這些介面擴充套件了接入方式，但不代表所有編碼 Agent 會自動使用檢查結果，也不等於系統已經替組織決定了正確的許可證政策。策略由企業維護，審計記錄幫助追蹤策略改變。公告與文件說明的是功能的可用性與處理機制，並沒有給出獨立測得的違規減少比例、檢測準確率或節省時間的資料。"
+              ]
+            },
+            {
+              "heading": "阻止合併、提示問題與批准例外各有邊界",
+              "paragraphs": [
+                "在 Active 模式下，規則可阻止不合規的變更合併；Evaluate 模式會標註問題，本身不按該許可證規則攔截。不過，如果倉庫的其他保護規則要求先解決評審註釋，Evaluate 產生的標記仍可能影響合併，不能籠統理解為所有情況下都毫無阻礙。開發者可以移除或更換依賴，也可以依據流程申請例外；出現標記並不會自動生成例外申請。",
+                "企業的開源許可證管理者負責審查這類申請。批准某個包的例外，屬於組織對自身策略的處理，不會改變開源許可證原有條款。官方文件也明確將風險分類視作資訊提示，而非法律意見。綠色檢查結果說明已識別的資料透過了配置的政策，不證明任意分發、修改或商業使用情境都沒有義務；釋出方式和組織實際要求仍需單獨判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據 GitHub 公告與文件重繪的策略檢查流程；展示產品機制，不表示法律結論或檢測準確率。",
+            "steps": [
+              "識別依賴與許可證",
+              "與組織配置的策略比較",
+              "標註問題或阻止合併",
+              "人工審查替換與例外"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "esa-juice-janus-africa-flyby-images",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "ESA: Fly over Africa with Juice",
+          "url": "https://www.esa.int/ESA_Multimedia/Images/2026/10/Fly_over_Africa_with_Juice"
+        },
+        {
+          "label": "ESA: Successful Earth flyby improves Juice’s course to Jupiter",
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/Juice/Successful_Earth_flyby_improves_Juice_s_course_to_Jupiter"
+        },
+        {
+          "label": "DLR: Juice snaps flyby photos of Earth and Moon",
+          "url": "https://www.dlr.de/en/latest/news/2026/say-cheese-juice-snaps-flyby-photos-of-earth-and-moon"
+        },
+        {
+          "label": "ASI: JANUS observes the Earth–Moon system",
+          "url": "https://www.asi.it/2026/10/28-settembre-2026-ega-earth-gravity-assist-lo-sguardo-di-janus-al-sistema-terra-luna/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "ESA 在 10 月 16 日公布了一幅 Juice 探测器眼中的非洲：一条带着云层与海岸线的狭长影像横跨地图。它来自 9 月 28 日的地球飞掠，不是 10 月又进行了一次近地飞行。对准备前往木星的任务团队来说，这批照片的价值也不只是风景，而是用熟悉的地球与月球检查 JANUS 科学相机在真实太空环境中的表现。",
+          "sections": [
+            {
+              "heading": "借地球改变航向，也检验相机",
+              "paragraphs": [
+                "这次飞掠首先服务于航行。Juice 借地球引力调整通往木星的路线，最近时距离地表约 8640 公里。与此同时，团队安排仪器观察地月系统，把已知目标当作参照：相机看到的细节、亮度和边缘是否合理，可以帮助检查后续分析所需的校准与处理流程。",
+                "德国航空航天中心介绍，观测还包括长曝光拍摄地球夜面，以及检查明亮月球边缘附近的杂散光。后者指本不应落到某个像素上的光，在仪器内部反射或散射后造成干扰。识别这些影响，才能避免把成像伪影误当成未来木星卫星上的真实特征。"
+              ]
+            },
+            {
+              "heading": "非洲条带怎样拼出来",
+              "paragraphs": [
+                "整个观测活动持续约五天，共拍摄 740 张地球与月球图像，用到了全部 13 个滤镜；非洲条带只是其中一部分。它由约 40 帧、三个红绿蓝滤镜的图像组成，拍摄集中在 9 月 28 日 13:46—13:50（欧洲中部夏令时）。条带宽约 250—300 公里，并不是一次曝光同时记录的整幅非洲照片。",
+                "处理人员依据探测器的位置与相机朝向，把图像投到地图坐标中，融合重叠区域，再协调三个颜色通道。图中底图来自 Natural Earth，真正的相机观测是覆盖其上的条带。随着探测器远离地球，每个像素对应的地面尺度从马达加斯加附近约 150 米增至大西洋上空约 375 米，因此整条影像的细节能力并不均匀。"
+              ]
+            },
+            {
+              "heading": "这批数据证明了什么",
+              "paragraphs": [
+                "这些观测为真实飞行条件下的仪器检验和分析准备提供了材料，不能直接当作 JANUS 已在木星完成观测的证据，也不能把此次地球图像的像素尺度套用到将来的所有任务。相机今后将观察木星及其冰卫星，目标距离、光照和拍摄方式都会不同。",
+                "团队还讨论用红光与近红外数据尝试植被分析，并与 PRISMA、EnMAP 等地球观测资料比较。这是进一步检验仪器与解释数据的方向，不意味着这次已发布了经过完整验证的全球植被产品。对读者而言，最实在的新进展是科学图像及其处理方式得到展示，后续科学结论仍需对应的数据分析。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释图：从地月观测到地图拼接与仪器检验，并非 JANUS 实测结果图。",
+            "steps": [
+              "选择滤镜观察地球与月球",
+              "结合位置和朝向定位各帧",
+              "拼接重叠区域并组合颜色",
+              "对照已知目标检查成像表现"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 16, ESA published a narrow, cloud-streaked view of Africa from the Juice spacecraft. The images were taken during its September 28 Earth flyby; they do not document another flyby in October. For the team preparing to explore Jupiter, familiar terrestrial and lunar scenery provides a practical reference for checking the JANUS science camera in space.",
+          "sections": [
+            {
+              "heading": "A navigation manoeuvre becomes an instrument check",
+              "paragraphs": [
+                "The flyby primarily adjusted Juice’s route toward Jupiter through Earth’s gravity. At closest approach, the spacecraft passed roughly 8,640 kilometres above the surface. Observing familiar targets alongside that manoeuvre lets the team examine image detail and brightness and prepare calibration and analysis procedures.",
+                "DLR describes long exposures of Earth’s night side and observations of stray light around the bright lunar edge. Stray light is unwanted light redirected inside an instrument. Understanding it helps distinguish imaging artefacts from real features when the camera later studies Jupiter’s moons."
+              ]
+            },
+            {
+              "heading": "A mapped strip, not a single photograph",
+              "paragraphs": [
+                "The approximately five-day campaign produced 740 Earth and Moon images using all 13 filters. The African strip is a subset: about 40 frames through three red, green and blue filters, recorded between 13:46 and 13:50 Central European Summer Time on September 28. It covers a swath about 250–300 kilometres wide.",
+                "The team placed the frames on a map using spacecraft position and camera pointing, blended overlaps and balanced the colour channels. The underlying map is from Natural Earth; the overlaid strip contains the camera observations. As Juice receded, the ground distance represented by a pixel increased from about 150 metres near Madagascar to 375 metres over the Atlantic. Detail is therefore not uniform across the composite."
+              ]
+            },
+            {
+              "heading": "Useful preparation, with science still to follow",
+              "paragraphs": [
+                "The images support instrument checks and analysis preparation under real flight conditions. They are not observations already made at Jupiter, and their ground sampling cannot be applied to every future observation: distance, illumination and imaging choices will change. JANUS is intended to study Jupiter and its icy moons.",
+                "The team also discusses experimental vegetation analysis using red and near-infrared data, with comparisons to PRISMA and EnMAP Earth observations. These are avenues for further assessment, not an already validated global vegetation product. The concrete development is the release of science-camera imagery and its processing explanation; additional scientific claims require their own analysis."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site: observation, mapping and instrument checks, not a JANUS measurement plot.",
+            "steps": [
+              "Observe Earth and Moon through selected filters",
+              "Locate frames from position and pointing",
+              "Blend overlaps and combine colour channels",
+              "Check images against familiar targets"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ESA は 10 月 16 日、木星探査機 Juice が撮影したアフリカの細長い画像を公開した。雲や海岸線の写る帯状の画像は、9 月 28 日の地球フライバイで得られたものだ。10 月に別の接近があったわけではない。よく知る地球と月を撮ることには、科学カメラ JANUS の宇宙空間での働きを確かめる意味がある。",
+          "sections": [
+            {
+              "heading": "航路の調整と機器の確認",
+              "paragraphs": [
+                "今回のフライバイの主目的は、地球の重力を利用して木星へ向かう軌道を調整することだった。最接近時の高度は約 8640 キロメートル。その機会に既知の対象を観測すれば、細部や明るさが妥当かを調べ、校正や解析の手順を準備できる。",
+                "ドイツ航空宇宙センターは、地球の夜側を長時間露光で撮ったことや、明るい月の縁で迷光を調べたことも説明している。迷光は、機器内部の反射や散乱で意図しない場所に届く光だ。その影響を知ることは、将来の木星の衛星画像で、実在する特徴と撮像上の偽像を区別する助けになる。"
+              ]
+            },
+            {
+              "heading": "約 40 枚を地図につないだ画像",
+              "paragraphs": [
+                "約 5 日間の観測では、13 種類すべてのフィルターを使い、地球と月の画像を計 740 枚取得した。アフリカの帯はその一部で、赤・緑・青の 3 種類を通した約 40 枚から作られた。撮影は 9 月 28 日の中央ヨーロッパ夏時間 13:46〜13:50 に集中し、帯の幅は約 250〜300 キロメートル。一度の撮影でアフリカ全体を写したものではない。",
+                "探査機の位置とカメラの向きから各画像を地図上に配置し、重なりを接続して色のバランスを整えた。背景は Natural Earth の地図で、観測データはその上の帯の部分だ。探査機が遠ざかるにつれ、1 ピクセルに相当する地上の長さはマダガスカル付近の約 150 メートルから大西洋上の約 375 メートルへ増えた。画像全体の細かさは一定ではない。"
+              ]
+            },
+            {
+              "heading": "今回わかること、今後確かめること",
+              "paragraphs": [
+                "このデータは、実際の飛行条件で機器を確認し、解析に備える材料になる。ただし木星での観測成果ではなく、今回の地上画素サイズを将来のすべての撮影に適用することもできない。木星や氷衛星を観測する際には、距離、照明条件、撮影方法が変わる。",
+                "チームは赤色光と近赤外線による植生解析を試し、PRISMA や EnMAP の地球観測データと比較する可能性も挙げている。これは機器やデータ解釈をさらに検討する方向性であり、検証済みの全球植生プロダクトを公開したという意味ではない。今回の具体的な前進は科学画像と処理方法が示されたことで、科学的な結論には別途解析が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトが描き直した説明図。地月観測から地図合成と機器確認までの流れで、JANUS の実測グラフではない。",
+            "steps": [
+              "フィルターを選んで地球と月を撮影",
+              "位置と向きから各画像を配置",
+              "重なりと色チャンネルを合成",
+              "既知の対象と照らして撮像を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "16 октября ESA опубликовало узкую полосу снимков Африки, полученных аппаратом Juice. Облака и береговая линия были сняты при пролёте Земли 28 сентября: нового сближения в октябре не было. Для будущих наблюдений Юпитера знакомые Земля и Луна полезны как ориентиры, позволяющие проверить научную камеру JANUS в реальных космических условиях.",
+          "sections": [
+            {
+              "heading": "Коррекция маршрута и проверка камеры",
+              "paragraphs": [
+                "Главная задача пролёта — изменить траекторию к Юпитеру с помощью земного притяжения. Минимальная высота составляла около 8640 километров. Параллельная съёмка известных объектов помогает оценивать детали и яркость изображений и готовить процедуры калибровки и анализа.",
+                "DLR также описывает длительные экспозиции ночной стороны Земли и изучение рассеянного света у яркого края Луны. Такой паразитный свет возникает при нежелательных отражениях и рассеянии внутри прибора. Знание этих эффектов помогает впоследствии отличать артефакты съёмки от реальных особенностей спутников Юпитера."
+              ]
+            },
+            {
+              "heading": "Как собрана полоса над Африкой",
+              "paragraphs": [
+                "За примерно пять дней кампании камера получила 740 изображений Земли и Луны, использовав все 13 фильтров. Африканская полоса — лишь часть набора: около 40 кадров через три красный, зелёный и синий фильтры. Они сняты 28 сентября с 13:46 до 13:50 по центральноевропейскому летнему времени. Ширина полосы — около 250–300 километров; это не один одномоментный снимок всего материка.",
+                "Кадры разместили на карте по положению аппарата и направлению камеры, объединили перекрытия и согласовали цветовые каналы. Фоновая карта взята из Natural Earth, а наблюдения камеры находятся в наложенной полосе. По мере удаления Juice размер участка поверхности на один пиксель вырос примерно со 150 метров у Мадагаскара до 375 метров над Атлантикой. Поэтому детализация всей мозаики неодинакова."
+              ]
+            },
+            {
+              "heading": "Что уже получено, а что предстоит проверить",
+              "paragraphs": [
+                "Изображения дают материал для проверки прибора в полёте и подготовки анализа. Это не результаты наблюдений у Юпитера, а масштаб земных кадров нельзя переносить на все будущие снимки. При изучении Юпитера и его ледяных спутников изменятся расстояние, освещение и режимы съёмки.",
+                "Команда также обсуждает экспериментальную оценку растительности по красному и ближнему инфракрасному свету и сопоставление с земными наблюдениями PRISMA и EnMAP. Это направления дальнейшей проверки, а не уже опубликованный и полностью проверенный глобальный продукт о растительности. Конкретный результат нынешней публикации — научные изображения и объяснение их обработки; дополнительные научные выводы потребуют отдельного анализа."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново нарисованная сайтом: наблюдения, привязка к карте и проверка камеры; не график измерений JANUS.",
+            "steps": [
+              "Снять Землю и Луну через выбранные фильтры",
+              "Разместить кадры по положению и направлению камеры",
+              "Объединить перекрытия и цветовые каналы",
+              "Проверить изображение по известным объектам"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "ESA 在 10 月 16 日公佈了一幅 Juice 探測器眼中的非洲：一條帶著雲層與海岸線的狹長影像橫跨地圖。它來自 9 月 28 日的地球飛掠，不是 10 月又進行了一次近地飛行。對準備前往木星的任務團隊來說，這批照片的價值也不只是風景，而是用熟悉的地球與月球檢查 JANUS 科學相機在真實太空環境中的表現。",
+          "sections": [
+            {
+              "heading": "借地球改變航向，也檢驗相機",
+              "paragraphs": [
+                "這次飛掠首先服務於航行。Juice 借地球引力調整通往木星的路線，最近時距離地表約 8640 公里。與此同時，團隊安排儀器觀察地月系統，把已知目標當作參照：相機看到的細節、亮度和邊緣是否合理，可以幫助檢查後續分析所需的校準與處理流程。",
+                "德國航空航天中心介紹，觀測還包括長曝光拍攝地球夜面，以及檢查明亮月球邊緣附近的雜散光。後者指本不應落到某個畫素上的光，在儀器內部反射或散射後造成干擾。識別這些影響，才能避免把成像偽影誤當成未來木星衛星上的真實特徵。"
+              ]
+            },
+            {
+              "heading": "非洲條帶怎樣拼出來",
+              "paragraphs": [
+                "整個觀測活動持續約五天，共拍攝 740 張地球與月球影像，用到了全部 13 個濾鏡；非洲條帶只是其中一部分。它由約 40 幀、三個紅綠藍濾鏡的影像組成，拍攝集中在 9 月 28 日 13:46—13:50（歐洲中部夏令時）。條帶寬約 250—300 公里，並不是一次曝光同時記錄的整幅非洲照片。",
+                "處理人員依據探測器的位置與相機朝向，把影像投到地圖座標中，融合重疊區域，再協調三個顏色通道。圖中底圖來自 Natural Earth，真正的相機觀測是覆蓋其上的條帶。隨著探測器遠離地球，每個畫素對應的地面尺度從馬達加斯加附近約 150 米增至大西洋上空約 375 米，因此整條影像的細節能力並不均勻。"
+              ]
+            },
+            {
+              "heading": "這批資料證明了什麼",
+              "paragraphs": [
+                "這些觀測為真實飛行條件下的儀器檢驗和分析準備提供了材料，不能直接當作 JANUS 已在木星完成觀測的證據，也不能把此次地球影像的畫素尺度套用到將來的所有任務。相機今後將觀察木星及其冰衛星，目標距離、光照和拍攝方式都會不同。",
+                "團隊還討論用紅光與近紅外資料嘗試植被分析，並與 PRISMA、EnMAP 等地球觀測資料比較。這是進一步檢驗儀器與解釋資料的方向，不意味著這次已釋出了經過完整驗證的全球植被產品。對讀者而言，最實在的新進展是科學影像及其處理方式得到展示，後續科學結論仍需對應的資料分析。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解釋圖：從地月觀測到地圖拼接與儀器檢驗，並非 JANUS 實測結果圖。",
+            "steps": [
+              "選擇濾鏡觀察地球與月球",
+              "結合位置和朝向定位各幀",
+              "拼接重疊區域並組合顏色",
+              "對照已知目標檢查成像表現"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nasa-black-marble-isaias-power-recovery",
+      "written_at": "2026-10-31",
+      "sources": [
+        {
+          "label": "NASA Earth Observatory: Isaias Dims the Gulf Coast",
+          "url": "https://science.nasa.gov/earth/earth-observatory/isaias-dims-the-gulf-coast/"
+        },
+        {
+          "label": "NASA Disasters: Black Marble HD product guidance",
+          "url": "https://science.data.nasa.gov/disasters/data-gallery/black-marble-hd"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "停电不容易从白天的卫星照片里辨认，夜间灯光却能提供另一种线索。NASA 地球观测站在 10 月 16 日展示了飓风 Isaias 过后佛罗里达部分地区的灯光变化：一些原本明亮的区域变暗，随后又逐渐出现灯光。这些图像适合帮助人们看清变化发生在哪里，却不是逐户电力恢复的证明。",
+          "sections": [
+            {
+              "heading": "把灾前与灾后的夜晚放在一起",
+              "paragraphs": [
+                "报道采用 8 月无云条件下的合成图作为灾前参照，再与 10 月 11 日的夜光影像比较，显示彭萨科拉至德斯廷一带部分区域亮度下降。另一次对比展示 10 月 11 日与 12 日之间的变化。到 14 日，报道所描述的灯光分布已接近灾前样貌；这只能说明可见灯光格局，不能据此宣布所有住户或供电线路均已恢复。",
+                "合成基线汇集了一个月内的可用观测，因此不是“灾前某一夜”的照片。把它与灾后单日影像比较，可以突出变化的空间位置，但读图时仍要区分观测时间与数据组织方式。此次新闻公布的是灾后分析，不应把 10 月 16 日的文章日期写成风暴登陆日。"
+              ]
+            },
+            {
+              "heading": "灯光来自观测，细网格来自建模",
+              "paragraphs": [
+                "该实例使用 NOAA-20 卫星上的 VIIRS 昼夜波段数据，并把夜光叠加到 Landsat 9 底图。夜光处理会考虑大气、月相和杂散光等影响：卫星接收到的亮度并不只由地面电灯决定。图上带斜线的灰色云区表示缺测，不是确认停电的区域。",
+                "Black Marble HD 产品说明还有一个关键限制：30 米网格是把 Black Marble 夜光数据降尺度建模后，对灯光空间分布作出的估计，并不代表 VIIRS 直接拍到了原生 30 米细节。产品定位是可视化，不用于定量分析。因此不能从这些小网格数出失去供电的家庭数量，也不能据颜色变化计算发电或用电量。"
+              ]
+            },
+            {
+              "heading": "如何把它用作恢复工作的线索",
+              "paragraphs": [
+                "机场、校园或市中心若一直亮着，可能是备用电源发挥作用，也可能是当地设施受影响不同，或者本来就未停电。夜光图不能在这些解释之间作出独立判断。同样，一处变暗还需要结合云量、观测条件和地面情况核实，不能自动等同于电网故障。",
+                "这类产品的用途是与地面停电报告互相补充，帮助定位值得进一步查看的区域，并追踪灯光重新出现的过程。NASA 将 Black Marble HD 标为实验性研究级数据，不能保证始终可用或按固定频率更新。把它作为观察和核查的入口，比把影像当作完整电网状态表更符合现有证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释图：夜光对比怎样辅助核查供电恢复。图示说明处理和判断流程，不是停电人数或电力测量结果。",
+            "steps": [
+              "建立灾前无云夜光参照",
+              "识别云层并处理观测干扰",
+              "比较建模后的灯光分布",
+              "结合地面报告核查恢复情况"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Power failures can be hard to identify in daytime satellite photographs. Night-time light offers another clue. On October 16, NASA Earth Observatory showed areas of Florida dimming and brightening after Hurricane Isaias. The imagery helps locate visible change; it does not certify that electricity has returned to every household.",
+          "sections": [
+            {
+              "heading": "Comparing different kinds of nights",
+              "paragraphs": [
+                "The analysis compares a cloud-free August composite with October 11 imagery, showing dimming in parts of the Pensacola–Destin area. Another comparison follows changes from October 11 to 12. By October 14, the reported light pattern resembled its pre-storm appearance. That concerns visible lighting, not confirmation that every home or power line had recovered.",
+                "A monthly composite combines usable observations rather than recording one pre-storm night. Comparing it with a post-storm day can highlight locations of change, but the dates and aggregation differ. October 16 is the publication date of the analysis, not the storm’s landfall date."
+              ]
+            },
+            {
+              "heading": "Observed light, modelled detail",
+              "paragraphs": [
+                "This example uses the VIIRS day/night band on NOAA-20, over a Landsat 9 basemap. Processing accounts for atmospheric effects, moon phase and stray light: detected brightness is not determined solely by electric lamps. Hatched grey cloud areas are missing data, not confirmed outages.",
+                "The Black Marble HD documentation states that its 30-metre grid is a downscaled, modelled estimate of light distribution. It is not native 30-metre VIIRS observation. The product is for visualisation, not quantitative analysis. Its fine cells therefore cannot be counted as disconnected households, nor can colour changes be converted into electricity production or consumption."
+              ]
+            },
+            {
+              "heading": "A clue to check on the ground",
+              "paragraphs": [
+                "An airport, campus or downtown area that remains bright might have backup power, different infrastructure impacts, or no outage at all. The image cannot distinguish those explanations by itself. A darkening area also needs checking against clouds, observation conditions and local information before attributing it to grid failure.",
+                "The useful role is to complement ground outage reports, direct attention to areas needing investigation and follow the return of visible light. NASA describes Black Marble HD as experimental, research-grade data, with no guarantee of continuous availability or regular updates. It is a starting point for verification, not a complete map of electrical service."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site: using night lights to support recovery checks, not a measurement of outage counts or electrical power.",
+            "steps": [
+              "Build a cloud-free pre-storm reference",
+              "Identify clouds and account for observation effects",
+              "Compare modelled light distributions",
+              "Check recovery against ground reports"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "停電の有無は、昼間の衛星写真だけではつかみにくい。夜間の光は、その変化を調べる別の手がかりになる。NASA 地球観測サイトは 10 月 16 日、ハリケーン Isaias の後、フロリダ州の一部で光が減り、再び現れる様子を紹介した。ただし、見える光の回復と、全世帯への送電再開は同じではない。",
+          "sections": [
+            {
+              "heading": "災害前の合成画像と災害後の夜",
+              "paragraphs": [
+                "分析では 8 月の雲のない観測を合成した画像を基準に、10 月 11 日と比較した。ペンサコーラからデスティンにかけて、一部が暗くなっている。さらに 11 日と 12 日の変化を比べ、14 日には光の分布が災害前に近づいたと報告している。これは照明の見え方の話であり、すべての住宅や送電線が復旧したという確認ではない。",
+                "月次合成画像は利用できる複数の観測をまとめたもので、災害前の特定の一晩を写した写真ではない。災害後の単日画像と比べれば変化した場所を探せるが、時期と集計方法の違いに注意が必要だ。また、10 月 16 日は分析記事の公開日であって、上陸日ではない。"
+              ]
+            },
+            {
+              "heading": "観測された光と、モデルで補った細かさ",
+              "paragraphs": [
+                "この例では NOAA-20 の VIIRS 昼夜バンドを使い、夜間光を Landsat 9 の背景画像に重ねている。大気、月の位相、迷光などの影響も処理する。衛星が捉える明るさは地上の電灯だけで決まらないためだ。図中の斜線入りの灰色の雲域は欠測であり、停電を確認した範囲ではない。",
+                "Black Marble HD の製品説明によると、30 メートル格子は夜間光データをダウンスケーリングし、光の空間分布をモデルで推定したものだ。VIIRS が直接観測した本来の 30 メートル画像ではない。この製品は可視化用で、定量分析には使わない。細かな格子を数えて停電世帯数を求めたり、色の変化を発電量や消費電力量に換算したりはできない。"
+              ]
+            },
+            {
+              "heading": "地上の情報と合わせて読む",
+              "paragraphs": [
+                "空港、大学、市街地が明るいままでも、予備電源が働いたのか、設備への被害が違ったのか、そもそも停電しなかったのかは画像だけでは区別できない。暗くなった場所についても、雲や観測条件、現地の状況を確認してから原因を判断する必要がある。",
+                "用途は地上の停電報告を補い、詳しく調べるべき地域を見つけ、光の戻り方を追うことだ。NASA は Black Marble HD を実験的な研究用データと位置づけ、常時の提供や定期更新を保証していない。電力網の状態を網羅した一覧ではなく、現地確認につなげる手がかりとして読むのが適切だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトが描き直した説明図。夜間光による復旧確認の流れを示し、停電人数や電力の測定結果ではない。",
+            "steps": [
+              "災害前の雲のない夜間光を基準にする",
+              "雲と観測条件の影響を確認する",
+              "モデル化した光の分布を比較する",
+              "地上の報告で復旧状況を確かめる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "На дневных спутниковых снимках отключение электричества заметить трудно. Ночное освещение даёт другой ориентир. 16 октября NASA Earth Observatory показало, как после урагана Isaias отдельные районы Флориды потемнели, а затем снова осветились. Изображения помогают найти изменения, но не доказывают восстановление подачи электричества каждому дому.",
+          "sections": [
+            {
+              "heading": "До и после: разные способы собрать картину",
+              "paragraphs": [
+                "В анализе безоблачную композицию за август сравнивают с изображением 11 октября: часть территории между Пенсаколой и Дестином стала темнее. Другая пара показывает изменения между 11 и 12 октября. К 14 октября описанная в статье картина освещения напоминала прежнюю. Это наблюдение за видимым светом, а не подтверждение ремонта всех линий и восстановления питания всех домов.",
+                "Месячная композиция объединяет пригодные наблюдения, а не изображает одну конкретную ночь до шторма. Сравнение с отдельным днём после него помогает находить изменившиеся участки, но даты и способ объединения данных различаются. 16 октября — дата публикации анализа, не дата выхода урагана на сушу."
+              ]
+            },
+            {
+              "heading": "Свет измеряется, мелкие детали моделируются",
+              "paragraphs": [
+                "В данном примере используются данные дневного/ночного канала VIIRS на NOAA-20 поверх основы Landsat 9. Обработка учитывает атмосферу, фазу Луны и паразитный свет: яркость зависит не только от электрических ламп. Серые заштрихованные облачные области означают отсутствие данных, а не установленное отключение.",
+                "Документация Black Marble HD подчёркивает: сетка 30 метров — результат моделирования распределения света при уменьшении масштаба ячеек исходных данных. Это не прямые наблюдения VIIRS с исходным разрешением 30 метров. Продукт предназначен для визуализации, не количественного анализа. По мелким ячейкам нельзя считать обесточенные домохозяйства, а по изменению цвета — выработку или потребление электроэнергии."
+              ]
+            },
+            {
+              "heading": "Подсказка для наземной проверки",
+              "paragraphs": [
+                "Если аэропорт, университет или центр города остаётся ярким, причиной может быть резервное питание, иное воздействие на инфраструктуру либо отсутствие отключения. Сам снимок не позволяет выбрать объяснение. Потемнение также следует сопоставлять с облачностью, условиями наблюдения и местными сведениями, прежде чем связывать его с повреждением сети.",
+                "Полезная роль этих данных — дополнять наземные сообщения, указывать участки для проверки и отслеживать возвращение видимого света. NASA называет Black Marble HD экспериментальными исследовательскими данными и не гарантирует непрерывную доступность или регулярное обновление. Это отправная точка проверки, а не исчерпывающая карта электроснабжения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново нарисованная сайтом: проверка восстановления по ночному свету, не измерение числа отключений или электрической мощности.",
+            "steps": [
+              "Собрать безоблачную основу до шторма",
+              "Учесть облака и условия наблюдения",
+              "Сравнить смоделированное распределение света",
+              "Сверить восстановление с наземными сообщениями"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "停電不容易從白天的衛星照片裡辨認，夜間燈光卻能提供另一種線索。NASA 地球觀測站在 10 月 16 日展示了颶風 Isaias 過後佛羅里達部分地區的燈光變化：一些原本明亮的區域變暗，隨後又逐漸出現燈光。這些影像適合幫助人們看清變化發生在哪裡，卻不是逐戶電力恢復的證明。",
+          "sections": [
+            {
+              "heading": "把災前與災後的夜晚放在一起",
+              "paragraphs": [
+                "報道採用 8 月無雲條件下的合成圖作為災前參照，再與 10 月 11 日的夜光影像比較，顯示彭薩科拉至德斯廷一帶部分區域亮度下降。另一次對比展示 10 月 11 日與 12 日之間的變化。到 14 日，報道所描述的燈光分佈已接近災前樣貌；這只能說明可見燈光格局，不能據此宣佈所有住戶或供電線路均已恢復。",
+                "合成基線彙集了一個月內的可用觀測，因此不是“災前某一夜”的照片。把它與災後單日影像比較，可以突出變化的空間位置，但讀圖時仍要區分觀測時間與資料組織方式。此次新聞公佈的是災後分析，不應把 10 月 16 日的文章日期寫成風暴登陸日。"
+              ]
+            },
+            {
+              "heading": "燈光來自觀測，細網格來自建模",
+              "paragraphs": [
+                "該實例使用 NOAA-20 衛星上的 VIIRS 晝夜波段資料，並把夜光疊加到 Landsat 9 底圖。夜光處理會考慮大氣、月相和雜散光等影響：衛星接收到的亮度並不只由地面電燈決定。圖上帶斜線的灰色雲區表示缺測，不是確認停電的區域。",
+                "Black Marble HD 產品說明還有一個關鍵限制：30 米網格是把 Black Marble 夜光資料降尺度建模後，對燈光空間分佈作出的估計，並不代表 VIIRS 直接拍到了原生 30 米細節。產品定位是視覺化，不用於定量分析。因此不能從這些小網格數出失去供電的家庭數量，也不能據顏色變化計算發電或用電量。"
+              ]
+            },
+            {
+              "heading": "如何把它用作恢復工作的線索",
+              "paragraphs": [
+                "機場、校園或市中心若一直亮著，可能是備用電源發揮作用，也可能是當地設施受影響不同，或者本來就未停電。夜光圖不能在這些解釋之間作出獨立判斷。同樣，一處變暗還需要結合雲量、觀測條件和地面情況核實，不能自動等同於電網故障。",
+                "這類產品的用途是與地面停電報告互相補充，幫助定位值得進一步檢視的區域，並追蹤燈光重新出現的過程。NASA 將 Black Marble HD 標為實驗性研究級資料，不能保證始終可用或按固定頻率更新。把它作為觀察和核查的入口，比把影像當作完整電網狀態表更符合現有證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解釋圖：夜光對比怎樣輔助核查供電恢復。圖示說明處理和判斷流程，不是停電人數或電力測量結果。",
+            "steps": [
+              "建立災前無雲夜光參照",
+              "識別雲層並處理觀測干擾",
+              "比較建模後的燈光分佈",
+              "結合地面報告核查恢復情況"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
