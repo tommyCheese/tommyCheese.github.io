@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30",
+  "updated_at": "2026-10-31",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,73 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "ontology-checkers-agent-false-alarms",
+      "kind": "preprint",
+      "published_at": "2026-10-27",
+      "collected_at": "2026-10-31",
+      "tags": [
+        "ai",
+        "agents",
+        "ontology",
+        "data-governance",
+        "papers"
+      ],
+      "source": "Michal Orzechowski, Rund Tawfiq, Tomasz Kosciolek · arXiv · 2610.37809v1",
+      "url": "https://arxiv.org/abs/2610.37809v1"
+    },
+    {
+      "id": "coverage-aware-longform-rag-context",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-31",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "He Tu, Aleena Bosco Kurumthottam, Torsten Suel · arXiv · 2610.40314v1",
+      "url": "https://arxiv.org/abs/2610.40314v1"
+    },
+    {
+      "id": "vericua-active-evidence-verification",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-31",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Qiushi Sun, Da Yu, Alexander Knop, Amer Sinha, Lingpeng Kong, Ben Kao, Ravi Kumar, Pritish Kamath · arXiv · 2610.40578v1",
+      "url": "https://arxiv.org/abs/2610.40578v1"
+    },
+    {
+      "id": "open-problem-graph-proposed-status-governance",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-31",
+      "tags": [
+        "data-governance",
+        "databases",
+        "papers"
+      ],
+      "source": "Mandarapu and Kunkunuru · arXiv:2610.39641v1",
+      "url": "https://arxiv.org/abs/2610.39641v1"
+    },
+    {
+      "id": "smooth-action-chunking-motion-primitives",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-10-31",
+      "tags": [
+        "robotics",
+        "papers",
+        "results"
+      ],
+      "source": "Nomura et al. · arXiv:2610.39451v1",
+      "url": "https://arxiv.org/abs/2610.39451v1"
+    },
     {
       "id": "cost-aware-rag-incremental-evidence",
       "kind": "preprint",

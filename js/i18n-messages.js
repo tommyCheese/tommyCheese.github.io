@@ -695,7 +695,17 @@ window.SITE_MESSAGES = {
     "news.linux-ipv4-race-patch-response.title": "Linux IPv4 竞态漏洞：红帽发布严重级别公告，发行版修复进度不一",
     "news.linux-ipv4-race-patch-response.summary": "CVE-2026-98432 涉及 TCP 连接处理中的内存释放竞态。红帽 10 月 30 日公告将其列为严重级别；Debian 已提供部分修复包。Anthropic 的远程控制演示使用 MPTCP 监听服务，不能据此断言所有 TCP 服务均可同样被接管。",
     "news.cursor-claude-extension-compromise.title": "Cursor 扩展市场发现恶意 Claude Code 包，公告补充两个受影响版本",
-    "news.cursor-claude-extension-compromise.summary": "Cursor 确认 10 月 29 日分发的 macOS、Windows 扩展包 2.1.312 与 2.1.313 被恶意修改，并已下架和重建市场。恶意包并非 Anthropic 开发；后门部分环节可能失败，但不能据此忽略信息外传和残留。"
+    "news.cursor-claude-extension-compromise.summary": "Cursor 确认 10 月 29 日分发的 macOS、Windows 扩展包 2.1.312 与 2.1.313 被恶意修改，并已下架和重建市场。恶意包并非 Anthropic 开发；后门部分环节可能失败，但不能据此忽略信息外传和残留。",
+    "research.ontology-checkers-agent-false-alarms.title": "本体能查出 Agent 的哪些错误？研究发现误报同样需要审查",
+    "research.ontology-checkers-agent-false-alarms.summary": "研究比较人工维护、数据推导和模型生成的本体对知识图谱 Agent 的检查效果。在 UniProt 上，人工本体捕获更多真实错误，也更常误报正确答案；结构检查仍难发现语义走偏。",
+    "research.coverage-aware-longform-rag-context.title": "长答案 RAG 怎样少漏信息：先按覆盖面选材料，再检查答案用到了什么",
+    "research.coverage-aware-longform-rag-context.summary": "研究把检索结果选择改为子问题覆盖优化，在固定文档预算下减少重复证据；同时发现检索覆盖提高未必带来更完整答案，基于原有材料的自我反馈才进一步改善信息利用。",
+    "research.vericua-active-evidence-verification.title": "VeriCUA：让电脑操作 Agent 的验收者主动寻找完成证据",
+    "research.vericua-active-evidence-verification.summary": "VeriCUA 将任务验收拆成要求、证据检查和规则裁决，结合操作记录、界面及持久状态。实验减少误判成功，但依赖可访问证据，部分任务选择弃权，验证成本也显著高于单次模型判断。",
+    "research.open-problem-graph-proposed-status-governance.title": "知识图谱能找到新证据，但不能替研究问题宣布结案",
+    "research.open-problem-graph-proposed-status-governance.summary": "双层知识图谱保留人工目录，把新增文献和状态判断放在独立证据层。作者复核全部41个“解决或反驳”判断，只有1个解决判断真正回答了核心问题，说明状态更新仍须保留为待审建议。",
+    "research.smooth-action-chunking-motion-primitives.title": "用平滑曲线连接机器人的动作片段",
+    "research.smooth-action-chunking-motion-primitives.summary": "以运动基元表示动作段，再用上一段末指令修正接续，降低 ACT 与 DiT 的指令抖动。实机样本较小，仿真有成功率下降；加权融合在部分振动指标上更强，平滑与反应速度仍需权衡。"
   },
   "en": {
     "nav.about": "About",
@@ -1392,7 +1402,17 @@ window.SITE_MESSAGES = {
     "news.linux-ipv4-race-patch-response.title": "Linux IPv4 race: Red Hat issues critical advisory as distribution fixes progress",
     "news.linux-ipv4-race-patch-response.summary": "CVE-2026-98432 involves memory lifetime during TCP connection handling. Red Hat issued a critical advisory on October 30; Debian has fixed packages. Anthropic demonstrated remote control with an MPTCP listener, not every TCP configuration.",
     "news.cursor-claude-extension-compromise.title": "Cursor identifies malicious Claude Code packages and clarifies affected versions",
-    "news.cursor-claude-extension-compromise.summary": "Cursor confirms malicious macOS and Windows packages 2.1.312 and 2.1.313 were distributed on October 29. It removed them and rebuilt the marketplace. Anthropic did not develop the malicious packages; a failed backdoor step does not rule out data reporting or persistence."
+    "news.cursor-claude-extension-compromise.summary": "Cursor confirms malicious macOS and Windows packages 2.1.312 and 2.1.313 were distributed on October 29. It removed them and rebuilt the marketplace. Anthropic did not develop the malicious packages; a failed backdoor step does not rule out data reporting or persistence.",
+    "research.ontology-checkers-agent-false-alarms.title": "What can an ontology catch? Auditing false alarms in knowledge-graph agents",
+    "research.ontology-checkers-agent-false-alarms.summary": "A comparison of curated, data-derived and model-generated ontologies finds that curated checks catch more real agent errors on UniProt but also flag more correct answers. Structural validation still misses many semantic mistakes.",
+    "research.coverage-aware-longform-rag-context.title": "Long-form RAG: select evidence for coverage, then check what the answer actually uses",
+    "research.coverage-aware-longform-rag-context.summary": "A coverage-aware selector reduces redundant evidence under a fixed document budget. Better retrieval coverage does not consistently improve answer completeness; grounded self-feedback helps the generator use more of the evidence it already has.",
+    "research.vericua-active-evidence-verification.title": "VeriCUA: actively gather evidence before declaring a computer-use task complete",
+    "research.vericua-active-evidence-verification.summary": "VeriCUA combines task requirements, active inspection and rule-based verdicts using trajectories, interfaces and persistent state. It reduces false success judgments in experiments, but needs accessible evidence, sometimes abstains and costs much more than a single-call judge.",
+    "research.open-problem-graph-proposed-status-governance.title": "A knowledge graph can find evidence without declaring a research problem solved",
+    "research.open-problem-graph-proposed-status-governance.summary": "A two-layer graph preserves curated catalogs while adding literature evidence and proposed status changes. In an audit of all 41 solve/refute verdicts, only one solve verdict closed the central question; automatic status changes remained blocked.",
+    "research.smooth-action-chunking-motion-primitives.title": "Smooth curves connect robot action chunks",
+    "research.smooth-action-chunking-motion-primitives.summary": "Movement-primitive coefficients and a correction anchored to the previous command reduce ACT and DiT command jerk. Hardware samples are small and one simulation loses success; blending is stronger on some vibration metrics, leaving responsiveness trade-offs."
   },
   "ja": {
     "nav.about": "私について",
@@ -2089,7 +2109,17 @@ window.SITE_MESSAGES = {
     "news.linux-ipv4-race-patch-response.title": "Linux IPv4の競合不具合、Red Hatが重大警告：修正状況は配布元ごとに異なる",
     "news.linux-ipv4-race-patch-response.summary": "CVE-2026-98432はTCP接続処理中のメモリ解放に関する競合。Red Hatは10月30日に重大と評価し、Debianは修正パッケージを提供。Anthropicの遠隔操作実証はMPTCP待受環境であり、すべてのTCP構成で同じ結果を示したわけではない。",
     "news.cursor-claude-extension-compromise.title": "Cursor市場で悪意あるClaude Code拡張、対象は2つのバージョン",
-    "news.cursor-claude-extension-compromise.summary": "Cursorは10月29日に配布したmacOS・Windows向け2.1.312と2.1.313の改ざんを確認し、削除と市場の再構築を実施。悪意あるパッケージはAnthropic製ではなく、侵入口の設置に失敗しても情報送信や残留は否定できない。"
+    "news.cursor-claude-extension-compromise.summary": "Cursorは10月29日に配布したmacOS・Windows向け2.1.312と2.1.313の改ざんを確認し、削除と市場の再構築を実施。悪意あるパッケージはAnthropic製ではなく、侵入口の設置に失敗しても情報送信や残留は否定できない。",
+    "research.ontology-checkers-agent-false-alarms.title": "オントロジーは Agent の何を見抜けるか――知識グラフ検証の誤警報を調べる",
+    "research.ontology-checkers-agent-false-alarms.summary": "人手で整備したオントロジー、データから導出したオントロジー、モデル生成のオントロジーを比較。UniProt では人手のオントロジーが実際の誤答を多く検出する一方、正答への誤警報も多く、構造検査では意味上の誤りを見逃した。",
+    "research.coverage-aware-longform-rag-context.title": "長文 RAG の情報の抜けを減らす――網羅性で資料を選び、回答での利用を確かめる",
+    "research.coverage-aware-longform-rag-context.summary": "固定の文書数で部分質問のカバー範囲を広げる選択手法を検証。検索の網羅性向上は回答の充実に直結せず、既存資料に基づく自己フィードバックが情報利用を改善した。",
+    "research.vericua-active-evidence-verification.title": "VeriCUA：コンピューター操作 Agent の完了を、証拠を探して確かめる",
+    "research.vericua-active-evidence-verification.summary": "要件整理、能動的な証拠収集、規則による裁定を組み合わせる検証方式。操作記録・画面・永続状態を使って誤った成功判定を減らすが、証拠へのアクセスに依存し、保留と高い検証費用も伴う。",
+    "research.open-problem-graph-proposed-status-governance.title": "知識グラフで証拠は探せても、研究課題の解決は宣言できない",
+    "research.open-problem-graph-proposed-status-governance.summary": "二層の知識グラフが人手の課題目録を保持し、新しい文献と状態変更の提案を追加する。解決・反駁と判定した全41件の監査では、中心的な問いを解決していた解決判定は1件だけだった。",
+    "research.smooth-action-chunking-motion-primitives.title": "滑らかな曲線でロボットの動作区間をつなぐ",
+    "research.smooth-action-chunking-motion-primitives.summary": "運動プリミティブによる表現と直前指令を使う補正で、ACT と DiT の指令ジャークを低減。実機標本は小さく、仮想環境には成功率低下もある。一部の振動指標では加重平均が強く、反応速度との両立は課題。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2786,7 +2816,17 @@ window.SITE_MESSAGES = {
     "news.linux-ipv4-race-patch-response.title": "Гонка в IPv4 Linux: критическое предупреждение Red Hat и исправления дистрибутивов",
     "news.linux-ipv4-race-patch-response.summary": "CVE-2026-98432 связана со временем жизни памяти при обработке TCP. Red Hat выпустила критическое предупреждение 30 октября; у Debian есть исправленные пакеты. Демонстрация Anthropic использовала MPTCP и не доказывает одинаковый захват всех TCP-сервисов.",
     "news.cursor-claude-extension-compromise.title": "Cursor обнаружила вредоносные пакеты Claude Code и уточнила две версии",
-    "news.cursor-claude-extension-compromise.summary": "Cursor подтвердила подмену пакетов 2.1.312 и 2.1.313 для macOS и Windows, распространявшихся 29 октября. Они удалены, магазин перестроен. Anthropic не создавала вредоносные пакеты; сбой части бэкдора не исключает передачу данных и закрепление."
+    "news.cursor-claude-extension-compromise.summary": "Cursor подтвердила подмену пакетов 2.1.312 и 2.1.313 для macOS и Windows, распространявшихся 29 октября. Они удалены, магазин перестроен. Anthropic не создавала вредоносные пакеты; сбой части бэкдора не исключает передачу данных и закрепление.",
+    "research.ontology-checkers-agent-false-alarms.title": "Что замечает онтология: ложные тревоги при проверке агентов для графов знаний",
+    "research.ontology-checkers-agent-false-alarms.summary": "Авторы сравнили курируемые, выведенные из данных и созданные моделью онтологии. На UniProt курируемые проверки находили больше реальных ошибок агентов, но чаще отвергали правильные ответы; многие смысловые ошибки оставались незамеченными.",
+    "research.coverage-aware-longform-rag-context.title": "Полнота длинных ответов RAG: сначала выбрать разные свидетельства, затем использовать их",
+    "research.coverage-aware-longform-rag-context.summary": "Отбор по покрытию подвопросов уменьшает повторение свидетельств при фиксированном числе документов. Однако более полный поиск не гарантирует полноты ответа; самопроверка по уже найденным материалам помогает использовать больше информации.",
+    "research.vericua-active-evidence-verification.title": "VeriCUA: искать свидетельства до признания компьютерной задачи выполненной",
+    "research.vericua-active-evidence-verification.summary": "VeriCUA соединяет требования задачи, активную проверку и правила вынесения решения по траекториям, интерфейсу и сохраненному состоянию. Ошибочных признаний успеха меньше, но нужны доступные свидетельства; возможен отказ от решения, а стоимость выше однократной оценки.",
+    "research.open-problem-graph-proposed-status-governance.title": "Граф знаний находит свидетельства, но не объявляет исследовательскую задачу решённой",
+    "research.open-problem-graph-proposed-status-governance.summary": "Двухслойный граф сохраняет курируемый каталог и добавляет свидетельства из литературы с предложениями сменить статус. Проверка всех 41 вердикта о решении или опровержении показала: только один вердикт о решении закрывал центральный вопрос.",
+    "research.smooth-action-chunking-motion-primitives.title": "Гладкие кривые соединяют последовательности действий робота",
+    "research.smooth-action-chunking-motion-primitives.summary": "Коэффициенты двигательных примитивов и привязка к последней команде снижают рывок ACT и DiT. Выборки на роботе малы, в одном симуляционном условии доля успешных попыток снижается. Смешивание сильнее по части вибрационных метрик; остаётся компромисс с быстротой реакции."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3483,6 +3523,16 @@ window.SITE_MESSAGES = {
     "news.linux-ipv4-race-patch-response.title": "Linux IPv4 競態漏洞：紅帽釋出嚴重級別公告，發行版修復進度不一",
     "news.linux-ipv4-race-patch-response.summary": "CVE-2026-98432 涉及 TCP 連線處理中的記憶體釋放競態。紅帽 10 月 30 日公告將其列為嚴重級別；Debian 已提供部分修復包。Anthropic 的遠端控制演示使用 MPTCP 監聽服務，不能據此斷言所有 TCP 服務均可同樣被接管。",
     "news.cursor-claude-extension-compromise.title": "Cursor 擴充套件市場發現惡意 Claude Code 包，公告補充兩個受影響版本",
-    "news.cursor-claude-extension-compromise.summary": "Cursor 確認 10 月 29 日分發的 macOS、Windows 擴充套件包 2.1.312 與 2.1.313 被惡意修改，並已下架和重建市場。惡意包並非 Anthropic 開發；後門部分環節可能失敗，但不能據此忽略資訊外傳和殘留。"
+    "news.cursor-claude-extension-compromise.summary": "Cursor 確認 10 月 29 日分發的 macOS、Windows 擴充套件包 2.1.312 與 2.1.313 被惡意修改，並已下架和重建市場。惡意包並非 Anthropic 開發；後門部分環節可能失敗，但不能據此忽略資訊外傳和殘留。",
+    "research.ontology-checkers-agent-false-alarms.title": "本體能查出 Agent 的哪些錯誤？研究發現誤報同樣需要審查",
+    "research.ontology-checkers-agent-false-alarms.summary": "研究比較人工維護、資料推導和模型生成的本體對知識圖譜 Agent 的檢查效果。在 UniProt 上，人工本體捕獲更多真實錯誤，也更常誤報正確答案；結構檢查仍難發現語義走偏。",
+    "research.coverage-aware-longform-rag-context.title": "長答案 RAG 怎樣少漏資訊：先按覆蓋面選材料，再檢查答案用到了什麼",
+    "research.coverage-aware-longform-rag-context.summary": "研究把檢索結果選擇改為子問題覆蓋最佳化，在固定文件預算下減少重複證據；同時發現檢索覆蓋提高未必帶來更完整答案，基於原有材料的自我反饋才進一步改善資訊利用。",
+    "research.vericua-active-evidence-verification.title": "VeriCUA：讓電腦操作 Agent 的驗收者主動尋找完成證據",
+    "research.vericua-active-evidence-verification.summary": "VeriCUA 將任務驗收拆成要求、證據檢查和規則裁決，結合操作記錄、介面及持久狀態。實驗減少誤判成功，但依賴可訪問證據，部分任務選擇棄權，驗證成本也顯著高於單次模型判斷。",
+    "research.open-problem-graph-proposed-status-governance.title": "知識圖譜能找到新證據，但不能替研究問題宣佈結案",
+    "research.open-problem-graph-proposed-status-governance.summary": "雙層知識圖譜保留人工目錄，把新增文獻和狀態判斷放在獨立證據層。作者複核全部41個“解決或反駁”判斷，只有1個解決判斷真正回答了核心問題，說明狀態更新仍須保留為待審建議。",
+    "research.smooth-action-chunking-motion-primitives.title": "用平滑曲線連接機器人的動作片段",
+    "research.smooth-action-chunking-motion-primitives.summary": "以運動基元表示動作段，再用上一段末指令修正接續，降低 ACT 與 DiT 的指令抖動。實機樣本較小，模擬有成功率下降；加權融合在部分振動指標上更強，平滑與反應速度仍需權衡。"
   }
 };
