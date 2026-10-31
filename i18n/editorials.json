@@ -26060,6 +26060,1638 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "northflank-ai-credentials-incident",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Northflank security incident updates",
+          "url": "https://status.northflank.com/"
+        },
+        {
+          "label": "Wiz incident-pattern analysis",
+          "url": "https://www.wiz.io/blog/black-october-for-ai-developer-platforms"
+        },
+        {
+          "label": "BleepingComputer independent reporting",
+          "url": "https://www.bleepingcomputer.com/news/security/northflank-security-breach-leads-to-abuse-of-customers-ai-api-keys/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Northflank 的安全事件已经影响到客户交给平台保管的 AI 服务凭据。公司在 10 月 30 日披露事件，随后称有用户报告 AI API 密钥遭到未经授权的使用；截至 31 日的更新，调查仍在继续。对使用这类托管平台的团队而言，需要处理的不只是平台本身，还包括由这些凭据连接的外部服务。",
+          "sections": [
+            {
+              "heading": "从安全告警到客户报告",
+              "paragraphs": [
+                "Northflank 用来托管应用、容器和数据库。应用通常需要凭据才能连接其他服务，这些凭据可能保存在运行环境的变量或平台管理的秘密配置中。它们不是模型本身，却可能代表调用模型、访问数据库或其他云服务的权限。",
+                "官方时间线显示，Wiz 在 10 月 30 日 11:43 UTC 发出告警，Northflank 工程师一分钟后查看，12:02 开始部署网络策略修补，之后又进行了修补。这些时间描述的是发现和响应过程，不能据此确定攻击首次发生的时间。"
+              ]
+            },
+            {
+              "heading": "修补平台还不等于收回访问权限",
+              "paragraphs": [
+                "Northflank 要求客户按所有环境变量可能已被解密的情况处理，撤销或轮换保存在工作负载、秘密分组和全局配置中的凭据。这里的“按全部受影响处理”是一项扩大防护范围的响应要求，不是已经逐一证实每位客户、每项秘密都被窃取的调查结论。",
+                "公司在 30 日开放 PostgreSQL 和 MongoDB 的凭据轮换，31 日又开放 MySQL 和 Redis，并向包括免费用户在内的所有客户提供审计记录。其建议还包括检查 AI 服务商的用量和账单、限制数据库附加服务的公开访问。平台漏洞得到修补后，已经流出的旧密钥仍需由签发它的服务商撤销；只更改应用里保存的值不一定能让旧凭据失效。"
+              ]
+            },
+            {
+              "heading": "已经确认的影响与仍未知的范围",
+              "paragraphs": [
+                "客户报告的 AI 密钥滥用是本次事件的重要进展，但公开信息尚未明确最初入侵方式、受影响客户数量，以及其他类型凭据是否遭到滥用。本文没有将平台风险提示换算为确定受害人数，也没有把其他公司的账单损失套到 Northflank 客户身上。",
+                "Wiz 的同期研究将多起开发平台事件放在一起观察，认为 AI 凭据成为有价值的攻击目标，但并未确立所有事件都由同一攻击者或同一漏洞造成。本站的判断是，这类事件提醒团队把“平台恢复”和“外部授权收回”分开核查；调查完成前，不能把服务恢复或新轮换功能上线等同于所有风险已经消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解释性重绘：平台修补与客户凭据处置是两条相互关联的工作，不是攻击复现图。",
+            "steps": [
+              "托管平台收到告警并修补",
+              "核对客户凭据及外部授权",
+              "撤销旧凭据、检查异常用量",
+              "继续调查影响范围"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Northflank’s security incident has reached the credentials customers entrusted to its hosting platform. The company disclosed the incident on October 30 and subsequently reported customer accounts of unauthorized AI API key use. Its investigation was still ongoing in the October 31 updates. For teams using the service, the exposure concerns not only the host but also the external services those credentials can unlock.",
+          "sections": [
+            {
+              "heading": "What the timeline establishes",
+              "paragraphs": [
+                "Northflank hosts applications, containers and databases. Applications commonly need credentials to connect to other services, and may keep them in environment variables or managed secret settings. These are not model weights: they represent permission to call a model, access a database or use another cloud service.",
+                "The official timeline places the Wiz alert at 11:43 UTC on October 30, an engineering review one minute later and an initial network-policy patch at 12:02, followed by further patches. Those times establish detection and response, not when the attacker first gained access."
+              ]
+            },
+            {
+              "heading": "Patching and revoking access are different jobs",
+              "paragraphs": [
+                "Northflank told customers to act on the assumption that all environment variables had been decrypted and to rotate or revoke credentials in workloads, secret groups and global settings. That broad precaution is a response requirement; it is not a finding that every secret belonging to every customer was individually confirmed stolen.",
+                "The platform enabled PostgreSQL and MongoDB credential rotation on October 30, added MySQL and Redis on October 31, and opened audit records to all customers, including free accounts. Its guidance also covers reviewing AI-provider usage and billing and restricting public access to database add-ons. A platform patch does not invalidate a copied key at its issuer. Merely replacing the value stored in an application may leave the old authorization usable."
+              ]
+            },
+            {
+              "heading": "Known impact and unanswered questions",
+              "paragraphs": [
+                "Customer reports of unauthorized AI-key use are a material development. Public information does not yet establish the original intrusion method, the number of affected customers or whether other credential types were abused. The precautionary scope should not become a confirmed victim count, and losses observed at other companies should not be assigned to Northflank.",
+                "Wiz’s contemporary research connects several developer-platform incidents as a pattern of interest in AI credentials, without establishing one attacker or vulnerability behind all of them. Our interpretation is that teams need to check platform recovery and external authorization separately. An available service or a new rotation feature does not by itself establish that the incident’s consequences are over."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw: platform remediation and credential response are connected but distinct; this is not an attack reproduction.",
+            "steps": [
+              "Alert and platform patches",
+              "Identify credentials and external permissions",
+              "Revoke old access and review usage",
+              "Continue the impact investigation"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Northflank のセキュリティ事案は、顧客がホスティング基盤に預けた AI サービスの認証情報にも及んでいる。同社は10月30日に事案を公表し、その後、AI API キーの不正利用を顧客が報告したと説明した。31日の更新時点でも調査は続いている。利用企業が確認すべき対象には、基盤だけでなく、その認証情報で接続できる外部サービスも含まれる。",
+          "sections": [
+            {
+              "heading": "告知の時系列が示すこと",
+              "paragraphs": [
+                "Northflank はアプリ、コンテナ、データベースをホストする。アプリが外部サービスに接続するための認証情報は、環境変数や秘密情報の設定として保存されることがある。これはモデルの重みではなく、モデルの呼び出しやデータベース、クラウドサービスへのアクセス権限に当たる。",
+                "公式の時系列では、10月30日11:43 UTC に Wiz が警告し、1分後に担当者が確認、12:02 に最初のネットワークポリシー修正を行い、その後も修正を加えた。これらは発見と対応の時刻であり、侵入が始まった時刻を示すものではない。"
+              ]
+            },
+            {
+              "heading": "基盤の修正と認証情報の失効は別の対応",
+              "paragraphs": [
+                "Northflank は、すべての環境変数が復号された可能性を前提として、ワークロード、秘密情報グループ、全体設定の認証情報を失効または交換するよう求めた。この広い対象設定は予防的な対応方針であり、全顧客の全情報について窃取を個別に確認したという意味ではない。",
+                "30日に PostgreSQL と MongoDB、31日に MySQL と Redis の認証情報更新機能を開放し、無料利用者を含む全顧客に監査記録を提供した。AI 提供元の利用量や請求、データベース付加サービスの公開範囲の確認も案内している。基盤を修正しても、コピーされたキーは発行元で失効させる必要がある。アプリ内の値を新しくするだけでは、古い権限が残る場合がある。"
+              ]
+            },
+            {
+              "heading": "分かっている影響と未確定の範囲",
+              "paragraphs": [
+                "AI キーの不正利用という顧客報告は重要な進展だが、侵入経路、影響を受けた顧客数、他の種類の認証情報の悪用はまだ公表情報から確定できない。防護上の対象範囲を被害者数と読み替えたり、別企業の損失額を今回の顧客に当てはめたりしてはいけない。",
+                "同時期の Wiz の調査は複数の開発基盤事件に AI 認証情報を狙う傾向を見いだしたが、すべてが同一犯や同一脆弱性によるものとは確定していない。本サイトは、基盤の復旧と外部アクセス権の回収を別々に確認する必要があると考える。サービスの利用再開や更新機能の提供だけでは、影響の解消を証明できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトの説明用描き直し。基盤修正と認証情報への対応の関係を示し、攻撃の再現を示すものではありません。",
+            "steps": [
+              "警告と基盤の修正",
+              "認証情報と外部権限の確認",
+              "旧権限の失効と利用量の確認",
+              "影響範囲の調査継続"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Инцидент Northflank затронул учетные данные, которые клиенты доверили платформе размещения приложений. Компания сообщила о происшествии 30 октября, а затем — о сообщениях клиентов о несанкционированном использовании ключей AI API. В обновлениях от 31 октября расследование еще продолжалось. Для пользователей вопрос касается не только самой платформы, но и внешних сервисов, доступ к которым дают сохраненные ключи.",
+          "sections": [
+            {
+              "heading": "Что подтверждает хронология",
+              "paragraphs": [
+                "Northflank размещает приложения, контейнеры и базы данных. Для обращения к другим сервисам приложения часто сохраняют учетные данные в переменных окружения или управляемых секретах. Это не веса модели, а полномочия: вызвать модель, подключиться к базе или воспользоваться облачной службой.",
+                "Согласно официальной хронологии, Wiz направила предупреждение 30 октября в 11:43 UTC. Инженеры рассмотрели его через минуту, в 12:02 внесли первое исправление сетевой политики, затем последовали другие исправления. Это время обнаружения и реагирования, а не установленное время начала вторжения."
+              ]
+            },
+            {
+              "heading": "Исправление платформы не отзывает выданные ключи",
+              "paragraphs": [
+                "Northflank предложила исходить из возможной расшифровки всех переменных окружения и отозвать либо заменить учетные данные рабочих нагрузок, групп секретов и общих настроек. Это широкая мера предосторожности, а не результат индивидуального подтверждения кражи каждого секрета у каждого клиента.",
+                "30 октября компания открыла замену учетных данных PostgreSQL и MongoDB, 31 октября добавила MySQL и Redis и предоставила журналы аудита всем клиентам, включая бесплатные аккаунты. Рекомендации также предусматривают проверку использования AI и счетов, а также ограничение публичного доступа к дополнительным базам данных. Исправление хоста не аннулирует скопированный ключ у его поставщика. Простая замена значения в приложении может оставить прежний ключ действующим."
+              ]
+            },
+            {
+              "heading": "Подтвержденные последствия и границы знания",
+              "paragraphs": [
+                "Сообщения клиентов о постороннем использовании AI-ключей — существенное развитие событий. Однако публично еще не установлены первоначальный способ проникновения, число пострадавших клиентов и злоупотребление другими видами учетных данных. Объем предупредительных мер нельзя выдавать за число подтвержденных жертв; ущерб из других инцидентов также нельзя приписывать Northflank.",
+                "В исследовании того же периода Wiz рассматривает несколько инцидентов на платформах разработки как проявление интереса к AI-ключам, но не устанавливает одного злоумышленника или одну уязвимость для всех случаев. По нашей оценке, восстановление платформы и отзыв внешних полномочий требуют отдельной проверки. Доступность сервиса или новой функции замены ключей сама по себе не означает устранения всех последствий."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Авторская поясняющая схема: исправление платформы и работа с ключами связаны, но различаются. Это не воспроизведение атаки.",
+            "steps": [
+              "Предупреждение и исправления",
+              "Проверка ключей и внешних полномочий",
+              "Отзыв старого доступа и проверка использования",
+              "Продолжение расследования"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Northflank 的安全事件已經影響到客戶交給平臺保管的 AI 服務憑據。公司在 10 月 30 日披露事件，隨後稱有使用者報告 AI API 金鑰遭到未經授權的使用；截至 31 日的更新，調查仍在繼續。對使用這類託管平臺的團隊而言，需要處理的不只是平臺本身，還包括由這些憑據連線的外部服務。",
+          "sections": [
+            {
+              "heading": "從安全告警到客戶報告",
+              "paragraphs": [
+                "Northflank 用來託管應用、容器和資料庫。應用通常需要憑據才能連線其他服務，這些憑據可能儲存在執行環境的變數或平臺管理的秘密配置中。它們不是模型本身，卻可能代表呼叫模型、訪問資料庫或其他雲服務的許可權。",
+                "官方時間線顯示，Wiz 在 10 月 30 日 11:43 UTC 發出告警，Northflank 工程師一分鐘後檢視，12:02 開始部署網路策略修補，之後又進行了修補。這些時間描述的是發現和響應過程，不能據此確定攻擊首次發生的時間。"
+              ]
+            },
+            {
+              "heading": "修補平臺還不等於收回訪問許可權",
+              "paragraphs": [
+                "Northflank 要求客戶按所有環境變數可能已被解密的情況處理，撤銷或輪換儲存在工作負載、秘密分組和全域性配置中的憑據。這裡的“按全部受影響處理”是一項擴大防護範圍的響應要求，不是已經逐一證實每位客戶、每項秘密都被竊取的調查結論。",
+                "公司在 30 日開放 PostgreSQL 和 MongoDB 的憑據輪換，31 日又開放 MySQL 和 Redis，並向包括免費使用者在內的所有客戶提供審計記錄。其建議還包括檢查 AI 服務商的用量和賬單、限制資料庫附加服務的公開訪問。平臺漏洞得到修補後，已經流出的舊金鑰仍需由簽發它的服務商撤銷；只更改應用裡儲存的值不一定能讓舊憑據失效。"
+              ]
+            },
+            {
+              "heading": "已經確認的影響與仍未知的範圍",
+              "paragraphs": [
+                "客戶報告的 AI 金鑰濫用是本次事件的重要進展，但公開資訊尚未明確最初入侵方式、受影響客戶數量，以及其他型別憑據是否遭到濫用。本文沒有將平颱風險提示換算為確定受害人數，也沒有把其他公司的賬單損失套到 Northflank 客戶身上。",
+                "Wiz 的同期研究將多起開發平臺事件放在一起觀察，認為 AI 憑據成為有價值的攻擊目標，但並未確立所有事件都由同一攻擊者或同一漏洞造成。本站的判斷是，這類事件提醒團隊把“平臺恢復”和“外部授權收回”分開核查；調查完成前，不能把服務恢復或新輪換功能上線等同於所有風險已經消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解釋性重繪：平臺修補與客戶憑據處置是兩條相互關聯的工作，不是攻擊復現圖。",
+            "steps": [
+              "託管平臺收到告警並修補",
+              "核對客戶憑據及外部授權",
+              "撤銷舊憑據、檢查異常用量",
+              "繼續調查影響範圍"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "reddit-logged-in-access-pilot",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Reddit CEO announcement and replies",
+          "url": "https://www.reddit.com/user/spez/comments/1xiupm0/about_that_login_screen/"
+        },
+        {
+          "label": "Reddit Q3 2026 results",
+          "url": "https://investor.redditinc.com/news-events/news-releases/news-details/2026/Reddit-Reports-Third-Quarter-2026-Results/default.aspx"
+        },
+        {
+          "label": "Reuters independent reporting",
+          "url": "https://www.investing.com/news/stock-market-news/reddit-puts-logged-in-experience-first-as-google-ai-hits-traffic-4985602"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Reddit 准备改变持续多年的开放浏览方式。首席执行官 Steve Huffman 在10月29日说明，公司希望让主要使用体验转向登录状态，并先在美国以外的部分市场测试。它还没有宣布全球立即封闭所有帖子；哪些页面仍可直接阅读，正是接下来需要试验的边界。",
+          "sections": [
+            {
+              "heading": "哪些访问可能改变",
+              "paragraphs": [
+                "Huffman 的说明把登录后的推荐、加入社区、投票和讨论放在一起，希望用户与社区形成更持续的联系。过去许多访客通过搜索或分享链接阅读帖子，无需建立这种账户关系；因此，这次变化涉及阅读入口，而不只是已经需要登录的发帖功能。",
+                "他同时表示，首页对未登录用户开放仍有价值，来自搜索或外部分享的访客也应能看到链接指向的内容。公司将在未来几个月于部分非美国市场测试，国家名单、具体限制和全面推出时间尚未确定。不能将这种意向写成所有外链已经失效，或宣称每次浏览都必须注册。"
+              ]
+            },
+            {
+              "heading": "数据访问与广告收入都在考虑之中",
+              "paragraphs": [
+                "Reddit 称，未经许可的数据抓取大多发生在未登录页面；它希望继续通过有约束的商业协议授权数据，而不是让任何来源无限制取得内容。这是公司对数据访问方式的选择，登录限制本身并不证明抓取已被阻止，也不代表授权数据业务将停止。",
+                "Huffman 也明确提到广告业务和监管适应性。登录有助于平台根据兴趣推荐内容与广告。其10月29日财报显示，第三季度收入为8.95亿美元，其中广告收入8.47亿美元；这是本次计划的商业背景，不是测试后已经实现的新增收入。本站认为，评价效果时应同时观察社区参与、外部访问便利与商业利益，而不能只采用公司对体验改善的预期。"
+              ]
+            },
+            {
+              "heading": "不要求真名不等于没有账户画像",
+              "paragraphs": [
+                "Huffman 表示，这项改变不会要求用户提供真实姓名或身份信息，并称应用正在重新推出只读的隐身浏览模式，浏览和搜索不影响已登录账户的体验；用户仍可退出个性化。他在回复中又区分了账户登录与部分场景下由第三方执行的年龄核验，因此不能把这项承诺扩大为平台永远没有任何核验要求。",
+                "上述隐私说法来自公司，尚不是对所有网络请求、数据留存或关联方式的独立审计结论。对读者而言，关键未决问题是未登录可读范围、隐身模式的实际行为，以及试点会给搜索和分享带来多大阻力。本站的判断是，便于参与和便于自由阅读不必然同步改善，最终仍要看测试规则与实际结果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解释性重绘：展示拟议试点与决策顺序，不表示全球登录限制已经实施。",
+            "steps": [
+              "现有未登录阅读入口",
+              "部分非美国市场试点",
+              "观察参与、访问与业务影响",
+              "再确定登录边界与扩大范围"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Reddit is preparing to change its long-standing approach to browsing without an account. On October 29, CEO Steve Huffman described a move toward a primarily logged-in experience, starting with tests in selected markets outside the United States. This is not an announcement that every post has immediately been closed worldwide. Deciding what remains readable without signing in is part of the planned experiment.",
+          "sections": [
+            {
+              "heading": "Which visits could change",
+              "paragraphs": [
+                "Huffman connects personalized recommendations with joining communities, voting and discussion, seeking a more sustained relationship between visitors and communities. Many people have instead arrived from search or shared links simply to read. The change therefore concerns the entrance to reading, not just posting features that already require an account.",
+                "His announcement also recognizes the value of a publicly accessible front page and of letting visitors read material reached through an external link or search result. Tests are planned in selected non-US markets over the coming months. Countries, exact restrictions and a global rollout date remain unspecified. It would be premature to say all shared links have stopped working or every visit already requires registration."
+              ]
+            },
+            {
+              "heading": "Data access and advertising both matter",
+              "paragraphs": [
+                "Reddit says most unauthorized scraping uses logged-out pages. It intends to keep licensing data under commercial agreements with restrictions on use rather than allow uncontrolled collection. A login requirement is a choice about access: it does not establish that scraping has been defeated, nor does it mean the licensing business will end.",
+                "Huffman explicitly includes advertising and adapting to regulation among the reasons. Logged-in activity helps associate content and ads with interests. Reddit’s October 29 results report $895 million in third-quarter revenue, including $847 million from advertising. These figures provide business context, not revenue already generated by the proposed tests. In our assessment, community participation, convenient outside access and commercial interests all belong in an evaluation of the change."
+              ]
+            },
+            {
+              "heading": "No real-name requirement does not mean no profile",
+              "paragraphs": [
+                "Huffman says the change will not require a real name or identity information. He also describes a rebuilt read-only incognito mode in the app that lets browsing and searching avoid affecting the signed-in account, alongside the ability to opt out of personalization. In replies he distinguishes login from third-party age checks in some circumstances, so the promise should not become a claim that Reddit never requires any verification.",
+                "Those privacy statements are company representations, not an independent audit of all network activity, retention or account-linking behavior. The important unresolved questions are how much remains readable without login, how incognito actually behaves and how much friction the pilots introduce for search and sharing. Our interpretation is that easier participation and easier open reading need not improve together; the rules and results of the tests will matter."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the proposed pilot and decision sequence, not a depiction of a worldwide restriction already in force.",
+            "steps": [
+              "Existing logged-out reading",
+              "Pilots in selected non-US markets",
+              "Assess participation, access and business effects",
+              "Set boundaries before broader expansion"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Reddit は、アカウントなしでも読めるという長年の利用形態を変えようとしている。Steve Huffman CEO は10月29日、ログインを中心とする体験への移行を説明し、まず米国外の一部市場で試す方針を示した。世界中の投稿を即座に閉じる発表ではない。未ログインでどこまで読めるかは、今後の試験で決める問題として残っている。",
+          "sections": [
+            {
+              "heading": "読むための入口が変わる可能性",
+              "paragraphs": [
+                "Huffman は推薦、コミュニティへの参加、投票、会話を結び付け、継続的な参加を増やしたいと説明する。一方、検索や共有リンクから訪れ、アカウントとの関係を作らずに読む人も多い。そのため今回の変更は、従来からログインが必要な投稿機能だけでなく、読むための入口にも関わる。",
+                "説明では、トップページを未ログインで開けることや、検索・外部リンクから来た人が対象の内容を読めることの価値も認めている。今後数か月に米国外の一部市場で試験するが、国名、具体的な制限、世界展開の時期は未定だ。すべての共有リンクが使えなくなった、全閲覧にすでに登録が必須だとは言えない。"
+              ]
+            },
+            {
+              "heading": "データ利用と広告の双方が背景",
+              "paragraphs": [
+                "Reddit は、無許可の収集の多くが未ログイン画面で起きていると主張する。利用条件のある商業契約を通じたデータ提供は続ける方針だ。ログイン制限はアクセス管理の選択であり、収集を防ぎ切れた証拠でも、データライセンス事業の終了でもない。",
+                "Huffman は広告事業と規制への対応も理由に挙げる。ログインした行動は、関心に応じた記事や広告の表示につながる。10月29日の決算では、第3四半期の売上8億9500万ドルのうち広告は8億4700万ドルだった。これは計画の事業背景であり、試験によってすでに増えた売上ではない。本サイトは、参加のしやすさ、外部からの閲覧、事業上の利益を合わせて評価する必要があると考える。"
+              ]
+            },
+            {
+              "heading": "実名不要と行動の関連付けは別の話",
+              "paragraphs": [
+                "Huffman は、この変更で実名や本人情報を要求することはないとし、アプリの読み取り専用シークレットモードを作り直して再提供すると説明した。閲覧や検索をログイン中のアカウントに反映させず、個人向け表示をやめる選択も残すという。一方、返信では一部場面の第三者による年齢確認とログインを区別しており、あらゆる確認が永遠に不要という約束ではない。",
+                "これらは企業の説明で、通信、保存、アカウントとの結び付け全体を独立監査した結果ではない。未ログインで読める範囲、シークレットモードの挙動、検索や共有に増える手間が未確定の要点だ。参加しやすくなることと自由に読みやすくなることは同じとは限らず、具体的な試験規則と結果を待つ必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトの説明用描き直し。計画中の試験と判断の順序であり、世界全体ですでに制限済みという意味ではありません。",
+            "steps": [
+              "現在の未ログイン閲覧",
+              "米国外の一部市場で試験",
+              "参加・アクセス・事業への影響を確認",
+              "境界を決めて展開を判断"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Reddit готовит изменение многолетней модели чтения без аккаунта. 29 октября генеральный директор Стив Хаффман описал переход к использованию преимущественно после входа, начиная с испытаний на отдельных рынках за пределами США. Это не объявление о немедленном закрытии всех публикаций во всем мире. Определение того, что останется доступным без входа, входит в сам эксперимент.",
+          "sections": [
+            {
+              "heading": "Какие посещения могут измениться",
+              "paragraphs": [
+                "Хаффман связывает рекомендации с вступлением в сообщества, голосованием и обсуждением: компания хочет более устойчивого участия пользователей. Многие посетители раньше приходили из поиска или по ссылке просто читать. Поэтому изменение касается входа в режим чтения, а не только публикации сообщений, для которой аккаунт уже нужен.",
+                "В объявлении также признается ценность открытой главной страницы и возможности прочитать материал по ссылке из поиска или другого сайта. В ближайшие месяцы планируются испытания в отдельных странах вне США. Перечень стран, точные ограничения и дата глобального запуска не определены. Нельзя утверждать, что все внешние ссылки уже перестали работать или любое чтение требует регистрации."
+              ]
+            },
+            {
+              "heading": "И данные, и реклама",
+              "paragraphs": [
+                "Reddit утверждает, что большая часть неразрешенного сбора данных происходит через страницы без авторизации. Компания намерена продолжать лицензирование по коммерческим соглашениям с условиями использования. Ограничение входом — это выбор способа доступа, а не доказательство прекращения сбора и не отказ от бизнеса лицензирования.",
+                "Хаффман прямо упоминает рекламу и адаптацию к регулированию среди причин. Действия после входа помогают соотносить материалы и рекламу с интересами. В отчете от 29 октября Reddit указала квартальную выручку 895 млн долларов, в том числе 847 млн от рекламы. Это контекст решения, а не уже полученный результат испытаний. По нашей оценке, учитывать нужно одновременно участие в сообществах, удобство внешнего доступа и коммерческий интерес."
+              ]
+            },
+            {
+              "heading": "Отсутствие настоящего имени не означает отсутствия профиля",
+              "paragraphs": [
+                "Хаффман говорит, что изменение не потребует настоящего имени или идентификационных данных. Он также описывает переработанный режим инкогнито в приложении: только чтение, просмотр и поиск без влияния на вошедший аккаунт. Возможность отказаться от персонализации сохранится. Но в ответах он отделяет вход от проверки возраста третьей стороной в отдельных случаях; это нельзя трактовать как обещание никогда не проводить никаких проверок.",
+                "Утверждения о приватности исходят от компании и не заменяют независимый аудит сетевой активности, хранения и связывания данных. Открытыми остаются объем чтения без входа, фактическое поведение инкогнито и новые препятствия для поиска и обмена ссылками. По нашему мнению, удобство участия и открытого чтения не обязаны улучшаться одновременно: важны конкретные правила и результаты испытаний."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Авторская поясняющая схема планируемого испытания и решений, а не изображение уже действующего глобального ограничения.",
+            "steps": [
+              "Текущее чтение без входа",
+              "Испытания на отдельных рынках вне США",
+              "Оценка участия, доступа и бизнеса",
+              "Определение границ перед расширением"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Reddit 準備改變持續多年的開放瀏覽方式。執行長 Steve Huffman 在10月29日說明，公司希望讓主要使用體驗轉向登入狀態，並先在美國以外的部分市場測試。它還沒有宣佈全球立即封閉所有帖子；哪些頁面仍可直接閱讀，正是接下來需要試驗的邊界。",
+          "sections": [
+            {
+              "heading": "哪些訪問可能改變",
+              "paragraphs": [
+                "Huffman 的說明把登入後的推薦、加入社群、投票和討論放在一起，希望使用者與社群形成更持續的聯絡。過去許多訪客透過搜尋或分享連結閱讀帖子，無需建立這種賬戶關係；因此，這次變化涉及閱讀入口，而不只是已經需要登入的發帖功能。",
+                "他同時表示，首頁對未登入使用者開放仍有價值，來自搜尋或外部分享的訪客也應能看到連結指向的內容。公司將在未來幾個月於部分非美國市場測試，國家名單、具體限制和全面推出時間尚未確定。不能將這種意向寫成所有外鏈已經失效，或宣稱每次瀏覽都必須註冊。"
+              ]
+            },
+            {
+              "heading": "資料訪問與廣告收入都在考慮之中",
+              "paragraphs": [
+                "Reddit 稱，未經許可的資料抓取大多發生在未登入頁面；它希望繼續透過有約束的商業協議授權資料，而不是讓任何來源無限制取得內容。這是公司對資料訪問方式的選擇，登入限制本身並不證明抓取已被阻止，也不代表授權資料業務將停止。",
+                "Huffman 也明確提到廣告業務和監管適應性。登入有助於平臺根據興趣推薦內容與廣告。其10月29日財報顯示，第三季度收入為8.95億美元，其中廣告收入8.47億美元；這是本次計劃的商業背景，不是測試後已經實現的新增收入。本站認為，評價效果時應同時觀察社群參與、外部訪問便利與商業利益，而不能只採用公司對體驗改善的預期。"
+              ]
+            },
+            {
+              "heading": "不要求真名不等於沒有賬戶畫像",
+              "paragraphs": [
+                "Huffman 表示，這項改變不會要求使用者提供真實姓名或身份資訊，並稱應用正在重新推出只讀的隱身瀏覽模式，瀏覽和搜尋不影響已登入賬戶的體驗；使用者仍可退出個性化。他在回覆中又區分了賬戶登入與部分場景下由第三方執行的年齡核驗，因此不能把這項承諾擴大為平臺永遠沒有任何核驗要求。",
+                "上述隱私說法來自公司，尚不是對所有網路請求、資料留存或關聯方式的獨立審計結論。對讀者而言，關鍵未決問題是未登入可讀範圍、隱身模式的實際行為，以及試點會給搜尋和分享帶來多大阻力。本站的判斷是，便於參與和便於自由閱讀不必然同步改善，最終仍要看測試規則與實際結果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解釋性重繪：展示擬議試點與決策順序，不表示全球登入限制已經實施。",
+            "steps": [
+              "現有未登入閱讀入口",
+              "部分非美國市場試點",
+              "觀察參與、訪問與業務影響",
+              "再確定登入邊界與擴大範圍"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "mistral-large4-open-weights-release",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Mistral · October 29 weights announcement",
+          "url": "https://mistral.ai/news/mistral-large-4-oss/"
+        },
+        {
+          "label": "Mistral · model card and weight files",
+          "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"
+        },
+        {
+          "label": "Mistral · full weight license",
+          "url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B/blob/main/LICENSE"
+        },
+        {
+          "label": "Hugging Face · release and architecture explanation",
+          "url": "https://huggingface.co/blog/mistral-large4"
+        },
+        {
+          "label": "Artificial Analysis · high-reasoning model assessment",
+          "url": "https://artificialanalysis.ai/models/mistral-large-4"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Mistral 在 10 月 29 日兑现了 Large 4 月内交付权重的计划。昵称 Le Chonk 的模型此前只能通过公开预览等托管方式使用，现在改进后的权重已放上 Hugging Face，机构可以自行部署和调整。这次变化是模型真正交付，机构不必再等权重发布；同时，开放权重并不代表所有商业用途都没有许可条件。",
+          "sections": [
+            {
+              "heading": "从预览服务到可下载的模型",
+              "paragraphs": [
+                "Large 4 于 10 月 6 日进入公开预览。Mistral 表示，随后约三周继续进行强化学习，并吸收用户和安全合作方反馈，重点改善编程与防御性网络安全任务。此次交付包含 FP8 与 NVFP4 两种官方权重版本，模型文件目录已可访问；它们采用不同数值精度，不能把文件体积变化简单当作模型能力变化。",
+                "模型接受文字和图像，输出文字，支持一百万 token 的上下文。它使用混合专家结构：不是每生成一个 token 都动用全部约一万亿参数，而是选择部分专家参与计算。模型卡给出的活跃参数是约 490 亿，计入嵌入与输出层后约 520 亿；这是统计口径差别，不是此次突然扩大了模型。长上下文容量也不等于对任意长文都能准确理解。"
+              ]
+            },
+            {
+              "heading": "编程有进步，数字仍要放回测试条件",
+              "paragraphs": [
+                "Mistral 称，新版在 Terminal-Bench 4.0 上达到 41%，比公开预览提高 13 个百分点，同时输出 token 减少 30%。这项测试关注终端环境里的编程任务；这些数字来自厂商发布说明，不能直接解释成任意软件项目成功率，或所有使用场景都能减少同样成本。新版提供低、中、高三档推理强度，高档为默认，实际时间和资源开销还会随任务变化。",
+                "独立评测机构 Artificial Analysis 当前把高推理档的综合 Intelligence Index 记为 26 分。综合指数与编程任务指标不是同一个分数，不能据此把局部编程优势推广为全面领先。Hugging Face 的发布介绍与 Mistral 公告还列出了部分不同的基准数字，因此本稿不混合这些结果来制造排名，也不把合作方推荐语当作独立复现实验。"
+              ]
+            },
+            {
+              "heading": "权重开放，服务转售仍有明确条件",
+              "paragraphs": [
+                "此次采用 Mistral Ecosystem Open-Weight License。许可允许在所列条件下使用、修改和分发模型，但并不是未经修改的 MIT 许可。若使用主体或关联方经营 Model-as-a-Service 业务，商业使用涉及另行取得许可的要求；这里主要指让第三方能够实质控制输入、参数或训练数据的模型服务。",
+                "原文同时列出例外：内部使用和通过 Mistral 官方产品使用不适用上述另行许可要求，模型能力仅嵌入特定功能的终端产品也不属于该定义。对读者而言，重要的是区分“能下载”“能在自己的设施运行”和“能按任意方式转售服务”。权重交付扩大了部署选择，并不自动消除基础设施成本、运行责任或许可边界。"
+              ]
+            },
+            {
+              "heading": "网络安全能力不等于安全保证",
+              "paragraphs": [
+                "Mistral 将防御性安全工作作为重点，也承认在预览流量中观察到能力可能帮助现实攻击，因此仍在调整防护措施。供部分经审核企业伙伴试用的专门安全变体有单独的访问与合同限制，不能写成此次公开下载权重包含的无限制版本。专门版本的受控试用与通用权重公开交付是两回事。",
+                "厂商表示完整技术报告仍将随后公布。本站的判断是，这次最确定的变化是可下载权重与部署控制权；泛化能力、不同推理配置下的表现及真实工作环境中的安全性，还需要持续验证。自建服务仍要限制 Agent 可使用的工具与数据，并检查结果。发布公告中的拒绝率或安全基准，不能替代具体应用的权限设计和测试。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开资料重绘的解释图：展示从托管预览到权重交付及部署评估的变化，不是模型结构全图或性能实测。",
+            "steps": [
+              "10 月 6 日公开预览",
+              "10 月 29 日改进权重交付",
+              "核对许可证和部署条件",
+              "分别验证任务表现与安全边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 29, Mistral delivered the Large 4 weights it had promised for the end of the month. The model, nicknamed Le Chonk, had previously been available through hosted access such as its public preview. Improved weights are now on Hugging Face for organizations to deploy and adapt themselves. The substantive change is delivery, not another preview announcement; open weights nevertheless come with commercial licensing conditions.",
+          "sections": [
+            {
+              "heading": "From a preview service to downloadable weights",
+              "paragraphs": [
+                "Large 4 entered public preview on October 6. Mistral says roughly three further weeks of reinforcement learning and feedback from users and security partners focused improvements on coding and defensive cybersecurity. The release includes official FP8 and NVFP4 checkpoints with accessible model files. These use different numerical precision; a change in file size should not simply be interpreted as a change in capability.",
+                "The model accepts text and images, produces text, and supports a one-million-token context. Its mixture-of-experts design selects some experts for each token rather than using all roughly one trillion parameters every time. The model card reports about 49 billion active parameters, or 52 billion when embeddings and output layers are included. That is a difference in accounting, not evidence that the model suddenly grew in this release. Context capacity also does not guarantee accurate understanding of arbitrary long documents."
+              ]
+            },
+            {
+              "heading": "Coding gains need their test conditions",
+              "paragraphs": [
+                "Mistral reports 41% on Terminal-Bench 4.0, up 13 percentage points from the public preview, with 30% fewer output tokens. This benchmark concerns coding tasks in terminal environments. The figures come from the vendor announcement: they are not success rates for arbitrary software projects or a promise of the same savings everywhere. Three reasoning levels—low, medium and high, with high as the default—provide a further tradeoff whose runtime and resource cost depend on the task.",
+                "Independent evaluator Artificial Analysis currently gives the high-reasoning model 26 on its overall Intelligence Index. That index and coding-task metrics measure different things; a coding advantage cannot establish universal leadership. Hugging Face’s release article and Mistral’s announcement also contain some different benchmark figures. We do not combine those results to manufacture a ranking or treat partner endorsements as independently reproduced experiments."
+              ]
+            },
+            {
+              "heading": "Open weights still have a service-licensing boundary",
+              "paragraphs": [
+                "The release uses the Mistral Ecosystem Open-Weight License, which permits use, modification and distribution under its stated conditions. It is not the unmodified MIT license. A licensee or affiliate operating a Model-as-a-Service business faces a separate commercial-license requirement for commercial use. The definition concerns third-party access that provides meaningful control over inputs, parameters or training data.",
+                "The text also states exceptions: internal use and use through Mistral’s official products are exempt from that separate-license requirement, while end-user products with capabilities embedded solely in specific features are outside the service definition. The useful distinction is between downloading weights, operating them on one’s infrastructure and reselling access in any desired form. Delivery expands deployment choices; it does not erase infrastructure costs, operating responsibilities or licensing conditions."
+              ]
+            },
+            {
+              "heading": "Cyber capability is not a safety guarantee",
+              "paragraphs": [
+                "Mistral emphasizes defensive security, but also acknowledges that preview traffic showed potential for the model to assist real attacks. It says safeguards are still being adjusted. A specialized security variant previewed by vetted enterprise partners has separate access and contractual restrictions; it should not be described as an unrestricted variant included in the public download. The controlled specialist preview and the general weight release are distinct.",
+                "The company says a full technical report is still forthcoming. Our assessment is that downloadable weights and greater deployment control are the clearest changes. Generalization, performance across reasoning settings and safety in real workflows still require evaluation. Self-hosted services must bound an agent’s tool and data access and check its results. Refusal rates or security benchmarks in a launch announcement do not replace application-specific permission design and testing."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on public sources: the move from hosted preview to weight delivery and deployment evaluation, not a complete architecture chart or measured performance result.",
+            "steps": [
+              "Public preview on October 6",
+              "Improved weights delivered October 29",
+              "Check licensing and deployment conditions",
+              "Evaluate task performance and safety separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Mistral は 10 月 29 日、月内公開を約束していた Large 4 の重みを配布した。Le Chonk と呼ばれるモデルは、それまで公開プレビューなどのホスト型サービスで利用できたが、改良版を Hugging Face から入手し、組織が自ら運用・調整できるようになった。今回は予告の繰り返しではなく実物の提供が変化だ。ただし、重みが公開されたからといって商用利用の条件がすべてなくなるわけではない。",
+          "sections": [
+            {
+              "heading": "プレビューからダウンロード可能なモデルへ",
+              "paragraphs": [
+                "Large 4 は 10 月 6 日に公開プレビューを開始した。Mistral によれば、その後約三週間の強化学習と利用者・安全分野の協力先からの反応を通じ、コーディングと防御的なサイバーセキュリティを改善した。今回の公式版は FP8 と NVFP4 で、モデルのファイルを確認できる。数値精度が異なるため、ファイル容量の違いだけを能力の違いと考えるべきではない。",
+                "文字と画像を入力し、文字を出力するモデルで、文脈長は百万トークンだ。混合エキスパート構造により、各トークンで約一兆の全パラメータを動かすのではなく一部の専門ネットワークを選ぶ。モデルカードでは活性化するパラメータを約 490 億、埋め込みと出力層を含めると約 520 億としている。これは数え方の違いであり、今回急にモデルが拡大した証拠ではない。長い文脈を受け入れる能力も、どんな長文でも正しく理解する保証にはならない。"
+              ]
+            },
+            {
+              "heading": "コーディングの数値は試験条件と一緒に読む",
+              "paragraphs": [
+                "Mistral は Terminal-Bench 4.0 で 41% と、公開プレビューより 13 ポイント改善し、出力トークンを 30% 減らしたと説明する。これは端末環境のコーディング課題の試験であり、数値は企業の発表による。任意の開発案件の成功率や、すべての用途で同じ費用削減が得られるという意味ではない。推論強度は低・中・高の三段階で高が既定値だが、所要時間と資源は課題によって変わる。",
+                "独立評価機関 Artificial Analysis の現在のモデルページでは、高推論設定の総合 Intelligence Index は 26 点だ。総合指標とコーディング課題の指標は別であり、一分野の優位を全面的な首位へ広げることはできない。また Hugging Face の紹介と Mistral の公告には、一部異なるベンチマーク値が載っている。本稿はそれらを混ぜて順位を作らず、協力企業の推薦も独立した再現実験として扱わない。"
+              ]
+            },
+            {
+              "heading": "重みの公開とサービス提供の許諾は別",
+              "paragraphs": [
+                "適用されるのは Mistral Ecosystem Open-Weight License だ。所定の条件の下で使用、改変、配布を認めるが、無変更の MIT ライセンスではない。利用者または関連会社が Model-as-a-Service 事業を営む場合、商用利用には別途商用ライセンスが必要となる。この定義は、第三者が入力、パラメータ、訓練データを実質的に制御できる形でモデルへアクセスするサービスに関わる。",
+                "例外も明記されている。内部利用と Mistral の公式製品を通じた利用には追加ライセンス要件を適用せず、特定機能だけにモデルを組み込んだ最終利用者向け製品はサービスの定義から除く。ダウンロードできること、自社設備で動かせること、任意の形式でアクセスを再販売できることは区別が必要だ。提供形態の選択肢が増えても、設備費、運用責任、許諾条件はなくならない。"
+              ]
+            },
+            {
+              "heading": "サイバー能力の高さは安全の保証ではない",
+              "paragraphs": [
+                "Mistral は防御用途を重視する一方、プレビュー利用から現実の攻撃を助ける可能性も認識し、防護策を調整していると説明する。審査済み企業が試す専用のセキュリティ版には別のアクセス条件と契約上の制約がある。これを一般公開の重みに含まれる無制限版と説明してはいけない。専用版の管理された試用と、汎用版の重み提供は別のものである。",
+                "完全な技術報告は今後公表するとしている。本稿では、最も確かな変化は重みの入手と配置場所を選ぶ権限だと考える。一般化能力、推論設定による差、実際の業務での安全性には検証が必要だ。自社運用でも Agent が使うツールやデータの範囲を制限し、結果を確認する必要がある。発表時の拒否率や安全ベンチマークは、各アプリの権限設計や試験の代わりにはならない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料を基に本站で描き直した説明図。ホスト型プレビューから重み提供と運用評価への変化を示し、完全な構造図や性能実測ではない。",
+            "steps": [
+              "10 月 6 日に公開プレビュー",
+              "10 月 29 日に改良版の重みを提供",
+              "許諾と運用条件を確認",
+              "課題性能と安全性を分けて検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "29 октября Mistral выполнила обещание предоставить веса Large 4 до конца месяца. Модель по прозвищу Le Chonk прежде была доступна через размещенные сервисы, включая публичную предварительную версию. Теперь улучшенные веса опубликованы на Hugging Face: организации могут развертывать и адаптировать модель самостоятельно. Новость состоит в фактической поставке, а не очередном анонсе; открытые веса при этом сохраняют условия коммерческого лицензирования.",
+          "sections": [
+            {
+              "heading": "От предварительного сервиса к скачиваемой модели",
+              "paragraphs": [
+                "Публичная предварительная версия Large 4 появилась 6 октября. По словам Mistral, следующие примерно три недели обучения с подкреплением и обратной связи от пользователей и партнеров по безопасности улучшили программирование и защитные киберзадачи. Выпущены официальные варианты FP8 и NVFP4, файлы модели доступны. У них разная численная точность, поэтому различие размера файлов нельзя само по себе считать различием возможностей.",
+                "Модель принимает текст и изображения, выдает текст и поддерживает контекст в миллион токенов. Архитектура смеси экспертов выбирает часть специализированных блоков для каждого токена вместо задействования всех примерно триллиона параметров. Карточка указывает около 49 миллиардов активных параметров, или 52 миллиарда с учетом входных представлений и выходных слоев. Это различие подсчета, а не свидетельство внезапного увеличения модели. Размер контекста также не гарантирует правильного понимания любого длинного документа."
+              ]
+            },
+            {
+              "heading": "Результаты программирования требуют условий испытаний",
+              "paragraphs": [
+                "Mistral сообщает о 41% на Terminal-Bench 4.0: рост на 13 процентных пунктов относительно предварительной версии при сокращении выходных токенов на 30%. Испытание касается задач программирования в терминальной среде; значения приведены поставщиком. Это не доля успешных произвольных проектов и не обещание одинаковой экономии везде. Доступны три уровня рассуждения — низкий, средний и высокий, последний по умолчанию; время и расход ресурсов зависят от задачи.",
+                "Независимый оценщик Artificial Analysis сейчас указывает для высокого уровня 26 баллов в общем Intelligence Index. Общий индекс и показатели программирования измеряют разное: преимущество в одной области не означает лидерства во всем. Кроме того, статья Hugging Face и объявление Mistral содержат некоторые различающиеся результаты. Мы не объединяем их для построения рейтинга и не считаем отзывы партнеров независимо воспроизведенными экспериментами."
+              ]
+            },
+            {
+              "heading": "Открытые веса и условия продажи сервиса",
+              "paragraphs": [
+                "Применяется Mistral Ecosystem Open-Weight License, разрешающая использование, изменение и распространение при указанных условиях. Это не неизмененная лицензия MIT. Если получатель лицензии или связанная компания ведет бизнес Model-as-a-Service, для коммерческого использования предусмотрено отдельное коммерческое разрешение. Определение относится к доступу третьих лиц, позволяющему существенно управлять входами, параметрами или данными последующего обучения.",
+                "Текст предусматривает исключения: внутреннее использование и доступ через официальные продукты Mistral освобождены от этого отдельного требования; конечные продукты, где возможности встроены только в конкретные функции, не входят в определение такого сервиса. Важно различать скачивание весов, запуск на собственной инфраструктуре и перепродажу доступа в любой форме. Поставка расширяет выбор размещения, но не отменяет расходы на оборудование, ответственность за эксплуатацию или условия лицензии."
+              ]
+            },
+            {
+              "heading": "Кибервозможности не гарантируют безопасность",
+              "paragraphs": [
+                "Mistral делает акцент на защите, но признает, что использование предварительной версии показало потенциал помощи реальным атакам. Компания продолжает корректировать защитные меры. Специализированный вариант для проверенных корпоративных партнеров имеет отдельные ограничения доступа и договорные условия; его нельзя представлять как неограниченную версию из публичной загрузки. Контролируемое испытание специализированного варианта и выпуск общих весов — разные вещи.",
+                "Полный технический отчет, по словам компании, еще предстоит опубликовать. Мы считаем наиболее определенными изменениями доступность весов и больший контроль над размещением. Обобщение, различия режимов рассуждения и безопасность в реальной работе требуют проверки. При самостоятельном запуске также нужны ограничения доступа агента к инструментам и данным и проверка результатов. Доля отказов или тесты безопасности в объявлении не заменяют проектирование разрешений и испытания конкретного приложения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Наша поясняющая схема по публичным источникам: переход от размещенной предварительной версии к весам и оценке развертывания, а не полная архитектура или измерение производительности.",
+            "steps": [
+              "Публичная предварительная версия 6 октября",
+              "Улучшенные веса опубликованы 29 октября",
+              "Проверка лицензии и условий размещения",
+              "Раздельная оценка задач и безопасности"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Mistral 在 10 月 29 日兌現了 Large 4 月內交付權重的計劃。暱稱 Le Chonk 的模型此前只能透過公開預覽等託管方式使用，現在改進後的權重已放上 Hugging Face，機構可以自行部署和調整。這次變化是模型真正交付，機構不必再等權重發布；同時，開放權重並不代表所有商業用途都沒有許可條件。",
+          "sections": [
+            {
+              "heading": "從預覽服務到可下載的模型",
+              "paragraphs": [
+                "Large 4 於 10 月 6 日進入公開預覽。Mistral 表示，隨後約三週繼續進行強化學習，並吸收使用者和安全合作方回饋，重點改善程式設計與防禦性網路安全任務。此次交付包含 FP8 與 NVFP4 兩種官方權重版本，模型檔案目錄已可存取；它們採用不同數值精度，不能把檔案體積變化簡單當作模型能力變化。",
+                "模型接受文字和影像，輸出文字，支援一百萬 token 的上下文。它使用混合專家結構：不是每生成一個 token 都動用全部約一兆參數，而是選擇部分專家參與計算。模型卡給出的活躍參數是約 490 億，計入嵌入與輸出層後約 520 億；這是統計口徑差別，不是此次突然擴大了模型。長上下文容量也不等於對任意長文都能準確理解。"
+              ]
+            },
+            {
+              "heading": "程式設計有進步，數字仍要放回測試條件",
+              "paragraphs": [
+                "Mistral 稱，新版在 Terminal-Bench 4.0 上達到 41%，比公開預覽提高 13 個百分點，同時輸出 token 減少 30%。這項測試關注終端環境裡的程式設計任務；這些數字來自廠商釋出說明，不能直接解釋成任意軟體專案成功率，或所有使用場景都能減少同樣成本。新版提供低、中、高三檔推理強度，高檔為預設，實際時間和資源開銷還會隨任務變化。",
+                "獨立評測機構 Artificial Analysis 當前把高推理檔的綜合 Intelligence Index 記為 26 分。綜合指數與程式設計任務指標不是同一個分數，不能據此把局部程式設計優勢推廣為全面領先。Hugging Face 的釋出介紹與 Mistral 公告還列出了部分不同的基準數字，因此本稿不混合這些結果來製造排名，也不把合作方推薦語當作獨立復現實驗。"
+              ]
+            },
+            {
+              "heading": "權重開放，服務轉售仍有明確條件",
+              "paragraphs": [
+                "此次採用 Mistral Ecosystem Open-Weight License。許可允許在所列條件下使用、修改和分發模型，但並不是未經修改的 MIT 許可。若使用主體或關聯方經營 Model-as-a-Service 業務，商業使用涉及另行取得許可的要求；這裡主要指讓第三方能夠實質控制輸入、參數或訓練資料的模型服務。",
+                "原文同時列出例外：內部使用和透過 Mistral 官方產品使用不適用上述另行許可要求，模型能力僅嵌入特定功能的終端產品也不屬於該定義。對讀者而言，重要的是區分“能下載”“能在自己的設施執行”和“能按任意方式轉售服務”。權重交付擴大了部署選擇，並不自動消除基礎設施成本、執行責任或許可邊界。"
+              ]
+            },
+            {
+              "heading": "網路安全能力不等於安全保證",
+              "paragraphs": [
+                "Mistral 將防禦性安全工作作為重點，也承認在預覽流量中觀察到能力可能幫助現實攻擊，因此仍在調整防護措施。供部分經稽核企業夥伴試用的專門安全變體有單獨的存取與合同限制，不能寫成此次公開下載權重包含的無限制版本。專門版本的受控試用與通用權重公開交付是兩回事。",
+                "廠商表示完整技術報告仍將隨後公佈。本站的判斷是，這次最確定的變化是可下載權重與部署控制權；泛化能力、不同推理配置下的表現及真實工作環境中的安全性，還需要持續驗證。自建服務仍要限制 Agent 可使用的工具與資料，並檢查結果。釋出公告中的拒絕率或安全基準，不能替代具體應用的權限設計和測試。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開資料重繪的解釋圖：展示從託管預覽到權重交付及部署評估的變化，不是模型結構全圖或效能實測。",
+            "steps": [
+              "10 月 6 日公開預覽",
+              "10 月 29 日改進權重交付",
+              "核對許可證和部署條件",
+              "分別驗證任務表現與安全邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "ollama-0406-gguf-windows-fixes",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Ollama · v0.40.6 release",
+          "url": "https://github.com/ollama/ollama/releases/tag/v0.40.6"
+        },
+        {
+          "label": "Ollama · Windows runner-lifetime fix",
+          "url": "https://github.com/ollama/ollama/pull/18500"
+        },
+        {
+          "label": "Ollama · Q2_0 reader compatibility",
+          "url": "https://github.com/ollama/ollama/pull/18967"
+        },
+        {
+          "label": "Ollama · question identifier correction",
+          "url": "https://github.com/ollama/ollama/pull/19041"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Ollama 0.40.6 于 10 月 16 日发布，主要解决两类容易被混为“模型不能用”的问题：模型文件虽然能被底层引擎执行，却在上层读取时失败；服务已经结束，推理子进程却仍留在 Windows 中。这次更新修补的是兼容性与进程管理，公告并未报告模型能力或推理速度的普遍提升。",
+          "sections": [
+            {
+              "heading": "底层能够运行，不代表文件就能顺利加载",
+              "paragraphs": [
+                "GGUF 是一种存放模型参数与相关信息的文件格式。Ollama 需要先理解文件里的数据类型，才能把模型交给底层推理引擎。相关变更说明指出，0.40.5 已包含能运行 Q2_0 文件的 llama.cpp 版本，但 Ollama 自己的 GGUF 读取器还不认识对应的张量类型和文件类型。于是，底层支持已经到位，上层导入或加载仍会失败。",
+                "0.40.6 补上这两个类型的识别。维护者给出的 Q2_0 布局为每块 64 个权重、18 字节；这里描述的是该量化块的存储结构，不能直接推算整个模型文件大小或内存占用。变更作者报告，在 Apple silicon 上用 Bonsai 2 的 2B、4B、9B、27B 文件验证了创建与运行，覆盖思考、视觉和工具功能；同一批文件在 0.40.5 失败。这是作者的测试范围，不是所有量化模型及设备的兼容性证明。"
+              ]
+            },
+            {
+              "heading": "让 Windows 接管退出时的子进程清理",
+              "paragraphs": [
+                "推理通常由服务启动的子进程承担。正常退出时，父服务可以通知并清理它们；强制结束时，这段清理逻辑可能来不及运行。修复说明针对 Windows 上独立运行服务的场景，维护者明确表示桌面应用正常关闭会让服务有机会清理，因此不属于其所描述的残留进程问题。",
+                "新实现把推理子进程放进 Windows 的 Job Object 管理。可以把它理解为操作系统维护的一组相关进程：持有它的服务结束、相应对象关闭后，由 Windows 终止归属其中的子进程，即使普通退出清理没有执行也能生效。评审还补上了失败重试，避免一次暂时性的底层失败让后续模型加载一直卡在失效状态。"
+              ]
+            },
+            {
+              "heading": "问题标识修正与更新的实际边界",
+              "paragraphs": [
+                "另一个修复涉及交互式提问：此前把问题全文当作问题标识，文本中常见的空格可能不满足严格的名称校验。新版本改用单独的标识来关联问题，让显示给人的问题内容与系统用于引用它的名称分开。这是一项接口输入兼容性修正，不会自动改善模型回答质量。",
+                "这些变化各有明确受益条件：遇到对应 GGUF 类型的用户获得读取兼容性，强制终止 Windows 独立服务的用户获得子进程生命周期修复，交互提问则减少名称校验失败。公告没有给出统一的速度、内存或准确率提升数字。是否解决具体故障，仍取决于文件编码、运行方式和硬件；成功加载某个模型，也不意味着其他不相关的模型架构或设备问题都已消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据版本说明和合并变更重绘的解释图，展示兼容性与进程生命周期，不是性能测试结果。",
+            "steps": [
+              "读取器识别模型编码",
+              "推理引擎运行模型",
+              "操作系统管理子进程退出"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Released on October 16, Ollama 0.40.6 addresses two distinct failures: a model supported by the underlying engine could still fail in the file reader, and inference subprocesses could remain after a Windows service was terminated. The changes concern compatibility and process ownership. They do not establish a general improvement in model intelligence or inference speed.",
+          "sections": [
+            {
+              "heading": "Engine support and file-reader support are separate",
+              "paragraphs": [
+                "GGUF stores model parameters and associated information. Ollama must understand its data types before handing the model to an inference engine. The change description says that 0.40.5 already included a llama.cpp version capable of running Q2_0 files, while Ollama’s own reader did not recognize the corresponding tensor and file types. Importing or loading could therefore fail even though the engine was ready.",
+                "Version 0.40.6 adds those type definitions. The documented layout contains 64 weights and 18 bytes per block; this is a block-format description, not a measurement of whole-model size or memory use. The author reports creation and execution tests on Apple silicon with Bonsai 2 files at 2B, 4B, 9B and 27B, including thinking, vision and tools, where 0.40.5 failed on the same files. That is an attributed test scope, not certification of every quantized model or device."
+              ]
+            },
+            {
+              "heading": "Windows takes responsibility when normal cleanup cannot run",
+              "paragraphs": [
+                "The service launches subprocesses to perform inference. A normal shutdown can clean them up, but forced termination may prevent that cleanup from executing. The maintainer describes the problem for independently run Windows services and explicitly says normal desktop-app shutdown already lets the service clean up its children. The issue should not be generalized to every desktop exit.",
+                "The fix places inference subprocesses in a Windows Job Object, an operating-system grouping of related processes. Closing the owning object makes Windows terminate the processes assigned to it, including when normal service cleanup cannot run. Review also added retry behavior so a transient low-level failure does not leave later model loads permanently stuck in the failed state."
+              ]
+            },
+            {
+              "heading": "Question identifiers and the limits of the release",
+              "paragraphs": [
+                "Another correction separates an interactive question’s text from its identifier. Previously the full question served as its name, and ordinary whitespace could fail strict name validation. Dedicated identifiers preserve the association without imposing naming rules on readable question text. This changes input compatibility rather than the quality of the model’s answer.",
+                "The beneficiaries depend on the failure encountered: specific GGUF encodings gain reader support, forced Windows service termination gains process cleanup, and interactive questions avoid a naming mismatch. The announcement supplies no universal speed, memory or accuracy improvement. Actual compatibility still depends on the file encoding, operating mode and hardware; loading one model successfully does not resolve unrelated architecture or device limitations."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory diagram based on release notes and merged changes; it illustrates compatibility and process lifetime, not benchmark results.",
+            "steps": [
+              "Recognize the model encoding",
+              "Run the inference engine",
+              "Let the operating system close owned processes"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "10 月 16 日公開の Ollama 0.40.6 は、異なる二つの不具合を修正した。下位の推論エンジンが対応済みのモデルでもファイル読み取りで失敗する問題と、Windows のサービスを強制終了しても推論の子プロセスが残る問題である。中心は互換性とプロセス管理であり、モデル能力や推論速度が全般的に向上したという発表ではない。",
+          "sections": [
+            {
+              "heading": "エンジンの対応と読み取り処理の対応は別",
+              "paragraphs": [
+                "GGUF はモデルのパラメーターと関連情報を保存する形式である。Ollama はそのデータ型を理解したうえで、推論エンジンにモデルを渡す。変更説明によれば、0.40.5 には Q2_0 を実行できる llama.cpp がすでに含まれていたが、Ollama 自身の読み取り処理は対応するテンソル型とファイル型を認識できなかった。そのため、実行エンジン側の対応だけでは導入や読み込みの失敗を防げなかった。",
+                "0.40.6 はその型定義を追加する。説明されている配置は 1 ブロックに 64 個の重み、18 バイトであり、モデル全体のファイル容量やメモリー使用量を測定した数字ではない。作成者は Apple silicon 上で Bonsai 2 の 2B、4B、9B、27B を作成・実行し、思考、視覚、ツールを確認したと報告している。同じファイルは 0.40.5 で失敗していた。ただし、すべての量子化モデルや機器への保証ではない。"
+              ]
+            },
+            {
+              "heading": "通常の終了処理が動かなくても OS が片付ける",
+              "paragraphs": [
+                "推論を担う子プロセスはサービスから起動される。通常終了なら親側で後処理できるが、強制終了ではその機会が失われる。修正説明が対象にするのは Windows 上で独立して動かすサービスで、保守担当者はデスクトップアプリの通常終了ではすでに子プロセスを片付ける機会があるとしている。あらゆるデスクトップ終了に問題があったとは言えない。",
+                "修正版は子プロセスを Windows の Job Object に所属させる。これは OS が関連プロセスをまとめて管理する仕組みで、所有するオブジェクトが閉じられると、通常の終了処理が動かなくても所属プロセスを Windows が終了できる。レビューでは再試行も追加され、一時的な低レベルの失敗が後のモデル読み込みを恒久的に妨げないようになった。"
+              ]
+            },
+            {
+              "heading": "質問の識別子を分離する小さな修正",
+              "paragraphs": [
+                "対話式の質問では、質問文そのものを名前として使っていたため、空白などが厳密な名前の検証で拒否される場合があった。新しい処理は専用の識別子で質問を関連付け、人が読む内容とシステムが参照する名前を分離する。入力の互換性を直す変更であり、回答の質を直接高めるものではない。",
+                "恩恵を受ける条件はそれぞれ異なる。該当 GGUF 型では読み取り、Windows の独立サービスの強制終了では後処理、対話式質問では名前検証が改善する。発表に一律の速度、メモリー、精度の改善値はない。実際の結果は形式、実行方法、ハードウェアに依存し、一つのモデルの読み込み成功が別の構造や機器の制約まで解決するわけではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "リリース説明と統合済み変更に基づき本サイトが描き直した説明図。互換性とプロセスの寿命を示し、性能測定ではない。",
+            "steps": [
+              "モデルの形式を読み取る",
+              "推論エンジンで実行",
+              "OS が所属プロセスを終了"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Выпущенная 16 октября Ollama 0.40.6 исправляет два разных сбоя: модель могла поддерживаться вычислительным движком, но не загружаться через считыватель файла; в Windows дочерние процессы могли оставаться после остановки службы. Речь идёт о совместимости и управлении процессами, а не о доказанном общем росте качества моделей или скорости генерации.",
+          "sections": [
+            {
+              "heading": "Поддержка движка не заменяет поддержку формата",
+              "paragraphs": [
+                "GGUF хранит параметры модели и сопутствующие сведения. Прежде чем передать модель движку, Ollama должна распознать типы данных файла. Согласно описанию изменения, версия 0.40.5 уже содержала llama.cpp, способный выполнять файлы Q2_0, но собственный считыватель Ollama ещё не понимал соответствующие типы тензоров и файлов. Поэтому импорт или загрузка могли завершаться ошибкой при готовом к работе движке.",
+                "Версия 0.40.6 добавляет эти определения. Описанный блок содержит 64 веса и занимает 18 байт; это характеристика блока, а не измерение размера всей модели или потребления памяти. Автор сообщает о проверке создания и запуска Bonsai 2 на Apple silicon в вариантах 2B, 4B, 9B и 27B, включая рассуждение, зрение и инструменты. Те же файлы не работали в 0.40.5. Это заявленная автором область тестирования, а не гарантия для всех квантованных моделей и устройств."
+              ]
+            },
+            {
+              "heading": "Windows завершает дочерние процессы вместо пропущенной очистки",
+              "paragraphs": [
+                "Вычисления выполняют дочерние процессы, запущенные службой. При обычном завершении их можно убрать штатно, но принудительное прекращение работы может не оставить времени для очистки. Разработчик описывает проблему у отдельно запускаемой службы Windows и уточняет, что нормальное закрытие настольного приложения уже позволяет службе завершить дочерние процессы. Распространять этот дефект на любое закрытие приложения неверно.",
+                "Исправление включает процессы в Windows Job Object — группу, жизненным циклом которой управляет операционная система. При закрытии владеющего объекта Windows завершает относящиеся к нему процессы, даже если обычная очистка не выполнилась. В ходе проверки добавили повторные попытки: временная низкоуровневая ошибка не должна навсегда блокировать последующие загрузки моделей."
+              ]
+            },
+            {
+              "heading": "Идентификатор вопроса отделяется от текста",
+              "paragraphs": [
+                "Ещё одно исправление касается интерактивных вопросов. Раньше полный текст вопроса использовался как его имя, а обычные пробелы могли не проходить строгую проверку имени. Отдельные идентификаторы сохраняют связь, не заставляя текст для человека соответствовать ограничениям системного названия. Это исправление совместимости ввода, а не улучшение качества ответа модели.",
+                "Полезность изменений зависит от исходной проблемы: определённые кодировки GGUF получают поддержку считывателя, принудительное завершение службы Windows — очистку процессов, интерактивные вопросы — корректные имена. Универсальных цифр ускорения, экономии памяти или роста точности в объявлении нет. Результат зависит от кодировки, режима работы и оборудования; успешная загрузка одной модели не устраняет ограничения других архитектур и устройств."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по выпуску и принятым изменениям; совместимость и жизненный цикл процессов, а не результаты измерения скорости.",
+            "steps": [
+              "Распознать кодировку модели",
+              "Выполнить вычисления движком",
+              "Завершить связанные процессы средствами ОС"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Ollama 0.40.6 於 10 月 16 日釋出，主要解決兩類容易被混為“模型不能用”的問題：模型檔案雖然能被底層引擎執行，卻在上層讀取時失敗；服務已經結束，推理子程序卻仍留在 Windows 中。這次更新修補的是相容性與程序管理，公告並未報告模型能力或推理速度的普遍提升。",
+          "sections": [
+            {
+              "heading": "底層能夠執行，不代表檔案就能順利載入",
+              "paragraphs": [
+                "GGUF 是一種存放模型參數與相關資訊的檔案格式。Ollama 需要先理解檔案裡的資料型別，才能把模型交給底層推理引擎。相關變更說明指出，0.40.5 已包含能執行 Q2_0 檔案的 llama.cpp 版本，但 Ollama 自己的 GGUF 讀取器還不認識對應的張量型別和檔案型別。於是，底層支援已經到位，上層匯入或載入仍會失敗。",
+                "0.40.6 補上這兩個型別的識別。維護者給出的 Q2_0 佈局為每塊 64 個權重、18 位元組；這裡描述的是該量化塊的儲存結構，不能直接推算整個模型檔案大小或記憶體佔用。變更作者報告，在 Apple silicon 上用 Bonsai 2 的 2B、4B、9B、27B 檔案驗證了建立與執行，覆蓋思考、視覺和工具功能；同一批檔案在 0.40.5 失敗。這是作者的測試範圍，不是所有量化模型及裝置的相容性證明。"
+              ]
+            },
+            {
+              "heading": "讓 Windows 接管退出時的子程序清理",
+              "paragraphs": [
+                "推理通常由服務啟動的子程序承擔。正常退出時，父服務可以通知並清理它們；強制結束時，這段清理邏輯可能來不及執行。修復說明針對 Windows 上獨立執行服務的場景，維護者明確表示桌面應用正常關閉會讓服務有機會清理，因此不屬於其所描述的殘留程序問題。",
+                "新實現把推理子程序放進 Windows 的 Job Object 管理。可以把它理解為作業系統維護的一組相關程序：持有它的服務結束、相應物件關閉後，由 Windows 終止歸屬其中的子程序，即使普通退出清理沒有執行也能生效。評審還補上了失敗重試，避免一次暫時性的底層失敗讓後續模型載入一直卡在失效狀態。"
+              ]
+            },
+            {
+              "heading": "問題標識修正與更新的實際邊界",
+              "paragraphs": [
+                "另一個修復涉及互動式提問：此前把問題全文當作問題標識，文字中常見的空格可能不滿足嚴格的名稱校驗。新版本改用單獨的標識來關聯問題，讓顯示給人的問題內容與系統用於引用它的名稱分開。這是一項介面輸入相容性修正，不會自動改善模型回答質量。",
+                "這些變化各有明確受益條件：遇到對應 GGUF 型別的使用者獲得讀取相容性，強制終止 Windows 獨立服務的使用者獲得子程序生命週期修復，互動提問則減少名稱校驗失敗。公告沒有給出統一的速度、記憶體或準確率提升數字。是否解決具體故障，仍取決於檔案編碼、執行方式和硬體；成功載入某個模型，也不意味著其他不相關的模型架構或裝置問題都已消失。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據版本說明和合並變更重繪的解釋圖，展示相容性與程序生命週期，不是效能測試結果。",
+            "steps": [
+              "讀取器識別模型編碼",
+              "推理引擎執行模型",
+              "作業系統管理子程序退出"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "mozilla-devtools-mcp-0106-pdf-tabs",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Mozilla · October 16 release announcement",
+          "url": "https://discourse.mozilla.org/t/firefox-devtools-mcp-0-10-6-released/149832"
+        },
+        {
+          "label": "Mozilla · v0.10.6 release",
+          "url": "https://github.com/mozilla/firefox-devtools-mcp/releases/tag/v0.10.6"
+        },
+        {
+          "label": "Mozilla · PDF printing change",
+          "url": "https://github.com/mozilla/firefox-devtools-mcp/pull/204"
+        },
+        {
+          "label": "Mozilla · tab identity and enumeration change",
+          "url": "https://github.com/mozilla/firefox-devtools-mcp/pull/209"
+        },
+        {
+          "label": "Mozilla · profile reuse change",
+          "url": "https://github.com/mozilla/firefox-devtools-mcp/pull/206"
+        },
+        {
+          "label": "Mozilla · v0.10.6 README and security scope",
+          "url": "https://raw.githubusercontent.com/mozilla/firefox-devtools-mcp/v0.10.6/README.md"
+        },
+        {
+          "label": "Mozilla · raw protocol tool restrictions",
+          "url": "https://github.com/mozilla/firefox-devtools-mcp/pull/205"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Firefox DevTools MCP 把浏览器操作与开发者工具提供给 AI 助手。10 月 16 日发布的 0.10.6 版本，一方面让助手能导出网页的打印版 PDF，另一方面减少浏览器自动化对用户当前标签的干扰，并修复标签数量变化后可能选错操作对象的问题。变化集中在可观察的浏览器行为，并不是对 Agent 整体可靠性的保证。",
+          "sections": [
+            {
+              "heading": "PDF 导出检查的是打印版页面",
+              "paragraphs": [
+                "新的打印工具通过 WebDriver BiDi 调用 Firefox 的打印能力，把选定页面保存为 PDF。WebDriver BiDi 是浏览器与自动化工具交换控制指令和状态的协议；MCP 则把这些能力包装成助手可调用的工具。导出采用网页的打印样式，因此适合检查分页、隐藏元素和纸面布局，与截取屏幕上看到的样子不是同一种输出。",
+                "工具支持横向排版和背景选项，两项默认都关闭。PDF 始终保存为文件，而非直接作为内嵌 PDF 内容返回到 MCP 响应中；打印模块属于默认的 basic 预设，不在更精简的 slim 预设内。输出反映的是浏览器对当时页面的打印渲染，不能据此宣称页面在所有纸张、打印机或交互状态下都完全一致，也不会自动判断内容是否正确。"
+              ]
+            },
+            {
+              "heading": "读取列表不再轮流把标签推到前台",
+              "paragraphs": [
+                "旧的标签刷新逻辑为了读取每个标签的网址与标题，会逐个切换到它们；浏览器被正常使用时，这会造成连续抢焦点。新版本通过 BiDi 获取浏览上下文和标题，避免为收集列表而选择每个标签。若一个页面忙碌、标题在 1 秒内无法取得，列表仍返回该项，但把标题显示为未知；尚未实际加载的恢复标签暂不列出。",
+                "更关键的是，选择或关闭标签会使用上次列表中保存的浏览上下文标识。此前若列表建立后又有标签打开或关闭，单纯按重新取得的序号操作可能指向另一个标签。现在失效的旧项会导致切换失败，而不是把动作落到另一个页面。这减少了一个明确的目标错位来源，但列表仍是某一时刻的快照，不代表浏览器状态永远不变。"
+              ]
+            },
+            {
+              "heading": "重用配置文件，同时保留权限边界",
+              "paragraphs": [
+                "版本还为服务自己创建的浏览器配置文件加入标记。再次指定这类配置文件时可直接重用，避免在其内部又创建一层新配置，导致状态意外分离。没有标记的目录仍沿用原有的子目录行为。配置文件包含浏览状态；重用修正不等于应该把日常浏览资料交给助手，官方文档仍建议使用专门配置，并提醒网页内容可能诱导 Agent 执行不当操作。",
+                "完整更新记录另列出一个原始 BiDi 指令工具，但合并后的限制是只进入 Mozilla 内部构建，公开包不会因此获得这个通用入口。它不能与普通标签工具改用 BiDi 混为一谈。此次版本说明和关联变更能够证明功能与修复已发布；没有独立的任务成功率、整体安全性或生产效率测量，实际效果仍受页面行为、工具权限和助手判断影响。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据 Mozilla 公告及变更记录重绘的机制图，区分列表读取、固定目标与打印输出，不是任务成功率测试。",
+            "steps": [
+              "读取已加载标签及其标识",
+              "对已列出的目标操作",
+              "以打印样式生成 PDF"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Firefox DevTools MCP exposes browser actions and developer tools to AI assistants. Version 0.10.6, published on October 16, adds print-layout PDF export, reduces disruption when enumerating tabs, and fixes a case where changes to the tab list could redirect an action to the wrong page. These are concrete browser-behavior changes, not a guarantee of overall agent reliability.",
+          "sections": [
+            {
+              "heading": "PDF export evaluates the printed page",
+              "paragraphs": [
+                "The new printing tool asks Firefox to save the selected page as a PDF through WebDriver BiDi. BiDi carries browser automation commands and state; MCP exposes capabilities as tools for an assistant. The output uses the page’s print styles, making it useful for inspecting pagination, hidden elements and paper layout. It is different from capturing what is visible on screen.",
+                "Landscape orientation and background printing are optional and both default to off. The PDF is always saved as a file rather than returned as inline PDF content in the MCP response. Printing belongs to the default basic preset, not the smaller slim preset. The result represents Firefox’s print rendering of that page state; it neither certifies every printer or page size nor determines whether the document’s content is correct."
+              ]
+            },
+            {
+              "heading": "Enumerating tabs without moving each one to the foreground",
+              "paragraphs": [
+                "The old refresh logic switched through tabs to read their addresses and titles, repeatedly changing focus in a browser someone was using. The new approach obtains browsing contexts and titles through BiDi without selecting each tab. If a busy page’s title cannot be retrieved within one second, the entry remains with an unknown title. Restored tabs that have not actually loaded are omitted until they load.",
+                "Selection and closing now use the browsing-context identity stored in the last tab list. Previously, opening or closing tabs after enumeration could change indexes, making an action target a different page. With the cached identity, a stale entry fails to switch instead of acting on another tab. This removes a specific source of target confusion, but a list remains a snapshot rather than a permanently accurate browser state."
+              ]
+            },
+            {
+              "heading": "Reusing profiles does not remove permission boundaries",
+              "paragraphs": [
+                "The server now marks browser profiles it creates. Pointing to one of these profiles reuses it directly instead of creating another nested profile and unexpectedly separating state. Unmarked locations retain the earlier subfolder behavior. Since profiles hold browsing state, this fix is not an invitation to expose an everyday profile to an assistant. Official documentation still advises a dedicated profile and warns that page content can try to manipulate an agent.",
+                "The complete release also lists a raw BiDi command tool, but its merged restriction confines it to Mozilla-internal builds; the public package does not acquire that general entry point. This is separate from ordinary tab tools using BiDi internally. Release records establish shipped capabilities and fixes, not independently measured task success, comprehensive security or productivity gains. Outcomes still depend on page behavior, tool permissions and the assistant’s decisions."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory diagram from Mozilla announcements and changes; it separates tab enumeration, target identity and print output rather than measuring agent success.",
+            "steps": [
+              "Read loaded tabs and their identities",
+              "Act on the listed target",
+              "Render a PDF with print styles"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Firefox DevTools MCP は、ブラウザー操作や開発者ツールを AI アシスタントに提供する。10 月 16 日公開の 0.10.6 では印刷用 PDF の出力が加わり、タブ一覧を取得するときの画面の切り替わりを抑え、タブの増減で操作先がずれる問題も修正された。具体的なブラウザー動作の改善であり、Agent 全体の信頼性を保証する更新ではない。",
+          "sections": [
+            {
+              "heading": "PDF で確認するのは印刷用のページ",
+              "paragraphs": [
+                "新しい印刷ツールは WebDriver BiDi を通じて Firefox に依頼し、選択中のページを PDF に保存する。BiDi はブラウザーと自動化ツールの間で操作と状態をやり取りするプロトコルで、MCP はその機能をアシスタント用ツールとして公開する。ページの印刷スタイルを使うため、改ページ、非表示要素、紙面向けの配置を確認できる。画面のスクリーンショットとは異なる出力である。",
+                "横向きと背景の印刷を指定でき、どちらも初期状態では無効になっている。PDF はファイルとして保存され、MCP 応答に PDF 本体がインラインで返るわけではない。印刷モジュールは標準の basic プリセットに含まれ、最小構成の slim には含まれない。結果はその時点のページを Firefox が印刷描画したもので、すべての用紙や印刷機での一致、文章内容の正しさまで保証しない。"
+              ]
+            },
+            {
+              "heading": "一覧を読むだけでタブを次々に前面へ出さない",
+              "paragraphs": [
+                "以前の更新処理は URL とタイトルを読むため各タブに切り替えており、使用中のブラウザーではフォーカスが連続して移動した。新方式は BiDi で閲覧コンテキストとタイトルを取得し、一覧を集めるための選択を避ける。ページが処理中でタイトルが 1 秒以内に得られない場合も項目は返し、タイトルを不明とする。復元後まだ読み込まれていないタブは読み込みまで一覧に含まれない。",
+                "選択と閉じる操作は、直前の一覧に保存した閲覧コンテキストの識別情報を使う。従来は一覧の取得後にタブが開閉されると、番号が変わって別のページを指す場合があった。修正版では古い項目が無効なら切り替えに失敗し、別タブを操作しない。特定の対象ずれを減らすが、一覧はあくまで取得時点の状態であり、ブラウザーがその後変化しないわけではない。"
+              ]
+            },
+            {
+              "heading": "設定を再利用しても権限の境界は残る",
+              "paragraphs": [
+                "サーバーが作成するブラウザープロファイルに印を付け、再指定された場合は直接再利用する。内部にさらにプロファイルを作って状態を分けてしまう挙動を防ぐ一方、印のない場所では従来のサブフォルダー方式を維持する。プロファイルには閲覧状態が含まれるため、この修正は日常用の情報をアシスタントに渡す理由にはならない。公式文書は専用プロファイルを勧め、ウェブページによる Agent の誘導にも注意を促している。",
+                "更新記録には生の BiDi 指令ツールもあるが、統合後は Mozilla 内部ビルド限定であり、公開パッケージに汎用的な入口が増えるわけではない。通常のタブツールが内部で BiDi を使うこととは別である。公開記録から確認できるのは機能と修正の提供であり、独立した作業成功率、安全性全般、生産性の測定ではない。結果はページの動作、許可した機能、アシスタントの判断に依存する。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Mozilla の告知と変更記録をもとに本サイトが描き直した説明図。対象の特定と印刷出力を示し、成功率の測定ではない。",
+            "steps": [
+              "読み込み済みタブと識別情報を取得",
+              "一覧の対象に対して操作",
+              "印刷スタイルで PDF を生成"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Firefox DevTools MCP предоставляет ИИ-помощникам операции браузера и инструменты разработчика. Версия 0.10.6 от 16 октября добавляет экспорт печатного представления страницы в PDF, уменьшает вмешательство при перечислении вкладок и исправляет выбор неверной страницы после изменения списка. Это конкретные изменения поведения браузера, а не гарантия общей надёжности агента.",
+          "sections": [
+            {
+              "heading": "PDF проверяет печатное представление",
+              "paragraphs": [
+                "Новый инструмент просит Firefox сохранить выбранную страницу в PDF через WebDriver BiDi. Этот протокол передаёт команды автоматизации и состояние браузера, а MCP представляет возможности как инструменты помощника. Используются стили для печати, поэтому можно проверить разбиение на страницы, скрытые элементы и бумажную компоновку. Это отличается от снимка видимой области экрана.",
+                "Альбомная ориентация и печать фона задаются отдельно; обе опции по умолчанию выключены. PDF всегда сохраняется в файл, а не возвращается как встроенное PDF-содержимое ответа MCP. Модуль печати входит в стандартный набор basic, но не в сокращённый slim. Результат отражает печатную отрисовку текущего состояния страницы в Firefox, а не подтверждает идентичность на всех принтерах и форматах бумаги или правильность текста документа."
+              ]
+            },
+            {
+              "heading": "Список вкладок больше не требует выводить каждую вперёд",
+              "paragraphs": [
+                "Раньше обновление списка переключалось между вкладками, чтобы прочитать адрес и заголовок, постоянно меняя фокус используемого браузера. Новый подход получает контексты просмотра и заголовки через BiDi без выбора каждой вкладки. Если заголовок занятой страницы недоступен в течение одной секунды, запись остаётся с неизвестным заголовком. Восстановленные, но ещё не загруженные вкладки отсутствуют до загрузки.",
+                "Выбор и закрытие теперь используют идентификатор контекста из последнего списка. Прежде открытие или закрытие вкладки после перечисления могло сместить индексы и направить действие на другую страницу. С сохранённой идентичностью устаревшая запись вызывает отказ переключения, а не действие над чужой вкладкой. Это убирает определённый источник путаницы, но список остаётся снимком момента, а не неизменным состоянием браузера."
+              ]
+            },
+            {
+              "heading": "Повторное использование профиля не отменяет границы доступа",
+              "paragraphs": [
+                "Сервер помечает созданные им профили браузера и при повторном указании использует их непосредственно, вместо создания ещё одного вложенного профиля и неожиданного разделения состояния. Для непомеченных мест сохраняется прежняя работа с подкаталогом. Профиль содержит состояние просмотра, поэтому исправление не означает, что повседневный профиль стоит передать помощнику. Официальная документация рекомендует отдельный профиль и предупреждает о попытках страниц манипулировать агентом.",
+                "Полный список изменений включает инструмент произвольных команд BiDi, но после проверки он ограничен внутренними сборками Mozilla: публичный пакет не получает этот универсальный вход. Это не то же самое, что использование BiDi внутри обычных инструментов вкладок. Записи выпуска подтверждают поставку функций и исправлений, но не независимые измерения успешности задач, полной безопасности или производительности. Результат зависит от страницы, разрешённых инструментов и решений помощника."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по объявлениям и изменениям Mozilla; идентичность вкладки и печатный вывод, а не измерение успешности агента.",
+            "steps": [
+              "Получить загруженные вкладки и их идентичность",
+              "Выполнить действие над указанной целью",
+              "Создать PDF с печатными стилями"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Firefox DevTools MCP 把瀏覽器操作與開發者工具提供給 AI 助手。10 月 16 日釋出的 0.10.6 版本，一方面讓助手能匯出網頁的列印版 PDF，另一方面減少瀏覽器自動化對使用者當前標籤的干擾，並修復標籤數量變化後可能選錯操作對象的問題。變化集中在可觀察的瀏覽器行為，並不是對 Agent 整體可靠性的保證。",
+          "sections": [
+            {
+              "heading": "PDF 匯出檢查的是列印版頁面",
+              "paragraphs": [
+                "新的列印工具透過 WebDriver BiDi 呼叫 Firefox 的列印能力，把選定頁面儲存為 PDF。WebDriver BiDi 是瀏覽器與自動化工具交換控制指令和狀態的協議；MCP 則把這些能力包裝成助手可呼叫的工具。匯出採用網頁的列印樣式，因此適合檢查分頁、隱藏元素和紙面佈局，與擷取螢幕上看到的樣子不是同一種輸出。",
+                "工具支援橫向排版和背景選項，兩項預設都關閉。PDF 始終儲存為檔案，而非直接作為內嵌 PDF 內容返回到 MCP 響應中；列印模組屬於預設的 basic 預設，不在更精簡的 slim 預設內。輸出反映的是瀏覽器對當時頁面的列印渲染，不能據此宣稱頁面在所有紙張、印表機或互動狀態下都完全一致，也不會自動判斷內容是否正確。"
+              ]
+            },
+            {
+              "heading": "讀取列表不再輪流把標籤推到前臺",
+              "paragraphs": [
+                "舊的標籤重新整理邏輯為了讀取每個標籤的網址與標題，會逐個切換到它們；瀏覽器被正常使用時，這會造成連續搶焦點。新版本透過 BiDi 獲取瀏覽上下文和標題，避免為收集列表而選擇每個標籤。若一個頁面忙碌、標題在 1 秒內無法取得，列表仍返回該項，但把標題顯示為未知；尚未實際載入的恢復標籤暫不列出。",
+                "更關鍵的是，選擇或關閉標籤會使用上次列表中儲存的瀏覽上下文標識。此前若列表建立後又有標籤開啟或關閉，單純按重新取得的序號操作可能指向另一個標籤。現在失效的舊項會導致切換失敗，而不是把動作落到另一個頁面。這減少了一個明確的目標錯位來源，但列表仍是某一時刻的快照，不代表瀏覽器狀態永遠不變。"
+              ]
+            },
+            {
+              "heading": "重用配置檔案，同時保留許可權邊界",
+              "paragraphs": [
+                "版本還為服務自己建立的瀏覽器配置檔案加入標記。再次指定這類配置檔案時可直接重用，避免在其內部又建立一層新配置，導致狀態意外分離。沒有標記的目錄仍沿用原有的子目錄行為。配置檔案包含瀏覽狀態；重用修正不等於應該把日常瀏覽資料交給助手，官方文件仍建議使用專門配置，並提醒網頁內容可能誘導 Agent 執行不當操作。",
+                "完整更新記錄另列出一個原始 BiDi 指令工具，但合併後的限制是只進入 Mozilla 內部構建，公開包不會因此獲得這個通用入口。它不能與普通標籤工具改用 BiDi 混為一談。此次版本說明和關聯變更能夠證明功能與修復已釋出；沒有獨立的任務成功率、整體安全性或生產效率測量，實際效果仍受頁面行為、工具許可權和助手判斷影響。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據 Mozilla 公告及變更記錄重繪的機制圖，區分列表讀取、固定目標與列印輸出，不是任務成功率測試。",
+            "steps": [
+              "讀取已載入標籤及其標識",
+              "對已列出的目標操作",
+              "以列印樣式生成 PDF"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "windows-11-28120-3272-accessibility-fixes",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Microsoft · October 16 Experimental release notes",
+          "url": "https://learn.microsoft.com/en-us/windows-insider/release-notes/experimental-26-h1/preview-build-28120-3272"
+        },
+        {
+          "label": "Pureinfotech · October 16 report",
+          "url": "https://pureinfotech.com/builds-28120-3272-28020-3262-windows-11-26h1/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Windows 11 的一次预览更新同时处理了“看不清”“找不到”和“会崩溃”三类日常问题。微软在 10 月 16 日发布 Experimental（26H1）Build 28120.3272，加入鼠标指针定位辅助、调整实时字幕与搜索，并修复一个引起部分应用和游戏崩溃的音频组件问题。它属于测试渠道，功能还会分批开放，不能按正式版普遍升级来理解。",
+          "sections": [
+            {
+              "heading": "让指针和声音内容更容易分辨",
+              "paragraphs": [
+                "新的 Pointer Indicator 面向低视力用户，帮助在屏幕上找到和使用鼠标指针。它位于辅助功能的“鼠标指针和触控”设置中。这里处理的是视觉定位困难，和修复鼠标输入、触控设备或图形性能不是一回事；公告也没有给出低视力用户完成任务时间的测量结果。",
+                "实时字幕增加了是否纳入屏幕阅读器音频的选项，默认关闭。关闭时，Narrator、JAWS、NVDA 等屏幕阅读器的朗读不被转写，字幕仍聚焦麦克风和系统音频。对同时使用语音朗读和字幕的人，这有助于控制哪些声音进入字幕；改变的是输入来源选择，而不是停止屏幕阅读器发声，也不是宣称字幕识别准确率提高。"
+              ]
+            },
+            {
+              "heading": "搜索说明去向，隐私设置减少查找层级",
+              "paragraphs": [
+                "搜索主页简化了视觉内容，并让最近搜索更容易找到。结果也更清楚地说明来源，例如应用、设置、文件、网页或 Microsoft Store 建议。另一个设置让用户选择是否把网页与商店建议同本地结果一起显示。这是在结果选择之前提供更多线索，而非公告了一个新的通用搜索排名模型或统一的速度提升。",
+                "“隐私和安全性”页面重新组织相近的控制项，把摄像头、麦克风和位置相关设置做得更容易发现，也将此前藏在更深页面的使用信息提到这一页。家庭安全功能则改善了应用因年龄限制被阻止时的提示。两者主要改进可见性与说明，不能据此认为系统替用户重新授予了权限，或取消了既有家长控制。"
+              ]
+            },
+            {
+              "heading": "特定崩溃修复，仍然是逐步验证的预览版",
+              "paragraphs": [
+                "微软明确列出修复 msmpeg2ac3dec.dll 相关问题，该组件近期曾导致部分应用和游戏崩溃。公告没有给出所有受影响程序清单、发生率或性能测试，因此不能扩大为“修复全部游戏崩溃”。Pureinfotech 的同期报道也区分了这份 Experimental 构建和另一份 Beta 构建：共同修复不代表两条渠道已经具有完全相同的新功能。",
+                "官方说明提醒，Experimental 构建可能不稳定，部分功能先向少量测试者开放，再依据反馈扩大。即便两台设备显示同一构建号，看到的功能也可能不同；一些功能的翻译亦可能尚未完成。这次发布的实质是可测试的辅助功能、界面调整与特定错误修复，而不是所有 Windows 用户已经获得的最终体验，也没有承诺这些设计都会以当前形式进入正式版。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据微软说明重绘的功能关系图；说明三类改动与预览范围，不是实际界面截图或用户实验。",
+            "steps": [
+              "辅助定位指针与选择字幕音源",
+              "看清搜索来源和隐私控制",
+              "修复特定崩溃并分批验证"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A Windows 11 preview tackles three everyday problems: locating the pointer, understanding what the interface is showing, and avoiding a particular crash. Microsoft released Experimental (26H1) Build 28120.3272 on October 16 with accessibility, captions and Search changes plus an audio-component fix affecting some applications and games. This is a test-channel release with staged features, not a general upgrade already delivered to every Windows user.",
+          "sections": [
+            {
+              "heading": "Making the pointer and audio sources easier to distinguish",
+              "paragraphs": [
+                "The new Pointer Indicator helps people with low vision locate and use the mouse pointer. Its control sits under Accessibility, in Mouse pointer and touch. The purpose is visual orientation, not repairing mouse input, touch hardware or graphics performance. The announcement provides no measured change in task-completion time for users with low vision.",
+                "Live Captions gains an option to include screen-reader audio, off by default. With it off, speech from Narrator, JAWS and NVDA is not transcribed, while captions focus on microphone and system audio. People combining spoken assistance with captions can control which audio enters the transcript. This changes source selection; it does not silence the screen reader or establish higher transcription accuracy."
+              ]
+            },
+            {
+              "heading": "Explaining search destinations and surfacing privacy controls",
+              "paragraphs": [
+                "The Search home page is simplified and recent searches become easier to find. Results identify their source more clearly, including apps, settings, files, web results and Microsoft Store suggestions. A setting controls whether web and Store suggestions appear alongside local results. These changes provide context before selection, rather than announcing a new general ranking model or a quantified speed improvement.",
+                "The Privacy & security page groups related controls and makes Camera, Microphone and Location settings easier to find. Usage information previously located on deeper pages is brought into this page. Family Safety also improves messages shown when age restrictions block an application. Both concern visibility and explanation; neither announcement means permissions have been silently granted or parental restrictions removed."
+              ]
+            },
+            {
+              "heading": "A specific crash fix within an experimental rollout",
+              "paragraphs": [
+                "Microsoft identifies a correction for an issue involving msmpeg2ac3dec.dll that had caused some applications and games to crash. It provides no exhaustive affected-program list, failure rate or performance benchmark, so this is not a fix for all game crashes. Pureinfotech’s contemporaneous report distinguishes this Experimental build from a separate Beta build: shared fixes do not imply identical feature sets across channels.",
+                "The official notes warn that Experimental builds can be unstable. Features may reach a small group first and expand in response to feedback, so two devices with the same build number may show different capabilities. Some localization may also be incomplete. The release provides testable accessibility changes, interface adjustments and a specific correction; it does not establish a final experience for all Windows users or promise that every design will ship unchanged."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory diagram based on Microsoft’s notes; it groups changes and their preview scope rather than reproducing the interface or a user experiment.",
+            "steps": [
+              "Locate the pointer and choose caption sources",
+              "Identify search sources and privacy controls",
+              "Fix a specific crash and validate gradually"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Windows 11 の今回のプレビューは、ポインターを見つけること、画面の情報を理解すること、特定のクラッシュを避けることに取り組む。Microsoft が 10 月 16 日に公開した Experimental（26H1）Build 28120.3272 は、アクセシビリティ、字幕、検索の変更と、一部のアプリやゲームに影響した音声コンポーネントの修正を含む。テスト用チャネルで段階的に提供されるもので、全利用者への正式な一斉更新ではない。",
+          "sections": [
+            {
+              "heading": "ポインターと字幕の音源を分かりやすくする",
+              "paragraphs": [
+                "新しい Pointer Indicator は、弱視の利用者がマウスポインターを探して使いやすくする機能で、アクセシビリティの「マウスポインターとタッチ」に設定がある。扱うのは画面上の位置の見つけやすさであり、マウス入力、タッチ機器、描画性能の不具合を直す機能ではない。弱視の利用者の作業時間がどれだけ短縮されたかという測定値も発表されていない。",
+                "ライブキャプションにはスクリーンリーダーの音声を含める設定が加わり、初期状態は無効となる。無効なら Narrator、JAWS、NVDA などの読み上げは文字化されず、字幕はマイクとシステム音声を中心に扱う。読み上げと字幕を併用する人が、字幕に入れる音源を調整できる変更である。読み上げ自体を止めるものでも、認識精度の向上を証明するものでもない。"
+              ]
+            },
+            {
+              "heading": "検索の行き先とプライバシー設定を見つける",
+              "paragraphs": [
+                "検索ホームは視覚的な混雑を減らし、最近の検索を見つけやすくする。結果の出所も、アプリ、設定、ファイル、ウェブ、Microsoft Store の候補などと分かりやすく示す。ウェブとストアの提案をローカル結果と一緒に表示するか選べる設定も加わる。選択前の手掛かりを増やすもので、新しい汎用順位付けモデルや測定済みの高速化を発表したわけではない。",
+                "「プライバシーとセキュリティ」は関連する設定をまとめ、カメラ、マイク、位置情報の制御を探しやすくする。深い階層にあった使用情報もこのページに移す。Family Safety は、年齢制限でアプリが止められた場合の説明を改善する。いずれも見やすさや説明の変更であり、権限が自動的に許可されたり保護者の制限が解除されたりすることを意味しない。"
+              ]
+            },
+            {
+              "heading": "特定のクラッシュを直し、段階的に確かめる",
+              "paragraphs": [
+                "Microsoft は msmpeg2ac3dec.dll に関する問題を修正したと明記する。この問題は一部のアプリやゲームをクラッシュさせていたが、対象の全一覧、発生率、性能測定は公表されていない。あらゆるゲームのクラッシュが解決したとは言えない。Pureinfotech の同時期の報道も、Experimental の本ビルドと別の Beta ビルドを区別しており、共通修正があっても新機能の構成まで同一ではない。",
+                "公式説明は Experimental の不安定さに注意を促している。機能は少数から提供し、反応を見て対象を広げるため、同じビルド番号でも表示される機能が異なる場合がある。翻訳が未完成の機能もあり得る。提供されたのは試せる補助機能、画面変更、特定の修正であり、全 Windows 利用者の最終体験や、そのまま正式版に採用される保証ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Microsoft の説明をもとに本サイトが描き直した機能図。変更とプレビュー範囲を示し、実際の画面や利用者実験ではない。",
+            "steps": [
+              "ポインターの位置と字幕音源を分かりやすくする",
+              "検索の出所とプライバシー制御を見つける",
+              "特定のクラッシュを修正し段階的に検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Новая предварительная Windows 11 затрагивает три повседневные задачи: найти указатель, понять информацию интерфейса и избежать определённого сбоя. Microsoft выпустил Experimental (26H1) Build 28120.3272 16 октября, добавив изменения специальных возможностей, субтитров и поиска, а также исправление аудиокомпонента, затронувшего некоторые приложения и игры. Это тестовый канал с постепенным включением функций, а не массовое обновление для всех пользователей.",
+          "sections": [
+            {
+              "heading": "Указатель и источники звука становятся различимее",
+              "paragraphs": [
+                "Новый Pointer Indicator помогает людям со слабым зрением находить и использовать указатель мыши. Настройка находится среди специальных возможностей, в разделе указателя мыши и касаний. Это помощь в визуальной ориентации, а не исправление ввода мышью, сенсорного оборудования или графической производительности. Измеренного сокращения времени выполнения задач пользователями со слабым зрением объявление не приводит.",
+                "Live Captions получает настройку включения звука экранных дикторов, по умолчанию выключенную. В таком состоянии речь Narrator, JAWS и NVDA не преобразуется в субтитры: внимание остаётся на микрофоне и системном звуке. Пользователь, совмещающий озвучивание и субтитры, может выбирать источники расшифровки. Изменение не отключает сам диктор и не доказывает повышение точности распознавания."
+              ]
+            },
+            {
+              "heading": "Поиск объясняет происхождение результата",
+              "paragraphs": [
+                "Начальная страница поиска становится проще, а недавние запросы — доступнее. Результаты яснее указывают источник: приложение, настройка, файл, веб-страница или рекомендация Microsoft Store. Отдельная настройка управляет появлением веб-результатов и предложений магазина рядом с локальными. Это дополнительный контекст перед выбором, а не объявление нового универсального ранжирования или измеренного ускорения.",
+                "Страница конфиденциальности и безопасности группирует связанные элементы и облегчает поиск управления камерой, микрофоном и геопозицией. Сведения об использовании, ранее находившиеся глубже, перенесены на эту страницу. Family Safety также понятнее объясняет блокировку приложения возрастными ограничениями. Речь о видимости и сообщениях, а не об автоматической выдаче разрешений или снятии родительского контроля."
+              ]
+            },
+            {
+              "heading": "Конкретное исправление в экспериментальной поставке",
+              "paragraphs": [
+                "Microsoft сообщает об устранении проблемы msmpeg2ac3dec.dll, вызывавшей сбои некоторых приложений и игр. Полного списка программ, частоты отказов и сравнительных измерений нет, поэтому исправление нельзя распространять на все игровые сбои. Одновременная публикация Pureinfotech различает эту Experimental-сборку и отдельную Beta-сборку: одинаковые исправления не делают наборы новых функций каналов идентичными.",
+                "Официальные примечания предупреждают о возможной нестабильности Experimental. Функции сначала получают небольшие группы, затем охват расширяют с учётом отзывов; на двух устройствах с одинаковым номером сборки набор возможностей может различаться. Локализация некоторых функций также может быть неполной. Выпуск предоставляет изменения для проверки, но не окончательный опыт всех пользователей Windows и не обещание перенести каждый элемент в стабильную версию без изменений."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по примечаниям Microsoft; группы изменений и границы предварительной версии, а не снимок интерфейса или пользовательское исследование.",
+            "steps": [
+              "Найти указатель и выбрать источники субтитров",
+              "Увидеть источники поиска и настройки доступа",
+              "Исправить конкретный сбой и проверять постепенно"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Windows 11 的一次預覽更新同時處理了“看不清”“找不到”和“會崩潰”三類日常問題。微軟在 10 月 16 日釋出 Experimental（26H1）Build 28120.3272，加入滑鼠指標定位輔助、調整實時字幕與搜尋，並修復一個引起部分應用和遊戲崩潰的音訊元件問題。它屬於測試渠道，功能還會分批開放，不能按正式版普遍升級來理解。",
+          "sections": [
+            {
+              "heading": "讓指標和聲音內容更容易分辨",
+              "paragraphs": [
+                "新的 Pointer Indicator 面向低視力使用者，幫助在螢幕上找到和使用滑鼠指標。它位於輔助功能的“滑鼠指標和觸控”設定中。這裡處理的是視覺定位困難，和修復滑鼠輸入、觸控裝置或圖形效能不是一回事；公告也沒有給出低視力使用者完成任務時間的測量結果。",
+                "實時字幕增加了是否納入螢幕閱讀器音訊的選項，預設關閉。關閉時，Narrator、JAWS、NVDA 等螢幕閱讀器的朗讀不被轉寫，字幕仍聚焦麥克風和系統音訊。對同時使用語音朗讀和字幕的人，這有助於控制哪些聲音進入字幕；改變的是輸入來源選擇，而不是停止螢幕閱讀器發聲，也不是宣稱字幕識別準確率提高。"
+              ]
+            },
+            {
+              "heading": "搜尋說明去向，隱私設定減少查詢層級",
+              "paragraphs": [
+                "搜尋主頁簡化了視覺內容，並讓最近搜尋更容易找到。結果也更清楚地說明來源，例如應用、設定、檔案、網頁或 Microsoft Store 建議。另一個設定讓使用者選擇是否把網頁與商店建議同本地結果一起顯示。這是在結果選擇之前提供更多線索，而非公告了一個新的通用搜尋排名模型或統一的速度提升。",
+                "“隱私和安全性”頁面重新組織相近的控制項，把攝像頭、麥克風和位置相關設定做得更容易發現，也將此前藏在更深頁面的使用資訊提到這一頁。家庭安全功能則改善了應用因年齡限制被阻止時的提示。兩者主要改進可見性與說明，不能據此認為系統替使用者重新授予了許可權，或取消了既有家長控制。"
+              ]
+            },
+            {
+              "heading": "特定崩潰修復，仍然是逐步驗證的預覽版",
+              "paragraphs": [
+                "微軟明確列出修復 msmpeg2ac3dec.dll 相關問題，該元件近期曾導致部分應用和遊戲崩潰。公告沒有給出所有受影響程式清單、發生率或效能測試，因此不能擴大為“修復全部遊戲崩潰”。Pureinfotech 的同期報道也區分了這份 Experimental 構建和另一份 Beta 構建：共同修復不代表兩條渠道已經具有完全相同的新功能。",
+                "官方說明提醒，Experimental 構建可能不穩定，部分功能先向少量測試者開放，再依據反饋擴大。即便兩臺裝置顯示同一構建號，看到的功能也可能不同；一些功能的翻譯亦可能尚未完成。這次釋出的實質是可測試的輔助功能、介面調整與特定錯誤修復，而不是所有 Windows 使用者已經獲得的最終體驗，也沒有承諾這些設計都會以當前形式進入正式版。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據微軟說明重繪的功能關係圖；說明三類改動與預覽範圍，不是實際介面截圖或使用者實驗。",
+            "steps": [
+              "輔助定位指標與選擇字幕音源",
+              "看清搜尋來源和隱私控制",
+              "修復特定崩潰並分批驗證"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "anthropic-nist-curve-seed-research",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Anthropic: Claude reveals ECDSA curve origins",
+          "url": "https://www.anthropic.com/research/ecdsa-curve-origins"
+        },
+        {
+          "label": "Filippo Valsorda: independent verification of the curve seeds",
+          "url": "https://words.filippo.io/seeds-solved/"
+        },
+        {
+          "label": "NIST: historical FIPS 186-2 and curve-generation appendices",
+          "url": "https://csrc.nist.gov/files/pubs/fips/186-2/final/docs/fips186-2.pdf"
+        },
+        {
+          "label": "Filippo Valsorda: the original seeds bounty",
+          "url": "https://words.filippo.io/seeds-bounty/"
+        },
+        {
+          "label": "Linux man-pages: the drand48 generator family",
+          "url": "https://man.archlinux.org/man/drand48.3.en"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "NIST 的几条常用椭圆曲线有一个持续多年的历史问题：标准公开了生成曲线的“种子”，却没有解释这些数字最初怎样选出。Anthropic 在 10 月 16 日公布了追溯结果；密码学工程师 Filippo Valsorda 另行实现了相关方法并确认结果。这项工作的意义是让公共参数的来历更透明，并不是破解数字签名或取得任何用户的私钥。",
+          "sections": [
+            {
+              "heading": "公开参数为什么还值得追问",
+              "paragraphs": [
+                "数字签名用私钥签署数据，让持有公钥的人验证身份与数据完整性；曲线参数则是这套计算共同使用的公开基础。2000 年的 FIPS 186-2 记载了由种子经过哈希处理得到部分参数的办法，可以检查后面的计算是否一致，却没有交代起始种子的选择过程。",
+                "因此，“种子生成了哪些参数”与“种子本身从哪里来”是两个问题。过去有关英语短句的线索未能给出答案。Valsorda 在 2023 年发起公开悬赏，目的正是补上这段历史，而不是征集一种攻击用户签名的方法。"
+              ]
+            },
+            {
+              "heading": "从输出规律找到旧时钟",
+              "paragraphs": [
+                "Anthropic 报告，研究使用 Claude 识别出旧式伪随机数发生器的输出规律，进而恢复状态并反推初始化值。伪随机数发生器会按确定规则产生数列，同样的起点可以重现同样的输出；这些起点对应 1997—1998 年的 Unix 时间戳。五条 NIST 素数曲线 P-192、P-224、P-256、P-384、P-521 的种子由此得到重现。",
+                "原研究以 lrand48 描述发生器，Valsorda 的独立说明使用同一发生器家族的 drand48；两者共享 48 位状态，返回值形式不同，不代表发现了两个互斥来源。每组 20 字节作为候选，按标准检查能否得到合适曲线。重要证据是能够重现公布的种子，而不是模型给出了一段听起来合理的故事。"
+              ]
+            },
+            {
+              "heading": "解释来源不等于解释所有选择",
+              "paragraphs": [
+                "复现也暴露了仍待回答的问题：有些合格候选被跳过，原先筛选的完整条件尚不明确。Anthropic 还指出，B-163 种子以及包括 P-256 在内的若干曲线基点来源没有解释完。基点是曲线计算使用的固定点，不能与种子混为一谈。",
+                "两方作者都认为结果增强了对曲线选择过程的信心，但这不是对所有实现和所有风险的安全证明。发现用于公开参数的简单发生器，不意味着用户私钥以同样方式生成，更不能推出现在可以伪造签名。读者无需因为这条历史研究更换密钥；其贡献在于可复核的来源证据和更清楚的未解边界。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释图：追溯公开曲线参数的来源，不是私钥恢复或签名破解流程。",
+            "steps": [
+              "从标准公布的种子寻找规律",
+              "恢复发生器状态与时间起点",
+              "重新生成候选并对照参数",
+              "独立复现并标记未解选择"
+            ]
+          }
+        },
+        "en": {
+          "lead": "For years, several widely used NIST elliptic curves carried an unanswered historical question: their published seeds explained part of parameter generation, but where did those seeds come from? Anthropic published its answer on October 16. Cryptographic engineer Filippo Valsorda separately implemented the method and verified the result. This improves the provenance of public parameters; it does not break digital signatures or recover users’ private keys.",
+          "sections": [
+            {
+              "heading": "Why public numbers need a history",
+              "paragraphs": [
+                "A digital signature uses a private key to sign data and a public key to check identity and integrity. Curve parameters are shared, public foundations for that calculation. FIPS 186-2, published in 2000, describes deriving some parameters by hashing a seed, allowing that derivation to be checked without explaining how the initial seed was selected.",
+                "Deriving parameters from a seed and choosing the seed itself are different questions. Earlier clues involving English phrases did not resolve the latter. Valsorda’s 2023 bounty sought to fill this historical gap, not obtain an attack on users’ signatures."
+              ]
+            },
+            {
+              "heading": "Recognising a generator behind the numbers",
+              "paragraphs": [
+                "Anthropic reports using Claude to recognise an old pseudorandom generator’s output, recover its state and work backwards to its initialisation. Such a generator produces a repeatable sequence from a fixed starting point. The recovered starting values correspond to Unix timestamps in 1997–98 and reproduce the seeds of P-192, P-224, P-256, P-384 and P-521.",
+                "Anthropic describes lrand48, while Valsorda uses drand48 from the same generator family. They share a 48-bit state but expose different forms of output; these are not competing origins. Groups of 20 bytes become candidates checked against the curve-generation rules. Reproducing the published numbers, rather than a plausible model-generated narrative, is the key evidence."
+              ]
+            },
+            {
+              "heading": "What remains unexplained",
+              "paragraphs": [
+                "Some suitable candidates were skipped, leaving the complete selection criteria uncertain. Anthropic also leaves the B-163 seed and several base-point origins, including P-256’s, unresolved. A base point is a fixed point used in curve calculations, not the same thing as a seed.",
+                "Both authors view the findings as strengthening confidence in curve selection, not proving every implementation safe against every risk. A simple generator used for public parameters does not establish that users’ secret keys were generated that way or that signatures can now be forged. This historical result alone does not call for changing keys; its contribution is reproducible evidence with clearly stated limits."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site: tracing public curve parameters, not recovering private keys or breaking signatures.",
+            "steps": [
+              "Identify patterns in published seeds",
+              "Recover generator state and time input",
+              "Regenerate candidates and compare parameters",
+              "Reproduce independently and mark unresolved choices"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "広く使われる NIST の楕円曲線には、長年説明されていない来歴があった。標準は曲線を作る「シード」を公開していたが、その数字自体をどう選んだかは不明だった。Anthropic は 10 月 16 日に調査結果を公表し、暗号技術者 Filippo Valsorda も別の実装で結果を確認した。公開パラメーターの由来を明らかにする研究であり、署名の解読や利用者の秘密鍵の回収ではない。",
+          "sections": [
+            {
+              "heading": "公開された数字にも来歴がある",
+              "paragraphs": [
+                "デジタル署名では秘密鍵でデータに署名し、公開鍵で本人性とデータの完全性を確かめる。曲線のパラメーターは、その計算に共通して使う公開情報だ。2000 年の FIPS 186-2 は、シードをハッシュ処理して一部のパラメーターを導く方法を示した。導出は検証できても、最初のシードの選び方までは説明していなかった。",
+                "「シードから何を作るか」と「シード自体をどう選ぶか」は別の問題だ。英語の短い文章が元になったという従来の手がかりでは、後者を解決できなかった。Valsorda が 2023 年に設けた懸賞も、この歴史の空白を埋めるためで、利用者の署名を攻撃する方法を募ったものではない。"
+              ]
+            },
+            {
+              "heading": "数字の並びから昔の時刻へ",
+              "paragraphs": [
+                "Anthropic によると、Claude を用いて古い疑似乱数生成器の出力の特徴を見つけ、内部状態を復元し、初期化まで逆にたどった。疑似乱数は同じ開始状態から同じ列を再現できる。復元された値は 1997〜1998 年の Unix タイムスタンプに対応し、P-192、P-224、P-256、P-384、P-521 のシードを再現した。",
+                "Anthropic は lrand48、Valsorda は同じ系統の drand48 で説明している。どちらも 48 ビット状態を共有し、出力の形が違うため、相反する二つの由来ではない。20 バイトずつを候補にして、標準の規則で適切な曲線になるかを確認する。根拠は公開済みの数字を再現できることであり、モデルがもっともらしい物語を語ることではない。"
+              ]
+            },
+            {
+              "heading": "まだ説明できない選択も残る",
+              "paragraphs": [
+                "条件を満たしうる候補にも採用されなかったものがあり、選別条件の全体はわからない。Anthropic は B-163 のシードや、P-256 を含む複数の曲線の基点の由来も未解明としている。基点は曲線上の計算で使う固定点で、シードとは異なる。",
+                "両者は曲線選択への信頼が高まると評価するが、あらゆる実装や危険に対する安全性の証明ではない。公開パラメーターに簡単な生成器が使われたからといって、利用者の秘密鍵も同じ方法で作られたことにはならず、署名を偽造できるともいえない。この研究だけを理由に鍵を交換する必要はない。再検証できる由来と、残る疑問の範囲が成果である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトが描き直した説明図。公開パラメーターの来歴を調べる流れで、秘密鍵の回収や署名攻撃ではない。",
+            "steps": [
+              "公開シードの規則性を調べる",
+              "生成器の状態と時刻を復元する",
+              "候補を生成しパラメーターと比べる",
+              "独立に再現し未解明の選択を残す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "У нескольких широко используемых эллиптических кривых NIST долго оставался пробел в истории: стандарт публиковал исходные seed-значения, но не объяснял их выбор. 16 октября Anthropic представила ответ, а криптограф Филиппо Вальсорда отдельно реализовал метод и подтвердил результат. Работа проясняет происхождение открытых параметров, а не взламывает подписи и не восстанавливает секретные ключи пользователей.",
+          "sections": [
+            {
+              "heading": "Зачем знать историю открытых чисел",
+              "paragraphs": [
+                "Цифровая подпись создаётся секретным ключом, а открытый ключ позволяет проверять личность подписавшего и целостность данных. Параметры кривой — общая открытая основа вычислений. Стандарт FIPS 186-2 2000 года описывает получение части параметров хешированием исходного значения. Это позволяет проверить преобразование, но не объясняет выбор самого значения.",
+                "Вывести параметры из seed и выбрать seed — разные задачи. Прежние предположения об английских фразах не дали ответа на второй вопрос. Объявленная Вальсордой в 2023 году награда была попыткой заполнить исторический пробел, а не получить средство атаки на пользовательские подписи."
+              ]
+            },
+            {
+              "heading": "От последовательности чисел к старым часам",
+              "paragraphs": [
+                "По сообщению Anthropic, Claude помог распознать выход старого генератора псевдослучайных чисел, восстановить состояние и проследить его до инициализации. Такой генератор повторяет одну последовательность при одинаковом начальном состоянии. Найденные значения соответствуют меткам Unix времени 1997–1998 годов и воспроизводят seed для P-192, P-224, P-256, P-384 и P-521.",
+                "Anthropic описывает lrand48, Вальсорда — drand48 из того же семейства. У них общее 48-битное состояние, но разные формы выходных значений; это не две несовместимые версии происхождения. Каждые 20 байтов образуют кандидата, проверяемого по правилам построения кривой. Основное доказательство — воспроизведение опубликованных чисел, а не правдоподобный рассказ модели."
+              ]
+            },
+            {
+              "heading": "Какие вопросы остаются",
+              "paragraphs": [
+                "Некоторые подходящие кандидаты были пропущены, поэтому полный набор критериев выбора неизвестен. Anthropic также не объяснила seed B-163 и происхождение ряда базовых точек, включая P-256. Базовая точка — фиксированная точка для вычислений на кривой, а не seed.",
+                "Оба автора считают, что результат укрепляет доверие к выбору кривых, но он не доказывает безопасность любой реализации против всех угроз. Простой генератор открытых параметров не означает, что секретные ключи пользователей создавались так же или что теперь можно подделывать подписи. Сам по себе этот исторический результат не требует замены ключей. Его ценность — воспроизводимое объяснение и явно обозначенные границы знания."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново нарисованная сайтом: происхождение открытых параметров, а не восстановление секретных ключей или взлом подписи.",
+            "steps": [
+              "Найти закономерности в опубликованных seed",
+              "Восстановить состояние генератора и время",
+              "Повторить кандидатов и сравнить параметры",
+              "Независимо воспроизвести и отметить неизвестное"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "NIST 的幾條常用橢圓曲線有一個持續多年的歷史問題：標準公開了生成曲線的“種子”，卻沒有解釋這些數字最初怎樣選出。Anthropic 在 10 月 16 日公佈了追溯結果；密碼學工程師 Filippo Valsorda 另行實現了相關方法並確認結果。這項工作的意義是讓公開參數的來歷更透明，並不是破解數位簽章或取得任何使用者的私密金鑰。",
+          "sections": [
+            {
+              "heading": "公開參數為什麼還值得追問",
+              "paragraphs": [
+                "數位簽章用私密金鑰簽署資料，讓持有公開金鑰的人驗證身份與資料完整性；曲線參數則是這套計算共同使用的公開基礎。2000 年的 FIPS 186-2 記載了由種子經過雜湊處理得到部分參數的辦法，可以檢查後面的計算是否一致，卻沒有交代起始種子的選擇過程。",
+                "因此，“種子生成了哪些參數”與“種子本身從哪裡來”是兩個問題。過去有關英語短句的線索未能給出答案。Valsorda 在 2023 年發起公開懸賞，目的正是補上這段歷史，而不是徵集一種攻擊使用者簽章的方法。"
+              ]
+            },
+            {
+              "heading": "從輸出規律找到舊時鐘",
+              "paragraphs": [
+                "Anthropic 報告，研究使用 Claude 識別出舊式偽隨機數發生器的輸出規律，進而恢復狀態並反推初始化值。偽隨機數發生器會按確定規則產生數列，同樣的起點可以重現同樣的輸出；這些起點對應 1997—1998 年的 Unix 時間戳記。五條 NIST 質數曲線 P-192、P-224、P-256、P-384、P-521 的種子由此得到重現。",
+                "原研究以 lrand48 描述發生器，Valsorda 的獨立說明使用同一發生器家族的 drand48；兩者共享 48 位元狀態，回傳值形式不同，不代表發現了兩個互斥來源。每組 20 位元組作為候選，按標準檢查能否得到合適曲線。重要證據是能夠重現公佈的種子，而不是模型給出了一段聽起來合理的故事。"
+              ]
+            },
+            {
+              "heading": "解釋來源不等於解釋所有選擇",
+              "paragraphs": [
+                "重現也暴露了仍待回答的問題：有些合格候選被跳過，原先篩選的完整條件尚不明確。Anthropic 還指出，B-163 種子以及包括 P-256 在內的若干曲線基點來源沒有解釋完。基點是曲線計算使用的固定點，不能與種子混為一談。",
+                "兩方作者都認為結果增強了對曲線選擇過程的信心，但這不是對所有實現和所有風險的安全證明。發現用於公開參數的簡單發生器，不意味著使用者私密金鑰以同樣方式生成，更不能推出現在可以偽造簽章。讀者無需因為這條歷史研究更換金鑰；其貢獻在於可複核的來源證據和更清楚的未解邊界。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解釋圖：追溯公開曲線參數的來源，不是私密金鑰恢復或簽章破解流程。",
+            "steps": [
+              "從標準公佈的種子尋找規律",
+              "恢復發生器狀態與時間起點",
+              "重新生成候選並對照參數",
+              "獨立重現並標記未解選擇"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "debian-linux-dsa-6568-security-update",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Debian: DSA-6568-1 original security announcement",
+          "url": "https://lists.debian.org/debian-security-announce/2026/msg00482.html"
+        },
+        {
+          "label": "Debian Security Tracker: DSA-6568-1 release status",
+          "url": "https://security-tracker.debian.org/tracker/DSA-6568-1"
+        },
+        {
+          "label": "Debian Security Tracker: CVE-2026-99999",
+          "url": "https://security-tracker.debian.org/tracker/CVE-2026-99999"
+        },
+        {
+          "label": "Debian Security Tracker: CVE-2026-98293",
+          "url": "https://security-tracker.debian.org/tracker/CVE-2026-98293"
+        },
+        {
+          "label": "Debian security FAQ: package versions and backported fixes",
+          "url": "https://www.debian.org/security/faq"
+        },
+        {
+          "label": "Debian release notes: kernel upgrades and restarting",
+          "url": "https://www.debian.org/releases/trixie/release-notes/upgrading.en.html"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Debian 在 10 月 16 日发布 DSA-6568-1，为稳定版 trixie 提供 Linux 内核安全更新，修复版本为 6.12.113-1。公告把多个子系统的问题合并交付，可能后果包括权限提升、拒绝服务和信息泄露。它说明了可获得的修复，并不意味着每台 Debian 机器已经遭到攻击，也不意味着清单中的每个漏洞都能从互联网直接触发。",
+          "sections": [
+            {
+              "heading": "一次更新覆盖的是一组不同问题",
+              "paragraphs": [
+                "内核承担网络、设备和进程资源管理，漏洞条件会因涉及的子系统、配置和操作方式而不同。DSA 的长清单提供了统一的修复入口；要判断某台机器受哪一项影响，还需要看对应漏洞记录，不能把所有编号当作同一种攻击。",
+                "例如 CVE-2026-99999 涉及 IPv4 处理中的校验和元数据。官方追踪器说明，不正确的元数据进入该处理路径后，完成校验和的过程可能破坏网络头；修复增加了相应检查。这是防御性检查的具体变化，不能单凭这段说明推导所有网络服务都可被远程接管。"
+              ]
+            },
+            {
+              "heading": "修复版本必须与发行版一起看",
+              "paragraphs": [
+                "另一个例子 CVE-2026-98293 涉及蓝牙 ISO 连接：分配子套接字失败时，错误路径没有释放持有的父套接字引用，造成资源泄漏。修复补上释放操作。这与前面的网络头问题不是同一种机制，也说明不能用一个笼统风险等级代替逐项判断。",
+                "该蓝牙问题在 trixie 的修复版本同样是 6.12.113-1，但追踪器明确记载 bookworm 的常规内核不含有问题的代码。不同分支有不同状态。Debian 的安全维护也会把补丁移植回稳定版本，因此不能只看上游大版本号判断是否修好，而应核对发行版、完整软件包版本和对应公告。"
+              ]
+            },
+            {
+              "heading": "从“有补丁”到“实际运行修复”",
+              "paragraphs": [
+                "Debian 建议更新相关内核软件包。公告中的 linux 是源软件包名称，实际安装的是由它产生、适合系统架构的二进制软件包。对维护人员而言，重点是通过对应发行版的安全更新取得修复，并按维护安排让系统运行修复后的内核；仅下载文件不是更新生效的证明。",
+                "这是一则 10 月 16 日修复发布的历史记录，6.12.113-1 是这份公告注明的版本，不宣称它始终是最新版本。实际处理仍应查看后续安全更新和自己所用分支的状态。这份公告提供的是修复依据；是否发生入侵，仍需要独立的事件调查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释图：从安全公告到匹配版本并确认修复生效，不是漏洞攻击链。",
+            "steps": [
+              "辨认发行版与内核来源",
+              "逐项核对漏洞条件及修复版本",
+              "获取匹配分支的安全更新",
+              "确认运行的内核已包含修复"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Debian published DSA-6568-1 on October 16, providing Linux kernel security fixes for stable trixie in package version 6.12.113-1. The bundle addresses issues across subsystems, with possible consequences including privilege escalation, denial of service and information disclosure. Availability of a fix does not establish that every Debian machine has been attacked, or that every listed flaw is reachable directly from the internet.",
+          "sections": [
+            {
+              "heading": "One delivery, several different mechanisms",
+              "paragraphs": [
+                "The kernel manages networking, devices and process resources. Exposure varies with the subsystem, configuration and operations involved. A bundled advisory supplies a common delivery point for fixes; determining a particular machine’s exposure still requires the individual vulnerability records.",
+                "For example, CVE-2026-99999 concerns checksum metadata in IPv4 processing. Debian’s tracker explains that incorrect metadata reaching this path can lead checksum completion to corrupt a network header. The fix adds validation. That specific defensive change does not, by itself, imply that every network service permits remote takeover."
+              ]
+            },
+            {
+              "heading": "Match the package version to the release",
+              "paragraphs": [
+                "CVE-2026-98293 illustrates a different mechanism in Bluetooth ISO connections. When allocating a child socket fails, an error path omits releasing its held reference to the parent socket, leaking resources. The fix supplies the missing release. One broad severity label cannot replace understanding these different conditions.",
+                "Trixie fixes that issue in 6.12.113-1, while the tracker explicitly says bookworm’s regular kernel lacks the affected code. Branches therefore have different statuses. Debian also backports security changes into stable packages: an upstream major version alone is not proof of vulnerability or repair. The release, complete package version and relevant advisory must be considered together."
+              ]
+            },
+            {
+              "heading": "A published fix must reach the running system",
+              "paragraphs": [
+                "Debian recommends updating the affected kernel packages. The advisory’s linux name identifies a source package; installed binaries derived from it depend on the system architecture. The operational objective is to obtain the corresponding release’s security update and, through normal maintenance, run a kernel containing the fix. Merely downloading files does not establish that it is active.",
+                "This article records the October 16 release. Version 6.12.113-1 is the version named in that advisory, not a claim that it will remain the newest available package. Later advisories and the relevant branch status still matter. The advisory establishes the available fix; determining whether an intrusion occurred requires a separate incident investigation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site: matching an advisory to a release and verifying an active fix, not an attack chain.",
+            "steps": [
+              "Identify the release and kernel source",
+              "Check each flaw’s conditions and fixed version",
+              "Obtain the matching security update",
+              "Confirm the running kernel contains the fix"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Debian は 10 月 16 日、安定版 trixie 向けに Linux カーネルのセキュリティ勧告 DSA-6568-1 を公開した。修正済みパッケージは 6.12.113-1。複数のサブシステムの問題をまとめて修正し、想定される影響には権限昇格、サービス拒否、情報漏えいが含まれる。ただし、全マシンが攻撃されたという発表でも、すべての問題をインターネットから直接悪用できるという意味でもない。",
+          "sections": [
+            {
+              "heading": "同じ更新でも問題の仕組みは異なる",
+              "paragraphs": [
+                "カーネルはネットワーク、機器、プロセスの資源を管理する。影響する条件はサブシステム、設定、実行する処理によって変わる。長い一覧をまとめた勧告は修正を届ける入口であり、特定のマシンの影響を判断するには個別の脆弱性記録が必要だ。",
+                "例えば CVE-2026-99999 は IPv4 処理のチェックサム用メタデータに関係する。Debian の追跡情報では、不正なメタデータがこの処理に入ると、チェックサム完成時にネットワークヘッダーを壊しうると説明している。修正はその検証を追加するものだ。この説明だけで、あらゆるネットワークサービスを遠隔操作できるとはいえない。"
+              ]
+            },
+            {
+              "heading": "バージョン番号はリリース名と組み合わせる",
+              "paragraphs": [
+                "CVE-2026-98293 は別の例で、Bluetooth ISO 接続の資源漏れに関わる。子ソケットの確保に失敗した際、エラー処理が保持していた親ソケットへの参照を解放しなかった。修正では不足していた解放を行う。前の問題とは仕組みが違い、一つの大まかな危険度だけでは説明できない。",
+                "trixie の修正版は同じく 6.12.113-1 だが、追跡情報によると bookworm の通常のカーネルにはこの Bluetooth 問題の原因となるコードがない。ブランチごとに状態が異なる。Debian は修正を安定版へバックポートすることもあるため、上流のメジャーバージョンだけで判断せず、リリース名、パッケージの完全な版番号、勧告を照合する必要がある。"
+              ]
+            },
+            {
+              "heading": "配布された修正を実際の動作につなげる",
+              "paragraphs": [
+                "Debian は該当するカーネルパッケージの更新を勧めている。勧告にある linux はソースパッケージ名で、実際に導入するバイナリはシステムのアーキテクチャに応じて派生する。対応するリリースの更新を受け取り、保守作業を通じて修正を含むカーネルで稼働させることが目的だ。ファイルのダウンロードだけで有効化を確認したことにはならない。",
+                "これは 10 月 16 日の修正公開を記録した記事である。6.12.113-1 は当該勧告が示した版で、常に最新だという意味ではない。その後の更新と使用ブランチの状態も確認が必要だ。勧告は修正の根拠を示すもので、侵入が発生したかどうかは別途インシデント調査で確かめる必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトが描き直した説明図。勧告とリリースを照合し修正の稼働を確認する流れで、攻撃手順ではない。",
+            "steps": [
+              "リリースとカーネルの提供元を確認",
+              "個別の条件と修正版を照合",
+              "対応ブランチの安全更新を取得",
+              "動作中のカーネルへの反映を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "16 октября Debian выпустил DSA-6568-1: обновление безопасности ядра Linux для стабильного trixie с исправленным пакетом 6.12.113-1. В набор входят проблемы разных подсистем, способные привести к повышению привилегий, отказу в обслуживании или утечке информации. Наличие исправления не означает, что все машины Debian уже атакованы или что каждый дефект доступен напрямую из интернета.",
+          "sections": [
+            {
+              "heading": "Одна поставка, разные причины",
+              "paragraphs": [
+                "Ядро управляет сетью, устройствами и ресурсами процессов. Условия уязвимости зависят от подсистемы, конфигурации и выполняемых операций. Общее уведомление объединяет поставку исправлений; влияние на конкретную машину следует оценивать по отдельным записям, а не считать все номера одной атакой.",
+                "Например, CVE-2026-99999 относится к метаданным контрольной суммы при обработке IPv4. По данным трекера Debian, неверные метаданные в этом пути могут привести к повреждению сетевого заголовка при завершении вычисления контрольной суммы. Исправление добавляет проверку. Само это описание не доказывает возможность удалённого захвата любого сетевого сервиса."
+              ]
+            },
+            {
+              "heading": "Версия пакета имеет смысл вместе с выпуском",
+              "paragraphs": [
+                "Другой механизм у CVE-2026-98293 в соединениях Bluetooth ISO. Если выделение дочернего сокета завершается ошибкой, соответствующий путь не освобождает удерживаемую ссылку на родительский сокет, вызывая утечку ресурсов. Исправление добавляет освобождение. Общая оценка опасности не заменяет понимание таких различий.",
+                "Для trixie эта проблема также исправлена в 6.12.113-1, однако трекер прямо указывает, что обычное ядро bookworm не содержит уязвимого кода. Статусы ветвей различаются. Debian переносит исправления в стабильные пакеты, поэтому одного основного номера версии upstream недостаточно: нужно сопоставлять выпуск, полную версию пакета и соответствующее уведомление."
+              ]
+            },
+            {
+              "heading": "Исправление должно работать, а не просто быть доступным",
+              "paragraphs": [
+                "Debian рекомендует обновить соответствующие пакеты ядра. Имя linux в уведомлении обозначает исходный пакет; устанавливаемые бинарные пакеты на его основе зависят от архитектуры системы. Практическая цель — получить обновление своего выпуска и в рамках обслуживания запустить ядро с исправлением. Одна загрузка файлов не подтверждает его действие.",
+                "Статья фиксирует публикацию от 16 октября. 6.12.113-1 — версия из этого уведомления, а не обещание, что она всегда будет самой новой. Следует учитывать последующие обновления и состояние своей ветви. Уведомление подтверждает доступность исправления; факт проникновения требует отдельного расследования инцидента."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново нарисованная сайтом: сопоставление выпуска с обновлением и проверка действующего исправления, не цепочка атаки.",
+            "steps": [
+              "Определить выпуск и источник ядра",
+              "Проверить условия и исправленную версию",
+              "Получить обновление подходящей ветви",
+              "Проверить исправление в работающем ядре"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Debian 在 10 月 16 日釋出 DSA-6568-1，為穩定版 trixie 提供 Linux 核心安全更新，修復版本為 6.12.113-1。公告把多個子系統的問題合併交付，可能後果包括權限提升、阻斷服務和資訊洩漏。它說明了可獲得的修復，並不意味著每臺 Debian 機器已經遭到攻擊，也不意味著清單中的每個漏洞都能從網際網路直接觸發。",
+          "sections": [
+            {
+              "heading": "一次更新覆蓋的是一組不同問題",
+              "paragraphs": [
+                "核心承擔網路、裝置和程序資源管理，漏洞條件會因涉及的子系統、配置和操作方式而不同。DSA 的長清單提供了統一的修復入口；要判斷某臺機器受哪一項影響，還需要看對應漏洞記錄，不能把所有編號當作同一種攻擊。",
+                "例如 CVE-2026-99999 涉及 IPv4 處理中的檢查碼後設資料。官方追蹤器說明，不正確的後設資料進入該處理路徑後，完成檢查碼的過程可能破壞網路標頭；修復增加了相應檢查。這是防禦性檢查的具體變化，不能單憑這段說明推導所有網路服務都可被遠端接管。"
+              ]
+            },
+            {
+              "heading": "修復版本必須與發行版一起看",
+              "paragraphs": [
+                "另一個例子 CVE-2026-98293 涉及藍牙 ISO 連線：分配子通訊端失敗時，錯誤路徑沒有釋放持有的父通訊端引用，造成資源洩漏。修復補上釋放操作。這與前面的網路標頭問題不是同一種機制，也說明不能用一個籠統風險等級代替逐項判斷。",
+                "該藍牙問題在 trixie 的修復版本同樣是 6.12.113-1，但追蹤器明確記載 bookworm 的常規核心不含有問題的程式碼。不同分支有不同狀態。Debian 的安全維護也會把修補程式移植回穩定版本，因此不能只看上游大版本號判斷是否修好，而應核對發行版、完整套件版本和對應公告。"
+              ]
+            },
+            {
+              "heading": "從“有修補程式”到“實際執行修復”",
+              "paragraphs": [
+                "Debian 建議更新相關核心套件。公告中的 linux 是原始碼套件名稱，實際安裝的是由它產生、適合系統架構的二進位套件。對維護人員而言，重點是透過對應發行版的安全更新取得修復，並按維護安排讓系統執行修復後的核心；僅下載檔案不是更新生效的證明。",
+                "這是一則 10 月 16 日修復釋出的歷史記錄，6.12.113-1 是這份公告註明的版本，不宣稱它始終是最新版本。實際處理仍應檢視後續安全更新和自己所用分支的狀態。這份公告提供的是修復依據；是否發生入侵，仍需要獨立的事件調查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解釋圖：從安全公告到匹配版本並確認修復生效，不是漏洞攻擊鏈。",
+            "steps": [
+              "辨認發行版與核心來源",
+              "逐項核對漏洞條件及修復版本",
+              "獲取匹配分支的安全更新",
+              "確認執行的核心已包含修復"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

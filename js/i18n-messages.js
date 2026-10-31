@@ -425,7 +425,7 @@ window.SITE_MESSAGES = {
     "news.nasa-black-marble-isaias-power-recovery.title": "NASA 用夜光影像观察飓风后的供电恢复",
     "news.nasa-black-marble-isaias-power-recovery.summary": "Black Marble HD 对比灾前与灾后的佛罗里达夜光变化。细网格来自降尺度建模，仅供可视化，不能用于计算停电户数；云区表示缺测，持续亮灯也不能单独证明备用电源状况。",
     "news.ollama-0406-gguf-windows-fixes.title": "Ollama 0.40.6 修复 Windows 残留进程并支持 Q2_0 文件",
-    "news.ollama-0406-gguf-windows-fixes.summary": "正式版修复 Windows 推理子进程遗留问题，为 GGUF 读取器加入 Q2_0 张量和文件类型，并调整 --ask 模式的问题键。",
+    "news.ollama-0406-gguf-windows-fixes.summary": "正式版修复 Windows 独立服务被强制结束后的推理子进程残留，为 GGUF 读取器补齐 Q2_0 类型，并修正交互式提问的标识校验；不代表通用性能提升。",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 增加 PDF 导出并修复标签操作",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "新增 print_page 工具，按打印样式导出 PDF，支持横向和背景选项；改用 WebDriver BiDi 读取标签列表，避免逐个激活标签，并修复已创建配置文件的复用。",
     "news.category.software": "软件与开源",
@@ -715,7 +715,13 @@ window.SITE_MESSAGES = {
     "research.exactcert-missing-data-retrieval-stability.title": "缺失数据补成什么样，会改变检索答案吗？ExactCert 给出有条件的保证",
     "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert 不挑一种补值方法，而检查给定区间内所有可能补全是否保持近邻关系。交通时序实验显示，插值经常改变第一近邻；认证能区分稳定结果，但依赖真实值落在区间内、候选数据完整等条件。",
     "research.webgpu-gpu-resident-speculative-decoding.title": "让浏览器推理少等GPU：按设备调整的投机解码",
-    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、验证与缓存维护留在GPU，结合整数内核减少浏览器同步开销。作者在三类GPU报告3.5—8.6倍WebLLM解码速度，但比较限于基线完成的提示，精确一致只针对自身量化贪心解码，集显投机仍可能略慢。"
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、验证与缓存维护留在GPU，结合整数内核减少浏览器同步开销。作者在三类GPU报告3.5—8.6倍WebLLM解码速度，但比较限于基线完成的提示，精确一致只针对自身量化贪心解码，集显投机仍可能略慢。",
+    "news.northflank-ai-credentials-incident.title": "Northflank 披露安全事件，客户报告 AI 密钥遭滥用",
+    "news.northflank-ai-credentials-incident.summary": "Northflank 要求客户按凭据可能暴露处理，并开放数据库凭据轮换与审计记录。事件调查仍在进行，影响人数和入侵方式尚未公布。",
+    "news.reddit-logged-in-access-pilot.title": "Reddit 拟在部分非美国市场测试更多登录限制",
+    "news.reddit-logged-in-access-pilot.summary": "Reddit 计划让主要体验转向登录状态，理由包括个性化、广告和数据访问管理。外链与首页仍可开放的边界待定，尚非全球立即实施。",
+    "news.mistral-large4-open-weights-release.title": "Mistral Large 4 正式交付权重，模型服务商需留意许可条件",
+    "news.mistral-large4-open-weights-release.summary": "10 月 29 日，Le Chonk 从托管预览走向可下载的改进权重，提供 FP8、NVFP4 版本及三档推理强度。厂商报告编程任务有所改善；开放权重采用附有模型服务限制的许可，不能等同于无条件开源或安全保证。"
   },
   "en": {
     "nav.about": "About",
@@ -1142,7 +1148,7 @@ window.SITE_MESSAGES = {
     "news.nasa-black-marble-isaias-power-recovery.title": "NASA uses night-light imagery to examine post-hurricane power recovery",
     "news.nasa-black-marble-isaias-power-recovery.summary": "Black Marble HD compares Florida’s night lights before and after the storm. Its fine grid is downscaled and modelled for visualisation, not outage counts; clouds mark missing data, and persistent light alone cannot establish backup-power use.",
     "news.ollama-0406-gguf-windows-fixes.title": "Ollama 0.40.6 fixes orphaned Windows runners and adds Q2_0 types",
-    "news.ollama-0406-gguf-windows-fixes.summary": "The stable release fixes orphaned inference runners on Windows, adds Q2_0 tensor and file types to the GGUF reader, and uses identifiers for --ask question keys.",
+    "news.ollama-0406-gguf-windows-fixes.summary": "The stable release fixes inference subprocesses left after forced termination of a standalone Windows service, adds Q2_0 reader types and corrects interactive question identifiers. It does not establish general performance gains.",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 adds PDF export and fixes tab handling",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "The new print_page tool exports PDFs using print CSS, with landscape and background options. Tab listing now uses WebDriver BiDi without bringing each tab forward, and server-created profiles can be reused correctly.",
     "news.category.software": "Software & open source",
@@ -1432,7 +1438,13 @@ window.SITE_MESSAGES = {
     "research.exactcert-missing-data-retrieval-stability.title": "Can filling missing data change the nearest neighbor? ExactCert makes the conditions explicit",
     "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert checks whether neighbor relations survive every completion inside specified intervals, rather than trusting one imputer. Traffic experiments show frequent changes after interpolation; certification separates stable results but requires valid bounds and a complete candidate gallery.",
     "research.webgpu-gpu-resident-speculative-decoding.title": "GPU-resident speculative decoding reduces browser inference overhead",
-    "research.webgpu-gpu-resident-speculative-decoding.summary": "A browser runtime keeps drafting, verification and cache maintenance on the GPU and adds integer kernels. Authors report 3.5–8.6× WebLLM decoding speed on three GPUs, using prompts the baseline completes. Exactness refers to its own quantized greedy decoder; speculation can still slightly slow an integrated GPU."
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "A browser runtime keeps drafting, verification and cache maintenance on the GPU and adds integer kernels. Authors report 3.5–8.6× WebLLM decoding speed on three GPUs, using prompts the baseline completes. Exactness refers to its own quantized greedy decoder; speculation can still slightly slow an integrated GPU.",
+    "news.northflank-ai-credentials-incident.title": "Northflank reports incident and unauthorized AI-key use",
+    "news.northflank-ai-credentials-incident.summary": "Northflank urges customers to treat stored credentials as exposed and opens database credential rotation and audit records. The intrusion method and number of affected customers remain undisclosed.",
+    "news.reddit-logged-in-access-pilot.title": "Reddit plans login-access pilots outside the US",
+    "news.reddit-logged-in-access-pilot.summary": "Reddit plans a primarily logged-in experience for personalization, advertising and data access control. Boundaries for the front page and external links remain unsettled; no immediate global restriction was announced.",
+    "news.mistral-large4-open-weights-release.title": "Mistral delivers Large 4 weights, with licensing conditions for model services",
+    "news.mistral-large4-open-weights-release.summary": "On October 29, Le Chonk moved beyond hosted preview to improved downloadable FP8 and NVFP4 weights with three reasoning levels. Mistral reports coding gains; the license includes model-service restrictions, so available weights do not mean unrestricted open source or guaranteed safety."
   },
   "ja": {
     "nav.about": "私について",
@@ -1859,7 +1871,7 @@ window.SITE_MESSAGES = {
     "news.nasa-black-marble-isaias-power-recovery.title": "NASA、夜間光画像でハリケーン後の電力復旧を観察",
     "news.nasa-black-marble-isaias-power-recovery.summary": "Black Marble HD が災害前後のフロリダの夜間光を比較。細かな格子はダウンスケーリングによる推定で可視化専用のため、停電世帯数は算出できない。雲域は欠測で、点灯の継続だけでは予備電源の利用も確認できない。",
     "news.ollama-0406-gguf-windows-fixes.title": "Ollama 0.40.6、Windows の残存プロセスを修正し Q2_0 に対応",
-    "news.ollama-0406-gguf-windows-fixes.summary": "正式版は Windows の推論子プロセスが残る問題を修正し、GGUF リーダーに Q2_0 のテンソル・ファイル型を追加。--ask の質問キーも識別子に変更した。",
+    "news.ollama-0406-gguf-windows-fixes.summary": "正式版は Windows の独立サービス強制終了後に残る推論子プロセスを修正し、GGUF の Q2_0 型と対話式質問の識別子に対応。全般的な性能向上を示すものではない。",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6、PDF 出力を追加しタブ操作を修正",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "print_page が印刷用 CSS で PDF を出力し、横向きと背景の指定に対応。タブ一覧を WebDriver BiDi で取得して各タブの前面表示を避け、作成済みプロファイルの再利用も修正した。",
     "news.category.software": "ソフトウェア・オープンソース",
@@ -2149,7 +2161,13 @@ window.SITE_MESSAGES = {
     "research.exactcert-missing-data-retrieval-stability.title": "欠損値の補完で最近傍は変わるか：ExactCert が保証の条件を示す",
     "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert は一つの補完値を信頼せず、指定区間内のすべての補完で近傍関係が保たれるかを調べる。交通時系列では補間による順位変化が多い。保証には真値を含む区間と完全な候補系列が必要となる。",
     "research.webgpu-gpu-resident-speculative-decoding.title": "ブラウザ推論の待ち時間を減らすGPU常駐型投機デコード",
-    "research.webgpu-gpu-resident-speculative-decoding.summary": "候補生成・検証・キャッシュ管理をGPUに残し、整数カーネルで同期費用を削減する。著者は三GPUでWebLLM比3.5〜8.6倍を報告するが、比較は基準が完了した入力に限る。一致は自身の量子化貪欲デコードに対するもので、内蔵GPUでは投機が少し遅くなる場合もある。"
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "候補生成・検証・キャッシュ管理をGPUに残し、整数カーネルで同期費用を削減する。著者は三GPUでWebLLM比3.5〜8.6倍を報告するが、比較は基準が完了した入力に限る。一致は自身の量子化貪欲デコードに対するもので、内蔵GPUでは投機が少し遅くなる場合もある。",
+    "news.northflank-ai-credentials-incident.title": "Northflank が安全事案を公表、顧客の AI キー不正利用報告",
+    "news.northflank-ai-credentials-incident.summary": "認証情報の流出を前提とした対応を求め、データベース認証情報の更新と監査記録を開放。侵入方法や影響を受けた顧客数は未公表で、調査が続く。",
+    "news.reddit-logged-in-access-pilot.title": "Reddit、米国外の一部市場でログイン制限を試験へ",
+    "news.reddit-logged-in-access-pilot.summary": "個人向け表示、広告、データ利用管理を理由にログイン中心の体験を計画。トップページや外部リンクの公開範囲は未定で、即時の世界展開ではない。",
+    "news.mistral-large4-open-weights-release.title": "Mistral Large 4 の重みを公開、モデルサービスの許諾条件に注意",
+    "news.mistral-large4-open-weights-release.summary": "10 月 29 日、Le Chonk の改良版を FP8・NVFP4 で提供し、三段階の推論強度を用意した。企業はコーディングの改善を報告するが、モデルサービスの制約を含む許諾であり、無条件のオープンソースや安全保証とは異なる。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2576,7 +2594,7 @@ window.SITE_MESSAGES = {
     "news.nasa-black-marble-isaias-power-recovery.title": "NASA изучает восстановление электроснабжения после урагана по ночному свету",
     "news.nasa-black-marble-isaias-power-recovery.summary": "Black Marble HD сравнивает ночное освещение Флориды до и после шторма. Мелкая сетка смоделирована для визуализации, а не подсчёта отключений. Облака означают пропуски данных; постоянный свет сам по себе не доказывает работу резервного питания.",
     "news.ollama-0406-gguf-windows-fixes.title": "Ollama 0.40.6 исправляет оставшиеся процессы Windows и добавляет Q2_0",
-    "news.ollama-0406-gguf-windows-fixes.summary": "Стабильный выпуск исправляет осиротевшие процессы инференса в Windows, добавляет типы тензоров и файлов Q2_0 в GGUF и идентификаторы ключей вопросов --ask.",
+    "news.ollama-0406-gguf-windows-fixes.summary": "Стабильный выпуск убирает дочерние процессы после принудительного завершения отдельной службы Windows, добавляет типы Q2_0 и исправляет идентификаторы интерактивных вопросов. Общего ускорения это не доказывает.",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 добавляет PDF и исправляет работу с вкладками",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "Инструмент print_page сохраняет PDF с печатными CSS-стилями, поддерживая альбомную ориентацию и фон. Список вкладок читается через WebDriver BiDi без их активации; исправлено повторное использование профилей сервера.",
     "news.category.software": "ПО и открытый код",
@@ -2866,7 +2884,13 @@ window.SITE_MESSAGES = {
     "research.exactcert-missing-data-retrieval-stability.title": "Меняет ли заполнение пропусков ближайшего соседа? Условия гарантии ExactCert",
     "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert проверяет устойчивость соседства при всех заполнениях внутри заданных интервалов. На транспортных рядах интерполяция часто меняет результат. Сертификаты требуют, чтобы истинные значения входили в интервалы, а ряды-кандидаты были полными.",
     "research.webgpu-gpu-resident-speculative-decoding.title": "Спекулятивный цикл на GPU снижает накладные расходы браузерного инференса",
-    "research.webgpu-gpu-resident-speculative-decoding.summary": "Черновики, проверка и обслуживание кэша остаются на GPU вместе с целочисленными ядрами. Авторы сообщают скорость декодирования в 3,5–8,6 раза выше WebLLM на трёх GPU для запросов, завершённых базой. Точность означает совпадение со своим квантованным жадным декодером; на встроенном GPU спекуляция иногда немного замедляет работу."
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "Черновики, проверка и обслуживание кэша остаются на GPU вместе с целочисленными ядрами. Авторы сообщают скорость декодирования в 3,5–8,6 раза выше WebLLM на трёх GPU для запросов, завершённых базой. Точность означает совпадение со своим квантованным жадным декодером; на встроенном GPU спекуляция иногда немного замедляет работу.",
+    "news.northflank-ai-credentials-incident.title": "Northflank сообщила об инциденте и злоупотреблении AI-ключами",
+    "news.northflank-ai-credentials-incident.summary": "Компания рекомендует считать сохраненные учетные данные раскрытыми и открыла их замену и аудит. Способ вторжения и число пострадавших клиентов пока не раскрыты.",
+    "news.reddit-logged-in-access-pilot.title": "Reddit готовит испытания доступа после входа за пределами США",
+    "news.reddit-logged-in-access-pilot.summary": "План связан с персонализацией, рекламой и контролем доступа к данным. Границы для главной страницы и внешних ссылок еще не определены; немедленного глобального ограничения нет.",
+    "news.mistral-large4-open-weights-release.title": "Mistral опубликовала веса Large 4 с условиями для модельных сервисов",
+    "news.mistral-large4-open-weights-release.summary": "29 октября Le Chonk перешел от размещенной предварительной версии к улучшенным скачиваемым весам FP8 и NVFP4 с тремя уровнями рассуждения. Mistral сообщает о росте результатов программирования; лицензия ограничивает модельные сервисы и не обещает неограниченную открытость или безопасность."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3293,7 +3317,7 @@ window.SITE_MESSAGES = {
     "news.nasa-black-marble-isaias-power-recovery.title": "NASA 用夜光影像觀察颶風後的供電恢復",
     "news.nasa-black-marble-isaias-power-recovery.summary": "Black Marble HD 對比災前與災後的佛羅里達夜光變化。細網格來自降尺度建模，僅供視覺化，不能用於計算停電戶數；雲區表示缺測，持續亮燈也不能單獨證明備用電源狀況。",
     "news.ollama-0406-gguf-windows-fixes.title": "Ollama 0.40.6 修正 Windows 殘留程序並支援 Q2_0 檔案",
-    "news.ollama-0406-gguf-windows-fixes.summary": "正式版修正 Windows 推論子程序殘留問題，為 GGUF 讀取器加入 Q2_0 張量和檔案類型，並調整 --ask 模式的問題鍵。",
+    "news.ollama-0406-gguf-windows-fixes.summary": "正式版修正 Windows 獨立服務被強制結束後的推論子程序殘留，為 GGUF 讀取器補齊 Q2_0 類型，並修正互動式提問的識別校驗；不代表通用效能提升。",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.title": "Firefox DevTools MCP 0.10.6 增加 PDF 匯出並修正分頁操作",
     "news.mozilla-devtools-mcp-0106-pdf-tabs.summary": "新增 print_page 工具，依列印樣式匯出 PDF，支援橫向與背景選項；改用 WebDriver BiDi 讀取分頁清單，避免逐一啟用分頁，並修正既有設定檔的重用。",
     "news.category.software": "軟體與開源",
@@ -3583,6 +3607,12 @@ window.SITE_MESSAGES = {
     "research.exactcert-missing-data-retrieval-stability.title": "缺失資料補成什麼樣，會改變檢索答案嗎？ExactCert 給出有條件的保證",
     "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert 不挑一種補值方法，而檢查給定區間內所有可能補全是否保持近鄰關係。交通時序實驗顯示，插值經常改變第一近鄰；認證能區分穩定結果，但依賴真實值落在區間內、候選資料完整等條件。",
     "research.webgpu-gpu-resident-speculative-decoding.title": "讓瀏覽器推理少等GPU：按裝置調整的投機解碼",
-    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、驗證與快取維護留在GPU，結合整數核心減少瀏覽器同步開銷。作者在三類GPU報告3.5—8.6倍WebLLM解碼速度，但比較限於基準方法完成的提示，精確一致只針對自身量化貪心解碼，內建GPU投機仍可能略慢。"
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、驗證與快取維護留在GPU，結合整數核心減少瀏覽器同步開銷。作者在三類GPU報告3.5—8.6倍WebLLM解碼速度，但比較限於基準方法完成的提示，精確一致只針對自身量化貪心解碼，內建GPU投機仍可能略慢。",
+    "news.northflank-ai-credentials-incident.title": "Northflank 披露安全事件，客戶報告 AI 金鑰遭濫用",
+    "news.northflank-ai-credentials-incident.summary": "Northflank 要求客戶按憑據可能暴露處理，並開放資料庫憑據輪換與審計記錄。事件調查仍在進行，影響人數和入侵方式尚未公佈。",
+    "news.reddit-logged-in-access-pilot.title": "Reddit 擬在部分非美國市場測試更多登入限制",
+    "news.reddit-logged-in-access-pilot.summary": "Reddit 計劃讓主要體驗轉向登入狀態，理由包括個性化、廣告和資料訪問管理。外鏈與首頁仍可開放的邊界待定，尚非全球立即實施。",
+    "news.mistral-large4-open-weights-release.title": "Mistral Large 4 正式交付權重，模型服務商需留意許可條件",
+    "news.mistral-large4-open-weights-release.summary": "10 月 29 日，Le Chonk 從託管預覽走向可下載的改進權重，提供 FP8、NVFP4 版本及三檔推理強度。廠商報告程式設計任務有所改善；開放權重採用附有模型服務限制的許可，不能等同於無條件開源或安全保證。"
   }
 };
