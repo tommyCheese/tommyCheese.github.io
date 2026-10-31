@@ -705,7 +705,17 @@ window.SITE_MESSAGES = {
     "research.open-problem-graph-proposed-status-governance.title": "知识图谱能找到新证据，但不能替研究问题宣布结案",
     "research.open-problem-graph-proposed-status-governance.summary": "双层知识图谱保留人工目录，把新增文献和状态判断放在独立证据层。作者复核全部41个“解决或反驳”判断，只有1个解决判断真正回答了核心问题，说明状态更新仍须保留为待审建议。",
     "research.smooth-action-chunking-motion-primitives.title": "用平滑曲线连接机器人的动作片段",
-    "research.smooth-action-chunking-motion-primitives.summary": "以运动基元表示动作段，再用上一段末指令修正接续，降低 ACT 与 DiT 的指令抖动。实机样本较小，仿真有成功率下降；加权融合在部分振动指标上更强，平滑与反应速度仍需权衡。"
+    "research.smooth-action-chunking-motion-primitives.summary": "以运动基元表示动作段，再用上一段末指令修正接续，降低 ACT 与 DiT 的指令抖动。实机样本较小，仿真有成功率下降；加权融合在部分振动指标上更强，平滑与反应速度仍需权衡。",
+    "research.value-indexed-memory-persistent-traversal.title": "把记忆检索变成连续移动：一个 Agent 寻址实验的启发与边界",
+    "research.value-indexed-memory-persistent-traversal.summary": "研究提出按信息价值组织记忆地址，并让检索位置持续移动。在固定空间的 MiniGrid 概念验证中，相对移动比两种绝对寻址更快学会任务；价值索引学习和连续多次检索尚未验证。",
+    "research.prefix-executability-tool-agent-reliability.title": "任务成功之前出过多少错？用前缀可执行性检查工具 Agent",
+    "research.prefix-executability-tool-agent-reliability.summary": "论文把工具调用过程与最终成功分开评分，定位首次非法操作并统计恢复。有些 Agent 最后完成了任务，过程却频繁出错；执行前验证在两组测试中改善可靠性，但在交互式迁移测试中未稳定获益。",
+    "research.on-policy-state-training-multihop-retrieval.title": "让多跳 RAG 检索器学会接住自己的错误，而不只沿着标准答案训练",
+    "research.on-policy-state-training-multihop-retrieval.summary": "链式检索一旦找错材料，后续查询也会被带偏。研究每轮收集当前检索器真实走到的状态，与标准路径混合训练，在固定编码器架构和索引下提高证据完整覆盖；长链仍然困难，也并非所有指标都超过搜索 Agent。",
+    "research.exactcert-missing-data-retrieval-stability.title": "缺失数据补成什么样，会改变检索答案吗？ExactCert 给出有条件的保证",
+    "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert 不挑一种补值方法，而检查给定区间内所有可能补全是否保持近邻关系。交通时序实验显示，插值经常改变第一近邻；认证能区分稳定结果，但依赖真实值落在区间内、候选数据完整等条件。",
+    "research.webgpu-gpu-resident-speculative-decoding.title": "让浏览器推理少等GPU：按设备调整的投机解码",
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、验证与缓存维护留在GPU，结合整数内核减少浏览器同步开销。作者在三类GPU报告3.5—8.6倍WebLLM解码速度，但比较限于基线完成的提示，精确一致只针对自身量化贪心解码，集显投机仍可能略慢。"
   },
   "en": {
     "nav.about": "About",
@@ -1412,7 +1422,17 @@ window.SITE_MESSAGES = {
     "research.open-problem-graph-proposed-status-governance.title": "A knowledge graph can find evidence without declaring a research problem solved",
     "research.open-problem-graph-proposed-status-governance.summary": "A two-layer graph preserves curated catalogs while adding literature evidence and proposed status changes. In an audit of all 41 solve/refute verdicts, only one solve verdict closed the central question; automatic status changes remained blocked.",
     "research.smooth-action-chunking-motion-primitives.title": "Smooth curves connect robot action chunks",
-    "research.smooth-action-chunking-motion-primitives.summary": "Movement-primitive coefficients and a correction anchored to the previous command reduce ACT and DiT command jerk. Hardware samples are small and one simulation loses success; blending is stronger on some vibration metrics, leaving responsiveness trade-offs."
+    "research.smooth-action-chunking-motion-primitives.summary": "Movement-primitive coefficients and a correction anchored to the previous command reduce ACT and DiT command jerk. Hardware samples are small and one simulation loses success; blending is stronger on some vibration metrics, leaving responsiveness trade-offs.",
+    "research.value-indexed-memory-persistent-traversal.title": "Memory retrieval as continuous traversal: a small agent experiment and its limits",
+    "research.value-indexed-memory-persistent-traversal.summary": "The paper proposes organizing memory addresses by information value and retaining a moving retrieval head. A fixed-geometry MiniGrid experiment learns faster with relative movement than two absolute-address alternatives; learned value indexing and repeated retrieval remain untested.",
+    "research.prefix-executability-tool-agent-reliability.title": "How much went wrong before success? Measuring tool agents with prefix executability",
+    "research.prefix-executability-tool-agent-reliability.summary": "The protocol separates executable tool-call prefixes from final success, locating first failures and measuring recovery. Some agents succeed despite frequent invalid actions. Pre-execution validation helps in two test sets, but its benefits do not consistently transfer to an interactive benchmark.",
+    "research.on-policy-state-training-multihop-retrieval.title": "Train a multi-hop RAG retriever to recover from its own mistakes",
+    "research.on-policy-state-training-multihop-retrieval.summary": "A chain retriever’s wrong passages can distort later queries. Refreshing training states from the current retriever and mixing them with gold histories improves complete evidence coverage without changing its architecture or index. Long chains remain difficult, and search agents still lead on some metrics.",
+    "research.exactcert-missing-data-retrieval-stability.title": "Can filling missing data change the nearest neighbor? ExactCert makes the conditions explicit",
+    "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert checks whether neighbor relations survive every completion inside specified intervals, rather than trusting one imputer. Traffic experiments show frequent changes after interpolation; certification separates stable results but requires valid bounds and a complete candidate gallery.",
+    "research.webgpu-gpu-resident-speculative-decoding.title": "GPU-resident speculative decoding reduces browser inference overhead",
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "A browser runtime keeps drafting, verification and cache maintenance on the GPU and adds integer kernels. Authors report 3.5–8.6× WebLLM decoding speed on three GPUs, using prompts the baseline completes. Exactness refers to its own quantized greedy decoder; speculation can still slightly slow an integrated GPU."
   },
   "ja": {
     "nav.about": "私について",
@@ -2119,7 +2139,17 @@ window.SITE_MESSAGES = {
     "research.open-problem-graph-proposed-status-governance.title": "知識グラフで証拠は探せても、研究課題の解決は宣言できない",
     "research.open-problem-graph-proposed-status-governance.summary": "二層の知識グラフが人手の課題目録を保持し、新しい文献と状態変更の提案を追加する。解決・反駁と判定した全41件の監査では、中心的な問いを解決していた解決判定は1件だけだった。",
     "research.smooth-action-chunking-motion-primitives.title": "滑らかな曲線でロボットの動作区間をつなぐ",
-    "research.smooth-action-chunking-motion-primitives.summary": "運動プリミティブによる表現と直前指令を使う補正で、ACT と DiT の指令ジャークを低減。実機標本は小さく、仮想環境には成功率低下もある。一部の振動指標では加重平均が強く、反応速度との両立は課題。"
+    "research.smooth-action-chunking-motion-primitives.summary": "運動プリミティブによる表現と直前指令を使う補正で、ACT と DiT の指令ジャークを低減。実機標本は小さく、仮想環境には成功率低下もある。一部の振動指標では加重平均が強く、反応速度との両立は課題。",
+    "research.value-indexed-memory-persistent-traversal.title": "記憶検索を連続的な移動に変える――Agent の小規模実験とその限界",
+    "research.value-indexed-memory-persistent-traversal.summary": "情報価値で記憶のアドレスを配置し、検索位置を持続させる構想を提案。固定空間の MiniGrid 実験では相対移動が二種類の絶対指定より早く学習したが、価値索引の学習と反復検索は未検証である。",
+    "research.prefix-executability-tool-agent-reliability.title": "成功までに何を間違えたか――ツール Agent を前段の実行可能性で評価する",
+    "research.prefix-executability-tool-agent-reliability.summary": "最終成功と呼び出し列の実行可能性を分け、最初の無効操作と回復を測る評価法。失敗を重ねても最終的に成功する場合がある。事前検証は二集合で信頼性を改善したが、対話的な移行評価では一貫した利益はなかった。",
+    "research.on-policy-state-training-multihop-retrieval.title": "多段 RAG 検索器を、正解経路だけでなく自分の誤りから回復できるように学習する",
+    "research.on-policy-state-training-multihop-retrieval.summary": "誤った文書を取得すると、後続の検索も引きずられる。現在の検索器が実際に訪れる状態を毎回集めて正解履歴と混ぜ、構造と索引を変えずに証拠の完全カバーを改善した。ただし長い連鎖は難しく、全指標で検索 Agent を上回るわけではない。",
+    "research.exactcert-missing-data-retrieval-stability.title": "欠損値の補完で最近傍は変わるか：ExactCert が保証の条件を示す",
+    "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert は一つの補完値を信頼せず、指定区間内のすべての補完で近傍関係が保たれるかを調べる。交通時系列では補間による順位変化が多い。保証には真値を含む区間と完全な候補系列が必要となる。",
+    "research.webgpu-gpu-resident-speculative-decoding.title": "ブラウザ推論の待ち時間を減らすGPU常駐型投機デコード",
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "候補生成・検証・キャッシュ管理をGPUに残し、整数カーネルで同期費用を削減する。著者は三GPUでWebLLM比3.5〜8.6倍を報告するが、比較は基準が完了した入力に限る。一致は自身の量子化貪欲デコードに対するもので、内蔵GPUでは投機が少し遅くなる場合もある。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2826,7 +2856,17 @@ window.SITE_MESSAGES = {
     "research.open-problem-graph-proposed-status-governance.title": "Граф знаний находит свидетельства, но не объявляет исследовательскую задачу решённой",
     "research.open-problem-graph-proposed-status-governance.summary": "Двухслойный граф сохраняет курируемый каталог и добавляет свидетельства из литературы с предложениями сменить статус. Проверка всех 41 вердикта о решении или опровержении показала: только один вердикт о решении закрывал центральный вопрос.",
     "research.smooth-action-chunking-motion-primitives.title": "Гладкие кривые соединяют последовательности действий робота",
-    "research.smooth-action-chunking-motion-primitives.summary": "Коэффициенты двигательных примитивов и привязка к последней команде снижают рывок ACT и DiT. Выборки на роботе малы, в одном симуляционном условии доля успешных попыток снижается. Смешивание сильнее по части вибрационных метрик; остаётся компромисс с быстротой реакции."
+    "research.smooth-action-chunking-motion-primitives.summary": "Коэффициенты двигательных примитивов и привязка к последней команде снижают рывок ACT и DiT. Выборки на роботе малы, в одном симуляционном условии доля успешных попыток снижается. Смешивание сильнее по части вибрационных метрик; остаётся компромисс с быстротой реакции.",
+    "research.value-indexed-memory-persistent-traversal.title": "Поиск в памяти как непрерывное перемещение: эксперимент с агентом и его границы",
+    "research.value-indexed-memory-persistent-traversal.summary": "Предлагается размещать память по ценности информации и сохранять позицию поисковой головки. В MiniGrid с фиксированной геометрией относительное перемещение обучалось быстрее двух вариантов абсолютной адресации; обучение самого индекса и повторный поиск пока не проверены.",
+    "research.prefix-executability-tool-agent-reliability.title": "Что пошло не так до успеха: исполнимость префиксов у инструментальных агентов",
+    "research.prefix-executability-tool-agent-reliability.summary": "Протокол отделяет исполнимость последовательности вызовов от конечного успеха, отмечая первую ошибку и восстановление. Успех может скрывать множество недопустимых действий. Предварительная проверка помогает на двух наборах, но не дает устойчивого выигрыша на интерактивном тесте переноса.",
+    "research.on-policy-state-training-multihop-retrieval.title": "Научить многошаговый RAG-поиск восстанавливаться после собственных ошибок",
+    "research.on-policy-state-training-multihop-retrieval.summary": "Ошибочные документы в цепочке искажают последующие запросы. Обновление состояний по текущему поисковику и смешивание с эталонными историями повышает полное покрытие свидетельств без изменения архитектуры и индекса. Длинные цепочки остаются трудными, а по некоторым метрикам поисковые агенты сильнее.",
+    "research.exactcert-missing-data-retrieval-stability.title": "Меняет ли заполнение пропусков ближайшего соседа? Условия гарантии ExactCert",
+    "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert проверяет устойчивость соседства при всех заполнениях внутри заданных интервалов. На транспортных рядах интерполяция часто меняет результат. Сертификаты требуют, чтобы истинные значения входили в интервалы, а ряды-кандидаты были полными.",
+    "research.webgpu-gpu-resident-speculative-decoding.title": "Спекулятивный цикл на GPU снижает накладные расходы браузерного инференса",
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "Черновики, проверка и обслуживание кэша остаются на GPU вместе с целочисленными ядрами. Авторы сообщают скорость декодирования в 3,5–8,6 раза выше WebLLM на трёх GPU для запросов, завершённых базой. Точность означает совпадение со своим квантованным жадным декодером; на встроенном GPU спекуляция иногда немного замедляет работу."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3533,6 +3573,16 @@ window.SITE_MESSAGES = {
     "research.open-problem-graph-proposed-status-governance.title": "知識圖譜能找到新證據，但不能替研究問題宣佈結案",
     "research.open-problem-graph-proposed-status-governance.summary": "雙層知識圖譜保留人工目錄，把新增文獻和狀態判斷放在獨立證據層。作者複核全部41個“解決或反駁”判斷，只有1個解決判斷真正回答了核心問題，說明狀態更新仍須保留為待審建議。",
     "research.smooth-action-chunking-motion-primitives.title": "用平滑曲線連接機器人的動作片段",
-    "research.smooth-action-chunking-motion-primitives.summary": "以運動基元表示動作段，再用上一段末指令修正接續，降低 ACT 與 DiT 的指令抖動。實機樣本較小，模擬有成功率下降；加權融合在部分振動指標上更強，平滑與反應速度仍需權衡。"
+    "research.smooth-action-chunking-motion-primitives.summary": "以運動基元表示動作段，再用上一段末指令修正接續，降低 ACT 與 DiT 的指令抖動。實機樣本較小，模擬有成功率下降；加權融合在部分振動指標上更強，平滑與反應速度仍需權衡。",
+    "research.value-indexed-memory-persistent-traversal.title": "把記憶檢索變成連續移動：一個 Agent 定址實驗的啟發與邊界",
+    "research.value-indexed-memory-persistent-traversal.summary": "研究提出按資訊價值組織記憶地址，並讓檢索位置持續移動。在固定空間的 MiniGrid 概念驗證中，相對移動比兩種絕對定址更快學會任務；價值索引學習和連續多次檢索尚未驗證。",
+    "research.prefix-executability-tool-agent-reliability.title": "任務成功之前出過多少錯？用前綴可執行性檢查工具 Agent",
+    "research.prefix-executability-tool-agent-reliability.summary": "論文把工具呼叫過程與最終成功分開評分，定位首次非法操作並統計恢復。有些 Agent 最後完成了任務，過程卻頻繁出錯；執行前驗證在兩組測試中改善可靠性，但在互動式遷移測試中未穩定獲益。",
+    "research.on-policy-state-training-multihop-retrieval.title": "讓多跳 RAG 檢索器學會接住自己的錯誤，而不只沿著標準答案訓練",
+    "research.on-policy-state-training-multihop-retrieval.summary": "鏈式檢索一旦找錯材料，後續查詢也會被帶偏。研究每輪收集當前檢索器真實走到的狀態，與標準路徑混合訓練，在固定編碼器架構和索引下提高證據完整覆蓋；長鏈仍然困難，也並非所有指標都超過搜尋 Agent。",
+    "research.exactcert-missing-data-retrieval-stability.title": "缺失資料補成什麼樣，會改變檢索答案嗎？ExactCert 給出有條件的保證",
+    "research.exactcert-missing-data-retrieval-stability.summary": "ExactCert 不挑一種補值方法，而檢查給定區間內所有可能補全是否保持近鄰關係。交通時序實驗顯示，插值經常改變第一近鄰；認證能區分穩定結果，但依賴真實值落在區間內、候選資料完整等條件。",
+    "research.webgpu-gpu-resident-speculative-decoding.title": "讓瀏覽器推理少等GPU：按裝置調整的投機解碼",
+    "research.webgpu-gpu-resident-speculative-decoding.summary": "研究把草稿、驗證與快取維護留在GPU，結合整數核心減少瀏覽器同步開銷。作者在三類GPU報告3.5—8.6倍WebLLM解碼速度，但比較限於基準方法完成的提示，精確一致只針對自身量化貪心解碼，內建GPU投機仍可能略慢。"
   }
 };

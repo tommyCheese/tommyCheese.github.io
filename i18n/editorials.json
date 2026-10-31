@@ -24140,6 +24140,1926 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "value-indexed-memory-persistent-traversal",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.40545v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.40545v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Agent 连续几步需要的记忆可能大部分相同，却常常每次都重新搜索。本文提出另一种思路：保留上次检索的位置，沿着记忆地址空间移动。但它目前不是已经验证的长上下文解决方案，而是一个价值索引目标，加上一项只检验寻址机制的小规模实验。",
+          "sections": [
+            {
+              "heading": "记忆内容与存放位置分开考虑",
+              "paragraphs": [
+                "作者把一条记忆能提供的信息，与读取它所需的地址分开。理想的索引应让对当前决策互补的记忆容易一起取到，同时避免重复信息挤在同一次检索里。目标函数既计算漏掉有用信息的损失，也对每条可取到的记忆收费；否则，把所有内容堆在同一点就会成为没有实际意义的最优解。这里的价值指对任务效用的增量，不等同于文本相似度。",
+                "有了合适的空间，检索头便可保留位置并相对移动，工作窗口保存最近取到的内容。其动机是相邻时刻需要的信息变化不大时，可以沿用先前检索状态。论文给出了互补与冗余如何影响共同检索的推导，但没有完成学习这种空间的训练方案；信息价值的估计、空间能否容纳随语境改变的关系，以及如何统一索引和移动规则，仍是未解决问题。"
+              ]
+            },
+            {
+              "heading": "五个上下文位置下的概念验证",
+              "paragraphs": [
+                "实验使用 MiniGrid Memory：Agent 先看线索，再走过走廊，在岔口选择对应物体。模型采用 Transformer-XL 和 PPO，先在固定任务、64 个上下文位置下预训练，再以五个位置适应随机走廊；决定所需的线索出现在此前 7—17 个环境步骤。记忆地址直接使用环境的空间和时间坐标，未学习论文提出的价值索引。每种检索头测试六个随机种子，短上下文无检索头基线只有三个。",
+                "作者用跨种子的平均回报曲线首次达到 0.95 所需训练步数作主要比较，而不是把每个种子的达标时间取平均。相对移动需要约 59 万步，高斯绝对寻址约 94 万步，类别式绝对寻址在约 205 万步预算内仍未确定达标时间。这是学习效率结果，0.95 是平均回报，不应改写成 95% 准确率。五位置的相对移动方案也比短上下文无检索头基线更少绕路。"
+              ]
+            },
+            {
+              "heading": "学得更快，不代表出现新的记忆能力",
+              "paragraphs": [
+                "一个重要的反例限制了结论：没有检索头的短上下文 Agent 也能解题。它可以按照线索等待不同时间，借时钟状态保留信息；去掉时空编码并进一步缩短窗口后，还可能通过反复转向把线索写进自己的近期行为。这些都是任务允许的有效策略。因此实验没有证明新方案拥有基线缺失的记忆能力，只支持在该任务及所比寻址方式下，学习和行为效率有所改善。",
+                "论文 10 月 29 日首次提交，作者注明获 NeurIPS 2026 的 Long-Context Foundation Models 工作坊接收；这是作者给出的工作坊信息，不是独立核验的主会录用。当前任务只需找回一条关键线索，没有验证连续访问多段记忆、学习几何或低变化检索假说。它提供了值得继续试验的机制，但还不能宣称能降低真实大模型长上下文检索成本，或取代现有语义检索。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性示意，分开展望的价值索引与已测试的固定空间寻址，不是实验曲线。",
+            "steps": [
+              "设想按任务价值组织记忆地址",
+              "保留并相对移动检索位置",
+              "在固定空间的小任务比较寻址",
+              "分别判断学习效率与尚未验证部分"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Consecutive agent decisions may need nearly the same memories, yet retrieval often starts afresh each time. This paper proposes retaining the previous retrieval position and moving through an address space. It is not a validated long-context solution: the contribution combines a value-indexing objective with a small experiment testing only the addressing mechanism.",
+          "sections": [
+            {
+              "heading": "Separate memory contents from their addresses",
+              "paragraphs": [
+                "The authors distinguish the information revealed by a memory from where it is stored. An ideal index makes complementary memories jointly accessible while avoiding redundant items in the same retrieval set. Its objective charges both for missed useful information and for every accessible memory; without the latter, collapsing all memories to one point would be a trivial solution. Value means the marginal contribution to task utility, rather than similarity between texts.",
+                "Given a suitable space, a retrieval head can retain its position and move relatively, while the working window keeps recently retrieved content. The motivation is to reuse retrieval state when information needs change little between nearby steps. The paper derives how complementarity and redundancy affect joint retrieval, but does not supply a complete procedure for learning the geometry. Estimating value, representing context-dependent relationships in a fixed space, and unifying indexing with movement remain unresolved."
+              ]
+            },
+            {
+              "heading": "A five-position context proof of principle",
+              "paragraphs": [
+                "The experiment uses MiniGrid Memory: an agent observes a cue, traverses a corridor and chooses the corresponding object at a junction. A Transformer-XL policy trained with PPO is pretrained on a fixed task with 64 context positions, then adapted to a randomized corridor with five positions. The relevant cue occurs 7–17 environment steps before the decision. Addresses are supplied directly by spatial and temporal coordinates; the proposed value index is not learned. Each retrieval-head condition uses six seeds, while the short-context no-head baseline uses three.",
+                "The primary statistic is the first training step at which the mean return curve across seeds reaches 0.95, not the mean of individual seeds’ crossing times. Relative movement requires about 590,000 steps, Gaussian absolute addressing about 940,000, and categorical absolute addressing does not establish a crossing within roughly 2.05 million steps. This measures learning efficiency: 0.95 is mean return, not 95% accuracy. The relative head with five context positions also takes fewer excess environment steps than the short-context no-head baseline."
+              ]
+            },
+            {
+              "heading": "Faster learning is not a new memory capability",
+              "paragraphs": [
+                "An important negative control limits the claim: an agent without a retrieval head can still solve the short-context task. It can wait for a cue-dependent duration and later use clock state; after removing spatial and temporal encodings and further shortening the window, repeated turns can encode the cue in recent behavior. These are legitimate solutions. The experiment therefore establishes no capability gap, only evidence of learning and behavioral efficiency for the tested task and addressing alternatives.",
+                "The first version was submitted on October 29. The authors report acceptance at the NeurIPS 2026 Long-Context Foundation Models workshop; this is author-reported workshop status, not independently verified main-conference acceptance. The task retrieves one crucial cue and tests neither sequential access to many memories, learned geometry nor the low-drift hypothesis. It motivates further experiments but does not establish lower retrieval costs in real long-context language models or a replacement for semantic search."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper; proposed value indexing is distinguished from tested fixed-geometry addressing, not plotted as experimental results.",
+            "steps": [
+              "Propose addresses organized by task value",
+              "Retain and move the retrieval position",
+              "Compare addressing in a fixed-space task",
+              "Separate efficiency findings from untested claims"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agent が連続する判断で必要とする記憶は、多くが共通かもしれない。それでも検索は毎回やり直されがちである。本論文は直前の検索位置を保ち、アドレス空間を移動する構想を示す。ただし、検証済みの長文脈解決策ではなく、価値に基づく索引の目的関数と、アドレス指定だけを試した小規模実験からなる。",
+          "sections": [
+            {
+              "heading": "記憶の内容とアドレスを分ける",
+              "paragraphs": [
+                "記憶から得られる情報と、その情報を置く場所を区別する。理想的には、判断に相補的な記憶を一緒に取り出しやすくし、同じ情報を繰り返す記憶は同時取得を避ける。目的関数は有用情報の取り逃しに加え、取得可能な記憶一件ごとにも費用を課す。後者がなければ全記憶を一点に置くだけでよくなってしまう。ここでいう価値はタスク効用への追加貢献であり、文章の類似度ではない。",
+                "適切な空間があれば、検索ヘッドは位置を維持して相対的に動き、作業窓には最近取り出した情報を残せる。隣接する時点で必要情報があまり変わらなければ、過去の検索状態を再利用できるという発想だ。論文は相補性と冗長性が共同検索にどう影響するかを導くが、その空間を学ぶ訓練手順は完成していない。価値推定、文脈により変わる関係の空間表現、索引と移動規則の統一は未解決である。"
+              ]
+            },
+            {
+              "heading": "五つの文脈位置による概念実証",
+              "paragraphs": [
+                "実験は MiniGrid Memory を使い、手掛かりを見た Agent が廊下を進み、分岐で対応する物体を選ぶ。Transformer-XL と PPO で、まず文脈長64の固定課題を事前学習し、その後、文脈長5のランダムな廊下へ適応させる。判断に必要な手掛かりは 7～17 環境ステップ前に現れる。記憶アドレスは環境の空間・時間座標から直接与え、価値索引を学習していない。各検索ヘッドは六シード、短文脈のヘッドなし基準は三シードで評価した。",
+                "主要指標はシードを平均した報酬曲線が初めて0.95に達する訓練ステップ数であり、各シードの到達時間の平均ではない。相対移動は約59万ステップ、ガウス分布の絶対指定は約94万ステップ、カテゴリ型の絶対指定は約205万ステップの予算内で到達を確定できなかった。0.95は平均報酬であり、正解率95%ではない。文脈長5の相対移動は、同じ短文脈でヘッドを持たない方式より余分な行動も少なかった。"
+              ]
+            },
+            {
+              "heading": "学習の速さと新しい記憶能力は別",
+              "paragraphs": [
+                "重要な対照結果として、検索ヘッドなしの短文脈 Agent も課題を解ける。手掛かりに応じて待つ時間を変え、後で時計状態を読む方法がある。時空間の符号化を外し窓をさらに短くしても、繰り返し向きを変える行動に手掛かりを埋め込める。いずれも課題上は正当な戦略である。したがって実験は能力の有無の差を示さず、この課題と比較した指定方式における学習・行動効率の証拠にとどまる。",
+                "初回投稿は10月29日。著者は NeurIPS 2026 の Long-Context Foundation Models ワークショップ採録と記載するが、著者申告のワークショップ情報であり、独立確認済みの本会議採録ではない。課題は重要な手掛かり一件の再取得のみで、複数記憶の連続アクセス、空間の学習、必要情報の変化が小さい場合の仮説は試していない。実際の長文脈モデルの費用削減や意味検索の代替が実証されたわけではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づく当サイト独自の説明図。提案された価値索引と、検証した固定空間の指定方式を区別するもので、実験曲線ではない。",
+            "steps": [
+              "タスク価値による記憶配置を提案する",
+              "検索位置を保って相対移動する",
+              "固定空間の小課題で指定方式を比べる",
+              "効率の結果と未検証の主張を分ける"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Для соседних решений агенту часто нужны почти одни и те же воспоминания, но поиск каждый раз начинается заново. Авторы предлагают сохранять предыдущую позицию и перемещаться по адресному пространству. Это пока не проверенное решение для длинного контекста: работа соединяет целевую функцию ценностного индекса с небольшим опытом, проверяющим только адресацию.",
+          "sections": [
+            {
+              "heading": "Отделить содержимое памяти от адреса",
+              "paragraphs": [
+                "Информация, раскрываемая воспоминанием, отделяется от места его хранения. В идеальном индексе взаимодополняющие воспоминания доступны совместно, а избыточные не попадают в один набор без необходимости. Целевая функция учитывает потери полезной информации и стоимость каждого доступного воспоминания. Без второй части тривиальным решением было бы поместить все в одну точку. Ценность означает дополнительную пользу для решения задачи, а не сходство текстов.",
+                "Если подходящее пространство задано, поисковая головка сохраняет положение и движется относительно него, а рабочее окно удерживает недавно извлеченные данные. Мотивация — повторно использовать состояние поиска при малом изменении информационной потребности. В статье выведено влияние взаимодополняемости и избыточности на совместное извлечение, но полной процедуры обучения геометрии нет. Оценка ценности, представление зависимых от контекста отношений и согласование индекса с правилом движения остаются открытыми вопросами."
+              ]
+            },
+            {
+              "heading": "Проверка с пятью позициями контекста",
+              "paragraphs": [
+                "В MiniGrid Memory агент видит подсказку, проходит коридор и выбирает соответствующий объект на развилке. Политика Transformer-XL с PPO сначала обучается на фиксированной задаче с 64 позициями контекста, затем адаптируется к случайному коридору с пятью позициями. Нужная подсказка встречается за 7–17 шагов среды до решения. Адреса напрямую заданы пространственными и временными координатами; ценностный индекс не обучается. Для каждой поисковой головки использовано шесть случайных инициализаций, для короткоконтекстной базы без головки — три.",
+                "Главный показатель — первый шаг обучения, когда усредненная по инициализациям кривая возврата достигает 0,95, а не среднее индивидуальных времен достижения. Относительное движение требует примерно 590 тысяч шагов, гауссова абсолютная адресация — 940 тысяч, а категориальная абсолютная адресация не устанавливает достижение в бюджете около 2,05 миллиона шагов. Значение 0,95 является средним возвратом, не точностью 95%. Относительная головка с пятью позициями также совершает меньше лишних действий, чем короткоконтекстная база без поиска."
+              ]
+            },
+            {
+              "heading": "Быстрее учиться — не значит получить новую способность",
+              "paragraphs": [
+                "Важный отрицательный контроль: агент без поисковой головки тоже решает задачу. Он может ждать зависящее от подсказки время и затем использовать часы; после удаления пространственно-временного кодирования и дальнейшего сокращения окна — повторять повороты, сохраняя подсказку в недавнем поведении. Это допустимые стратегии. Поэтому опыт не устанавливает разрыв в способностях, а лишь дает свидетельства большей эффективности обучения и поведения в этой задаче относительно проверенных способов адресации.",
+                "Первая версия подана 29 октября. Авторы сообщают о принятии на воркшоп Long-Context Foundation Models при NeurIPS 2026; это их заявление о воркшопе, не независимо подтвержденное принятие на основную конференцию. В задаче извлекается одна ключевая подсказка: последовательный доступ к многим воспоминаниям, обучение геометрии и гипотеза малого изменения потребностей не проверены. Работа мотивирует дальнейшие опыты, но не доказывает снижение стоимости длинного контекста реальных языковых моделей или замену семантического поиска."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: предлагаемая ценностная индексация отделена от проверенной фиксированной геометрии; это не экспериментальный график.",
+            "steps": [
+              "Предложить адреса по ценности для задачи",
+              "Сохранять и перемещать позицию поиска",
+              "Сравнить адресацию на задаче с фиксированной геометрией",
+              "Отделить эффективность от непроверенных утверждений"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Agent 連續幾步需要的記憶可能大部分相同，卻常常每次都重新搜尋。本文提出另一種思路：保留上次檢索的位置，沿著記憶地址空間移動。但它目前不是已經驗證的長上下文解決方案，而是一個價值索引目標，加上一項只檢驗定址機制的小規模實驗。",
+          "sections": [
+            {
+              "heading": "記憶內容與存放位置分開考慮",
+              "paragraphs": [
+                "作者把一條記憶能提供的資訊，與讀取它所需的地址分開。理想的索引應讓對當前決策互補的記憶容易一起取到，同時避免重複資訊擠在同一次檢索裡。目標函式既計算漏掉有用資訊的損失，也對每條可取到的記憶收費；否則，把所有內容堆在同一點就會成為沒有實際意義的最優解。這裡的價值指對任務效用的增量，不等同於文字相似度。",
+                "有了合適的空間，檢索頭便可保留位置並相對移動，工作視窗儲存最近取到的內容。其動機是相鄰時刻需要的資訊變化不大時，可以沿用先前檢索狀態。論文給出了互補與冗餘如何影響共同檢索的推導，但沒有完成學習這種空間的訓練方案；資訊價值的估計、空間能否容納隨語境改變的關係，以及如何統一索引和移動規則，仍是未解決問題。"
+              ]
+            },
+            {
+              "heading": "五個上下文位置下的概念驗證",
+              "paragraphs": [
+                "實驗使用 MiniGrid Memory：Agent 先看線索，再走過走廊，在岔口選擇對應物體。模型採用 Transformer-XL 和 PPO，先在固定任務、64 個上下文位置下預訓練，再以五個位置適應隨機走廊；決定所需的線索出現在此前 7—17 個環境步驟。記憶地址直接使用環境的空間和時間座標，未學習論文提出的價值索引。每種檢索頭測試六個隨機種子，短上下文無檢索頭基線只有三個。",
+                "作者用跨種子的平均回報曲線首次達到 0.95 所需訓練步數作主要比較，而不是把每個種子的達標時間取平均。相對移動需要約 59 萬步，高斯絕對定址約 94 萬步，類別式絕對定址在約 205 萬步預算內仍未確定達標時間。這是學習效率結果，0.95 是平均回報，不應改寫成 95% 準確率。五位置的相對移動方案也比短上下文無檢索頭基線更少繞路。"
+              ]
+            },
+            {
+              "heading": "學得更快，不代表出現新的記憶能力",
+              "paragraphs": [
+                "一個重要的反例限制了結論：沒有檢索頭的短上下文 Agent 也能解題。它可以按照線索等待不同時間，借時鐘狀態保留資訊；去掉時空編碼並進一步縮短視窗後，還可能透過反覆轉向把線索寫進自己的近期行為。這些都是任務允許的有效策略。因此實驗沒有證明新方案擁有基線缺失的記憶能力，只支援在該任務及所比定址方式下，學習和行為效率有所改善。",
+                "論文 10 月 29 日首次提交，作者註明獲 NeurIPS 2026 的 Long-Context Foundation Models 工作坊接收；這是作者給出的工作坊資訊，不是獨立核驗的主會錄用。當前任務只需找回一條關鍵線索，沒有驗證連續訪問多段記憶、學習幾何或低變化檢索假說。它提供了值得繼續試驗的機制，但還不能宣稱能降低真實大模型長上下文檢索成本，或取代現有語義檢索。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性示意，分開展望的價值索引與已測試的固定空間定址，不是實驗曲線。",
+            "steps": [
+              "設想按任務價值組織記憶地址",
+              "保留並相對移動檢索位置",
+              "在固定空間的小任務比較定址",
+              "分別判斷學習效率與尚未驗證部分"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "prefix-executability-tool-agent-reliability",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.40444v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.40444v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一个 Agent 最后完成了任务，不代表中途每次工具调用都合法。它可能先引用不存在的对象、遗漏必要信息，再收到报错并修好。本文提出“前缀可执行性”：沿着实际调用顺序，检查从第一步到当前步是否一直可执行，把顺利完成与出错后恢复分别展示。",
+          "sections": [
+            {
+              "heading": "评价过程，不要求照抄标准路径",
+              "paragraphs": [
+                "评分器按工具是否存在、参数格式、状态前提和跨步数据依赖，确定每一次调用能否执行。它使用基准暴露的状态和确定性规则，不依赖语言模型裁判，也不强迫 Agent 走唯一标准路线。首次被拒绝的调用确定错误深度，前缀重放在此停止；原始完整轨迹仍保留，用来判断最终成功和是否恢复。实验中的执行前模型验证器是另一部分，不能与这个评分器混为一谈。",
+                "指标分别回答不同问题：TER 是全程没有非法前缀的轨迹比例；恢复率只以曾经出现非法前缀的轨迹为分母；按深度画的 PEC 则使用固定的全部任务作为分母，统计到达该深度且此前一直合法的比例。因此曲线下降也可能只是轨迹已正常结束，不全是新增错误。论文还给出按各轨迹长度归一化的面积，避免只看最末一步而丢掉首次错误发生的位置。"
+              ]
+            },
+            {
+              "heading": "同样的最终成功率，可能来自不同过程",
+              "paragraphs": [
+                "主要测试从 BFCL-v3 和 ToolSandbox 各取 200 个任务，比较三个模型与四种 Agent 方式；迁移部分覆盖 τ³-bench 的航空50题、零售114题基本集合，共形成 6,768 次执行。四种方式从 ReAct、先写计划但不约束执行、让计划约束执行，到在计划执行前增加检查与修订。相同任务用于配对比较，但主表的区间是边际区间，不能仅凭它们重叠与否判断配对显著性。",
+                "BFCL 的 Llama-4 Maverick 计划约束方式展示了为何需要分开统计：200 次执行中只有10次全程可执行，且都成功；190次出现过非法前缀，其中138次后来成功。因此 TER 为5%，恢复率为138/190约72.6%，最终成功为148/200即74%。成功并非虚构，只是其中93.2%曾出过前缀错误。若只报告74%，就看不出任务对纠错的依赖程度。"
+              ]
+            },
+            {
+              "heading": "预先检查有用，但收益不能直接推广",
+              "paragraphs": [
+                "在 ToolSandbox 的 GPT-5.4 条件下，计划约束方式的最终成功率点估计为69%，加入双循环验证后为63%；但全程可执行率从48%升至94%。这体现了过程可靠性与最终收益的不同，而不是验证方式在所有指标上都获胜。到 τ³-bench，预先验证没有复现前两集合的一致优势；专门的配对敏感性研究中，可执行率和归一化面积变化的95%区间都包含零，增加推理预算也不能自动保证改进。",
+                "论文10月29日首次提交，作者注明 NeurIPS 2026 录用，但未注明轨道，未将其升级为独立确认的主会证据。实验不是完整排行榜，前两集合为样本，迁移只覆盖航空和零售；每任务一次执行的区间不描述反复运行波动。方法依赖显式前提和可观察状态，也未与匹配的约束解码对照。可执行轨迹仍可能语义错误或违背用户意图，所以这些指标补充最终成功，而不是替代它。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，区分连续合法执行与出错后恢复，不是实验成绩图。",
+            "steps": [
+              "按实际顺序检查调用前提",
+              "定位第一个不可执行步骤",
+              "保留完整轨迹观察后续恢复",
+              "分别报告过程可靠性与最终成功"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Completing a task does not mean every tool call along the way was valid. An agent may reference a nonexistent object or omit required information, receive an error and then repair the problem. Prefix executability checks whether the trajectory remained feasible from its first action to each later action, distinguishing uninterrupted execution from recovery after failure.",
+          "sections": [
+            {
+              "heading": "Evaluate the process without enforcing one reference path",
+              "paragraphs": [
+                "The scorer checks tool availability, argument schemas, state preconditions and dependencies on earlier values. It uses exposed benchmark state and deterministic rules, not a language-model judge, and allows alternative valid routes. The first rejected action fixes the first-error depth and stops prefix replay; the original full rollout remains available for final-success and recovery scoring. The model-based pre-execution verifier tested as an intervention is separate from this benchmark-side scorer.",
+                "The metrics answer different questions. Trajectory Executability Rate, or TER, is the fraction of trajectories with no invalid prefix. Recovery Rate uses only trajectories that experienced an invalid prefix as its denominator. The depth-wise PEC curve instead uses the fixed full cohort and counts trajectories that both reach a depth and remain executable through it. A decline can therefore reflect normal termination, not only a new error. A horizon-normalized area also records how late the first error occurs within each trajectory."
+              ]
+            },
+            {
+              "heading": "The same success score can hide different trajectories",
+              "paragraphs": [
+                "The main tests sample 200 tasks each from BFCL-v3 and ToolSandbox, with three models and four agent variants. Transfer testing covers all 50 Airline and 114 Retail base tasks of τ³-bench, giving 6,768 executions overall. Variants progress from ReAct, to an unenforced initial plan, to plan-conditioned execution, to additional plan checking and revision. Shared task IDs support paired comparisons, but the main tables report marginal intervals; overlap or non-overlap alone does not establish paired significance.",
+                "The BFCL Llama-4 Maverick plan-conditioned setting illustrates the distinction. Of 200 executions, only ten were fully executable, and all ten succeeded. Among 190 with an invalid prefix, 138 eventually succeeded. TER is therefore 5%, recovery is 138/190, approximately 72.6%, and final success is 148/200, or 74%. Those successes are real, but 93.2% of them followed an earlier prefix failure. Reporting only 74% conceals how much completion depends on repair."
+              ]
+            },
+            {
+              "heading": "Validation helps in some settings, not everywhere",
+              "paragraphs": [
+                "On ToolSandbox with GPT-5.4, the final-success point estimate is 69% for plan-conditioned execution and 63% after Dual-Loop validation, while TER rises from 48% to 94%. This separates process reliability from terminal utility rather than establishing dominance on every metric. On τ³-bench, advance validation does not reproduce the consistent advantage seen in the first two collections. In a separate paired sensitivity study, all 95% intervals for TER and normalized-area changes include zero; more validation inference does not guarantee an improvement.",
+                "The first version was submitted on October 29. The authors report acceptance to NeurIPS 2026 without specifying a track; this is not upgraded to independently verified main-conference status. The study is an audit, not a complete leaderboard: two collections are sampled and transfer covers only Airline and Retail. One rollout per task does not measure repeated-run variability. Explicit preconditions and observable state are required, and matched constrained-decoding controls were not evaluated. Executable actions can still be semantically wrong or violate user intent, so these metrics complement rather than replace final success."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper; it separates uninterrupted execution from recovery and is not an experimental score chart.",
+            "steps": [
+              "Check prerequisites in execution order",
+              "Locate the first invalid action",
+              "Retain the full trajectory to observe recovery",
+              "Report process reliability and final success separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "タスクを最後に達成しても、途中のツール呼び出しがすべて正しかったとは限らない。存在しない対象を参照したり必要情報を省いたりして、エラー後に修正する場合がある。本論文の前段実行可能性は、最初の操作から各時点まで実行可能だったかを調べ、失敗なしの完了と失敗後の回復を分けて示す。",
+          "sections": [
+            {
+              "heading": "標準経路の模倣ではなく過程を評価する",
+              "paragraphs": [
+                "採点器はツールの存在、引数形式、状態の前提、前段の値への依存を確認する。基準環境が公開する状態と決定的規則を使い、言語モデル判定器には依存せず、別の合法的経路も許容する。最初に拒否された操作を初回エラー深度として前段の再実行を止める一方、元の完全な軌跡は最終成功と回復の採点用に残す。介入として試すモデルベースの実行前検証器とは別の仕組みである。",
+                "指標の分母も区別する。TER は無効な前段が一度もない軌跡の割合で、回復率は無効前段を経験した軌跡だけを分母にする。深度ごとの PEC は固定した全タスクを分母に、そこまで到達し、かつ合法性を保った割合を表す。したがって曲線の低下は通常終了でも起こり、すべてが新しいエラーではない。各軌跡の長さで正規化した面積も使い、初回エラーの早さを捉える。"
+              ]
+            },
+            {
+              "heading": "同じ成功率でも過程は違う",
+              "paragraphs": [
+                "主実験は BFCL-v3 と ToolSandbox から各200タスクを抽出し、三モデル・四方式を比較する。移行評価は τ³-bench の航空50問と小売114問の基本集合すべてを対象とし、全体で6,768実行となる。方式は ReAct、計画を先に書くだけ、計画に従う実行、さらに計画の検証と修正を加えるもの。タスクIDを共通化しているが、主表は周辺信頼区間であり、区間の重なりだけで対応比較の有意差を判断できない。",
+                "BFCL の Llama-4 Maverick を計画に従わせた条件では、200実行のうち全過程が実行可能だったのは10件で、すべて成功した。無効前段のあった190件のうち138件も最終的には成功した。よって TER は5%、回復率は138/190で約72.6%、最終成功率は148/200で74%となる。成功自体は事実だが、その93.2%は途中の失敗後に達成された。74%だけでは修正への依存を読み取れない。"
+              ]
+            },
+            {
+              "heading": "事前検証の効果には適用範囲がある",
+              "paragraphs": [
+                "ToolSandbox の GPT-5.4 条件では、最終成功率の点推定は計画に従う方式の69%に対し、Dual-Loop 検証追加後は63%だった。一方 TER は48%から94%へ上がる。過程の信頼性と最終効用は異なり、全指標で検証が勝つわけではない。τ³-bench では前二集合の一貫した優位が再現せず、別途の対応付き感度分析では TER と正規化面積の変化の95%区間がすべてゼロを含んだ。推論量を増やせば改善するとは限らない。",
+                "初回投稿は10月29日。著者は NeurIPS 2026 採録と記載するがトラックは不明で、独立確認済みの本会議採録へ読み替えない。完全なランキング評価ではなく、前二集合は標本、移行は航空・小売のみである。各タスク一実行なので反復時の揺らぎは測らない。明示的前提と観察可能な状態が必要で、条件を揃えた制約付きデコーディングとの比較もない。実行可能でも意味的な誤りや意図違反はあり得るため、最終成功を補完する指標として扱う。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づく当サイト独自の説明図。失敗なしの実行と失敗後の回復を分け、実験スコアそのものは示さない。",
+            "steps": [
+              "実行順に呼び出しの前提を確認する",
+              "最初の実行不能な操作を特定する",
+              "完全な軌跡を残して回復を見る",
+              "過程の信頼性と最終成功を別々に報告する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Завершенная задача не означает, что каждый вызов инструмента был допустим. Агент может сослаться на несуществующий объект, пропустить нужные данные, получить ошибку и исправиться. Исполнимость префиксов проверяет допустимость последовательности от первого действия до каждого последующего, разделяя непрерывно корректное выполнение и восстановление после сбоя.",
+          "sections": [
+            {
+              "heading": "Оценивать процесс, не навязывая эталонный маршрут",
+              "paragraphs": [
+                "Оценщик проверяет доступность инструмента, схемы аргументов, предусловия состояния и зависимости от предыдущих значений. Он использует открытое состояние бенчмарка и детерминированные правила, без языковой модели-судьи, и допускает альтернативные законные маршруты. Первое отклоненное действие фиксирует глубину ошибки и останавливает воспроизведение префикса; полная исходная траектория сохраняется для оценки успеха и восстановления. Экспериментальный модельный проверяющий до исполнения — отдельный механизм, не этот оценщик.",
+                "У показателей разные знаменатели. TER — доля траекторий без недопустимого префикса. Recovery Rate считает только траектории, где такой сбой произошел. Кривая PEC по глубине использует всю фиксированную выборку и показывает долю траекторий, достигших глубины без предыдущей ошибки. Падение может отражать обычное завершение, а не новый сбой. Нормированная на длину траектории площадь также учитывает, насколько рано возникла первая ошибка."
+              ]
+            },
+            {
+              "heading": "Одинаковый успех может скрывать разные траектории",
+              "paragraphs": [
+                "Основные опыты используют по 200 задач из BFCL-v3 и ToolSandbox, три модели и четыре варианта агента. Перенос проверен на всех 50 базовых задачах Airline и 114 Retail в τ³-bench; всего получено 6 768 выполнений. Варианты идут от ReAct к первоначальному необязательному плану, исполнению по плану и дополнительной проверке с исправлением плана. Общие идентификаторы задач позволяют парное сравнение, но главные таблицы дают маргинальные интервалы: их пересечение само по себе не определяет парную значимость.",
+                "Пример BFCL с Llama-4 Maverick, исполняющим план, показывает различие. Из 200 выполнений только десять были полностью исполнимыми, и все десять завершились успехом. Среди 190 с недопустимым префиксом впоследствии преуспели 138. Значит, TER равен 5%, восстановление — 138/190, около 72,6%, а итоговый успех — 148/200, или 74%. Успехи реальны, но 93,2% из них произошли после предшествующей ошибки. Одно число 74% скрывает зависимость результата от исправления."
+              ]
+            },
+            {
+              "heading": "Предварительная проверка полезна не везде",
+              "paragraphs": [
+                "В ToolSandbox с GPT-5.4 точечная оценка итогового успеха составляет 69% при исполнении по плану и 63% после Dual-Loop, тогда как TER растет с 48% до 94%. Это различие надежности процесса и конечной полезности, а не победа проверки по всем показателям. На τ³-bench предварительная проверка не воспроизводит устойчивое преимущество первых наборов. В отдельном парном исследовании чувствительности все 95%-ные интервалы изменений TER и нормированной площади включают ноль; дополнительное рассуждение не гарантирует улучшения.",
+                "Первая версия подана 29 октября. Авторы сообщают о принятии на NeurIPS 2026 без указания трека; это не превращается в независимо подтвержденное принятие на основную конференцию. Исследование является аудитом, не полным рейтингом: первые наборы выборочные, перенос ограничен Airline и Retail. Одно выполнение на задачу не измеряет межзапусковую вариативность. Нужны явные предусловия и наблюдаемое состояние; сопоставимый контроль с ограниченным декодированием не проверен. Исполнимые действия могут быть смыслово неверными или нарушать намерение пользователя, поэтому показатели дополняют итоговый успех, а не заменяют его."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: непрерывная исполнимость отделена от восстановления; это не график экспериментальных баллов.",
+            "steps": [
+              "Проверить предусловия в порядке исполнения",
+              "Найти первое недопустимое действие",
+              "Сохранить полную траекторию для оценки восстановления",
+              "Раздельно сообщить надежность процесса и успех"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一個 Agent 最後完成了任務，不代表中途每次工具呼叫都合法。它可能先引用不存在的物件、遺漏必要資訊，再收到報錯並修好。本文提出“前綴可執行性”：沿著實際呼叫順序，檢查從第一步到當前步是否一直可執行，把順利完成與出錯後恢復分別展示。",
+          "sections": [
+            {
+              "heading": "評價過程，不要求照抄標準路徑",
+              "paragraphs": [
+                "評分器按工具是否存在、引數格式、狀態前提和跨步資料依賴，確定每一次呼叫能否執行。它使用基準暴露的狀態和確定性規則，不依賴語言模型裁判，也不強迫 Agent 走唯一標準路線。首次被拒絕的呼叫確定錯誤深度，前綴重放在此停止；原始完整軌跡仍保留，用來判斷最終成功和是否恢復。實驗中的執行前模型驗證器是另一部分，不能與這個評分器混為一談。",
+                "指標分別回答不同問題：TER 是全程沒有非法前綴的軌跡比例；恢復率只以曾經出現非法前綴的軌跡為分母；按深度畫的 PEC 則使用固定的全部任務作為分母，統計到達該深度且此前一直合法的比例。因此曲線下降也可能只是軌跡已正常結束，不全是新增錯誤。論文還給出按各軌跡長度歸一化的面積，避免只看最末一步而丟掉首次錯誤發生的位置。"
+              ]
+            },
+            {
+              "heading": "同樣的最終成功率，可能來自不同過程",
+              "paragraphs": [
+                "主要測試從 BFCL-v3 和 ToolSandbox 各取 200 個任務，比較三個模型與四種 Agent 方式；遷移部分覆蓋 τ³-bench 的航空50題、零售114題基本集合，共形成 6,768 次執行。四種方式從 ReAct、先寫計劃但不約束執行、讓計劃約束執行，到在計劃執行前增加檢查與修訂。相同任務用於配對比較，但主表的區間是邊際區間，不能僅憑它們重疊與否判斷配對顯著性。",
+                "BFCL 的 Llama-4 Maverick 計劃約束方式展示了為何需要分開統計：200 次執行中只有10次全程可執行，且都成功；190次出現過非法前綴，其中138次後來成功。因此 TER 為5%，恢復率為138/190約72.6%，最終成功為148/200即74%。成功並非虛構，只是其中93.2%曾出過前綴錯誤。若只報告74%，就看不出任務對糾錯的依賴程度。"
+              ]
+            },
+            {
+              "heading": "預先檢查有用，但收益不能直接推廣",
+              "paragraphs": [
+                "在 ToolSandbox 的 GPT-5.4 條件下，計劃約束方式的最終成功率點估計為69%，加入雙迴圈驗證後為63%；但全程可執行率從48%升至94%。這體現了過程可靠性與最終收益的不同，而不是驗證方式在所有指標上都獲勝。到 τ³-bench，預先驗證沒有復現前兩集合的一致優勢；專門的配對敏感性研究中，可執行率和歸一化面積變化的95%區間都包含零，增加推理預算也不能自動保證改進。",
+                "論文10月29日首次提交，作者註明 NeurIPS 2026 錄用，但未註明軌道，未將其升級為獨立確認的主會證據。實驗不是完整排行榜，前兩集合為樣本，遷移只覆蓋航空和零售；每任務一次執行的區間不描述反覆執行波動。方法依賴顯式前提和可觀察狀態，也未與匹配的約束解碼對照。可執行軌跡仍可能語義錯誤或違背使用者意圖，所以這些指標補充最終成功，而不是替代它。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，區分連續合法執行與出錯後恢復，不是實驗成績圖。",
+            "steps": [
+              "按實際順序檢查呼叫前提",
+              "定位第一個不可執行步驟",
+              "保留完整軌跡觀察後續恢復",
+              "分別報告過程可靠性與最終成功"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "on-policy-state-training-multihop-retrieval",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.40409v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.40409v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "多跳问答需要把几篇材料串起来。训练时如果每一步都给检索器正确的前文，测试时第一次检错就会把它带进从未见过的状态：错误材料成为下一次查询的一部分，继续影响后续选择。本文把训练重点转向这些真实偏离的状态，研究小型向量检索器能否学会从自己的错误中接着找证据。",
+          "sections": [
+            {
+              "heading": "把实际检索历史带回训练",
+              "paragraphs": [
+                "方法保留原有链式检索架构：把问题与已检索材料一起编码，每步选一个尚未取得的文档。每个训练轮次开始时，让当前检索器在训练问题上走一遍，收集它实际访问的状态，包括含错文档的历史。训练样本一半来自这些状态，一半来自标准证据历史；新状态每轮替换，而不是一直积累旧状态，避免训练分布落后于正在变化的检索器。",
+                "每个状态以尚未找到的最早标准证据为正目标，并从对比损失的负例中排除其他尚缺的标准证据，避免惩罚另一条同样有用的续接。只更新查询编码器的低秩适配参数，文档编码和索引保持不动，负例也由固定编码器按同一规则产生。它借助已标注的证据集合提供逐步监督，不需要语言模型评判或最终奖励；但这也意味着训练依赖可用的标准证据标注。"
+              ]
+            },
+            {
+              "heading": "完整找齐证据，与平均召回分开算",
+              "paragraphs": [
+                "训练使用 MuSiQue 的1,800个问题，另200题选模型，在1,000个官方开发集问题和11,656篇材料上测试。表1按五个随机种子报告结果：前五篇中找齐全部标准证据的问题比例 C@5 为49.3%，Search-R1 为36.5%。这不是单篇文档召回率。为分清收益来自链式训练还是错误状态，单种子、同架构同训练预算的消融将仅标准历史的44.6%提高到50.5%；这组数字不能与五种子均值混用。",
+                "恢复探针把不同编码器放到同一组3,403个仍缺证据的状态中，而非让各自挑容易状态。历史已有一个错文档时，下一步取得缺失正确证据的比例由25.0%升至35.8%；有两个及以上错文档时由14.5%升至29.2%，分母分别是对应污染程度的状态子集。在同一固定阅读模型接收各检索器前五篇材料的问答测试中，单种子方案的答案完全匹配率为44.1%，Search-R1材料对应35.5%；这是作者实验结果，不是本站实测。"
+              ]
+            },
+            {
+              "heading": "恢复能力改善，长链与泛化仍有限",
+              "paragraphs": [
+                "作者还构造 HotpotQA-Long 与 2Wiki-Long，各300题，材料规模分别约55万和22万篇，直接使用 MuSiQue 训练所得模型，不再微调。方法在前十篇的完整覆盖率为29.6%和32.8%，显示一定跨长链迁移，但 Search-R1 在第二集合达到37.0%，并非所有条件都落后。四跳 MuSiQue 的完整覆盖仍很低；更新自身状态的训练改善恢复，不代表解决了长期证据串联问题。",
+                "论文10月29日首次提交，未提供会议录用证据。主要检索结果用五个种子，而消融、恢复探针和下游问答使用同一单种子；新增长链集合由作者构造，不能直接等同标准测试集。长链上的两个图检索基线采用较小语料，模型及搜索预算也不完全相同，因此不能把跨系统差距全部归因于训练方法。可用的结论是，在控制较充分的同检索器对照中，训练真实错误历史及持续刷新这些历史，比只教标准路径更有效。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，展示训练状态如何更新，不是模型实际检索结果或性能曲线。",
+            "steps": [
+              "当前检索器生成包含错误的历史",
+              "与标准证据历史各取一半",
+              "学习寻找尚缺的正确证据",
+              "下一轮刷新实际访问状态"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Multi-hop questions require several documents to work together. If training always supplies a correct history, the first retrieval mistake at test time creates an unfamiliar state: the wrong passage becomes part of the next query and can keep pulling the chain off course. This paper trains on those deviations to test whether a small embedding retriever can continue finding evidence after its own errors.",
+          "sections": [
+            {
+              "heading": "Bring actual retrieval histories into training",
+              "paragraphs": [
+                "The method retains the existing chain architecture: encode the question with previously retrieved passages and select one unseen document per step. At the start of each epoch, the current retriever rolls out on training questions and records visited states, including histories containing wrong documents. Half the training states come from these rollouts and half from gold-evidence histories. The visited half is replaced every epoch rather than accumulated indefinitely, keeping training aligned with the changing retriever.",
+                "For each state, the target is the earliest missing gold passage. Other missing gold passages are excluded from contrastive negatives so that an alternative useful continuation is not penalized. Only low-rank query-encoder adapters change; document embeddings and the index remain fixed, and a frozen encoder supplies negatives under the same rule. Labeled evidence sets provide dense stepwise supervision without a language-model judge or terminal reward. That also means training depends on gold evidence annotations being available."
+              ]
+            },
+            {
+              "heading": "Separate complete evidence from average recall",
+              "paragraphs": [
+                "Training uses 1,800 MuSiQue questions with 200 more for checkpoint selection; testing uses 1,000 official development questions and 11,656 passages. Table 1 averages five seeds: C@5, the fraction of questions whose entire gold evidence set appears in the first five passages, is 49.3%, versus 36.5% for Search-R1. This is not passage recall. To isolate training-state gains from chain training itself, the single-seed, matched-architecture and matched-budget ablation rises from 44.6% with gold histories alone to 50.5%. Those figures must not be mixed with the five-seed means.",
+                "Recovery probes give different encoders the same 3,403 states still missing evidence rather than their own potentially easier states. With one wrong passage in history, next-step retrieval of a missing gold passage rises from 25.0% to 35.8%; with two or more, it rises from 14.5% to 29.2%. Each denominator is the corresponding contamination stratum. A fixed reader receiving each system’s top five passages reaches 44.1% answer exact match with the single-seed proposed retriever and 35.5% with Search-R1 passages. These are the authors’ experiments, not independent site measurements."
+              ]
+            },
+            {
+              "heading": "Recovery improves, but long chains remain hard",
+              "paragraphs": [
+                "The authors also construct HotpotQA-Long and 2Wiki-Long, with 300 questions each and approximately 550,000 and 220,000 passages. The MuSiQue-trained encoder transfers without further tuning, obtaining complete top-ten coverage of 29.6% and 32.8%. Yet Search-R1 reaches 37.0% on the second collection, so the proposed retriever does not lead everywhere. Complete coverage on four-hop MuSiQue remains low. Training on refreshed self-generated states improves recovery without solving long evidence chains.",
+                "The first version was submitted on October 29 with no conference-acceptance evidence. Main retrieval results use five seeds, while ablations, recovery probes and downstream answering share one seed. The long-chain collections are author-constructed variants, not interchangeable with the original benchmarks. Two graph baselines use reduced long-chain corpora, and model sizes and search budgets differ across systems; not every cross-system gap is attributable to this training method. The stronger conclusion comes from controlled comparisons of the same retriever: actual erroneous histories, refreshed as learning proceeds, help more than gold-only teaching."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the paper; it shows training-state refresh, not actual retrieved results or a performance curve.",
+            "steps": [
+              "Roll out the current retriever, including mistakes",
+              "Mix visited and gold histories equally",
+              "Learn to retrieve still-missing gold evidence",
+              "Refresh visited states in the next epoch"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "多段の質問では、複数の文書をつないで答える必要がある。訓練で常に正しい履歴を渡すと、テストで一度誤検索しただけで未知の状態に入る。誤った文書が次の問い合わせに含まれ、その後の選択まで引っ張るからだ。本研究は実際の逸脱状態を訓練に戻し、小さな埋め込み検索器が自分の誤りから証拠探索を続けられるかを調べる。",
+          "sections": [
+            {
+              "heading": "実際に通った検索履歴を訓練へ戻す",
+              "paragraphs": [
+                "構造は既存の連鎖型を維持する。質問と取得済み文書を一緒に符号化し、各段で未取得の文書を一つ選ぶ。各エポックの初めに現在の検索器を訓練質問で動かし、誤文書を含む履歴も含め、訪れた状態を収集する。訓練状態の半分をその履歴、半分を正解証拠の履歴とする。実際の状態は蓄積し続けず毎回置き換え、変化する検索器に訓練分布を合わせる。",
+                "各状態では未取得の正解文書のうち順序上最初のものを正例にし、ほかの未取得正解文書を対比損失の負例から除く。別の有益な続き方を罰しないためだ。更新するのは問い合わせエンコーダーの低ランク適応部分だけで、文書埋め込みと索引は固定し、負例も固定エンコーダーによる同じ規則で作る。正解証拠集合が逐次の教師信号となるため、言語モデル判定器や最終報酬は不要だが、訓練には証拠注釈が必要である。"
+              ]
+            },
+            {
+              "heading": "証拠の完全取得と平均再現率を分ける",
+              "paragraphs": [
+                "訓練は MuSiQue の1,800問、モデル選択は別の200問、評価は公式開発集合の1,000問と11,656文書を使う。表1は五シード平均で、上位五文書に正解証拠がすべて入る質問割合 C@5 が49.3%、Search-R1 は36.5%だった。文書単位の再現率とは異なる。連鎖訓練自体と状態訓練の利益を分けた、同構造・同予算の単一シード分析では、正解履歴のみの44.6%から50.5%へ改善した。五シード平均と混同できない。",
+                "回復分析では、各検索器が自分で選んだ状態ではなく、証拠がまだ足りない同じ3,403状態を渡す。履歴に誤文書が一つある群では、次に不足する正解文書を取る率が25.0%から35.8%へ、二つ以上ある群では14.5%から29.2%へ上がった。分母はそれぞれの汚染程度の状態群である。固定の読解モデルに各方式の上位五文書を渡す問答評価では、提案検索器の単一シードで完全一致44.1%、Search-R1の文書で35.5%。いずれも著者の実験であり、当サイトの独自測定ではない。"
+              ]
+            },
+            {
+              "heading": "回復は改善しても長い連鎖は難しい",
+              "paragraphs": [
+                "著者は HotpotQA-Long と 2Wiki-Long も構築し、各300問、約55万と22万文書で、MuSiQue 学習済みモデルを追加調整せず評価した。上位十文書での完全カバーは29.6%と32.8%だったが、後者では Search-R1 が37.0%で上回るため、全条件で勝るわけではない。四段の MuSiQue の完全カバーも低いままである。自身の状態を更新しながら学ぶことは回復を改善するが、長い証拠連鎖を解決したとはいえない。",
+                "初回投稿は10月29日で、会議採録の証拠はない。主要検索結果は五シード、要素分析・回復分析・下流問答は共通の単一シードである。長連鎖集合は著者による派生版で、元の標準集合と同一視できない。二つのグラフ検索基準は長連鎖で縮小語料を使い、モデル規模や探索予算も方式間で違う。システム間の差すべてを本手法に帰属できない。より強い結論は、同じ検索器の制御比較で、実際の誤履歴を継続更新して教えることが正解経路のみより有効だった点にある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づく当サイト独自の説明図。訓練状態の更新を示し、実際の検索結果や性能曲線ではない。",
+            "steps": [
+              "現在の検索器を動かし誤履歴も得る",
+              "実履歴と正解履歴を半分ずつ混ぜる",
+              "未取得の正解証拠を探すよう学習する",
+              "次のエポックで実状態を更新する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Многошаговый вопрос требует соединить несколько документов. Если при обучении поисковику всегда дают правильную историю, первая ошибка на тесте создает незнакомое состояние: неверный документ входит в следующий запрос и продолжает уводить цепочку. Работа возвращает такие реальные отклонения в обучение, проверяя, может ли небольшой векторный поисковик находить свидетельства после собственных ошибок.",
+          "sections": [
+            {
+              "heading": "Возвращать реальные истории поиска в обучение",
+              "paragraphs": [
+                "Сохраняется прежняя цепочечная архитектура: вопрос кодируется вместе с найденными материалами, на каждом шаге выбирается один новый документ. В начале каждой эпохи текущий поисковик проходит обучающие вопросы и собирает посещенные состояния, включая истории с неверными документами. Половина обучающих состояний берется из этих проходов, половина — из эталонных историй. Первая половина обновляется каждую эпоху, а не бесконечно накапливается, чтобы соответствовать меняющемуся поисковику.",
+                "Целью состояния служит первый по порядку еще не найденный эталонный документ. Остальные недостающие правильные документы исключаются из отрицательных примеров контрастивной функции, чтобы не наказывать полезное альтернативное продолжение. Обновляются только низкоранговые адаптеры кодировщика запроса; векторы документов и индекс фиксированы, негативы выбирает замороженный кодировщик по одинаковому правилу. Размеченные множества свидетельств дают пошаговый обучающий сигнал без модели-судьи или конечной награды, но такая разметка должна быть доступна."
+              ]
+            },
+            {
+              "heading": "Отделять полное покрытие от среднего извлечения",
+              "paragraphs": [
+                "Обучение использует 1 800 вопросов MuSiQue, еще 200 нужны для выбора модели; тест — 1 000 вопросов официальной валидационной части и 11 656 документов. Таблица 1 усредняет пять инициализаций: C@5, доля вопросов со всеми эталонными свидетельствами среди первых пяти документов, составляет 49,3%, против 36,5% у Search-R1. Это не полнота извлечения отдельных документов. Контроль с одной инициализацией, одинаковой архитектурой и бюджетом отделяет эффект состояний от самой цепочки: 44,6% на эталонных историях против 50,5%. Эти числа нельзя смешивать со средними по пяти запускам.",
+                "Для проверки восстановления кодировщикам дают одни и те же 3 403 состояния с недостающими свидетельствами, а не собственные потенциально более легкие состояния. При одном неверном документе вероятность найти недостающее правильное свидетельство следующим шагом растет с 25,0% до 35,8%; при двух и более — с 14,5% до 29,2%. Знаменатели — соответствующие подгруппы загрязнения истории. Один фиксированный читатель, получая первые пять документов, достигает 44,1% точного совпадения ответа с предложенным поисковиком одного запуска и 35,5% с материалами Search-R1. Это результаты авторов, не независимые измерения сайта."
+              ]
+            },
+            {
+              "heading": "Восстановление лучше, длинные цепочки все еще сложны",
+              "paragraphs": [
+                "Авторы также создают HotpotQA-Long и 2Wiki-Long: по 300 вопросов, примерно 550 тысяч и 220 тысяч документов. Кодировщик переносится с MuSiQue без дообучения и получает полное покрытие в первой десятке 29,6% и 32,8%. Однако Search-R1 достигает 37,0% на втором наборе, поэтому новый метод не лидирует везде. Полное покрытие четырехшаговых вопросов MuSiQue остается низким. Обновление собственных состояний улучшает восстановление, но не решает задачу длинных цепочек свидетельств.",
+                "Первая версия подана 29 октября; свидетельств принятия на конференцию нет. Основные поисковые результаты используют пять инициализаций, а абляции, восстановление и ответы — одну общую. Длинные коллекции созданы авторами и не тождественны исходным стандартным тестам. Два графовых метода на длинных задачах используют сокращенные корпуса; размеры моделей и поисковые бюджеты также различаются. Нельзя приписывать весь межсистемный разрыв новому обучению. Более убедителен контролируемый вывод для одного поисковика: реальные ошибочные истории, обновляемые по мере обучения, полезнее обучения только правильному пути."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: обновление обучающих состояний, не реальные результаты поиска и не кривая качества.",
+            "steps": [
+              "Пройти вопросы текущим поисковиком, включая ошибки",
+              "Поровну смешать реальные и эталонные истории",
+              "Учиться находить недостающие свидетельства",
+              "Обновить посещенные состояния в следующей эпохе"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "多跳問答需要把幾篇材料串起來。訓練時如果每一步都給檢索器正確的前文，測試時第一次檢錯就會把它帶進從未見過的狀態：錯誤材料成為下一次查詢的一部分，繼續影響後續選擇。本文把訓練重點轉向這些真實偏離的狀態，研究小型向量檢索器能否學會從自己的錯誤中接著找證據。",
+          "sections": [
+            {
+              "heading": "把實際檢索歷史帶回訓練",
+              "paragraphs": [
+                "方法保留原有鏈式檢索架構：把問題與已檢索材料一起編碼，每步選一個尚未取得的文件。每個訓練輪次開始時，讓當前檢索器在訓練問題上走一遍，收集它實際訪問的狀態，包括含錯文件的歷史。訓練樣本一半來自這些狀態，一半來自標準證據歷史；新狀態每輪替換，而不是一直積累舊狀態，避免訓練分佈落後於正在變化的檢索器。",
+                "每個狀態以尚未找到的最早標準證據為正目標，並從對比損失的負例中排除其他尚缺的標準證據，避免懲罰另一條同樣有用的續接。只更新查詢編碼器的低秩適配引數，文件編碼和索引保持不動，負例也由固定編碼器按同一規則產生。它藉助已標註的證據集合提供逐步監督，不需要語言模型評判或最終獎勵；但這也意味著訓練依賴可用的標準證據標註。"
+              ]
+            },
+            {
+              "heading": "完整找齊證據，與平均召回分開算",
+              "paragraphs": [
+                "訓練使用 MuSiQue 的1,800個問題，另200題選模型，在1,000個官方開發集問題和11,656篇材料上測試。表1按五個隨機種子報告結果：前五篇中找齊全部標準證據的問題比例 C@5 為49.3%，Search-R1 為36.5%。這不是單篇文件召回率。為分清收益來自鏈式訓練還是錯誤狀態，單種子、同架構同訓練預算的消融將僅標準歷史的44.6%提高到50.5%；這組數字不能與五種子均值混用。",
+                "恢復探針把不同編碼器放到同一組3,403個仍缺證據的狀態中，而非讓各自挑容易狀態。歷史已有一個錯文件時，下一步取得缺失正確證據的比例由25.0%升至35.8%；有兩個及以上錯文件時由14.5%升至29.2%，分母分別是對應汙染程度的狀態子集。在同一固定閱讀模型接收各檢索器前五篇材料的問答測試中，單種子方案的答案完全匹配率為44.1%，Search-R1材料對應35.5%；這是作者實驗結果，不是本站實測。"
+              ]
+            },
+            {
+              "heading": "恢復能力改善，長鏈與泛化仍有限",
+              "paragraphs": [
+                "作者還構造 HotpotQA-Long 與 2Wiki-Long，各300題，材料規模分別約55萬和22萬篇，直接使用 MuSiQue 訓練所得模型，不再微調。方法在前十篇的完整覆蓋率為29.6%和32.8%，顯示一定跨長鏈遷移，但 Search-R1 在第二集合達到37.0%，並非所有條件都落後。四跳 MuSiQue 的完整覆蓋仍很低；更新自身狀態的訓練改善恢復，不代表解決了長期證據串聯問題。",
+                "論文10月29日首次提交，未提供會議錄用證據。主要檢索結果用五個種子，而消融、恢復探針和下游問答使用同一單種子；新增長鏈集合由作者構造，不能直接等同標準測試集。長鏈上的兩個圖檢索基線採用較小語料，模型及搜尋預算也不完全相同，因此不能把跨系統差距全部歸因於訓練方法。可用的結論是，在控制較充分的同檢索器對照中，訓練真實錯誤歷史及持續重新整理這些歷史，比只教標準路徑更有效。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，展示訓練狀態如何更新，不是模型實際檢索結果或效能曲線。",
+            "steps": [
+              "當前檢索器生成包含錯誤的歷史",
+              "與標準證據歷史各取一半",
+              "學習尋找尚缺的正確證據",
+              "下一輪重新整理實際訪問狀態"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "exactcert-missing-data-retrieval-stability",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper and submission history",
+          "url": "https://arxiv.org/abs/2610.40579v1"
+        },
+        {
+          "label": "Full paper: method, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.40579v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "传感器漏记了一段数据，补上一条看似合理的曲线后，再找历史上最相似的一天，答案可能已经被补值规则改变。Jianru Shen 的研究不试图猜准每个空缺，而是追问：即使空缺在允许范围内任意变化，哪些检索结论仍然成立？这是把缺失数据的不确定性带到结果层的一种质量检查。",
+          "sections": [
+            {
+              "heading": "把一个补全答案换成一组可能情况",
+              "paragraphs": [
+                "方法给每个缺失时刻指定上下界，已观测时刻固定不变。这些区间没有概率，也不假定相邻点一定平滑。候选库中的历史序列则必须完整。距离比较的是连续时间窗口的最小值：窗口只含一个时刻时等同于归一化 L1 距离；窗口变宽后，会同时比较不同跨度内的低谷。在车速数据里，它对应某段时间内最严重的拥堵，而不是任意时序距离的通用替代。",
+                "ExactCert 先问两个候选在最不利补全下是否仍有严格先后关系。只检查区间端点不够，因为重叠窗口会让内部取值改变排序。论文把连续问题化成有限关键值，再用区间动态规划精确求解；前置的快速层用有效上界证明稳定，或找出使排序不再严格的补全作为反例，剩余情况才进入动态规划。两两判断可组成不会漏掉可能最近邻的候选集合，但未必给出最小集合；无法证实严格先后也可能只是存在并列。"
+              ]
+            },
+            {
+              "heading": "插值很方便，却不是中性的操作",
+              "paragraphs": [
+                "作者使用 METR-LA、PEMS-BAY、PeMSD7-M 三个交通集合。每个集合从完整测试日构造1,000条查询，把真实缺失模式移植到48个时间点中，因而能与未遮挡结果比较；另有621条真正缺失的 METR-LA 查询，没有完整真值。主实验将速度编码到每小时八分之一英里的整数精度，保证针对这一编码表示，不应误读为原始连续测量的无限精度结论。",
+                "在线性插值下，三个集合的 L1 第一近邻改变率分别为32.8%、24.9%、20.7%，全窗口距离下为22.6%、17.7%、14.8%；并列的正确近邻不算改变。在全窗口设置中，ExactCert 保留下来的集合对区间内真值实现了全部最近邻保留，但能缩成唯一候选的查询仅有6.8%、5.9%、10.3%。这不是所有缺失查询都能自动确认。固定补全与随机采样检查有时会误删真实近邻，所以样本里没有发现反例不等于已经证明稳定。"
+              ]
+            },
+            {
+              "heading": "保证成立的前提，比一个速度倍数更重要",
+              "paragraphs": [
+                "快速层在困难排序边界对中解决约九成判断，减少昂贵的动态规划。网络规模实验中，每个集合只对10条相同查询同时运行完整方法与纯动态规划，作者报告82至110倍加速且结果相同；不能把这个配对小样本比例扩大为所有查询的统一收益。更宽的窗口也不是免费增强：它降低插值敏感性，却增加下一小时预测误差，降低唯一候选认证比例，具体取舍随数据集变化。",
+                "保证只在真实查询位于指定区间内时成立；历史最大值只是经验界限，PEMS-BAY 的0.3%查询落在区间外。方法还要求候选完整、时刻对齐、距离参数固定，不覆盖动态时间规整，也不允许补全后重新归一化。标签认证表示预测不会随补值改变，不代表标签一定正确。本站的工程解读是把可认证结果与尚不确定结果分开呈现。原文10月29日首发，作者注明 IEEE BigData 录用，但未明确届次和轨道，不能据此称为独立核实的主会成果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程；展示不确定性检查，不是实验结果图。",
+            "steps": [
+              "为缺失值设定允许区间",
+              "比较候选在最不利补全下的排序",
+              "快速证明或反例检查，必要时精确求解",
+              "保留有保证的候选并说明未决范围"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A sensor misses part of a day, an interpolation fills the gap, and a search retrieves the most similar historical day. That answer may reflect the filling rule as much as the observations. Jianru Shen asks which retrieval conclusions survive every admissible completion, carrying missing-data uncertainty through to the result rather than claiming to recover each absent value.",
+          "sections": [
+            {
+              "heading": "Replace one completed series with a set of possibilities",
+              "paragraphs": [
+                "Each missing time slot receives a lower and upper bound, while observed slots stay fixed. The intervals assign no probabilities and impose no smoothness across time. Historical candidate series must be complete. The distance compares minima in contiguous windows: single-slot windows recover normalized L1 distance, while wider windows compare troughs at several scales. For speed data, a trough represents the worst congestion within a span; this family is not a replacement for every time-series distance.",
+                "ExactCert asks whether one candidate remains strictly nearer than another under the worst completion. Checking interval endpoints is insufficient because overlapping windows can make interior values change the ordering. A finite critical-value reduction and interval dynamic program solve the pairwise problem exactly. A fast front end first proves stability with valid bounds or finds a completion refuting strict ordering. Only unresolved pairs need the expensive solver. Pairwise decisions yield a candidate set containing every possible nearest neighbor, not necessarily the smallest such set; a rejected strict ordering may simply admit a tie."
+              ]
+            },
+            {
+              "heading": "Interpolation is convenient but not neutral",
+              "paragraphs": [
+                "The experiments use METR-LA, PEMS-BAY and PeMSD7-M. Each supplies 1,000 queries made by transplanting real missingness patterns into complete 48-slot test windows, allowing comparison with unmasked truth. Another 621 METR-LA queries have genuine gaps and no complete ground truth. Speeds are integer-coded at one eighth of a mile per hour. The guarantees apply to that representation, not to infinitely precise original measurements.",
+                "With linear interpolation, top-1 changes occur on 32.8%, 24.9% and 20.7% of queries under L1, versus 22.6%, 17.7% and 14.8% at the full window band; returning a tied true neighbor is not counted as a change. At the full band, ExactCert retains every true nearest neighbor for queries whose truth is inside the box, but obtains a single-candidate set for only 6.8%, 5.9% and 10.3% of queries. Many cases remain unresolved. Fixed-completion and Monte Carlo checks sometimes discard a true neighbor, illustrating why failing to sample a counterexample is not a proof."
+              ]
+            },
+            {
+              "heading": "Read the guarantee before the speedup",
+              "paragraphs": [
+                "The fast layer decides about nine tenths of difficult ranking-boundary pairs without dynamic programming. In network-scale tests, only ten identical queries per dataset are run through both the full method and dynamic programming alone. The reported paired speedups are 82–110 times with identical outputs, not a universal gain over all queries. Wider windows also involve a trade-off: less sensitivity to interpolation comes with higher next-hour forecasting error and lower single-candidate certification, with dataset-dependent crossovers.",
+                "The true query must lie inside the stated bounds. A historical maximum is an empirical convention, and 0.3% of PEMS-BAY queries fall outside. Candidates must be complete, time positions aligned and distance parameters fixed; dynamic time warping and renormalization after completion are excluded. A label certificate guarantees an unchanged prediction, not a correct one. Our engineering interpretation is to present certified and unresolved results separately. First submitted on October 29, the paper carries author-reported IEEE BigData acceptance, without an edition or track; it is not independently verified main-track acceptance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory redraw by this site based on the paper; an uncertainty-checking workflow, not an experimental plot.",
+            "steps": [
+              "Specify intervals for missing values",
+              "Compare candidates under the worst completion",
+              "Use bounds and witnesses, then exact solving if needed",
+              "Return guaranteed candidates and unresolved uncertainty"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "センサーが一部を記録できず、自然に見える曲線で補ってから似た過去の日を探す。その結果は、観測値だけでなく補完規則にも左右される。Jianru Shen は欠損値を一つずつ当てる代わりに、許容範囲内でどう補っても成立する検索結果を調べ、データの不確かさを結果まで伝える。",
+          "sections": [
+            {
+              "heading": "一つの補完結果ではなく可能な集合を扱う",
+              "paragraphs": [
+                "欠損時点ごとに下限と上限を与え、観測済みの値は固定する。区間に確率はなく、隣接時点の滑らかさも仮定しない。一方、候補となる過去の系列は完全でなければならない。距離は連続時間窓の最小値を比較する。窓が一点なら正規化 L1 距離になり、窓を広げると異なる時間幅の谷を比べる。車速では区間内の最も深い渋滞を表すが、あらゆる時系列距離を置き換える提案ではない。",
+                "ExactCert は最悪の補完でも一方の候補が他方より厳密に近いかを問う。窓が重なるため、区間端点だけの確認では内部の値による順位逆転を見落とす。有限の重要値への帰着と区間動的計画法で厳密に解く前に、高速層が有効な上界から安定性を証明するか、厳密な順位を崩す補完例を探す。未決の組だけを厳密計算に回す。組ごとの判定から可能な最近傍を漏らさない候補集合を作れるが、最小集合とは限らない。厳密な順位を否定する例には同順位も含まれる。"
+              ]
+            },
+            {
+              "heading": "便利な補間も結果を変えてしまう",
+              "paragraphs": [
+                "実験は METR-LA、PEMS-BAY、PeMSD7-M の三つ。各集合の完全な48時点のテスト系列に実際の欠損パターンを移し、1,000件ずつの検索を構成したため、隠す前の真値と比較できる。別に評価した本来欠損している METR-LA 621件には完全な正解がない。速度は時速8分の1マイル単位の整数に符号化され、保証はこの表現に対するもので、元の連続測定値の無限精度を意味しない。",
+                "線形補間で第一近傍が変わる割合は L1 で32.8%、24.9%、20.7%、全窓では22.6%、17.7%、14.8%だった。同順位の真の近傍を返す場合は変化に数えない。全窓の ExactCert は真値が区間内にある検索で真の最近傍をすべて残したが、候補を一つに確定できた割合は6.8%、5.9%、10.3%にとどまる。固定補完やモンテカルロ検査は真の近傍を削除する場合があり、標本で反例が見つからないことは証明にならない。"
+              ]
+            },
+            {
+              "heading": "高速化より先に保証の前提を読む",
+              "paragraphs": [
+                "高速層は順位境界にある難しい候補対の約9割を動的計画法なしで判定した。ネットワーク規模の比較では、各集合で同じ10検索だけを完全手法と動的計画法のみの双方で実行し、同じ結果で82～110倍の高速化を報告した。全検索に一律の利益が出るとはいえない。窓を広げると補間への感度は下がる一方、次の一時間の予測誤差が増え、唯一候補の認証割合も下がる。得失の境目はデータに依存する。",
+                "真の検索系列が指定区間内にあることが必要で、過去の最大値は経験的な境界にすぎない。PEMS-BAY では0.3%が区間外だった。候補系列の完全性、時間位置の整列、距離設定の固定も必要で、動的時間伸縮や補完後の再正規化は対象外となる。ラベル認証は予測が変わらない保証であり、正解の保証ではない。本站の工学的な解釈では、認証済み結果と未決結果を分けて示すことが有用である。10月29日初回投稿で著者は IEEE BigData 採録と記載するが、開催回とトラックは不明で、独立確認済みの本会議採録とはしない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき本站が描き直した説明図。不確かさの検査手順であり、実験結果の図ではない。",
+            "steps": [
+              "欠損値の許容区間を指定",
+              "最悪の補完で候補順位を比較",
+              "上界と反例を調べ必要時に厳密計算",
+              "保証された候補と未決範囲を返す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Датчик пропустил часть дня, пробел заполнили правдоподобной кривой, после чего нашли самый похожий день в архиве. Ответ может зависеть от правила заполнения не меньше, чем от наблюдений. Jianru Shen исследует, какие выводы поиска сохраняются при любом допустимом заполнении, передавая неопределённость данных на уровень результата, а не обещая угадать каждое отсутствующее значение.",
+          "sections": [
+            {
+              "heading": "Вместо одного заполнения — множество возможностей",
+              "paragraphs": [
+                "Каждому пропуску задают нижнюю и верхнюю границы; наблюдаемые значения фиксируют. Интервалы не задают вероятностей и не предполагают гладкости между соседними моментами. Архивные ряды-кандидаты должны быть полными. Расстояние сравнивает минимумы в непрерывных временных окнах: одноточечные окна дают нормированное L1, более широкие сравнивают провалы на нескольких масштабах. Для скорости это сильнейшее замедление внутри отрезка, а не универсальная замена всех временных расстояний.",
+                "ExactCert выясняет, остаётся ли один кандидат строго ближе другого при худшем заполнении. Проверки концов интервала недостаточно: перекрывающиеся окна позволяют внутренним значениям менять порядок. Сведение к конечному набору критических значений и интервальное динамическое программирование дают точное решение. Быстрый слой сначала доказывает устойчивость допустимой верхней границей либо находит заполнение, опровергающее строгий порядок. Дорогой решатель нужен оставшимся парам. Из решений получают множество, не теряющее возможных ближайших соседей, но не обязательно минимальное; отказ в строгом порядке может означать лишь ничью."
+              ]
+            },
+            {
+              "heading": "Интерполяция удобна, но не нейтральна",
+              "paragraphs": [
+                "Эксперименты используют METR-LA, PEMS-BAY и PeMSD7-M. Для каждого набора создают 1 000 запросов, перенося реальные шаблоны пропусков на полные тестовые окна из 48 точек: так можно сравнить результат с незакрытыми данными. Ещё 621 запрос METR-LA имеет настоящие пропуски без полной истины. Скорости кодируют целыми числами с шагом одна восьмая мили в час. Гарантии относятся к этому представлению, а не к бесконечно точным исходным измерениям.",
+                "При линейной интерполяции первый сосед меняется в 32,8%, 24,9% и 20,7% запросов для L1; при полном наборе окон — в 22,6%, 17,7% и 14,8%. Возврат одного из равных истинных соседей изменением не считается. На полной полосе ExactCert сохраняет всех истинных ближайших соседей, когда истина лежит внутри интервалов, но единственного кандидата подтверждает лишь для 6,8%, 5,9% и 10,3% запросов. Многие случаи остаются неопределёнными. Проверки фиксированных заполнений и Монте-Карло иногда удаляют истинного соседа: отсутствие найденного контрпримера ещё не доказательство."
+              ]
+            },
+            {
+              "heading": "Сначала условия, затем ускорение",
+              "paragraphs": [
+                "Быстрый слой решает около девяти десятых сложных пар на границе ранжирования без динамического программирования. В сетевом масштабе только десять одинаковых запросов на каждый набор прошли и полный метод, и вариант только с динамическим программированием. Авторы сообщают ускорение в 82–110 раз при одинаковом результате; это не универсальный выигрыш на всех запросах. Расширение окон уменьшает чувствительность к интерполяции, но увеличивает ошибку прогноза следующего часа и уменьшает долю сертификатов единственного кандидата. Компромисс зависит от данных.",
+                "Истинный ряд должен входить в указанные интервалы. Исторический максимум — лишь эмпирическая граница; 0,3% запросов PEMS-BAY выходят за неё. Нужны полный архив кандидатов, выровненные моменты времени и фиксированные параметры расстояния. Динамическое выравнивание времени и перенормировка после заполнения не охвачены. Сертификат метки доказывает неизменность прогноза, а не его правильность. Наша инженерная интерпретация — раздельно показывать подтверждённые и неопределённые результаты. Первая версия подана 29 октября; автор сообщает о принятии на IEEE BigData без года проведения и трека, что не является независимым подтверждением основного трека."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, перерисованная сайтом по статье; проверка неопределённости, не экспериментальный график.",
+            "steps": [
+              "Задать интервалы пропущенных значений",
+              "Сравнить кандидатов при худшем заполнении",
+              "Проверить границы и примеры, при необходимости решить точно",
+              "Вернуть гарантированных кандидатов и область неопределённости"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "感測器漏記了一段資料，補上一條看似合理的曲線後，再找歷史上最相似的一天，答案可能已經被補值規則改變。Jianru Shen 的研究不試圖猜準每個空缺，而是追問：即使空缺在允許範圍內任意變化，哪些檢索結論仍然成立？這是把缺失資料的不確定性帶到結果層的一種質量檢查。",
+          "sections": [
+            {
+              "heading": "把一個補全答案換成一組可能情況",
+              "paragraphs": [
+                "方法給每個缺失時刻指定上下界，已觀測時刻固定不變。這些區間沒有機率，也不假定相鄰點一定平滑。候選庫中的歷史序列則必須完整。距離比較的是連續時間視窗的最小值：視窗只含一個時刻時等同於歸一化 L1 距離；視窗變寬後，會同時比較不同跨度內的低谷。在車速資料裡，它對應某段時間內最嚴重的擁堵，而不是任意時序距離的通用替代。",
+                "ExactCert 先問兩個候選在最不利補全下是否仍有嚴格先後關係。只檢查區間端點不夠，因為重疊視窗會讓內部取值改變排序。論文把連續問題化成有限關鍵值，再用區間動態規劃精確求解；前置的快速層用有效上界證明穩定，或找出使排序不再嚴格的補全作為反例，剩餘情況才進入動態規劃。兩兩判斷可組成不會漏掉可能最近鄰的候選集合，但未必給出最小集合；無法證實嚴格先後也可能只是存在並列。"
+              ]
+            },
+            {
+              "heading": "插值很方便，卻不是中性的操作",
+              "paragraphs": [
+                "作者使用 METR-LA、PEMS-BAY、PeMSD7-M 三個交通集合。每個集合從完整測試日構造1,000條查詢，把真實缺失模式移植到48個時間點中，因而能與未遮擋結果比較；另有621條真正缺失的 METR-LA 查詢，沒有完整真值。主實驗將速度編碼到每小時八分之一英里的整數精度，保證針對這一編碼表示，不應誤讀為原始連續測量的無限精度結論。",
+                "線上性插值下，三個集合的 L1 第一近鄰改變率分別為32.8%、24.9%、20.7%，全視窗距離下為22.6%、17.7%、14.8%；並列的正確近鄰不算改變。在全視窗設定中，ExactCert 保留下來的集合對區間內真值實現了全部最近鄰保留，但能縮成唯一候選的查詢僅有6.8%、5.9%、10.3%。這不是所有缺失查詢都能自動確認。固定補全與隨機取樣檢查有時會誤刪真實近鄰，所以樣本里沒有發現反例不等於已經證明穩定。"
+              ]
+            },
+            {
+              "heading": "保證成立的前提，比一個速度倍數更重要",
+              "paragraphs": [
+                "快速層在困難排序邊界對中解決約九成判斷，減少昂貴的動態規劃。網路規模實驗中，每個集合只對10條相同查詢同時執行完整方法與純動態規劃，作者報告82至110倍加速且結果相同；不能把這個配對小樣本比例擴大為所有查詢的統一收益。更寬的視窗也不是免費增強：它降低插值敏感性，卻增加下一小時預測誤差，降低唯一候選認證比例，具體取捨隨資料集變化。",
+                "保證只在真實查詢位於指定區間內時成立；歷史最大值只是經驗界限，PEMS-BAY 的0.3%查詢落在區間外。方法還要求候選完整、時刻對齊、距離引數固定，不覆蓋動態時間規整，也不允許補全後重新歸一化。標籤認證表示預測不會隨補值改變，不代表標籤一定正確。本站的工程解讀是把可認證結果與尚不確定結果分開呈現。原文10月29日首發，作者註明 IEEE BigData 錄用，但未明確屆次和軌道，不能據此稱為獨立核實的主會成果。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程；展示不確定性檢查，不是實驗結果圖。",
+            "steps": [
+              "為缺失值設定允許區間",
+              "比較候選在最不利補全下的排序",
+              "快速證明或反例檢查，必要時精確求解",
+              "保留有保證的候選並說明未決範圍"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "webgpu-gpu-resident-speculative-decoding",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.39761v1"
+        },
+        {
+          "label": "arXiv version and publication metadata",
+          "url": "https://arxiv.org/abs/2610.39761v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "在浏览器里运行语言模型，慢的不只是模型计算。每生成一个词元，网页与GPU之间的提交、同步和读回都可能让硬件空等。这篇研究重新设计浏览器推理循环，把连续生成的控制留在GPU上，再根据设备能力决定一次验证多少候选。它解决的是运行时效率问题，并未训练出能力更强的模型。",
+          "sections": [
+            {
+              "heading": "把逐词往返变成GPU内循环",
+              "paragraphs": [
+                "投机解码先提出几个候选词元，再由目标模型一起验证，接受正确的前缀。浏览器却可能为草稿计算、验证和CPU判断付出额外通信成本。作者因此把草稿生成、验证、接受判断及保存中间注意力状态的KV缓存整理都放到GPU上，CPU按小窗口批量提交工作，异步读取输出。候选来自页面文字、当前对话或此前生成的文本，不需要额外下载草稿模型。",
+                "另一个关键是适合少量词元并行验证的整数计算内核：权重为4位，激活为8位，并固定归约顺序，使批量验证与本运行时逐词贪心生成保持一致。控制器测量当前设备验证不同宽度的成本，再按每毫秒能接受多少词元调整候选树与提交窗口。强GPU可以用宽树摊薄成本，集显往往应该接近逐词执行；并非同时猜得越多越快。"
+              ]
+            },
+            {
+              "heading": "加速数字对应哪些实验",
+              "paragraphs": [
+                "浏览器实验使用Chrome、七个0.5B至8B模型和11项任务，包括页面问答、摘要、数学题与对话。主实验每模型220条提示；工作站运行全部七个模型，同一笔记本的独显和集显只测三个最小模型。与WebLLM比较时，各引擎使用WebLLM实际完成的相同子集：集显三个模型分别只有88、51、64条，不能把这些结果说成完整220条测试的普遍表现。",
+                "作者报告，相对WebLLM，笔记本独显的每输出词元解码速度为3.5—5.4倍，集显为4.8—6.2倍，工作站为4.8—8.6倍。数字同时包含整数内核、GPU驻留循环和投机的收益；仅后两项在工作站相对优化后内核再提供1.8—3.2倍，不能把总收益全归给投机。额外训练并下载草稿头后的10.2倍峰值属于另一配置，不是默认无额外模型的结果。"
+              ]
+            },
+            {
+              "heading": "精确一致有条件，弱设备仍有代价",
+              "paragraphs": [
+                "“精确一致”只表示输出与同一个运行时的确定性量化贪心解码逐词相同，不保证等于原始全精度模型或WebLLM。质量另用200道GSM8K题评估，平均准确率相同也不代表所有题答案一致。在集显两个较大模型上，自适应投机仍可比不投机的GPU循环慢2%和7%；它避免了固定宽树的严重退化，并未保证每种设备都会获益。",
+                "实验只覆盖Chrome及所测NVIDIA、AMD设备，没有验证Safari、Firefox、Apple或手机GPU，也没有与原生运行时比较。集显同时显示页面时仍可能明显掉帧，小窗口不足以消除资源争抢；真实会话可复用文本也可能少于基准。论文只承诺发表后开放实现，不能写成代码已开放。研究提供的是减少浏览器同步成本的一组方法，其部署价值仍需在目标设备、交互负载和质量要求下验证。这些速度还不含首次加载和校准；三个最小模型在工作站上需约4—9次页面任务才摊回相对WebLLM的启动成本，单次短请求并不会更快。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的机制示意，展示控制流程，不是性能曲线或实验截图。",
+            "steps": [
+              "从已有上下文提出候选词元",
+              "在GPU验证并接受匹配前缀",
+              "整理KV缓存并继续生成",
+              "按设备成本调整宽度与提交窗口"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Running a language model in a browser is slowed not only by neural-network computation. Submitting work, synchronizing and reading each generated token back can leave the GPU waiting. This study redesigns that loop so the GPU controls successive generation steps, while the runtime chooses how many candidate tokens to verify according to the device. The contribution concerns inference efficiency, not a more capable language model.",
+          "sections": [
+            {
+              "heading": "Keep the generation loop on the GPU",
+              "paragraphs": [
+                "Speculative decoding proposes several tokens and lets the target model verify them together, accepting the correct prefix. In a browser, drafting, verification and a CPU acceptance decision can introduce enough extra communication to erase the benefit. Here drafting, verification, acceptance and maintenance of the attention key–value cache all execute on the GPU. The CPU submits small windows of work and drains output asynchronously. Candidates reuse page text, the current conversation or earlier generated text, without downloading another drafting model.",
+                "The other major component is an integer kernel designed for verifying a small batch of tokens: weights use four bits and activations eight bits. A fixed reduction order keeps batched verification consistent with this runtime’s own token-by-token greedy decoding. A controller measures the cost of different verification widths and adjusts both candidate-tree width and submission windows for accepted tokens per millisecond. Wide trees can amortize costs on a fast GPU, whereas an integrated GPU may be better served by near-single-token execution."
+              ]
+            },
+            {
+              "heading": "What the reported speedups measure",
+              "paragraphs": [
+                "The browser evaluation uses Chrome, seven models from 0.5B to 8B parameters and eleven tasks, including page-based questions, summarization, arithmetic and chat. The main workload has 220 prompts per model. The workstation runs all seven models; the discrete and integrated GPUs of the same laptop run only the three smallest. Cross-engine comparisons use the identical subset completed by WebLLM. On the integrated GPU those subsets contain only 88, 51 and 64 prompts, so their results must not be presented as measurements over all 220 prompts.",
+                "The authors report decoding speedups per output token over WebLLM of 3.5–5.4× on the laptop’s discrete GPU, 4.8–6.2× on its integrated GPU and 4.8–8.6× on the workstation. These combine integer kernels, GPU residency and speculation. The latter two add 1.8–3.2× over the optimized kernels on the workstation; speculation alone does not explain the headline gain. A 10.2× peak additionally uses trained, downloaded draft heads, and belongs to a different configuration from the default without an extra drafting model."
+              ]
+            },
+            {
+              "heading": "Exact agreement and practical limits",
+              "paragraphs": [
+                "Exact agreement means token-for-token equality with the same runtime’s deterministic quantized greedy decoder, not with the original full-precision model or WebLLM. Quality is tested separately on 200 GSM8K problems; equal mean accuracy does not mean identical answers on every problem. On the integrated GPU’s two larger tested models, adaptive speculation remains 2% and 7% slower than the GPU loop without speculation. It avoids the severe regressions of a fixed wide tree without guaranteeing a benefit on every device.",
+                "Testing covers Chrome and the measured NVIDIA and AMD devices, not Safari, Firefox, Apple or mobile GPUs, and there is no native-runtime comparison. Sharing an integrated GPU with page rendering can still lower frame rates: short windows do not remove resource contention. Real sessions may also offer less reusable text than these benchmarks. The authors promise to release the implementation upon publication; they do not establish that it is already available. Deployment therefore still requires checking the target hardware, interactive workload and quality constraints. Reported speedups also exclude loading and calibration: on the workstation the three smallest models need roughly four to nine page-based requests to recover startup cost against WebLLM, and one short request is not faster."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Mechanism diagram redrawn by this site from the paper; it is not a performance plot or experimental screenshot.",
+            "steps": [
+              "Propose tokens from existing context",
+              "Verify and accept a matching prefix on the GPU",
+              "Maintain the KV cache and continue generation",
+              "Adapt width and submission windows to device costs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ブラウザ内で言語モデルを動かす際は、モデルの計算だけでなく、生成したトークンを一つずつCPUへ戻す同期処理も遅延になる。本研究は生成ループの制御をGPUに残し、端末の性能に応じて一度に検証する候補数を変える。モデルの能力を高める研究ではなく、ブラウザ固有の実行コストを減らす研究である。",
+          "sections": [
+            {
+              "heading": "トークンごとの往復を減らす",
+              "paragraphs": [
+                "投機的デコードでは複数の候補を先に作り、対象モデルでまとめて検証して正しい先頭部分を採用する。しかしブラウザでは、候補生成、検証、CPUでの採否判断の通信が利点を打ち消し得る。提案方式は候補生成、検証、採用判断、注意機構の中間状態であるKVキャッシュの整理をGPU内で行う。CPUは小さな実行窓ごとに処理を送り、出力を非同期で読む。候補はページ、会話、過去の生成文から再利用し、別の草稿モデルを必要としない。",
+                "少数トークンの並列検証に向いた整数カーネルも導入する。重みは4ビット、活性値は8ビットで、集約計算の順序を固定し、この実行系で一つずつ行う貪欲デコードとの一致を保つ。制御器は検証幅ごとの費用を実測し、1ミリ秒当たりに採用できるトークン数を基準に候補木の幅と実行窓を調整する。高性能GPUでは幅を広げられるが、内蔵GPUでは一語ずつに近い実行の方が適する場合もある。"
+              ]
+            },
+            {
+              "heading": "高速化の比較条件を読む",
+              "paragraphs": [
+                "実験はChromeで、0.5Bから8Bまでの七つのモデルと、ページに関する質問、要約、数学、会話など11課題を使う。主実験はモデル当たり220プロンプト。ワークステーションでは七モデルを、同じノートPCの独立GPUと内蔵GPUでは最小の三モデルだけを測った。WebLLMとの比較は同エンジンが完了した同一の部分集合に限定される。内蔵GPUではモデルごとに88、51、64件であり、全220件の結果と混同できない。",
+                "著者による出力トークン当たりのデコード高速化は、WebLLM比で独立GPUが3.5〜5.4倍、内蔵GPUが4.8〜6.2倍、ワークステーションが4.8〜8.6倍である。整数カーネル、GPU常駐ループ、投機の効果を合わせた数字であり、後二者だけでは最適化済みカーネルに対してワークステーションで1.8〜3.2倍となる。10.2倍の最大値は学習済み草稿ヘッドを追加でダウンロードする別設定で、標準設定の結果ではない。"
+              ]
+            },
+            {
+              "heading": "一致の意味と端末ごとの限界",
+              "paragraphs": [
+                "厳密な一致は、同じ実行系の決定的な量子化貪欲デコードとトークン列が等しいという意味だ。元の全精度モデルやWebLLMとの一致ではない。品質は別にGSM8Kの200問で測り、平均正解率は一致したが、各問題の回答一致を意味しない。内蔵GPUの大きい二モデルでは、自動調整後も投機なしのGPUループより2%と7%遅い。固定幅の大きな木による大幅な退行は避けても、全端末で改善する保証はない。",
+                "評価対象はChromeと実測したNVIDIA・AMD機器に限られ、Safari、Firefox、Apple、スマートフォンGPU、ネイティブ実行系との比較はない。内蔵GPUを画面描画と共有するとフレームレートは下がり得て、小さな実行窓だけでは競合を解消できない。実際の会話では再利用できる文章も少ない可能性がある。実装は論文刊行後の公開を予定している段階で、既に公開済みとは言えない。対象端末、対話負荷、品質条件での追加検証が必要である。高速化には初回の読込と校正も含まれない。ワークステーションの最小三モデルではWebLLM比の起動費用回収に約4〜9回のページ課題が必要で、短い一回の要求は速くならない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の仕組みを当サイトが描き直した説明図。性能グラフや実験画面ではない。",
+            "steps": [
+              "既存文脈から候補を作る",
+              "GPUで検証して一致部分を採用",
+              "KVキャッシュを整理し生成を続ける",
+              "端末の費用に合わせ幅と実行窓を調整"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "При запуске языковой модели в браузере задержку создают не только вычисления нейросети. Передача заданий, синхронизация и чтение каждого нового токена процессором могут оставлять GPU без работы. Авторы перестраивают цикл генерации так, чтобы управление последовательными шагами оставалось на GPU, а число одновременно проверяемых кандидатов зависело от устройства. Это работа об эффективности исполнения, а не об улучшении способностей модели.",
+          "sections": [
+            {
+              "heading": "Перенести цикл генерации на GPU",
+              "paragraphs": [
+                "Спекулятивное декодирование сначала предлагает несколько токенов, а затем проверяет их целевой моделью, принимая совпавший префикс. В браузере расходы на черновик, проверку и решение CPU могут уничтожить выигрыш. Здесь построение кандидатов, проверка, принятие и обслуживание KV-кэша, хранящего промежуточные состояния внимания, выполняются на GPU. CPU отправляет небольшие окна работы и асинхронно считывает результат. Кандидаты берутся из текста страницы, беседы и предыдущих ответов; загружать вторую модель для черновиков не требуется.",
+                "Другой компонент — целочисленные ядра для проверки небольших пакетов токенов: веса имеют четыре бита, активации — восемь. Фиксированный порядок редукций сохраняет совпадение с последовательным жадным декодированием этой же системы. Контроллер измеряет стоимость разных размеров дерева и меняет ширину кандидатов и окно отправки по числу принятых токенов за миллисекунду. На мощном GPU широкое дерево окупается, тогда как встроенному GPU нередко выгоднее почти обычная генерация по одному токену."
+              ]
+            },
+            {
+              "heading": "Условия сравнения скорости",
+              "paragraphs": [
+                "Браузерные эксперименты используют Chrome, семь моделей от 0,5 до 8 млрд параметров и одиннадцать задач: вопросы по странице, суммаризацию, математику, диалог и другие. Основной набор содержит 220 запросов на модель. Рабочая станция запускает все семь моделей, дискретный и встроенный GPU одного ноутбука — только три наименьшие. Для сравнения движков берут одинаковое подмножество запросов, завершённых WebLLM. На встроенном GPU это лишь 88, 51 и 64 запроса соответственно, а не полный набор из 220.",
+                "Авторы сообщают ускорение декодирования на выходной токен относительно WebLLM в 3,5–5,4 раза на дискретном GPU ноутбука, 4,8–6,2 раза на встроенном и 4,8–8,6 раза на рабочей станции. Это совместный эффект целочисленных ядер, размещения цикла на GPU и спекуляции. Последние два компонента дают ещё 1,8–3,2 раза относительно уже оптимизированных ядер на рабочей станции; приписывать весь эффект спекуляции нельзя. Пик 10,2 раза получен с дополнительно обученными и загружаемыми головами черновиков, то есть в другой конфигурации."
+              ]
+            },
+            {
+              "heading": "Границы точности и ускорения",
+              "paragraphs": [
+                "Точное совпадение означает равенство токенов детерминированному квантованному жадному декодеру той же системы. Это не равенство исходной модели полной точности или WebLLM. Качество отдельно проверено на 200 задачах GSM8K: одинаковая средняя точность не означает одинаковых ответов на каждую задачу. На двух более крупных моделях встроенного GPU адаптивная спекуляция всё ещё на 2% и 7% медленнее GPU-цикла без неё. Она предотвращает сильные замедления фиксированного широкого дерева, но не гарантирует выигрыш везде.",
+                "Измерения относятся только к Chrome и проверенным устройствам NVIDIA и AMD: Safari, Firefox, Apple и мобильные GPU не изучены, сравнения с нативными движками нет. Совместное использование встроенного GPU с отрисовкой страницы всё ещё снижает частоту кадров; короткие окна не устраняют конкуренцию за ресурсы. В реальных беседах может быть меньше повторно используемого текста. Реализацию обещают открыть после публикации, поэтому считать её уже доступной нельзя. Практический эффект требует проверки на нужном оборудовании, интерактивной нагрузке и требованиях к качеству. Ускорения также не учитывают загрузку и калибровку: на рабочей станции трём наименьшим моделям нужно примерно четыре–девять запросов по странице, чтобы окупить стартовые расходы относительно WebLLM; один короткий запрос быстрее не становится."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, перерисованная сайтом по методу статьи; это не график измерений и не снимок эксперимента.",
+            "steps": [
+              "Предложить токены из имеющегося контекста",
+              "Проверить и принять совпавший префикс на GPU",
+              "Обновить KV-кэш и продолжить генерацию",
+              "Настроить ширину и окна по стоимости устройства"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "在瀏覽器裡執行語言模型，慢的不只是模型計算。每生成一個詞元，網頁與GPU之間的提交、同步和讀回都可能讓硬體空等。這篇研究重新設計瀏覽器推理迴圈，把連續生成的控制留在GPU上，再根據裝置能力決定一次驗證多少候選。它解決的是執行時效率問題，並未訓練出能力更強的模型。",
+          "sections": [
+            {
+              "heading": "把逐詞往返變成GPU內迴圈",
+              "paragraphs": [
+                "投機解碼先提出幾個候選詞元，再由目標模型一起驗證，接受正確的前綴。瀏覽器卻可能為草稿計算、驗證和CPU判斷付出額外通訊成本。作者因此把草稿生成、驗證、接受判斷及儲存中間注意力狀態的KV快取整理都放到GPU上，CPU按小視窗批次提交工作，非同步讀取輸出。候選來自頁面文字、當前對話或此前生成的文字，不需要額外下載草稿模型。",
+                "另一個關鍵是適合少量詞元並行驗證的整數計算核心：權重為4位，活化為8位，並固定歸約順序，使批次驗證與本執行時逐詞貪心生成保持一致。控制器測量當前裝置驗證不同寬度的成本，再按每毫秒能接受多少詞元調整候選樹與提交視窗。強GPU可以用寬樹攤薄成本，內建GPU往往應該接近逐詞執行；並非同時猜得越多越快。"
+              ]
+            },
+            {
+              "heading": "加速數字對應哪些實驗",
+              "paragraphs": [
+                "瀏覽器實驗使用Chrome、七個0.5B至8B模型和11項任務，包括頁面問答、摘要、數學題與對話。主實驗每模型220條提示；工作站執行全部七個模型，同一筆記型電腦的獨立GPU和內建GPU只測三個最小模型。與WebLLM比較時，各引擎使用WebLLM實際完成的相同子集：內建GPU三個模型分別只有88、51、64條，不能把這些結果說成完整220條測試的普遍表現。",
+                "作者報告，相對WebLLM，筆記型電腦獨立GPU的每輸出詞元解碼速度為3.5—5.4倍，內建GPU為4.8—6.2倍，工作站為4.8—8.6倍。數字同時包含整數核心、GPU駐留迴圈和投機的收益；僅後兩項在工作站相對最佳化後核心再提供1.8—3.2倍，不能把總收益全歸給投機。額外訓練並下載草稿頭後的10.2倍峰值屬於另一配置，不是預設無額外模型的結果。"
+              ]
+            },
+            {
+              "heading": "精確一致有條件，弱裝置仍有代價",
+              "paragraphs": [
+                "“精確一致”只表示輸出與同一個執行時的確定性量化貪心解碼逐詞相同，不保證等於原始全精度模型或WebLLM。品質另用200道GSM8K題評估，平均準確率相同也不代表所有題答案一致。在內建GPU兩個較大模型上，自適應投機仍可比不投機的GPU迴圈慢2%和7%；它避免了固定寬樹的嚴重退化，並未保證每種裝置都會獲益。",
+                "實驗只覆蓋Chrome及所測NVIDIA、AMD裝置，沒有驗證Safari、Firefox、Apple或手機GPU，也沒有與原生執行時比較。內建GPU同時顯示頁面時仍可能明顯幀率下降，小視窗不足以消除資源爭搶；真實會話可複用文字也可能少於基準。論文只承諾發表後開放實現，不能寫成程式碼已開放。研究提供的是減少瀏覽器同步成本的一組方法，其部署價值仍需在目標裝置、互動負載和品質要求下驗證。這些速度還不含首次載入和校準；三個最小模型在工作站上需約4—9次頁面任務才攤回相對WebLLM的啟動成本，單次短請求並不會更快。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的機制示意，展示控制流程，不是效能曲線或實驗截圖。",
+            "steps": [
+              "從已有上下文提出候選詞元",
+              "在GPU驗證並接受匹配前綴",
+              "整理KV快取並繼續生成",
+              "按裝置成本調整寬度與提交視窗"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "consdl-consistent-concept-discovery",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.23801v1"
+        },
+        {
+          "label": "arXiv version and publication metadata",
+          "url": "https://arxiv.org/abs/2610.23801v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "解释模型内部表示时，研究者常把一组神经元的激活拆成少量“概念”的组合。但如果换一个随机种子，得到的概念字典就大不相同，分析结论便难以复核。ConSDL关注这种训练间的不稳定：它用逐样本优化替代稀疏自编码器的一次编码，尝试让不同训练过程发现更一致的特征。这里的“概念”是模型表示中的候选方向，并不等于已经证实的因果机制。",
+          "sections": [
+            {
+              "heading": "先求好系数，再更新字典",
+              "paragraphs": [
+                "稀疏自编码器通常让一个共享编码器快速预测哪些字典元素参与重构、各占多少权重，再共同更新编码器与字典。单次预测虽然便宜，却可能不是当前字典下最合适的系数。ConSDL改为对每个样本使用FISTA迭代求稀疏系数，再固定这些系数更新字典；这样，字典学习所依据的权重不再完全依赖一次前向计算的近似。",
+                "仅加入迭代求解还不够。鼓励稀疏的惩罚会把非零系数压小，因此方法保留选中的元素，去掉该惩罚重新拟合其强度，但不激活新元素。它还惩罚同一样本中同时活跃且过于相似的字典方向，以减少重复。消融实验显示，重拟合能缓解大量元素从不激活的问题，而相似性约束进一步减少重复元素；两者分别处理不同的不稳定来源。"
+              ]
+            },
+            {
+              "heading": "一致性指标怎样得到",
+              "paragraphs": [
+                "合成实验有16种条件，真实字典和系数已知，可以直接测恢复程度。模型激活实验则使用CLIP ViT-B/16、DINOv2、GPT-2 Small与Pythia-160M，统一激活维度为768。视觉训练约120万张ImageNet图像，语言训练为5亿FineWeb词元。四个模型、三种字典宽度和三个稀疏水平组成36个配置，各训练三个随机种子；真实模型没有已知的“正确概念字典”，因此评价重点转为不同种子间的一致性。",
+                "作者先匹配不同训练得到的字典元素，再以方向余弦相似度DCS衡量字典一致性，以系数相关性MCC衡量激活强度的一致性。跨模型平均值分别为0.84和0.78，相对六种SAE基线的平均水平提高17.6%和35.9%，是相对增幅而非百分点。若改与各指标最强基线比较，增幅分别缩小为1.9%和13.3%。合成条件下接近完整恢复，不能直接转写为真实模型的概念也被完整找回。"
+              ]
+            },
+            {
+              "heading": "更可复核的表示仍不是解释终点",
+              "paragraphs": [
+                "为了检查稳定性是否以丢掉有用信息为代价，作者用最有区分力的一或五个特征做稀疏探测：视觉覆盖六个分类数据集，语言覆盖113个二元任务，整体接近最强基线。它支持“少量特征仍能承载类别信息”，但不证明每个特征都有单一、准确的人类语义，也不证明改变特征就能可靠控制模型行为。部分可视化展示更细粒度的属性，可视作解释线索。",
+                "代价是每样本迭代优化比一次编码更费计算，且实验主要是较小的基础模型，尚未证明同样收益可以推广到数十亿参数模型或更大字典。方法也假定激活能够用稀疏线性方向组合来近似，非线性或流形结构不在其解决范围。它使同一类分析更容易重复，却没有消除解释本身的建模假设。对研究者而言，较可靠的用法是把跨种子稳定性和任务验证一起看，而不是把稳定性单独当作真理检验。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据ConSDL方法重绘的解释流程，不是原论文的概念可视化或实验结果图。",
+            "steps": [
+              "对每个激活样本迭代求稀疏系数",
+              "固定选中元素并重拟合强度",
+              "更新字典并抑制共同活跃的重复方向",
+              "跨随机种子匹配特征并验证任务信息"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Researchers often explain a model’s internal activations as sparse combinations of learned “concepts.” Yet a different random seed can produce a substantially different concept dictionary, making the analysis difficult to reproduce. ConSDL targets this instability by replacing the one-pass encoder of a sparse autoencoder with optimization for each sample. Its concepts are candidate directions in a representation, not already established causal mechanisms.",
+          "sections": [
+            {
+              "heading": "Improve coefficients before updating the dictionary",
+              "paragraphs": [
+                "A sparse autoencoder normally uses a shared encoder to predict which dictionary elements reconstruct an activation and how strongly each contributes. It then learns the encoder and dictionary jointly. That single prediction is cheap but can be suboptimal for the current dictionary. ConSDL instead applies iterative sparse coding with FISTA to each sample and updates the dictionary while holding those inferred coefficients fixed. The weights driving dictionary learning therefore no longer depend entirely on a one-pass approximation.",
+                "Iterative inference alone is insufficient. The sparsity penalty shrinks nonzero coefficients, so ConSDL keeps the selected elements and refits their magnitudes without that penalty, activating no new elements. It also penalizes excessively similar dictionary directions when they are active for the same sample. Ablations show that refitting helps prevent large numbers of permanently inactive elements, while the similarity regularizer further reduces duplicates. The two components address different causes of unstable dictionary learning."
+              ]
+            },
+            {
+              "heading": "How consistency is measured",
+              "paragraphs": [
+                "Sixteen synthetic settings provide known dictionaries and coefficients, allowing direct recovery tests. The model-activation experiments use CLIP ViT-B/16, DINOv2, GPT-2 Small and Pythia-160M, all with activation dimension 768. Vision training uses about 1.2 million ImageNet images; language training uses 500 million FineWeb tokens. Four models, three dictionary widths and three sparsity levels produce 36 configurations, each trained with three seeds. Because real models have no known correct concept dictionary, the primary criterion there is agreement between seeds.",
+                "The authors match dictionary elements between runs and measure directional cosine similarity with DCS and coefficient correlation with MCC. Their averages across backbones are 0.84 and 0.78. The reported 17.6% and 35.9% improvements are relative to the average of six SAE baselines, not percentage-point increases. Against the strongest baseline for each metric, the gains shrink to 1.9% and 13.3%. Near-perfect recovery in the synthetic settings does not establish complete recovery of concepts inside real models."
+              ]
+            },
+            {
+              "heading": "Reproducibility is not the end of interpretation",
+              "paragraphs": [
+                "To check whether consistency sacrifices useful information, sparse probes use the one or five most discriminative features. Evaluation covers six visual classification datasets and 113 binary language tasks, with performance generally close to the strongest baselines. This supports the claim that a few features still carry class-relevant information. It does not establish that every feature has one correct human meaning or that intervening on it reliably controls model behavior. Selected visualizations of finer-grained attributes provide interpretive clues rather than causal proofs.",
+                "The cost is more computation for iterative per-sample optimization than for one encoder pass. Experiments focus on relatively small foundation models and do not establish the same benefits for billion-parameter models or much larger dictionaries. The method also assumes activations can be approximated as sparse combinations of linear directions; nonlinear or manifold structure remains outside its scope. It makes this form of analysis more reproducible without removing its modeling assumptions. Cross-seed stability should therefore be considered alongside task validation, not used alone as a test of semantic truth."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from ConSDL; it is not a concept visualization or experimental figure from the paper.",
+            "steps": [
+              "Infer sparse coefficients for each activation",
+              "Refit magnitudes on the selected elements",
+              "Update the dictionary and discourage co-active duplicates",
+              "Match features across seeds and test retained information"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "モデル内部を説明する際、神経活動を少数の「概念」の組み合わせに分解する方法がよく使われる。ただし乱数シードを変えるだけで概念辞書が大きく変われば、分析は再現しにくい。ConSDLは稀疎オートエンコーダの一回の符号化を、各サンプルに対する最適化へ置き換え、学習を繰り返したときの一致性を改善する。ここでいう概念は表現内の候補方向であり、因果機構が証明されたという意味ではない。",
+          "sections": [
+            {
+              "heading": "係数を求めてから辞書を更新する",
+              "paragraphs": [
+                "通常の稀疎オートエンコーダは共通のエンコーダで、活性値の再構成に使う辞書要素と各要素の強さを予測し、辞書と同時に学習する。一回の計算は安い一方、現在の辞書にとって最適な係数とは限らない。ConSDLはFISTAによる反復的な稀疎符号化をサンプルごとに実行し、得た係数を固定して辞書を更新する。これにより、辞書学習の重みを一回の近似予測だけに依存させない。",
+                "反復計算だけでは十分ではない。稀疎性を促す罰則は非ゼロ係数も縮小するため、選んだ要素を保ったまま罰則なしで強度を再推定する。この段階では新しい要素を有効化しない。さらに、同じサンプルで同時に活性化し、互いに似過ぎる方向へ罰則を課す。除去実験では、再推定が全く活性化しない要素の大量発生を抑え、類似性制約が重複要素を減らした。別々の不安定要因を二つの処理で扱っている。"
+              ]
+            },
+            {
+              "heading": "一致性をどの条件で測ったか",
+              "paragraphs": [
+                "合成データの16条件では正解の辞書と係数が分かるため、直接復元度を測れる。実モデルではCLIP ViT-B/16、DINOv2、GPT-2 Small、Pythia-160Mの768次元の活性を使う。画像側は約120万枚のImageNet、言語側は5億FineWebトークンで学習した。四モデル、三つの辞書幅、三つの稀疎度からなる36設定を、各三シードで学習する。実モデルには正解の概念辞書がないため、主指標はシード間の一致性となる。",
+                "異なる学習の要素を対応付け、辞書方向のコサイン類似度DCSと係数相関MCCを測る。モデル間平均はそれぞれ0.84と0.78だった。17.6%と35.9%という改善は六つのSAE基準手法の平均に対する相対増加で、パーセントポイントではない。各指標で最強の基準手法と比べると1.9%と13.3%になる。合成条件でのほぼ完全な復元を、そのまま実モデルの概念も全て復元したと解釈することはできない。"
+              ]
+            },
+            {
+              "heading": "再現しやすさと説明の正しさは別",
+              "paragraphs": [
+                "安定性を得る代わりに情報を失っていないかも調べた。識別力が高い一つまたは五つの特徴を使う稀疎プローブで、画像は六つの分類データセット、言語は113の二値課題を評価し、おおむね最強の基準手法に近かった。少数特徴がクラス情報を保持することは支持されるが、各特徴に唯一の正しい人間的意味があることや、介入でモデルを確実に制御できることは示さない。細かな属性の可視化は解釈の手掛かりである。",
+                "代償は、一回の符号化よりサンプルごとの反復最適化が重いことだ。実験は比較的小さい基盤モデルが中心で、数十億パラメータのモデルやはるかに大きい辞書への拡張は確立していない。また、活性が稀疎な線形方向の組み合わせで近似できるという仮定があり、非線形・多様体構造そのものは扱わない。同じ分析を再現しやすくしても、その分析の仮定は残る。シード間の安定性は課題上の検証と組み合わせて読むべきで、意味の真偽を単独で判定する尺度ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "ConSDLの方法を当サイトが描き直した説明図。原論文の概念可視化や実験図ではない。",
+            "steps": [
+              "各活性から稀疎係数を反復推定",
+              "選んだ要素の強度を再推定",
+              "辞書更新と同時活性の重複抑制",
+              "シード間の対応と保持情報を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Для объяснения внутренних представлений модели исследователи часто раскладывают активации на разреженные сочетания изученных «понятий». Но если другой случайный seed даёт совсем иной словарь, анализ трудно воспроизвести. ConSDL заменяет однопроходный энкодер разреженного автоэнкодера оптимизацией для каждого примера, стремясь повысить согласованность независимых запусков обучения. «Понятия» здесь — кандидаты на направления в представлении, а не уже доказанные причинные механизмы.",
+          "sections": [
+            {
+              "heading": "Сначала уточнить коэффициенты, затем словарь",
+              "paragraphs": [
+                "Обычный разреженный автоэнкодер общим энкодером предсказывает, какие элементы словаря участвуют в реконструкции активации и с какими весами, после чего совместно обновляет энкодер и словарь. Один проход экономичен, но его коэффициенты могут быть неоптимальными для текущего словаря. ConSDL вместо этого итеративно решает задачу разреженного кодирования методом FISTA для каждого примера, затем фиксирует найденные коэффициенты при обновлении словаря. Таким образом, обучение словаря меньше зависит от однопроходного приближения.",
+                "Одной итеративной оценки недостаточно. Штраф за разреженность уменьшает и ненулевые коэффициенты, поэтому метод сохраняет выбранные элементы и заново оценивает их величины без этого штрафа, не активируя новые элементы. Кроме того, он штрафует чрезмерно похожие направления, одновременно активные на одном примере. Абляции показывают, что повторная оценка предотвращает появление множества никогда не активирующихся элементов, а регуляризация сходства сокращает дубликаты. Эти компоненты решают разные причины нестабильности."
+              ]
+            },
+            {
+              "heading": "Как измеряется согласованность",
+              "paragraphs": [
+                "В шестнадцати синтетических условиях правильные словари и коэффициенты известны, поэтому можно прямо измерить восстановление. Для настоящих моделей используют CLIP ViT-B/16, DINOv2, GPT-2 Small и Pythia-160M с размерностью активаций 768. Обучение визуальных представлений опирается примерно на 1,2 млн изображений ImageNet, языковых — на 500 млн токенов FineWeb. Четыре модели, три ширины словаря и три уровня разреженности образуют 36 конфигураций, каждую обучают с тремя seed. Поскольку истинный словарь реальной модели неизвестен, здесь оценивается прежде всего согласованность между запусками.",
+                "После сопоставления элементов между запусками DCS измеряет косинусное сходство направлений словаря, а MCC — корреляцию коэффициентов. Средние по моделям равны 0,84 и 0,78. Улучшения 17,6% и 35,9% рассчитаны относительно среднего шести базовых SAE и не являются процентными пунктами. Относительно сильнейшей базы по каждому показателю выигрыш составляет 1,9% и 13,3%. Почти полное восстановление в синтетических условиях не доказывает, что все понятия настоящей модели тоже найдены."
+              ]
+            },
+            {
+              "heading": "Воспроизводимость не доказывает смысл",
+              "paragraphs": [
+                "Чтобы проверить сохранение полезной информации, авторы строят разреженные пробы по одному или пяти наиболее различающим признакам. Шесть наборов визуальной классификации и 113 бинарных языковых задач дают результаты, в целом близкие к сильнейшим базам. Это поддерживает сохранение информации о классах в небольшом числе признаков. Однако ни единственный правильный человеческий смысл каждого признака, ни надёжное управление поведением через вмешательство не доказаны. Отдельные визуализации более тонких атрибутов — подсказки для интерпретации, а не причинные доказательства.",
+                "Цена подхода — дополнительные вычисления на итеративную оптимизацию вместо одного прохода энкодера. Исследованы сравнительно небольшие базовые модели; перенос результатов на модели с миллиардами параметров и гораздо более крупные словари не установлен. Кроме того, предполагается приближение активаций разреженной линейной комбинацией направлений. Нелинейная или многообразная структура сама по себе не решается. Метод делает этот вид анализа воспроизводимее, но сохраняет его предпосылки. Согласованность между seed следует читать вместе с проверкой на задачах, а не считать самостоятельным критерием смысловой истины."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема ConSDL, перерисованная сайтом; это не визуализация понятий или экспериментальный рисунок из статьи.",
+            "steps": [
+              "Итеративно найти коэффициенты каждой активации",
+              "Переоценить величины выбранных элементов",
+              "Обновить словарь и подавить совместно активные дубликаты",
+              "Сопоставить признаки между seed и проверить информацию"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "解釋模型內部表示時，研究者常把一組神經元的活化拆成少量“概念”的組合。但如果換一個隨機種子，得到的概念字典就大不相同，分析結論便難以複核。ConSDL關注這種訓練間的不穩定：它用逐樣本最佳化替代稀疏自編碼器的一次編碼，嘗試讓不同訓練過程發現更一致的特徵。這裡的“概念”是模型表示中的候選方向，並不等於已經證實的因果機制。",
+          "sections": [
+            {
+              "heading": "先求好係數，再更新字典",
+              "paragraphs": [
+                "稀疏自編碼器通常讓一個共享編碼器快速預測哪些字典元素參與重構、各佔多少權重，再共同更新編碼器與字典。單次預測雖然便宜，卻可能不是當前字典下最合適的係數。ConSDL改為對每個樣本使用FISTA迭代求稀疏係數，再固定這些係數更新字典；這樣，字典學習所依據的權重不再完全依賴一次前向計算的近似。",
+                "僅加入迭代求解還不夠。鼓勵稀疏的懲罰會把非零係數壓小，因此方法保留選中的元素，去掉該懲罰重新擬合其強度，但不活化新元素。它還懲罰同一樣本中同時活躍且過於相似的字典方向，以減少重複。消融實驗顯示，重擬合能緩解大量元素從不活化的問題，而相似性約束進一步減少重複元素；兩者分別處理不同的不穩定來源。"
+              ]
+            },
+            {
+              "heading": "一致性指標怎樣得到",
+              "paragraphs": [
+                "合成實驗有16種條件，真實字典和係數已知，可以直接測恢復程度。模型活化實驗則使用CLIP ViT-B/16、DINOv2、GPT-2 Small與Pythia-160M，統一活化維度為768。視覺訓練約120萬張ImageNet影像，語言訓練為5億FineWeb詞元。四個模型、三種字典寬度和三個稀疏水平組成36個配置，各訓練三個隨機種子；真實模型沒有已知的“正確概念字典”，因此評價重點轉為不同種子間的一致性。",
+                "作者先匹配不同訓練得到的字典元素，再以方向餘弦相似度DCS衡量字典一致性，以係數相關性MCC衡量活化強度的一致性。跨模型平均值分別為0.84和0.78，相對六種SAE基準方法的平均水平提高17.6%和35.9%，是相對增幅而非百分點。若改與各指標最強基準方法比較，增幅分別縮小為1.9%和13.3%。合成條件下接近完整恢復，不能直接轉寫為真實模型的概念也被完整找回。"
+              ]
+            },
+            {
+              "heading": "更可複核的表示仍不是解釋終點",
+              "paragraphs": [
+                "為了檢查穩定性是否以丟掉有用資訊為代價，作者用最有區分力的一或五個特徵做稀疏探測：視覺覆蓋六個分類資料集，語言覆蓋113個二元任務，整體接近最強基準方法。它支持“少量特徵仍能承載類別資訊”，但不證明每個特徵都有單一、準確的人類語義，也不證明改變特徵就能可靠控制模型行為。部分視覺化展示更細粒度的屬性，可視作解釋線索。",
+                "代價是每樣本迭代最佳化比一次編碼更費計算，且實驗主要是較小的基礎模型，尚未證明同樣收益可以推廣到數十億個參數的模型或更大字典。方法也假定活化能夠用稀疏線性方向組合來近似，非線性或流形結構不在其解決範圍。它使同一類分析更容易重複，卻沒有消除解釋本身的建模假設。對研究者而言，較可靠的用法是把跨種子穩定性和任務驗證一起看，而不是把穩定性單獨當作真理檢驗。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據ConSDL方法重繪的解釋流程，不是原論文的概念視覺化或實驗結果圖。",
+            "steps": [
+              "對每個活化樣本迭代求稀疏係數",
+              "固定選中元素並重擬合強度",
+              "更新字典並抑制共同活躍的重複方向",
+              "跨隨機種子匹配特徵並驗證任務資訊"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "c-to-rust-performance-recovery",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.23044v1"
+        },
+        {
+          "label": "arXiv version and publication metadata",
+          "url": "https://arxiv.org/abs/2610.23044v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把C程序翻译成Rust，得到相同输出并不意味着性能也能保住。翻译后的表达方式可能多做计算，或者让编译器看不清原本可以优化的内存访问与循环关系。这项研究先在真实项目中追踪性能损失，再把可重复出现的问题整理成规则，用PerfR引导模型修改热点，并逐次检查输出和耗时。它研究的是迁移后的性能恢复，不是证明Rust天然快于或慢于C。",
+          "sections": [
+            {
+              "heading": "慢在哪里，要从运行证据找",
+              "paragraphs": [
+                "作者整理20个真实项目，范围为约1000至18万行项目自身代码，分成八个研究项目和十二个不重叠的评估项目。项目须能被c2rust翻译、具有可核对输出的确定性负载，并在项目自身逻辑中出现可测热点；主要耗时在输入输出或外部库的项目被排除。研究部分的19项操作中，12项相对C慢超过3%，最大慢62.2%，说明退化并非只存在于个别小函数。",
+                "研究把执行时间进一步分成执行指令数和每条指令的代价，再结合编译器中间表示与优化信息定位原因。整理出的九类模式涉及残留运行时工作、未发生的编译器优化和沿用C风格的表达。后续十二个项目的41项操作中，27项初始Rust版本比C慢超过3%，其中25项存在指令数量膨胀。这提示许多损失来自翻译后多做了工作，而不能简单归咎于语言标签。"
+              ]
+            },
+            {
+              "heading": "规则引导改写，验证决定是否保留",
+              "paragraphs": [
+                "PerfR先生成可执行的完整操作与输入，并用覆盖反馈扩充测试；功能负载强调输入多样性，性能负载则放大数据规模以稳定计时。它整理翻译结果、定位热点、匹配规则，再让语言模型结合项目上下文判断改写前提。每个候选都必须编译通过、在测试输入上保持输出摘要一致，并通过增量和累计性能检查，否则修复或放弃。优化使用的内部负载与最终基准负载分开，减少直接迎合测试的风险。",
+                "在十二个独立评估项目的41项操作上，作者报告PerfR全部保持与C的测试输出一致，40项比未经优化的Rust更快，18项比C更快，其中10项快超过3%。与同用GPT-5.4的通用Codex基线比较，双方都保持输出一致的37项中，PerfR有31项耗时更低；Codex在另四项出现输出不一致。去掉规则提示的同框架版本则在41项中有34项慢于完整PerfR，支持规则本身具有作用。"
+              ]
+            },
+            {
+              "heading": "恢复了多少，仍不能保证什么",
+              "paragraphs": [
+                "计时采用预热后成对测量、交替执行顺序，每个负载30对测量，并统一函数对齐以减轻代码布局影响。结果描述的是这些操作和输入上的实测运行时间，不是所有路径的性能保证。模型改写需要已有规则适用、热点能被内部负载触发、输出能被测试比较；新增输入或完全不同的工作负载仍可能暴露错误或退化，因此不能把测试输出一致写成形式化语义等价证明。",
+                "安全方面，论文报告调用者可直接从安全Rust调用的函数比例由0.2%提高到39.5%，但仍有60.5%的函数保留不安全调用接口；减少原始指针操作也不等于证明整个程序内存安全。项目选择排除了主要受输入输出支配的系统，最终效果还依赖编译配置、硬件和测试覆盖。更稳妥的结论是：编译器证据、领域规则和回归验证结合起来，能在所测迁移项目中找回不少性能，而不是让模型修改后即可自动信任。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据PerfR流程重绘的解释示意，不包含程序片段，也不是实验性能图。",
+            "steps": [
+              "测量翻译版本并定位热点",
+              "用编译器证据匹配性能问题规则",
+              "在项目上下文中生成候选改写",
+              "核对测试输出与增量、累计耗时"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Translating a C program into Rust can preserve its output while losing performance. The translated representation may introduce extra work or obscure memory-access and loop relationships that the compiler could otherwise optimize. This study first traces those losses in real projects, then turns recurring patterns into rules. PerfR uses the rules to guide model-generated changes to hot code and checks both outputs and timing after each change. It is about recovering migration losses, not proving that either language is inherently faster.",
+          "sections": [
+            {
+              "heading": "Locate losses in execution evidence",
+              "paragraphs": [
+                "The authors assemble twenty real projects containing about one thousand to 180 thousand lines of project-owned code, split into eight study projects and twelve disjoint evaluation projects. Eligible projects must translate with c2rust, support deterministic workloads with checkable outputs, and expose measurable hotspots in their own logic. Projects dominated by input/output or external libraries are excluded. In the study set, twelve of nineteen operations run more than 3% slower than C, with a maximum slowdown of 62.2%, showing that regressions are not confined to isolated tiny functions.",
+                "Timing is decomposed into executed instruction count and cost per instruction, then investigated using compiler intermediate representations and optimization information. Nine recurring patterns involve residual runtime work, missed compiler transformations and C-oriented source representations. In the later evaluation set, twenty-seven of forty-one initial Rust operations are over 3% slower than C, and twenty-five of those twenty-seven show instruction inflation. Much of the loss therefore comes from extra work after translation, rather than from a language label alone."
+              ]
+            },
+            {
+              "heading": "Let rules suggest changes and validation decide",
+              "paragraphs": [
+                "PerfR synthesizes executable end-to-end operations and inputs, expanding tests with coverage feedback. Functional workloads emphasize input diversity; performance workloads scale meaningful data sizes for stable timing. It normalizes the translated project, locates hotspots, matches rules and asks the language model to check rewrite preconditions in project context. Candidates must build, preserve output digests on test inputs and pass incremental and cumulative performance checks. Otherwise they are repaired or discarded. These internal optimization workloads are separate from the final benchmark workloads.",
+                "Across forty-one operations from twelve held-out projects, the authors report matching C outputs in every tested case, lower runtime than unoptimized Rust in forty operations, and lower runtime than C in eighteen, including ten by more than 3%. Against a general Codex baseline using the same GPT-5.4 model, PerfR is faster on thirty-one of the thirty-seven operations where both preserve outputs. Codex produces different outputs on the other four. Removing rule guidance from the same framework produces higher runtime than full PerfR on thirty-four of forty-one operations, supporting a contribution from the rules."
+              ]
+            },
+            {
+              "heading": "What was recovered, and what remains unproven",
+              "paragraphs": [
+                "Timing uses warm-up followed by thirty paired measurements per workload, alternating execution order and controlling function alignment to reduce code-placement effects. Results concern measured runtime for these operations and inputs, not every path. Successful rewriting depends on applicable rules, internal workloads that exercise the hotspot and outputs that can be compared. New inputs or substantially different workloads may still uncover errors or regressions. Matching tested outputs must not be described as a formal proof of semantic equivalence.",
+                "For safety, the paper reports that the share of functions callable from safe Rust rises from 0.2% to 39.5%, but 60.5% still retain an unsafe calling interface. Reducing raw-pointer operations does not prove whole-program memory safety. Project selection excludes systems dominated by input/output, and results remain dependent on compiler settings, hardware and coverage. The supported conclusion is that compiler evidence, domain rules and regression validation can recover substantial performance on the studied migrations; a model-generated change is not automatically trustworthy."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from PerfR; it contains no program excerpts and is not an experimental performance chart.",
+            "steps": [
+              "Measure the translated program and locate hotspots",
+              "Match performance rules using compiler evidence",
+              "Generate a candidate with project-specific preconditions",
+              "Check outputs and incremental and cumulative runtime"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "CのプログラムをRustへ翻訳し、同じ出力が得られても、性能まで保たれるとは限らない。翻訳後の表現が余計な処理を増やしたり、メモリアクセスやループの関係をコンパイラから見えにくくしたりする。本研究は実プロジェクトで損失を追跡し、繰り返し現れる問題を規則にまとめた。PerfRはその規則でモデルによるホットスポットの修正を導き、毎回出力と時間を検証する。言語の優劣ではなく、移行後の性能回復を扱う。",
+          "sections": [
+            {
+              "heading": "実行の証拠から遅さを調べる",
+              "paragraphs": [
+                "対象はプロジェクト自身のコードが約1000〜18万行の実プロジェクト20件で、調査用八件と重ならない評価用十二件に分ける。c2rustで翻訳でき、出力を照合できる決定的な負荷があり、自身の処理に測定可能なホットスポットがあることを条件とする。入出力や外部ライブラリが時間の大部分を占めるものは除外した。調査の19操作中12操作はCより3%以上遅く、最大の低下は62.2%だった。",
+                "実行時間を命令数と一命令当たりの費用に分解し、コンパイラの中間表現や最適化情報から原因を追う。残る実行時処理、行われないコンパイラ変換、C風のソース表現に関する九つの問題パターンを得た。後続の十二プロジェクト41操作では、初期Rust版の27操作がCより3%以上遅く、そのうち25操作で命令数が膨らんでいた。多くの損失は翻訳後に余計な仕事をすることから生じ、言語名だけでは説明できない。"
+              ]
+            },
+            {
+              "heading": "規則で候補を作り、検証で採否を決める",
+              "paragraphs": [
+                "PerfRは一連の機能を実行する操作と入力を作り、カバレッジを基にテストを増やす。機能用の負荷は入力の多様性、性能用の負荷はデータ量を増やした安定計測を重視する。翻訳結果を整理し、ホットスポットと規則を対応させ、モデルにプロジェクトの文脈で修正条件を確認させる。候補はビルド、テスト入力の出力ダイジェスト一致、増分と累積の性能検証を通る必要があり、失敗すれば修復または破棄する。内部最適化用と最終評価用の負荷は別にした。",
+                "独立した評価十二プロジェクトの41操作では、全てのテスト出力がCと一致し、40操作が未最適化Rustより速く、18操作がCより速かったと報告する。このうち10操作はCより3%以上速い。同じGPT-5.4を使う汎用Codexとの比較では、両者が出力を保った37操作中31操作でPerfRの実行時間が短い。残る四操作ではCodexの出力が一致しなかった。同じ枠組みから規則を除いた版よりも、41操作中34操作で完全版が速く、規則の寄与を支持する。"
+              ]
+            },
+            {
+              "heading": "回復した範囲と保証できないこと",
+              "paragraphs": [
+                "計測はウォームアップ後に各負荷30組の対測定を行い、実行順を交互にし、関数のアラインメントも統一して配置差を抑える。結果はこれらの操作と入力の実測であり、全経路の保証ではない。規則が適用でき、内部負荷が問題箇所を動かし、出力を比較できる必要がある。新たな入力や大きく異なる仕事では誤りや性能低下が残り得る。テスト出力の一致を形式的な意味的等価性の証明と呼んではいけない。",
+                "安全なRustから直接呼べる関数の割合は0.2%から39.5%へ増えたが、60.5%は依然として呼び出し側にunsafeを要求する。生ポインタ操作の削減もプログラム全体のメモリ安全性を証明しない。入出力主体のシステムは対象外で、結果はコンパイル条件、ハードウェア、テスト範囲に依存する。支持される結論は、コンパイラの証拠、分野の規則、回帰検証を組み合わせれば調べた移行で性能をかなり回復できることであり、モデルの修正を無条件に信頼できるということではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "PerfRの流れを当サイトが描き直した説明図。プログラム断片や実験の性能グラフではない。",
+            "steps": [
+              "翻訳版を測定してホットスポットを特定",
+              "コンパイラの証拠を性能規則に対応付ける",
+              "プロジェクトの前提を満たす修正候補を作る",
+              "出力と増分・累積の実行時間を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Перевод программы с C на Rust может сохранить выходные данные, но ухудшить скорость. Новое представление иногда добавляет работу или скрывает от компилятора связи между доступами к памяти и циклами. Авторы сначала исследуют такие потери в реальных проектах, затем превращают повторяющиеся причины в правила. PerfR направляет этими правилами изменения горячих участков, предложенные моделью, и после каждого изменения проверяет результаты и время. Работа посвящена восстановлению производительности после миграции, а не превосходству одного языка.",
+          "sections": [
+            {
+              "heading": "Найти причину замедления в измерениях",
+              "paragraphs": [
+                "Набор включает двадцать реальных проектов примерно от тысячи до 180 тысяч строк собственного кода: восемь для исследования причин и двенадцать непересекающихся для оценки. Проект должен переводиться c2rust, иметь детерминированную нагрузку с проверяемым результатом и измеримые горячие участки в собственной логике. Системы, где доминируют ввод-вывод или внешние библиотеки, исключены. В исследовательской части двенадцать из девятнадцати операций медленнее C более чем на 3%, максимальное замедление — 62,2%.",
+                "Авторы разделяют время на число выполненных инструкций и стоимость одной инструкции, затем изучают промежуточное представление компилятора и сведения об оптимизации. Девять повторяющихся паттернов связаны с лишней работой времени исполнения, пропущенными преобразованиями компилятора и сохранением представлений в стиле C. В последующей оценке двадцать семь из сорока одной операции исходного перевода Rust медленнее C более чем на 3%; у двадцати пяти из этих двадцати семи растёт число инструкций. Существенная часть потерь вызвана дополнительной работой, а не названием языка."
+              ]
+            },
+            {
+              "heading": "Правила предлагают, проверки решают",
+              "paragraphs": [
+                "PerfR создаёт исполняемые сквозные операции и входы, расширяя тесты по обратной связи о покрытии. Функциональные нагрузки обеспечивают разнообразие входов, а нагрузочные увеличивают значимый размер данных для стабильного измерения. Затем система нормализует перевод, находит горячие участки, сопоставляет правила и просит модель проверить предпосылки изменения в контексте проекта. Кандидат должен собраться, сохранить дайджесты выходов на тестовых входах и пройти инкрементальные и накопительные проверки времени. Иначе его исправляют или отбрасывают. Внутренние нагрузки оптимизации отделены от итоговых бенчмарков.",
+                "На сорока одной операции двенадцати отложенных проектов авторы сообщают совпадение тестовых выходов с C во всех случаях. Сорок операций быстрее неоптимизированного Rust, восемнадцать — быстрее C, причём десять более чем на 3%. В сравнении с обычным Codex на той же GPT-5.4 PerfR быстрее в тридцати одной из тридцати семи операций, где оба сохраняют выходы. В остальных четырёх Codex выдаёт несовпадающие результаты. Вариант той же системы без правил медленнее полного PerfR на тридцати четырёх из сорока одной операции, что подтверждает вклад направляющих правил."
+              ]
+            },
+            {
+              "heading": "Результаты и границы гарантий",
+              "paragraphs": [
+                "После прогрева выполняются тридцать пар измерений каждой нагрузки, порядок запусков чередуется, выравнивание функций унифицировано для уменьшения влияния размещения машинного кода. Речь идёт о времени конкретных операций и входов, не о гарантии для всех путей исполнения. Нужны применимые правила, внутренние нагрузки, достигающие проблемного участка, и сравнимые результаты. Новые входы или другая работа могут обнаружить ошибки либо регрессии. Совпадение проверенных выходов не следует называть формальным доказательством семантической эквивалентности.",
+                "Доля функций, вызываемых из безопасного Rust, по данным статьи растёт с 0,2% до 39,5%, однако 60,5% сохраняют небезопасный интерфейс вызова. Уменьшение операций с сырыми указателями тоже не доказывает безопасность памяти всей программы. Системы с преобладанием ввода-вывода исключены, результат зависит от компиляции, оборудования и покрытия. Обоснованный вывод: свидетельства компилятора, предметные правила и регрессионные проверки способны вернуть существенную производительность на изученных миграциях. Изменение, предложенное моделью, само по себе не становится заслуживающим доверия."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема PerfR, перерисованная сайтом; она не содержит фрагментов программы и не является графиком результатов.",
+            "steps": [
+              "Измерить перевод и найти горячие участки",
+              "Сопоставить правила с данными компилятора",
+              "Предложить изменение с учётом предпосылок проекта",
+              "Проверить выходы и инкрементальное и накопленное время"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把C程式翻譯成Rust，得到相同輸出並不意味著效能也能保住。翻譯後的表達方式可能多做計算，或者讓編譯器看不清原本可以最佳化的記憶體存取與迴圈關係。這項研究先在真實專案中追蹤效能損失，再把可重複出現的問題整理成規則，用PerfR引導模型修改熱點，並逐次檢查輸出和耗時。它研究的是遷移後的效能恢復，不是證明Rust天然快於或慢於C。",
+          "sections": [
+            {
+              "heading": "慢在哪裡，要從執行證據找",
+              "paragraphs": [
+                "作者整理20個真實專案，範圍為約1000至18萬行專案自身程式碼，分成八個研究專案和十二個不重疊的評估專案。專案須能被c2rust翻譯、具有可核對輸出的確定性負載，並在專案自身邏輯中出現可測熱點；主要耗時在輸入輸出或外部函式庫的專案被排除。研究部分的19項操作中，12項相對C慢超過3%，最大慢62.2%，說明退化並非只存在於個別小函式。",
+                "研究把執行時間進一步分成執行指令數和每條指令的代價，再結合編譯器中間表示與最佳化資訊定位原因。整理出的九類模式涉及殘留執行時工作、未發生的編譯器最佳化和沿用C風格的表達。後續十二個專案的41項操作中，27項初始Rust版本比C慢超過3%，其中25項存在指令數量膨脹。這提示許多損失來自翻譯後多做了工作，而不能簡單歸咎於語言標籤。"
+              ]
+            },
+            {
+              "heading": "規則引導改寫，驗證決定是否保留",
+              "paragraphs": [
+                "PerfR先生成可執行的完整操作與輸入，並用覆蓋回饋擴充測試；功能負載強調輸入多樣性，效能負載則放大資料規模以穩定計時。它整理翻譯結果、定位熱點、匹配規則，再讓語言模型結合專案上下文判斷改寫前提。每個候選都必須編譯成功、在測試輸入上保持輸出摘要一致，並通過增量和累計效能檢查，否則修復或放棄。最佳化使用的內部負載與最終基準負載分開，減少直接迎合測試的風險。",
+                "在十二個獨立評估專案的41項操作上，作者報告PerfR全部保持與C的測試輸出一致，40項比未經最佳化的Rust更快，18項比C更快，其中10項快超過3%。與同用GPT-5.4的通用Codex基準方法比較，雙方都保持輸出一致的37項中，PerfR有31項耗時更低；Codex在另四項出現輸出不一致。去掉規則提示的同框架版本則在41項中有34項慢於完整PerfR，支持規則本身具有作用。"
+              ]
+            },
+            {
+              "heading": "恢復了多少，仍不能保證什麼",
+              "paragraphs": [
+                "計時採用預熱後成對測量、交替執行順序，每個負載30對測量，並統一函式對齊以減輕程式碼佈局影響。結果描述的是這些操作和輸入上的實測執行時間，不是所有路徑的效能保證。模型改寫需要已有規則適用、熱點能被內部負載觸發、輸出能被測試比較；新增輸入或完全不同的工作負載仍可能暴露錯誤或退化，因此不能把測試輸出一致寫成形式化語義等價證明。",
+                "安全方面，論文報告呼叫者可直接從安全Rust呼叫的函式比例由0.2%提高到39.5%，但仍有60.5%的函式保留不安全呼叫介面；減少原生指標操作也不等於證明整個程式記憶體安全。專案選擇排除了主要受輸入輸出支配的系統，最終效果還依賴編譯配置、硬體和測試覆蓋。更穩妥的結論是：編譯器證據、領域規則和迴歸驗證結合起來，能在所測遷移專案中找回不少效能，而不是讓模型修改後即可自動信任。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據PerfR流程重繪的解釋示意，不包含程式片段，也不是實驗效能圖。",
+            "steps": [
+              "測量翻譯版本並定位熱點",
+              "用編譯器證據匹配效能問題規則",
+              "在專案上下文中生成候選改寫",
+              "核對測試輸出與增量、累計耗時"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "self-building-labs-automation",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "Self-Building Labs · original v1",
+          "url": "https://arxiv.org/html/2610.23826v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.23826v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "自动实验室通常能反复执行已经配置好的流程，却不一定能应付新仪器、新摆放方式或新操作。Self-Building Labs 关注的是这段适配工作：由 Agent 找出目标实验缺少什么能力，建立仿真环境，开发操作技能，再把验证过的步骤接成实验流程。“自建”指发展这些能力，并不是凭空造出所有硬件。",
+          "sections": [
+            {
+              "heading": "从现有设备建立可检查的环境",
+              "paragraphs": [
+                "研究者先提供科学目标、实验室照片、可用的设备信息和操作接口。系统中的科学 Agent 组织实验计划，孪生 Agent 构建设备与空间的数字模型，安全 Agent 利用模型分析风险并生成运行约束。数字孪生是可用于模拟动作的实验室副本，不只是外观相似的三维图；设备的活动部件、位置与状态也要能支持规划。",
+                "系统优先寻找现成设备模型，缺失时依据说明资料和图像建立近似几何，再比较相机观测与渲染结果校准位置。抓取、转移等操作先在仿真中探索，但毫米级插入对误差更敏感，需要在获准的实体试验中利用视觉、深度和力矩反馈修正。作者发现逐步调用语言模型太慢，便把成功经验整理成可直接执行的技能，遇到不满足条件的情况再交回 Agent。"
+              ]
+            },
+            {
+              "heading": "实体实验完成了什么",
+              "paragraphs": [
+                "端到端验证使用真实的量子点合成任务，把移液、封板、机械臂搬运和光学测量连接起来。人工提供初始信息并批准计划后，系统用 236 项液体处理控制操作准备一块 96 孔板，再完成 19 个机器人操作阶段，包括转移、封板、重新抓取和装入读板设备。这些数字描述一次所展示流程的规模，不是跨任务成功率，也不能据此比较与人工操作的效率。",
+                "作者记录了持续八小时的光学变化，其中一个示例孔的发射峰从 520 纳米移到 560 纳米，作为纳米晶逐渐生长的实验迹象。它说明自动化流程获得了可测量的实验结果，不等于发现普适的最优材料配方。论文另展示不同机械臂之间交接样品、跨工作站协调运输等扩展，但这些多机器人协调结果来自仿真，应与已经完成的实体量子点实验分开理解。"
+              ]
+            },
+            {
+              "heading": "安全与人工介入仍是系统的一部分",
+              "paragraphs": [
+                "碰撞检查只能覆盖孪生模型表示出来的几何和状态。系统另设物理运行约束，包括机器人速度上限、力传感触发的保护停止，以及人工随时终止实验的入口；化学风险和不确定接触还需额外检查。作者还遇到设备接口未报告故障、Agent 根据待确认的假设行动，以及多个 Agent 争论后需要人工裁定的情况。模型本身愿不愿意拒绝危险操作不能替代这些约束。",
+                "本研究主要证明了能力开发与实验执行可以接在一起，尚未定量证明连续使用后能稳定减少多少工程时间或人工干预。成功技能迁移到新设备或布局时，仍要重新检查适用条件。对科研 Agent 的启发是把观察、仿真、实体反馈与可复用技能连接起来，同时让不可观察的事实和未解决的分歧明确交给研究者。这是对所展示系统的理解，不是任意实验均可无人完成的承诺。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：区分仿真验证、获准的实体试验和技能复用，不复现论文实验图。",
+            "steps": [
+              "确定实验目标与缺少的能力",
+              "建立并校准数字孪生",
+              "在仿真和获准的实体试验中完善技能",
+              "在物理约束下运行并保留可复用技能"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An automated laboratory may repeat a configured procedure without being able to adapt to a new instrument, layout or operation. Self-Building Labs addresses this adaptation work: agents identify missing capabilities, build a simulation, develop skills and assemble validated steps into an experimental workflow. “Self-building” concerns those capabilities; it does not mean creating every piece of hardware from nothing.",
+          "sections": [
+            {
+              "heading": "Build an environment that can be checked",
+              "paragraphs": [
+                "Researchers provide a scientific goal, laboratory photographs, available equipment information and control interfaces. A scientific agent organizes the experimental plan, a twin agent models equipment and space, and a safety agent uses that model to examine hazards and create runtime constraints. The digital twin is a laboratory counterpart for testing actions, not merely a visually convincing three-dimensional illustration. Moving parts, positions and equipment states must support planning.",
+                "The system first looks for existing equipment models. Where these are missing, documentation and images support approximate geometry, which is calibrated by comparing camera observations with rendered views. Grasping and transfer are explored in simulation, but millimetre-scale insertion needs visual, depth and force/torque feedback during approved physical trials. Repeated language-model calls proved too slow for the chemical workflow, so successful experience was distilled into directly executable skills that return control to the agent when their operating conditions no longer hold."
+              ]
+            },
+            {
+              "heading": "What was demonstrated in the physical laboratory",
+              "paragraphs": [
+                "The end-to-end demonstration links liquid handling, plate sealing, robotic transport and optical measurement in a real quantum-dot synthesis experiment. After a human supplied initial information and approved the plan, 236 liquid-handling control operations prepared a 96-well plate, followed by 19 robotic stages covering transfer, sealing, re-grasping and reader loading. These counts describe the scale of the demonstrated workflow, not a success rate across tasks or an efficiency comparison with human operation.",
+                "The authors monitor optical changes over eight hours. In one example well, an emission peak moves from 520 to 560 nanometres, providing an indication of progressive nanocrystal growth. This establishes that the automated workflow produced measurable experimental output, not a universally optimal materials recipe. The paper also demonstrates handoffs between different arms and transport across workstations, but this broader multi-robot coordination is evaluated in simulation and must be distinguished from the physical quantum-dot experiment."
+              ]
+            },
+            {
+              "heading": "Safety and human intervention remain part of the system",
+              "paragraphs": [
+                "Collision checks cover only geometry and states represented in the twin. Physical constraints include robot speed limits, force-triggered protective stops and a human-operated means of stopping the experiment; chemical hazards and uncertain contact need additional checks. The authors also encountered device failures not reported by interfaces, actions based on assumptions requiring clarification, and inter-agent disagreements needing human resolution. A model’s willingness to refuse dangerous actions cannot replace these constraints.",
+                "The work demonstrates that capability development can be connected to experimental execution. It does not yet quantify a sustained reduction in engineering time or human intervention over successive cycles. Skills still need their applicability checked when equipment or layouts change. The engineering lesson is to connect observation, simulation, physical feedback and reusable skills while explicitly escalating unobservable facts and unresolved disagreements to researchers. This interpretation of the demonstrated system is not a promise that arbitrary experiments can run unattended."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper, separating simulation, approved physical trials and skill reuse; not an experimental figure.",
+            "steps": [
+              "Identify the goal and missing capabilities",
+              "Construct and calibrate a digital twin",
+              "Refine skills in simulation and approved physical trials",
+              "Execute within physical constraints and retain reusable skills"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "自動実験室は設定済みの手順を繰り返せても、新しい装置、配置、操作に対応できるとは限りません。Self-Building Labs はその適応作業を対象にします。Agent が目標に足りない能力を見つけ、シミュレーションを作り、技能を開発して検証済みの手順を実験につなぎます。「自ら構築する」とは能力を整えることで、すべてのハードウェアを無から製造する意味ではありません。",
+          "sections": [
+            {
+              "heading": "検証できる環境を既存装置から作る",
+              "paragraphs": [
+                "研究者は科学的な目標、実験室の写真、装置の情報、操作インターフェースを渡します。科学 Agent が計画をまとめ、ツイン Agent が装置と空間をモデル化し、安全 Agent がそのモデルで危険を検討して実行時の制約を作ります。デジタルツインは動作を試せる実験室の複製であり、見た目だけの三次元画像ではありません。可動部、位置、装置の状態も計画に使える必要があります。",
+                "既存の装置モデルを優先し、見つからなければ説明資料と画像から近似形状を作り、カメラ観測と描画結果を比較して位置を校正します。把持や移送はまずシミュレーションで探索しますが、ミリメートル精度の挿入には、許可を得た実機試験で視覚、深度、力・トルクのフィードバックが必要です。言語モデルを逐次呼び出す方式は化学実験には遅かったため、成功した経験を直接実行できる技能にまとめ、適用条件を外れると Agent に制御を戻します。"
+              ]
+            },
+            {
+              "heading": "実機で何を確認したのか",
+              "paragraphs": [
+                "実際の量子ドット合成で、分注、プレート封止、ロボットによる移送、光学測定を一連の工程にしました。人間が初期情報を与えて計画を承認した後、236 件の液体処理の制御操作で 96 ウェルプレートを準備し、移送、封止、持ち替え、測定装置への装填を含む 19 段階のロボット操作を行いました。これらは示された工程の規模であり、多数の課題での成功率や人手との効率比較ではありません。",
+                "著者らは八時間の光学変化を記録し、例示した一つのウェルでは発光ピークが 520 ナノメートルから 560 ナノメートルへ移りました。ナノ結晶が徐々に成長する兆候であり、自動工程から測定可能な結果が得られたことを示しますが、普遍的に最適な材料処方を発見したという意味ではありません。異なるアーム間の受け渡しや作業台をまたぐ輸送も示されますが、この複数ロボットの連携はシミュレーションでの評価で、実機の量子ドット実験とは区別が必要です。"
+              ]
+            },
+            {
+              "heading": "安全対策と人間の判断は残る",
+              "paragraphs": [
+                "衝突検査が扱えるのはツインに表現された形状と状態だけです。実機には速度制限、力検出による保護停止、人が実験を停止する仕組みを設け、化学的危険や不確かな接触には別の確認が必要です。装置の故障がインターフェースに現れない例、確認が必要な仮定に基づく行動、Agent 同士の対立を人間が解決した例も報告されています。モデルが危険な行動を拒否するかどうかに、これらの制約を置き換えることはできません。",
+                "本研究は能力の開発と実験の実行をつなげられることを示しますが、繰り返すことで工数や人の介入がどれだけ継続的に減るかは、まだ定量的に実証していません。装置や配置を変えれば、技能の適用条件も再確認が必要です。観測、仮想環境、実機の反応、再利用可能な技能を結び、観測できない事実や未解決の判断を研究者に明示することが実装上の示唆です。任意の実験を無人化できるという保証ではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。仮想環境、承認済みの実機試験、技能の再利用を区別し、実験図は転載していません。",
+            "steps": [
+              "目標と不足する能力を特定",
+              "デジタルツインを構築・校正",
+              "仮想環境と承認済みの実機試験で技能を改善",
+              "物理的制約の下で実行し技能を保存"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Автоматизированная лаборатория может повторять настроенный процесс, но не обязательно умеет адаптироваться к новому прибору, расположению оборудования или действию. Self-Building Labs исследует именно адаптацию: агенты определяют недостающие возможности, строят симуляцию, разрабатывают навыки и объединяют проверенные этапы в эксперимент. «Самостоятельное построение» относится к этим возможностям, а не к созданию всего оборудования из ничего.",
+          "sections": [
+            {
+              "heading": "Построить среду, в которой можно проверять действия",
+              "paragraphs": [
+                "Исследователи задают научную цель, предоставляют фотографии, сведения об оборудовании и интерфейсы управления. Научный агент составляет план, агент цифрового двойника моделирует приборы и пространство, а агент безопасности исследует риски и создаёт ограничения исполнения. Двойник — это копия лаборатории для проверки действий, а не просто правдоподобное трёхмерное изображение. Положение, подвижные части и состояния приборов должны поддерживать планирование.",
+                "Система сначала ищет готовые модели оборудования, а при их отсутствии строит приближённую геометрию по документации и изображениям. Положение уточняется сравнением изображений камеры и визуализации. Захват и перенос исследуются в симуляции, но вставка с миллиметровой точностью требует визуальной, глубинной и силовой обратной связи в одобренных физических испытаниях. Последовательные обращения к языковой модели оказались слишком медленными для химического процесса. Поэтому успешный опыт преобразовали в непосредственно исполняемые навыки, возвращающие управление агенту при выходе за условия применимости."
+              ]
+            },
+            {
+              "heading": "Что проверено в реальной лаборатории",
+              "paragraphs": [
+                "В реальном синтезе квантовых точек система связала дозирование жидкости, герметизацию планшета, роботизированную транспортировку и оптическое измерение. После предоставления исходных данных и одобрения плана человеком 236 операций управления жидкостной обработкой подготовили 96-луночный планшет. Затем выполнены 19 роботизированных этапов: перенос, герметизация, перехват и загрузка в измеритель. Эти числа характеризуют показанный процесс, а не вероятность успеха на разных задачах или преимущество по времени над человеком.",
+                "Авторы наблюдали оптические изменения восемь часов. В одной показательной лунке пик излучения сместился с 520 до 560 нанометров, указывая на постепенный рост нанокристаллов. Это демонстрирует получение измеримого результата автоматизированным процессом, но не универсально оптимальный рецепт материала. Передача образцов между разными манипуляторами и транспорт между рабочими станциями также показаны, однако эта расширенная координация роботов изучалась в симуляции, отдельно от физического эксперимента с квантовыми точками."
+              ]
+            },
+            {
+              "heading": "Безопасность и участие человека остаются необходимыми",
+              "paragraphs": [
+                "Проверка столкновений охватывает только геометрию и состояния, представленные в двойнике. Физические ограничения включают предел скорости робота, защитную остановку по силовым датчикам и возможность остановить эксперимент человеком; химические риски и неопределённый контакт требуют дополнительных проверок. Авторы сталкивались со сбоями, о которых интерфейс не сообщал, действиями на основе требующих уточнения предположений и спорами агентов, разрешавшимися человеком. Готовность модели отказаться от опасного действия не заменяет эти ограничения.",
+                "Работа демонстрирует связь разработки возможностей с выполнением эксперимента, но пока не измеряет устойчивое сокращение инженерных затрат или вмешательства человека после последовательных циклов. При изменении приборов или размещения применимость навыков нужно проверять заново. Практический вывод — соединять наблюдения, симуляцию, физическую обратную связь и повторно используемые навыки, явно передавая исследователю ненаблюдаемые факты и нерешённые вопросы. Это интерпретация показанной системы, а не обещание автономности любых экспериментов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, самостоятельно перерисованная редакцией по статье: симуляция, одобренные физические испытания и повторное использование навыков показаны отдельно; это не экспериментальный график.",
+            "steps": [
+              "Определить цель и недостающие возможности",
+              "Построить и откалибровать цифровой двойник",
+              "Уточнить навыки в симуляции и одобренных физических испытаниях",
+              "Исполнять с физическими ограничениями и сохранять навыки"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "自動實驗室通常能反覆執行已經配置好的流程，卻不一定能應付新儀器、新擺放方式或新操作。Self-Building Labs 關注的是這段適配工作：由 Agent 找出目標實驗缺少什麼能力，建立模擬環境，開發操作技能，再把驗證過的步驟接成實驗流程。“自建”指發展這些能力，並不是憑空造出所有硬體。",
+          "sections": [
+            {
+              "heading": "從現有裝置建立可檢查的環境",
+              "paragraphs": [
+                "研究者先提供科學目標、實驗室照片、可用的裝置資訊和操作介面。系統中的科學 Agent 組織實驗計劃，孿生 Agent 構建裝置與空間的數字模型，安全 Agent 利用模型分析風險並生成執行約束。數位孿生是可用於模擬動作的實驗室副本，不只是外觀相似的三維圖；裝置的活動部件、位置與狀態也要能支援規劃。",
+                "系統優先尋找現成裝置模型，缺失時依據說明資料和影像建立近似幾何，再比較相機觀測與渲染結果校準位置。抓取、轉移等操作先在模擬中探索，但毫米級插入對誤差更敏感，需要在獲准的實體試驗中利用視覺、深度和力矩回饋修正。作者發現逐步呼叫語言模型太慢，便把成功經驗整理成可直接執行的技能，遇到不滿足條件的情況再交回 Agent。"
+              ]
+            },
+            {
+              "heading": "實體實驗完成了什麼",
+              "paragraphs": [
+                "端到端驗證使用真實的量子點合成任務，把移液、封板、機械臂搬運和光學測量串接起來。人工提供初始資訊並批准計劃後，系統用 236 項液體處理控制操作準備一塊 96 孔板，再完成 19 個機器人操作階段，包括轉移、封板、重新抓取和裝入讀板裝置。這些數字描述一次所展示流程的規模，不是跨任務成功率，也不能據此比較與人工操作的效率。",
+                "作者記錄了持續八小時的光學變化，其中一個示例孔的發射峰從 520 奈米移到 560 奈米，作為奈米晶逐漸生長的實驗跡象。它說明自動化流程獲得了可測量的實驗結果，不等於發現普適的最優材料配方。論文另展示不同機械臂之間交接樣品、跨工作站協調運輸等擴展，但這些多機器人協調結果來自模擬，應與已經完成的實體量子點實驗分開理解。"
+              ]
+            },
+            {
+              "heading": "安全與人工介入仍是系統的一部分",
+              "paragraphs": [
+                "碰撞檢查只能覆蓋孿生模型表示出來的幾何和狀態。系統另設物理執行約束，包括機器人速度上限、力感測觸發的保護停止，以及人工隨時終止實驗的入口；化學風險和不確定接觸還需額外檢查。作者還遇到裝置介面未報告故障、Agent 根據待確認的假設行動，以及多個 Agent 爭論後需要人工裁定的情況。模型本身願不願意拒絕危險操作不能替代這些約束。",
+                "本研究主要證明了能力開發與實驗執行可以接在一起，尚未定量證明連續使用後能穩定減少多少工程時間或人工干預。成功技能遷移到新裝置或佈局時，仍要重新檢查適用條件。對科研 Agent 的啟發是把觀察、模擬、實體回饋與可複用技能串接起來，同時讓不可觀察的事實和未解決的分歧明確交給研究者。這是對所展示系統的理解，不是任意實驗均可無人完成的承諾。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：區分模擬驗證、獲准的實體試驗和技能複用，不重現論文實驗圖。",
+            "steps": [
+              "確定實驗目標與缺少的能力",
+              "建立並校準數位孿生",
+              "在模擬和獲准的實體試驗中完善技能",
+              "在物理約束下執行並保留可複用技能"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "tider-temporal-agent-memory",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "RL-Guided Temporal Localization for Dual-Channel Retrieval in Long-Horizon Agent Memory · original v1",
+          "url": "https://arxiv.org/html/2610.23598v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.23598v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "长期助手记下很多相似事件后，检索“谈过什么”容易，分清“问的是哪一次”却更难。TIDER 把时间定位放在选证据之前：先推测问题对应的时间段，再与语义检索并行取回材料。它要解决的是相关旧事挤掉正确时间证据的问题，而不是让回答模型在一堆错时材料里事后猜答案。",
+          "sections": [
+            {
+              "heading": "时间通道与语义通道各做什么",
+              "paragraphs": [
+                "系统先从多轮对话提取带日期的记忆项，再按时间和语义接近程度聚合，形成包含日期范围、事件摘要与原始条目的记忆池。一个小型定位模型读取问题和相关时间线摘要，判断是否需要时间约束，并输出一个或多个时间窗口。没有时间要求时关闭时间通道，仍按语义检索；需要时间时，时间通道优先召回与窗口重叠的事件。",
+                "语义通道一直保留，因为有用背景未必恰好落在预测窗口内。两路候选合并后，按语义匹配、时间通道加分和距窗口的远近重新排序，距离衰减保留最低值，避免远处证据被彻底抹掉。定位器基于 Qwen3-1.7B，用强化学习训练；奖励同时检查时间需求判断、窗口位置、证据覆盖和最终答案，防止偶然答对却检索错误的时间段也得到充分奖励。"
+              ]
+            },
+            {
+              "heading": "提升是在什么条件下得到的",
+              "paragraphs": [
+                "LifeBench 评测使用两个留出用户的 408 道题，训练材料来自其他用户；LoCoMo 使用排除对抗类别后的 1,540 道题，作为未在该数据上训练的泛化测试。除直接提供标准证据的上界对照外，各方法在同一数据集使用相同的回答模型和最多 20 条检索记忆，评测重复三次取均值。这样主要比较记忆与检索方案，而不是给某个方法换上更强的回答模型。",
+                "作者报告 TIDER 在两套题上的平均准确率分别为 61.52% 和 78.96%，较次优对照 NeSTR 的 52.70% 和 TiMem 的 75.30%，分别提高 8.82、3.66 个百分点。这里是答对问题的比例，不是检索召回率。固定双通道与重排结构、移除定位器的 GRPO 强化训练后，LifeBench 准确率降至 55.64%，说明仅加一个时间通道还不够，窗口策略的训练也有作用。"
+              ]
+            },
+            {
+              "heading": "真实长期记忆仍有未覆盖的难点",
+              "paragraphs": [
+                "时间定位依赖前面的事件提取：日期写错、人物归属错误或摘要丢失细节，都会把偏差传给窗口预测。语义通道可保留窗口外候选，但不能自动修复这些上游错误。作者还发现增加检索数量并不总能提高准确率，因此不能把“保存更多、取回更多”当作时间理解的替代办法。对于实际助手，先确认日期来源和事件归属，是由该机制引出的工程判断。",
+                "两套基准都是英文合成历史，并非真实用户长期记录；现实中缺少时间戳、跨来源矛盾和不同语言日期表达可能更难。论文没有验证中文农历、日文年号等情形，也不能据此宣称多语言记忆效果。作者在 arXiv 版本说明中注明 NeurIPS 2026 录用，但未注明轨道，本文保留这一归因，不升级为独立核验的主会录用。结论限于所测记忆结构、训练划分和问答条件。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：时间定位与语义检索并行，合并证据后回答；不是准确率图。",
+            "steps": [
+              "提取带日期的事件与时间线摘要",
+              "判断时间需求并预测窗口",
+              "并行检索时间与语义候选",
+              "合并重排证据后生成答案"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A long-term assistant may remember many similar events yet confuse which occurrence a question refers to. TIDER localizes time before selecting evidence: it predicts relevant intervals and retrieves through temporal and semantic channels in parallel. The aim is to stop similar events from the wrong period crowding out the right evidence, rather than asking the answer model to repair a poorly chosen context.",
+          "sections": [
+            {
+              "heading": "Two channels with different responsibilities",
+              "paragraphs": [
+                "The system extracts dated memory items from multi-turn conversations and groups them by temporal and semantic proximity. Each cluster contains a date range, an event summary and the original items. A small locator reads the question and relevant timeline summaries, decides whether time constraints are needed, and predicts one or more windows. Non-temporal questions disable the temporal channel and retain semantic retrieval; otherwise, overlapping events enter the temporal candidate set.",
+                "The semantic channel remains active because useful background may lie outside the predicted windows. Merged candidates are ranked using semantic similarity, a temporal-channel boost and distance from the windows. Distance decay has a floor, so distant evidence does not disappear entirely. The Qwen3-1.7B locator is trained through reinforcement learning with rewards for temporal-need detection, window localization, evidence coverage and answer correctness. A lucky answer from the wrong period should not receive the same full reward as correctly grounded retrieval."
+              ]
+            },
+            {
+              "heading": "The conditions behind the reported improvement",
+              "paragraphs": [
+                "LifeBench evaluation uses 408 questions from two held-out users, while training material comes from other users. LoCoMo contributes 1,540 questions after excluding the adversarial category and tests generalization without training on that dataset. Apart from an upper-bound condition supplied with gold evidence, methods share the same answer model within each dataset and a retrieval budget of 20 memories. Evaluation is repeated three times and averaged, comparing retrieval and memory approaches without changing the answer model’s strength.",
+                "The authors report mean answer accuracy of 61.52% on LifeBench and 78.96% on LoCoMo. The respective runner-up baselines are NeSTR at 52.70% and TiMem at 75.30%, giving gains of 8.82 and 3.66 percentage points. These measure correctly answered questions, not retrieval recall. Holding the dual-channel retriever and reranker fixed while removing GRPO training from the locator lowers LifeBench accuracy to 55.64%. Adding a temporal channel alone is therefore insufficient; learning the window-selection policy also matters."
+              ]
+            },
+            {
+              "heading": "Real long-term memory remains an open test",
+              "paragraphs": [
+                "Temporal localization depends on upstream extraction. Incorrect dates, misattributed people or lost summary details propagate into window predictions. The semantic channel preserves candidates outside those windows but cannot automatically repair the original extraction errors. The authors also find that retrieving more items does not consistently improve accuracy. Checking event attribution and date provenance in a deployed assistant is an engineering implication of the mechanism, not another experimentally established result.",
+                "Both benchmarks contain English synthetic histories rather than real long-term user records. Missing timestamps, conflicting sources and different linguistic date conventions may make deployment harder. Chinese lunar dates and Japanese era names, for example, are not evaluated, so multilingual memory performance cannot be claimed. The authors’ arXiv comment reports acceptance at NeurIPS 2026 without specifying a track. That attribution is retained here and is not upgraded to independently confirmed main-track acceptance. Conclusions remain bounded by the tested memory construction, data split and question-answering setup."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: temporal and semantic retrieval run in parallel before evidence is merged; not an accuracy chart.",
+            "steps": [
+              "Extract dated events and timeline summaries",
+              "Detect temporal need and predict windows",
+              "Retrieve temporal and semantic candidates in parallel",
+              "Merge and rerank evidence before answering"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "長期的な助手が似た出来事を多数記憶すると、話題は合っていても「どの回のことか」を取り違えます。TIDER は証拠を選ぶ前に時間を特定し、予測した期間に基づく検索と意味検索を並行させます。異なる時期の似た記憶に正しい証拠が押し出される問題を、回答モデルが後から補うのではなく、検索段階で扱う方法です。",
+          "sections": [
+            {
+              "heading": "時間と意味を別々の経路で検索する",
+              "paragraphs": [
+                "複数ターンの対話から日付付きの記憶項目を抽出し、時間と意味の近さでまとめます。各まとまりには日付範囲、出来事の要約、元の項目が含まれます。小型の位置推定モデルが質問と関連する時系列要約を読み、時間制約の要否と一つ以上の期間を予測します。時間指定が不要なら時間経路を止めて意味検索を使い、必要なら予測期間と重なる出来事を候補にします。",
+                "有用な背景が予測期間外にある可能性があるため、意味検索は常に残します。二つの候補集合を統合し、意味の近さ、時間経路への加点、期間からの距離で再順位付けします。距離による減衰には下限があり、遠い証拠も完全には消しません。Qwen3-1.7B を基にした推定器は強化学習で訓練し、時間制約の判定、期間の位置、証拠の網羅、最終回答の正しさを報酬に使います。違う時期を取得して偶然正答するだけでは、十分な報酬を得にくい設計です。"
+              ]
+            },
+            {
+              "heading": "結果を読むための実験条件",
+              "paragraphs": [
+                "LifeBench は留出した二人分の 408 問で評価し、訓練材料は別の人物群から作ります。LoCoMo は対抗的なカテゴリを除いた 1,540 問を使い、このデータでは訓練しない汎化試験とします。正解証拠を直接与える上限比較を除き、各手法は同じデータセット内で同じ回答モデルと 20 件の記憶取得予算を使います。評価は三回繰り返して平均するため、回答モデルの強さを変えずに検索・記憶方式を比較しています。",
+                "著者報告の平均正答率は LifeBench で 61.52%、LoCoMo で 78.96% です。次点はそれぞれ NeSTR の 52.70%、TiMem の 75.30% で、差は 8.82 ポイントと 3.66 ポイントです。これは質問への正答率であって検索再現率ではありません。二経路の検索と再順位付けを固定し、推定器の GRPO 強化学習だけを除くと LifeBench は 55.64% に下がりました。時間経路を設けるだけでなく、期間選択の学習も寄与しています。"
+              ]
+            },
+            {
+              "heading": "実際の長期記憶で残る課題",
+              "paragraphs": [
+                "時間推定は前段の抽出品質に依存します。日付の誤り、人物の取り違え、要約で失われた詳細は期間予測にも伝わります。意味検索が期間外の候補を残しても、元の抽出誤りを自動修復するわけではありません。また、取得件数を増やしても正答率は常に上がりません。実装時に出来事の帰属と日付の出所を確かめることは、この仕組みから得られる設計上の示唆であり、別の実証結果ではありません。",
+                "両ベンチマークは英語の合成履歴で、実ユーザーの長期記録ではありません。日時の欠落、情報源の矛盾、言語ごとの日付表現は現実でさらに難しくなり得ます。中国の旧暦や日本の年号などは評価されておらず、多言語の記憶性能は主張できません。arXiv の著者コメントには NeurIPS 2026 採択とありますが、トラックは明記されていません。本稿も著者による記載として扱い、独立確認済みのメイントラック採択には読み替えません。結論は検証した記憶構造、データ分割、質問応答条件に限られます。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。時間検索と意味検索を並行させ、統合した証拠から回答する流れで、正答率の図ではありません。",
+            "steps": [
+              "日付付きの出来事と時系列要約を抽出",
+              "時間制約の要否と期間を予測",
+              "時間と意味の候補を並行検索",
+              "証拠を統合・再順位付けして回答"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Долгосрочный помощник может помнить множество похожих событий и всё же путать, о каком именно случае его спрашивают. TIDER определяет время до отбора свидетельств: предсказывает нужные интервалы и параллельно выполняет временной и семантический поиск. Цель — не дать похожим событиям другого периода вытеснить нужные материалы, вместо того чтобы требовать от модели ответа исправления уже неверно подобранного контекста.",
+          "sections": [
+            {
+              "heading": "Два канала с разными задачами",
+              "paragraphs": [
+                "Система извлекает датированные элементы памяти из многошаговых диалогов и объединяет их по временной и смысловой близости. Каждая группа содержит диапазон дат, краткое описание событий и исходные элементы. Небольшая модель локализации читает вопрос и относящиеся к нему сводки хронологии, определяет необходимость временного ограничения и предсказывает одно или несколько окон. Для вопросов без временной привязки временной канал выключается; иначе он отбирает пересекающиеся с окнами события.",
+                "Семантический канал работает всегда, поскольку полезный контекст может находиться вне предсказанного периода. Общие кандидаты ранжируются по смысловому сходству, прибавке за временной канал и расстоянию до окон. У затухания есть нижняя граница, поэтому далёкие свидетельства не исчезают полностью. Локализатор на основе Qwen3-1.7B обучается с подкреплением: награды учитывают необходимость времени, положение окон, полноту свидетельств и правильность ответа. Случайно верный ответ из неправильного периода не должен получать столь же полную награду."
+              ]
+            },
+            {
+              "heading": "При каких условиях получено улучшение",
+              "paragraphs": [
+                "LifeBench оценивается на 408 вопросах двух отложенных пользователей, а обучающий материал берётся у других пользователей. Для LoCoMo используются 1,540 вопросов без состязательной категории; на этом наборе модель не обучается, что проверяет перенос. Кроме верхней оценки с готовыми эталонными свидетельствами, методы используют одну и ту же модель ответа внутри набора и бюджет в 20 извлечённых воспоминаний. Оценка повторяется трижды и усредняется: сравниваются подходы к памяти и поиску, а не разные по силе модели ответа.",
+                "Авторы сообщают среднюю точность ответа 61.52% на LifeBench и 78.96% на LoCoMo. Следующие результаты — 52.70% у NeSTR и 75.30% у TiMem; улучшение составляет 8.82 и 3.66 процентного пункта. Это доля правильно отвеченных вопросов, не полнота поиска. Если оставить два канала и повторное ранжирование, но убрать GRPO-обучение локализатора, точность LifeBench падает до 55.64%. Значит, важен не только сам временной канал, но и обучение выбору окон."
+              ]
+            },
+            {
+              "heading": "Реальная долгосрочная память ещё не проверена",
+              "paragraphs": [
+                "Локализация зависит от предшествующего извлечения событий. Неверная дата, ошибочная привязка к человеку или потерянная деталь сводки передаются в предсказание окон. Семантический канал сохраняет внешние кандидаты, но не исправляет исходную ошибку автоматически. Авторы также находят, что увеличение числа извлечённых элементов не всегда повышает точность. Проверка происхождения дат и принадлежности событий в рабочем помощнике — инженерный вывод из механизма, а не отдельный установленный экспериментом результат.",
+                "Оба набора содержат англоязычные синтетические истории, а не длительные записи реальных пользователей. Пропущенные даты, противоречивые источники и другие языковые формы времени могут осложнить применение. Китайский лунный календарь и японские названия эр, например, не оценивались; многоязычная эффективность памяти не установлена. В комментарии arXiv авторы сообщают о принятии на NeurIPS 2026 без указания трека. Здесь сохраняется именно эта атрибуция, без утверждения о независимо подтверждённом основном треке. Выводы ограничены проверенной памятью, разделением данных и условиями ответов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, самостоятельно перерисованная редакцией по статье: временной и семантический поиск выполняются параллельно; это не график точности.",
+            "steps": [
+              "Извлечь датированные события и сводки хронологии",
+              "Определить необходимость времени и предсказать окна",
+              "Параллельно получить временные и смысловые кандидаты",
+              "Объединить и ранжировать свидетельства перед ответом"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "長期助手記下很多相似事件後，檢索“談過什麼”容易，分清“問的是哪一次”卻更難。TIDER 把時間定位放在選證據之前：先推測問題對應的時間段，再與語義檢索並行取回材料。它要解決的是相關舊事擠掉正確時間證據的問題，而不是讓回答模型在一堆錯時材料裡事後猜答案。",
+          "sections": [
+            {
+              "heading": "時間通道與語義通道各做什麼",
+              "paragraphs": [
+                "系統先從多輪對話提取帶日期的記憶項，再按時間和語義接近程度聚合，形成包含日期範圍、事件摘要與原始條目的記憶池。一個小型定位模型讀取問題和相關時間線摘要，判斷是否需要時間約束，並輸出一個或多個時間窗。沒有時間要求時關閉時間通道，仍按語義檢索；需要時間時，時間通道優先召回與時間窗重疊的事件。",
+                "語義通道一直保留，因為有用背景未必恰好落在預測時間窗內。兩路候選合併後，按語義匹配、時間通道加分和距時間窗的遠近重新排序，距離衰減保留最低值，避免遠處證據被徹底抹掉。定位器基於 Qwen3-1.7B，用強化學習訓練；獎勵同時檢查時間需求判斷、時間窗位置、證據覆蓋和最終答案，防止偶然答對卻檢索錯誤的時間段也得到充分獎勵。"
+              ]
+            },
+            {
+              "heading": "提升是在什麼條件下得到的",
+              "paragraphs": [
+                "LifeBench 評測使用兩個留出使用者的 408 道題，訓練材料來自其他使用者；LoCoMo 使用排除對抗類別後的 1,540 道題，作為未在該資料上訓練的泛化測試。除直接提供標準證據的上界對照外，各方法在同一資料集使用相同的回答模型和最多 20 條檢索記憶，評測重複三次取均值。這樣主要比較記憶與檢索方案，而不是給某個方法換上更強的回答模型。",
+                "作者報告 TIDER 在兩套題上的平均準確率分別為 61.52% 和 78.96%，較次優對照 NeSTR 的 52.70% 和 TiMem 的 75.30%，分別提高 8.82、3.66 個百分點。這裡是答對問題的比例，不是檢索召回率。固定雙通道與重排結構、移除定位器的 GRPO 強化訓練後，LifeBench 準確率降至 55.64%，說明僅加一個時間通道還不夠，時間窗策略的訓練也有作用。"
+              ]
+            },
+            {
+              "heading": "真實長期記憶仍有未覆蓋的難點",
+              "paragraphs": [
+                "時間定位依賴前面的事件提取：日期寫錯、人物歸屬錯誤或摘要丟失細節，都會把偏差傳給時間窗預測。語義通道可保留時間窗外候選，但不能自動修復這些上游錯誤。作者還發現增加檢索數量並不總能提高準確率，因此不能把“儲存更多、取回更多”當作時間理解的替代辦法。對於實際助手，先確認日期來源和事件歸屬，是由該機制引出的工程判斷。",
+                "兩套基準都是英文合成歷史，並非真實使用者長期記錄；現實中缺少時間戳、跨來源矛盾和不同語言日期表達可能更難。論文沒有驗證中文農曆、日文年號等情形，也不能據此宣稱多語言記憶效果。作者在 arXiv 版本說明中註明 NeurIPS 2026 錄用，但未註明軌道，本文保留這一歸因，不升級為獨立核驗的主會錄用。結論限於所測記憶結構、訓練劃分和問答條件。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：時間定位與語義檢索並行，合併證據後回答；不是準確率圖。",
+            "steps": [
+              "提取帶日期的事件與時間線摘要",
+              "判斷時間需求並預測時間窗",
+              "並行檢索時間與語義候選",
+              "合併重排證據後生成答案"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "fde-gym-ai-delivery-benchmark",
+      "written_at": "2026-11-01",
+      "sources": [
+        {
+          "label": "FDE-Gym: The Last Mile of AI Delivery · original v1",
+          "url": "https://arxiv.org/html/2610.22350v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22350v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "客户说想要一个新功能，不一定已经指出真正影响业务的问题。FDE-Gym 把 Agent 放进这样的交付情境：它既要调查资料、找到未说明的规则，也要向不同角色询问，再改造系统并产生可衡量的效果。评测从“功能是否做出来”转向“交付是否解决了客户的问题”。",
+          "sections": [
+            {
+              "heading": "把需求澄清和系统交付放在一起",
+              "paragraphs": [
+                "基准由行业专家把 18 个领域的 20 个项目改编为模拟客户环境，再改变关键事实形成变体，最终包含 95 项任务。环境提供可修改的系统、历史数据、文档和客户角色；角色按脚本回应，有各自掌握的信息、联系限制和耐心，不由另一个语言模型自由扮演。这样能更稳定地比较 Agent 的调查与交付行为，但它仍是仿真，而非直接在真实客户现场测试。",
+                "每个原始任务设四档说明：L0 给出真实问题、规则、约束和评分标准；L1 只明确问题；L2 给出方向正确但模糊的需求；L3 保留客户最初的要求，甚至可能指向错误问题。环境与评分保持相同。L3 覆盖全部 95 项，L0—L2 只在 20 项原始任务上比较，因此不能把各档差异理解为对全部变体做过同样测试。"
+              ]
+            },
+            {
+              "heading": "分数衡量改善，也扣除交付代价",
+              "paragraphs": [
+                "交付结果在留出的数据上运行，以原系统为零点、专家参考方案带来的改善为单位，计算业务增益。归一增益为 1 表示达到参考改善，低于 0 表示比不改系统还差；出现预定义运行事故时，正增益被清零。随后再扣除联系客户角色的成本，包括适用情形下的消息、试运行和等待。只有最终得分至少 0.8 且没有事故，任务才算解决。",
+                "作者在同一个简化 Agent 框架中测试了七家提供者的 13 种模型配置，每个任务与说明条件运行三次并取均值。L3 平均得分最高的配置为 Claude Opus 5.5，得分 0.56，95 项中有 14 项达到解决标准。0.56 不是 56% 的任务成功率；它是业务增益经事故调整、再扣沟通成本后的指标，也不是关于产品整体能力或真实客户部署成功率的结论。"
+              ]
+            },
+            {
+              "heading": "找到信息之后，仍可能交付失败",
+              "paragraphs": [
+                "在同样的 20 项原始任务上，三种领先配置获知规则时得分为 0.73—0.82，自行发现约束时降到 0.39—0.62。作者据此把未说明约束的发现视为主要难点。可是问全信息也不保证实现效果：最高分配置在 23 项任务里取得所有关键事实，只有其中 10 项达到至少 0.8 的业务增益，这里尚未扣沟通成本。调查、设计、实现和交付之间仍会断裂。",
+                "基准的客户时间成本由专家设定，并非实际测量的人力成本；脚本角色也无法完整模拟会改主意或理解错问题的真实人。此版本还没有人类交付表现基线，参考解只是掌握完整事实后的可行方案，不代表真人从 L3 起点能做多好。模型排名还受所用框架影响。研究更适合用于检查 Agent 是否理解业务目标、约束和运行后果，而不是凭单一分数宣称它可以替代交付工程师。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：从需求调查到业务结果评分，沟通成本单独扣除；不是模型排名图。",
+            "steps": [
+              "调查需求、资料与客户角色",
+              "识别真实问题和未说明约束",
+              "修改系统并在留出数据上运行",
+              "调整事故影响、扣除沟通成本后评分"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A customer asking for a feature may not have identified the problem that actually affects the business. FDE-Gym places agents in this delivery setting: inspect materials, uncover unstated rules, question different stakeholders, modify a system and produce measurable improvement. The evaluation shifts from whether a feature was built to whether the delivery addressed the customer’s problem.",
+          "sections": [
+            {
+              "heading": "Evaluate clarification and delivery together",
+              "paragraphs": [
+                "Industry experts adapt 20 projects across 18 sectors into simulated customer environments and alter key facts to create variants, yielding 95 tasks. Agents receive modifiable systems, historical data, documents and customer stakeholders. Stakeholders respond through scripts with specific knowledge, contact restrictions and patience, rather than being freely played by another language model. This makes investigation and delivery more reproducibly comparable, but it remains a simulation, not a field trial with real customers.",
+                "Each original task has four instruction levels. L0 supplies the underlying problem, rules, constraints and grading criteria; L1 identifies only the problem; L2 gives a vague but directionally correct request; L3 retains the sponsor’s original request, which may target the wrong problem. Environment and grading stay fixed. L3 covers all 95 tasks, while L0–L2 comparisons use only the 20 original tasks. Differences between levels therefore do not establish the same effect across every variant."
+              ]
+            },
+            {
+              "heading": "Measure improvement and charge for delivery costs",
+              "paragraphs": [
+                "The delivered system runs on held-out data. Business uplift is normalized relative to the unchanged system and the improvement achieved by an expert reference solution. A value of 1 matches the reference improvement; a negative value is worse than doing nothing. A predefined operational incident removes positive uplift. Stakeholder contact costs are then deducted, including messages and, where applicable, trial runs and waiting. Resolution requires a final score of at least 0.8 and no incident.",
+                "The authors test 13 model configurations from seven providers within the same minimal agent framework. Each task–instruction condition is run three times and averaged. Claude Opus 5.5 has the highest L3 mean score, 0.56, with 14 of 95 tasks meeting the resolution criterion. The 0.56 score is not a 56% task-success rate: it is incident-adjusted business uplift minus contact cost. It also does not measure the entire commercial product or establish a real-customer deployment success rate."
+              ]
+            },
+            {
+              "heading": "Discovering facts does not guarantee a successful delivery",
+              "paragraphs": [
+                "On the same 20 original tasks, the three leading configurations score 0.73–0.82 when rules are supplied, falling to 0.39–0.62 when constraints must be discovered. This supports the authors’ finding that unstated constraints are a major difficulty. Yet complete information is insufficient: the highest-scoring configuration obtains every key fact on 23 tasks, but only ten achieve business uplift of at least 0.8 before contact costs. Investigation, design, implementation and delivery can still come apart.",
+                "Stakeholder costs are expert-defined models of time, not measurements of actual labor cost. Scripted people cannot fully represent real customers who change their minds or misunderstand questions. This version has no human delivery baseline; the reference is a feasible solution with complete knowledge, not a measure of what a person can achieve from an L3 starting point. Rankings also depend on the agent framework. The benchmark is useful for examining whether agents understand objectives, constraints and operational consequences, not for declaring them replacements for delivery engineers on the strength of one score."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: investigation through business-outcome assessment, with contact costs deducted separately; not a model ranking chart.",
+            "steps": [
+              "Investigate requests, records and stakeholders",
+              "Identify the real problem and unstated constraints",
+              "Modify the system and evaluate on held-out data",
+              "Adjust for incidents and deduct contact costs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "顧客が新機能を求めても、本当に事業を左右する問題を特定できているとは限りません。FDE-Gym は、資料を調べ、明示されない規則を見つけ、関係者に質問し、システムを変更して測定可能な改善を出す状況に Agent を置きます。機能を作れたかだけでなく、納品したものが顧客の問題を解いたかを評価します。",
+          "sections": [
+            {
+              "heading": "要件の確認とシステムの納品を一緒に測る",
+              "paragraphs": [
+                "業界の専門家が 18 分野の 20 プロジェクトを模擬顧客環境にし、重要な事実を変えた派生課題を含めて 95 タスクを作りました。変更可能なシステム、過去のデータ、文書、顧客の担当者が与えられます。担当者は別の言語モデルが自由に演じるのではなく、持つ情報、連絡制限、忍耐度を定めたスクリプトで応答します。調査と納品の比較を再現しやすくしますが、実際の顧客現場での試験ではありません。",
+                "元の課題には四段階の指示があります。L0 は真の問題、規則、制約、採点基準を示し、L1 は問題だけを明示、L2 は方向が正しい曖昧な依頼、L3 は誤った問題を指すかもしれない顧客の当初の依頼です。環境と採点は変えません。L3 は全 95 タスクを対象としますが、L0—L2 は元の 20 タスクのみです。段階間の差を、すべての派生課題でも同様に確認した結果とは扱えません。"
+              ]
+            },
+            {
+              "heading": "改善を測り、納品に伴う費用も差し引く",
+              "paragraphs": [
+                "納品物は留出データで動かし、元のシステムを零点、専門家の参照解が生む改善を単位として業務上の増益を正規化します。値が 1 なら参照解と同じ改善、負なら何もしないより悪い結果です。定義済みの運用事故があれば正の増益を零にし、担当者への連絡費用を差し引きます。費用にはメッセージのほか、該当する場合は試運転と待ち時間も含みます。最終得点が 0.8 以上で事故がない場合だけ解決とします。",
+                "著者らは同じ簡素な Agent フレームワークで、七社の 13 モデル構成を試し、各課題・指示条件を三回実行して平均しました。L3 の平均点が最高だった Claude Opus 5.5 は 0.56 で、95 件中 14 件が解決基準を満たしました。0.56 は 56% の成功率ではなく、事故調整後の業務改善から連絡費用を引いた指標です。製品全体の能力や実顧客への導入成功率を示すものでもありません。"
+              ]
+            },
+            {
+              "heading": "情報がそろっても納品が成功するとは限らない",
+              "paragraphs": [
+                "同じ元の 20 タスクで、上位三構成は規則を渡されると 0.73—0.82 点でしたが、制約を自ら見つける条件では 0.39—0.62 点になりました。明示されない制約の発見が大きな難所だという著者の判断を支えます。ただし最高得点の構成が全重要情報を得た 23 タスクでも、連絡費用を引く前の業務改善が 0.8 以上だったのは 10 件だけです。調査、設計、実装、納品の間には依然として失敗の余地があります。",
+                "連絡費用は専門家が設定した時間費用のモデルで、実労働費の測定ではありません。スクリプトの人物では、考えを変えたり質問を取り違えたりする現実の顧客を完全には表せません。この版には人間の納品成績の基準がなく、参照解は全事実を知った場合の実行可能な解であり、人が L3 からどこまで達成できるかを測っていません。順位も Agent の枠組みに依存します。単一の点数で担当エンジニアの代替を宣言するより、目的、制約、運用上の結果を理解できるかの検査に向いた研究です。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。調査から業務効果の評価までを示し、連絡費用を別途差し引きます。モデル順位の図ではありません。",
+            "steps": [
+              "依頼、資料、関係者を調査",
+              "真の問題と未記載の制約を特定",
+              "システムを変更し留出データで実行",
+              "事故の影響と連絡費用を反映して採点"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Просьба клиента добавить функцию не обязательно описывает проблему, действительно влияющую на бизнес. FDE-Gym помещает агента в ситуацию поставки решения: изучить материалы, выявить негласные правила, расспросить разных участников, изменить систему и получить измеримое улучшение. Оценивается не только наличие функции, но и то, решена ли проблема заказчика.",
+          "sections": [
+            {
+              "heading": "Объединить уточнение требований и поставку системы",
+              "paragraphs": [
+                "Отраслевые эксперты адаптируют 20 проектов из 18 секторов в моделируемые клиентские среды, затем изменяют ключевые факты для создания вариантов. Всего получается 95 задач. Агент получает изменяемую систему, исторические данные, документы и представителей заказчика. Их ответы задаются сценариями с определёнными знаниями, ограничениями контакта и терпением, а не свободной ролью другой языковой модели. Это делает сравнение воспроизводимее, но остаётся симуляцией, не полевым испытанием у настоящего клиента.",
+                "У исходной задачи четыре уровня инструкции. L0 раскрывает настоящую проблему, правила, ограничения и критерии оценки; L1 — только проблему; L2 — расплывчатый, но верно направленный запрос; L3 сохраняет первоначальную просьбу заказчика, которая может касаться не той проблемы. Среда и оценивание не меняются. L3 охватывает все 95 задач, а L0–L2 сравниваются только на 20 исходных. Различия уровней нельзя автоматически переносить на каждый вариант."
+              ]
+            },
+            {
+              "heading": "Считать улучшение, вычитая издержки поставки",
+              "paragraphs": [
+                "Поставленная система проверяется на отложенных данных. Бизнес-эффект нормируется относительно неизменённой системы и улучшения от экспертного эталонного решения. Значение 1 означает достижение эталонного улучшения, отрицательное — результат хуже бездействия. Заранее определённый эксплуатационный инцидент обнуляет положительный эффект. Затем вычитаются расходы на общение с участниками: сообщения и, где применимо, пробные запуски и ожидание. Задача решена только при итоговой оценке не ниже 0.8 и отсутствии инцидента.",
+                "Авторы испытывают 13 конфигураций моделей семи поставщиков в одном минимальном агентном каркасе. Каждую комбинацию задачи и инструкции запускают трижды и усредняют. Лучшая средняя оценка L3 у Claude Opus 5.5 — 0.56; критерий решения выполнен на 14 из 95 задач. Это не 56% успешных задач, а бизнес-эффект после поправки на инциденты и вычета стоимости контактов. Показатель не характеризует весь коммерческий продукт и не устанавливает вероятность успешного внедрения у реального заказчика."
+              ]
+            },
+            {
+              "heading": "Получить факты недостаточно для хорошей поставки",
+              "paragraphs": [
+                "На тех же 20 исходных задачах три ведущие конфигурации получают 0.73–0.82 при раскрытых правилах и 0.39–0.62, когда ограничения нужно найти самостоятельно. Это поддерживает вывод авторов о трудности поиска неявных ограничений. Но полная информация тоже не гарантирует результат: конфигурация с лучшей средней оценкой получает все ключевые факты на 23 задачах, а бизнес-эффект не ниже 0.8 до вычета контактов достигается лишь на десяти. Между исследованием, проектированием, реализацией и поставкой остаются разрывы.",
+                "Стоимость общения задана экспертами как модель времени, а не измерена как реальный труд. Сценарные персонажи не полностью отражают людей, меняющих мнение или неверно понимающих вопрос. В этой версии нет человеческой базовой оценки: эталон показывает выполнимость при полном знании, а не возможности человека, начинающего с L3. Рейтинг зависит и от агентного каркаса. Работа полезна для проверки понимания бизнес-целей, ограничений и эксплуатационных последствий, но один балл не позволяет объявлять агента заменой инженеру по внедрению."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, самостоятельно перерисованная редакцией по статье: от исследования запроса к оценке бизнес-результата с отдельным вычетом контактов; не рейтинг моделей.",
+            "steps": [
+              "Изучить запрос, материалы и участников",
+              "Найти настоящую проблему и неявные ограничения",
+              "Изменить систему и проверить на отложенных данных",
+              "Учесть инциденты и вычесть стоимость общения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "客戶說想要一個新功能，不一定已經指出真正影響業務的問題。FDE-Gym 把 Agent 放進這樣的交付情境：它既要調查資料、找到未說明的規則，也要向不同角色詢問，再改造系統併產生可衡量的效果。評測從“功能是否做出來”轉向“交付是否解決了客戶的問題”。",
+          "sections": [
+            {
+              "heading": "把需求澄清和系統交付放在一起",
+              "paragraphs": [
+                "基準由行業專家把 18 個領域的 20 個專案改編為模擬客戶環境，再改變關鍵事實形成變體，最終包含 95 項任務。環境提供可修改的系統、歷史資料、文件和客戶角色；角色按預設規則回應，有各自掌握的資訊、聯絡限制和耐心，不由另一個語言模型自由扮演。這樣能更穩定地比較 Agent 的調查與交付行為，但它仍是模擬，而非直接在真實客戶現場測試。",
+                "每個原始任務設四檔說明：L0 給出真實問題、規則、約束和評分標準；L1 只明確問題；L2 給出方向正確但模糊的需求；L3 保留客戶最初的要求，甚至可能指向錯誤問題。環境與評分保持相同。L3 覆蓋全部 95 項，L0—L2 只在 20 項原始任務上比較，因此不能把各檔差異理解為對全部變體做過同樣測試。"
+              ]
+            },
+            {
+              "heading": "分數衡量改善，也扣除交付代價",
+              "paragraphs": [
+                "交付結果在留出的資料上執行，以原系統為零點、專家參考方案帶來的改善為單位，計算業務增益。正規化增益為 1 表示達到參考改善，低於 0 表示比不改系統還差；出現預定義執行事故時，正增益被清零。隨後再扣除聯絡客戶角色的成本，包括適用情形下的訊息、試執行和等待。只有最終得分至少 0.8 且沒有事故，任務才算解決。",
+                "作者在同一個簡化 Agent 框架中測試了七家提供者的 13 種模型配置，每個任務與說明條件執行三次並取均值。L3 平均得分最高的配置為 Claude Opus 5.5，得分 0.56，95 項中有 14 項達到解決標準。0.56 不是 56% 的任務成功率；它是業務增益經事故調整、再扣溝通成本後的指標，也不是關於產品整體能力或真實客戶部署成功率的結論。"
+              ]
+            },
+            {
+              "heading": "找到資訊之後，仍可能交付失敗",
+              "paragraphs": [
+                "在同樣的 20 項原始任務上，三種領先配置獲知規則時得分為 0.73—0.82，自行發現約束時降到 0.39—0.62。作者據此把未說明約束的發現視為主要難點。可是問全資訊也不保證實現效果：最高分配置在 23 項任務裡取得所有關鍵事實，只有其中 10 項達到至少 0.8 的業務增益，這裡尚未扣溝通成本。調查、設計、實現和交付之間仍會斷裂。",
+                "基準的客戶時間成本由專家設定，並非實際測量的人力成本；依劇本行動的角色也無法完整模擬會改主意或理解錯問題的真實人。此版本還沒有人類交付表現基線，參考解只是掌握完整事實後的可行方案，不代表真人從 L3 起點能做多好。模型排名還受所用框架影響。研究更適合用於檢查 Agent 是否理解業務目標、約束和執行後果，而不是憑單一分數宣稱它可以替代交付工程師。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：從需求調查到業務結果評分，溝通成本單獨扣除；不是模型排名圖。",
+            "steps": [
+              "調查需求、資料與客戶角色",
+              "識別真實問題和未說明約束",
+              "修改系統並在留出資料上執行",
+              "調整事故影響、扣除溝通成本後評分"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31",
+  "updated_at": "2026-11-01",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,77 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "value-indexed-memory-persistent-traversal",
+      "kind": "conference-paper",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-01",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Daniel Strauß, Zhenshan Bing, Alois Knoll · arXiv · 2610.40545v1",
+      "url": "https://arxiv.org/abs/2610.40545v1",
+      "venue": "NeurIPS 2026 LCFM workshop (author-reported acceptance)"
+    },
+    {
+      "id": "prefix-executability-tool-agent-reliability",
+      "kind": "conference-paper",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-01",
+      "tags": [
+        "ai",
+        "agents",
+        "papers",
+        "conferences"
+      ],
+      "source": "Amir H. Rezaeian, Weiyi Sun, Yassine Benajiba, Dan Roth · arXiv · 2610.40444v1",
+      "url": "https://arxiv.org/abs/2610.40444v1",
+      "venue": "NeurIPS 2026 (author-reported acceptance; track unspecified)"
+    },
+    {
+      "id": "on-policy-state-training-multihop-retrieval",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-01",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Chenjie Qiu, Zixuan Zeng, Shaobin Shi, Bingfeng Chen, Dongsheng Luo, Boyan Xu · arXiv · 2610.40409v1",
+      "url": "https://arxiv.org/abs/2610.40409v1"
+    },
+    {
+      "id": "exactcert-missing-data-retrieval-stability",
+      "kind": "conference-paper",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-01",
+      "tags": [
+        "data-governance",
+        "databases",
+        "papers",
+        "conferences"
+      ],
+      "source": "Jianru Shen · arXiv:2610.40579v1",
+      "url": "https://arxiv.org/abs/2610.40579v1",
+      "venue": "IEEE BigData (author-reported acceptance; edition and track unspecified)"
+    },
+    {
+      "id": "webgpu-gpu-resident-speculative-decoding",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-01",
+      "tags": [
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Song et al. · arXiv:2610.39761v1",
+      "url": "https://arxiv.org/abs/2610.39761v1"
+    },
     {
       "id": "ontology-checkers-agent-false-alarms",
       "kind": "preprint",
