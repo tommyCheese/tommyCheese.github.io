@@ -29281,6 +29281,1965 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "kite-structured-conversation-memory",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41521v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41521v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "长期对话记忆不只是寻找最相似的一段话。用户可能问某次搬家之前的计划，或者比较几个月里发生的变化；时间、人物与事件必须同时对上。KITE 把这类检索视为一个需要明确条件和执行规则的决策过程，让模型先写出可检查的计划，再由固定检索程序寻找带出处的证据。",
+          "sections": [
+            {
+              "heading": "先整理记忆，再编译问题",
+              "paragraphs": [
+                "系统先把每次有日期的会话拆成能够独立理解的记忆，保留支持它的原始话语，并抽取主题、人物、对象、地点和事件。相对时间根据会话日期解释，缺少有效出处的记忆会被丢弃。主题表不是每出现一个新词就扩张：新主题至少在跨两个月的三次会话出现才正式纳入，反复确认冗余的同级主题也会合并。这让记忆写入和后续查询尽量使用同一套分类。",
+                "回答问题时，语言模型把问题编译成带类型的查询计划，指定时间、条件、所需粒度和可用操作；多步计划可引用前一步找到的对象。执行器验证计划后，以固定的索引、放宽条件规则和排序规则检索，并携带原始引文组装上下文。它不依赖向量相似度检索，但仍用语言模型抽取记忆、编译计划和生成答案。结构化查询没有匹配项时，还可能使用词面检索回退，因此“没有结构化匹配”不等于最终拒答。"
+              ]
+            },
+            {
+              "heading": "回答分数与证据覆盖分别看",
+              "paragraphs": [
+                "作者在 LoCoMo 的十组多轮对话、1,540 个问题，以及 LongMemEval-S 的 500 个问题上测试。以 gpt-4.1-mini 同时作为回答模型和评判模型，报告答案准确率为 93.5% 和 86.0%，平均交给回答模型的上下文约为 1,500 和 1,600 token。这些是作者的模型评判结果；上下文长度只覆盖阅读阶段，不能当作索引、计划生成及所有模型调用的总成本。",
+                "更有解释力的一组对照固定了记忆库、回答模型和输入预算。LoCoMo 上，混合检索的准确率为 87.8%，KITE 为 93.5%；LongMemEval-S 上为 78.0% 对 86.0%。证据召回也提高，但两个数据集的分母不同：前者以标注话语轮次计，后者以会话计，不能横向比较高低。论文另一张跨系统表部分引用已有汇总结果，并非所有基线都重新统一运行，不能把很小的差距说成已证实的普遍优势。"
+              ]
+            },
+            {
+              "heading": "可复现的是执行，不是整个系统",
+              "paragraphs": [
+                "可检查的计划有助于追溯为何取到某条记忆，却不能自动修复错误的初始抽取或错误条件。固定索引、计划与排序策略后，执行可以复现；计划本身由模型产生，系统也会尝试多个候选，因此整条流程并非完全确定。需要隐含推断的偏好尤其困难：LongMemEval-S 的 30 道用户偏好题上准确率为 63.3%，表明清晰条件查询仍难替代对间接表达的理解。",
+                "论文于 10 月 30 日首次提交，备注只有笼统的“conference”字样，没有可核验会议名称或录用证据，本条按预印本收录。研究支持的结论是，结构化记忆、受约束的计划和可追溯证据在这两套测试中有用；它尚未证明真实长期产品中的稳定性，也未提供端到端时延或总费用优势。是否适合部署，还要考虑记忆抽取质量、主题管理和错误计划的处理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "从会话抽取带出处与日期的记忆",
+              "以共享主题和字段编译查询计划",
+              "验证计划并执行固定检索规则",
+              "结合证据回答并检查失败边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Long-term conversational memory requires more than finding a similar passage. A question may refer to plans before a move or changes across several months, so people, events and dates must line up. KITE treats retrieval as a decision process with explicit conditions: a language model writes an inspectable plan, then fixed retrieval operations collect source-linked evidence.",
+          "sections": [
+            {
+              "heading": "Organize memories before compiling questions",
+              "paragraphs": [
+                "Each dated session is converted into self-contained memories that retain supporting utterances and record topics, people, objects, places and events. Relative dates are resolved against the session date, and entries without valid provenance are discarded. The topic vocabulary does not expand for every new phrase: a proposed topic must occur in three sessions spanning at least two months before admission. Repeatedly confirmed redundant siblings are merged, helping memory ingestion and later queries share a stable vocabulary.",
+                "A language model compiles a question into a typed plan specifying time constraints, conditions, granularity and permitted operations. Linked subqueries can refer to objects found earlier. After validation, a fixed index, relaxation policy and ranking procedure retrieve and package evidence with original quotations. Retrieval is vector-free, but memory extraction, plan compilation and answer generation still use language models. A structured no-match can trigger lexical fallback, so it must not be equated with final abstention."
+              ]
+            },
+            {
+              "heading": "Separate answer scores from evidence coverage",
+              "paragraphs": [
+                "The authors test 1,540 questions across ten multi-session LoCoMo conversations and 500 LongMemEval-S questions. With gpt-4.1-mini used as both reader and judge, reported answer accuracy is 93.5% and 86.0%. Average context delivered to the reader is about 1,500 and 1,600 tokens. These are author-reported model judgments, and reader context is not the total cost of indexing, compiling plans or all model calls.",
+                "A more controlled comparison fixes the memory store, reader and input budgets. On LoCoMo, hybrid retrieval reaches 87.8% accuracy versus KITE’s 93.5%; on LongMemEval-S, the figures are 78.0% and 86.0%. Evidence recall also improves, but its units differ: annotated turns in LoCoMo and sessions in LongMemEval-S. Their recall values should not be compared directly. A separate cross-system table partly reuses published consolidated results rather than rerunning every baseline together, so small margins are not established universal gains."
+              ]
+            },
+            {
+              "heading": "Execution is reproducible; the whole pipeline is not",
+              "paragraphs": [
+                "Inspectable plans explain why evidence was selected, but cannot automatically correct an erroneous memory extraction or query condition. Execution is reproducible given a fixed index, plan and ranking policy; compilation is model-generated and considers multiple candidates, so the entire pipeline is not deterministic. Indirect preferences remain challenging: accuracy is 63.3% on LongMemEval-S’s 30 preference questions. Explicit filters cannot substitute for understanding every implied preference.",
+                "The first submission is dated October 30. Its generic “conference” comment supplies neither a named venue nor verifiable acceptance, so this entry treats it as a preprint. The supported conclusion is that structured memory, constrained plans and traceable evidence help on these two benchmarks. Reliability in real long-running products, end-to-end latency and total monetary savings remain unestablished; deployment would still depend on extraction quality, vocabulary maintenance and handling incorrect plans."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Extract dated memories with supporting sources",
+              "Compile queries against shared topics and fields",
+              "Validate plans and execute fixed retrieval rules",
+              "Answer from evidence and inspect failure boundaries"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "長期対話の記憶では、似た文章が見つかるだけでは足りない。引っ越し前の予定や数か月間の変化を尋ねられれば、日時、人物、出来事を同時に合わせる必要がある。KITE は検索条件を明示した計画をモデルに作らせ、固定の手順で出典付きの証拠を集める。",
+          "sections": [
+            {
+              "heading": "記憶を整理してから質問を計画に変える",
+              "paragraphs": [
+                "日時のある会話を、それだけで理解できる記憶に分解し、裏付けとなる元の発言と、話題、人物、対象、場所、出来事を保存する。「先月」などは会話日を基準に解釈し、有効な出典のない記憶は捨てる。話題の語彙も際限なく増やさず、新しい話題は少なくとも二か月にまたがる三回の会話で現れてから採用する。重複する同階層の話題は繰り返し確認して統合し、保存と検索で同じ分類を使いやすくする。",
+                "言語モデルは質問を、時間、条件、粒度、許可された操作を持つ型付き計画に変える。複数段階の問い合わせでは、先に見つけた対象を次で参照できる。検証後は固定の索引、条件緩和、順位付けで検索し、原発言を添えて回答用の文脈を作る。ベクトル検索は使わないが、記憶抽出、計画作成、回答には言語モデルを使う。構造化検索で一致がなくても語句検索に戻れるため、不一致と最終的な回答拒否は同じではない。"
+              ]
+            },
+            {
+              "heading": "回答の評価と証拠の回収を分ける",
+              "paragraphs": [
+                "評価は LoCoMo の十組の複数セッション会話に対する 1,540 問と、LongMemEval-S の 500 問で行った。回答と評価の双方に gpt-4.1-mini を用い、著者の報告する正答率は 93.5% と 86.0%。回答モデルに渡す文脈は平均約 1,500、1,600 token だった。これはモデルによる判定であり、文脈の短さは索引作成や計画生成、全モデル呼び出しを含めた総費用を意味しない。",
+                "記憶庫、回答モデル、入力予算を固定した比較では、LoCoMo の混合検索 87.8% に対し KITE は 93.5%、LongMemEval-S では 78.0% に対し 86.0% だった。証拠再現率も改善したが、LoCoMo は注釈付き発言ターン、LongMemEval-S はセッションが分母なので、数値をそのまま横比較できない。別のシステム比較表は既発表の集計値を一部再利用しており、すべてを同条件で再実行した結果ではない。小差を普遍的優位と断言すべきではない。"
+              ]
+            },
+            {
+              "heading": "再現可能なのは実行部分",
+              "paragraphs": [
+                "計画を検査できれば、なぜその記憶が選ばれたかを追える。しかし最初の抽出や質問条件の誤りまで自動的に直るわけではない。索引、計画、順位規則を固定した実行は再現できるが、計画自体はモデルが複数候補を作るので、全工程が決定的ではない。LongMemEval-S のユーザーの好みに関する 30 問では 63.3% にとどまり、暗黙の好みを明示条件だけで捉える難しさも残る。",
+                "初回投稿は 10 月 30 日。備考の一般的な「conference」という語だけでは会議名や採択を確認できず、本項ではプレプリントとして扱う。二つのベンチマークで構造化記憶、制約付き計画、追跡可能な証拠が役立つことは示されたが、実製品での長期安定性、全体の遅延や費用削減は未確立である。導入には抽出精度、話題管理、誤った計画への対処を別途考える必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "日時と出典付きの記憶を抽出",
+              "共通の話題と項目で検索計画を作成",
+              "計画を検証し固定規則で検索",
+              "証拠で回答し失敗条件を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Для долговременной памяти диалога недостаточно найти похожий фрагмент. Вопрос о планах до переезда или изменениях за несколько месяцев требует совместить людей, события и даты. KITE предлагает явно задать условия: языковая модель составляет проверяемый план, после чего фиксированные операции находят свидетельства с указанием источников.",
+          "sections": [
+            {
+              "heading": "Сначала организовать память, затем составить план",
+              "paragraphs": [
+                "Каждая датированная беседа преобразуется в самостоятельные записи с подтверждающими репликами, темами, участниками, объектами, местами и событиями. Относительное время разрешается по дате беседы; записи без допустимого источника отбрасываются. Словарь тем не расширяется после каждого нового выражения: новая тема должна встретиться в трёх сессиях как минимум за два разных месяца. Повторно подтверждённые избыточные соседние темы объединяются, чтобы запись памяти и последующий поиск использовали согласованную классификацию.",
+                "Модель переводит вопрос в типизированный план с временными ограничениями, условиями, гранулярностью и разрешёнными операциями. Последующие подзапросы могут ссылаться на уже найденные объекты. После проверки фиксированный индекс, правила ослабления условий и ранжирования собирают контекст с исходными цитатами. Векторный поиск не используется, но извлечение памяти, компиляция плана и ответ всё ещё требуют языковых моделей. Отсутствие структурированного совпадения может включить лексический запасной поиск и потому не означает окончательный отказ отвечать."
+              ]
+            },
+            {
+              "heading": "Различать качество ответа и полноту свидетельств",
+              "paragraphs": [
+                "Авторы проверяют 1 540 вопросов в десяти многосессионных диалогах LoCoMo и 500 вопросов LongMemEval-S. При использовании gpt-4.1-mini одновременно для ответа и оценки точность составляет 93,5% и 86,0%. Средний контекст читателя — примерно 1 500 и 1 600 токенов. Это оценки модели, сообщённые авторами; длина контекста не равна полной стоимости построения индекса, составления планов и всех обращений к моделям.",
+                "В более контролируемом сравнении фиксируются хранилище памяти, читатель и бюджет входа. На LoCoMo гибридный поиск даёт 87,8% точности против 93,5% KITE; на LongMemEval-S — 78,0% против 86,0%. Полнота свидетельств тоже растёт, но её единицы различаются: размеченные реплики в первом наборе и сессии во втором. Эти показатели нельзя напрямую сопоставлять. Другая таблица систем частично заимствует опубликованные сводные результаты, а не повторно запускает все базовые методы вместе; небольшие отрывы не доказывают универсального преимущества."
+              ]
+            },
+            {
+              "heading": "Воспроизводимо исполнение, а не весь процесс",
+              "paragraphs": [
+                "Проверяемый план помогает объяснить выбор записи, но не исправляет автоматически ошибку первоначального извлечения или условия запроса. Исполнение воспроизводимо при фиксированных индексе, плане и ранжировании; сам план порождается моделью в нескольких вариантах, поэтому весь процесс не детерминирован. Неявные предпочтения особенно сложны: на 30 вопросах этого типа в LongMemEval-S точность равна 63,3%. Явные фильтры не заменяют понимания косвенно выраженных пожеланий.",
+                "Первая версия подана 30 октября. Общее слово «conference» в комментарии не называет площадку и не подтверждает принятие, поэтому материал учтён как препринт. Результаты поддерживают пользу структурированной памяти, ограниченных планов и прослеживаемых свидетельств на двух тестах. Долговременная надёжность реального продукта, полная задержка и денежная экономия не установлены; для внедрения остаются важны качество извлечения, ведение словаря и обработка неправильных планов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Извлечь датированные записи с источниками",
+              "Составить план по общим темам и полям",
+              "Проверить план и выполнить правила поиска",
+              "Ответить по свидетельствам и проверить границы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "長期對話記憶不只是尋找最相似的一段話。使用者可能問某次搬家之前的計劃，或者比較幾個月裡發生的變化；時間、人物與事件必須同時對上。KITE 把這類檢索視為一個需要明確條件和執行規則的決策過程，讓模型先寫出可檢查的計劃，再由固定檢索程式尋找帶出處的證據。",
+          "sections": [
+            {
+              "heading": "先整理記憶，再編譯問題",
+              "paragraphs": [
+                "系統先把每次有日期的會話拆成能夠獨立理解的記憶，保留支援它的原始話語，並抽取主題、人物、物件、地點和事件。相對時間根據會話日期解釋，缺少有效出處的記憶會被丟棄。主題表不是每出現一個新詞就擴張：新主題至少在跨兩個月的三次會話出現才正式納入，反覆確認冗餘的同級主題也會合並。這讓記憶寫入和後續查詢儘量使用同一套分類。",
+                "回答問題時，語言模型把問題編譯成帶型別的查詢計劃，指定時間、條件、所需粒度和可用操作；多步計劃可引用前一步找到的物件。執行器驗證計劃後，以固定的索引、放寬條件規則和排序規則檢索，並攜帶原始引文組裝上下文。它不依賴向量相似度檢索，但仍用語言模型抽取記憶、編譯計劃和生成答案。結構化查詢沒有匹配項時，還可能使用詞面檢索回退，因此“沒有結構化匹配”不等於最終拒答。"
+              ]
+            },
+            {
+              "heading": "回答分數與證據覆蓋分別看",
+              "paragraphs": [
+                "作者在 LoCoMo 的十組多輪對話、1,540 個問題，以及 LongMemEval-S 的 500 個問題上測試。以 gpt-4.1-mini 同時作為回答模型和評判模型，報告答案準確率為 93.5% 和 86.0%，平均交給回答模型的上下文約為 1,500 和 1,600 token。這些是作者的模型評判結果；上下文長度只覆蓋閱讀階段，不能當作索引、計劃生成及所有模型呼叫的總成本。",
+                "更有解釋力的一組對照固定了記憶庫、回答模型和輸入預算。LoCoMo 上，混合檢索的準確率為 87.8%，KITE 為 93.5%；LongMemEval-S 上為 78.0% 對 86.0%。證據召回也提高，但兩個資料集的分母不同：前者以標註話語輪次計，後者以會話計，不能橫向比較高低。論文另一張跨系統表部分引用已有彙總結果，並非所有基線都重新統一執行，不能把很小的差距說成已證實的普遍優勢。"
+              ]
+            },
+            {
+              "heading": "可復現的是執行，不是整個系統",
+              "paragraphs": [
+                "可檢查的計劃有助於追溯為何取到某條記憶，卻不能自動修復錯誤的初始抽取或錯誤條件。固定索引、計劃與排序策略後，執行可以復現；計劃本身由模型產生，系統也會嘗試多個候選，因此整條流程並非完全確定。需要隱含推斷的偏好尤其困難：LongMemEval-S 的 30 道使用者偏好題上準確率為 63.3%，表明清晰條件查詢仍難替代對間接表達的理解。",
+                "論文於 10 月 30 日首次提交，備註只有籠統的“conference”字樣，沒有可核驗會議名稱或錄用證據，本條按預印本收錄。研究支援的結論是，結構化記憶、受約束的計劃和可追溯證據在這兩套測試中有用；它尚未證明真實長期產品中的穩定性，也未提供端到端時延或總費用優勢。是否適合部署，還要考慮記憶抽取質量、主題管理和錯誤計劃的處理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "從會話抽取帶出處與日期的記憶",
+              "以共享主題和欄位編譯查詢計劃",
+              "驗證計劃並執行固定檢索規則",
+              "結合證據回答並檢查失敗邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "pix2evidence-multimodal-rag",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41335v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41335v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "网页里的答案可能在段落中，也可能藏在表格布局、图片或图注里。只检索文字容易丢失视觉信息，只看截图又会增加阅读难度。Pix2Evidence 尝试把同一页的两种表达共同用于找证据和回答，而不是等文字检索失败后才临时寻找图片。",
+          "sections": [
+            {
+              "heading": "把同一份证据做成图文联合表示",
+              "paragraphs": [
+                "研究复用 PixelRAG 的维基百科截图语料，约 710 万页、2,820 万个图像切片。Qwen3-VL-4B-Instruct 预先逐片转写可见文字，不看当前问题，结果缓存后反复使用；约 85% 的切片有非空文字，其余保留图像。图像与转写共同进入 Qwen3-VL-Embedding-2B，形成单个联合检索向量。这不是分别找文字和图片再简单合并两个列表的主方案。",
+                "训练时，较大的 Qwen3-VL-32B-Instruct 读取问题、正例切片和参考答案，描述切片中支持答案的可见证据；这个教师信号只用于训练，不把测试答案写进文档。模型一方面学习拉近问题与正确切片，另一方面用证据描述约束候选的相对排序。回答阶段让阅读模型同时接收截图和转写。默认取五个候选、向阅读器提供三个，也可加一个未经本任务微调的 Qwen3-VL-Reranker-2B 重排。"
+              ]
+            },
+            {
+              "heading": "哪些对照真正说明两种模态互补",
+              "paragraphs": [
+                "评测包括 NQ、NQTables、SimpleQA 各 1,000 题，MMSearch 的全部 300 题，以及 EVQA 中 749 道自动筛出的地标题。MMSearch 内有 171 道图像查询和 129 道纯文字查询；EVQA 这部分不代表完整数据集。主阅读器是 Qwen3-VL-4B，答案由 GPT-4.1 判定。论文的 NQ 系列表注与附录对精确匹配和模型评判的说明不一致，因此这里不使用那部分分数作结论。",
+                "控制较清楚的 SimpleQA 模态消融中，使用相同图文阅读器时，联合图文检索的正确率为 73.4%，纯文字检索为 66.2%。保持联合检索不变，图文阅读为 73.4%，只读文字为 71.9%，只读图像为 67.9%。这些作者实验支持图文在检索和阅读两个环节互补，但不能推出任意模型都会获得同样幅度。MMSearch 上无重排为 26.0%，加重排反而降至 23.0%，也说明多加一个模型不保证更好。"
+              ]
+            },
+            {
+              "heading": "证据来自正确文章，还不等于答对",
+              "paragraphs": [
+                "另一个容易混淆的指标是文章召回：论文检查被选切片是否来自标准来源文章，并没有因此确认该切片实际包含答案。MMSearch 没有标准文章标注，也就没有这一召回分数。跨系统比较还受到阅读器差异影响：附录说明 PixelRAG 原表使用 Qwen3.5-4B，而本文主设置使用 Qwen3-VL-4B，因此不能把两者答案差距全部归功于联合检索方法。",
+                "论文 10 月 30 日首次提交，未给出会议录用证据。实验主要是英文维基百科及有限的模型组合，图文联合索引、转写与可选重排会带来存储和计算负担；作者没有报告峰值内存或端到端时延，不能宣称已经降低总成本。这项工作的价值在于把视觉和文字作为同一份证据处理，并以消融展示互补性；真实多语言网页、复杂版式和不同领域仍需要进一步验证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "独立转写页面切片的可见文字",
+              "将图像与文字编码成联合检索向量",
+              "用可见证据描述辅助训练排序",
+              "检索后让阅读器共同查看图文"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A web answer may sit in a paragraph, a table layout, an image or its caption. Text-only retrieval can lose visual information, while screenshots alone make reading harder. Pix2Evidence uses both representations of a page when finding and reading evidence, rather than searching for images only after text retrieval fails.",
+          "sections": [
+            {
+              "heading": "Build one representation from two views of evidence",
+              "paragraphs": [
+                "The study reuses PixelRAG’s Wikipedia screenshot corpus: about 7.1 million pages and 28.2 million image tiles. Qwen3-VL-4B-Instruct transcribes visible text independently of the current question, and the cached result can be reused. Roughly 85% of tiles have nonempty text; the rest retain their image input. The image and transcription enter Qwen3-VL-Embedding-2B together to produce one fused retrieval vector. The main method is not two separate text and image searches merged afterward.",
+                "During training, Qwen3-VL-32B-Instruct sees a question, positive tile and reference answer and describes the visible evidence supporting that answer. This teacher signal belongs to training; test answers are not inserted into document fields. Training both attracts questions to positive tiles and uses evidence descriptions to align relative candidate rankings. At answering time, the reader sees images and transcriptions together. The default retrieves five candidates and supplies three to the reader, optionally reranking with Qwen3-VL-Reranker-2B without task-specific fine-tuning."
+              ]
+            },
+            {
+              "heading": "Which comparisons establish complementarity",
+              "paragraphs": [
+                "Evaluation includes 1,000 questions each from NQ, NQTables and SimpleQA; all 300 MMSearch questions; and 749 automatically selected landmark questions from EVQA. MMSearch contains 171 image queries and 129 text-only queries; the EVQA subset is not its complete dataset. The main reader is Qwen3-VL-4B, with GPT-4.1 judging answers. The NQ-family table caption and appendix disagree about exact match versus model judging, so those scores are not used here to support a conclusion.",
+                "The cleaner SimpleQA modality ablation uses the same image-and-text reader: fused retrieval reaches 73.4% correctness versus 66.2% for text-only retrieval. Holding fused retrieval fixed, joint reading scores 73.4%, text-only reading 71.9%, and image-only reading 67.9%. These author-run experiments support complementarity at both stages, not a guaranteed gain for every model. On MMSearch, the no-reranking result is 26.0%, whereas adding reranking lowers it to 23.0%; another model in the pipeline does not necessarily improve performance."
+              ]
+            },
+            {
+              "heading": "Finding the right article is not finding the answer",
+              "paragraphs": [
+                "Article recall also needs careful interpretation. It checks whether a selected tile comes from the gold source article, not whether that specific tile contains the answer. MMSearch lacks gold-article labels and consequently has no such recall score. Cross-system answer comparisons are further affected by reader differences: the appendix says the original PixelRAG table uses Qwen3.5-4B, while this paper’s main setup uses Qwen3-VL-4B. Their entire answer-score gap cannot be attributed to fused retrieval.",
+                "The first submission is October 30, with no acceptance evidence provided. Experiments mainly cover English Wikipedia and a limited set of model combinations. Transcription, fused indexing and optional reranking add storage and computation; peak memory and end-to-end latency are not reported, so total-cost savings are unproven. The useful result is a coherent way to treat text and visuals as the same evidence, with ablations showing complementarity. Multilingual sites, difficult layouts and other domains still require validation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Transcribe visible text independently of the query",
+              "Encode image and text into one retrieval vector",
+              "Train ranking with descriptions of visible evidence",
+              "Retrieve and let the reader inspect both views"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ウェブ上の答えは段落だけでなく、表の配置、画像、図の説明に含まれることもある。文字だけでは視覚情報が失われ、画像だけでは読み取りが難しくなる。Pix2Evidence は検索と回答の両方で同じページの図文を組み合わせる。",
+          "sections": [
+            {
+              "heading": "同じ証拠の二つの表現を一つにする",
+              "paragraphs": [
+                "PixelRAG の Wikipedia スクリーンショット群、約 710 万ページ、2,820 万画像タイルを再利用する。Qwen3-VL-4B-Instruct が質問を見ずに各タイルの文字を転写し、結果を保存して再利用する。約 85% には空でない文字があり、残りは画像を維持する。画像と転写を Qwen3-VL-Embedding-2B に同時入力し、一つの検索ベクトルにする。主方式は文字検索と画像検索を別々に行って最後に混ぜる方式ではない。",
+                "学習時には Qwen3-VL-32B-Instruct が質問、正例タイル、参照回答を読み、回答を支える見える証拠を記述する。この信号は学習専用で、テストの答えを文書に埋め込むわけではない。質問と正例を近づける学習に加え、証拠記述で候補の相対順位も合わせる。回答時は画像と転写を読み手に渡す。標準設定は五候補を取得して三件を読む方式で、対象課題に追加学習していない Qwen3-VL-Reranker-2B による再順位付けも選べる。"
+              ]
+            },
+            {
+              "heading": "図文の補完性を確かめる比較",
+              "paragraphs": [
+                "NQ、NQTables、SimpleQA は各 1,000 問、MMSearch は全 300 問、EVQA は自動抽出したランドマークの 749 問を評価した。MMSearch の内訳は画像付き質問 171 問、文字のみ 129 問で、EVQA は全体ではない。主な読み手は Qwen3-VL-4B、回答判定は GPT-4.1 である。NQ 系列について表の説明と付録で完全一致かモデル判定かが一致しないため、その数値を本記事の結論には使わない。",
+                "より条件の明確な SimpleQA の比較では、同じ図文読み手に対し、図文検索の正答率は 73.4%、文字のみの検索は 66.2% だった。図文検索を固定すると、図文を読む場合 73.4%、文字のみ 71.9%、画像のみ 67.9%。著者の実験は検索と読解の両方で補完性を示すが、どのモデルでも同じ差が出るとはいえない。MMSearch は再順位付けなしで 26.0%、追加すると 23.0% に下がり、構成を増やせば必ず改善するわけでもない。"
+              ]
+            },
+            {
+              "heading": "正しい記事と、答えを含む断片は違う",
+              "paragraphs": [
+                "記事再現率は、選んだタイルが正解の出典記事に属するかを調べる指標で、そのタイルに答えがあるかまでは保証しない。MMSearch には正解記事の注釈がないため、この値もない。また付録によれば PixelRAG の元の表は読み手に Qwen3.5-4B を使い、本研究の主設定は Qwen3-VL-4B である。システム間の回答の差をすべて共同検索の効果とみなすことはできない。",
+                "初回投稿は 10 月 30 日で、会議採択の証拠は示されていない。主な対象は英語 Wikipedia と限られたモデルの組み合わせである。転写、図文索引、再順位付けには保存容量と計算が必要だが、最大メモリや全体遅延は報告されず、総費用の削減は証明されていない。図文を同じ証拠として扱い、比較で補完性を示した点が意義であり、多言語サイト、難しいレイアウト、他分野での有効性は追加検証が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "質問と独立に画像内の文字を転写",
+              "図文を一つの検索ベクトルに変換",
+              "見える証拠の記述で順位学習を補助",
+              "取得後に図文を合わせて読む"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Ответ на веб-странице может находиться в абзаце, структуре таблицы, изображении или подписи. Текстовый поиск теряет часть визуальных свидетельств, а одни снимки сложнее читать. Pix2Evidence совместно использует оба представления страницы при поиске и ответе.",
+          "sections": [
+            {
+              "heading": "Одно представление для двух видов свидетельств",
+              "paragraphs": [
+                "Работа использует корпус снимков Wikipedia из PixelRAG: около 7,1 млн страниц и 28,2 млн фрагментов изображений. Qwen3-VL-4B-Instruct заранее распознаёт видимый текст независимо от вопроса; результат кэшируется. Примерно 85% фрагментов дают непустой текст, остальные сохраняют изображение. Оба входа поступают в Qwen3-VL-Embedding-2B и образуют единый поисковый вектор. Основной метод не сводится к двум независимым поискам по тексту и картинкам с последующим объединением.",
+                "При обучении Qwen3-VL-32B-Instruct получает вопрос, положительный фрагмент и эталонный ответ, чтобы описать видимые подтверждения ответа. Этот учительский сигнал используется только при обучении: ответы теста не дописываются в документы. Наряду со сближением вопроса и правильного фрагмента описания свидетельств помогают согласовать относительное ранжирование кандидатов. Читатель получает изображение вместе с транскрипцией. Основная настройка извлекает пять кандидатов и передаёт три; дополнительно доступен Qwen3-VL-Reranker-2B без дообучения под задачу."
+              ]
+            },
+            {
+              "heading": "Какие сравнения подтверждают взаимодополняемость",
+              "paragraphs": [
+                "Оценка включает по 1 000 вопросов NQ, NQTables и SimpleQA, все 300 вопросов MMSearch и 749 автоматически отобранных вопросов EVQA о достопримечательностях. В MMSearch 171 запрос с изображением и 129 текстовых; подмножество EVQA не представляет весь набор. Основной читатель — Qwen3-VL-4B, ответы оценивает GPT-4.1. Подпись таблицы и приложение расходятся в том, используется ли для семейства NQ точное совпадение или оценка моделью, поэтому эти числа здесь не служат основанием вывода.",
+                "В более чистом сравнении модальностей SimpleQA читатель с изображением и текстом одинаков: совместный поиск даёт 73,4% правильных ответов против 66,2% текстового. При неизменном совместном поиске чтение обеих модальностей даёт 73,4%, только текста — 71,9%, только изображения — 67,9%. Эксперименты авторов подтверждают взаимодополняемость на обоих этапах, но не гарантируют такой же выигрыш для любой модели. На MMSearch результат без повторного ранжирования равен 26,0%, а с ним падает до 23,0%: дополнительная модель не обязательно полезна."
+              ]
+            },
+            {
+              "heading": "Правильная статья ещё не означает найденный ответ",
+              "paragraphs": [
+                "Полнота по статьям проверяет, происходит ли выбранный фрагмент из эталонной статьи, но не доказывает наличие ответа именно в нём. У MMSearch нет разметки эталонных статей, поэтому этот показатель отсутствует. Сравнения разных систем дополнительно ограничены читателем: по приложению исходная таблица PixelRAG использует Qwen3.5-4B, тогда как здесь основная модель — Qwen3-VL-4B. Весь разрыв качества ответов нельзя приписать совместному поиску.",
+                "Первая версия опубликована 30 октября; доказательств принятия на конференцию нет. Проверены преимущественно английская Wikipedia и ограниченный набор моделей. Распознавание текста, совместный индекс и дополнительное ранжирование требуют памяти и вычислений, но пиковая память и полная задержка не измерены, поэтому экономия общей стоимости не установлена. Ценность работы — согласованное использование изображения и текста как одного свидетельства и абляции их взаимодополняемости. Многоязычные сайты, сложная вёрстка и другие области требуют отдельной проверки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Независимо распознать видимый текст фрагмента",
+              "Объединить изображение и текст в поисковом векторе",
+              "Обучить ранжирование по описаниям свидетельств",
+              "Найти фрагменты и прочитать обе модальности"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "網頁裡的答案可能在段落中，也可能藏在表格佈局、圖片或圖注裡。只檢索文字容易丟失視覺資訊，只看截圖又會增加閱讀難度。Pix2Evidence 嘗試把同一頁的兩種表達共同用於找證據和回答，而不是等文字檢索失敗後才臨時尋找圖片。",
+          "sections": [
+            {
+              "heading": "把同一份證據做成圖文聯合表示",
+              "paragraphs": [
+                "研究複用 PixelRAG 的維基百科截圖語料，約 710 萬頁、2,820 萬個影象切片。Qwen3-VL-4B-Instruct 預先逐片轉寫可見文字，不看當前問題，結果快取後反覆使用；約 85% 的切片有非空文字，其餘保留影象。影象與轉寫共同進入 Qwen3-VL-Embedding-2B，形成單個聯合檢索向量。這不是分別找文字和圖片再簡單合併兩個列表的主方案。",
+                "訓練時，較大的 Qwen3-VL-32B-Instruct 讀取問題、正例切片和參考答案，描述切片中支援答案的可見證據；這個教師訊號只用於訓練，不把測試答案寫進文件。模型一方面學習拉近問題與正確切片，另一方面用證據描述約束候選的相對排序。回答階段讓閱讀模型同時接收截圖和轉寫。預設取五個候選、向閱讀器提供三個，也可加一個未經本任務微調的 Qwen3-VL-Reranker-2B 重排。"
+              ]
+            },
+            {
+              "heading": "哪些對照真正說明兩種模態互補",
+              "paragraphs": [
+                "評測包括 NQ、NQTables、SimpleQA 各 1,000 題，MMSearch 的全部 300 題，以及 EVQA 中 749 道自動篩出的地標題。MMSearch 內有 171 道影象查詢和 129 道純文字查詢；EVQA 這部分不代表完整資料集。主閱讀器是 Qwen3-VL-4B，答案由 GPT-4.1 判定。論文的 NQ 系列表注與附錄對精確匹配和模型評判的說明不一致，因此這裡不使用那部分分數作結論。",
+                "控制較清楚的 SimpleQA 模態消融中，使用相同圖文閱讀器時，聯合圖文檢索的正確率為 73.4%，純文字檢索為 66.2%。保持聯合檢索不變，圖文閱讀為 73.4%，只讀文字為 71.9%，只讀影象為 67.9%。這些作者實驗支援圖文在檢索和閱讀兩個環節互補，但不能推出任意模型都會獲得同樣幅度。MMSearch 上無重排為 26.0%，加重排反而降至 23.0%，也說明多加一個模型不保證更好。"
+              ]
+            },
+            {
+              "heading": "證據來自正確文章，還不等於答對",
+              "paragraphs": [
+                "另一個容易混淆的指標是文章召回：論文檢查被選切片是否來自標準來源文章，並沒有因此確認該切片實際包含答案。MMSearch 沒有標準文章標註，也就沒有這一召回分數。跨系統比較還受到閱讀器差異影響：附錄說明 PixelRAG 原表使用 Qwen3.5-4B，而本文主設定使用 Qwen3-VL-4B，因此不能把兩者答案差距全部歸功於聯合檢索方法。",
+                "論文 10 月 30 日首次提交，未給出會議錄用證據。實驗主要是英文維基百科及有限的模型組合，圖文聯合索引、轉寫與可選重排會帶來儲存和計算負擔；作者沒有報告峰值記憶體或端到端時延，不能宣稱已經降低總成本。這項工作的價值在於把視覺和文字作為同一份證據處理，並以消融展示互補性；真實多語言網頁、複雜版式和不同領域仍需要進一步驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "獨立轉寫頁面切片的可見文字",
+              "將影象與文字編碼成聯合檢索向量",
+              "用可見證據描述輔助訓練排序",
+              "檢索後讓閱讀器共同檢視圖文"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "peel-retrieval-embedding-taxonomy",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41785v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41785v1"
+        },
+        {
+          "label": "ACL Anthology · official EMNLP 2026 main-conference record",
+          "url": "https://aclanthology.org/2026.emnlp-main.1305/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "检索向量通常用来比较两个词或文档有多接近，知识本体却还需要知道谁属于谁。PEEL 研究一个较窄而具体的问题：已经有概念名称和一份源领域分类关系时，能否借助现成的检索向量恢复 is-a 父子层级，并转移到另一个领域？它提取的是分类结构，不是自动构建完整业务本体。",
+          "sections": [
+            {
+              "heading": "前部维度里是否藏着层级线索",
+              "paragraphs": [
+                "Matryoshka 表征学习让向量的前若干维也能单独用于检索。作者先在 Nomic、Jina 与 Qwen 三种不同架构模型上比较不同长度的前部维度，并用随机打乱维度和从末尾取维度作对照，观察邻近概念是否属于相同粗细层级。结果支持前部维度存在有用的粒度线索，但有这种统计规律，不等于向量已经直接给出可用的父子关系。",
+                "正式方法冻结 Nomic 的 768 维向量，只训练一个约 9.8 万参数的线性映射及非负激活，把概念投到 128 维。训练使用源领域标准父子边，用坐标上的包含关系表达层级，并随机选择不同长度的前部维度。随后按关系违约程度给概念对评分，先解码出含全部概念的有向树，再在保持无环的前提下补边。它使用监督关系学习，输入也是标准概念表，并非无监督发现新概念。"
+              ]
+            },
+            {
+              "heading": "小探针如何变成分类图",
+              "paragraphs": [
+                "实验使用 Wiki-ol 的 8,033 个概念、14,673 条标准边、三层深度，以及 ArXiv-ol 的 61 个类别、两层深度。Wiki 的训练、验证、测试按边分成 80%、10%、10%，而不是把概念或领域完全隔离。主结构指标针对完整的 8,033 概念图计算，不能解释成留出边的预测准确率。ArXiv 使用同一探针，不用目标领域边训练或选模型；较小图采用树结构解码，展示的是这种限定设置下的跨域迁移。",
+                "作者报告 Wiki 的 Graph F1 为 0.885、ArXiv 为 0.931，但严格按概念名称和父子连接匹配的 Literal F1 只有 0.111 和 0.298；连续匹配指标则为 0.551 和 0.604。几种分数回答不同问题：图形结构能接近标准答案，不表示 Wiki 中 88.5% 的父子边正确。论文把从文档同时发现概念与结构的 OLLM 作为跨任务参考，输入条件更难，不能将这一对照写成完全公平的同任务胜负。"
+              ]
+            },
+            {
+              "heading": "图结构接近，不代表每条边正确",
+              "paragraphs": [
+                "模型仍依赖源领域标注和事先给定的概念名称，无法据此宣称已经自动读文档并生成可靠本体。改变所用维度长度得到的图也未必逐层嵌套，因此不是保证一致的粗到细分类。验证仅涉及两个领域，目标层级比源领域浅，没有展示法律、生物等专门知识下的表现，也没有测量把生成图用于问答或检索是否真的提升结果。",
+                "ACL Anthology 的正式记录确认论文收录于 EMNLP 2026 主会，不只是作者备注。会议记录仅给出 2026 年 10 月，未标具体日；本条发布日期采用可核验的 arXiv v1 10 月 30 日，不推定会议录也在当天发布。研究最有价值的启示是，已有检索表征可以给分类结构恢复提供起点，但结构评估、精确关系核验和下游用途仍须分开检验，不能用一个高分替代人工治理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "检查向量前部维度的层级线索",
+              "用源领域父子边训练小型探针",
+              "在已知概念表上解码无环分类图",
+              "分别核验整体结构与精确父子边"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Retrieval vectors usually express how close two terms or documents are, while an ontology also needs to specify what is a subtype of what. PEEL asks a narrower question: given concept names and labeled relations in a source domain, can existing retrieval embeddings recover an is-a hierarchy and transfer it elsewhere? It extracts taxonomic structure, not a complete business ontology.",
+          "sections": [
+            {
+              "heading": "Do leading dimensions contain hierarchical clues?",
+              "paragraphs": [
+                "Matryoshka Representation Learning makes leading slices of an embedding usable for retrieval on their own. The authors compare different prefix lengths in Nomic, Jina and Qwen models with distinct architectures, using shuffled dimensions and suffix dimensions as controls. Neighborhoods show useful coarse-to-fine signals in the early dimensions. That statistical regularity does not mean the vectors already provide explicit, reliable parent–child relations.",
+                "The main method freezes 768-dimensional Nomic embeddings and trains only a roughly 98,000-parameter linear map with a nonnegative activation into 128 dimensions. Gold source-domain parent–child edges supervise a coordinate-containment objective; training also samples different prefix lengths. Pairwise constraint violations then score possible relations. Decoding first builds a directed spanning tree and adds edges while preserving acyclicity. This is supervised relation learning with a supplied gold concept vocabulary, not unsupervised discovery of new concepts."
+              ]
+            },
+            {
+              "heading": "Turn a small probe into a taxonomy graph",
+              "paragraphs": [
+                "The datasets are Wiki-ol, with 8,033 concepts, 14,673 gold edges and depth three, and ArXiv-ol, with 61 categories and depth two. Wiki uses an 80/10/10 split of edges, not fully isolated concepts or domains. Main structural scores are computed on the complete 8,033-concept graph and must not be read as held-out-edge prediction accuracy. ArXiv reuses the probe without target-domain edges for training or model selection; its compact graph is decoded as a tree. Transfer is demonstrated within that limited setup.",
+                "The reported Graph F1 is 0.885 on Wiki and 0.931 on ArXiv, but Literal F1, requiring exact concept-name and parent–child connection matches, is only 0.111 and 0.298. Continuous matching scores are 0.551 and 0.604. These measures ask different questions: a graph can resemble the target structurally without 88.5% of Wiki parent–child edges being correct. OLLM jointly discovers concepts and structure from documents and appears as a cross-task reference; its harder input conditions prevent treating that comparison as an entirely matched contest."
+              ]
+            },
+            {
+              "heading": "Structural similarity is not exact-edge correctness",
+              "paragraphs": [
+                "The method still relies on source annotations and a pre-existing concept vocabulary, so it has not demonstrated automatically reading documents to produce a dependable ontology. Graphs decoded at different prefix lengths are not guaranteed to be nested refinements. Only two domains are evaluated, with a shallower target hierarchy; specialized legal or biological knowledge is not established. Nor does the study test whether the resulting graph improves downstream question answering or retrieval.",
+                "The official ACL Anthology record confirms inclusion in the EMNLP 2026 main conference, beyond an author comment. That record gives October 2026 without a day; this entry uses the verifiable October 30 arXiv v1 date and does not imply that the proceedings appeared that day. Existing retrieval representations can provide a starting point for recovering taxonomies, but structural evaluation, exact relation checking and downstream utility remain separate obligations. A high structural score cannot replace governance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Inspect hierarchical clues in leading embedding dimensions",
+              "Train a small probe on source parent–child edges",
+              "Decode an acyclic taxonomy over supplied concepts",
+              "Check graph structure and exact relations separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "検索ベクトルは語や文書の近さを表すが、オントロジーには「何が何の下位概念か」も必要になる。PEEL は、概念名と元領域の分類関係が与えられたとき、既存の検索表現から is-a 階層を取り出し、別の領域へ移せるかを調べる。対象は分類構造であり、業務オントロジー全体の自動構築ではない。",
+          "sections": [
+            {
+              "heading": "ベクトルの前部に階層の手掛かりはあるか",
+              "paragraphs": [
+                "Matryoshka 表現学習では、ベクトルの先頭の一部だけでも検索に使える。著者は構造の異なる Nomic、Jina、Qwen で、使う前部の長さと近傍概念の粗細を比較し、次元のランダム並べ替えや末尾の次元を対照にした。前部の次元に階層粒度の手掛かりがあることを支持するが、その統計的傾向だけで正しい親子関係が明示されているとはいえない。",
+                "主要手法は Nomic の 768 次元表現を固定し、非負の活性化を伴う約 9.8 万パラメータの線形写像だけを学習して 128 次元にする。元領域の正解親子辺を使い、座標上の包含関係が階層を表すよう学習する。前部の長さも学習中に変える。関係制約の違反度を概念対の点数とし、まず全概念を含む有向木を作り、閉路を作らない範囲で辺を加える。既知の正解概念表を使う教師あり学習であり、新概念の教師なし発見ではない。"
+              ]
+            },
+            {
+              "heading": "小さなプローブから分類グラフを作る",
+              "paragraphs": [
+                "Wiki-ol は 8,033 概念、14,673 本の正解辺、深さ三、ArXiv-ol は 61 カテゴリ、深さ二である。Wiki は辺を 80%、10%、10% に分けて学習・検証・テストするので、概念や領域を完全に分離した評価ではない。主な構造指標は全 8,033 概念のグラフで計算され、未見の辺の予測正答率とは違う。ArXiv は同じプローブを使い、対象領域の辺で学習やモデル選択をしない。小規模なため木として復元しており、この設定内での転移を示す。",
+                "著者の Graph F1 は Wiki で 0.885、ArXiv で 0.931。一方、概念名と親子接続を厳密に照合する Literal F1 は 0.111 と 0.298、連続的照合の値は 0.551 と 0.604 である。これらは別の性質を測るため、Wiki の親子辺が 88.5% 正しいという意味ではない。文書から概念と構造を同時発見する OLLM は異なる課題の参考で、入力条件が難しい。完全に同条件の優劣として読めない。"
+              ]
+            },
+            {
+              "heading": "構造の類似と厳密な辺の正しさを分ける",
+              "paragraphs": [
+                "元領域の注釈と既存の概念名に依存しており、文書を自動で読んで信頼できるオントロジーを作ったとはいえない。また前部の長さを変えたグラフが必ず入れ子になるわけではなく、一貫した粗から細への分類も保証しない。検証は二領域で、移転先の階層は浅い。法律や生物などの専門分野、生成グラフを使った質問応答や検索の改善も検証していない。",
+                "ACL Anthology の正式記録が EMNLP 2026 本会議への収録を確認しており、著者の備考だけに依存しない。ただし会議録の日時は 2026 年 10 月までで日付がない。本項は確認可能な arXiv v1 の 10 月 30 日を採用し、会議録も同日に出たと推定しない。検索表現は分類復元の出発点になるが、構造の評価、個々の関係の確認、用途での有効性は別々に確かめる必要がある。高い構造指標は管理や検証の代わりにならない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "ベクトル前部の階層的手掛かりを確認",
+              "元領域の親子辺で小型プローブを学習",
+              "既知概念上に非巡回の分類図を復元",
+              "全体構造と厳密な親子辺を別々に検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Поисковые векторы обычно отражают близость слов или документов, но онтологии нужно также отношение «является разновидностью». PEEL ставит ограниченную задачу: можно ли восстановить такую иерархию из готовых поисковых представлений, имея названия понятий и размеченные отношения исходной области, а затем перенести её? Речь о таксономии, а не о полной бизнес-онтологии.",
+          "sections": [
+            {
+              "heading": "Есть ли иерархические признаки в первых координатах?",
+              "paragraphs": [
+                "Matryoshka Representation Learning позволяет использовать для поиска только начальную часть вектора. Авторы сравнивают разные длины этих частей у архитектурно различных Nomic, Jina и Qwen, контролируя результат случайной перестановкой координат и выбором координат с конца. Окружения понятий показывают полезные признаки перехода от общего к частному в ранних измерениях. Такая закономерность сама по себе не означает наличия явных достоверных связей родитель–потомок.",
+                "Основной метод замораживает 768-мерные представления Nomic и обучает лишь линейное отображение примерно с 98 тысячами параметров и неотрицательной активацией в 128 измерений. Эталонные связи исходной области задают обучение включению по координатам; длина начальной части также меняется при обучении. Нарушения ограничений дают оценку парам понятий. Сначала декодируется ориентированное остовное дерево, затем добавляются рёбра без образования циклов. Это обучение с учителем и заданным эталонным словарём, а не самостоятельное открытие новых понятий."
+              ]
+            },
+            {
+              "heading": "Как маленький зонд превращается в граф",
+              "paragraphs": [
+                "Wiki-ol содержит 8 033 понятия, 14 673 эталонных ребра и глубину три; ArXiv-ol — 61 категорию и глубину два. Wiki делится в пропорции 80/10/10 по рёбрам, а не по полностью раздельным понятиям или областям. Основные структурные показатели относятся ко всему графу из 8 033 понятий и не являются точностью предсказания отложенных рёбер. Для ArXiv используется тот же зонд без обучения или выбора модели по рёбрам целевой области. Компактный граф восстанавливается как дерево; перенос показан именно в этих ограниченных условиях.",
+                "Авторы сообщают Graph F1 0,885 для Wiki и 0,931 для ArXiv, но Literal F1 со строгим совпадением названий и связей составляет лишь 0,111 и 0,298. Показатели непрерывного сопоставления — 0,551 и 0,604. Метрики отвечают на разные вопросы: сходство структуры не означает, что 88,5% родительских связей Wiki правильны. OLLM одновременно обнаруживает понятия и структуру из документов и приведён как ориентир для другой задачи; более сложные входные условия не позволяют считать сравнение полностью равным."
+              ]
+            },
+            {
+              "heading": "Сходная структура не означает правильность каждого ребра",
+              "paragraphs": [
+                "Сохраняется зависимость от разметки исходной области и заранее известных названий понятий. Автоматическое чтение документов с построением надёжной онтологии здесь не доказано. Графы при разных длинах начальной части вектора не обязаны быть вложенными уточнениями. Проверены лишь две области, причём целевая иерархия мельче исходной; специальные юридические или биологические знания не исследованы. Нет и проверки того, улучшает ли полученный граф ответы на вопросы или поиск.",
+                "Официальная запись ACL Anthology подтверждает публикацию в основной программе EMNLP 2026, а не только заявление авторов. Она указывает октябрь 2026 года без дня; в этой записи сохранена проверяемая дата arXiv v1 — 30 октября, без предположения о дне выхода сборника. Готовые поисковые представления могут стать отправной точкой восстановления таксономий. Однако общая структура, точность отдельных отношений и практическая польза требуют разных проверок: высокий структурный показатель не заменяет управление качеством."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Проверить иерархические признаки ранних координат",
+              "Обучить небольшой зонд на исходных связях",
+              "Декодировать ациклический граф заданных понятий",
+              "Раздельно проверить структуру и точные отношения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "檢索向量通常用來比較兩個詞或文件有多接近，知識本體卻還需要知道誰屬於誰。PEEL 研究一個較窄而具體的問題：已經有概念名稱和一份源領域分類關係時，能否藉助現成的檢索向量恢復 is-a 父子層級，並轉移到另一個領域？它提取的是分類結構，不是自動構建完整業務本體。",
+          "sections": [
+            {
+              "heading": "前部維度裡是否藏著層級線索",
+              "paragraphs": [
+                "Matryoshka 表徵學習讓向量的前若干維也能單獨用於檢索。作者先在 Nomic、Jina 與 Qwen 三種不同架構模型上比較不同長度的前部維度，並用隨機打亂維度和從末尾取維度作對照，觀察鄰近概念是否屬於相同粗細層級。結果支援前部維度存在有用的粒度線索，但有這種統計規律，不等於向量已經直接給出可用的父子關係。",
+                "正式方法凍結 Nomic 的 768 維向量，只訓練一個約 9.8 萬引數的線性對映及非負啟用，把概念投到 128 維。訓練使用源領域標準父子邊，用座標上的包含關係表達層級，並隨機選擇不同長度的前部維度。隨後按關係違約程度給概念對評分，先解碼出含全部概念的有向樹，再在保持無環的前提下補邊。它使用監督關係學習，輸入也是標準概念表，並非無監督發現新概念。"
+              ]
+            },
+            {
+              "heading": "小探針如何變成分類圖",
+              "paragraphs": [
+                "實驗使用 Wiki-ol 的 8,033 個概念、14,673 條標準邊、三層深度，以及 ArXiv-ol 的 61 個類別、兩層深度。Wiki 的訓練、驗證、測試按邊分成 80%、10%、10%，而不是把概念或領域完全隔離。主結構指標針對完整的 8,033 概念圖計算，不能解釋成留出邊的預測準確率。ArXiv 使用同一探針，不用目標領域邊訓練或選模型；較小圖採用樹結構解碼，展示的是這種限定設定下的跨域遷移。",
+                "作者報告 Wiki 的 Graph F1 為 0.885、ArXiv 為 0.931，但嚴格按概念名稱和父子連線匹配的 Literal F1 只有 0.111 和 0.298；連續匹配指標則為 0.551 和 0.604。幾種分數回答不同問題：圖形結構能接近標準答案，不表示 Wiki 中 88.5% 的父子邊正確。論文把從文件同時發現概念與結構的 OLLM 作為跨任務參考，輸入條件更難，不能將這一對照寫成完全公平的同任務勝負。"
+              ]
+            },
+            {
+              "heading": "圖結構接近，不代表每條邊正確",
+              "paragraphs": [
+                "模型仍依賴源領域標註和事先給定的概念名稱，無法據此宣稱已經自動讀文件並生成可靠本體。改變所用維度長度得到的圖也未必逐層巢狀，因此不是保證一致的粗到細分類。驗證僅涉及兩個領域，目標層級比源領域淺，沒有展示法律、生物等專門知識下的表現，也沒有測量把生成圖用於問答或檢索是否真的提升結果。",
+                "ACL Anthology 的正式記錄確認論文收錄於 EMNLP 2026 主會，不只是作者備註。會議記錄僅給出 2026 年 10 月，未標具體日；本條釋出日期採用可核驗的 arXiv v1 10 月 30 日，不推定會議錄也在當天釋出。研究最有價值的啟示是，已有檢索表徵可以給分類結構恢復提供起點，但結構評估、精確關係核驗和下游用途仍須分開檢驗，不能用一個高分替代人工治理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "檢查向量前部維度的層級線索",
+              "用源領域父子邊訓練小型探針",
+              "在已知概念表上解碼無環分類圖",
+              "分別核驗整體結構與精確父子邊"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "sealcall-confidential-agent-safety-auditing",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "SealCall — fixed v1 full paper, methods, evaluation and appendices",
+          "url": "https://arxiv.org/html/2610.41401v1"
+        },
+        {
+          "label": "arXiv — original submission and publication metadata",
+          "url": "https://arxiv.org/abs/2610.41401"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "给 Agent 增加一道安全检查，可能先把用户隐私交给了检查者。SealCall 研究的是这层容易忽视的数据暴露：外部服务需要判断一次工具调用是否越权，却未必应该看到任务、参数和完整历史。论文提出把明文处理、密文计算与执行放行分开，并用公开调用记录检验这种安排的效果与代价。",
+          "sections": [
+            {
+              "heading": "审计服务负责算分，用户侧保留决定权",
+              "paragraphs": [
+                "系统划分三个权限区域：Agent 提出待执行操作；可信控制器掌握用户任务、工具参数、历史及解密权限；外部审计服务只接收加密后的表示。控制器先保留任务和最终调用，挑选相关历史并标注信息来源，再把文本向量与工具、参数和来源特征组合成紧凑表示。单纯发送未加密的向量也可能泄露内容，因此这一表示仍要加密。",
+                "外部服务利用 CKKS 同态加密计算候选表示与不安全参考样本的相似度。同态加密允许对密文进行特定计算，而无需先解开内容。控制器拿回结果后解密、取最大相似度并比较阈值，最后确认实际调用和状态仍与受审对象一致。参数或状态改变就重新检查，过期、重放或不可用结果不能直接放行；服务方没有执行授权。"
+              ]
+            },
+            {
+              "heading": "隐私边界不能替代检测质量",
+              "paragraphs": [
+                "数据来自 ToolSafe 发布的 AgentHarm 和 AgentDojo 调用标注。清理后有1,525条候选，其中1,252条二分类样本用于训练评估，273条中间标签样本另放。作者按202个任务根分组，使用五折外层评估、内层选择和独立校准，并汇总五个种子的结果。公开数据在方法开发期间已经被查看过，因此这不是一个从未接触过的盲测集。",
+                "以不安全调用为正类，按校准 F1 选择阈值时，SealCall 平均 F1 为0.840，安全调用误拦率为11.2%。F1 综合考虑检出的风险是否准确与漏掉多少风险，不等于总体正确率。同样输入上的逻辑回归和 RBF-SVM 达到0.913和0.905，优于参考样本评分。另一个校准策略虽把校准集误拦预算设为10%，测试误拦仍为15.26%；预算不能保证未来表现。"
+              ]
+            },
+            {
+              "heading": "0.176 秒测的只是加密评分环节",
+              "paragraphs": [
+                "作者在 Intel Core Ultra 5 225H、32 GB 内存、单线程环境中，以256维表示和16个参考样本测得每次加密评分平均0.176秒。加上可信侧准备后平均0.663秒，仍不含网络和调度时间。实验在同一进程中分开保存公开与秘密上下文，没有验证真实进程隔离和多用户云端部署，因此不能把0.176秒写成完整请求延迟。",
+                "760条“模型与布局”数值记录中，加密与明文评分在两个固定阈值策略下给出相同决定。这些记录包含同一查询的不同布局，不是760个全新独立任务。它们说明测得的近似计算误差没有改变决定，不能证明原决定都正确。代表性比较中，逻辑回归也更准确、更快，只是 SealCall 打包后的响应更小；方案选择仍需权衡检测、计算与通信。"
+              ]
+            },
+            {
+              "heading": "授权含义变了，模型还可能没看出来",
+              "paragraphs": [
+                "最直接的失败来自80个构造的授权情境：每个情境包含安全与不安全两种情况，各有两种表达，共320例。在接收者关系、用途、来源权威或前提改变时，没有一个情境的四个决定全部正确。这是针对性诊断，不能说模型在全部任务上都失败，但它表明当前表示尚不能可靠追踪授权语义的变化。离线检测也没有验证被拦截后 Agent 能否继续完成任务。",
+                "隐私分析假设审计方会遵守计算协议、只是试图窥探输入，且可信控制器、密钥隔离和工具拦截可靠。它没有覆盖审计方故意返回假分数；请求时间、表示尺寸和后续工具行为也可能泄露信息。论文未给出可确认的会议录用证据，本站按预印本收录。本站认为，其价值在于把“谁能看数据、谁来算、谁能放行”明确分开，同时展示了加密保护与正确理解权限是两个都需要解决的问题。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释图，说明数据和权限如何分工；不是实验曲线，也不表示检测无误。",
+            "steps": [
+              "可信控制器整理任务、调用及带来源的历史",
+              "加密表示后交外部服务计算相似度",
+              "控制器解密评分并检查调用与状态",
+              "只放行匹配且获准的操作，变化后重新审计"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Adding a safety check to an agent can first disclose private information to the checker. SealCall examines that additional exposure: an external service needs to assess whether a proposed tool call is authorized, but should not necessarily see the task, arguments and full history. The paper separates plaintext preparation, encrypted computation and execution control, then measures the arrangement’s utility and costs on public call records.",
+          "sections": [
+            {
+              "heading": "The service scores; the trusted controller decides",
+              "paragraphs": [
+                "Three domains have different permissions. The agent proposes an operation; a trusted controller holds the task, arguments, history and decryption authority; the external auditor receives encrypted representations. The controller keeps the task and final call, selects relevant earlier context with source labels, and combines text embeddings with tool, argument and provenance features. Unencrypted embeddings can themselves disclose content, so this compact representation is encrypted too.",
+                "The auditor uses CKKS homomorphic encryption to calculate similarities to unsafe reference examples. Homomorphic encryption permits specified computations on ciphertext without first revealing its contents. The controller decrypts the results, takes the maximum similarity and applies a threshold. Before release it checks that the actual call and expected state still match what was audited. Changes require another audit; stale, replayed or unusable results do not authorize execution. The provider has no release authority."
+              ]
+            },
+            {
+              "heading": "Confidentiality is separate from detection quality",
+              "paragraphs": [
+                "The data use ToolSafe annotations of AgentHarm and AgentDojo trajectories. Cleaning leaves 1,525 candidates: 1,252 binary cases enter fitting and evaluation, while 273 intermediate-label cases remain separate. The authors split by 202 task roots, use five outer folds, inner selection and separate calibration, and average results over five seeds. They had inspected these public data during development, so the benchmark is not an untouched blind test.",
+                "With unsafe calls as positives and a threshold chosen to maximize calibration F1, SealCall obtains mean F1 of 0.840 and incorrectly blocks 11.2% of safe calls. F1 combines precision and recall rather than measuring overall accuracy. Logistic regression and RBF-SVM on the same inputs reach 0.913 and 0.905, outperforming reference scoring. Another policy targets a 10% false-positive budget on calibration data but reaches 15.26% on tests: a calibration budget is not a future guarantee."
+              ]
+            },
+            {
+              "heading": "0.176 seconds covers encrypted scoring, not the whole request",
+              "paragraphs": [
+                "On an Intel Core Ultra 5 225H with 32 GB RAM and one thread, a representative 256-dimensional configuration with 16 references averages 0.176 seconds per encrypted scoring operation. Trusted preparation plus scoring averages 0.663 seconds, still excluding network and scheduling. Public and secret contexts are separated within one process; actual process isolation and multi-user cloud operation are not tested. The shorter figure is therefore not end-to-end request latency.",
+                "Across 760 model–layout numerical records, encrypted and plaintext scoring produce the same decisions under both fixed threshold policies. These include different layouts of the same queries, not 760 entirely new independent tasks. They show that measured approximation errors did not change the decisions, not that the original decisions were correct. Logistic regression is also more accurate and faster in the representative comparison, while SealCall has a smaller packed response. Detection, computation and communication remain separate trade-offs."
+              ]
+            },
+            {
+              "heading": "Changed authorization remains a substantial weakness",
+              "paragraphs": [
+                "A targeted diagnostic creates 80 authorization worlds, each containing safe and unsafe cases in two renderings, for 320 cases. When recipient binding, purpose, source authority or prerequisites change, no world has all four decisions correct. This does not establish failure on every task; it does show that the current representation does not reliably track changes in authorization meaning. Offline detection also does not measure whether an agent completes its task after a blocked call.",
+                "The confidentiality analysis assumes an auditor that follows the protocol while trying to learn private inputs, plus a trustworthy controller, isolated keys and reliable tool mediation. It does not cover an auditor deliberately returning a false score. Timing, dimensions and subsequent tool behavior can still reveal information. No confirmed conference acceptance is provided, so we catalog the paper as a preprint. In our reading, its contribution is an explicit separation of who sees data, who computes and who releases actions, alongside evidence that encryption and authorization understanding need distinct solutions."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from the paper, showing the division of data access and authority. It is not an experimental plot or a guarantee of correct detection.",
+            "steps": [
+              "Trusted controller prepares task, call and source-linked history",
+              "External service computes similarities on encrypted representations",
+              "Controller decrypts and checks call and state",
+              "Release only matching approved actions; changes require re-auditing"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agent に安全確認を加えると、その確認者へ先に個人情報を渡してしまう場合がある。SealCall はこの追加的な露出を扱う。外部サービスはツール呼び出しが許可範囲内か判断したいが、タスク、引数、履歴をそのまま読める必要はないかもしれない。論文は平文の準備、暗号化計算、実行制御を分け、公開記録で効果と費用を検証した。",
+          "sections": [
+            {
+              "heading": "監査サービスは計算し、信頼する制御側が決める",
+              "paragraphs": [
+                "権限を三つの領域に分ける。Agent は操作を提案し、信頼するコントローラーがタスク、引数、履歴、復号権限を保持し、外部監査者は暗号化表現を受け取る。コントローラーはタスクと最終呼び出しを残し、関連する過去の情報に出所を付け、テキスト埋め込みとツール・引数・由来の特徴を組み合わせる。埋め込み自体から内容が漏れる可能性もあるため、この短い表現も暗号化する。",
+                "外部では CKKS 準同型暗号を使って危険な参考例との類似度を計算する。準同型暗号は内容を復号せず特定の計算を行う仕組みだ。コントローラーが結果を復号し、最大類似度をしきい値と比べ、実行前に呼び出しと想定状態が監査対象に一致するか確認する。変更なら再監査し、期限切れ、再送、利用不能の結果は実行を許可しない。監査側に実行の許可権限はない。"
+              ]
+            },
+            {
+              "heading": "秘密保持と検出精度は別の問題",
+              "paragraphs": [
+                "データは ToolSafe が公開した AgentHarm と AgentDojo の注釈に基づく。整理後の 1,525 件のうち、二値ラベルの 1,252 件を学習・評価に使い、中間ラベルの 273 件は分離した。202 個のタスク根を単位に分け、外側 5 分割、内側の選択、独立した校正を行い、5 シードの結果を平均する。ただし開発中に公開データを確認しており、未見の盲検データではない。",
+                "危険な呼び出しを陽性とし、校正 F1 を最大化した場合、平均 F1 は 0.840、安全な呼び出しの誤遮断率は 11.2% だった。F1 は適合率と再現率を組み合わせる指標で、全体の正解率ではない。同じ入力のロジスティック回帰は 0.913、RBF-SVM は 0.905 と上回った。別の校正方針は誤遮断の予算を 10% に置くが、テストでは 15.26% となり、将来の挙動を保証していない。"
+              ]
+            },
+            {
+              "heading": "0.176 秒は暗号化した採点部分だけ",
+              "paragraphs": [
+                "Intel Core Ultra 5 225H、メモリ 32 GB、1 スレッドで、256 次元・参考例 16 件の構成は暗号化採点に平均 0.176 秒を要した。信頼側の準備を加えると平均 0.663 秒で、なお通信とスケジューリングは含まない。公開・秘密の暗号コンテキストを同一プロセス内で分けた測定であり、実際のプロセス隔離や多数利用者のクラウド運用は検証していない。短い数値を要求全体の遅延とは呼べない。",
+                "760 件のモデル・配置の数値記録では、二つの固定しきい値方針とも暗号化前後の判断が一致した。同じ問い合わせの異なる配置を含むため、760 個の新しい独立タスクではない。測定された近似誤差が判断を変えなかったことを示すだけで、元の判断の正しさは保証しない。代表構成ではロジスティック回帰の方が高精度で速く、SealCall は圧縮した応答が小さい。精度、計算、通信を別々に比較する必要がある。"
+              ]
+            },
+            {
+              "heading": "許可の意味が変わると見落としが残る",
+              "paragraphs": [
+                "診断では 80 個の権限の状況を作り、それぞれ安全・危険の二例を二通りに表現し、合計 320 例とした。受取人との関係、目的、情報源の権威、前提を変えたところ、四つの判断がすべて正しい状況は一つもなかった。あらゆるタスクに失敗するという意味ではないが、現在の表現が権限の意味の変化を安定して捉えられないことを示す。遮断後に Agent がタスクを完了できるかも、オフライン検出では測れていない。",
+                "秘密保持の分析は、監査者が入力を知ろうとしても計算手順は守ること、信頼できる制御、鍵の隔離、確実なツール仲介を前提とする。監査者が意図的に偽のスコアを返す場合は対象外だ。時刻、次元数、後続のツール動作から情報が分かる可能性も残る。会議採択の確かな記載はなく、本站ではプレプリントとして扱う。価値は、誰がデータを見て、計算し、実行を許可するかを分ける一方、暗号化と権限理解をそれぞれ改善すべき課題として示した点にある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づく本站の説明用描き直し。データと権限の分担を示し、実験グラフや誤検出ゼロの保証ではない。",
+            "steps": [
+              "信頼する制御側でタスク・呼び出し・出所付き履歴を整理",
+              "暗号化表現で外部が類似度を計算",
+              "制御側で復号し呼び出しと状態を照合",
+              "一致し許可された操作だけ実行、変更時は再監査"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Дополнительная проверка агента может сначала раскрыть личную информацию самому проверяющему. SealCall изучает именно эту утечку: внешнему сервису нужно оценить допустимость вызова инструмента, но не обязательно видеть задачу, аргументы и всю историю. Авторы разделяют подготовку открытых данных, зашифрованные вычисления и контроль выполнения, измеряя полезность и стоимость подхода на публичных записях.",
+          "sections": [
+            {
+              "heading": "Сервис вычисляет оценку, доверенный контроллер решает",
+              "paragraphs": [
+                "Полномочия распределены между тремя областями. Агент предлагает действие; доверенный контроллер хранит задачу, аргументы, историю и право расшифровки; внешний аудитор получает зашифрованное представление. Контроллер сохраняет задачу и окончательный вызов, выбирает относящуюся к нему прошлую информацию с обозначением источника и объединяет текстовые векторы с признаками инструмента, аргументов и происхождения. Незашифрованные векторы тоже могут раскрывать содержание, поэтому компактное представление шифруют.",
+                "Аудитор использует гомоморфное шифрование CKKS для вычисления сходства с примерами опасных действий. Оно позволяет выполнять определённые операции над шифротекстом без предварительного раскрытия содержимого. Контроллер расшифровывает результат, берёт максимальное сходство, применяет порог и проверяет соответствие реального вызова и ожидаемого состояния проверенным. Изменения требуют нового аудита; устаревшие, повторные или непригодные результаты не разрешают действие. У сервиса нет полномочий на его запуск."
+              ]
+            },
+            {
+              "heading": "Конфиденциальность не заменяет качество обнаружения",
+              "paragraphs": [
+                "Используются аннотации ToolSafe к траекториям AgentHarm и AgentDojo. После очистки остаётся 1 525 кандидатов: 1 252 бинарных примера участвуют в обучении и оценке, а 273 с промежуточными метками рассматриваются отдельно. Разбиение выполняется по 202 корням задач, с пятью внешними блоками, внутренним выбором и отдельной калибровкой; результаты усредняются по пяти начальным состояниям генератора. Разработчики уже изучали публичные данные, поэтому это не нетронутый слепой тест.",
+                "Если опасные вызовы считать положительным классом и выбирать порог по калибровочному F1, средний F1 SealCall составляет 0,840, а доля ошибочно заблокированных безопасных вызовов — 11,2%. F1 сочетает точность положительных ответов и полноту, а не долю всех правильных решений. На тех же входах логистическая регрессия достигает 0,913, RBF-SVM — 0,905. Другая политика задаёт калибровочный бюджет ложных срабатываний 10%, но на тесте получает 15,26%: бюджет не гарантирует будущий результат."
+              ]
+            },
+            {
+              "heading": "0,176 секунды относится только к зашифрованной оценке",
+              "paragraphs": [
+                "На Intel Core Ultra 5 225H с 32 ГБ памяти и одним потоком представительная конфигурация из 256 измерений и 16 эталонов требует в среднем 0,176 секунды на зашифрованное оценивание. Вместе с подготовкой на доверенной стороне среднее составляет 0,663 секунды, всё ещё без сети и планирования. Открытый и секретный контексты разделены внутри одного процесса; реальная изоляция процессов и многопользовательское облако не испытаны. Меньшее число нельзя выдавать за задержку всего запроса.",
+                "В 760 численных записях «модель–раскладка» зашифрованные и открытые вычисления дали одинаковые решения при обеих фиксированных пороговых политиках. Записи включают разные раскладки одних запросов, а не 760 новых независимых задач. Это свидетельствует, что измеренная погрешность не изменила решения, но не доказывает их правильность. В представительном сравнении логистическая регрессия также точнее и быстрее, а SealCall возвращает меньший упакованный ответ. Качество, вычисления и связь требуют отдельного сопоставления."
+              ]
+            },
+            {
+              "heading": "Изменившийся смысл разрешения пока распознаётся плохо",
+              "paragraphs": [
+                "Диагностика создаёт 80 ситуаций с полномочиями: в каждой безопасный и опасный случаи представлены двумя способами, всего 320 примеров. При изменении связи с получателем, цели, авторитетности источника или предварительных условий ни в одной ситуации все четыре решения не оказались правильными. Это не провал на любых задачах, но явная слабость представления при изменении смысла разрешения. Офлайн-проверка также не показывает, завершит ли агент задачу после блокировки.",
+                "Анализ конфиденциальности предполагает, что аудитор соблюдает протокол, хотя пытается узнать входные данные, а контроллер, изоляция ключей и посредничество инструментов надёжны. Намеренная отправка ложной оценки аудитором не покрыта. Время запросов, размерность и последующие действия тоже могут раскрывать информацию. Подтверждённого принятия на конференцию не указано, поэтому материал включён как препринт. По нашей оценке, вклад — явное разделение доступа к данным, вычисления и разрешения действий при одновременном признании, что шифрование и понимание полномочий требуют разных решений."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по статье: распределение доступа к данным и полномочий. Это не экспериментальный график и не гарантия безошибочного обнаружения.",
+            "steps": [
+              "Доверенная подготовка задачи, вызова и истории с источниками",
+              "Внешнее вычисление сходства над шифротекстом",
+              "Контроллер расшифровывает результат и сверяет вызов и состояние",
+              "Выполняется только совпадающее разрешённое действие; изменения проверяются заново"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "給 Agent 增加一道安全檢查，可能先把使用者隱私交給了檢查者。SealCall 研究的是這層容易忽視的資料暴露：外部服務需要判斷一次工具呼叫是否越權，卻未必應該看到任務、引數和完整歷史。論文提出把明文處理、密文計算與執行放行分開，並用公開呼叫記錄檢驗這種安排的效果與代價。",
+          "sections": [
+            {
+              "heading": "審計服務負責算分，使用者側保留決定權",
+              "paragraphs": [
+                "系統劃分三個許可權區域：Agent 提出待執行操作；可信控制器掌握使用者任務、工具引數、歷史及解密許可權；外部審計服務只接收加密後的表示。控制器先保留任務和最終呼叫，挑選相關歷史並標註資訊來源，再把文字向量與工具、引數和來源特徵組合成緊湊表示。單純傳送未加密的向量也可能洩露內容，因此這一表示仍要加密。",
+                "外部服務利用 CKKS 同態加密計算候選表示與不安全參考樣本的相似度。同態加密允許對密文進行特定計算，而無需先解開內容。控制器拿回結果後解密、取最大相似度並比較閾值，最後確認實際呼叫和狀態仍與受審物件一致。引數或狀態改變就重新檢查，過期、重放或不可用結果不能直接放行；服務方沒有執行授權。"
+              ]
+            },
+            {
+              "heading": "隱私邊界不能替代檢測質量",
+              "paragraphs": [
+                "資料來自 ToolSafe 釋出的 AgentHarm 和 AgentDojo 呼叫標註。清理後有1,525條候選，其中1,252條二分類樣本用於訓練評估，273條中間標籤樣本另放。作者按202個任務根分組，使用五折外層評估、內層選擇和獨立校準，並彙總五個種子的結果。公開資料在方法開發期間已經被檢視過，因此這不是一個從未接觸過的盲測集。",
+                "以不安全呼叫為正類，按校準 F1 選擇閾值時，SealCall 平均 F1 為0.840，安全呼叫誤攔率為11.2%。F1 綜合考慮檢出的風險是否準確與漏掉多少風險，不等於總體正確率。同樣輸入上的邏輯迴歸和 RBF-SVM 達到0.913和0.905，優於參考樣本評分。另一個校準策略雖把校準集誤攔預算設為10%，測試誤攔仍為15.26%；預算不能保證未來表現。"
+              ]
+            },
+            {
+              "heading": "0.176 秒測的只是加密評分環節",
+              "paragraphs": [
+                "作者在 Intel Core Ultra 5 225H、32 GB 記憶體、單執行緒環境中，以256維表示和16個參考樣本測得每次加密評分平均0.176秒。加上可信側準備後平均0.663秒，仍不含網路和排程時間。實驗在同一程序中分開儲存公開與秘密上下文，沒有驗證真實程序隔離和多使用者雲端部署，因此不能把0.176秒寫成完整請求延遲。",
+                "760條“模型與佈局”數值記錄中，加密與明文評分在兩個固定閾值策略下給出相同決定。這些記錄包含同一查詢的不同佈局，不是760個全新獨立任務。它們說明測得的近似計算誤差沒有改變決定，不能證明原決定都正確。代表性比較中，邏輯迴歸也更準確、更快，只是 SealCall 打包後的響應更小；方案選擇仍需權衡檢測、計算與通訊。"
+              ]
+            },
+            {
+              "heading": "授權含義變了，模型還可能沒看出來",
+              "paragraphs": [
+                "最直接的失敗來自80個構造的授權情境：每個情境包含安全與不安全兩種情況，各有兩種表達，共320例。在接收者關係、用途、來源權威或前提改變時，沒有一個情境的四個決定全部正確。這是針對性診斷，不能說模型在全部任務上都失敗，但它表明當前表示尚不能可靠追蹤授權語義的變化。離線檢測也沒有驗證被攔截後 Agent 能否繼續完成任務。",
+                "隱私分析假設審計方會遵守計算協議、只是試圖窺探輸入，且可信控制器、金鑰隔離和工具攔截可靠。它沒有覆蓋審計方故意返回假分數；請求時間、表示尺寸和後續工具行為也可能洩露資訊。論文未給出可確認的會議錄用證據，本站按預印本收錄。本站認為，其價值在於把“誰能看資料、誰來算、誰能放行”明確分開，同時展示了加密保護與正確理解許可權是兩個都需要解決的問題。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋圖，說明資料和許可權如何分工；不是實驗曲線，也不表示檢測無誤。",
+            "steps": [
+              "可信控制器整理任務、呼叫及帶來源的歷史",
+              "加密表示後交外部服務計算相似度",
+              "控制器解密評分並檢查呼叫與狀態",
+              "只放行匹配且獲准的操作，變化後重新審計"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "falcons-parallel-scientific-compression",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.41209v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.41209v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "天气、流体和宇宙学模拟会产生大量数值数组，写盘和传输有时比计算更拖后腿。有损压缩能少传数据，但如果压缩本身太慢，节省的时间又会被吃掉。Falcons尝试同时提高数据缩减能力与CPU处理速度：它保留用户设定的逐点误差上限，重新安排插值计算、编码和并行调度，再检验完整科学计算流程能否获益。",
+          "sections": [
+            {
+              "heading": "让预测与编码都顺着硬件工作",
+              "paragraphs": [
+                "方法先利用相邻已重构数值预测当前位置，再把预测误差量化为整数，最后无损编码这些整数。这里“有损”的部分是量化，后续编码不会再次改变数值。Falcons把原本跨步、分散的插值访问整理为连续缓冲区，滑动复用邻居，并融合预测与量化，让x86与ARM的SIMD一次处理多项数值，同时保持相同的插值预测结果。",
+                "量化后的整数有时包含长串零，有时则是较分散但相邻相关的符号。前者用RunGamma提取零游程并编码长度，后者用Context按前一符号的幅值分组建模；系统根据采样到的零频率选择编码路线。并行时又分两种情况：每个进程处理自己的数据时减少整块数组的重复遍历；多个线程共同压缩一份数据时保留完整预测邻域，避免简单切块削弱压缩率。"
+              ]
+            },
+            {
+              "heading": "加速落在什么数据和流程上",
+              "paragraphs": [
+                "作者在Sugon-SD的x86与LineShine的ARM平台，比较SZ3.3、SPERR、ZFP和PFPL。六个科学数据集为CESM-ATM、NYX、Miranda、Hurricane ISABEL、SCALE-LETKF与JHTDB，覆盖大气、宇宙学、流体和湍流等领域。计时各重复五次取算术平均。误差阈值按整份数组的最大值减最小值计算；例如10⁻³表示允许该值域0.1%的逐点绝对误差，不是每个数自身0.1%的相对误差。",
+                "远程传输实验使用20节点、每节点32线程和约1 GB/s链路，统计压缩、传输、解压的总时间。在10⁻³阈值下，NYX从最快基线25.3秒降到12.3秒，减少51.5%；这是特定数据集的最大节时，不是通用吞吐倍数。另一个并行写入实验在LineShine的4096核上相对次优PFPL减少44.6%时间，但每个并行进程处理的是数据集副本，不能当作一次独立科学模拟的自然分区负载。"
+              ]
+            },
+            {
+              "heading": "有界误差不等于科学结论自动无损",
+              "paragraphs": [
+                "完整应用案例把压缩器作为HDF5过滤器接入WRF输出路径，不修改天气模型的数值计算内核。CONUS 2.5公里基准在Sugon-SD的2048核上运行，作者报告总流程速度为原来的1.55倍、输出约为原始大小的1.8%。这里的改善包含计算与输出阶段，比只看压缩内核更接近应用收益；同一实验仍使用10⁻³误差阈值，不能解释成无损保存全部输出。",
+                "论文用逐点误差和峰值信噪比检查重构数据，WRF一幅风速切片的PSNR为69.22 dB，但这不证明所有下游诊断、极值分析或预测结论都不受影响，误差预算仍需由使用者验证。测试针对CPU压缩，不包含GPU压缩器对比；高线程数还会因工作量变小与同步产生次线性扩展。压缩能否缩短总流程取决于数据相关性、可接受误差、存储带宽与处理速度，不能把所测上限推广到任意科学数组。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据Falcons方法重绘的解释流程，不是原论文压缩效果图或实测性能曲线。",
+            "steps": [
+              "用已重构邻居插值并量化误差",
+              "按零游程和相关性选择编码路线",
+              "保留预测邻域并减少并行内存流量",
+              "同时检查重构误差与完整流程耗时"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Weather, fluid and cosmological simulations produce large numerical arrays, and writing or transferring them can become a bottleneck. Lossy compression reduces the bytes moved, but slow compression can consume the time it saves. Falcons tackles both data reduction and CPU throughput: it retains a user-selected pointwise error bound, reorganizes interpolation, coding and parallel scheduling, then tests whether complete scientific workflows benefit.",
+          "sections": [
+            {
+              "heading": "Make prediction and coding hardware-friendly",
+              "paragraphs": [
+                "The compressor predicts a value from neighbouring reconstructed values, quantizes the prediction error into integers, then encodes those integers losslessly. Quantization is the lossy stage; subsequent coding introduces no additional numerical change. Falcons reorganizes strided interpolation accesses into contiguous buffers, reuses neighbours through a sliding window and fuses prediction with quantization. This exposes multiple values to x86 and ARM SIMD execution while preserving the interpolation predictions.",
+                "The quantized stream may contain long runs of zeros or more varied but locally correlated symbols. RunGamma extracts zero runs and codes their lengths; Context instead groups predictions by the preceding symbol’s magnitude. A sampled zero frequency selects the route. Parallel execution also distinguishes independent data per process from several threads compressing one array. The former reduces repeated whole-array passes; the latter preserves complete prediction neighbourhoods instead of sacrificing compression ratio through naive partitioning."
+              ]
+            },
+            {
+              "heading": "Which data and workflows were measured",
+              "paragraphs": [
+                "The authors compare SZ3.3, SPERR, ZFP and PFPL on x86 Sugon-SD and ARM LineShine systems. Six scientific datasets—CESM-ATM, NYX, Miranda, Hurricane ISABEL, SCALE-LETKF and JHTDB—cover atmospheric, cosmological, fluid and turbulence simulations. Each timing is repeated five times and reported as an arithmetic mean. Error bounds are relative to the entire array’s maximum-minus-minimum range. A threshold of 10⁻³ permits pointwise absolute error of 0.1% of that range, not 0.1% of each individual value.",
+                "The remote-transfer experiment uses twenty nodes with thirty-two threads each and an approximately 1 GB/s link, timing compression, transfer and decompression together. At a 10⁻³ bound, NYX falls from the fastest baseline’s 25.3 seconds to 12.3 seconds, a 51.5% time reduction. This is a dataset-specific maximum, not a general throughput multiplier. A separate parallel-writing experiment on 4,096 LineShine cores reduces time by 44.6% against second-best PFPL, but every process handles a dataset copy, rather than the natural partition of one independent simulation."
+              ]
+            },
+            {
+              "heading": "Bounded error is not a universal scientific guarantee",
+              "paragraphs": [
+                "The application case integrates Falcons as an HDF5 filter in WRF’s output path without modifying its numerical weather kernels. The CONUS 2.5-km benchmark runs on 2,048 Sugon-SD cores. Authors report a 1.55× end-to-end speedup and output around 1.8% of its original size. This includes computation and output rather than just a compression kernel, making it closer to an application benefit. It still uses a 10⁻³ error bound and must not be described as preserving every output value losslessly.",
+                "The study checks pointwise error and peak signal-to-noise ratio; one WRF wind-speed slice has PSNR 69.22 dB. That does not establish that every downstream diagnostic, extreme-value analysis or forecast conclusion is unaffected. Users must validate their error budgets. The comparisons cover CPU compressors, excluding GPU compressors, and high thread counts show sublinear scaling as work per thread shrinks and synchronization matters. End-to-end value depends on data correlation, tolerable error, storage bandwidth and processing speed, so the measured maxima are not guarantees for arbitrary scientific arrays."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory workflow redrawn by this site from Falcons; it is not an original compression-quality figure or a measured performance plot.",
+            "steps": [
+              "Interpolate reconstructed neighbours and quantize errors",
+              "Choose coding from zero runs and local correlation",
+              "Preserve neighbourhoods while reducing parallel memory traffic",
+              "Check reconstruction error and complete workflow time"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "天気、流体、宇宙論のシミュレーションは大量の数値配列を生み、保存や転送が計算以上の負担になることがある。非可逆圧縮でデータ量を減らしても、圧縮自体が遅ければ効果は失われる。Falconsはユーザーが定める各点の誤差上限を保ちながら、補間、符号化、並列実行を組み直し、CPU処理速度とデータ削減を両立させる。評価は圧縮単体に加え、科学計算の全工程も対象にする。",
+          "sections": [
+            {
+              "heading": "予測と符号化をハードウェアに合わせる",
+              "paragraphs": [
+                "まず復元済みの隣接値から対象値を予測し、予測誤差を整数に量子化して、その整数を可逆符号化する。数値情報を失うのは量子化であり、その後の符号化がさらに値を変えるわけではない。Falconsは飛び飛びのメモリアクセスを連続バッファへ整理し、窓を動かして隣接値を再利用し、予測と量子化を融合する。補間の予測値を変えずに、x86とARMのSIMDで複数値をまとめて処理できる。",
+                "量子化後の整数には、ゼロが長く続く場合と、分散していても隣接符号に相関がある場合がある。RunGammaはゼロの連続長を取り出して符号化し、Contextは直前の符号の大きさで分類してモデル化する。サンプルのゼロ頻度で経路を選ぶ。各プロセスが別データを扱う場合は配列全体の繰り返し走査を減らし、複数スレッドが一配列を共同処理する場合は予測の近傍を保ち、単純分割による圧縮率低下を避ける。"
+              ]
+            },
+            {
+              "heading": "何をどの条件で高速化したか",
+              "paragraphs": [
+                "評価はSugon-SDのx86とLineShineのARMで、SZ3.3、SPERR、ZFP、PFPLと比較した。CESM-ATM、NYX、Miranda、Hurricane ISABEL、SCALE-LETKF、JHTDBの六データセットで大気、宇宙論、流体、乱流などを扱う。計測は各五回の算術平均。誤差閾値は配列全体の最大値と最小値の差を分母とし、10⁻³ならその値域の0.1%までの各点の絶対誤差を許す。各数値そのものに対する0.1%ではない。",
+                "遠隔転送では20ノード、各32スレッド、約1 GB/sの回線を使い、圧縮・転送・展開を合計した。10⁻³の条件でNYXは最速の比較手法の25.3秒から12.3秒へ短縮し、51.5%減となる。特定データの最大削減率であり、普遍的なスループット倍率ではない。別の並列書き込みではLineShineの4096コアで次点のPFPLより44.6%短縮したが、各プロセスはデータセットの複製を処理する。単一シミュレーションの自然な領域分割とは異なる。"
+              ]
+            },
+            {
+              "heading": "誤差上限と科学的妥当性を分ける",
+              "paragraphs": [
+                "アプリケーション実験ではHDF5フィルタとしてWRFの出力に組み込み、気象モデルの数値計算カーネルは変更しない。CONUS 2.5キロメートル基準をSugon-SDの2048コアで実行し、全工程で1.55倍、出力サイズは元の約1.8%と著者は報告する。計算と出力を含むため圧縮単体より実用に近い指標だが、同じ10⁻³の誤差を認めており、全ての出力値を可逆保存した結果ではない。",
+                "再構成は各点の誤差とピーク信号対雑音比で確認し、WRFの風速一断面ではPSNRが69.22 dBだった。しかし全ての後段診断、極値解析、予報結論への無影響は証明しない。利用者側で許容誤差を検証する必要がある。比較はCPU圧縮器に限り、GPU圧縮器は含まない。多数スレッドでは一つ当たりの処理減少と同期により線形には伸びない。全体の利益はデータ相関、誤差許容度、保存帯域、処理速度に依存し、最大値を任意の科学配列へ一般化できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Falconsの方法を当サイトが描き直した説明図。原論文の圧縮画像や実測性能グラフではない。",
+            "steps": [
+              "復元済み近傍から補間し誤差を量子化",
+              "ゼロ連続長と相関で符号化を選択",
+              "予測近傍を保ち並列メモリ転送を削減",
+              "再構成誤差と全工程の時間を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Моделирование погоды, жидкостей и космологических процессов создаёт большие числовые массивы, запись и передача которых могут ограничивать вычисления. Сжатие с потерями уменьшает объём, но слишком медленный компрессор съедает выигрыш. Falcons сохраняет заданный пользователем предел ошибки в каждой точке и перестраивает интерполяцию, кодирование и параллельное исполнение. Цель — совместить уменьшение данных с высокой скоростью CPU и проверить пользу для полного научного процесса.",
+          "sections": [
+            {
+              "heading": "Согласовать предсказание и кодирование с аппаратурой",
+              "paragraphs": [
+                "Компрессор предсказывает значение по уже восстановленным соседям, квантует ошибку в целые числа и затем кодирует их без потерь. Потери возникают при квантовании, а последующее кодирование новых числовых изменений не добавляет. Falcons превращает разрозненные обращения интерполяции в непрерывные буферы, повторно использует соседние значения скользящим окном и объединяет предсказание с квантованием. Это позволяет SIMD на x86 и ARM обрабатывать несколько значений вместе, не меняя результатов самой интерполяции.",
+                "Поток квантованных чисел может содержать длинные серии нулей либо более разнообразные, но локально связанные символы. RunGamma выделяет нулевые серии и кодирует длины; Context моделирует символы по группе величины предыдущего. Маршрут выбирается по выборочной частоте нуля. При независимых данных у каждого процесса сокращаются повторные полные проходы массива. Когда несколько потоков сжимают один массив, сохраняются полные окрестности предсказания: простое разбиение могло бы ухудшить коэффициент сжатия."
+              ]
+            },
+            {
+              "heading": "Какие данные и процессы ускорились",
+              "paragraphs": [
+                "Авторы сравнивают SZ3.3, SPERR, ZFP и PFPL на x86-платформе Sugon-SD и ARM-платформе LineShine. Шесть наборов — CESM-ATM, NYX, Miranda, Hurricane ISABEL, SCALE-LETKF и JHTDB — охватывают атмосферу, космологию, жидкости и турбулентность. Время усредняется арифметически по пяти повторам. Предел ошибки нормируется на разность максимума и минимума всего массива: 10⁻³ допускает абсолютную ошибку каждой точки до 0,1% этого диапазона, а не 0,1% собственного значения точки.",
+                "Удалённая передача использует двадцать узлов по тридцать два потока и канал около 1 ГБ/с; учитываются сжатие, передача и восстановление. При пороге 10⁻³ NYX сокращается с 25,3 секунды у лучшей базы до 12,3 секунды: на 51,5%. Это максимальное сокращение времени конкретного набора, не универсальный множитель пропускной способности. Отдельная параллельная запись на 4096 ядрах LineShine сокращает время на 44,6% относительно второго по скорости PFPL, но каждый процесс обрабатывает копию набора, а не естественный раздел одной симуляции."
+              ]
+            },
+            {
+              "heading": "Предел ошибки не гарантирует сохранность всех выводов",
+              "paragraphs": [
+                "В прикладном опыте Falcons подключён фильтром HDF5 к выводу WRF без изменения численных ядер погодной модели. Бенчмарк CONUS с шагом 2,5 км выполняется на 2048 ядрах Sugon-SD. Авторы сообщают ускорение полного процесса в 1,55 раза и выходной объём около 1,8% исходного. Показатель включает вычисления и вывод, поэтому ближе к прикладной пользе, чем скорость одного компрессора. Однако предел ошибки остаётся 10⁻³: это не сохранение всех исходных значений без потерь.",
+                "Реконструкция проверяется по ошибке каждой точки и пиковому отношению сигнал/шум; для одного среза скорости ветра WRF PSNR равен 69,22 дБ. Это не доказывает неизменность всех последующих диагностик, экстремумов или прогнозных выводов: допустимую ошибку должен проверять пользователь. Сравнения ограничены CPU-компрессорами, без GPU-аналогов. На большом числе потоков масштабирование сублинейно из-за меньшей работы на поток и синхронизации. Итог зависит от корреляции данных, допустимой ошибки, полосы хранения и скорости обработки; переносить максимумы на любые массивы нельзя."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема Falcons, перерисованная сайтом; это не исходная иллюстрация качества сжатия или график измерений.",
+            "steps": [
+              "Предсказать по восстановленным соседям и квантовать ошибку",
+              "Выбрать кодирование по нулевым сериям и корреляции",
+              "Сохранить окрестности и уменьшить параллельный трафик памяти",
+              "Проверить ошибку восстановления и полное время"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "天氣、流體和宇宙學模擬會產生大量數值陣列，寫入儲存裝置和傳輸有時比計算更拖後腿。有失真壓縮能少傳資料，但如果壓縮本身太慢，節省的時間又會被吃掉。Falcons嘗試同時提高資料縮減能力與CPU處理速度：它保留使用者設定的逐點誤差上限，重新安排插值計算、編碼和並行排程，再檢驗完整科學計算流程能否獲益。",
+          "sections": [
+            {
+              "heading": "讓預測與編碼都順著硬體工作",
+              "paragraphs": [
+                "方法先利用相鄰已重構數值預測當前位置，再把預測誤差量化為整數，最後無損編碼這些整數。這裡“有損”的部分是量化，後續編碼不會再次改變數值。Falcons把原本跨步、分散的插值存取整理為連續緩衝區，滑動複用鄰居，並融合預測與量化，讓x86與ARM的SIMD一次處理多項數值，同時保持相同的插值預測結果。",
+                "量化後的整數有時包含長串零，有時則是較分散但相鄰相關的符號。前者用RunGamma提取零連續段並編碼長度，後者用Context按前一符號的幅值分組建模；系統根據取樣到的零頻率選擇編碼路線。並行時又分兩種情況：每個程序處理自己的資料時減少整塊陣列的重複遍歷；多個執行緒共同壓縮一份資料時保留完整預測鄰域，避免簡單切塊削弱壓縮率。"
+              ]
+            },
+            {
+              "heading": "加速落在什麼資料和流程上",
+              "paragraphs": [
+                "作者在Sugon-SD的x86與LineShine的ARM平臺，比較SZ3.3、SPERR、ZFP和PFPL。六個科學資料集為CESM-ATM、NYX、Miranda、Hurricane ISABEL、SCALE-LETKF與JHTDB，覆蓋大氣、宇宙學、流體和湍流等領域。計時各重複五次取算術平均。誤差閾值按整份陣列的最大值減最小值計算；例如10⁻³表示允許該值域0.1%的逐點絕對誤差，不是每個數自身0.1%的相對誤差。",
+                "遠端傳輸實驗使用20節點、每節點32執行緒和約1 GB/s鏈路，統計壓縮、傳輸、解壓的總時間。在10⁻³閾值下，NYX從最快基準方法25.3秒降到12.3秒，減少51.5%；這是特定資料集的最大節時，不是通用吞吐倍數。另一個並行寫入實驗在LineShine的4096核上相對次優PFPL減少44.6%時間，但每個並行程序處理的是資料集副本，不能當作一次獨立科學模擬的自然分區負載。"
+              ]
+            },
+            {
+              "heading": "有界誤差不等於科學結論自動無損",
+              "paragraphs": [
+                "完整應用案例把壓縮器作為HDF5過濾器接入WRF輸出路徑，不修改天氣模型的數值計算核心。CONUS 2.5公里基準在Sugon-SD的2048核上執行，作者報告總流程速度為原來的1.55倍、輸出約為原始大小的1.8%。這裡的改善包含計算與輸出階段，比只看壓縮核心更接近應用收益；同一實驗仍使用10⁻³誤差閾值，不能解釋成無損儲存全部輸出。",
+                "論文用逐點誤差和峰值訊雜比檢查重構資料，WRF一幅風速切片的PSNR為69.22 dB，但這不證明所有下游診斷、極值分析或預測結論都不受影響，誤差預算仍需由使用者驗證。測試針對CPU壓縮，不包含GPU壓縮器對比；高執行緒數還會因工作量變小與同步產生次線性擴展。壓縮能否縮短總流程取決於資料相關性、可接受誤差、儲存頻寬與處理速度，不能把所測上限推廣到任意科學陣列。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據Falcons方法重繪的解釋流程，不是原論文壓縮效果圖或實測效能曲線。",
+            "steps": [
+              "用已重構鄰居插值並量化誤差",
+              "按零連續段和相關性選擇編碼路線",
+              "保留預測鄰域並減少並行記憶體流量",
+              "同時檢查重構誤差與完整流程耗時"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "langdit-continuous-diffusion-transformer",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.22330v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.22330v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "连续扩散语言模型先在连续数值空间中处理带噪声的整段文本表示，再反复去噪，最终转成词元。过去常直接借用自回归语言模型或图像扩散模型的Transformer。LangDiT问的是：如果专门调整去噪骨干、词表预测接口和训练中的反馈方式，能否在不更换原有目标与采样器的情况下改善文本生成？论文给出了受控比较，也明确区分了更长训练得到的成绩。",
+          "sections": [
+            {
+              "heading": "三个接口怎样配合",
+              "paragraphs": [
+                "噪声强度不断变化，使特征和注意力分数的尺度难以稳定。LangDiT在骨干以及注意力的查询、键上加入RMSNorm，并加宽噪声条件通路，让模型分别处理特征尺度与噪声调制。词表预测还保留一条根据带噪状态与词嵌入相容性计算的似然捷径；方法阻断该分支直接流向词嵌入表的梯度，再用有界门控校准它对预测的影响。",
+                "自条件意味着把上一轮的预测交给下一轮去噪。训练时，论文按预测分布的熵调节这份反馈：较不确定的估计受到抑制，避免未经区分地送回模型。推理时仍使用不加权的后验均值，因此不能把改善说成部署时新加了置信门。移植到Plaid式模型时只采用兼容的四项修改，保留其原生捷径梯度与解析系数，并非把LangFlow全部六项改造照搬过去。"
+              ]
+            },
+            {
+              "heading": "最能归因于架构的比较",
+              "paragraphs": [
+                "主要实验从头训练OpenWebText无条件生成模型，输出长度1024词元，七个累计配置保持相同数据顺序、批量、目标与采样器，每增加一项都重新训练。各本地评估生成1024条文本，用固定GPT-2 Large评分。GenPPL是按被评分词元汇总的生成困惑度，较低表示文本更符合该评分模型，不是正确率；同时报告按样本平均的一元词熵，观察词汇分布变化。",
+                "在一致的25万次更新和128次去噪模型调用下，LangFlow基线的GenPPL为64.26，LangDiT为53.66，相对降低16.5%；一元词熵从5.416变成5.391。完整参数量则从3.2709亿增至3.3445亿，主要增加来自噪声条件通路。因此这是训练进度与调用次数匹配的比较，不是参数量、浮点运算量或实际耗时完全匹配的证明，更不能据此宣称生成速度更快。"
+              ]
+            },
+            {
+              "heading": "较低困惑度还缺哪些证明",
+              "paragraphs": [
+                "另有更长训练的低分：66万次更新的LangFlow配置在1024次调用下达到21.72，52万次更新的Plaid配置在1024个去噪转换、实际1025次调用下达到11.33。两者来自计划100万次更新的过程，并非已经完成100万次训练。它们还伴随更明显的词熵下降，且Plaid基线与修改版部分比较的训练进度不同，不能用这些成绩单独量化六项架构改动的净收益。",
+                "现有研究只覆盖OpenWebText、一个骨干规模和一个训练种子，累计消融的顺序还会影响每项改动呈现出的贡献。置信门也可能压低有价值但不确定的反馈，停止某条梯度可能移除有益学习信号；更充分的逐项移除、参数与计算量匹配、多个训练种子仍待补充。词汇熵不是语义多样性，困惑度也不验证连贯性、事实性或推理能力。论文支持进一步研究专用去噪架构，但没有建立通用对话质量已经全面提升的结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据LangDiT机制重绘的解释流程，不是注意力实测图或生成质量排行榜。",
+            "steps": [
+              "归一化带噪特征并加入噪声条件",
+              "校准词表捷径及其梯度路径",
+              "训练时调节预测反馈，推理保留原估计器",
+              "在相同进度下同时比较困惑度与词熵"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Continuous diffusion language models repeatedly denoise numerical representations of an entire text sequence before converting them into tokens. Their Transformers have often been borrowed from autoregressive language models or image diffusion. LangDiT asks whether a denoiser-specific backbone, vocabulary interface and training-feedback design can improve generation without changing the underlying objective or sampler. The paper separates controlled comparisons from stronger scores obtained after longer training.",
+          "sections": [
+            {
+              "heading": "Coordinate three interfaces",
+              "paragraphs": [
+                "Changing noise levels complicates the scale of features and attention scores. LangDiT adds RMSNorm to the backbone and attention queries and keys, and widens the noise-conditioning pathway, separating feature-scale control from noise modulation. Vocabulary prediction also retains a likelihood shortcut measuring compatibility between noisy states and token embeddings. The method stops this branch’s direct gradient into the embedding codebook and uses a bounded gate to calibrate its contribution to predictions.",
+                "Self-conditioning feeds a previous prediction into the next denoising step. During training, an entropy-based gate attenuates uncertain feedback instead of treating every estimate equally. Inference still uses an unweighted posterior mean, so the gain is not evidence for a newly added inference-time confidence gate. The Plaid-style adaptation transfers only four compatible changes and retains its native shortcut-gradient rule and analytic coefficient; it does not copy all six LangFlow interventions."
+              ]
+            },
+            {
+              "heading": "The comparison that best isolates architecture",
+              "paragraphs": [
+                "The main experiments train unconditional OpenWebText generation from scratch at a length of 1,024 tokens. Seven cumulative configurations share data order, batch size, objective and sampler, with each configuration trained separately. Every local evaluation generates 1,024 texts and scores them using a frozen GPT-2 Large. GenPPL aggregates generation perplexity over scored tokens: lower values mean greater compatibility with this evaluator, not greater factual accuracy. Mean per-sample unigram entropy separately tracks changes in lexical distribution.",
+                "At the same 250,000 updates and 128 denoiser calls, LangFlow’s GenPPL is 64.26 and LangDiT’s 53.66, a relative reduction of 16.5%; unigram entropy moves from 5.416 to 5.391. Total parameters increase from 327.09 million to 334.45 million, mainly because of wider noise conditioning. This matches training progress and model-call counts, not parameter count, floating-point work or wall-clock time. It does not support a claim of faster generation."
+              ]
+            },
+            {
+              "heading": "What lower perplexity does not establish",
+              "paragraphs": [
+                "Lower scores also come from extended training: a 660,000-update LangFlow checkpoint reaches 21.72 at 1,024 calls, while a 520,000-update Plaid checkpoint reaches 11.33 at 1,024 reverse transitions, requiring 1,025 actual calls. Both belong to planned one-million-update runs, not completed one-million-update evaluations. They also accompany larger decreases in lexical entropy, and some Plaid baseline and modified checkpoints have unequal training progress. These scores alone cannot quantify the net effect of all six architectural changes.",
+                "The study covers one dataset, backbone scale and training seed. Contributions in a cumulative ablation depend on the order of earlier changes. Confidence gating may suppress useful but uncertain feedback, and stopping gradients may remove helpful learning signals. Component-removal tests, parameter- and compute-matched comparisons and multiple training seeds remain necessary. Lexical entropy is not semantic diversity, and perplexity does not establish coherence, factuality or reasoning ability. The evidence supports further work on dedicated denoising architectures, not a conclusion that general conversational quality has comprehensively improved."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from LangDiT; it is not a measured attention plot or a generation-quality ranking.",
+            "steps": [
+              "Normalize noisy features and condition on noise level",
+              "Calibrate the vocabulary shortcut and its gradient path",
+              "Gate training feedback while retaining the inference estimator",
+              "Compare perplexity and lexical entropy at matched progress"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "連続拡散言語モデルは、文章全体の連続値表現を何度もノイズ除去し、最後にトークンへ変換する。従来は自己回帰言語モデルや画像拡散のTransformerを流用することが多かった。LangDiTは、元の目的関数とサンプラーを保ったまま、去ノイズ骨格、語彙予測、学習中のフィードバックを専用設計する効果を調べる。条件を揃えた比較と長期学習の成績を分けて読む必要がある。",
+          "sections": [
+            {
+              "heading": "三つの接点を調整する",
+              "paragraphs": [
+                "ノイズ量が変わると特徴や注意スコアの尺度も変わり、学習を難しくする。LangDiTは骨格と注意のクエリ・キーにRMSNormを加え、ノイズ条件の通路を広げて、特徴の尺度制御とノイズによる変調を分ける。語彙予測にはノイズ付き状態と語埋め込みの適合度を表す尤度ショートカットがある。その分岐から埋め込み辞書へ直接流れる勾配を止め、有界ゲートで予測への寄与を校正する。",
+                "自己条件付けは前段の予測を次のノイズ除去へ渡す仕組みである。学習時には予測分布のエントロピーを基に、不確かなフィードバックを弱める。ただし推論は重みなしの事後平均を保つため、推論時に新しい信頼度ゲートを導入した効果とは言えない。Plaid型への適用では互換性のある四変更だけを移し、元のショートカットの勾配規則と解析的係数を残す。LangFlowの六変更全てを移植したわけではない。"
+              ]
+            },
+            {
+              "heading": "構造の効果を読みやすい比較",
+              "paragraphs": [
+                "主実験はOpenWebTextで1024トークンの無条件生成をゼロから学習する。七つの累積構成はデータ順、バッチ、目的、サンプラーを揃え、各構成を別々に訓練する。各ローカル評価は1024文章を生成し、固定GPT-2 Largeで採点する。GenPPLは採点対象トークンで集計する生成困惑度で、低いほど評価器にとって自然だが、事実の正解率ではない。サンプルごとの平均ユニグラムエントロピーも併記し、語彙分布の変化を確認する。",
+                "25万更新、去ノイズモデル128呼び出しを揃えると、LangFlowのGenPPLは64.26、LangDiTは53.66で、相対16.5%減となる。ユニグラムエントロピーは5.416から5.391へ変わる。総パラメータは3億2709万から3億3445万へ増え、主因はノイズ条件通路の拡大である。学習進度と呼び出し数は揃っても、パラメータ数、演算量、実時間まで同じとは言えず、生成が高速化したという証拠ではない。"
+              ]
+            },
+            {
+              "heading": "困惑度の低下だけでは分からないこと",
+              "paragraphs": [
+                "さらに長く学習したLangFlowの66万更新時点は1024呼び出しで21.72、Plaidの52万更新時点は1024逆遷移、実際には1025呼び出しで11.33となる。いずれも100万更新を予定する途中のモデルで、100万更新完了後の評価ではない。語彙エントロピーの減少も大きく、一部のPlaid比較では基準と変更後の学習進度が違う。その低いスコアだけで六変更の純粋な効果を定量化することはできない。",
+                "対象は一データセット、一骨格規模、一学習シードに限られる。累積アブレーションの見かけの寄与は変更順に依存する。信頼度ゲートが有用だが不確かな情報を抑えたり、勾配停止が有益な学習信号を失わせたりする可能性もある。個別要素の除去、規模と計算量を揃えた対照、複数シードが必要だ。語彙エントロピーは意味の多様性ではなく、困惑度も整合性、事実性、推論力を検証しない。専用の去ノイズ構造を研究する根拠はあるが、一般会話の品質が全面的に上がったとは結論できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "LangDiTの仕組みを当サイトが描き直した説明図。注意の実測図や生成品質順位ではない。",
+            "steps": [
+              "ノイズ特徴を正規化しノイズ量を条件付け",
+              "語彙ショートカットと勾配経路を校正",
+              "学習時の予測入力を調整し推論推定は保持",
+              "同じ学習進度で困惑度と語彙エントロピーを比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Непрерывные диффузионные языковые модели многократно удаляют шум из числового представления целого текста, а затем превращают его в токены. Их Transformer часто заимствуют у авторегрессионных языковых или графических диффузионных моделей. LangDiT проверяет, помогут ли специальная архитектура денойзера, словарный интерфейс и обучающая обратная связь без смены исходной цели и сэмплера. Контролируемые сравнения здесь важно отделять от лучших оценок после более долгого обучения.",
+          "sections": [
+            {
+              "heading": "Настроить три интерфейса",
+              "paragraphs": [
+                "Меняющийся шум осложняет контроль масштаба признаков и оценок внимания. LangDiT добавляет RMSNorm в основу и к запросам и ключам внимания, расширяя путь условия по шуму. Так разделяются масштаб признаков и шумовая модуляция. Словарный прогноз сохраняет короткую ветвь правдоподобия, оценивающую совместимость зашумлённого состояния с эмбеддингами токенов. Её прямой градиент в словарь эмбеддингов отключается, а ограниченный гейт калибрует вклад в прогноз.",
+                "Самокондиционирование передаёт прежний прогноз следующему шагу удаления шума. При обучении энтропийный гейт ослабляет неуверенную обратную связь. На инференсе остаётся невзвешенное апостериорное среднее: улучшение нельзя приписывать новому гейту уверенности во время генерации. Адаптация к Plaid переносит лишь четыре совместимых изменения, сохраняя собственные правила градиента короткой ветви и аналитический коэффициент. Это не перенос всех шести вмешательств LangFlow."
+              ]
+            },
+            {
+              "heading": "Сравнение с наиболее ясными условиями",
+              "paragraphs": [
+                "Основные эксперименты обучают безусловную генерацию OpenWebText с нуля для длины 1024 токена. Семь последовательных конфигураций сохраняют порядок данных, батч, цель и сэмплер, но каждая обучается отдельно. Локальная оценка генерирует 1024 текста и использует фиксированную GPT-2 Large. GenPPL — перплексия генерации, агрегированная по оцениваемым токенам: меньшее значение означает большее соответствие оценщику, а не фактическую правильность. Отдельно приводится средняя по текстам униграммная энтропия для контроля лексического распределения.",
+                "При одинаковых 250 тысячах обновлений и 128 вызовах денойзера GenPPL уменьшается с 64,26 у LangFlow до 53,66 у LangDiT, то есть относительно на 16,5%; энтропия меняется с 5,416 до 5,391. Полное число параметров растёт с 327,09 до 334,45 млн, прежде всего из-за расширения шумового условия. Совпадают прогресс обучения и число вызовов, но не число параметров, FLOPs или реальное время. Вывода об ускорении генерации отсюда не следует."
+              ]
+            },
+            {
+              "heading": "Чего не доказывает низкая перплексия",
+              "paragraphs": [
+                "После более долгого обучения контрольная точка LangFlow на 660 тысячах обновлений достигает 21,72 при 1024 вызовах, а Plaid на 520 тысячах — 11,33 при 1024 обратных переходах, то есть 1025 фактических вызовах. Обе принадлежат планам на миллион обновлений, но это не результаты завершённого миллиона. Снижение энтропии там больше, а часть сравнений Plaid использует разные стадии обучения базы и изменённой модели. Такие оценки сами по себе не выделяют чистый эффект всех шести архитектурных изменений.",
+                "Исследованы один набор данных, один масштаб основы и один seed обучения. В последовательной абляции вклад зависит от порядка предыдущих изменений. Гейт может подавлять полезную неуверенную обратную связь, а остановка градиента — убирать полезный обучающий сигнал. Нужны удаление отдельных компонентов, сравнения при равных параметрах и вычислениях, несколько seed. Лексическая энтропия не равна смысловому разнообразию, перплексия не проверяет связность, фактичность или рассуждение. Результаты обосновывают дальнейшее изучение специального денойзера, но не всестороннее улучшение обычного диалога."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема LangDiT, перерисованная сайтом; это не измерения внимания или рейтинг качества генерации.",
+            "steps": [
+              "Нормализовать шумные признаки и задать уровень шума",
+              "Калибровать словарную ветвь и её градиент",
+              "Регулировать обучающую обратную связь, сохранив оценку инференса",
+              "Сравнить перплексию и энтропию при равном прогрессе"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "連續擴散語言模型先在連續數值空間中處理帶噪聲的整段文字表示，再反覆去噪，最終轉成詞元。過去常直接借用自迴歸語言模型或影像擴散模型的Transformer。LangDiT問的是：如果專門調整去噪骨幹、詞表預測介面和訓練中的回饋方式，能否在不更換原有目標與取樣器的情況下改善文字生成？論文給出了受控比較，也明確區分了更長訓練得到的成績。",
+          "sections": [
+            {
+              "heading": "三個介面怎樣配合",
+              "paragraphs": [
+                "噪聲強度不斷變化，使特徵和注意力分數的尺度難以穩定。LangDiT在骨幹以及注意力的查詢、鍵上加入RMSNorm，並加寬噪聲條件通路，讓模型分別處理特徵尺度與噪聲調製。詞表預測還保留一條根據帶噪狀態與詞嵌入相容性計算的似然捷徑；方法阻斷該分支直接流向詞嵌入表的梯度，再用有界門控校準它對預測的影響。",
+                "自條件意味著把上一輪的預測交給下一輪去噪。訓練時，論文按預測分佈的熵調節這份回饋：較不確定的估計受到抑制，避免未經區分地送回模型。推理時仍使用不加權的後驗均值，因此不能把改善說成部署時新加了置信門。移植到Plaid式模型時只採用相容的四項修改，保留其原生捷徑梯度與解析係數，並非把LangFlow全部六項改造照搬過去。"
+              ]
+            },
+            {
+              "heading": "最能歸因於架構的比較",
+              "paragraphs": [
+                "主要實驗從頭訓練OpenWebText無條件生成模型，輸出長度1024詞元，七個累計配置保持相同資料順序、批次、目標與取樣器，每增加一項都重新訓練。各本地評估生成1024條文字，用固定GPT-2 Large評分。GenPPL是按被評分詞元彙總的生成困惑度，較低表示文字更符合該評分模型，不是正確率；同時報告按樣本平均的一元詞熵，觀察詞彙分佈變化。",
+                "在一致的25萬次更新和128次去噪模型呼叫下，LangFlow基準方法的GenPPL為64.26，LangDiT為53.66，相對降低16.5%；一元詞熵從5.416變成5.391。完整參數量則從3.2709億增至3.3445億，主要增加來自噪聲條件通路。因此這是訓練進度與呼叫次數匹配的比較，不是參數量、浮點運算量或實際耗時完全匹配的證明，更不能據此宣稱生成速度更快。"
+              ]
+            },
+            {
+              "heading": "較低困惑度還缺哪些證明",
+              "paragraphs": [
+                "另有更長訓練的低分：66萬次更新的LangFlow配置在1024次呼叫下達到21.72，52萬次更新的Plaid配置在1024個去噪轉換、實際1025次呼叫下達到11.33。兩者來自計劃100萬次更新的過程，並非已經完成100萬次訓練。它們還伴隨更明顯的詞熵下降，且Plaid基準方法與修改版部分比較的訓練進度不同，不能用這些成績單獨量化六項架構改動的淨收益。",
+                "現有研究只覆蓋OpenWebText、一個骨幹規模和一個訓練種子，累計消融的順序還會影響每項改動呈現出的貢獻。置信門也可能壓低有價值但不確定的回饋，停止某條梯度可能移除有益學習訊號；更充分的逐項移除、參數與計算量匹配、多個訓練種子仍待補充。詞彙熵不是語義多樣性，困惑度也不驗證連貫性、事實性或推理能力。論文支持進一步研究專用去噪架構，但沒有建立通用對話品質已經全面提升的結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據LangDiT機制重繪的解釋流程，不是注意力實測圖或生成品質排行榜。",
+            "steps": [
+              "歸一化帶噪特徵並加入噪聲條件",
+              "校準詞表捷徑及其梯度路徑",
+              "訓練時調節預測回饋，推理保留原估計器",
+              "在相同進度下同時比較困惑度與詞熵"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "cyclotron-recurrence-communication-compiler",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.20981v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.20981v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "分布式矩阵计算不仅要安排算术，还要决定数据何时、沿什么路径送到哪个处理器。手工实现常把算法与通信细节缠在一起，换一种硬件或广播方式就要大改程序。Cyclotron用递推关系同时描述计算和数据移动，再由程序员选择哪些维度分配给处理器、哪些维度按时间执行。它把探索通信策略变得更直接，目标并不是自动替用户找到一个对所有机器都最优的方案。",
+          "sections": [
+            {
+              "heading": "把通信写进算法表示",
+              "paragraphs": [
+                "传统数组表达式把数据看成内存中的值；Cyclotron还允许数据存在于逻辑迭代空间的某个位置，一个位置可以从另一个位置取得值。同一移动关系，沿空间维度就是处理器间通信，沿时间维度就是本地保留到下一步。因此邻居接力、一对多广播、双向环和分段混合都可用统一表示描述，不必被固定的通信库接口限制。",
+                "编译器接收递推关系及空间、时间标注，生成每个处理器的计算与收发顺序。它区分当前步骤新产生的数据和上一时间步保留的数据，按依赖排序，避免旧值尚未被使用就遭覆盖；接收关系还会推导出对应发送。块循环映射把多个虚拟位置分摊到物理处理器，兼顾负载均衡，并去掉同一数据在同一处理器上的重复传送。正确安排通信和选择最快策略仍是不同问题。"
+              ]
+            },
+            {
+              "heading": "比较时必须看清传输路径",
+              "paragraphs": [
+                "作者在Perlmutter上测试最多16个CPU节点与16块A100 GPU，后者分布在四节点。任务包括矩阵乘法、三角求解TRSM、Cholesky分解及二者融合；比较ScaLAPACK、SLATE与cuSolverMp，匹配精度、分块大小和计算内核等条件。各配置预热两次、测量四次，报告最快时间，不是平均值。CPU Cholesky考察11种通信策略，其中最佳方案相对ScaLAPACK快1.34—1.68倍，也有方案更慢。",
+                "GPU结果必须区分通信方式。双方都经过主机中转时，16块A100上的Cyclotron在较大块循环配置下最多达到SLATE的1.24倍。改为GPU直接通信后，对同样直接通信的cuSolverMp为1.12—1.28倍；相对仍走主机中转的SLATE更大的倍数，不能解释成纯编译器优势。论文观察到不同硬件、块形状和问题规模会改变赢家，因此保留多种可表达策略比锁定单一广播方式更重要。"
+              ]
+            },
+            {
+              "heading": "融合收益来自哪里，又止于哪里",
+              "paragraphs": [
+                "依赖满足即可执行，还允许相邻工作相互填补空闲。四CPU节点上的三角求解交替使用两种空间映射，对比把它们前后串行执行，吞吐分别为顺序执行的1.72倍与1.83倍。另一实验将Cholesky与后续求解融合：在4096阶矩阵、16进程且负载不均衡的非块循环配置下，约90%的单独求解时间被重叠隐藏；较均衡的块循环配置只隐藏18%—23%。90%不是整个应用的时间减少比例。",
+                "实验说明通信表示与调度值得联合设计，却没有证明所有分布式程序都能自动提速。当前实证集中在规则的分块线性代数，测到的是给定机器上的选定策略与最快轮次；不规则工作负载、不同网络或更大规模仍需验证。即使同一个算法，更多计算并行也可能让通信变成新的瓶颈。本站的工程启发是先保持算法与映射可分离，再用目标负载测出适合的通信方案，而不是从一个加速数字推断通用最优编译。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据Cyclotron方法重绘的解释图，不是处理器实测轨迹或性能结果图。",
+            "steps": [
+              "用递推关系描述计算与数据移动",
+              "标注空间和时间维度",
+              "按依赖生成匹配的收发与计算",
+              "比较通信策略并让可重叠任务提前执行"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Distributed matrix computation must decide not only which arithmetic to perform, but when and along which paths data reaches each processor. Handwritten implementations often entangle algorithms with communication, making hardware or broadcast changes expensive. Cyclotron describes computation and data movement with recurrence relations, then lets the programmer choose which dimensions span processors and which advance in time. It makes communication strategies easier to explore; it does not automatically discover one universally optimal strategy.",
+          "sections": [
+            {
+              "heading": "Put communication into the algorithm representation",
+              "paragraphs": [
+                "Conventional array expressions describe values in memory. Cyclotron additionally lets a value reside at a point in a logical iteration space, with another point receiving it. The same movement along a spatial dimension means interprocessor communication; along a temporal dimension it means keeping a value locally for a later step. Neighbour relays, one-to-many broadcasts, bidirectional rings and piecewise hybrids therefore fit one representation rather than a fixed menu of library operations.",
+                "The compiler takes recurrences and space–time annotations and generates each processor’s computation and communication order. It distinguishes values produced in the current step from values retained from a preceding time step, ordering dependencies so an old value is read before being overwritten. Receive relations generate matching sends. Block-cyclic mapping distributes virtual positions across physical processors, balances work and eliminates redundant transfers of the same value to a processor. Correct communication and fastest communication remain separate questions."
+              ]
+            },
+            {
+              "heading": "Compare like-for-like transport paths",
+              "paragraphs": [
+                "The evaluation runs on Perlmutter with up to sixteen CPU nodes and sixteen A100 GPUs across four nodes. Tasks include matrix multiplication, triangular solve TRSM, Cholesky factorization and fused factorization–solve, compared with ScaLAPACK, SLATE and cuSolverMp under matched precision, tile sizes and computational kernels. Each configuration has two warm-ups and four measured trials, reporting the fastest time rather than the mean. Eleven CPU Cholesky strategies are examined; the best is 1.34–1.68× faster than ScaLAPACK, while some strategies are slower.",
+                "GPU results require distinguishing transport. With both systems staging through host memory, Cyclotron reaches up to 1.24× SLATE on sixteen A100s in the larger block-cyclic configuration. With direct GPU communication, it reaches 1.12–1.28× cuSolverMp, which also communicates directly. The larger gain against host-staged SLATE mixes transport with execution changes and is not a pure compiler advantage. Hardware, tile shape and problem size change the winning strategy, motivating expressible alternatives rather than one fixed broadcast policy."
+              ]
+            },
+            {
+              "heading": "Where fusion helps, and where evidence ends",
+              "paragraphs": [
+                "Dependency-ready execution also lets consecutive work fill idle periods. On four CPU nodes, triangular solves alternating two spatial mappings gain 1.72× and 1.83× throughput over running those mappings back-to-back. Another experiment fuses Cholesky with the following solve: for a 4,096-order matrix and sixteen processes, the imbalanced non-block-cyclic configuration hides about 90% of standalone solve time. A more balanced block-cyclic configuration hides only 18–23%. The 90% figure is not a reduction in total application time.",
+                "The study supports joint design of communication representation and scheduling, not automatic acceleration of every distributed program. Evidence centres on regular tiled linear algebra, selected strategies and the fastest trials on particular machines. Irregular workloads, other networks and larger scales require further evaluation. Even for one algorithm, more compute parallelism can make communication the next bottleneck. Our engineering interpretation is to keep algorithms separable from mappings and measure candidate communication policies on the target workload, rather than infer universal optimal compilation from one speedup."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from Cyclotron; it is not a measured processor trace or performance figure.",
+            "steps": [
+              "Describe computation and data movement with recurrences",
+              "Assign dimensions to space or time",
+              "Generate matched sends, receives and computation from dependencies",
+              "Compare policies and overlap dependency-ready work"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "分散行列計算では算術だけでなく、いつ、どの経路で、どの処理器へデータを届けるかも重要になる。手書き実装は算法と通信を絡めがちで、機器やブロードキャスト方式を替えると大幅な変更が必要だ。Cyclotronは計算と移動を漸化式で表し、どの次元を処理器へ割り当て、どれを時間方向に実行するかを利用者が選ぶ。通信方式を探索しやすくする仕組みで、全機器共通の最適解を自動発見するものではない。",
+          "sections": [
+            {
+              "heading": "通信を算法の表現に含める",
+              "paragraphs": [
+                "通常の配列表現では値はメモリにある。Cyclotronは論理反復空間のある点にも値を置き、別の点から受け取る関係を記述できる。同じ移動でも空間次元なら処理器間通信、時間次元なら次の段階まで値を保持する意味になる。隣接中継、一対多配信、双方向リング、区間ごとの混合を共通の表現で扱い、ライブラリが用意した固定方式に限定しない。",
+                "コンパイラは漸化式と時空間の指定から、各処理器の演算と送受信順序を作る。現在の段階で生まれる値と前段階から残る値を区別し、古い値を読み終える前に上書きしないよう依存関係を並べる。受信の関係から対応する送信も導く。ブロック巡回配置は複数の仮想位置を物理処理器へ配分し、負荷を均して同じ値の重複転送を除く。ただし正しい通信と最速の通信は別の問題である。"
+              ]
+            },
+            {
+              "heading": "同じ転送経路で比べる",
+              "paragraphs": [
+                "Perlmutterで最大16CPUノード、または四ノードの16枚のA100 GPUを使う。行列積、三角求解TRSM、Cholesky分解、分解と求解の融合を、精度、タイル寸法、計算カーネルなどを揃えてScaLAPACK、SLATE、cuSolverMpと比較した。各設定は二回準備実行後、四回計測し最速値を報告するため、平均時間ではない。CPU Choleskyでは11通信方式のうち最良がScaLAPACK比1.34〜1.68倍だが、遅くなる方式もある。",
+                "GPUでは転送経路を分けて読む必要がある。両者ともホストメモリを経由する条件で、16枚A100の大きいブロック巡回設定はSLATE比最大1.24倍だった。GPU間直接通信では、同じ直接通信のcuSolverMp比1.12〜1.28倍となる。ホスト経由のSLATEとのより大きい差には転送方式の変更も含まれ、コンパイラだけの効果ではない。機器、タイル形状、問題規模で勝つ方式が変わるので、単一方式を固定しない意義がある。"
+              ]
+            },
+            {
+              "heading": "融合が効く条件と実証範囲",
+              "paragraphs": [
+                "依存が満たされ次第動くため、隣接する仕事が空き時間を埋められる。四CPUノードの三角求解では二つの空間配置を交互に重ね、前後に続けて実行する場合よりスループットが1.72倍と1.83倍になる。4096次行列、16プロセスで分解と後続求解を融合する実験では、負荷が不均一な非ブロック巡回設定で単独求解時間の約90%を隠せた。より均等なブロック巡回設定は18〜23%にとどまる。90%はアプリ全体の時間削減率ではない。",
+                "通信表現とスケジューリングを一緒に設計する利点は示すが、全分散プログラムの自動高速化は証明しない。評価は規則的なタイル線形代数に集中し、特定機器で選んだ方式の最速試行を測る。不規則負荷、別ネットワーク、より大規模な環境は追加検証が必要だ。同じ算法でも計算並列性を高めると通信が次の律速になる。当サイトの工学的な読み取りは、算法と配置を分離して対象負荷で通信を測ることであり、一つの倍率から万能の最適コンパイルを推測することではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Cyclotronの方法を当サイトが描き直した説明図。実測の処理器軌跡や性能図ではない。",
+            "steps": [
+              "計算と移動を漸化式で記述",
+              "次元を空間または時間へ割り当て",
+              "依存から整合した送受信と演算を生成",
+              "通信方式を比較し実行可能な仕事を重ねる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Распределённые матричные вычисления требуют решить не только какую арифметику выполнить, но и когда, куда и по какому пути доставить данные. Ручные реализации часто связывают алгоритм с коммуникацией, затрудняя смену аппаратуры или рассылки. Cyclotron выражает вычисления и движение данных рекуррентными отношениями, после чего программист назначает измерения процессорам либо времени. Это облегчает исследование стратегий, но не автоматически находит один оптимальный вариант для всех машин.",
+          "sections": [
+            {
+              "heading": "Включить обмен в представление алгоритма",
+              "paragraphs": [
+                "Обычное обращение к массиву описывает значение в памяти. Cyclotron дополнительно размещает значение в точке логического пространства итераций, откуда его может получить другая точка. Движение вдоль пространственного измерения означает обмен между процессорами, вдоль временного — локальное сохранение до следующего шага. Соседняя передача, рассылка одному ко многим, двунаправленные кольца и кусочные сочетания выражаются одинаково, без ограничения фиксированными операциями библиотеки.",
+                "Компилятор принимает рекуррентные отношения и пространственно-временные пометки, создавая порядок вычислений и обменов для каждого процессора. Он различает новые значения текущего шага и сохранённые значения прошлого, чтобы старое значение прочитали до перезаписи. Из отношений приёма выводятся парные отправки. Блочно-циклическое размещение распределяет виртуальные позиции по физическим процессорам, балансирует работу и убирает повторные передачи одного значения тому же процессору. Корректный обмен и самый быстрый обмен остаются разными задачами."
+              ]
+            },
+            {
+              "heading": "Сравнивать одинаковые пути передачи",
+              "paragraphs": [
+                "На Perlmutter изучают до шестнадцати CPU-узлов и шестнадцати A100 на четырёх узлах. Задачи — матричное умножение, треугольное решение TRSM, разложение Холецкого и слитное разложение с решением. ScaLAPACK, SLATE и cuSolverMp сравниваются при согласованных точности, размерах плиток и вычислительных ядрах. После двух прогревов выполняются четыре измерения и берётся лучшее, не среднее время. Среди одиннадцати коммуникационных стратегий CPU-Холецкого лучшая быстрее ScaLAPACK в 1,34–1,68 раза, но некоторые варианты медленнее.",
+                "На GPU необходимо разделять транспорт. При передаче обоих решений через память хоста Cyclotron достигает до 1,24 скорости SLATE на шестнадцати A100 в более крупной блочно-циклической конфигурации. При прямом обмене GPU он быстрее cuSolverMp, тоже использующего прямой обмен, в 1,12–1,28 раза. Больший выигрыш над SLATE с промежуточным хостом включает смену транспорта и не является чистым эффектом компилятора. Лидер меняется с аппаратурой, формой плиток и размером задачи, поэтому полезна выразимость нескольких политик."
+              ]
+            },
+            {
+              "heading": "Условия выигрыша от слияния",
+              "paragraphs": [
+                "Исполнение сразу после удовлетворения зависимостей позволяет соседним задачам заполнять простои. На четырёх CPU-узлах чередование двух пространственных отображений треугольного решения даёт пропускную способность в 1,72 и 1,83 раза выше их последовательного исполнения. При слиянии Холецкого и следующего решения для матрицы порядка 4096 и шестнадцати процессов несбалансированная неблочно-циклическая конфигурация скрывает около 90% времени отдельного решения. Более сбалансированная блочно-циклическая скрывает лишь 18–23%. Это не сокращение полного времени приложения на 90%.",
+                "Результаты поддерживают совместное проектирование представления обменов и расписания, а не автоматическое ускорение любой распределённой программы. Эксперименты сосредоточены на регулярной блочной линейной алгебре, выбранных политиках и лучших попытках на конкретных машинах. Нерегулярные нагрузки, другие сети и большие масштабы требуют проверки. Даже в одном алгоритме усиление вычислительного параллелизма может сделать связь новым узким местом. Наш инженерный вывод — отделять алгоритм от отображения и измерять обмен на целевой нагрузке, не выводя универсальную оптимальность из одного коэффициента."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема Cyclotron, перерисованная сайтом; это не измеренная трасса процессоров или график производительности.",
+            "steps": [
+              "Описать вычисления и движение рекуррентными отношениями",
+              "Назначить измерения пространству или времени",
+              "Сгенерировать согласованные обмены и вычисления по зависимостям",
+              "Сравнить политики и перекрыть готовую работу"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "分散式矩陣計算不僅要安排算術，還要決定資料何時、沿什麼路徑送到哪個處理器。手工實現常把演算法與通訊細節纏在一起，換一種硬體或廣播方式就要大改程式。Cyclotron用遞推關係同時描述計算和資料移動，再由程式設計師選擇哪些維度分配給處理器、哪些維度按時間執行。它把探索通訊策略變得更直接，目標並不是自動替使用者找到一個對所有機器都最優的方案。",
+          "sections": [
+            {
+              "heading": "把通訊寫進演算法表示",
+              "paragraphs": [
+                "傳統陣列表示式把資料看成記憶體中的值；Cyclotron還允許資料存在於邏輯迭代空間的某個位置，一個位置可以從另一個位置取得值。同一移動關係，沿空間維度就是處理器間通訊，沿時間維度就是本機保留到下一步。因此鄰居接力、一對多廣播、雙向環和分段混合都可用統一表示描述，不必被固定的通訊函式庫介面限制。",
+                "編譯器接收遞推關係及空間、時間標註，生成每個處理器的計算與收發順序。它區分當前步驟新產生的資料和上一時間步保留的資料，按依賴排序，避免舊值尚未被使用就遭覆蓋；接收關係還會推導出對應傳送。區塊循環對映把多個虛擬位置分攤到物理處理器，兼顧負載均衡，並去掉同一資料在同一處理器上的重複傳送。正確安排通訊和選擇最快策略仍是不同問題。"
+              ]
+            },
+            {
+              "heading": "比較時必須看清傳輸路徑",
+              "paragraphs": [
+                "作者在Perlmutter上測試最多16個CPU節點與16塊A100 GPU，後者分佈在四節點。任務包括矩陣乘法、三角求解TRSM、Cholesky分解及二者融合；比較ScaLAPACK、SLATE與cuSolverMp，匹配精度、分塊大小和計算核心等條件。各配置預熱兩次、測量四次，報告最快時間，不是平均值。CPU Cholesky考察11種通訊策略，其中最佳方案相對ScaLAPACK快1.34—1.68倍，也有方案更慢。",
+                "GPU結果必須區分通訊方式。雙方都經過主機中轉時，16塊A100上的Cyclotron在較大區塊循環配置下最多達到SLATE的1.24倍。改為GPU直接通訊後，對同樣直接通訊的cuSolverMp為1.12—1.28倍；相對仍走主機中轉的SLATE更大的倍數，不能解釋成純編譯器優勢。論文觀察到不同硬體、區塊形狀和問題規模會改變贏家，因此保留多種可表達策略比鎖定單一廣播方式更重要。"
+              ]
+            },
+            {
+              "heading": "融合收益來自哪裡，又止於哪裡",
+              "paragraphs": [
+                "依賴滿足即可執行，還允許相鄰工作相互填補空閒。四CPU節點上的三角求解交替使用兩種空間對映，對比把它們前後依序執行，吞吐分別為順序執行的1.72倍與1.83倍。另一實驗將Cholesky與後續求解融合：在4096階矩陣、16程序且負載不均衡的非區塊循環配置下，約90%的單獨求解時間被重疊隱藏；較均衡的區塊循環配置只隱藏18%—23%。90%不是整個應用的時間減少比例。",
+                "實驗說明通訊表示與排程值得聯合設計，卻沒有證明所有分散式程式都能自動提速。當前實證集中在規則的分塊線性代數，測到的是給定機器上的選定策略與最快輪次；不規則工作負載、不同網路或更大規模仍需驗證。即使同一個演算法，更多計算並行也可能讓通訊變成新的瓶頸。本站的工程啟發是先保持演算法與對映可分離，再用目標負載測出適合的通訊方案，而不是從一個加速數字推斷通用最優編譯。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據Cyclotron方法重繪的解釋圖，不是處理器實測軌跡或效能結果圖。",
+            "steps": [
+              "用遞推關係描述計算與資料移動",
+              "標註空間和時間維度",
+              "按依賴生成匹配的收發與計算",
+              "比較通訊策略並讓可重疊任務提前執行"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "random-projection-private-rag",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Private Retrieval Augmented Generation via Random Projection · original v1",
+          "url": "https://arxiv.org/html/2610.22297v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22297v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "RAG 把外部资料交给语言模型，可以补充模型不知道的信息，也可能让系统在不该披露时复述资料库里的敏感内容。这篇研究尝试改变检索的几何空间：让系统仍能找到相关材料，却不那么容易被连续追问引导到特定原文。它提供的是实验中的风险降低证据，不是资料绝不泄露的保证。",
+          "sections": [
+            {
+              "heading": "先改变检索空间，再生成回答",
+              "paragraphs": [
+                "作者使用随机投影，把资料库中的向量映射到较低维空间，查询向量也经过同一个变换。投影矩阵只采样一次，资料库可预先处理，查询则在检索时转换；默认投影维数为 100。随机投影能以较高概率近似保持向量间距离，但最近邻的具体排序可能改变。系统因此可能取得意思相近的替代材料，而不是总返回攻击者希望提取的那一段。",
+                "研究同时考察把检索片段放进提示的普通 RAG，以及用近邻信息调整下一个词元概率的 KNN-LM。前一种方式仍会把检索到的原始文本交给生成模型，投影并没有加密或删除正文。威胁模型也有限定：攻击者只能看到文本接口的回答，知道系统使用随机投影，却拿不到具体矩阵、模型参数或向量。拿到内部表示后的反推、旁路和系统入侵不在验证范围内。"
+              ]
+            },
+            {
+              "heading": "泄露下降是在什么条件下测得的",
+              "paragraphs": [
+                "实验覆盖邮件、法律文本、通用文本和多跳问答，并采用多种生成模型。主要重复查询设置对每个目标尝试十次，只要一次成功提取就记为泄露；研究假设超过十次的重复访问会被限制。这一定义比只检查一次回答严格，但仍不能代表攻击者拥有无限查询预算时的情况。对照包括不加保护的检索系统、没有外部资料库的模型，以及加入差分隐私机制的检索方法。",
+                "在 ECHR 法律文本与 Qwen3-4B 的普通 RAG 实验中，作者报告目标条目的泄露比例从 21.30% 降至 2.05%，对应回答 F1 从 97.32 降至 95.43；F1 衡量答案与参照答案的匹配，不能当作事实全部正确的比例。邮件实验中，被提取出的敏感项目数量从 217 个降至 3 个。后一个数字是项目数，不是百分比，也说明保护并未消除所有泄露。"
+              ]
+            },
+            {
+              "heading": "攻击测试有效，不等于形式化隐私保证",
+              "paragraphs": [
+                "作者还测试了会根据先前回答调整策略的多轮提取，单次攻击过程的查询预算最多为 200 次。随机投影在这些条件下也减少了恢复出的内容，但没有因此获得差分隐私的最坏情况保证。差分隐私约束单条数据变化对输出分布的影响；本研究的隐私结论主要来自选定攻击、资料和访问条件下的观察，不能因为某些攻击率接近对照，就把两种保证视为相同。",
+                "检索扰动还有质量代价。论文个案中，生成模型在少复述原文的同时编造了部分细节，表明“没把原文说出来”与“回答可信”是两件事。实际采用时仍需分别检查泄露风险、回答依据与访问权限，并重新评估新的资料分布和查询预算。这些是由研究边界得到的工程考虑，不是论文已经验证的一套完整安全方案；仅靠隐藏投影矩阵也不应被理解为充分的资料治理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：展示共享随机投影如何改变检索候选，不代表加密流程或隐私保证。",
+            "steps": [
+              "资料向量与查询使用同一随机投影",
+              "在低维空间寻找语义相近候选",
+              "用检索结果生成回答",
+              "分别评估内容泄露与回答质量"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Retrieval-augmented generation gives a language model access to external information, but it can also expose material that should remain private. This paper changes the geometry of retrieval: the system should still find relevant evidence while becoming harder to steer toward a particular passage through repeated requests. The evidence supports reduced leakage in experiments, not a guarantee that the datastore cannot be disclosed.",
+          "sections": [
+            {
+              "heading": "Change the search space before generating an answer",
+              "paragraphs": [
+                "A random projection maps datastore embeddings into a lower-dimensional space, and queries undergo the same transformation. The matrix is sampled once, rather than anew for every request. Documents can be processed beforehand; queries are transformed during retrieval. The default projection dimension is 100. Pairwise distances are approximately preserved with high probability, while the ordering of nearest neighbours can change. Retrieval may therefore select semantically related alternatives instead of consistently exposing the exact passage an attacker targets.",
+                "The paper studies ordinary RAG, which inserts retrieved text into a prompt, and KNN-LM, which adjusts next-token probabilities using neighbours. In ordinary RAG, original retrieved text still reaches the generator: projection neither encrypts nor removes it. The adversary sees only textual API responses and knows projection is used, but lacks its matrix, model parameters and embeddings. Attacks that recover internal representations, exploit side channels or compromise the underlying system are outside the evaluated threat model."
+              ]
+            },
+            {
+              "heading": "What the reported leakage reduction measures",
+              "paragraphs": [
+                "Experiments span email, legal documents, general text and multi-hop question answering with several generation models. The main repeated-query setup allows ten attempts per target; any successful extraction marks that target as leaked. The study assumes further repetitions are blocked. This is stricter than inspecting a single response, but does not establish protection with unlimited queries. Comparisons include unprotected retrieval, models without an external datastore and retrieval methods incorporating differential privacy.",
+                "For ordinary RAG on ECHR legal text with Qwen3-4B, the authors report a target-entry leakage rate falling from 21.30% to 2.05%, while answer F1 falls from 97.32 to 95.43. F1 measures agreement with reference answers, not the proportion of answers whose every fact is correct. In the email experiment, extracted sensitive items fall from 217 to 3. These are item counts rather than percentages, and the remaining items show that leakage was not eliminated."
+              ]
+            },
+            {
+              "heading": "An empirical defence is not a formal privacy guarantee",
+              "paragraphs": [
+                "The authors also examine adaptive multi-round extraction with a maximum budget of 200 queries per attack process. Projection reduces recovered content under those conditions too, but does not acquire a differential-privacy worst-case guarantee. Differential privacy constrains how changing one record affects output distributions. Here, privacy conclusions primarily come from particular attacks, datasets and access assumptions; similar observed attack rates do not make the underlying guarantees equivalent.",
+                "Retrieval perturbation can also affect answer quality. One example in the paper contains invented details despite reduced reproduction of source text, illustrating why avoiding verbatim disclosure and answering accurately are separate requirements. Deployment would still require separate checks of leakage, evidence quality and access permissions, followed by reassessment for new data distributions and query budgets. These are engineering implications of the study’s boundaries, not a complete security system already validated by the paper. Keeping the projection matrix secret is not, by itself, adequate data governance."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: shared projection changes retrieval candidates; it is not an encryption flow or a privacy guarantee.",
+            "steps": [
+              "Apply the same random projection to document and query vectors",
+              "Retrieve related candidates in the reduced space",
+              "Generate an answer using retrieved evidence",
+              "Assess leakage and answer quality separately"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "RAG は外部資料を言語モデルに渡し、モデルが知らない情報を補います。一方、開示すべきでない資料を回答で再現してしまう可能性もあります。本研究は検索空間の形を変え、関連資料は探せるまま、繰り返しの質問で特定の原文を取り出しにくくする方法です。示されたのは実験条件下での漏えい低減であり、資料が絶対に流出しないという保証ではありません。",
+          "sections": [
+            {
+              "heading": "回答の前に検索空間を変える",
+              "paragraphs": [
+                "ランダム射影で資料の埋め込みベクトルを低次元に写し、質問にも同じ変換を適用します。行列は一度だけ生成し、要求ごとに作り直しません。資料側は事前処理でき、質問側は検索時に変換します。既定の射影次元は 100 です。ベクトル間の距離は高い確率で近似的に保たれますが、最近傍の順序は変わり得ます。そのため、狙われた特定の文章を常に返す代わりに、意味の近い別の候補が取得される可能性があります。",
+                "取得した文章をプロンプトに入れる通常の RAG と、近傍情報で次のトークンの確率を調整する KNN-LM を調べています。通常の RAG では元の文章が生成モデルに渡るため、射影は本文の暗号化や削除ではありません。攻撃者はテキスト API の回答だけを見て、射影の使用は知っていても、具体的な行列、モデルのパラメータ、埋め込みにはアクセスできません。内部表現の逆推定、サイドチャネル、システム侵入は評価の対象外です。"
+              ]
+            },
+            {
+              "heading": "漏えい低減を測った条件",
+              "paragraphs": [
+                "メール、法律文書、一般的な文章、多段階の質問応答を複数モデルで評価しています。主要な反復質問の実験では、一つの対象に十回試行し、一度でも抽出できれば漏えいと数えます。十回を超える反復アクセスは制限されるという仮定です。一度の回答だけを見るより厳しいものの、無制限の質問に対する防御を示す条件ではありません。保護のない検索、外部資料を使わないモデル、差分プライバシーを組み込んだ検索手法と比較します。",
+                "ECHR の法律文書と Qwen3-4B を用いた通常の RAG では、対象項目の漏えい率が 21.30% から 2.05% に低下し、回答の F1 は 97.32 から 95.43 になったと著者らは報告します。F1 は参照回答との一致を測るもので、回答の全事実が正しい割合ではありません。メールの実験では抽出された機微な項目が 217 件から 3 件に減りました。これは割合ではなく件数であり、漏えいがゼロではないことも示します。"
+              ]
+            },
+            {
+              "heading": "攻撃実験と形式的な保証を区別する",
+              "paragraphs": [
+                "前の回答を使って方針を変える複数ラウンドの抽出も検証し、一つの攻撃過程の予算を最大 200 回の質問に設定しています。その条件でも復元される内容は減りましたが、差分プライバシーの最悪時保証を得たわけではありません。差分プライバシーは一件の記録の変更が出力分布に及ぼす影響を制限します。本研究の結論は選んだ攻撃、データ、アクセス条件での観測が中心であり、攻撃成功率が似ていても保証は同じではありません。",
+                "検索の変化は回答品質にも影響します。論文の一例では、原文の再現が減る一方で、生成モデルが細部を作り上げています。原文を漏らさないことと、正しく答えることは別の要件です。導入時は漏えい、根拠の品質、アクセス権を別々に検査し、データ分布や質問予算が変われば評価し直す必要があります。これは研究範囲から導く設計上の示唆であり、論文が完成した安全対策を検証したという意味ではありません。行列を秘密にするだけで十分なデータ管理になるわけでもありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。共通の射影で検索候補が変わる仕組みを示し、暗号化やプライバシー保証の図ではありません。",
+            "steps": [
+              "資料と質問のベクトルに同じ射影を適用",
+              "低次元空間で関連候補を検索",
+              "検索結果を使って回答を生成",
+              "漏えいと回答品質を別々に評価"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "RAG передаёт языковой модели внешние материалы, расширяя доступные ей знания, но одновременно создаёт риск раскрытия закрытых сведений. Эта работа меняет геометрию поиска: система должна сохранять доступ к релевантным материалам, но реже выдавать конкретный фрагмент при настойчивых повторных запросах. Результат представляет собой экспериментальное снижение утечек, а не гарантию невозможности раскрытия базы.",
+          "sections": [
+            {
+              "heading": "Сначала изменить пространство поиска",
+              "paragraphs": [
+                "Случайная проекция переводит векторы документов в пространство меньшей размерности; к запросам применяется то же преобразование. Матрицу выбирают один раз, а не заново для каждого обращения. Базу можно обработать заранее, запрос преобразуется при поиске. По умолчанию размерность проекции равна 100. Расстояния между векторами приближённо сохраняются с высокой вероятностью, однако порядок ближайших соседей может меняться. Вместо точного фрагмента, на который нацелен запрос, поиск иногда возвращает другие материалы с близким смыслом.",
+                "Авторы исследуют обычный RAG, добавляющий найденные тексты в контекст, и KNN-LM, корректирующий вероятности следующего токена с помощью соседних примеров. При обычном RAG исходный найденный текст всё равно поступает генератору: проекция не шифрует и не удаляет его. Противник видит только текстовые ответы API и знает о применении проекции, но не имеет её матрицы, параметров модели или эмбеддингов. Восстановление внутренних представлений, побочные каналы и компрометация системы находятся за пределами проверенной модели угроз."
+              ]
+            },
+            {
+              "heading": "Условия измерения утечек",
+              "paragraphs": [
+                "Эксперименты охватывают электронную почту, юридические документы, общие тексты и вопросы с несколькими шагами поиска, используя разные модели генерации. В основном тесте повторных запросов разрешено десять попыток на один объект: хотя бы одно успешное извлечение считается утечкой. Предполагается, что дальнейшие повторения блокируются. Это строже проверки единственного ответа, но не доказывает защиту при неограниченном числе запросов. Сравнения включают поиск без защиты, модели без внешней базы и методы с дифференциальной приватностью.",
+                "Для обычного RAG на юридических текстах ECHR с Qwen3-4B авторы сообщают снижение доли раскрытых целевых записей с 21.30% до 2.05%, тогда как F1 ответов меняется с 97.32 до 95.43. F1 характеризует соответствие эталонным ответам, а не долю ответов, в которых верен каждый факт. В почтовом эксперименте количество извлечённых чувствительных элементов уменьшается с 217 до 3. Это количество, а не процент; оставшиеся элементы показывают, что утечки не устранены полностью."
+              ]
+            },
+            {
+              "heading": "Эмпирическая защита не равна формальной гарантии",
+              "paragraphs": [
+                "Проверены и адаптивные многораундовые попытки извлечения, меняющие стратегию по предыдущим ответам, с бюджетом не более 200 запросов на процесс атаки. Проекция снижает объём восстановленных сведений и в этих условиях, но не получает гарантию дифференциальной приватности для худшего случая. Дифференциальная приватность ограничивает влияние изменения одной записи на распределение выходов. Здесь выводы преимущественно основаны на выбранных атаках, данных и правилах доступа: похожие наблюдаемые частоты утечек не делают гарантии одинаковыми.",
+                "Изменение поиска влияет и на качество ответа. В одном примере статьи модель выдумывает детали, хотя воспроизводит меньше исходного текста. Отсутствие дословной утечки и фактическая точность поэтому остаются отдельными требованиями. При внедрении нужны раздельные проверки утечек, качества свидетельств и прав доступа, а при изменении данных или бюджета запросов — новая оценка. Это инженерные следствия границ исследования, а не уже проверенная полноценная система безопасности. Одной секретности матрицы недостаточно для надлежащего управления данными."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: общая проекция меняет кандидатов поиска; схема не обозначает шифрование или гарантию приватности.",
+            "steps": [
+              "Применить общую случайную проекцию к документам и запросу",
+              "Найти близкие кандидаты в пространстве меньшей размерности",
+              "Сформировать ответ по найденным материалам",
+              "Отдельно оценить утечки и качество ответа"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "RAG 把外部資料交給語言模型，可以補充模型不知道的資訊，也可能讓系統在不該披露時複述資料庫裡的敏感內容。這篇研究嘗試改變檢索的幾何空間：讓系統仍能找到相關材料，卻不那麼容易被連續追問引導到特定原文。它提供的是實驗中的風險降低證據，不是資料絕不洩露的保證。",
+          "sections": [
+            {
+              "heading": "先改變檢索空間，再生成回答",
+              "paragraphs": [
+                "作者使用隨機投影，把資料庫中的向量對映到較低維空間，查詢向量也經過同一個變換。投影矩陣只取樣一次，資料庫可預先處理，查詢則在檢索時轉換；預設投影維數為 100。隨機投影能以較高機率近似保持向量間距離，但最近鄰的具體排序可能改變。系統因此可能取得意思相近的替代材料，而不是總返回攻擊者希望提取的那一段。",
+                "研究同時考察把檢索片段放進提示的普通 RAG，以及用近鄰資訊調整下一個詞元機率的 KNN-LM。前一種方式仍會把檢索到的原始文字交給生成模型，投影並沒有加密或刪除正文。威脅模型也有限定：攻擊者只能看到文字介面的回答，知道系統使用隨機投影，卻拿不到具體矩陣、模型參數或向量。拿到內部表示後的反推、旁路和系統入侵不在驗證範圍內。"
+              ]
+            },
+            {
+              "heading": "洩露下降是在什麼條件下測得的",
+              "paragraphs": [
+                "實驗覆蓋郵件、法律文字、通用文字和多跳問答，並採用多種生成模型。主要重複查詢設定對每個目標嘗試十次，只要一次成功提取就記為洩露；研究假設超過十次的重複存取會被限制。這一定義比只檢查一次回答嚴格，但仍不能代表攻擊者擁有無限查詢預算時的情況。對照包括不加保護的檢索系統、沒有外部資料庫的模型，以及加入差分隱私機制的檢索方法。",
+                "在 ECHR 法律文字與 Qwen3-4B 的普通 RAG 實驗中，作者報告目標條目的洩露比例從 21.30% 降至 2.05%，對應回答 F1 從 97.32 降至 95.43；F1 衡量答案與參照答案的匹配，不能當作事實全部正確的比例。郵件實驗中，被提取出的敏感項目數量從 217 個降至 3 個。後一個數字是項目數，不是百分比，也說明保護並未消除所有洩露。"
+              ]
+            },
+            {
+              "heading": "攻擊測試有效，不等於形式化隱私保證",
+              "paragraphs": [
+                "作者還測試了會根據先前回答調整策略的多輪提取，單次攻擊過程的查詢預算最多為 200 次。隨機投影在這些條件下也減少了恢復出的內容，但沒有因此獲得差分隱私的最壞情況保證。差分隱私約束單條資料變化對輸出分佈的影響；本研究的隱私結論主要來自選定攻擊、資料和存取條件下的觀察，不能因為某些攻擊率接近對照，就把兩種保證視為相同。",
+                "檢索擾動還有品質代價。論文個案中，生成模型在少複述原文的同時編造了部分細節，表明“沒把原文說出來”與“回答可信”是兩件事。實際採用時仍需分別檢查洩露風險、回答依據與存取權限，並重新評估新的資料分佈和查詢預算。這些是由研究邊界得到的工程考慮，不是論文已經驗證的一套完整安全方案；僅靠隱藏投影矩陣也不應被理解為充分的資料治理。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：展示共享隨機投影如何改變檢索候選，不代表加密流程或隱私保證。",
+            "steps": [
+              "資料向量與查詢使用同一隨機投影",
+              "在低維空間尋找語義相近候選",
+              "用檢索結果生成回答",
+              "分別評估內容洩露與回答品質"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "realtime-bench-temporal-action",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Realtime-Bench: Can Frontier Models Solve Real-time Interactive Problems? · original v1",
+          "url": "https://arxiv.org/html/2610.22155v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22155v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "会做题的 Agent 不一定能及时行动。网页状态、移动目标和短暂出现的操作机会不会总等它想好下一步。Realtime-Bench 把时间本身纳入评测，比较环境正常流逝、思考时暂停，以及按生成词元推进三种条件，拆开“想得对不对”和“来不来得及”这两个问题。",
+          "sections": [
+            {
+              "heading": "三种时钟分别测什么",
+              "paragraphs": [
+                "真实时钟模式让环境在模型推理期间继续变化，模型和服务的响应延迟都会消耗机会；暂停时钟模式则在推理时冻结环境，作为消除时间压力的对照。词元时钟不按服务器实际速度走，而是按模型生成的词元数量推进，主实验以每 64 个计费生成词元对应一秒模拟时间。这样，较长的推理仍有时间成本，但不同服务的快慢不再直接决定这个成本。",
+                "任务包含 30 个网页任务和 20 个游戏任务，共 50 个，状态会自行变化，部分操作必须赶在期限或机会消失前完成。系统每秒提供一帧截图，并标出可交互元素以减轻识别位置的负担；生成期间错过的中间画面不会全部补回来。这个设置让评测更关注时间判断，但也限定了观测精度：一秒之内发生又消失的变化可能无法看见。"
+              ]
+            },
+            {
+              "heading": "44% 是单次最佳结果，不是平均水平",
+              "paragraphs": [
+                "作者在真实时钟下测试 12 个模型，并选出 6 个代表模型比较三种时钟与两档推理强度；其中 Jev1.13 只评网页任务，不能把它的范围当作完整 50 题。主要评测重复三次。附录列出的最佳单次真实时钟成功率是 44%，即 50 个任务中完成 22 个。要求同一任务三次都成功时，最佳结果为 36%，即 18 个任务，这项指标衡量稳定性，不是三次里只要一次成功即可。",
+                "更长思考在暂停条件下帮助了所有被比较的模型，却不保证在计时条件下也有收益。Claude Opus 5 在暂停时钟下从低推理的 62% 升到高推理的 70%，但在词元时钟下从 44% 降到 30%；Kimi-K3 在同一词元时钟比较中则从 24% 升到 36%。这些差异说明合理的思考长度与模型和任务有关，不能直接得出“越快越好”或“多想总有用”的统一规则。"
+              ]
+            },
+            {
+              "heading": "评测仍没有覆盖所有现实延迟",
+              "paragraphs": [
+                "论文把失败分为漏掉状态更新、思考过久，以及误判该行动还是等待等情形。三种时钟的比较能帮助定位问题：暂停后明显改善，说明时间压力确实影响表现；按词元计时后仍不好，则不能只归因于服务器慢。对 Agent 设计的启发是让推理预算和重新观察的时机适应机会窗口。这是对实验的解释，并不是已经测得某一种调度方案可普遍解决问题。",
+                "基准规模有限，使用选定的网页和游戏，并非所有真实工作场景。真实时钟包含推理和服务延迟，但明确不把图形界面动作的执行耗时算入环境推进，因此也不是完整的端到端响应时间测量。一秒一帧的观察、任务设置及服务条件都会影响排名；词元时钟则是一种受控实验规则，不能当作实际部署的速度承诺。论文最有用的结论，是应把准确决策、及时决策和多次运行的稳定性分开检查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：同一类动态任务在三种时钟下对照，图区分延迟来源，不复现模型排名图。",
+            "steps": [
+              "动态环境持续产生行动机会",
+              "分别采用真实、暂停与词元时钟",
+              "模型观察后决定行动或等待",
+              "比较任务完成率与三次均成功的稳定性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An agent that knows what to do may still act too late. A changing page, moving target or brief interaction opportunity does not necessarily wait while the model reasons. Realtime-Bench makes time part of evaluation by comparing a running environment, an environment paused during inference and a clock advanced by generated tokens. This separates making a correct decision from making it in time.",
+          "sections": [
+            {
+              "heading": "Three clocks isolate different costs",
+              "paragraphs": [
+                "Wall-clock mode lets the environment continue during inference, so model and serving latency can consume an opportunity. Paused-clock mode freezes it during inference, providing a comparison without that time pressure. Token-clock mode advances according to generation rather than server speed: the main setting charges one simulated second per 64 generation tokens. Longer reasoning still costs time, but differences in serving speed no longer directly determine that cost.",
+                "The benchmark contains 50 tasks: 30 web tasks and 20 games. States change independently, and some actions must occur before a deadline or opportunity disappears. Agents receive one screenshot per second, with interactive elements marked to reduce the burden of locating controls. Intermediate frames missed during generation are not all replayed afterwards. This focuses attention on temporal decisions but limits observation: a change that appears and vanishes between frames may never be seen."
+              ]
+            },
+            {
+              "heading": "The headline 44% is a best single run",
+              "paragraphs": [
+                "Twelve models are tested under wall-clock conditions, and six representative models are compared across three clocks and two reasoning levels. Jev1.13 is evaluated only on web tasks, so its coverage must not be treated as all 50 tasks. Main evaluations repeat three times. The appendix’s highest individual wall-clock run achieves 44%, or 22 of 50 tasks. The best result requiring success on the same task in all three runs is 36%, or 18 tasks. That measures consistency, not success in at least one of three attempts.",
+                "More reasoning helps all compared models when the environment is paused, but not necessarily when reasoning consumes time. Claude Opus 5 rises from 62% at low reasoning to 70% at high reasoning under the paused clock, yet falls from 44% to 30% under the token clock. Kimi-K3 instead rises from 24% to 36% in that token-clock comparison. The useful reasoning length therefore depends on the model and task; neither “always act faster” nor “always think longer” follows from these results."
+              ]
+            },
+            {
+              "heading": "The benchmark does not include every real-world delay",
+              "paragraphs": [
+                "The paper distinguishes failures involving missed state changes, excessive reasoning and incorrect choices between acting and waiting. Comparing clocks helps diagnose them: improvement after pausing shows that temporal pressure matters, while poor token-clock performance cannot be blamed solely on a slow server. Adapting reasoning budgets and observation timing to available opportunities is an engineering implication. It is not evidence that a particular scheduling policy has already solved the problem in general.",
+                "The benchmark is small and uses selected web and game environments rather than the full range of real work. Wall-clock mode includes inference and serving latency but explicitly excludes GUI action-execution latency from environment advancement; it is therefore not a complete end-to-end response-time measurement. One-frame-per-second observations, task choices and service conditions can affect rankings. The token clock is a controlled experimental rule, not a deployment-speed promise. Correctness, timeliness and repeatability remain distinct properties that should be checked separately."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: compare dynamic tasks under three clocks to distinguish timing costs, rather than reproduce a model-ranking chart.",
+            "steps": [
+              "Dynamic environments create time-limited opportunities",
+              "Apply wall, paused and token clocks separately",
+              "Observe and decide whether to act or wait",
+              "Compare completion and success across all three runs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "何をすべきか分かる Agent でも、行動が間に合うとは限りません。変わる画面、動く対象、短時間だけ現れる操作機会は、推論が終わるまで待ってくれません。Realtime-Bench は時間を評価に組み込み、環境が動き続ける場合、推論中に停止する場合、生成トークン数で時間が進む場合を比較します。正しい判断と、間に合う判断を分けるためです。",
+          "sections": [
+            {
+              "heading": "三つの時計で遅れの原因を分ける",
+              "paragraphs": [
+                "実時間モードでは推論中も環境が変わり、モデルと提供サービスの応答遅延が機会を消費します。停止モードは推論中だけ環境を止め、時間圧力を除いた対照を作ります。トークン時計はサーバーの速度ではなく生成量に応じて進み、主設定では計上された生成トークン 64 個をシミュレーション時間の一秒に換算します。長い推論には時間コストが残る一方、サービスの処理速度による違いを切り離せます。",
+                "課題はウェブ 30 件とゲーム 20 件の計 50 件です。状態は Agent とは独立に変化し、期限や操作機会が消える前の行動を要求する課題もあります。毎秒一枚の画面画像を渡し、操作可能な要素には印を付けて位置認識の負担を減らします。生成中に見逃した途中の画像をすべて再送するわけではありません。時間判断に注目しやすい反面、フレーム間に現れて消える変化は見えない可能性があります。"
+              ]
+            },
+            {
+              "heading": "44% は最良の一回であり平均ではない",
+              "paragraphs": [
+                "実時間条件では 12 モデルを試し、代表的な 6 モデルで三つの時計と二段階の推論強度を比較します。Jev1.13 はウェブ課題のみの評価で、全 50 件を解いた扱いにはできません。主要評価は三回反復します。付録で最も高い実時間の単一試行は 44%、つまり 50 件中 22 件の成功です。同じ課題で三回すべて成功する条件では最高 36%、18 件でした。これは安定性の指標で、三回のうち一度成功すればよい指標ではありません。",
+                "停止モードでは比較対象の全モデルで長い推論が役立ちましたが、時間を消費する条件では同じとは限りません。Claude Opus 5 は停止モードで低推論の 62% から高推論の 70% へ上がる一方、トークン時計では 44% から 30% に下がります。Kimi-K3 は同じトークン時計の比較で 24% から 36% に上がりました。適切な推論量はモデルと課題に依存し、常に速く動くべきとも、長く考えるほどよいとも言えません。"
+              ]
+            },
+            {
+              "heading": "現実の遅延をすべて測るわけではない",
+              "paragraphs": [
+                "論文は状態更新の見落とし、長すぎる推論、行動と待機の選び間違いを失敗の型として整理しています。停止すると改善するなら時間圧力の影響があり、トークン時計でも成績が低ければサーバーの遅さだけでは説明できません。機会の長さに合わせて推論予算と再観測の時機を変えることが設計上の示唆です。ただし、特定のスケジューリング方法で一般的に解決したという実証ではありません。",
+                "課題数は限られ、選ばれたウェブとゲームは現実の仕事全体を代表しません。実時間モードには推論とサービスの遅延が入りますが、GUI 操作自体の実行時間は環境の時間進行から除外されています。完全な端から端までの応答時間測定ではありません。毎秒一枚の観測、課題、サービス条件で順位は変わり得ます。トークン時計も制御実験の規則で、実運用速度の保証ではありません。判断の正確さ、適時性、反復時の安定性を別々に評価することが重要です。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。三つの時計で時間コストを比較する流れで、モデル順位の実験図ではありません。",
+            "steps": [
+              "動く環境に時間制限のある機会が生じる",
+              "実時間・停止・トークン時計を別々に適用",
+              "観測して行動か待機かを選ぶ",
+              "完了率と三回すべて成功する安定性を比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Агент может правильно понимать задачу и всё же действовать слишком поздно. Изменяющаяся страница, движущаяся цель или короткая возможность взаимодействия не обязаны ждать окончания рассуждения. Realtime-Bench включает время в оценку: сравнивает непрерывно работающую среду, остановку среды на время вывода и часы, зависящие от числа сгенерированных токенов. Так правильность решения отделяется от своевременности.",
+          "sections": [
+            {
+              "heading": "Три способа учитывать время",
+              "paragraphs": [
+                "При обычных часах среда продолжает изменяться во время вывода, поэтому задержки модели и сервиса могут исчерпать доступную возможность. Режим паузы замораживает среду на время вывода и служит сравнением без такого давления. Токенные часы зависят от объёма генерации, а не скорости сервера: основной режим начисляет одну секунду моделируемого времени за 64 учитываемых токена генерации. Долгое рассуждение по-прежнему стоит времени, но скорость обслуживания непосредственно эту стоимость не определяет.",
+                "В наборе 50 задач: 30 веб-задач и 20 игр. Состояние меняется независимо от агента; некоторые действия нужно выполнить до истечения срока или исчезновения возможности. Агент получает один снимок экрана в секунду с отмеченными интерактивными элементами, уменьшающими трудность поиска нужного места. Пропущенные во время генерации промежуточные кадры затем не воспроизводятся целиком. Это помогает сосредоточиться на временных решениях, но ограничивает наблюдение: краткое изменение между кадрами может остаться невидимым."
+              ]
+            },
+            {
+              "heading": "44% — лучший отдельный запуск, а не среднее",
+              "paragraphs": [
+                "С обычными часами проверяют 12 моделей; шесть представителей сравнивают при трёх типах часов и двух уровнях рассуждения. Jev1.13 оценивается только на веб-задачах, поэтому его покрытие нельзя считать равным всем 50 заданиям. Основные оценки повторяют трижды. Лучший отдельный запуск с обычными часами в приложении достигает 44%, то есть 22 из 50 задач. Если требовать успеха в одной задаче во всех трёх запусках, лучший результат составляет 36%, или 18 задач. Это показатель устойчивости, а не успех хотя бы в одной из трёх попыток.",
+                "При остановленной среде увеличение рассуждения помогает всем сравниваемым моделям, но при учёте времени результат иной. Claude Opus 5 повышает успех с 62% при низком уровне рассуждения до 70% при высоком в режиме паузы, однако с токенными часами падает с 44% до 30%. Kimi-K3 в таком же токенном сравнении растёт с 24% до 36%. Подходящая длина рассуждения зависит от модели и задачи: результаты не подтверждают универсальное правило ни «всегда быстрее», ни «всегда думать дольше»."
+              ]
+            },
+            {
+              "heading": "Не все реальные задержки включены",
+              "paragraphs": [
+                "Авторы различают пропуск обновления состояния, слишком долгое рассуждение и ошибочный выбор между действием и ожиданием. Сравнение часов помогает установить причину: улучшение при паузе показывает роль временного давления, а слабый результат с токенными часами нельзя объяснить только медленным сервером. Подстройка бюджета рассуждений и момента нового наблюдения под доступное окно — инженерное следствие результатов, а не доказательство, что конкретный планировщик уже решает проблему в общем случае.",
+                "Набор невелик и состоит из выбранных веб-сред и игр, а не всех реальных рабочих ситуаций. Обычные часы учитывают вывод и обслуживание, но время исполнения самого действия в GUI явно исключено из продвижения среды. Это не полное измерение сквозной задержки. Частота наблюдения один кадр в секунду, выбор задач и условия сервиса могут влиять на рейтинг. Токенные часы — правило контролируемого эксперимента, а не обещание скорости внедрения. Точность, своевременность и повторяемость нужно проверять отдельно."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: три типа часов разделяют временные издержки; это не воспроизведение рейтинга моделей.",
+            "steps": [
+              "Среда создаёт ограниченные во времени возможности",
+              "Раздельно применить обычные часы, паузу и токенные часы",
+              "Наблюдать и выбирать действие либо ожидание",
+              "Сравнить завершение задач и успех во всех трёх запусках"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "會做題的 Agent 不一定能及時行動。網頁狀態、移動目標和短暫出現的操作機會不會總等它想好下一步。Realtime-Bench 把時間本身納入評測，比較環境正常流逝、思考時暫停，以及按生成詞元推進三種條件，拆開“想得對不對”和“來不來得及”這兩個問題。",
+          "sections": [
+            {
+              "heading": "三種時鐘分別測什麼",
+              "paragraphs": [
+                "真實時鐘模式讓環境在模型推理期間繼續變化，模型和服務的回應延遲都會消耗機會；暫停時鐘模式則在推理時凍結環境，作為消除時間壓力的對照。詞元時鐘不按伺服器實際速度走，而是按模型生成的詞元數量推進，主實驗以每 64 個計費生成詞元對應一秒模擬時間。這樣，較長的推理仍有時間成本，但不同服務的快慢不再直接決定這個成本。",
+                "任務包含 30 個網頁任務和 20 個遊戲任務，共 50 個，狀態會自行變化，部分操作必須趕在期限或機會消失前完成。系統每秒提供一幀截圖，並標出可互動元素以減輕識別位置的負擔；生成期間錯過的中間畫面不會全部補回來。這個設定讓評測更關注時間判斷，但也限定了觀測精度：一秒之內發生又消失的變化可能無法看見。"
+              ]
+            },
+            {
+              "heading": "44% 是單次最佳結果，不是平均水平",
+              "paragraphs": [
+                "作者在真實時鐘下測試 12 個模型，並選出 6 個代表模型比較三種時鐘與兩檔推理強度；其中 Jev1.13 只評網頁任務，不能把它的範圍當作完整 50 題。主要評測重複三次。附錄列出的最佳單次真實時鐘成功率是 44%，即 50 個任務中完成 22 個。要求同一任務三次都成功時，最佳結果為 36%，即 18 個任務，這項指標衡量穩定性，不是三次裡只要一次成功即可。",
+                "更長思考在暫停條件下幫助了所有被比較的模型，卻不保證在計時條件下也有收益。Claude Opus 5 在暫停時鐘下從低推理的 62% 升到高推理的 70%，但在詞元時鐘下從 44% 降到 30%；Kimi-K3 在同一詞元時鐘比較中則從 24% 升到 36%。這些差異說明合理的思考長度與模型和任務有關，不能直接得出“越快越好”或“多想總有用”的統一規則。"
+              ]
+            },
+            {
+              "heading": "評測仍沒有覆蓋所有現實延遲",
+              "paragraphs": [
+                "論文把失敗分為漏掉狀態更新、思考過久，以及誤判該行動還是等待等情形。三種時鐘的比較能幫助定位問題：暫停後明顯改善，說明時間壓力確實影響表現；按詞元計時後仍不好，則不能只歸因於伺服器慢。對 Agent 設計的啟發是讓推理預算和重新觀察的時機適應機會時間窗。這是對實驗的解釋，並不是已經測得某一種排程方案可普遍解決問題。",
+                "基準規模有限，使用選定的網頁和遊戲，並非所有真實工作場景。真實時鐘包含推理和服務延遲，但明確不把圖形介面動作的執行耗時算入環境推進，因此也不是完整的端到端回應時間測量。一秒一幀的觀察、任務設定及服務條件都會影響排名；詞元時鐘則是一種受控實驗規則，不能當作實際部署的速度承諾。論文最有用的結論，是應把準確決策、及時決策和多次執行的穩定性分開檢查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：同一類動態任務在三種時鐘下對照，圖區分延遲來源，不重現模型排名圖。",
+            "steps": [
+              "動態環境持續產生行動機會",
+              "分別採用真實、暫停與詞元時鐘",
+              "模型觀察後決定行動或等待",
+              "比較任務完成率與三次均成功的穩定性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "value-as-memory-robot-posttraining",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Value as Memory: Online Value-Guided Post-training for General Robot Policies · original v1",
+          "url": "https://arxiv.org/html/2610.22368v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22368v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "机器人眼前的画面差不多，下一步却可能完全不同：一次是在正常推进，另一次可能已经卡住，需要退回或重试。Value as Memory（VaM）把近期的任务价值预测作为记忆交给动作策略，让它不只看现在的样子，也参考过去一段时间是在进步、停滞还是倒退，再通过实际操作持续更新策略。",
+          "sections": [
+            {
+              "heading": "用进度估计补足视觉信息",
+              "paragraphs": [
+                "这里的“价值”是模型对未来任务回报的估计，不是传感器直接测得的完成百分比。价值模型从图像历史等信息预测进展，系统缓存近期预测，再与图像、机器人自身状态一起提供给动作模型。相似画面如果对应不同的价值变化，动作模型便多了一条区分任务阶段的线索。价值与动作推理异步运行，当前动作使用之前已有的预测，不等待当前时刻的新价值计算。",
+                "训练先用专家演示初始化，再通过离线强化学习预热，接着进入有人纠正错误的在线 DAgger 阶段，最后转入 Learn from Experience。最后阶段依靠自主尝试的终局奖励，不再收集新的人工纠正，但仍会重用此前的人类干预数据。离线演示、历史干预和当前策略产生的尝试共同用于更新价值模型与动作模型，因此不能把最终的自主学习描述为从未使用人工数据。"
+              ]
+            },
+            {
+              "heading": "三个实体任务中的对照结果",
+              "paragraphs": [
+                "实验在单台机器人上完成盒子组装、衣物折叠和磁性巴士组装，覆盖长流程、柔性物体与接触密集操作。成功率指在各任务规定时间内完成整个评估回合的比例。表中的结果平均最后三个在线训练检查点，误差范围也是这三个检查点之间的变化，不是三个独立训练随机种子的统计；这一点决定了该结果能够说明怎样的稳定性。",
+                "作者报告 VaM 在上述三个任务上的平均成功率分别为 96.7%、88.9% 和 76.7%，去掉价值缓存的对照分别为 81.7%、48.9% 和 43.3%。跨任务平均提升为 29.4 个百分点，是成功率的绝对差值，而非相对提高 29.4%。另外，从同一个预热模型出发并匹配梯度更新步数和数据采集预算时，在线训练在自主学习阶段结束后的平均成功率比离线训练高 32.8 个百分点。"
+              ]
+            },
+            {
+              "heading": "记住预测有帮助，也会继承预测的错误",
+              "paragraphs": [
+                "论文还观察是否能从局部失败中恢复，而不只统计整项任务最终成功与否。衣物折叠中，VaM 在 44 次需要恢复的事件中成功处理了 38 次，即 86.4%；无价值缓存对照为 51 次中的 30 次，即 58.8%。分母是需要恢复的事件数，不是评估回合数，一个回合可能出现多个事件。保持动作模型不变、把价值模型换成较早阶段的版本，也会降低三个任务的成功率，说明收益与进度预测是否适应当前策略有关。",
+                "缓存里保存的是模型自己的判断，错误或失真的价值估计仍可能误导行动。作者明确指出，稳定训练依赖离线预热以及能跟踪实际进度的价值模型；单机实验尚未证明多机器人共享经验后的扩展效果。时间效率还受并行采集和训练安排影响，不能据此声称任意机器人的学习速度都会成倍提高。VaM 支持的是在所测任务中将进度估计用作短期记忆，并持续利用实际反馈改进策略，尚不是通用操作能力或安全自主运行的保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释示意：近期价值预测作为动作输入，实际尝试又用于更新模型；不是原始成功率图。",
+            "steps": [
+              "从图像历史估计任务价值",
+              "缓存近期预测并与机器人状态结合",
+              "动作策略执行并记录结果",
+              "混合演示、历史干预和新经验更新模型"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Nearly identical robot-camera images can call for different actions: one may show normal progress, another a stalled attempt requiring retreat or retry. Value as Memory (VaM) supplies recent task-value predictions to the action policy as memory. The policy can use a short history of improvement, stagnation or decline alongside the current appearance, while learning continues from physical interaction.",
+          "sections": [
+            {
+              "heading": "Use progress estimates to supplement vision",
+              "paragraphs": [
+                "“Value” is a model’s estimate of future task return, not a sensor measurement of percentage completion. A value model uses information including image history to estimate progress. Recent predictions are cached and supplied to the action model together with images and the robot’s own state. Different value trends provide another clue when similar images correspond to different task stages. Value inference and action inference run asynchronously: the current action uses earlier available predictions rather than waiting for a new value computation.",
+                "Training starts with expert demonstrations, proceeds through offline reinforcement-learning warmup, then uses online DAgger with human corrections before entering Learn from Experience. The final stage uses outcome rewards from autonomous attempts without collecting new human corrections, but continues to reuse earlier intervention data. Offline demonstrations, historical interventions and attempts by the current policy jointly update the value and action models. Autonomous learning in this final stage therefore does not mean the system has never relied on human data."
+              ]
+            },
+            {
+              "heading": "Controlled comparisons on three physical tasks",
+              "paragraphs": [
+                "Experiments use one robot for box assembly, laundry folding and magnetic bus assembly, covering long workflows, deformable objects and contact-rich manipulation. Success rate is the fraction of evaluation episodes completing the task within its specified time limit. Reported results average the final three online-training checkpoints. Their error bars describe variation across those checkpoints, not three independently trained random seeds, which limits what the figures establish about repeatability.",
+                "The authors report mean success rates of 96.7%, 88.9% and 76.7% for these tasks with VaM, compared with 81.7%, 48.9% and 43.3% without value caching. The mean absolute improvement across tasks is 29.4 percentage points, not a relative 29.4% gain. A separate comparison starts from the same warmed-up model and matches gradient-step and data-collection budgets. After autonomous learning, online training exceeds offline training by an average of 32.8 percentage points in success rate."
+              ]
+            },
+            {
+              "heading": "Memory helps only when its estimates remain useful",
+              "paragraphs": [
+                "Correction is examined separately from eventual task completion. In laundry folding, VaM recovers from 38 of 44 events requiring recovery, or 86.4%; the no-cache variant recovers from 30 of 51, or 58.8%. The denominator is recovery-requiring events, not evaluation episodes, and one episode can contain several events. Keeping the action model fixed while replacing the value model with an earlier snapshot also lowers success on all three tasks. This supports the importance of estimates adapted to the current policy, rather than merely adding any numerical history.",
+                "The cache contains the model’s own judgements, so inaccurate or distorted value estimates can still mislead actions. The authors identify offline warmup and a value model that tracks actual progress as requirements for stable training; the single-robot study does not establish scaling to fleets sharing experience. Timing gains also depend on parallel collection and training arrangements and cannot imply a universal multiplication of robot learning speed. The evidence supports using progress estimates as short-term memory and updating policies from feedback on the tested tasks, not general manipulation competence or guaranteed safe autonomy."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: recent value estimates inform actions and physical experience updates the models; not the original success-rate figure.",
+            "steps": [
+              "Estimate task value from image history",
+              "Cache recent predictions alongside robot state",
+              "Act and record outcomes",
+              "Update models using demonstrations, past interventions and new experience"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ロボットの目の前がほぼ同じでも、必要な次の動作は異なることがあります。順調に進んでいる場面と、行き詰まって戻るべき場面です。Value as Memory（VaM）は直近のタスク価値予測を記憶として動作方策に渡します。現在の見た目だけでなく、最近の進捗が改善、停滞、後退のどれだったかも参考にし、実機での経験から学習を続けます。",
+          "sections": [
+            {
+              "heading": "進捗の推定で視覚情報を補う",
+              "paragraphs": [
+                "ここでいう価値は将来のタスク報酬に関するモデルの推定であり、センサーが直接測った完了率ではありません。価値モデルは画像履歴などから進捗を予測し、その履歴をキャッシュして、画像とロボット自身の状態とともに動作モデルへ渡します。似た画像でも価値の変化が違えば、作業段階を区別する手掛かりになります。価値と動作の推論は非同期で、現在の動作は新しい価値計算を待たず、すでに得られた過去の予測を使います。",
+                "学習は専門家の実演による初期化、オフライン強化学習の準備段階、人間の修正を伴うオンライン DAgger、Learn from Experience の順に進みます。最終段階は自律的な試行の終端報酬を使い、新たな人の修正は収集しませんが、以前に集めた介入データは再利用します。実演、過去の介入、現在の方策による試行を混ぜて価値モデルと動作モデルを更新します。この段階の自律学習を、人間のデータを一切使わない学習と呼ぶことはできません。"
+              ]
+            },
+            {
+              "heading": "三つの実機課題で比較した結果",
+              "paragraphs": [
+                "一台のロボットで箱の組み立て、洗濯物の折り畳み、磁石を使うバスの組み立てを実施し、長い工程、変形する物体、接触の多い操作を扱います。成功率は課題ごとの制限時間内に全工程を完了した評価エピソードの割合です。報告値はオンライン学習の最後の三つのチェックポイントの平均で、誤差もその間の変動です。三つの独立した乱数シードで学習した統計ではなく、反復可能性について示せる範囲には限りがあります。",
+                "著者報告の VaM の平均成功率は順に 96.7%、88.9%、76.7% で、価値キャッシュを外すと 81.7%、48.9%、43.3% でした。課題平均の改善は絶対差で 29.4 ポイントであり、相対的な 29.4% 増ではありません。別の比較では同じ準備済みモデルから出発し、勾配更新ステップ数とデータ収集予算をそろえます。自律学習段階の終了後、オンライン学習はオフライン学習を平均 32.8 ポイント上回りました。"
+              ]
+            },
+            {
+              "heading": "記憶は予測の誤りも引き継ぐ",
+              "paragraphs": [
+                "最終的な課題成功だけでなく、途中の失敗から復帰できるかも調べています。折り畳みでは VaM が復帰を要する 44 件中 38 件、86.4% を処理できたのに対し、キャッシュなしは 51 件中 30 件、58.8% でした。分母は復帰が必要な事象で、評価エピソード数ではなく、一回の試行に複数起こり得ます。動作モデルを固定して価値モデルだけを以前の版に戻すと三課題とも成功率が低下し、単に数値の履歴があることより、現在の方策に合う推定が重要だと示唆されます。",
+                "保存するのはモデル自身の判断なので、不正確な価値推定は行動を誤らせる可能性があります。著者らは安定した学習にオフラインの準備段階と実際の進捗を追える価値モデルが必要とし、一台の実験では経験を共有する複数ロボットへの拡張は実証していません。時間短縮も収集と学習の並列化に依存し、あらゆるロボットの学習速度が何倍にもなるとは言えません。実証は対象課題で進捗推定を短期記憶として使い、実機の反応から方策を更新する効果に限られ、汎用的な操作能力や安全な自律運転の保証ではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。直近の価値予測を動作入力にし、実機の経験でモデルを更新する流れで、成功率の原図ではありません。",
+            "steps": [
+              "画像履歴からタスク価値を推定",
+              "直近の予測を保存しロボット状態と組み合わせる",
+              "動作して結果を記録",
+              "実演・過去の介入・新しい経験でモデルを更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Почти одинаковые изображения с камеры робота могут требовать разных действий: в одном случае работа идёт нормально, в другом механизм застрял и нужно отступить или повторить попытку. Value as Memory (VaM) передаёт политике действий недавние предсказания ценности задачи как память. Вместе с текущим изображением политика получает историю улучшения, остановки или ухудшения прогресса, продолжая учиться на физическом взаимодействии.",
+          "sections": [
+            {
+              "heading": "Дополнить зрение оценкой прогресса",
+              "paragraphs": [
+                "Ценность здесь — предсказание будущей награды за задачу, а не измеренный датчиком процент завершения. Модель ценности оценивает прогресс по истории изображений и другим наблюдениям. Недавние предсказания сохраняются и поступают модели действий вместе с изображениями и собственным состоянием робота. Разные тенденции ценности помогают различать стадии с похожей картинкой. Вычисление ценности и выбор действия идут асинхронно: текущее действие использует уже доступные предыдущие предсказания и не ждёт нового вычисления.",
+                "Обучение начинается с экспертных демонстраций, проходит предварительную офлайн-настройку с подкреплением, затем онлайн-DAgger с исправлениями человека и этап Learn from Experience. Последний использует итоговые награды автономных попыток без сбора новых человеческих исправлений, но продолжает применять ранее собранные вмешательства. Демонстрации, исторические вмешательства и попытки текущей политики совместно обновляют модели ценности и действий. Автономность заключительного этапа поэтому не означает, что система никогда не опиралась на человеческие данные."
+              ]
+            },
+            {
+              "heading": "Сравнения на трёх физических задачах",
+              "paragraphs": [
+                "Один робот собирает коробку, складывает бельё и собирает магнитный автобус; задачи охватывают длинные процессы, деформируемые предметы и операции с интенсивным контактом. Успех — доля оценочных эпизодов, завершивших всю задачу в пределах установленного для неё времени. Результаты усредняются по последним трём контрольным точкам онлайн-обучения. Интервалы разброса относятся к этим точкам, а не к трём независимым обучениям с разными случайными инициализациями, что ограничивает выводы о воспроизводимости.",
+                "Для VaM авторы сообщают средние показатели успеха 96.7%, 88.9% и 76.7% соответственно; без кеширования ценности они составляют 81.7%, 48.9% и 43.3%. Среднее абсолютное улучшение по задачам равно 29.4 процентного пункта, а не относительному росту на 29.4%. В отдельном сравнении обучение начинается с одной и той же предварительно подготовленной модели при равных бюджетах градиентных шагов и сбора данных. После автономного этапа онлайн-обучение превосходит офлайн-вариант в среднем на 32.8 процентного пункта успешности."
+              ]
+            },
+            {
+              "heading": "Память наследует ошибки предсказаний",
+              "paragraphs": [
+                "Восстановление после локального сбоя оценивается отдельно от окончательного завершения задачи. При складывании белья VaM успешно исправляет 38 из 44 событий, требующих восстановления, — 86.4%; вариант без кеша справляется с 30 из 51, или 58.8%. Знаменатель — события, а не оценочные эпизоды: за один эпизод таких событий может быть несколько. Если оставить модель действий неизменной, но заменить модель ценности более ранней версией, результат снижается во всех трёх задачах. Это подчёркивает важность оценок, соответствующих текущей политике, а не просто наличия числовой истории.",
+                "Кеш хранит собственные суждения модели, поэтому неточные оценки способны направить действия неверно. Авторы отмечают необходимость предварительной офлайн-подготовки и модели ценности, отражающей действительный прогресс. Опыт на одном роботе не доказывает масштабирование на парк с обменом опытом. Выигрыш по времени зависит и от параллельной организации сбора данных и обучения, а не означает универсального многократного ускорения обучения любого робота. Работа поддерживает использование оценок прогресса как краткосрочной памяти и обновление по обратной связи в исследованных задачах, но не гарантирует общую компетентность манипуляции или безопасную автономность."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: недавние оценки ценности входят в выбор действий, а физический опыт обновляет модели; это не исходный график успешности.",
+            "steps": [
+              "Оценить ценность задачи по истории изображений",
+              "Сохранить недавние оценки вместе с состоянием робота",
+              "Выполнить действие и записать результат",
+              "Обновить модели по демонстрациям, прежним вмешательствам и новому опыту"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "機器人眼前的畫面差不多，下一步卻可能完全不同：一次是在正常推進，另一次可能已經卡住，需要退回或重試。Value as Memory（VaM）把近期的任務價值預測作為記憶交給動作策略，讓它不只看現在的樣子，也參考過去一段時間是在進步、停滯還是倒退，再透過實際操作持續更新策略。",
+          "sections": [
+            {
+              "heading": "用進度估計補足視覺資訊",
+              "paragraphs": [
+                "這裡的“價值”是模型對未來任務回報的估計，不是感測器直接測得的完成百分比。價值模型從影像歷史等資訊預測進展，系統快取近期預測，再與影像、機器人自身狀態一起提供給動作模型。相似畫面如果對應不同的價值變化，動作模型便多了一條區分任務階段的線索。價值與動作推理非同步執行，當前動作使用之前已有的預測，不等待當前時刻的新價值計算。",
+                "訓練先用專家演示初始化，再透過離線強化學習預熱，接著進入有人糾正錯誤的線上 DAgger 階段，最後轉入 Learn from Experience。最後階段依靠自主嘗試的終局獎勵，不再收集新的人工糾正，但仍會重用此前的人類干預資料。離線演示、歷史干預和當前策略產生的嘗試共同用於更新價值模型與動作模型，因此不能把最終的自主學習描述為從未使用人工資料。"
+              ]
+            },
+            {
+              "heading": "三個實體任務中的對照結果",
+              "paragraphs": [
+                "實驗在單臺機器人上完成盒子組裝、衣物摺疊和磁性巴士組裝，覆蓋長流程、柔性物體與接觸密集操作。成功率指在各任務規定時間內完成整個評估回合的比例。表中的結果平均最後三個線上訓練檢查點，誤差範圍也是這三個檢查點之間的變化，不是三個獨立訓練隨機種子的統計；這一點決定了該結果能夠說明怎樣的穩定性。",
+                "作者報告 VaM 在上述三個任務上的平均成功率分別為 96.7%、88.9% 和 76.7%，去掉價值快取的對照分別為 81.7%、48.9% 和 43.3%。跨任務平均提升為 29.4 個百分點，是成功率的絕對差值，而非相對提高 29.4%。另外，從同一個預熱模型出發並匹配梯度更新步數和資料採集預算時，線上訓練在自主學習階段結束後的平均成功率比離線訓練高 32.8 個百分點。"
+              ]
+            },
+            {
+              "heading": "記住預測有幫助，也會繼承預測的錯誤",
+              "paragraphs": [
+                "論文還觀察是否能從局部失敗中恢復，而不只統計整項任務最終成功與否。衣物摺疊中，VaM 在 44 次需要恢復的事件中成功處理了 38 次，即 86.4%；無價值快取對照為 51 次中的 30 次，即 58.8%。分母是需要恢復的事件數，不是評估回合數，一個回合可能出現多個事件。保持動作模型不變、把價值模型換成較早階段的版本，也會降低三個任務的成功率，說明收益與進度預測是否適應當前策略有關。",
+                "快取裡儲存的是模型自己的判斷，錯誤或失真的價值估計仍可能誤導行動。作者明確指出，穩定訓練依賴離線預熱以及能跟蹤實際進度的價值模型；單機實驗尚未證明多機器人共享經驗後的擴展效果。時間效率還受並行採集和訓練安排影響，不能據此聲稱任意機器人的學習速度都會成倍提高。VaM 支援的是在所測任務中將進度估計用作短期記憶，並持續利用實際回饋改進策略，尚不是通用操作能力或安全自主執行的保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋示意：近期價值預測作為動作輸入，實際嘗試又用於更新模型；不是原始成功率圖。",
+            "steps": [
+              "從影像歷史估計任務價值",
+              "快取近期預測並與機器人狀態結合",
+              "動作策略執行並記錄結果",
+              "混合演示、歷史干預和新經驗更新模型"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
