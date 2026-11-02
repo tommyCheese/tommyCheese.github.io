@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">How Deep Review checks a document</title><desc id="desc">An original explanatory diagram. The full document is divided into overlapping logical segments, compute is allocated by complexity, agents check segments with full context, and a synthesis stage produces comments for human verification. Not an experimental result.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#527498" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="675" rx="28" fill="#f3f7fc"/>
+<text x="60" y="73" fill="#285174" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">DOCUMENT VERIFICATION</text>
+<text x="60" y="127" fill="#18354c" font-family="Arial,sans-serif" font-size="40" font-weight="700">Divide the work. Keep the context.</text>
+<text x="60" y="164" fill="#516a80" font-family="Arial,sans-serif" font-size="21">Deep Review / PAT — original explanatory diagram</text>
+<g font-family="Arial,sans-serif">
+<rect x="60" y="226" width="240" height="220" rx="18" fill="white" stroke="#b9cce0" stroke-width="2"/>
+<rect x="340" y="226" width="240" height="220" rx="18" fill="white" stroke="#b9cce0" stroke-width="2"/>
+<rect x="620" y="226" width="240" height="220" rx="18" fill="white" stroke="#b9cce0" stroke-width="2"/>
+<rect x="900" y="226" width="240" height="220" rx="18" fill="white" stroke="#b9cce0" stroke-width="2"/>
+<g fill="#285174" font-size="15" font-weight="700"><text x="82" y="259">01 / SEGMENT</text><text x="362" y="259">02 / ALLOCATE</text><text x="642" y="259">03 / VERIFY</text><text x="922" y="259">04 / SYNTHESIZE</text></g>
+<g fill="#18354c" font-size="22" font-weight="700"><text x="82" y="299">Logical sections</text><text x="362" y="299">Reasoning effort</text><text x="642" y="299">Parallel agents</text><text x="922" y="299">Check consistency</text></g>
+<g fill="#516a80" font-size="18"><text x="82" y="337">Cover the whole text</text><text x="82" y="366">Allow useful overlap</text><text x="362" y="337">More for dense proofs</text><text x="362" y="366">Less for simpler parts</text><text x="642" y="337">Focus on one section</text><text x="642" y="366">Refer to the full text</text><text x="922" y="337">Reconcile findings</text><text x="922" y="366">Check outside evidence</text></g>
+<g fill="#c4d8ee"><rect x="82" y="395" width="118" height="12" rx="6"/><rect x="151" y="414" width="118" height="12" rx="6"/></g>
+<g fill="#7aa9d3"><rect x="365" y="411" width="40" height="15" rx="4"/><rect x="420" y="400" width="40" height="26" rx="4"/><rect x="475" y="388" width="40" height="38" rx="4"/></g>
+<g fill="#7aa9d3"><circle cx="665" cy="408" r="13"/><circle cx="733" cy="408" r="13"/><circle cx="801" cy="408" r="13"/></g>
+<path d="M926 401h51m-51 18h92m-6-28 12 12 25-27" fill="none" stroke="#7aa9d3" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<g stroke="#527498" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M305 331h28"/><path d="M585 331h28"/><path d="M865 331h28"/></g>
+<rect x="60" y="489" width="1080" height="85" rx="16" fill="#e3edf7"/>
+<text x="86" y="525" fill="#18354c" font-size="23" font-weight="700">Review comments require human verification.</text>
+<text x="86" y="554" fill="#516a80" font-size="18">Whole-document access supports cross-references; it does not guarantee correct reasoning.</text>
+<text x="60" y="624" fill="#516a80" font-size="17">Based on the published method. Not an accuracy chart or an official Google illustration.</text>
+</g></svg>

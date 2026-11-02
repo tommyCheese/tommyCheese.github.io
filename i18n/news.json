@@ -1,6 +1,17 @@
 {
-  "updated_at": "2026-11-01",
+  "updated_at": "2026-11-02",
   "items": [
+    {
+      "id": "openai-chat-work-shared-allowance-plan",
+      "category": "ai",
+      "published_at": "2026-11-01",
+      "collected_at": "2026-11-02",
+      "source": "BleepingComputer / OpenAI",
+      "url": "https://www.bleepingcomputer.com/news/artificial-intelligence/openai-says-its-doubling-pro-usage-limits-and-bringing-work-features-to-chat/",
+      "image": "https://tommycheese.github.io/images/news/openai-chat-work-shared-allowance.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not a product screenshot",
+      "image_fit": "contain"
+    },
     {
       "id": "northflank-ai-credentials-incident",
       "category": "security",
@@ -43,6 +54,28 @@
       "url": "https://access.redhat.com/security/vulnerabilities/RHSB-2026-016",
       "image": "https://tommycheese.github.io/images/news/linux-ipv4-patch-response.svg",
       "image_credit": "Original explanatory diagram",
+      "image_fit": "contain"
+    },
+    {
+      "id": "alpine-gitlab-rebuild-account-recovery",
+      "category": "security",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "source": "Alpine Linux / GitLab / Ruby",
+      "url": "https://alpinelinux.org/posts/GitLab-reopened-after-security-incident.html",
+      "image": "https://tommycheese.github.io/images/news/alpine-gitlab-recovery.svg",
+      "image_credit": "Tech Daily · original explanatory diagram",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-gpt6-rosalind-research-controlled-rollout",
+      "category": "ai",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "source": "OpenAI / The File",
+      "url": "https://deploymentsafety.openai.com/gpt-rosalind-6",
+      "image": "https://tommycheese.github.io/images/news/rosalind-research-access.svg",
+      "image_credit": "Tech Daily · original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -658,8 +691,8 @@
       "published_at": "2026-10-15",
       "source": "Google Chrome Releases",
       "url": "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_01886704284.html",
-      "image": "https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_284x96dp.png",
-      "image_credit": "Google",
+      "image": "https://tommycheese.github.io/images/news/chrome-155-security-lifecycle.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -678,8 +711,8 @@
       "published_at": "2026-10-15",
       "source": "PrismML",
       "url": "https://prismml.com/news/bonsai-2-family",
-      "image": "https://cdn.prod.website-files.com/699604cc2b9dd89bdbda0608/6a6d0e0bc0d5f9a97a5164c0_69cc089669ab0df26e921aac_prism-og-img%2520(2).png",
-      "image_credit": "PrismML",
+      "image": "https://tommycheese.github.io/images/news/bonsai2-small-memory-boundaries.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -688,8 +721,8 @@
       "published_at": "2026-10-15",
       "source": "TSMC",
       "url": "https://pr.tsmc.com/english/news/3346",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/10/39f62375-b431-48bf-80b3-751ad3ddd8bc.png",
-      "image_credit": "TSMC · IT之家",
+      "image": "https://tommycheese.github.io/images/news/tsmc-q3-2026-revenue-margins.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -703,22 +736,13 @@
       "image_fit": "contain"
     },
     {
-      "id": "samsung-future-wireless-summit-2026",
-      "category": "ai",
-      "published_at": "2026-10-15",
-      "source": "Samsung Newsroom",
-      "url": "https://news.samsung.com/global/samsung-hosts-silicon-valley-future-wireless-summit-2026",
-      "image": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/10/15072626/Samsung-Corporate-Silicon-Valley-Future-Wireless-Summit-2026_Thumb932F.jpg",
-      "image_credit": "Samsung Electronics"
-    },
-    {
       "id": "google-deep-review-public-release",
       "category": "ai",
       "published_at": "2026-10-14",
       "source": "Google Research",
       "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
-      "image": "https://storage.googleapis.com/gweb-research2023-media/original_images/DeepReview2.jpg",
-      "image_credit": "Google Research",
+      "image": "https://tommycheese.github.io/images/news/deep-review-document-verification.svg",
+      "image_credit": "Original explanatory diagram",
       "image_fit": "contain"
     },
     {

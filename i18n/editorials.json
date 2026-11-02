@@ -27692,6 +27692,1595 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "alpine-gitlab-rebuild-account-recovery",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Alpine recovery announcement",
+          "url": "https://alpinelinux.org/posts/GitLab-reopened-after-security-incident.html"
+        },
+        {
+          "label": "Alpine incident report and verification scope",
+          "url": "https://alpinelinux.org/posts/GitLab-security-incident-CVE-2026-97229.html"
+        },
+        {
+          "label": "GitLab critical patch release",
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/"
+        },
+        {
+          "label": "Ruby 3.3.13 release",
+          "url": "https://www.ruby-lang.org/en/news/2026/10/23/ruby-3-3-13-released/"
+        },
+        {
+          "label": "BleepingComputer independent reporting",
+          "url": "https://www.bleepingcomputer.com/news/security/alpine-linux-rebuilds-gitlab-after-attempted-rce-attack/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Alpine Linux 在10月30日发布开发平台恢复说明：受到漏洞利用尝试的 GitLab 已迁到重新搭建的服务器，运行 GitLab 19.3.7 和已修复的 Ruby 3.3.13。账户和项目仍在，但密码、双因素认证及多类授权需要重新设置。重建是针对无法排除的风险采取的措施，并不是宣布已经证实软件发行版被植入恶意内容。",
+          "sections": [
+            {
+              "heading": "版本号升级了，依赖组件却没修好",
+              "paragraphs": [
+                "Alpine 的开发平台承载代码、评审和构建任务，其中 aports 仓库保存软件包的构建规则。项目报告，攻击者在10月20日至21日针对 CVE-2026-97229 发起尝试，导致8次工作进程崩溃；其中4次到达利用链的中间阶段，但未观察到完成。崩溃次数不能当成成功入侵次数。",
+                "漏洞涉及 Ruby 内置的 Onigmo 正则表达式引擎。GitLab 在12日发布的官方软件包已带有相关 Ruby 修补，但 Alpine 使用自己的容器构建，22日仅升级 GitLab 到19.3.6并未带入依赖修复。Ruby 23日发布3.3.13等修复版本。这说明检查应用版本还不够，自行打包时还要确认实际使用的依赖包含补丁。"
+              ]
+            },
+            {
+              "heading": "为什么没有成功证据仍要重建",
+              "paragraphs": [
+                "项目没有发现攻击者代码执行、异常文件或已检查内容遭篡改的证据，但部分事发日记录及旧容器文件已不可得，也没有对外网络连接记录。因此，缺少证据不能证明尝试全部失败。维护者把实例按可能被攻破处理，重新搭建服务并更换秘密密钥，避免仅修补漏洞却保留可能存在的控制入口。",
+                "软件包核验有明确范围：24日的检查覆盖20日至22日的 aports 提交、截至24日构建的软件包，以及21日的稳定版发行。团队与开发者副本和45台构建机的外部记录比对；公告同时表示将检查延伸到27日关闭平台之前，不能把尚在扩展的范围写成已经全部验证。软件包和发行版签名密钥从未保存在这台 GitLab 上，这是独立于日志完整性的防护边界。"
+              ]
+            },
+            {
+              "heading": "恢复的是服务，授权关系也要重建",
+              "paragraphs": [
+                "30日恢复公告说明，项目、议题和合并请求保留，但所有密码已重置，双因素认证及旧恢复码也需要重新设置，旧个人访问令牌失效。流水线变量的名称和设置仍在，值被清空；部分集成要重新提供授权信息。项目提醒将旧秘密视为可能暴露并尽量使用新凭据，而不是简单恢复旧值。",
+                "新服务器的身份也发生变化，维护者应依据官方恢复说明核验连接身份，不应把任何警告一概忽略。项目还承诺更快检查关键安全更新及其依赖补丁、记录对外连接、延长记录保留时间并使用签名发行标签。本站认为，此次事件的教训是补丁落地、发布内容核验与账户恢复需要分别确认；平台重新开放并不补回缺失的历史证据，也不能推出所有下游系统都曾遭到入侵。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解释性重绘：展示事件恢复的不同核验环节，不是攻击流程或已证实入侵的示意。",
+            "steps": [
+              "确认应用及实际依赖补丁",
+              "重建开发平台并更换授权",
+              "按外部记录核验发行内容",
+              "恢复账户并持续调查"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Alpine Linux published recovery guidance on October 30 after rebuilding the GitLab development platform targeted by exploitation attempts. The new server runs GitLab 19.3.7 and patched Ruby 3.3.13. Accounts and projects remain, but passwords, two-factor authentication and several kinds of authorization must be restored. Rebuilding addresses a compromise the team cannot rule out; it is not an announcement that malicious content was found in Alpine releases.",
+          "sections": [
+            {
+              "heading": "An application upgrade missed a dependency patch",
+              "paragraphs": [
+                "Alpine’s development platform hosts code, reviews and build jobs; the aports repository contains package build recipes. The project reports attempts against CVE-2026-97229 on October 20–21 that caused eight worker crashes. Four progressed partway through exploitation, but completion was not observed. A crash count is not a count of successful intrusions.",
+                "The underlying problem concerns Onigmo, Ruby’s regular-expression engine. GitLab’s official packages released on October 12 included Ruby patches. Alpine used its own container build, so upgrading GitLab to 19.3.6 on October 22 did not bring in that dependency fix. Ruby released 3.3.13 and other corrected versions on October 23. Checking the application’s version alone is insufficient when a custom package supplies its own runtime."
+              ]
+            },
+            {
+              "heading": "Why rebuild without proof of successful execution?",
+              "paragraphs": [
+                "The team found no evidence of attacker code execution, unexpected files or tampering in the material it checked. However, some incident-day records and the old container filesystem were no longer available, and outbound connections were not recorded. Missing evidence could not establish that every attempt failed. The team treated the instance as potentially compromised, rebuilt it and replaced its secret keys rather than leave a possible foothold behind a patched vulnerability.",
+                "Package verification has a defined scope. Checks conducted on October 24 covered aports commits from October 20–22, packages built through October 24 and the October 21 stable releases. The team compared outside records from a developer’s clone and 45 builders. Its report says those checks are being extended to the October 27 closure, so that wider period must not be described as already fully verified. Package and release signing keys were never kept on the GitLab server, a protection separate from the completeness of the logs."
+              ]
+            },
+            {
+              "heading": "Service recovery also changes authorization",
+              "paragraphs": [
+                "The October 30 guidance preserves projects, issues and merge requests, but resets every password and two-factor setup, invalidates old recovery codes and personal access tokens, and clears pipeline-variable values while keeping names and settings. Some integrations require authorization to be entered again. Maintainers are told to regard old secrets as possibly exposed and prefer replacement credentials, not simply restore previous values.",
+                "The new server also has a new identity. Maintainers should verify it using official recovery information rather than dismiss connection warnings indiscriminately. The project promises faster scrutiny of critical updates and dependency patches, outbound-connection records, longer retention and signed release tags. Our interpretation is that patch deployment, release integrity and account recovery need separate checks. Reopening the service does not recreate missing evidence or establish that every downstream system was compromised."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of distinct recovery checks, not an attack procedure or a depiction of confirmed compromise.",
+            "steps": [
+              "Check application and dependency fixes",
+              "Rebuild and replace authorizations",
+              "Verify releases against outside records",
+              "Restore accounts and continue investigation"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Alpine Linux は10月30日、脆弱性の悪用を試みられた開発用 GitLab の復旧案内を公表した。新しく構築したサーバーは GitLab 19.3.7 と修正済み Ruby 3.3.13 を使用する。アカウントやプロジェクトは残るが、パスワード、二要素認証、複数の連携権限は再設定が必要だ。再構築は排除できない侵害リスクへの対応であり、配布ソフトへの不正混入を確認したという発表ではない。",
+          "sections": [
+            {
+              "heading": "アプリを更新しても依存部分が未修正だった",
+              "paragraphs": [
+                "開発基盤はコード、レビュー、ビルドを担い、aports リポジトリにはパッケージの構築規則がある。プロジェクトによると、10月20～21日の CVE-2026-97229 を狙う試みでワーカープロセスが8回停止した。4回は悪用の途中まで進んだが、完了は観測されていない。停止回数を侵入成功回数と見なしてはいけない。",
+                "問題は Ruby 内蔵の正規表現エンジン Onigmo にある。GitLab の12日公開の公式パッケージは Ruby の修正も含んだが、Alpine は独自のコンテナを使っていた。22日に GitLab を19.3.6へ更新しても依存部分の修正は入らなかった。Ruby は23日に3.3.13などを公開した。独自に構成する場合、アプリの番号だけでなく実際の実行基盤まで確認する必要がある。"
+              ]
+            },
+            {
+              "heading": "成功の証拠がなくても再構築した理由",
+              "paragraphs": [
+                "チームは攻撃者のコード実行や異常なファイル、調べた成果物の改変を発見していない。しかし当日の一部記録と旧コンテナのファイルは残っておらず、外向き通信の記録もなかった。証拠不足から全試行の失敗を断定できず、侵害の可能性を前提にサーバーを作り直し、秘密鍵も交換した。脆弱性だけ直して潜在的な侵入口を残さないためだ。",
+                "配布内容の検証には範囲がある。24日の確認は20～22日の aports 変更、24日までのパッケージ、21日の安定版を対象とし、開発者の複製と45台のビルド機にある外部記録と照合した。公告では27日の閉鎖まで対象を広げるとしており、その期間全体の検証完了とは言えない。パッケージと配布版の署名鍵は元々 GitLab に保存されておらず、これは記録の欠落とは別の防護境界になる。"
+              ]
+            },
+            {
+              "heading": "サービスと権限をそれぞれ復旧する",
+              "paragraphs": [
+                "30日の案内ではプロジェクト、課題、マージ要求は保たれる一方、すべてのパスワードと二要素認証をリセットし、旧回復コードと個人アクセストークンは無効になる。パイプライン変数は名前と設定を残し、値を消去した。一部連携の認証も再入力が必要だ。旧秘密情報は流出した可能性を考え、同じ値の復元より新しい認証情報への交換を勧めている。",
+                "新サーバーの識別情報も変わるため、管理者は接続警告を一律に無視せず、公式の復旧案内で確認する必要がある。チームは重要更新と依存修正の迅速な確認、外向き通信の記録、記録保持の延長、署名付きリリースタグを約束した。本サイトは、修正の適用、配布内容の整合性、アカウント復旧を個別に確認する事例と捉える。再開しても失われた証拠は戻らず、下流の全システムが侵害されたことにもならない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトの説明用描き直し。復旧時の異なる確認を示し、攻撃手順や侵害確定を示すものではありません。",
+            "steps": [
+              "アプリと依存部分の修正確認",
+              "開発基盤の再構築と権限交換",
+              "外部記録との配布内容照合",
+              "アカウント復旧と調査継続"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "30 октября Alpine Linux опубликовала инструкции по восстановлению GitLab после попыток эксплуатации уязвимости. Новый сервер построен заново и использует GitLab 19.3.7 с исправленной Ruby 3.3.13. Аккаунты и проекты сохранены, но пароли, двухфакторную защиту и ряд разрешений нужно настроить повторно. Перестройка отвечает на риск, который нельзя исключить; она не означает, что в выпусках Alpine обнаружен вредоносный код.",
+          "sections": [
+            {
+              "heading": "Обновление приложения пропустило зависимость",
+              "paragraphs": [
+                "Платформа разработки обслуживает код, проверки и сборки; репозиторий aports хранит рецепты сборки пакетов. По сообщению проекта, попытки эксплуатации CVE-2026-97229 20–21 октября вызвали восемь падений рабочих процессов. Четыре попытки продвинулись до промежуточного этапа, но завершение не наблюдалось. Число падений нельзя считать числом успешных вторжений.",
+                "Причина связана с Onigmo, движком регулярных выражений Ruby. Официальные пакеты GitLab от 12 октября включали исправления Ruby, но Alpine использовала собственный контейнер. Обновление GitLab до 19.3.6 22 октября поэтому не устранило проблему зависимости. Ruby выпустила 3.3.13 и другие исправленные версии 23 октября. В самостоятельно собранном окружении мало проверить номер приложения: исправление должно присутствовать в реально используемой среде исполнения."
+              ]
+            },
+            {
+              "heading": "Почему сервер перестроили без доказанного выполнения кода",
+              "paragraphs": [
+                "Команда не нашла свидетельств выполнения кода атакующего, неожиданных файлов или изменения проверенных материалов. Однако часть записей за день атаки и файловая система старого контейнера уже отсутствовали, а исходящие соединения не регистрировались. Недостаток доказательств не позволял подтвердить провал каждой попытки. Поэтому инстанс рассматривали как потенциально скомпрометированный, построили заново и заменили его секретные ключи.",
+                "Проверка пакетов имела конкретные границы. Работа от 24 октября охватила изменения aports за 20–22 октября, пакеты, собранные по 24 октября, и стабильные выпуски от 21 октября. Сопоставлялись внешние записи из копии разработчика и 45 сборочных машин. В отчете говорится о расширении проверки до закрытия платформы 27 октября, а не о завершенной проверке всего этого периода. Ключи подписи пакетов и выпусков никогда не хранились на GitLab; эта защита не зависит от полноты журналов."
+              ]
+            },
+            {
+              "heading": "Возвращение сервиса меняет и доступ",
+              "paragraphs": [
+                "Сообщение от 30 октября подтверждает сохранность проектов, задач и запросов на слияние, но пароли и двухфакторная настройка сброшены, старые коды восстановления и персональные токены недействительны. Значения переменных конвейеров очищены, хотя имена и настройки остались. Некоторые интеграции требуют повторной авторизации. Старые секреты предлагают считать потенциально раскрытыми и по возможности заменить, а не восстановить прежние значения.",
+                "Идентификатор нового сервера также изменился. Администраторам следует сверять его с официальным сообщением, а не игнорировать все предупреждения о соединении. Проект обещает быстрее проверять критические обновления и зависимости, фиксировать исходящие соединения, дольше хранить записи и подписывать теги выпусков. По нашей оценке, применение исправлений, целостность выпусков и восстановление аккаунтов требуют отдельных проверок. Повторное открытие не возвращает отсутствующие доказательства и не доказывает взлом всех downstream-систем."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Авторская поясняющая схема разных проверок при восстановлении, а не процедура атаки или изображение подтвержденного взлома.",
+            "steps": [
+              "Проверка приложения и зависимостей",
+              "Перестройка и замена разрешений",
+              "Сверка выпусков с внешними записями",
+              "Восстановление аккаунтов и расследование"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Alpine Linux 在10月30日釋出開發平臺恢復說明：受到漏洞利用嘗試的 GitLab 已遷到重新搭建的伺服器，執行 GitLab 19.3.7 和已修復的 Ruby 3.3.13。賬戶和專案仍在，但密碼、雙因素認證及多類授權需要重新設定。重建是針對無法排除的風險採取的措施，並不是宣佈已經證實軟體發行版被植入惡意內容。",
+          "sections": [
+            {
+              "heading": "版本號升級了，依賴元件卻沒修好",
+              "paragraphs": [
+                "Alpine 的開發平臺承載程式碼、評審和構建任務，其中 aports 倉庫儲存軟體包的構建規則。專案報告，攻擊者在10月20日至21日針對 CVE-2026-97229 發起嘗試，導致8次工作程序崩潰；其中4次到達利用鏈的中間階段，但未觀察到完成。崩潰次數不能當成成功入侵次數。",
+                "漏洞涉及 Ruby 內建的 Onigmo 正規表示式引擎。GitLab 在12日釋出的官方軟體包已帶有相關 Ruby 修補，但 Alpine 使用自己的容器構建，22日僅升級 GitLab 到19.3.6並未帶入依賴修復。Ruby 23日釋出3.3.13等修復版本。這說明檢查應用版本還不夠，自行打包時還要確認實際使用的依賴包含補丁。"
+              ]
+            },
+            {
+              "heading": "為什麼沒有成功證據仍要重建",
+              "paragraphs": [
+                "專案沒有發現攻擊者程式碼執行、異常檔案或已檢查內容遭篡改的證據，但部分事發日記錄及舊容器檔案已不可得，也沒有對外網路連線記錄。因此，缺少證據不能證明嘗試全部失敗。維護者把例項按可能被攻破處理，重新搭建服務並更換秘密金鑰，避免僅修補漏洞卻保留可能存在的控制入口。",
+                "軟體包核驗有明確範圍：24日的檢查覆蓋20日至22日的 aports 提交、截至24日構建的軟體包，以及21日的穩定版發行。團隊與開發者副本和45臺構建機的外部記錄比對；公告同時表示將檢查延伸到27日關閉平臺之前，不能把尚在擴充套件的範圍寫成已經全部驗證。軟體包和發行版簽名金鑰從未儲存在這臺 GitLab 上，這是獨立於日誌完整性的防護邊界。"
+              ]
+            },
+            {
+              "heading": "恢復的是服務，授權關係也要重建",
+              "paragraphs": [
+                "30日恢復公告說明，專案、議題和合並請求保留，但所有密碼已重置，雙因素認證及舊恢復碼也需要重新設定，舊個人訪問令牌失效。流水線變數的名稱和設定仍在，值被清空；部分整合要重新提供授權資訊。專案提醒將舊秘密視為可能暴露並儘量使用新憑據，而不是簡單恢復舊值。",
+                "新伺服器的身份也發生變化，維護者應依據官方恢復說明核驗連線身份，不應把任何警告一概忽略。專案還承諾更快檢查關鍵安全更新及其依賴補丁、記錄對外連線、延長記錄保留時間並使用簽名發行標籤。本站認為，此次事件的教訓是補丁落地、釋出內容核驗與賬戶恢復需要分別確認；平臺重新開放並不補回缺失的歷史證據，也不能推出所有下游系統都曾遭到入侵。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解釋性重繪：展示事件恢復的不同核驗環節，不是攻擊流程或已證實入侵的示意。",
+            "steps": [
+              "確認應用及實際依賴補丁",
+              "重建開發平臺並更換授權",
+              "按外部記錄核驗發行內容",
+              "恢復賬戶並持續調查"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-chat-work-shared-allowance-plan",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "OpenAI — Understanding ChatGPT and Codex usage limits",
+          "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits"
+        },
+        {
+          "label": "OpenAI — ChatGPT Work and Codex",
+          "url": "https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex"
+        },
+        {
+          "label": "OpenAI — ChatGPT release notes, October 29",
+          "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+        },
+        {
+          "label": "BleepingComputer — subscriber notice and combined-experience test, November 1",
+          "url": "https://www.bleepingcomputer.com/news/artificial-intelligence/openai-says-its-doubling-pro-usage-limits-and-bringing-work-features-to-chat/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 准备把 ChatGPT Work 的多步骤执行能力融入日常聊天，并从 12 月起让 Plus、Pro 和 Business 的 ChatGPT 与 Codex 共用使用额度。11 月 1 日的独立报道披露了发给订阅者的通知，官方帮助文档也确认了额度调整。这涉及工作入口和使用规则的变化，但尚不能理解为所有账户已经完成合并。",
+          "sections": [
+            {
+              "heading": "从聊天转入执行，不再先选模式",
+              "paragraphs": [
+                "目前的官方说明把 Chat 定位为日常问答，把 Work 定位为处理较长任务、交付文档和其他成果的 Agent。两者的区别不只是回答长短：Work 可以围绕目标持续处理文件和工具，用户在过程中查看进展、补充要求并调整方向。Codex 则面向软件开发与技术工作。",
+                "据 BleepingComputer 看到的 OpenAI 邮件，合并体验将在未来数周先向一小部分用户测试，再扩大范围。用户可以在同一处从讨论想法转入制作演示文稿、网站或网页任务，接入文件和插件，同时检查和指导执行。报道明确桌面应用中的 Codex 仍保留独立体验；这不是把所有产品和工具一并取消。"
+              ]
+            },
+            {
+              "heading": "共用的是额度，不是每条消息都同样计费",
+              "paragraphs": [
+                "官方帮助页写明，共享额度从 12 月开始，列出的计划是 Plus、Pro 和 Business。ChatGPT 与 Codex 的使用按 token 衡量；token 是模型处理和生成信息的单位，并不等于固定数量的汉字或一次提问。所选模型、任务复杂程度会影响消耗，更复杂的工作通常用得更多。",
+                "Instant 聊天不从这份额度中扣除。用户将能在使用设置里看到合并后的剩余额度与重置时间。对同时依赖深度聊天和编程的人来说，共用额度意味着两类工作会影响同一份可用余量；这是规则带来的使用安排变化，不能简单地按“每天能问多少次”比较。官方文档没有在这里承诺每项任务固定消耗多少，也未将此规则扩大到所有组织方案。"
+              ]
+            },
+            {
+              "heading": "已生效的额度调整与下一阶段分开看",
+              "paragraphs": [
+                "10 月 29 日的官方发布记录已说明，Pro 100、Pro 500 的 Work 与 Codex 额度增加为此前两倍；Pro 200 则取消先前通知中的缩减，原本额度较低的订阅者提升至同一水平，已拥有较高额度的保持不变。这是已经公布的额度调整，与未来合并 Chat、Work 的小规模试验、12 月开始的共享规则属于不同阶段。",
+                "OpenAI 预计多数用户不会比现在更频繁地等待重置，但这是公司的预期，不是独立测得的结果，也不能代表每个重度用户。当前资料尚不足以给出统一的全球切换日期或每个账户的具体影响。本次值得关注的是能否在连续任务中少切换入口，以及统一计量后不同工作如何共享资源；模型质量和复杂任务的可靠性仍需分别判断。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开文档重绘的解释图：区分现有 Chat/Work、拟测试的合并体验和 12 月共享额度，不是已全面上线的界面截图。",
+            "steps": [
+              "现有 Chat 与 Work 分工",
+              "未来数周小范围测试合并体验",
+              "12 月起指定计划共享 ChatGPT/Codex 额度",
+              "Instant 聊天不扣这份额度"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI plans to bring ChatGPT Work’s task-execution capabilities into everyday Chat and, starting in December, share an allowance between ChatGPT and Codex on Plus, Pro and Business. A November 1 report described subscriber notices, while an official help article confirms the allowance transition. These changes affect both the interface and resource accounting; they do not mean every account has already migrated.",
+          "sections": [
+            {
+              "heading": "From discussing an idea to carrying it out",
+              "paragraphs": [
+                "OpenAI’s current documentation separates Chat for everyday conversation from Work, an agent for longer tasks and finished deliverables. Work is not simply a mode that writes longer answers: it can use files and tools over multiple steps while users review progress and change direction. Codex remains focused on software development and technical work.",
+                "BleepingComputer reports that an OpenAI email describes testing a combined Chat and Work experience with a small group in the coming weeks before expanding it. Files and plugins would help users move from an idea to a presentation, website or web task in one place, with opportunities to review and guide the work. The report says Codex will remain a separate experience in the desktop app, rather than disappear into the same interface."
+              ]
+            },
+            {
+              "heading": "A shared allowance does not mean identical costs per message",
+              "paragraphs": [
+                "The official help article identifies December as the start of shared ChatGPT and Codex allowances for Plus, Pro and Business. Usage will be measured in tokens, units of information processed and generated by a model. A token is not a fixed-length word or a whole request. Model choice and task complexity affect consumption, so more involved work generally uses more.",
+                "Instant chat will not draw from this allowance. Remaining combined usage and reset times will be visible in usage settings. For people who rely on advanced conversations as well as coding, the practical implication is that these activities can compete for the same remaining capacity. Comparing only a daily message count would miss that difference. The article does not establish a fixed cost per task or extend the change to every organizational plan."
+              ]
+            },
+            {
+              "heading": "Separate the current increase from the coming transition",
+              "paragraphs": [
+                "The October 29 release notes already describe doubling Work and Codex allowances for Pro 100 and Pro 500. For Pro 200, OpenAI canceled a previously announced reduction: subscribers with lower allowances move to the higher level, while those already at that level retain it. This adjustment, the limited combined-interface test and the December sharing policy are three different stages.",
+                "OpenAI expects most users will not have to wait for resets more frequently. That is a company expectation, not an independently measured result or a guarantee for every heavy user. The available information does not establish a single worldwide migration date or the effect on each account. The meaningful questions are whether continuous tasks require less interface switching and how different workloads share capacity; model quality and task reliability remain separate issues."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on public documentation: existing Chat/Work roles, a planned limited test and December allowance sharing. It is not a screenshot of a universally available interface.",
+            "steps": [
+              "Existing Chat and Work roles",
+              "Limited combined-experience test in coming weeks",
+              "December: named plans share ChatGPT/Codex usage",
+              "Instant chat does not consume this allowance"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は ChatGPT Work の複数段階の作業能力を通常の Chat に組み込み、12 月から Plus、Pro、Business で ChatGPT と Codex の利用枠を共有する計画だ。11 月 1 日の独立報道が契約者への通知を紹介し、公式ヘルプも利用枠の変更を確認している。操作の入口と利用量の数え方の両方が変わるが、すべてのアカウントで移行が完了したという意味ではない。",
+          "sections": [
+            {
+              "heading": "相談から実行へ、モードを選び直す手間を減らす",
+              "paragraphs": [
+                "現在の公式説明では、Chat は日常の質問や会話、Work は長い作業と成果物の作成を担う Agent である。Work は単に長い回答を書くモードではなく、ファイルやツールを使って複数の手順を進め、利用者は途中で確認、補足、方向転換ができる。Codex はソフトウェア開発と技術的な作業を担当する。",
+                "BleepingComputer が確認した OpenAI のメールによると、Chat と Work を合わせた体験は今後数週間に少人数で試し、その後対象を広げる。ファイルやプラグインを使い、アイデアの相談からプレゼンテーション、ウェブサイト、ウェブ上の作業へ同じ場所で進み、利用者が確認・指示できるという。デスクトップアプリの Codex は独立した体験として残ると報道されており、すべての機能を一つにして廃止する話ではない。"
+              ]
+            },
+            {
+              "heading": "共有枠でも、どのメッセージも同じ消費量ではない",
+              "paragraphs": [
+                "公式ヘルプは Plus、Pro、Business の ChatGPT と Codex の共有枠を 12 月から始めるとしている。利用量はモデルが処理・生成する情報の単位であるトークンで測る。トークンは固定文字数や一回の質問と同義ではない。モデルと作業の複雑さで消費量が変わり、一般に込み入った作業ほど多く使う。",
+                "Instant の会話はこの枠を消費しない。設定では共有枠の残量とリセット時刻を確認できるようになる。高度な会話と開発の両方を使う人には、二種類の作業が同じ残量に影響する点が変化となる。一日あたりの質問回数だけでは比較しきれない。各作業の消費量を固定する保証はなく、すべての組織向けプランへ対象を広げた説明でもない。"
+              ]
+            },
+            {
+              "heading": "実施済みの増枠と、今後の移行を区別する",
+              "paragraphs": [
+                "10 月 29 日の公式更新記録では、Pro 100 と Pro 500 の Work・Codex 枠を従来の二倍にした。Pro 200 は予告していた削減を取りやめ、低い枠だった契約者を高い水準へそろえ、すでに高い枠の利用者は維持する。今回の増枠、少人数での統合画面の試験、12 月の共有ルールはそれぞれ別の段階だ。",
+                "OpenAI は、ほとんどの利用者が今より頻繁にリセットを待つことにはならないと見込む。ただし企業の予測であり、独立した測定結果でも、すべての大量利用者への保証でもない。全世界で一斉に切り替える日や各アカウントへの具体的な影響は、現時点の資料だけでは確定できない。連続する作業で画面切り替えが減るか、異なる作業が利用枠をどう分け合うかが焦点であり、モデルの品質や複雑な作業の信頼性は別に評価する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開文書を基に本站が描き直した説明図。現行の Chat・Work、予定される小規模試験、12 月の利用枠共有を分けて示す。全員に提供済みの画面ではない。",
+            "steps": [
+              "現在は Chat と Work が役割を分担",
+              "今後数週間に少人数で統合体験を試験",
+              "12 月から対象プランで ChatGPT・Codex の枠を共有",
+              "Instant の会話はこの枠を消費しない"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "OpenAI планирует перенести возможности ChatGPT Work для выполнения многоэтапных задач в обычный Chat. С декабря Plus, Pro и Business получат общий лимит использования ChatGPT и Codex. Независимая публикация от 1 ноября описывает письма подписчикам, а официальная справка подтверждает изменение учёта. Речь идёт одновременно об интерфейсе и расходовании ресурсов, но не о завершённом переходе всех аккаунтов.",
+          "sections": [
+            {
+              "heading": "От обсуждения идеи к выполнению задачи",
+              "paragraphs": [
+                "В действующей документации Chat предназначен для повседневных вопросов, а Work — агент для длительных задач и готовых результатов. Разница не сводится к длине ответа: Work может последовательно работать с файлами и инструментами, пока пользователь проверяет ход работы, уточняет требования и меняет направление. Codex специализируется на разработке программного обеспечения и технических задачах.",
+                "По данным BleepingComputer, в письме OpenAI описан тест объединённого Chat и Work для небольшой группы в ближайшие недели с последующим расширением. Файлы и плагины позволят переходить от идеи к презентации, сайту или работе в интернете в одном месте, сохраняя возможность проверки и указаний. Издание уточняет, что Codex останется отдельным режимом настольного приложения: его не объявляли упразднённым."
+              ]
+            },
+            {
+              "heading": "Общий лимит не означает одинаковую стоимость сообщений",
+              "paragraphs": [
+                "Официальная справка указывает декабрь как начало общего лимита ChatGPT и Codex для Plus, Pro и Business. Использование будет измеряться токенами — единицами информации, которую модель обрабатывает и создаёт. Токен не равен фиксированному слову или одному запросу. Расход зависит от модели и сложности задачи; более сложная работа обычно требует больше ресурсов.",
+                "Общение в Instant не будет расходовать этот лимит. Остаток и время обновления общей квоты появятся в настройках использования. Для тех, кому нужны и сложные диалоги, и программирование, практическое изменение состоит в конкуренции этих занятий за один остаток. Сравнение только по числу сообщений в день этого не отражает. Справка не задаёт фиксированный расход на любую задачу и не распространяет правило на все корпоративные планы."
+              ]
+            },
+            {
+              "heading": "Уже увеличенные квоты и будущий переход — разные этапы",
+              "paragraphs": [
+                "В официальных примечаниях от 29 октября уже описано удвоение квот Work и Codex для Pro 100 и Pro 500. Для Pro 200 отменено ранее объявленное сокращение: пользователи с меньшим лимитом переходят на повышенный, а уже имевшие его сохраняют условия. Это изменение, небольшой тест общего интерфейса и декабрьское объединение лимитов не следует считать одним завершённым запуском.",
+                "OpenAI ожидает, что большинству пользователей не придётся чаще ждать обновления квоты. Это ожидание компании, а не результат независимого измерения и не гарантия для каждого активного пользователя. Доступные сведения пока не устанавливают единую мировую дату перехода или последствия для каждого аккаунта. Важно, станет ли меньше переключений внутри длительной работы и как разные задачи будут делить ресурсы; качество моделей и надёжность выполнения нужно оценивать отдельно."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по публичным документам: нынешние Chat и Work, запланированный ограниченный тест и общая квота с декабря. Это не снимок уже доступного всем интерфейса.",
+            "steps": [
+              "Текущие роли Chat и Work",
+              "Ограниченный тест объединения в ближайшие недели",
+              "С декабря указанные планы делят лимит ChatGPT/Codex",
+              "Instant не расходует эту квоту"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 準備把 ChatGPT Work 的多步驟執行能力融入日常聊天，並從 12 月起讓 Plus、Pro 和 Business 的 ChatGPT 與 Codex 共用使用額度。11 月 1 日的獨立報道披露了發給訂閱者的通知，官方幫助文件也確認了額度調整。這涉及工作入口和使用規則的變化，但尚不能理解為所有帳號已經完成合並。",
+          "sections": [
+            {
+              "heading": "從聊天轉入執行，不再先選模式",
+              "paragraphs": [
+                "目前的官方說明把 Chat 定位為日常問答，把 Work 定位為處理較長任務、交付文件和其他成果的 Agent。兩者的區別不只是回答長短：Work 可以圍繞目標持續處理檔案和工具，使用者在過程中檢視進展、補充要求並調整方向。Codex 則面向軟體開發與技術工作。",
+                "據 BleepingComputer 看到的 OpenAI 郵件，合併體驗將在未來數週先向一小部分使用者測試，再擴大範圍。使用者可以在同一處從討論想法轉入製作簡報、網站或網頁任務，接入檔案和外掛，同時檢查和指導執行。報道明確桌面應用中的 Codex 仍保留獨立體驗；這不是把所有產品和工具一併取消。"
+              ]
+            },
+            {
+              "heading": "共用的是額度，不是每條訊息都同樣計費",
+              "paragraphs": [
+                "官方幫助頁寫明，共享額度從 12 月開始，列出的計劃是 Plus、Pro 和 Business。ChatGPT 與 Codex 的使用按 token 衡量；token 是模型處理和生成資訊的單位，並不等於固定數量的漢字或一次提問。所選模型、任務複雜程度會影響消耗，更復雜的工作通常用得更多。",
+                "Instant 聊天不從這份額度中扣除。使用者將能在使用設定裡看到合併後的剩餘額度與重置時間。對同時依賴深度聊天和程式設計的人來說，共用額度意味著兩類工作會影響同一份可用餘量；這是規則帶來的使用安排變化，不能簡單地按“每天能問多少次”比較。官方文件沒有在這裡承諾每項任務固定消耗多少，也未將此規則擴大到所有組織方案。"
+              ]
+            },
+            {
+              "heading": "已生效的額度調整與下一階段分開看",
+              "paragraphs": [
+                "10 月 29 日的官方釋出記錄已說明，Pro 100、Pro 500 的 Work 與 Codex 額度增加為此前兩倍；Pro 200 則取消先前通知中的縮減，原本額度較低的訂閱者提升至同一水平，已擁有較高額度的保持不變。這是已經公佈的額度調整，與未來合併 Chat、Work 的小規模試驗、12 月開始的共享規則屬於不同階段。",
+                "OpenAI 預計多數使用者不會比現在更頻繁地等待重置，但這是公司的預期，不是獨立測得的結果，也不能代表每個重度使用者。當前資料尚不足以給出統一的全球切換日期或每個帳號的具體影響。本次值得關注的是能否在連續任務中少切換入口，以及統一計量後不同工作如何共享資源；模型質量和複雜任務的可靠性仍需分別判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開文件重繪的解釋圖：區分現有 Chat/Work、擬測試的合併體驗和 12 月共享額度，不是已全面上線的介面截圖。",
+            "steps": [
+              "現有 Chat 與 Work 分工",
+              "未來數週小範圍測試合併體驗",
+              "12 月起指定計劃共享 ChatGPT/Codex 額度",
+              "Instant 聊天不扣這份額度"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-gpt6-rosalind-research-controlled-rollout",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "OpenAI — October 30 Model Release Notes",
+          "url": "https://help.openai.com/en/articles/9624314-model-release-notes"
+        },
+        {
+          "label": "OpenAI — GPT-Rosalind-6 safety addendum",
+          "url": "https://deploymentsafety.openai.com/gpt-rosalind-6"
+        },
+        {
+          "label": "OpenAI — life sciences access and deployment",
+          "url": "https://help.openai.com/en/articles/20001193-gpt-rosalind-for-life-sciences-research"
+        },
+        {
+          "label": "The File — independent coverage, November 1",
+          "url": "https://thefile.news/story/openai-gpt-rosalind-6-addendum-oct30"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 在 10 月 30 日开始向部分已获批机构开放 GPT-6 Rosalind Research，并发布安全说明补充文件。它把 GPT-6 的推理能力带入多步骤生命科学工作，但不是面向普通聊天用户的普遍开放。这次新闻的重点是新的受控交付范围，以及机构必须承担的审核和使用责任。",
+          "sections": [
+            {
+              "heading": "模型换代，开放范围没有随之放宽",
+              "paragraphs": [
+                "Rosalind 面向研究团队整理文献证据、分析生物数据和协调科学工具。官方把它分成 Research 与 Discovery 两种准入层级：前者支持更前沿的研究，后者用于日常科学工作，并采用更严格的监测。Discovery 仍使用 5.5，获得该层级批准不代表可以使用 Research；已有团队也能继续选择 GPT-5.5 Rosalind Research。",
+                "此次 GPT-6 Rosalind Research 只向有限的获批 Research 机构提供 Work、Codex 入口，API 还需要另行批准，普通 Chat 标签页不可用。Enterprise 工作区先进入两周管理员预览，默认关闭；管理员可以为获批研究人员开启。已有 Research 批准也不会绕过这段预览，购买订阅或加入工作区本身更不等于获得准入。"
+              ]
+            },
+            {
+              "heading": "相同权重下，变化在使用场景和控制方式",
+              "paragraphs": [
+                "安全补充文件明确说明，GPT-Rosalind-6 使用与 GPT-6 Astra 相同的模型权重，本次没有新增训练数据或额外后训练。权重是模型学习到的参数，因此不能把这个名称理解为重新训练了一套生命科学模型。本站据此判断，这次应重点看研究场景中的交付、安全边界和工具配合，而不是仅凭新名称推断基础能力出现全新跃迁。",
+                "官方将文献、数据库和专门工具的协调列为其用途，但这些用途介绍不是现实科研效率的独立测量。补充文件里的能力和安全评估均由厂商报告，不同测试的版本、推理设置和样本覆盖还可能不同。公开材料不足以证明每一种研究任务都更可靠，也不能由测试结果直接推导真实实验一定成功。"
+              ]
+            },
+            {
+              "heading": "准入、数据处理和研究结论分别负责",
+              "paragraphs": [
+                "OpenAI 表示，准入审查会核对机构的研究目的、治理安排和安全控制；获批机构须限制授权用户范围，并让合格人员复核将用于实验、论文或重要决策的输出。官方帮助文档还把当前 API 用途限定为获批的内部研究，不包含面向外部客户的产品或商业应用。模型访问和数据保留安排分别审批，不能把准入许可理解为任何数据都可直接提交。",
+                "安全补充文件按 OpenAI 自身框架将生物和化学能力列为 High、低于 Critical，并依据母模型评估将网络安全能力按 Critical 对待。这些是厂商的能力与风险分级，不是独立安全认证，也不是实际危害发生概率。说明文件没有给出获批机构总数，现实科研收益和持续防护效果仍需后续证据。对研究团队而言，实际变化是多了一个受约束的工具选择，科研判断和机构责任并未交给模型。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开发布记录和准入说明重绘的解释图，展示获批研究用途、管理员启用与人工复核的关系，不是产品截图或实验结果。",
+            "steps": [
+              "机构与研究用途获批",
+              "Enterprise 两周管理员预览，默认关闭",
+              "获授权用户通过 Work、Codex 或单独获批 API 使用",
+              "重要研究输出由合格人员复核"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 30, OpenAI began making GPT-6 Rosalind Research available to a limited set of approved organizations and published an accompanying safety addendum. The release brings GPT-6 reasoning to multistep life sciences work, rather than opening a new general-purpose chat option. Its practical news is the controlled delivery arrangement and the responsibilities retained by research institutions.",
+          "sections": [
+            {
+              "heading": "A new generation does not broaden eligibility",
+              "paragraphs": [
+                "Rosalind is intended to help research teams organize literature evidence, analyze biological data and coordinate scientific tools. OpenAI distinguishes Research access for advanced work from Discovery for everyday scientific tasks with stricter monitoring. Discovery continues to use 5.5 and does not authorize Research access. Existing teams can also continue choosing GPT-5.5 Rosalind Research.",
+                "GPT-6 Rosalind Research is limited to approved Research organizations in Work and Codex, with API access separately approved; it is unavailable in the ordinary Chat tab. Enterprise workspaces begin with a two-week Admin Preview, off by default, during which administrators can enable approved researchers. Existing Research approval does not bypass that preview. A subscription or workspace membership alone does not confer access."
+              ]
+            },
+            {
+              "heading": "Same weights, different deployment and controls",
+              "paragraphs": [
+                "The safety addendum explicitly states that GPT-Rosalind-6 uses GPT-6 Astra’s weights without additional training data or post-training for this release. Weights are a model’s learned parameters, so the new name should not be read as evidence of a newly trained life sciences model. Our interpretation is that delivery, safety boundaries and tool-supported research workflows deserve attention here, rather than an assumed leap in underlying capabilities based on branding.",
+                "OpenAI describes coordination across literature, databases and specialized tools, but a list of intended uses is not an independent measurement of research productivity. Capability and safety evaluations in the addendum are company-reported; versions, inference settings and sample coverage also differ across some comparisons. The material does not establish that every research task is more reliable or that success in an evaluation guarantees success in a real experiment."
+              ]
+            },
+            {
+              "heading": "Access, data handling and scientific judgment remain distinct",
+              "paragraphs": [
+                "OpenAI says it reviews research purposes, governance and security before granting access. Approved organizations must restrict authorized users and require qualified human review before outputs inform experiments, publications or consequential decisions. The help documentation limits current API use to approved internal research, excluding customer-facing products and external commercial applications. Model access and data-retention arrangements receive separate approval, so admission is not permission to submit any data without further consideration.",
+                "Under OpenAI’s own framework, the addendum treats biological and chemical capabilities as High, below Critical, and cybersecurity as Critical based on the parent model’s assessment. These are company capability and risk categories, not independent safety certification or probabilities of real-world harm. The document does not give a total number of approved organizations. Research benefits and continuing safeguards still need real-world evidence; institutions gain a constrained tool, not a transfer of scientific judgment or responsibility to a model."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from public release and access documentation: approved research, administrator activation and human review. This is neither a product screenshot nor an experimental result.",
+            "steps": [
+              "Organization and research purpose approved",
+              "Enterprise: two-week Admin Preview, off by default",
+              "Authorized Work/Codex use or separately approved API",
+              "Qualified people review consequential research outputs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は 10 月 30 日、一部の承認済み機関に GPT-6 Rosalind Research の提供を始め、安全性の補足文書を公開した。生命科学の多段階の作業に GPT-6 の推論能力を持ち込むが、一般のチャット利用者への全面開放ではない。今回の変化は管理された提供範囲と、研究機関に残る審査・利用上の責任にある。",
+          "sections": [
+            {
+              "heading": "世代が変わっても対象の条件は広がらない",
+              "paragraphs": [
+                "Rosalind は研究チームが文献の証拠を整理し、生物学データを分析し、科学ツールを連携させるためのモデル群だ。公式説明は、先端研究向けの Research と、日常の科学作業向けで監視がより厳しい Discovery を分ける。Discovery は引き続き 5.5 を使用し、その承認だけで Research を使えるわけではない。既存チームは GPT-5.5 Rosalind Research も選び続けられる。",
+                "GPT-6 Rosalind Research は承認された一部の Research 機関に Work と Codex で提供され、API は別途承認が必要だ。通常の Chat タブでは使えない。Enterprise は 2 週間の管理者プレビューを初期設定オフで開始し、管理者が承認済み研究者に有効化できる。既存の Research 承認でもこの期間は省略されず、契約やワークスペースへの参加だけでは利用資格を得られない。"
+              ]
+            },
+            {
+              "heading": "同じ重みでも提供と管理の仕組みが異なる",
+              "paragraphs": [
+                "安全性補足文書は GPT-Rosalind-6 が GPT-6 Astra と同じ重みを使い、今回のために訓練データを追加したり後学習を実施したりしていないと明記する。重みはモデルが学習したパラメーターであり、新しい名前から生命科学モデルを一から学習し直したと解釈すべきではない。本站は、基盤能力の飛躍を名称から推測するより、研究用途での提供、安全上の境界、ツールとの連携を見るべき変更と捉えている。",
+                "文献、データベース、専門ツールの連携は公式の用途説明だが、実際の研究効率を独立して測った結果ではない。補足文書の能力・安全性評価は企業による報告であり、一部の比較では評価版、推論設定、標本範囲も異なる。あらゆる研究作業で信頼性が上がるとは示されておらず、評価での成功を実験の成功へそのまま置き換えることもできない。"
+              ]
+            },
+            {
+              "heading": "利用承認、データ管理、科学的判断を分ける",
+              "paragraphs": [
+                "OpenAI は研究目的、ガバナンス、安全管理を審査すると説明する。承認された機関は利用者を限定し、出力を実験、論文、重要な意思決定に使う前に適切な専門家が確認しなければならない。公式ヘルプは現在の API 用途を承認済みの内部研究に限定し、外部顧客向け製品や外部の商用アプリは含めない。モデル利用とデータ保持の取り決めは別々に承認するため、利用許可を得ても任意のデータを無条件に送れるわけではない。",
+                "補足文書は OpenAI 独自の枠組みで、生物・化学能力を Critical 未満の High とし、サイバー能力は母モデルの評価に基づいて Critical として扱う。これは企業の能力・リスク分類で、独立した安全認証や現実の被害確率ではない。承認済み機関の総数も示していない。研究上の利益と継続的な防護には実運用の証拠が必要だ。機関に増えるのは制約付きの道具であり、科学的判断や責任をモデルへ移すものではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開された提供・承認文書から本站が描き直した説明図。研究承認、管理者による有効化、人の確認を示す。製品画面や実験結果ではない。",
+            "steps": [
+              "機関と研究目的の承認",
+              "Enterprise は 2 週間の管理者プレビュー、初期設定オフ",
+              "許可された Work・Codex または別途承認済み API",
+              "重要な研究出力を適切な専門家が確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "30 октября OpenAI начала предоставлять GPT-6 Rosalind Research ограниченному кругу одобренных организаций и опубликовала дополнение к документации по безопасности. Модель переносит возможности рассуждения GPT-6 в многоэтапную работу в науках о жизни, но не становится общедоступным вариантом обычного чата. Главное изменение — условия контролируемого предоставления и обязанности, которые остаются у научных организаций.",
+          "sections": [
+            {
+              "heading": "Новое поколение не расширяет круг допущенных пользователей",
+              "paragraphs": [
+                "Rosalind предназначена для систематизации литературных свидетельств, анализа биологических данных и координации научных инструментов. OpenAI различает Research для передовых исследований и Discovery для повседневной научной работы с более строгим мониторингом. Discovery сохраняет модель 5.5 и не даёт разрешения на Research. Существующие команды также могут продолжать выбирать GPT-5.5 Rosalind Research.",
+                "GPT-6 Rosalind Research доступна только части одобренных организаций Research через Work и Codex; API требует отдельного согласования. В обычной вкладке Chat её нет. В Enterprise сначала действует двухнедельный Admin Preview: модель по умолчанию отключена, а администраторы могут включить её одобренным исследователям. Даже действующее разрешение Research не отменяет этот этап. Подписка или членство в рабочем пространстве сами по себе доступа не дают."
+              ]
+            },
+            {
+              "heading": "Те же веса, иные условия предоставления и контроля",
+              "paragraphs": [
+                "Дополнение прямо указывает, что GPT-Rosalind-6 использует веса GPT-6 Astra без дополнительных обучающих данных и постобучения для этого выпуска. Веса — усвоенные моделью параметры, поэтому новое название не свидетельствует об обучении отдельной модели для наук о жизни. По нашей оценке, здесь следует изучать предоставление, границы безопасности и взаимодействие с инструментами, а не предполагать скачок базовых способностей только по названию.",
+                "Взаимодействие с литературой, базами данных и специализированными инструментами описывает предполагаемые применения, а не независимый замер производительности исследователей. Оценки способностей и безопасности опубликованы самой компанией; в некоторых сравнениях различаются версии тестов, настройки вывода и охват выборок. Материалы не доказывают повышение надёжности любой исследовательской задачи и не позволяют приравнивать успешный тест к успешному реальному эксперименту."
+              ]
+            },
+            {
+              "heading": "Допуск, работа с данными и научная ответственность различаются",
+              "paragraphs": [
+                "OpenAI сообщает, что проверяет цели исследований, управление и меры защиты. Одобренные организации должны ограничивать круг пользователей и обеспечивать квалифицированную проверку результатов людьми до их применения в экспериментах, публикациях или важных решениях. Справка разрешает нынешнее использование API для одобренных внутренних исследований, исключая продукты для внешних клиентов и внешние коммерческие приложения. Доступ к модели и условия хранения данных согласуются отдельно: допуск не означает разрешения отправлять любые данные без дополнительной проверки.",
+                "По собственной системе OpenAI дополнение относит биологические и химические способности к High, ниже Critical, а киберспособности — к Critical на основе оценки родительской модели. Это категории компании, а не независимый сертификат безопасности или вероятность реального вреда. Общее число допущенных организаций не раскрыто. Практическая научная польза и устойчивость защитных мер требуют дальнейших свидетельств. У организаций появляется инструмент с ограничениями, но научное суждение и ответственность не переходят к модели."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по открытым документам: одобрение исследования, включение администратором и проверка человеком. Это не интерфейс продукта и не экспериментальный результат.",
+            "steps": [
+              "Одобрение организации и научной цели",
+              "Enterprise: двухнедельный Admin Preview, по умолчанию выключен",
+              "Разрешённые Work/Codex либо отдельно согласованный API",
+              "Квалифицированные люди проверяют значимые научные результаты"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 在 10 月 30 日開始向部分已獲批機構開放 GPT-6 Rosalind Research，併發布安全說明補充檔案。它把 GPT-6 的推理能力帶入多步驟生命科學工作，但不是面向普通聊天使用者的普遍開放。這次新聞的重點是新的受控交付範圍，以及機構必須承擔的稽核和使用責任。",
+          "sections": [
+            {
+              "heading": "模型換代，開放範圍沒有隨之放寬",
+              "paragraphs": [
+                "Rosalind 面向研究團隊整理文獻證據、分析生物資料和協調科學工具。官方把它分成 Research 與 Discovery 兩種准入層級：前者支援更前沿的研究，後者用於日常科學工作，並採用更嚴格的監測。Discovery 仍使用 5.5，獲得該層級批准不代表可以使用 Research；已有團隊也能繼續選擇 GPT-5.5 Rosalind Research。",
+                "此次 GPT-6 Rosalind Research 只向有限的獲批 Research 機構提供 Work、Codex 入口，API 還需要另行批准，普通 Chat 標籤頁不可用。Enterprise 工作區先進入兩週管理員預覽，預設關閉；管理員可以為獲批研究人員開啟。已有 Research 批准也不會繞過這段預覽，購買訂閱或加入工作區本身更不等於獲得准入。"
+              ]
+            },
+            {
+              "heading": "相同權重下，變化在使用場景和控制方式",
+              "paragraphs": [
+                "安全補充檔案明確說明，GPT-Rosalind-6 使用與 GPT-6 Astra 相同的模型權重，本次沒有新增訓練資料或額外後訓練。權重是模型學習到的引數，因此不能把這個名稱理解為重新訓練了一套生命科學模型。本站據此判斷，這次應重點看研究場景中的交付、安全邊界和工具配合，而不是僅憑新名稱推斷基礎能力出現全新躍遷。",
+                "官方將文獻、資料庫和專門工具的協調列為其用途，但這些用途介紹不是現實科研效率的獨立測量。補充檔案裡的能力和安全評估均由廠商報告，不同測試的版本、推理設定和樣本覆蓋還可能不同。公開材料不足以證明每一種研究任務都更可靠，也不能由測試結果直接推導真實實驗一定成功。"
+              ]
+            },
+            {
+              "heading": "准入、資料處理和研究結論分別負責",
+              "paragraphs": [
+                "OpenAI 表示，准入審查會核對機構的研究目的、治理安排和安全控制；獲批機構須限制授權使用者範圍，並讓合格人員複核將用於實驗、論文或重要決策的輸出。官方幫助文件還把當前 API 用途限定為獲批的內部研究，不包含面向外部客戶的產品或商業應用。模型訪問和資料保留安排分別審批，不能把准入許可理解為任何資料都可直接提交。",
+                "安全補充檔案按 OpenAI 自身框架將生物和化學能力列為 High、低於 Critical，並依據母模型評估將網路安全能力按 Critical 對待。這些是廠商的能力與風險分級，不是獨立安全認證，也不是實際危害發生機率。說明檔案沒有給出獲批機構總數，現實科研收益和持續防護效果仍需後續證據。對研究團隊而言，實際變化是多了一個受約束的工具選擇，科研判斷和機構責任並未交給模型。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開發布記錄和准入說明重繪的解釋圖，展示獲批研究用途、管理員啟用與人工複核的關係，不是產品截圖或實驗結果。",
+            "steps": [
+              "機構與研究用途獲批",
+              "Enterprise 兩週管理員預覽，預設關閉",
+              "獲授權使用者透過 Work、Codex 或單獨獲批 API 使用",
+              "重要研究輸出由合格人員複核"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "chrome-155-prerender-security-update",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Google · October 15 desktop stable update",
+          "url": "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_01886704284.html"
+        },
+        {
+          "label": "Chrome for Developers · how prerendering works",
+          "url": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+        },
+        {
+          "label": "CSIRT Toscana · October 16 security alert",
+          "url": "https://csirt.regione.toscana.it/risolte-vulnerabilita-in-google-chrome-al05-261016-csirt-ita/"
+        },
+        {
+          "label": "ASCII.jp · October 16 independent report",
+          "url": "https://ascii.jp/elem/000/004/443/4443375/"
+        },
+        {
+          "label": "Google Chrome Help · applying updates",
+          "url": "https://support.google.com/chrome/answer/95414"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让网页更快出现的后台处理，同样需要严密管理内存。Google 在 10 月 15 日发布 Chrome 155 桌面稳定版安全更新，修复 10 项问题，其中一项位于预渲染组件，被列为 Critical。此次公告提供了受影响组件、漏洞类型与修复版本，却没有确认这些问题已经遭到在野利用；严重等级与已发生攻击是两回事。",
+          "sections": [
+            {
+              "heading": "预渲染为什么涉及看不见的页面",
+              "paragraphs": [
+                "预渲染会提前准备用户可能访问的页面，效果类似在不可见的后台标签中加载内容，等真正跳转时再激活。它能减少等待，但不是单纯下载一个文件：页面状态、脚本和内存对象都要在后台被管理。Chrome 的开发文档也说明，浏览器会根据设置、资源和判断决定是否执行这种推测性加载，并延迟某些会干扰用户的行为。",
+                "CVE-2026-110922 被描述为 Prerender 中的“释放后使用”：某个内存对象已经结束生命周期，程序却仍然使用原来的引用。这类缺陷可能使浏览器处理失效数据，属于内存安全问题。公开公告没有展示完整触发条件或攻击链，因此不能把组件的一般工作原理当成本次漏洞的完整复现，更不能只凭 Critical 等级断言所有设备已被控制。"
+              ]
+            },
+            {
+              "heading": "十项修复分布在多个浏览器组件",
+              "paragraphs": [
+                "官方列表包含 1 项 Critical、6 项 High 和 3 项 Medium。除预渲染问题外，高等级修复涉及 DOM、V8、Core 与 SVG；中等级问题涉及桌面输入校验、合成和 Workers。这里的十项是安全修复数量，不是十起独立攻击事件，也不代表它们都具有相同触发方式或影响范围。",
+                "公告对其中一项 DOM 内存损坏问题 CVE-2026-110913 注明，报告者为 Anthropic 的 Xinyang Ge，并由 Claude 协助。这能说明该漏洞报告使用了 AI 辅助，不能外推为十项问题都由 AI 独立发现。Google 同时解释，部分漏洞细节可能在多数用户更新之前保持受限；披露有限并不取消修复的重要性，也不等于已经证实存在利用行动。"
+              ]
+            },
+            {
+              "heading": "修复版本与实际生效要分开确认",
+              "paragraphs": [
+                "这次发布的 Windows 与 Mac 版本为 155.0.8059.84/.85，Linux 为 155.0.8059.84，公告预计在随后数天至数周逐步推送。版本号对应 10 月 15 日这批修复，不是要求用户在以后停留于这个历史版本。Google 的更新说明指出，下载后的更新通常需要关闭并重新打开浏览器，或完成提示的重新启动，才会应用。",
+                "对普通用户，关键是确认所用渠道已经取得可用的安全更新，并让它实际生效；对管理多台设备的人，收到更新通知与所有运行实例都已切换版本也不是同一状态。CSIRT 的后续告警建议采用最新可用版本。现有资料支持将这批更新视为明确的风险修补，而不是性能升级、入侵规模统计，或“未报告攻击就可以忽略”的依据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据官方说明重绘的机制与处置示意；不含漏洞触发方法，也不表示已发生攻击数量。",
+            "steps": [
+              "后台准备可能访问的页面",
+              "修复对象生命周期等安全缺陷",
+              "取得更新并重新启动使其生效"
+            ]
+          }
+        },
+        "en": {
+          "lead": "The background work that makes pages appear faster also needs safe memory management. Google’s October 15 Chrome 155 desktop stable update fixes ten security issues, including a Critical flaw in prerendering. The announcement identifies components, defect classes and fixed versions, but does not confirm exploitation in the wild. Severity and an observed attack are different kinds of evidence.",
+          "sections": [
+            {
+              "heading": "Why prerendering involves an invisible page",
+              "paragraphs": [
+                "Prerendering prepares a page before a likely visit, much like loading it in an invisible background tab and activating it when navigation occurs. This reduces waiting, but involves more than downloading a file: page state, scripts and memory objects must be managed. Chrome’s documentation explains that speculative loading depends on settings and resources, while some intrusive behavior is deferred until activation.",
+                "CVE-2026-110922 is described as a use-after-free in Prerender: software retains a reference after the referenced object’s lifetime has ended. That can cause processing of invalid memory and is a memory-safety defect. The announcement does not expose the complete trigger or attack chain. General background on prerendering is therefore not a reconstruction of this exploit, and a Critical rating does not establish that every device was compromised."
+              ]
+            },
+            {
+              "heading": "Ten fixes across several browser components",
+              "paragraphs": [
+                "The official list contains one Critical, six High and three Medium issues. Beyond Prerender, the High issues involve DOM, V8, Core and SVG; Medium issues concern desktop input validation, compositing and Workers. Ten is a count of security fixes, not ten separately observed attacks, nor evidence that all have the same trigger or scope.",
+                "For the DOM memory-corruption issue CVE-2026-110913, Google credits Anthropic’s Xinyang Ge, assisted by Claude. This establishes AI assistance for that report, not autonomous AI discovery of all ten issues. Google also says some details may remain restricted until most users update. Limited disclosure neither removes the value of the fix nor proves an active exploitation campaign."
+              ]
+            },
+            {
+              "heading": "A fixed release and an applied update are separate states",
+              "paragraphs": [
+                "The releases were 155.0.8059.84/.85 for Windows and Mac and 155.0.8059.84 for Linux, with rollout planned over subsequent days or weeks. These identify the October 15 patch, not a recommendation to remain on that historical version. Google’s update documentation explains that downloaded changes normally take effect after the browser closes and reopens or completes the requested relaunch.",
+                "Users need their channel’s available security update to be both obtained and applied. For administrators, an update notification is not proof that every running instance has switched versions. The follow-up CSIRT alert recommends the latest available release. The evidence supports a concrete security correction, not a performance claim, a victim count or an inference that the absence of an exploitation announcement makes the defects irrelevant."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original mechanism-and-response diagram based on official documentation; it shows no exploit trigger or attack count.",
+            "steps": [
+              "Prepare a likely next page in the background",
+              "Correct lifetime and other security defects",
+              "Obtain the update and relaunch to apply it"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ページを速く表示する裏側の処理にも、安全なメモリー管理が必要だ。Google が 10 月 15 日に公開した Chrome 155 デスクトップ安定版の更新は、プリレンダリングの Critical な問題を含む 10 件を修正した。対象コンポーネント、欠陥の種類、修正版は示されているが、実際の攻撃での悪用はこの告知で確認されていない。深刻度と観測済みの攻撃は別の情報である。",
+          "sections": [
+            {
+              "heading": "見えないページを先に準備する仕組み",
+              "paragraphs": [
+                "プリレンダリングは、次に開く可能性の高いページを不可視のバックグラウンドタブのような状態で準備し、移動時に有効化する。待ち時間を減らせる一方、単にファイルを取得するだけでなく、ページの状態、スクリプト、メモリー上のオブジェクトを管理する必要がある。公式文書は、実行の判断が設定や資源に依存し、利用者への干渉を避けるため一部の動作を有効化まで遅らせると説明する。",
+                "CVE-2026-110922 は Prerender の解放後使用である。寿命を終えたオブジェクトへの参照を使い続け、無効なメモリーを扱うおそれがある種類の問題だ。告知は完全な発生条件や攻撃の流れを公開していない。プリレンダリングの一般的な説明がそのまま攻撃の再現になるわけではなく、Critical という評価だけで全端末の侵害を断定できない。"
+              ]
+            },
+            {
+              "heading": "複数のコンポーネントにまたがる十件",
+              "paragraphs": [
+                "内訳は Critical が 1 件、High が 6 件、Medium が 3 件である。High は DOM、V8、Core、SVG、Medium はデスクトップの入力検証、合成、Workers に関係する。十件は安全上の修正数であり、観測された十回の攻撃でも、すべて同じ条件や範囲で影響するという意味でもない。",
+                "DOM のメモリー破損 CVE-2026-110913 については、Anthropic の Xinyang Ge が Claude の支援を受けて報告したと記されている。その報告に AI 支援があったことを示す情報で、十件すべてを AI が独力で発見した証拠ではない。Google は、多くの利用者が更新するまで詳細を制限する場合があるとも説明している。情報の制限は、修正が不要なことも攻撃が進行中であることも意味しない。"
+              ]
+            },
+            {
+              "heading": "配布された版と適用済みの状態を区別する",
+              "paragraphs": [
+                "今回の版は Windows と Mac が 155.0.8059.84/.85、Linux が 155.0.8059.84 で、その後数日から数週間にわたり配布する予定とされた。これは 10 月 15 日の修正を特定する番号で、将来もその版に留まる推奨ではない。Google の案内では、取得済みの更新は通常、ブラウザーを閉じて開き直すか、再起動の案内に従って初めて適用される。",
+                "利用者には、使っているチャネルの更新を取得し、実際に反映させることが重要になる。複数端末の管理でも、通知を受け取った状態と稼働中の全ブラウザーが新しい版になった状態は異なる。後続の CSIRT 告知は最新の利用可能版を勧めている。確認できるのは具体的な安全修正であり、性能改善や被害人数、悪用報告がないから無視できるという判断ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公式説明に基づき本サイトが描き直した仕組みと対応の図。攻撃方法や発生件数を示すものではない。",
+            "steps": [
+              "次に開くページを裏側で準備",
+              "寿命管理などの安全上の欠陥を修正",
+              "更新を取得し再起動で適用"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Фоновая подготовка страниц для быстрой навигации тоже требует безопасной работы с памятью. Обновление стабильной настольной Chrome 155 от 15 октября исправляет десять проблем, включая Critical-уязвимость предварительного рендеринга. Google указал компоненты, классы ошибок и исправленные версии, но не подтвердил эксплуатацию этих проблем в реальных атаках. Степень опасности и наблюдавшаяся атака — разные сведения.",
+          "sections": [
+            {
+              "heading": "Зачем браузер готовит невидимую страницу",
+              "paragraphs": [
+                "Предварительный рендеринг загружает вероятную следующую страницу словно в невидимой фоновой вкладке, чтобы активировать её при переходе. Это сокращает ожидание, но требует управлять состоянием страницы, сценариями и объектами в памяти, а не только скачать файл. Документация Chrome поясняет, что такая загрузка зависит от настроек и ресурсов, а некоторые вмешивающиеся действия откладываются до активации.",
+                "CVE-2026-110922 описана как использование после освобождения в Prerender: программа продолжает обращаться к объекту после окончания его жизни. Это может привести к обработке недействительной памяти. Полные условия запуска дефекта и цепочка атаки в объявлении не раскрыты. Описание обычной работы предварительного рендеринга не является реконструкцией эксплуатации, а оценка Critical не означает, что все устройства уже захвачены."
+              ]
+            },
+            {
+              "heading": "Десять исправлений в разных компонентах",
+              "paragraphs": [
+                "Официальный перечень содержит одну Critical, шесть High и три Medium проблемы. Высокая опасность отмечена для DOM, V8, Core и SVG; средняя — для проверки настольного ввода, композитинга и Workers. Десять — число исправлений безопасности, а не отдельных подтверждённых атак. Оно не говорит об одинаковых условиях или последствиях всех дефектов.",
+                "Для повреждения памяти DOM, CVE-2026-110913, Google указал исследователя Xinyang Ge из Anthropic и помощь Claude. Это подтверждает использование ИИ в данном сообщении, а не самостоятельное обнаружение всех десяти дефектов системой ИИ. Google также допускает ограничение подробностей до обновления большинства пользователей. Ограниченное раскрытие не отменяет важность исправления и не доказывает текущую кампанию атак."
+              ]
+            },
+            {
+              "heading": "Получить обновление и применить его — не одно и то же",
+              "paragraphs": [
+                "Выпущены 155.0.8059.84/.85 для Windows и Mac и 155.0.8059.84 для Linux; распространение планировалось на последующие дни и недели. Номера обозначают исправление от 15 октября, а не совет оставаться на исторической версии. По справке Google, загруженные изменения обычно применяются после закрытия и повторного открытия браузера либо запрошенного перезапуска.",
+                "Пользователю нужно не только получить доступное обновление своего канала, но и применить его. Администратору уведомление об обновлении не доказывает, что все работающие экземпляры уже сменили версию. Последующее предупреждение CSIRT рекомендует последний доступный выпуск. Источники подтверждают конкретное исправление риска, а не прирост скорости, количество жертв или безопасность игнорирования дефектов без сообщения об эксплуатации."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по официальным материалам; без способа эксплуатации и без количества атак.",
+            "steps": [
+              "Подготовить вероятную следующую страницу",
+              "Исправить управление памятью и другие дефекты",
+              "Получить обновление и применить перезапуском"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓網頁更快出現的背景處理，同樣需要嚴密管理記憶體。Google 在 10 月 15 日發布 Chrome 155 桌面穩定版安全更新，修復 10 項問題，其中一項位於預渲染元件，被列為 Critical。此次公告提供了受影響元件、漏洞型別與修復版本，卻沒有確認這些問題已經遭到在野利用；嚴重等級與已發生攻擊是兩回事。",
+          "sections": [
+            {
+              "heading": "預渲染為什麼涉及看不見的頁面",
+              "paragraphs": [
+                "預渲染會提前準備使用者可能訪問的頁面，效果類似在不可見的背景分頁中載入內容，等真正跳轉時再啟用。它能減少等待，但不是單純下載一個檔案：頁面狀態、指令碼和記憶體物件都要在背景被管理。Chrome 的開發文件也說明，瀏覽器會根據設定、資源和判斷決定是否執行這種推測性載入，並延遲某些會干擾使用者的行為。",
+                "CVE-2026-110922 被描述為 Prerender 中的“釋放後使用”：某個記憶體物件已經結束生命週期，程式卻仍然使用原來的引用。這類缺陷可能使瀏覽器處理失效資料，屬於記憶體安全問題。公開公告沒有展示完整觸發條件或攻擊鏈，因此不能把元件的一般工作原理當成本次漏洞的完整復現，更不能只憑 Critical 等級斷言所有裝置已被控制。"
+              ]
+            },
+            {
+              "heading": "十項修復分佈在多個瀏覽器元件",
+              "paragraphs": [
+                "官方列表包含 1 項 Critical、6 項 High 和 3 項 Medium。除預渲染問題外，高等級修復涉及 DOM、V8、Core 與 SVG；中等級問題涉及桌面輸入校驗、合成和 Workers。這裡的十項是安全修復數量，不是十起獨立攻擊事件，也不代表它們都具有相同觸發方式或影響範圍。",
+                "公告對其中一項 DOM 記憶體損壞問題 CVE-2026-110913 註明，報告者為 Anthropic 的 Xinyang Ge，並由 Claude 協助。這能說明該漏洞報告使用了 AI 輔助，不能外推為十項問題都由 AI 獨立發現。Google 同時解釋，部分漏洞細節可能在多數使用者更新之前保持受限；披露有限並不取消修復的重要性，也不等於已經證實存在利用行動。"
+              ]
+            },
+            {
+              "heading": "修復版本與實際生效要分開確認",
+              "paragraphs": [
+                "這次發布的 Windows 與 Mac 版本為 155.0.8059.84/.85，Linux 為 155.0.8059.84，公告預計在隨後數天至數週逐步推送。版本號對應 10 月 15 日這批修復，不是要求使用者在以後停留於這個歷史版本。Google 的更新說明指出，下載後的更新通常需要關閉並重新開啟瀏覽器，或完成提示的重新啟動，才會應用。",
+                "對普通使用者，關鍵是確認所用渠道已經取得可用的安全更新，並讓它實際生效；對管理多臺裝置的人，收到更新通知與所有執行個體都已切換版本也不是同一狀態。CSIRT 的後續告警建議採用最新可用版本。現有資料支援將這批更新視為明確的風險修補，而不是效能升級、入侵規模統計，或“未報告攻擊就可以忽略”的依據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據官方說明重繪的機制與處置示意；不含漏洞觸發方法，也不表示已發生攻擊數量。",
+            "steps": [
+              "背景準備可能訪問的頁面",
+              "修復物件生命週期等安全缺陷",
+              "取得更新並重新啟動使其生效"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "prismml-ternary-bonsai2-small-models",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "PrismML: Ternary Bonsai 2 small model release",
+          "url": "https://prismml.com/news/bonsai-2-family"
+        },
+        {
+          "label": "Ternary Bonsai 2 small models whitepaper",
+          "url": "https://github.com/PrismML-Eng/Bonsai-demo/blob/main/bonsai-2-small-whitepaper.pdf"
+        },
+        {
+          "label": "2B model files and license",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-2B-gguf"
+        },
+        {
+          "label": "4B model files and license",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-4B-gguf"
+        },
+        {
+          "label": "9B model files and license",
+          "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-2-9B-gguf"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "PrismML 在 10 月 15 日发布 Ternary Bonsai 2 的 2B、4B 和 9B 小模型，将基于 Qwen3.5 的三元权重方案扩展到更适合本地运行的规模。三款模型的权重文件已提供下载，仓库标注 Apache 2.0 许可。这次变化的重点是用更小的存储和内存负担部署模型，而不是推出一个已经证明能替代所有云端服务的通用系统。",
+          "sections": [
+            {
+              "heading": "小的是哪部分，先把边界分清",
+              "paragraphs": [
+                "三元权重把语言模型矩阵中的数值压缩为负一、零和正一。配套白皮书描述的实现还包含半精度的分组缩放值与固定变换，因此不能把整套模型理解成只由三个数构成。模型沿用 Qwen3.5 的架构，目标是尽量保留原模型能力，同时降低存放和读取权重的成本。",
+                "白皮书给出的语言模型体积依次为 0.43、0.95 和 2 GB，对应基线的 BF16 权重为 3.76、8.41 和 17.91 GB。这组比较只覆盖语言模型部分。视觉编码器需要额外文件，运行时也需要工作内存和上下文缓存；不同格式的打包结果并不相同。因此，9B 权重约 2 GB 不等于一套可处理图像的应用只占用 2 GB 内存。"
+              ]
+            },
+            {
+              "heading": "工具调用和视觉能力没有被无损保留",
+              "paragraphs": [
+                "白皮书分别对 2B、4B 和 9B 报告了 17、18 和 19 项基准，不能把所有尺寸都说成完成同一组 19 项测试。比较对象是同尺寸 Qwen3.5 的 BF16 基线，并在所述评测中采用一致的生成设置。所谓能力保留率是对应分数的比值，不是所有真实任务的成功率，也不是对用户场景的保证。",
+                "长程任务上的差距值得单独看：在包含多轮交互的 tau2 Bench 中，4B 从基线的 81.65 降到 61.87，9B 从 85.25 降到 73.02。文档理解也有明显取舍，9B 在 OmniDocBench 的分数为 73.80，基线为 88.73。这些是作者报告的特定基准结果，说明能调用工具或接收图像，并不意味着复杂代理流程和文档解析质量保持不变。"
+              ]
+            },
+            {
+              "heading": "生成得快，不代表整个请求都更快",
+              "paragraphs": [
+                "性能表测的是特定硬件、运行框架和打包格式下的单请求生成，解码部分采用批量为一、生成 128 个词元的设置。解码是逐个产生输出，预填充则是先处理输入；两者不能互相代替。白皮书也列出部分服务器 GPU 上 BF16 基线预填充更快，以及部分 Mac 测试中参考模型首词元时间更好的情况。",
+                "因此，这批模型的可核验意义是让更紧凑的权重和本地工具调用、多模态能力成为可实际试用的组合。现有性能数字来自发布方，尚不足以证明任意设备、长上下文或完整代理任务都会提速。选择时要同时看设备能否容纳整个运行流程、任务质量能否接受压缩损失，以及首个响应和持续输出各自的表现。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据白皮书重绘的解释性示意图；展示内存范围与评测边界，不代表新的实验结果。",
+            "steps": [
+              "压缩语言模型矩阵权重",
+              "另计视觉模块与运行时内存",
+              "分别检查任务质量和响应阶段"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 15, PrismML introduced 2B, 4B and 9B members of Ternary Bonsai 2, bringing its Qwen3.5-based ternary-weight approach to smaller local models. Weight files are available, and the repositories identify the license as Apache 2.0. The substantive change is a smaller storage and memory burden for deployment, rather than evidence that one compact system can replace every cloud service.",
+          "sections": [
+            {
+              "heading": "What exactly becomes smaller?",
+              "paragraphs": [
+                "Ternary weights reduce values in the language-model matrices to minus one, zero and plus one. The accompanying whitepaper also describes half-precision group scales and a fixed transform, so the entire model is not made solely of three possible numbers. It retains the Qwen3.5 architecture while attempting to preserve capabilities and reduce the cost of storing and reading its weights.",
+                "The paper lists language-model sizes of 0.43, 0.95 and 2 GB, against BF16 baselines of 3.76, 8.41 and 17.91 GB. This comparison covers the language component. A vision encoder requires additional files; execution needs working memory and context caches; packaging varies by format. A roughly 2 GB 9B weight package therefore does not mean that a complete image-capable application uses only 2 GB of memory."
+              ]
+            },
+            {
+              "heading": "Tool use and vision come with measurable tradeoffs",
+              "paragraphs": [
+                "The whitepaper reports 17 benchmarks for 2B, 18 for 4B and 19 for 9B, rather than one identical set of 19 for every size. It compares each model with the same-size Qwen3.5 BF16 baseline using matched generation settings in the stated evaluation. Capability retention expresses a ratio of corresponding scores, not a success rate across all real tasks or a promise for a particular application.",
+                "Longer interactions show meaningful gaps. On the multi-turn tau2 Bench, 4B scores 61.87 against its baseline’s 81.65, and 9B scores 73.02 against 85.25. Document understanding also changes: 9B reaches 73.80 on OmniDocBench, versus 88.73 for the baseline. These author-reported benchmark results show why accepting images or calling tools does not establish unchanged quality in complex agent workflows or document parsing."
+              ]
+            },
+            {
+              "heading": "Fast generation is not the same as a faster whole request",
+              "paragraphs": [
+                "The performance tables describe particular hardware, runtimes and packing formats. Decode measurements use a batch of one and 128 generated tokens. Decoding produces output incrementally; prefill first processes the input. They are different stages. The paper also records cases where BF16 prefill is faster on server GPUs and where a reference model has a better time to first token in a Mac test.",
+                "The verifiable development is an available combination of compact weights, local tool use and multimodal features. The performance figures come from the publisher and do not establish acceleration on every device, long context or complete agent task. A deployment decision must consider memory for the whole pipeline, acceptable task-quality losses, and both initial response latency and sustained generation."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from the whitepaper: memory scope and evaluation boundaries, not a new experiment.",
+            "steps": [
+              "Compress language-model matrix weights",
+              "Account separately for vision and runtime memory",
+              "Check task quality and each response stage"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "PrismML は 10 月 15 日、Ternary Bonsai 2 に 2B、4B、9B の小型モデルを追加した。Qwen3.5 を基にした三値重みの方式を、ローカル実行に向いた規模へ広げる発表だ。重みファイルは取得でき、リポジトリのライセンス表記は Apache 2.0。意義は保存容量とメモリ負担の軽減であり、あらゆるクラウドサービスを置き換えられると実証したわけではない。",
+          "sections": [
+            {
+              "heading": "何が小さくなるのか",
+              "paragraphs": [
+                "三値化では言語モデルの行列重みをマイナス一、ゼロ、プラス一に圧縮する。付属の白書には半精度のグループごとのスケール値や固定変換も記載されており、モデル全体が三つの数だけでできているわけではない。Qwen3.5 の構造を保ちつつ、能力をできるだけ維持し、重みの保存と読み込みの負担を下げる狙いがある。",
+                "白書が示す言語モデル部分の容量は順に 0.43、0.95、2 GB。比較対象の BF16 重みは 3.76、8.41、17.91 GB である。ただし画像エンコーダーには別のファイルが必要で、実行時の作業領域やコンテキストのキャッシュも加わる。形式によって梱包内容も異なるため、9B の重みが約 2 GB でも、画像を扱うアプリ全体の使用メモリが 2 GB という意味にはならない。"
+              ]
+            },
+            {
+              "heading": "ツール使用と視覚理解にも損失がある",
+              "paragraphs": [
+                "白書の評価数は 2B が 17、4B が 18、9B が 19。全サイズで同一の 19 項目を実施したわけではない。比較対象は同サイズの Qwen3.5 BF16 で、記載された評価では生成設定をそろえている。「能力維持率」は対応するスコアの比率であり、実際のあらゆる仕事の成功率や利用先での保証ではない。",
+                "多段階の対話を含む tau2 Bench では、4B は基準モデルの 81.65 に対して 61.87、9B は 85.25 に対して 73.02 だった。文書理解の OmniDocBench でも 9B は 73.80、基準は 88.73 である。いずれも著者報告の特定条件での結果だ。画像入力やツール呼び出しへの対応だけで、複雑なエージェント処理や文書解析の品質が変わらないとは判断できない。"
+              ]
+            },
+            {
+              "heading": "出力速度だけでは待ち時間は決まらない",
+              "paragraphs": [
+                "速度表は特定の機器、実行基盤、重み形式での測定で、デコードはバッチ数一、出力 128 トークンの条件を使う。デコードは出力を順に作る段階で、入力を先に処理するプリフィルとは別だ。白書には、一部サーバー GPU では BF16 のプリフィルが速い例や、Mac の一部試験で基準モデルの最初のトークン到達が速い例もある。",
+                "確認できる前進は、小さな重みとローカルのツール使用、マルチモーダル機能を組み合わせたモデルが実際に提供されたことだ。速度値は提供元によるもので、あらゆる機器や長い文脈、エージェントの全工程での高速化を保証しない。全処理がメモリに収まるか、精度の損失を許容できるか、初回応答と継続出力の双方を確認する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "白書に基づく当サイトの説明用再描画。メモリの範囲と評価上の条件を示し、新たな実験結果ではない。",
+            "steps": [
+              "言語モデルの行列重みを圧縮",
+              "画像部分と実行時メモリを別に計上",
+              "仕事の品質と応答の各段階を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "15 октября PrismML выпустила модели Ternary Bonsai 2 размером 2B, 4B и 9B, распространив подход с троичными весами на основе Qwen3.5 на компактные локальные модели. Файлы весов доступны, а репозитории указывают лицензию Apache 2.0. Содержательное изменение — уменьшение требований к хранению и памяти, а не доказательство способности заменить любые облачные сервисы.",
+          "sections": [
+            {
+              "heading": "Какая часть модели становится меньше",
+              "paragraphs": [
+                "Троичное представление сжимает значения матриц языковой модели до минус единицы, нуля и плюс единицы. Белая книга описывает также групповые масштабы половинной точности и фиксированное преобразование: вся модель не состоит только из трёх возможных чисел. Архитектура Qwen3.5 сохраняется, а цель — снизить стоимость хранения и чтения весов при максимально возможном сохранении возможностей.",
+                "Размеры языковой части в документе составляют 0.43, 0.95 и 2 GB против 3.76, 8.41 и 17.91 GB у соответствующих BF16-базовых моделей. Сравнение не включает всю систему. Для визуального кодировщика нужны дополнительные файлы, для исполнения — рабочая память и кэш контекста; упаковка зависит от формата. Поэтому около 2 GB весов модели 9B не означают, что приложение с обработкой изображений требует всего 2 GB памяти."
+              ]
+            },
+            {
+              "heading": "Вызов инструментов и зрение сохраняются не без потерь",
+              "paragraphs": [
+                "Для 2B белая книга сообщает 17 тестов, для 4B — 18, для 9B — 19, а не одинаковые 19 испытаний для каждого размера. Сравнение ведётся с Qwen3.5 BF16 того же размера при согласованных настройках генерации в описанной оценке. Доля сохранённых возможностей — отношение соответствующих результатов, а не вероятность успеха любой реальной задачи и не гарантия для конкретного приложения.",
+                "В многоходовом tau2 Bench модель 4B получила 61.87 против базовых 81.65, а 9B — 73.02 против 85.25. На OmniDocBench для понимания документов результат 9B равен 73.80, тогда как базовая модель достигает 88.73. Это результаты авторов в конкретных тестах. Поддержка изображений и инструментов сама по себе не доказывает сохранение качества сложных агентных процессов или разбора документов."
+              ]
+            },
+            {
+              "heading": "Быстрая генерация не равна быстрому запросу целиком",
+              "paragraphs": [
+                "Таблицы производительности относятся к определённым устройствам, средам выполнения и форматам упаковки. Декодирование измеряется с размером пакета один и генерацией 128 токенов. Оно последовательно создаёт ответ, тогда как prefill сначала обрабатывает вход. Это разные этапы. Документ отмечает и случаи более быстрого prefill у BF16 на серверных GPU, и лучшее время до первого токена у базовой модели в некоторых испытаниях Mac.",
+                "Проверяемый результат выпуска — доступное сочетание компактных весов, локального использования инструментов и мультимодальности. Показатели скорости принадлежат разработчику и не доказывают ускорение на любом устройстве, длинном контексте или полной агентной задаче. При выборе важны память всего процесса, допустимые потери качества, задержка начального ответа и скорость дальнейшей генерации."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по белой книге: границы учёта памяти и оценки, а не новый эксперимент.",
+            "steps": [
+              "Сжать матричные веса языковой модели",
+              "Отдельно учесть зрение и память выполнения",
+              "Проверить качество задач и этапы ответа"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "PrismML 在 10 月 15 日發布 Ternary Bonsai 2 的 2B、4B 和 9B 小模型，將基於 Qwen3.5 的三元權重方案擴展到更適合本機執行的規模。三款模型的權重檔案已提供下載，儲存庫標註 Apache 2.0 授權。這次變化的重點是用更小的儲存和記憶體負擔部署模型，而不是推出一套已經證明能替代所有雲端服務的通用系統。",
+          "sections": [
+            {
+              "heading": "小的是哪部分，先把邊界分清",
+              "paragraphs": [
+                "三元權重把語言模型矩陣中的數值壓縮為負一、零和正一。配套白皮書描述的實現還包含半精度的分組縮放值與固定變換，因此不能把整套模型理解成只由三個數構成。模型沿用 Qwen3.5 的架構，目標是儘量保留原模型能力，同時降低存放和讀取權重的成本。",
+                "白皮書給出的語言模型體積依次為 0.43、0.95 和 2 GB，對應基線的 BF16 權重為 3.76、8.41 和 17.91 GB。這組比較只覆蓋語言模型部分。視覺編碼器需要額外檔案，執行時也需要工作記憶體和上下文快取；不同格式的打包結果並不相同。因此，9B 權重約 2 GB 不等於一套可處理影像的應用只佔用 2 GB 記憶體。"
+              ]
+            },
+            {
+              "heading": "工具呼叫和視覺能力沒有被無損保留",
+              "paragraphs": [
+                "白皮書分別對 2B、4B 和 9B 報告了 17、18 和 19 項基準，不能把所有尺寸都說成完成同一組 19 項測試。比較物件是同尺寸 Qwen3.5 的 BF16 基線，並在所述評測中採用一致的生成設定。所謂能力保留率是對應分數的比值，不是所有真實任務的成功率，也不是對使用者場景的保證。",
+                "長程任務上的差距值得單獨看：在包含多輪互動的 tau2 Bench 中，4B 從基線的 81.65 降到 61.87，9B 從 85.25 降到 73.02。文件理解也有明顯取捨，9B 在 OmniDocBench 的分數為 73.80，基線為 88.73。這些是作者報告的特定基準結果，說明能呼叫工具或接收影像，並不意味著複雜代理流程和文件解析品質保持不變。"
+              ]
+            },
+            {
+              "heading": "生成得快，不代表整個請求都更快",
+              "paragraphs": [
+                "效能表測的是特定硬體、執行框架和打包格式下的單請求生成，解碼部分採用批次為一、生成 128 個詞元的設定。解碼是逐個產生輸出，預填充則是先處理輸入；兩者不能互相代替。白皮書也列出部分伺服器 GPU 上 BF16 基線預填充更快，以及部分 Mac 測試中參考模型首詞元時間更好的情況。",
+                "因此，這批模型的可核驗意義是讓更緊湊的權重和本機工具呼叫、多模態能力成為可實際試用的組合。現有效能數字來自發布方，尚不足以證明任意裝置、長上下文或完整代理任務都會提速。選擇時要同時看裝置能否容納整個執行流程、任務品質能否接受壓縮損失，以及首個回應和持續輸出各自的表現。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據白皮書重繪的解釋性示意圖；展示記憶體範圍與評測邊界，不代表新的實驗結果。",
+            "steps": [
+              "壓縮語言模型矩陣權重",
+              "另計視覺模組與執行時記憶體",
+              "分別檢查任務品質和回應階段"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "tsmc-2026-third-quarter-results",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "TSMC third-quarter results announcement",
+          "url": "https://pr.tsmc.com/english/news/3346"
+        },
+        {
+          "label": "TSMC results and guidance filed with the SEC",
+          "url": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000726/a3q26e_withguidancexfinal.htm"
+        },
+        {
+          "label": "TSMC third-quarter management report",
+          "url": "https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-10/f83780000ddc0c3b48e57a87eab6814c4ab35058/3Q26%20ManagementReport.pdf"
+        },
+        {
+          "label": "CRN Asia: revenue exceeds guidance amid AI demand",
+          "url": "https://www.crnasia.com/news/2026/components-and-peripherals/tsmc-third-quarter-revenue-tops-guidance-as-ceo-says-ai-dema"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "台积电 10 月 15 日公布截至 9 月 30 日的第三季度业绩：合并营收为新台币 1.49424 万亿元，同比增长 50.9%；净利润为 7630.6 亿元，同比增长 68.7%。这份财报既显示先进制程需求带来的收入增长，也呈现新工艺扩大生产时的成本压力。收入、利润与不同业务占比需要分别看，不能由一个增长数字概括所有变化。",
+          "sections": [
+            {
+              "heading": "收入增长很快，但币种会改变比较结果",
+              "paragraphs": [
+                "公司按台湾国际财务报告准则公布的营收较上季度增长 17.6%，净利润较上季度增长 8.0%，稀释每股收益为新台币 29.43 元。同比比较的是上一年同一季度，环比比较的是紧邻的上一季度；两组增长速度回答不同问题。利润仍在上升，但本季度环比增幅明显小于收入增幅。",
+                "按美元计，公司第三季度收入为 467.2 亿美元，同比增长 41.2%，环比增长 16.2%。它与新台币口径的 50.9% 同比增速并不矛盾：换算币种和汇率会影响报表中的增长率。收入增长也不等于晶圆出货数量等比例增长，价格、产品组合与币种都会影响金额；这份公告不能单独证明某一种芯片的销量变化。"
+              ]
+            },
+            {
+              "heading": "2 纳米和高性能计算，说的是不同分母",
+              "paragraphs": [
+                "在晶圆收入中，2 纳米占 8%，高于上季度的 3%；3 纳米占 33%，5 纳米占 28%，7 纳米占 10%。7 纳米及更先进制程合计占 79%。这些是晶圆收入的分布，不是生产线数量、晶圆片数或客户数量。2 纳米占比提高，说明新节点对收入的贡献增加，不能直接当作良率或整座工厂的产能利用率。",
+                "管理报告另按应用平台划分净收入，高性能计算占 68%，智能手机占 21%。这套分类与制程分类可以交叉，不能把两个百分比直接相加。高性能计算也不等于全部都是 AI 加速器。管理层把增长与先进制程需求及 AI 相关建设联系起来，独立报道同样关注这一背景；但报告没有把每一笔高性能计算收入都归因为 AI。"
+              ]
+            },
+            {
+              "heading": "新工艺爬坡让利润率承压",
+              "paragraphs": [
+                "本季度毛利率为 66.4%，营业利润率为 58.7%，净利率为 51.1%。毛利率比上季度的 67.7% 下降 1.3 个百分点，营业利润率也由 60.3% 回落。公司将毛利率的环比稀释主要归因于 2 纳米初期量产爬坡。这说明新节点收入增加和短期利润率下降可以同时发生，并不构成相互矛盾的信号。",
+                "公司给出的第四季度收入指引为 523 亿至 543 亿美元，毛利率指引为 65% 至 67%，采用一美元兑新台币 31.8 元的汇率假设。这些是前瞻估计，不是已经实现的业绩。对产业观察而言，后续需要关注需求能否兑现、新节点成本如何变化，以及汇率对报表的影响；单季表现无法保证未来增长，也不提供某家客户或某款芯片的完整订单图景。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公司报表重绘的解释性示意图；区分收入、业务结构与利润率，不构成股价预测。",
+            "steps": [
+              "第三季度营收与利润增长",
+              "分别观察制程收入和应用平台",
+              "核对量产爬坡成本及未来指引"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 15, TSMC reported results for the third quarter ended September 30. Consolidated revenue reached NT$1.49424 trillion, up 50.9% year over year, while net income was NT$763.06 billion, up 68.7%. The report shows both demand for advanced manufacturing and the cost pressure of ramping a new process. Revenue growth, profitability and business mix describe different aspects of that change.",
+          "sections": [
+            {
+              "heading": "Currency changes the growth comparison",
+              "paragraphs": [
+                "Under the company’s Taiwan IFRS reporting, revenue increased 17.6% from the preceding quarter and net income rose 8.0%; diluted earnings per share were NT$29.43. Year-over-year comparisons use the same quarter a year earlier, whereas sequential figures use the immediately preceding quarter. Profit continued to grow, but its sequential increase was substantially smaller than the revenue increase.",
+                "In US dollars, third-quarter revenue was US$46.72 billion, up 41.2% year over year and 16.2% sequentially. The 41.2% dollar increase does not contradict the 50.9% increase in Taiwan dollars: currency conversion and exchange rates affect reported growth. Revenue also is not a direct measure of wafer unit shipments. Prices, product mix and currency influence sales value, so the announcement alone cannot establish unit-sales growth for a particular chip."
+              ]
+            },
+            {
+              "heading": "Process nodes and computing platforms use different denominators",
+              "paragraphs": [
+                "Of wafer revenue, 2-nanometer technology represented 8%, up from 3% in the preceding quarter. Three-nanometer represented 33%, five-nanometer 28% and seven-nanometer 10%. Seven-nanometer and more advanced processes together contributed 79%. These percentages concern wafer revenue, not production lines, wafer units or customer counts. The rising 2-nanometer share indicates a greater revenue contribution, not a direct measurement of yield or factory utilization.",
+                "The management report separately groups net revenue by application platform: high-performance computing contributed 68% and smartphones 21%. Platform and process classifications overlap; their percentages cannot simply be added. Nor is all high-performance computing revenue necessarily AI-accelerator revenue. Management linked growth to advanced-process demand and AI-related investment, a context also covered independently, but the report does not attribute every HPC sale to AI."
+              ]
+            },
+            {
+              "heading": "A new process can grow while diluting margins",
+              "paragraphs": [
+                "Third-quarter gross margin was 66.4%, operating margin 58.7% and net margin 51.1%. Gross margin declined 1.3 percentage points from the preceding quarter’s 67.7%, and operating margin fell from 60.3%. The company chiefly attributed sequential gross-margin dilution to the initial 2-nanometer production ramp. Growing revenue from a new node and declining short-term margins can therefore occur together.",
+                "For the fourth quarter, TSMC guided to US$52.3–54.3 billion in revenue and a 65–67% gross margin, assuming NT$31.8 per US dollar. These are forecasts rather than realized results. Subsequent reports will need to show whether demand materializes, how ramp costs evolve and how exchange rates affect the figures. One quarter neither guarantees future growth nor reveals the full order book of a specific customer or chip."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from company reports, separating revenue, business mix and margins; not a share-price forecast.",
+            "steps": [
+              "Revenue and profit grow in the third quarter",
+              "Separate process revenue from application platforms",
+              "Check ramp costs and conditional guidance"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "TSMC は 10 月 15 日、9 月 30 日に終了した第 3 四半期の決算を発表した。連結売上高は 1 兆 4942 億 4000 万台湾ドルで前年同期比 50.9% 増、純利益は 7630 億 6000 万台湾ドルで 68.7% 増だった。先端製造への需要だけでなく、新しい製造プロセスの立ち上げに伴う費用負担も読み取れる。売上の成長、利益率、事業構成は分けて見る必要がある。",
+          "sections": [
+            {
+              "heading": "通貨によって成長率の見え方が変わる",
+              "paragraphs": [
+                "台湾の国際財務報告基準に基づく発表では、前四半期比の売上高増加率は 17.6%、純利益は 8.0%、希薄化後一株当たり利益は 29.43 台湾ドルだった。前年同期比は一年前の同じ期間、前四半期比は直前の期間との比較である。利益は増えたものの、直前期からの伸びは売上高より小さい。",
+                "米ドル換算の売上高は 467 億 2000 万ドルで、前年同期比 41.2%、前四半期比 16.2% 増。台湾ドルでの 50.9% 増と矛盾する数字ではなく、通貨の換算と為替が成長率に影響する。また売上額はウエハー出荷枚数そのものではない。価格、製品構成、通貨が金額を変えるため、この発表だけで特定チップの販売数量の増加を確定できない。"
+              ]
+            },
+            {
+              "heading": "製造ノードと用途別構成は分母が違う",
+              "paragraphs": [
+                "ウエハー売上高では 2 ナノメートルが 8% を占め、前四半期の 3% から増加した。3 ナノメートルは 33%、5 ナノメートルは 28%、7 ナノメートルは 10%。7 ナノメートル以降の先端プロセスは計 79% である。これは売上の構成で、生産ライン数や枚数、顧客数の割合ではない。2 ナノメートルの寄与増加から歩留まりや工場稼働率を直接読み取ることはできない。",
+                "管理報告の用途別純売上高では、高性能コンピューティングが 68%、スマートフォンが 21% を占める。用途とプロセスは重なり得る分類なので割合を足し合わせられない。高性能コンピューティング全体が AI アクセラレーターでもない。経営陣や独立報道は先端製造需要と AI 関連投資を成長の背景として挙げるが、全 HPC 売上を AI に帰属させた報告ではない。"
+              ]
+            },
+            {
+              "heading": "新しい工程の拡大と利益率低下は両立する",
+              "paragraphs": [
+                "売上総利益率は 66.4%、営業利益率は 58.7%、純利益率は 51.1% だった。売上総利益率は前期の 67.7% から 1.3 ポイント低下し、営業利益率も 60.3% から下がった。会社は売上総利益率の前期比低下を主として 2 ナノメートルの初期量産立ち上げによるものと説明する。新ノードの売上寄与が増えても、短期的な利益率は低下し得る。",
+                "第 4 四半期の見通しは売上高 523 億～543 億米ドル、売上総利益率 65～67% で、為替は一米ドル当たり 31.8 台湾ドルを仮定する。いずれも実績ではなく予測だ。今後は需要の実現、立ち上げ費用の変化、為替の影響を確認する必要がある。一四半期の好調さは将来の成長を保証せず、特定顧客やチップの受注全体を示すものでもない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "会社報告に基づく当サイトの説明用再描画。売上、事業構成、利益率を分けて示し、株価予測は行わない。",
+            "steps": [
+              "第 3 四半期の売上と利益が増加",
+              "製造プロセス別と用途別を区別",
+              "立ち上げ費用と条件付き見通しを確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "15 октября TSMC опубликовала результаты третьего квартала, завершившегося 30 сентября. Консолидированная выручка составила 1.49424 трлн тайваньских долларов, увеличившись на 50.9% год к году, а чистая прибыль — 763.06 млрд, с ростом на 68.7%. Отчёт отражает и спрос на передовое производство, и затраты на освоение нового процесса. Рост выручки, рентабельность и структура бизнеса требуют раздельного рассмотрения.",
+          "sections": [
+            {
+              "heading": "Валюта влияет на сравнение темпов роста",
+              "paragraphs": [
+                "Согласно отчётности компании по Taiwan IFRS, относительно предыдущего квартала выручка выросла на 17.6%, чистая прибыль — на 8.0%, а разводнённая прибыль на акцию составила 29.43 тайваньского доллара. Годовое сравнение использует тот же квартал прошлого года, последовательное — непосредственно предшествующий квартал. Прибыль росла, но её последовательный прирост был заметно меньше прироста выручки.",
+                "В долларах США выручка достигла 46.72 млрд, увеличившись на 41.2% год к году и на 16.2% к предыдущему кварталу. Рост на 41.2% не противоречит 50.9% в тайваньских долларах: пересчёт и обменный курс меняют отчётные темпы. Выручка также не равна количеству отгруженных пластин. На денежный результат влияют цены, ассортимент и валюта; из объявления нельзя напрямую вывести рост продаж конкретного чипа в штуках."
+              ]
+            },
+            {
+              "heading": "Техпроцессы и вычислительные платформы — разные срезы",
+              "paragraphs": [
+                "В выручке от пластин доля 2-нанометровой технологии достигла 8% против 3% кварталом ранее. На 3 нм пришлось 33%, на 5 нм — 28%, на 7 нм — 10%. Процессы 7 нм и более передовые вместе дали 79%. Это распределение выручки, а не числа линий, пластин или клиентов. Рост доли 2 нм показывает увеличение вклада в продажи, но непосредственно не измеряет выход годных изделий или загрузку фабрики.",
+                "Отдельная классификация чистой выручки по применениям отводит высокопроизводительным вычислениям 68%, смартфонам — 21%. Категории применения и техпроцесса пересекаются, поэтому складывать их проценты нельзя. Не вся выручка HPC обязательно связана с ускорителями ИИ. Руководство и независимое освещение связывают рост со спросом на передовые процессы и инвестициями в ИИ, однако отчёт не относит к ИИ каждую продажу HPC."
+              ]
+            },
+            {
+              "heading": "Освоение нового процесса снижает краткосрочную маржу",
+              "paragraphs": [
+                "Валовая рентабельность составила 66.4%, операционная — 58.7%, чистая — 51.1%. Валовая маржа снизилась на 1.3 процентного пункта относительно прежних 67.7%, операционная — с 60.3%. Основной причиной последовательного снижения валовой маржи компания назвала начальный этап развёртывания производства 2 нм. Рост выручки нового процесса и снижение краткосрочной рентабельности поэтому могут происходить одновременно.",
+                "На четвёртый квартал TSMC прогнозирует выручку 52.3–54.3 млрд долларов США и валовую маржу 65–67% при предположении курса 31.8 тайваньского доллара за доллар США. Это прогнозы, не достигнутые результаты. Далее важно проверить реализацию спроса, изменение затрат на освоение и влияние курса. Один квартал не гарантирует будущего роста и не раскрывает полностью заказы отдельного клиента или конкретного чипа."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по отчётам компании: выручка, структура бизнеса и маржа показаны отдельно; это не прогноз акций.",
+            "steps": [
+              "Рост выручки и прибыли в третьем квартале",
+              "Разделить техпроцессы и платформы применения",
+              "Проверить затраты освоения и условия прогноза"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "台積電 10 月 15 日公佈截至 9 月 30 日的第三季業績：合併營收為新台幣 1.49424 萬億元，年增 50.9%；淨利為 7630.6 億元，年增 68.7%。這份財報既顯示先進製程需求帶來的收入增長，也呈現新製程擴大生產時的成本壓力。收入、利潤與不同業務佔比需要分別看，不能由一個增長數字概括所有變化。",
+          "sections": [
+            {
+              "heading": "收入增長很快，但幣種會改變比較結果",
+              "paragraphs": [
+                "公司按臺灣國際財務報告準則公佈的營收較上季增長 17.6%，淨利較上季增長 8.0%，稀釋每股盈餘為新台幣 29.43 元。年增率比較的是上一年同一季，季增率比較的是緊鄰的上一季；兩組增長速度回答不同問題。利潤仍在上升，但本季季增幅明顯小於收入增幅。",
+                "按美元計，公司第三季收入為 467.2 億美元，年增 41.2%，季增 16.2%。它與新台幣口徑的 50.9% 年增率並不矛盾：換算幣種和匯率會影響報表中的增長率。收入增長也不等於晶圓出貨數量等比例增長，價格、產品組合與幣種都會影響金額；這份公告不能單獨證明某一種晶片的銷量變化。"
+              ]
+            },
+            {
+              "heading": "2 奈米和高效能運算，說的是不同分母",
+              "paragraphs": [
+                "在晶圓收入中，2 奈米佔 8%，高於上季的 3%；3 奈米佔 33%，5 奈米佔 28%，7 奈米佔 10%。7 奈米及更先進製程合計佔 79%。這些是晶圓收入的分佈，不是生產線數量、晶圓片數或客戶數量。2 奈米佔比提高，說明新節點對收入的貢獻增加，不能直接當作良率或整座工廠的產能利用率。",
+                "管理報告另按應用平臺劃分淨收入，高效能運算佔 68%，智慧手機佔 21%。這套分類與製程分類可以交叉，不能把兩個百分比直接相加。高效能運算也不等於全部都是 AI 加速器。管理層把增長與先進製程需求及 AI 相關建設聯絡起來，獨立報道同樣關注這一背景；但報告沒有把每一筆高效能運算收入都歸因為 AI。"
+              ]
+            },
+            {
+              "heading": "新製程爬坡讓利潤率承壓",
+              "paragraphs": [
+                "本季毛利率為 66.4%，營業利益率為 58.7%，淨利率為 51.1%。毛利率比上季的 67.7% 下降 1.3 個百分點，營業利益率也由 60.3% 回落。公司將毛利率的相較上一季的稀釋主要歸因於 2 奈米初期量產爬坡。這說明新節點收入增加和短期利潤率下降可以同時發生，並不構成相互矛盾的訊號。",
+                "公司給出的第四季收入指引為 523 億至 543 億美元，毛利率指引為 65% 至 67%，採用一美元兌新台幣 31.8 元的匯率假設。這些是前瞻估計，不是已經實現的業績。對產業觀察而言，後續需要關注需求能否兌現、新節點成本如何變化，以及匯率對報表的影響；單季表現無法保證未來增長，也不提供某家客戶或某款晶片的完整訂單圖景。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按公司報表重繪的解釋性示意圖；區分收入、業務結構與利潤率，不構成股價預測。",
+            "steps": [
+              "第三季營收與利潤增長",
+              "分別觀察製程收入和應用平臺",
+              "核對量產爬坡成本及未來指引"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nasa-artemis-ii-heat-shield-assessment",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "NASA: Artemis II postflight heat-shield assessment",
+          "url": "https://www.nasa.gov/missions/artemis/artemis-2/rigorous-analysis-confirms-nasas-artemis-ii-heat-shield-performance/"
+        },
+        {
+          "label": "NASA: cause of Artemis I char loss",
+          "url": "https://www.nasa.gov/missions/artemis/nasa-identifies-cause-of-artemis-i-orion-heat-shield-char-loss/"
+        },
+        {
+          "label": "NASA: initial Artemis II assessments",
+          "url": "https://www.nasa.gov/missions/nasa-on-track-for-future-missions-with-initial-artemis-ii-assessments/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "NASA 在2026年10月15日公布 Artemis II 隔热罩的飞行后评估。这次更新针对4月10日已经返回的载人绕月任务，补上了回收现场照片之外的检查结果：NASA 统计到9处大小不一的炭化层脱落，而 Artemis I 有103处。减少的是脱落位置的数量，不能直接换算成损失材料的体积，更不能理解为安全性提高了同样倍数。",
+          "sections": [
+            {
+              "heading": "为什么隔热材料会脱落",
+              "paragraphs": [
+                "Orion 返回舱使用 Avcoat 烧蚀材料抵挡再入时的高温。烧蚀意味着材料在受热过程中发生变化、消耗自身来保护舱体，表面变黑或有材料消耗并不一定是故障。Artemis I 引起关注的，是超过预期的炭化材料成块脱落，工程师需要判断这些脱落由什么触发，以及剩余隔热层是否足够。",
+                "NASA 在2024年公布的调查把原因指向材料内部气体排出不畅。Artemis I 的跳跃式再入会先进入大气减速，再短暂抬升，最后返回；在两段之间的较低加热阶段，内部仍在产气，但表面炭化层不够透气，压力积聚后造成开裂和脱落。早期地面试验的较高加热条件没有充分复现这一过程，后来调整试验条件才重现了问题。"
+              ]
+            },
+            {
+              "heading": "改变轨迹后，飞行留下了什么证据",
+              "paragraphs": [
+                "Artemis II 缩短了从进入大气层到溅落点的最大下程距离，以减少在相关温度区间停留的时间。这个选择针对的是热量进入材料的过程，而不只是一个最高温度数字。4月的初步观察已显示裂纹和脱落减少，10月发布的评估则进一步对照了飞行前预测、地面试验与回收后的检查。",
+                "隔热罩先在肯尼迪航天中心接受详细检查，随后运往马歇尔航天飞行中心，8月开始材料取样和 X 射线检查。NASA 表示，再入气动与热环境的评估符合飞前预测，背壳也没有出现超出预期的局部过热。报道配图左侧为 Artemis I、右侧为 Artemis II 的隔热罩，能辅助观察表面差别，但照片无法代替对厚度、内部状态和材料性能的测量。"
+              ]
+            },
+            {
+              "heading": "结果支持了什么，还有什么没结束",
+              "paragraphs": [
+                "9处与103处的对照，支持此次轨迹调整减轻异常炭化层脱落的判断；它并不意味着隔热罩完全没有损耗。不同脱落位置大小不一，单纯数位置不能算出脱落面积、体积或安全裕度。这里报道的是 NASA 对这次任务的评估，没有把它包装成本站开展的独立试验。",
+                "后续工作仍包括把激光扫描结果与飞行前表面形状比较，估算材料退蚀量，并继续取样、材料试验和热分析。NASA 还在为 Artemis III 改进 Avcoat 制造中的透气性一致性。因此，这次返回提供了重要的实飞证据，但后续任务的材料制造、轨迹和热环境仍须分别验证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解释性重绘：从异常排气机理到轨迹调整与飞行后检查，表示验证步骤，不是实验曲线。",
+            "steps": [
+              "材料受热产气，排气不足可能导致开裂",
+              "调整再入轨迹，缩短相关温度区间停留",
+              "对回收隔热罩取样、检查并对照预测",
+              "继续测量退蚀量，验证后续材料与任务"
+            ]
+          }
+        },
+        "en": {
+          "lead": "NASA published its postflight assessment of the Artemis II heat shield on October 15, 2026. The crewed lunar flyby had already returned on April 10; the new development was the inspection evidence beyond the recovery photographs. NASA counted nine areas of char loss of varying sizes, compared with 103 on Artemis I. Those are counts of locations, not measurements of lost material volume or a corresponding multiplier in safety.",
+          "sections": [
+            {
+              "heading": "Why material loss needed investigation",
+              "paragraphs": [
+                "Orion uses an ablative material called Avcoat to protect the returning capsule. Ablation deliberately consumes and changes material as it absorbs the effects of intense heating. A darkened surface or some material loss therefore does not by itself indicate failure. The concern after Artemis I was unexpected loss of chunks of char, and whether the remaining protection was sufficient.",
+                "NASA’s investigation, published in 2024, identified gas trapped within the material as the cause. During Artemis I’s skip entry, the capsule first dipped into the atmosphere, briefly climbed out, then descended again. Gas continued forming during the lower-heating interval, but the char was insufficiently permeable to vent it. Pressure caused cracking and shedding. Earlier ground tests used higher heating conditions that did not reproduce this behavior; revised tests subsequently did."
+              ]
+            },
+            {
+              "heading": "What changed, and what the inspections found",
+              "paragraphs": [
+                "For Artemis II, NASA shortened the maximum downrange distance between atmospheric entry and splashdown to reduce time in the temperature range associated with the earlier problem. The change addressed the history of heating within the material, not simply a peak temperature. Initial observations in April suggested less cracking and shedding. The October assessment added comparisons with preflight predictions, ground testing and detailed postflight inspections.",
+                "The shield was examined at Kennedy Space Center and then sent to Marshall Space Flight Center, where material extraction and X-ray work began in August. NASA reported aerothermal behavior consistent with predictions and no unexpected localized overheating on the backshell. The accompanying photograph shows Artemis I on the left and Artemis II on the right. It helps illustrate surface differences, but cannot substitute for measurements of thickness, internal condition or material properties."
+              ]
+            },
+            {
+              "heading": "Evidence for this mission, with work still continuing",
+              "paragraphs": [
+                "The nine-versus-103 comparison supports the assessment that the changed trajectory reduced anomalous char loss. It does not mean the shield suffered no material consumption. Because individual areas differ in size, counting them does not establish lost area, volume or a safety margin. These are NASA’s findings for this flight, not independent testing performed by this site.",
+                "Further work includes comparing laser scans with the preflight surface to estimate material recession, alongside sampling, material testing and thermal analysis. NASA is also improving consistency of Avcoat permeability in manufacturing for Artemis III. The flight supplies important operational evidence, while later missions still require validation of their materials, trajectories and heating environments."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw: the chain from gas-venting failure to trajectory changes and postflight checks; not an experimental plot.",
+            "steps": [
+              "Heating generates gas; poor venting can cause cracks",
+              "Change the trajectory to limit time in the relevant temperature range",
+              "Inspect recovered material and compare with predictions",
+              "Measure recession and validate later materials and missions"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "NASAは2026年10月15日、Artemis IIの耐熱シールドに関する飛行後評価を公表した。有人月周回飛行は4月10日に帰還しており、今回の新情報は回収時の写真に続く詳しい検査結果である。NASAが確認した炭化層の脱落箇所は大小合わせて9か所で、Artemis Iでは103か所だった。この数字は場所の数であり、失われた材料の体積や安全性の改善倍率を表してはいない。",
+          "sections": [
+            {
+              "heading": "想定内の消耗と異常な脱落",
+              "paragraphs": [
+                "Orionの帰還カプセルは、Avcoatというアブレーション材料で再突入時の熱から守られる。アブレーションは、材料自身が熱で変化・消耗することで内部を保護する仕組みだ。表面が黒くなることや材料が減ること自体は、必ずしも故障ではない。Artemis Iで問題になったのは、想定を超えて炭化層が塊で剝がれたことであり、原因と残存する防護能力の確認が必要だった。",
+                "NASAが2024年に発表した調査では、材料内部に生じたガスが十分に抜けなかったことが原因とされた。Artemis Iのスキップ再突入では、大気に入って減速した後、一時的に高度を上げてから再び降下する。その間の加熱が弱い段階でもガスは発生し続け、通気性の足りない炭化層の内側に圧力が蓄積して亀裂や脱落を生んだ。従来の地上試験は加熱条件が強く、この挙動を十分に再現できず、条件を変えた試験で再現された。"
+              ]
+            },
+            {
+              "heading": "軌道変更を実機の検査で確かめる",
+              "paragraphs": [
+                "Artemis IIでは、大気圏突入点から着水地点までの最大ダウンレンジ距離を短くし、問題に関係する温度域に滞在する時間を減らした。最高温度だけでなく、材料がどのような熱の履歴を受けるかに対する変更である。4月の初期観察でも亀裂や脱落の減少が見られたが、10月の評価では飛行前予測、地上試験、回収後の詳しい検査を照合した。",
+                "シールドはケネディ宇宙センターで検査された後、マーシャル宇宙飛行センターに移され、8月から試料採取とX線検査が始まった。NASAによると空力・熱的な挙動は予測に沿い、背面側の外殻にも想定外の局所過熱はなかった。写真は左がArtemis I、右がArtemis IIである。表面の違いを示す一方、厚さ、内部の状態、材料特性の測定を代替するものではない。"
+              ]
+            },
+            {
+              "heading": "今回の成果と残された確認",
+              "paragraphs": [
+                "9か所と103か所という比較は、軌道変更によって異常な炭化層脱落が抑えられたという評価を支える。ただし消耗がゼロだったわけではない。個々の脱落箇所の大きさは異なるため、数だけから面積、体積、安全余裕を求めることはできない。本稿はNASAの今回の飛行評価を伝えるもので、当サイトが独自に試験した結果ではない。",
+                "今後もレーザー測定と飛行前の表面形状を比較して材料の後退量を調べ、試料採取、材料試験、熱解析を進める。NASAはArtemis IIIに向け、Avcoat製造時の通気性を均一にする改良も行っている。今回の実飛行は重要な証拠となるが、後続ミッションの材料、軌道、加熱環境については、それぞれ検証が必要になる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "当サイトによる説明用の描き直し。ガス排出の問題、軌道変更、飛行後検査の関係を示すもので、実験グラフではない。",
+            "steps": [
+              "加熱でガスが生じ、排出不足で亀裂が起こり得る",
+              "軌道を調整し、関連する温度域での滞在を短くする",
+              "回収した材料を検査し、予測と照合する",
+              "材料の後退量と後続ミッションの条件を検証する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "15 октября 2026 года NASA опубликовало послеполётную оценку теплозащитного щита Artemis II. Пилотируемый облёт Луны завершился возвращением 10 апреля; новость касается результатов проверки, дополнивших первые фотографии после посадки. NASA насчитало девять участков потери обугленного материала разных размеров против 103 у Artemis I. Это число участков, а не объём утраченного материала и не показатель того, во сколько раз выросла безопасность.",
+          "sections": [
+            {
+              "heading": "Почему отслоение материала потребовало расследования",
+              "paragraphs": [
+                "Капсулу Orion защищает абляционный материал Avcoat. При абляции материал меняется и расходуется под действием нагрева, защищая внутренние конструкции. Поэтому потемнение поверхности или некоторый расход материала сами по себе не означают неисправность. После Artemis I внимание привлекло неожиданное отделение кусков обугленного слоя: требовалось установить причину и оценить достаточность оставшейся защиты.",
+                "Расследование NASA, опубликованное в 2024 году, связало проблему с недостаточным выходом газа из материала. При рикошетирующем входе Artemis I сначала погружался в атмосферу для торможения, затем ненадолго поднимался и снова снижался. В промежутке с меньшим нагревом газ продолжал образовываться, но проницаемость обугленного слоя была недостаточной. Давление вызывало трещины и отслоение. Предыдущие наземные испытания при более интенсивном нагреве не воспроизводили этот режим; скорректированные испытания смогли его повторить."
+              ]
+            },
+            {
+              "heading": "Изменённая траектория и результаты обследования",
+              "paragraphs": [
+                "Для Artemis II NASA сократило максимальную дальность между входом в атмосферу и приводнением, чтобы уменьшить время в температурном диапазоне, связанном с прежней проблемой. Изменение касалось всей истории нагрева материала, а не только максимальной температуры. Первые наблюдения в апреле указывали на уменьшение трещин и отслоений. Октябрьская оценка сопоставила подробные проверки с предполётными прогнозами и наземными испытаниями.",
+                "Щит обследовали в Космическом центре Кеннеди, затем отправили в Центр космических полётов Маршалла, где в августе начались отбор образцов и рентгеновские исследования. NASA сообщило о соответствии аэротермического поведения прогнозам и отсутствии неожиданного местного перегрева задней оболочки. На фотографии слева показан щит Artemis I, справа — Artemis II. Снимок помогает увидеть различия поверхности, но не заменяет измерений толщины, внутреннего состояния и свойств материала."
+              ]
+            },
+            {
+              "heading": "Что подтверждено и что ещё предстоит проверить",
+              "paragraphs": [
+                "Сравнение девяти и 103 участков поддерживает вывод о снижении аномального отслоения после изменения траектории. Оно не означает полного отсутствия расхода материала. Участки различаются по размеру, поэтому по их количеству нельзя вычислить утраченную площадь, объём или запас безопасности. Речь идёт об оценке NASA для данного полёта, а не о независимых испытаниях, выполненных нашей редакцией.",
+                "Работа продолжается: лазерные измерения сравнивают с предполётной формой поверхности для оценки убыли материала, проводят отбор образцов, материаловедческие испытания и тепловой анализ. Для Artemis III NASA также улучшает равномерность проницаемости Avcoat при изготовлении. Реальный полёт дал важные данные, но материалы, траектория и тепловые условия последующих миссий требуют собственной проверки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции: связь газоотвода, изменения траектории и послеполётной проверки. Это не график эксперимента.",
+            "steps": [
+              "Нагрев образует газ; плохой отвод может вызвать трещины",
+              "Траектория сокращает время в проблемном температурном диапазоне",
+              "Возвращённый щит исследуют и сравнивают с прогнозами",
+              "Измеряют убыль материала и проверяют будущие миссии"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "NASA 在2026年10月15日公佈 Artemis II 隔熱罩的飛行後評估。這次更新針對4月10日已經返回的載人繞月任務，補上了回收現場照片之外的檢查結果：NASA 統計到9處大小不一的炭化層脫落，而 Artemis I 有103處。減少的是脫落位置的數量，不能直接換算成損失材料的體積，更不能理解為安全性提高了同樣倍數。",
+          "sections": [
+            {
+              "heading": "為什麼隔熱材料會脫落",
+              "paragraphs": [
+                "Orion 返回艙使用 Avcoat 燒蝕材料抵擋再入時的高溫。燒蝕意味著材料在受熱過程中發生變化、消耗自身來保護艙體，表面變黑或有材料消耗並不一定是故障。Artemis I 引起關注的，是超過預期的炭化材料成塊脫落，工程師需要判斷這些脫落由什麼觸發，以及剩餘隔熱層是否足夠。",
+                "NASA 在2024年公佈的調查把原因指向材料內部氣體排出不暢。Artemis I 的跳躍式再入會先進入大氣減速，再短暫抬升，最後返回；在兩段之間的較低加熱階段，內部仍在產氣，但表面炭化層不夠透氣，壓力積聚後造成開裂和脫落。早期地面試驗的較高加熱條件沒有充分復現這一過程，後來調整試驗條件才重現了問題。"
+              ]
+            },
+            {
+              "heading": "改變軌跡後，飛行留下了什麼證據",
+              "paragraphs": [
+                "Artemis II 縮短了從進入大氣層到濺落點的最大下程距離，以減少在相關溫度區間停留的時間。這個選擇針對的是熱量進入材料的過程，而不只是一個最高溫度數字。4月的初步觀察已顯示裂紋和脫落減少，10月釋出的評估則進一步對照了飛行前預測、地面試驗與回收後的檢查。",
+                "隔熱罩先在肯尼迪航天中心接受詳細檢查，隨後運往馬歇爾航天飛行中心，8月開始材料取樣和 X 射線檢查。NASA 表示，再入氣動與熱環境的評估符合飛前預測，背殼也沒有出現超出預期的區域性過熱。報道配圖左側為 Artemis I、右側為 Artemis II 的隔熱罩，能輔助觀察表面差別，但照片無法代替對厚度、內部狀態和材料效能的測量。"
+              ]
+            },
+            {
+              "heading": "結果支援了什麼，還有什麼沒結束",
+              "paragraphs": [
+                "9處與103處的對照，支援此次軌跡調整減輕異常炭化層脫落的判斷；它並不意味著隔熱罩完全沒有損耗。不同脫落位置大小不一，單純數位置不能算出脫落面積、體積或安全裕度。這裡報道的是 NASA 對這次任務的評估，沒有把它包裝成本站開展的獨立試驗。",
+                "後續工作仍包括把鐳射掃描結果與飛行前表面形狀比較，估算材料退蝕量，並繼續取樣、材料試驗和熱分析。NASA 還在為 Artemis III 改進 Avcoat 製造中的透氣性一致性。因此，這次返回提供了重要的實飛證據，但後續任務的材料製造、軌跡和熱環境仍須分別驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站解釋性重繪：從異常排氣機理到軌跡調整與飛行後檢查，表示驗證步驟，不是實驗曲線。",
+            "steps": [
+              "材料受熱產氣，排氣不足可能導致開裂",
+              "調整再入軌跡，縮短相關溫度區間停留",
+              "對回收隔熱罩取樣、檢查並對照預測",
+              "繼續測量退蝕量，驗證後續材料與任務"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "google-deep-review-public-release",
+      "written_at": "2026-11-02",
+      "sources": [
+        {
+          "label": "Google Research: public Deep Review release",
+          "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/"
+        },
+        {
+          "label": "PAT research paper, version 1",
+          "url": "https://arxiv.org/html/2606.28277v1"
+        },
+        {
+          "label": "ICML: retrospective on the PAT pilot",
+          "url": "https://blog.icml.cc/2026/03/30/retrospective-on-pat-x-icml-2026-ai-paper-assistant-program/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Google 于2026年10月14日公开发布 Deep Review，把此前面向论文作者试用的 Paper Assistant Tool（PAT）扩展为文档审阅服务。它要做的是逐项检查论证、数学推导和证据之间是否相符，而不只是改写文字。首发输入格式为 PDF 和纯文本，多文件审阅仍是预告功能；公开发布也不意味着它已经获得替代专家或正式同行评审的资格。",
+          "sections": [
+            {
+              "heading": "从作者助手到公开服务",
+              "paragraphs": [
+                "PAT 的早期试验发生在会议投稿前，作者自愿提交稿件，拿到仅供自己使用的意见。ICML 的官方复盘明确说，反馈与正式评审完全分开，审稿人和程序委员会看不到这些意见。因此，参与试验的论文数量不等于会议录用数量，也不能据此说会议已把录用决定交给 AI。",
+                "这次实质变化是公众可以使用这一类分段核查流程，适用对象也从计算机论文扩展到其他技术文档。对于长文，某个结论可能依赖很远处的定义或实验条件，一次性问答容易漏掉这种联系。Google 宣称还可用于法律和金融材料，但论文实验并未证明这些领域的专业判断能力，不能把它当作已完成验证的通用审查系统。"
+              ]
+            },
+            {
+              "heading": "先分工核查，再把意见合起来",
+              "paragraphs": [
+                "系统先按逻辑划分文档，允许片段重叠，但要求覆盖全文。接着根据各部分的信息密度分配计算预算：复杂证明可以比引言获得更多推理资源。多个专门的 Agent 并行核查各自片段，同时仍能看到全文，尽量避免只盯着局部、误解其他章节中的前提。",
+                "最后，一个汇总 Agent 合并意见、检查跨章节一致性，必要时重做逻辑核查，并借助外部检索或工具核对依据。这里的检索是为了检查事实或引用是否有来源，不意味着检索到的内容一定可靠。用户得到的是需要验证的审阅意见，不是给整篇文章盖上“正确”的印章。"
+              ]
+            },
+            {
+              "heading": "实验数字、使用边界和文档保留",
+              "paragraphs": [
+                "PAT 论文报告了一项受限实验：从 SPOT 中筛选26篇数学或计算机论文，包含29个已知的公式或证明错误。在同为 Gemini 3.1 Pro 的条件下，单次生成检出55.2%，PAT 检出89.7%，相差34.5个百分点。这衡量的是该小样本中已知错误的检出率，不是所有审阅意见的准确率。评分使用模型判断描述是否与已知错误等价，再由论文作者人工复核；评分规则与原 SPOT 不同，不能直接横比其排行榜。",
+                "论文也记载了把正确推导误判为错误、PDF 解析失败和知识过时等问题。早期作者问卷反映使用感受，不能补上误报率或跨领域验证的缺口。另一个容易忽略的区别是文档保留：Google 称公开服务的上传内容不用于训练、微调或改进模型，但为向用户展示会保留一年；早期会议试验则称项目结束后及时删除。这是服务方公布的政策，不能把“不训练”误读成“不保存”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开方法重新绘制的解释图：片段可重叠，每个核查 Agent 保留全文上下文；不是官方实验图或准确率保证。",
+            "steps": [
+              "按逻辑切分全文，允许必要重叠",
+              "根据复杂程度分配推理预算",
+              "并行核查片段，同时保留全文上下文",
+              "汇总意见、检索核对，由人作最终判断"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Google publicly released Deep Review on October 14, 2026, expanding its Paper Assistant Tool (PAT) experiments into a document-review service. The purpose is to examine whether arguments, mathematical steps and supporting evidence fit together, rather than merely polish prose. PDF and plain text were the launch input formats; multiple-file review was still planned. Public availability does not establish that the system can replace experts or formal peer review.",
+          "sections": [
+            {
+              "heading": "From private author feedback to public access",
+              "paragraphs": [
+                "Early PAT pilots ran before conference submission. Authors opted in and received feedback intended only for them. ICML’s official retrospective explicitly separates that feedback from formal review: reviewers and the program committee could not see it. The number of manuscripts processed therefore does not represent acceptances, or show that a conference delegated acceptance decisions to AI.",
+                "The substantive change is wider access to this structured checking process, with a scope extending beyond computer science manuscripts to other technical documents. A conclusion in a long document may depend on a distant definition or experimental condition that a single response overlooks. Google also proposes legal and financial uses, but the paper’s experiments do not validate professional judgment in those domains. This is not evidence of a universally validated review system."
+              ]
+            },
+            {
+              "heading": "Separate the work, then reconcile the findings",
+              "paragraphs": [
+                "The system divides a document into logical segments that may overlap but must cover the full input. It then allocates computing effort by information density: a difficult proof can receive more reasoning resources than an introduction. Specialized agents examine segments in parallel while retaining access to the whole document, helping them interpret assumptions established elsewhere.",
+                "A synthesis agent combines the findings, checks consistency between sections and can repeat logical checks. External search and tools provide additional checks on supporting evidence. Looking something up does not itself make the result reliable. The output remains a set of comments to verify, rather than a certification that every claim in the document is correct."
+              ]
+            },
+            {
+              "heading": "What the experiment measures, and what the service retains",
+              "paragraphs": [
+                "The PAT paper reports a narrow experiment on 26 mathematics or computer science papers from SPOT containing 29 known equation or proof errors. Using Gemini 3.1 Pro in both conditions, a single generation detected 55.2% and PAT 89.7%, a difference of 34.5 percentage points. This measures detection of known errors in that small subset, not the accuracy of every review comment. An automated grader assessed equivalence to the known error and paper authors audited its decisions. The scoring rule differs from the original SPOT evaluation, so its leaderboard is not directly comparable.",
+                "The paper also records false objections to correct reasoning, PDF parsing failures and outdated knowledge. Early author surveys measure reported usefulness, not a missing false-positive rate or validation across professions. Retention deserves separate attention: Google says public-service uploads are not used to train, fine-tune or improve models, but are retained for one year for display to the user. Earlier conference pilots instead described prompt deletion after each program. These are provider policy statements; “not used for training” does not mean “not stored.”"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An original explanatory redraw of the published method: segments can overlap and each checking agent retains whole-document context. Not an official experimental figure or an accuracy guarantee.",
+            "steps": [
+              "Divide the full document into logical, potentially overlapping segments",
+              "Allocate reasoning effort by complexity",
+              "Check segments in parallel with the full document available",
+              "Synthesize and ground comments; people make the final judgment"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Googleは2026年10月14日、論文著者向けに試験提供していたPaper Assistant Tool（PAT）を発展させ、文書レビューサービスDeep Reviewを一般公開した。文章を整えるだけでなく、主張、数学的推論、根拠の対応関係を点検する仕組みだ。公開時の入力形式はPDFとプレーンテキストで、複数ファイルのレビューは予告段階だった。一般公開されたことは、専門家や正式な査読を置き換えられるという証明ではない。",
+          "sections": [
+            {
+              "heading": "著者だけに返す助言から一般公開へ",
+              "paragraphs": [
+                "初期のPAT実験は会議への投稿前に行われ、希望した著者だけが自分の原稿への助言を受け取った。ICMLの公式振り返りでは、助言は正式な査読と完全に分離され、査読者やプログラム委員会には見えなかったと明記されている。処理した原稿数は採択数ではなく、会議がAIに採否を任せたことも意味しない。",
+                "今回の変化は、この分担型の点検手順を一般の利用者も使えるようにし、対象を計算機科学の論文以外にも広げた点にある。長い文書の結論は、離れた場所にある定義や実験条件に依存することがあり、一度の応答では関係を見落としやすい。Googleは法律・金融文書への用途も掲げるが、論文の実験はそれらの専門的判断能力を検証したものではなく、万能な審査システムとみなすことはできない。"
+              ]
+            },
+            {
+              "heading": "分担して読み、最後に整合性を確かめる",
+              "paragraphs": [
+                "まず文書を論理的なまとまりに分ける。区分の重複は許す一方、全文を漏れなく覆う必要がある。次に情報の密度に応じて計算量を配分し、複雑な証明には序論より多くの推論資源を使う。専用のAgentが並列に各区分を点検する際にも全文を参照できるため、別の章で示された前提を読み落とさないようにする。",
+                "最後に統合用Agentが意見をまとめ、章をまたぐ整合性を確認し、必要に応じて論理点検をやり直す。外部検索やツールで根拠を追加確認するが、検索結果があるだけで正しさが保証されるわけではない。返されるのは人が確かめるべきレビュー意見であり、文書全体の正確性を認証するものではない。"
+              ]
+            },
+            {
+              "heading": "実験の分母と、文書が保存される期間",
+              "paragraphs": [
+                "PAT論文の実験では、SPOTから数式・証明の既知の誤り29件を含む数学・計算機科学の26論文を選んだ。どちらもGemini 3.1 Proを用いた条件で、単発生成の検出率は55.2%、PATは89.7%で、差は34.5ポイントだった。この小さな部分集合にある既知の誤りを見つけた割合であり、全レビュー意見の正答率ではない。モデルが既知の誤りとの意味的な一致を採点し、論文著者が点検した。元のSPOTとは採点方式が違い、順位表と直接比較できない。",
+                "論文には、正しい推論を誤りと指摘するケース、PDF解析の失敗、知識の古さも記載されている。初期の著者アンケートは利用感を示すもので、誤検出率や他分野での検証を補うものではない。保存条件も区別が必要だ。Googleは一般公開サービスの文書をモデルの学習・微調整・改善には使わない一方、利用者への表示のため1年間保存すると説明する。会議実験では終了後速やかに削除するとしていた。これは提供側の方針であり、「学習に使わない」と「保存しない」は異なる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開手法に基づく当サイトの説明用再描画。区分は重複でき、各Agentは全文の文脈を保持する。公式の実験図や精度保証ではない。",
+            "steps": [
+              "全文を論理区分に分け、必要な重複を許す",
+              "複雑さに応じて推論資源を配分する",
+              "全文を参照しながら各区分を並列点検する",
+              "意見を統合して根拠を確認し、人が最終判断する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "14 октября 2026 года Google открыла публичный доступ к Deep Review, развив экспериментальный Paper Assistant Tool (PAT) в сервис проверки документов. Его задача — сопоставлять аргументы, математические выводы и доказательную базу, а не только редактировать стиль. При запуске поддерживались PDF и обычный текст; проверка нескольких файлов оставалась анонсированной возможностью. Общедоступность сервиса не доказывает, что он способен заменить специалиста или официальное научное рецензирование.",
+          "sections": [
+            {
+              "heading": "От личных рекомендаций авторам к открытому сервису",
+              "paragraphs": [
+                "Ранние испытания PAT проводились до подачи статей на конференции. Авторы участвовали добровольно и получали рекомендации только для себя. В официальном обзоре ICML подчёркнуто, что они были полностью отделены от формального рецензирования: рецензенты и программный комитет их не видели. Количество обработанных рукописей поэтому нельзя считать количеством принятых статей или свидетельством передачи решений о приёме искусственному интеллекту.",
+                "Содержательное изменение — более широкий доступ к разделённой на этапы проверке и расширение её применения за пределы статей по информатике. Вывод в длинном документе может зависеть от определения или условия эксперимента в другой главе, что легко пропустить при одном ответе модели. Google также предлагает юридические и финансовые применения, но эксперименты в статье не подтверждают компетентность системы в профессиональных решениях этих областей. Универсальность проверки пока не доказана."
+              ]
+            },
+            {
+              "heading": "Разделить проверку и согласовать замечания",
+              "paragraphs": [
+                "Сначала документ делят на логические фрагменты. Они могут пересекаться, но должны охватывать весь материал. Затем вычислительные ресурсы распределяют по плотности информации: сложному доказательству можно выделить больше рассуждений, чем введению. Специализированные агенты параллельно проверяют фрагменты, сохраняя доступ ко всему документу, чтобы учитывать предпосылки из других разделов.",
+                "Агент синтеза объединяет замечания, проверяет согласованность между разделами и при необходимости повторяет логические проверки. Внешний поиск и инструменты помогают дополнительно сверить основания утверждений. Однако сам факт обнаружения источника не гарантирует его надёжности. Результат — замечания, которые следует проверить человеку, а не сертификат правильности всего документа."
+              ]
+            },
+            {
+              "heading": "Границы эксперимента и хранение документов",
+              "paragraphs": [
+                "В статье PAT описан ограниченный эксперимент: из SPOT выбрали 26 математических или компьютерных статей с 29 известными ошибками в формулах и доказательствах. С Gemini 3.1 Pro в обоих вариантах один ответ обнаруживал 55,2% ошибок, а PAT — 89,7%; разница составляет 34,5 процентного пункта. Это обнаружение известных ошибок в небольшой выборке, а не точность всех замечаний. Автоматический оценщик определял смысловое соответствие известной ошибке, а авторы статьи проверяли оценки вручную. Правила отличаются от исходного SPOT, поэтому напрямую сравнивать результаты с его рейтингом нельзя.",
+                "Авторы также сообщают о ложных возражениях против корректных рассуждений, сбоях разбора PDF и устаревших знаниях. Опросы участников отражают субъективную полезность, а не заменяют измерение ложных срабатываний или проверку других профессий. Отдельно важна политика хранения: Google заявляет, что загрузки публичного сервиса не используют для обучения, дообучения или улучшения моделей, но сохраняют на год для отображения пользователю. В конференционных экспериментах обещалось удаление вскоре после завершения программы. Это заявления поставщика; отсутствие использования для обучения не означает отсутствие хранения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции по опубликованному методу: фрагменты могут пересекаться, а каждый агент видит весь документ. Это не официальный экспериментальный рисунок и не гарантия точности.",
+            "steps": [
+              "Разделить весь документ на логические фрагменты с допустимым пересечением",
+              "Распределить вычисления по сложности",
+              "Параллельно проверить фрагменты с доступом к полному контексту",
+              "Согласовать замечания и источники; окончательное решение принимает человек"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Google 於2026年10月14日公開發布 Deep Review，把此前面向論文作者試用的 Paper Assistant Tool（PAT）擴充套件為文件審閱服務。它要做的是逐項檢查論證、數學推導和證據之間是否相符，而不只是改寫文字。首發輸入格式為 PDF 和純文字，多檔案審閱仍是預告功能；公開發布也不意味著它已經獲得替代專家或正式同行評審的資格。",
+          "sections": [
+            {
+              "heading": "從作者助手到公開服務",
+              "paragraphs": [
+                "PAT 的早期試驗發生在會議投稿前，作者自願提交稿件，拿到僅供自己使用的意見。ICML 的官方覆盤明確說，反饋與正式評審完全分開，審稿人和程式委員會看不到這些意見。因此，參與試驗的論文數量不等於會議錄用數量，也不能據此說會議已把錄用決定交給 AI。",
+                "這次實質變化是公眾可以使用這一類分段核查流程，適用物件也從計算機論文擴充套件到其他技術文件。對於長文，某個結論可能依賴很遠處的定義或實驗條件，一次性問答容易漏掉這種聯絡。Google 宣稱還可用於法律和金融材料，但論文實驗並未證明這些領域的專業判斷能力，不能把它當作已完成驗證的通用審查系統。"
+              ]
+            },
+            {
+              "heading": "先分工核查，再把意見合起來",
+              "paragraphs": [
+                "系統先按邏輯劃分文件，允許片段重疊，但要求覆蓋全文。接著根據各部分的資訊密度分配計算預算：複雜證明可以比引言獲得更多推理資源。多個專門的 Agent 並行核查各自片段，同時仍能看到全文，儘量避免只盯著區域性、誤解其他章節中的前提。",
+                "最後，一個彙總 Agent 合併意見、檢查跨章節一致性，必要時重做邏輯核查，並藉助外部檢索或工具核對依據。這裡的檢索是為了檢查事實或引用是否有來源，不意味著檢索到的內容一定可靠。使用者得到的是需要驗證的審閱意見，不是給整篇文章蓋上“正確”的印章。"
+              ]
+            },
+            {
+              "heading": "實驗數字、使用邊界和文件保留",
+              "paragraphs": [
+                "PAT 論文報告了一項受限實驗：從 SPOT 中篩選26篇數學或計算機論文，包含29個已知的公式或證明錯誤。在同為 Gemini 3.1 Pro 的條件下，單次生成檢出55.2%，PAT 檢出89.7%，相差34.5個百分點。這衡量的是該小樣本中已知錯誤的檢出率，不是所有審閱意見的準確率。評分使用模型判斷描述是否與已知錯誤等價，再由論文作者人工複核；評分規則與原 SPOT 不同，不能直接橫比其排行榜。",
+                "論文也記載了把正確推導誤判為錯誤、PDF 解析失敗和知識過時等問題。早期作者問卷反映使用感受，不能補上誤報率或跨領域驗證的缺口。另一個容易忽略的區別是文件保留：Google 稱公開服務的上傳內容不用於訓練、微調或改進模型，但為向使用者展示會保留一年；早期會議試驗則稱專案結束後及時刪除。這是服務方公佈的政策，不能把“不訓練”誤讀成“不儲存”。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開方法重新繪製的解釋圖：片段可重疊，每個核查 Agent 保留全文上下文；不是官方實驗圖或準確率保證。",
+            "steps": [
+              "按邏輯切分全文，允許必要重疊",
+              "根據複雜程度分配推理預算",
+              "並行核查片段，同時保留全文上下文",
+              "彙總意見、檢索核對，由人作最終判斷"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
