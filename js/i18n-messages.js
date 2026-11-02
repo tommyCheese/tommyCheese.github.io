@@ -725,7 +725,17 @@ window.SITE_MESSAGES = {
     "news.openai-chat-work-shared-allowance-plan.title": "OpenAI 拟合并 Chat 与 Work，12 月起共享 ChatGPT、Codex 额度",
     "news.openai-chat-work-shared-allowance-plan.summary": "官方确认 Plus、Pro、Business 将共享使用额度，Instant 聊天不计入。Chat 与 Work 的合并体验先小范围测试，Codex 仍保留独立入口。",
     "news.openai-gpt6-rosalind-research-controlled-rollout.title": "GPT-6 Rosalind Research 开始受控开放，研究机构仍须单独获批",
-    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日发布记录确认有限开放 Work、Codex 和获批 API；模型沿用 GPT-6 Astra 权重，Discovery 仍为 5.5，Enterprise 默认关闭并进入两周管理员预览。"
+    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日发布记录确认有限开放 Work、Codex 和获批 API；模型沿用 GPT-6 Astra 权重，Discovery 仍为 5.5，Enterprise 默认关闭并进入两周管理员预览。",
+    "research.kite-structured-conversation-memory.title": "KITE：把长期对话记忆检索变成可检查的查询计划",
+    "research.kite-structured-conversation-memory.summary": "KITE 把对话整理为有时间、主题和出处的记忆，再执行结构化检索计划。在两套长期记忆基准及同记忆库对照中提高回答表现；执行可复现不代表抽取与查询编译无误，隐含偏好仍较难处理。",
+    "research.pix2evidence-multimodal-rag.title": "Pix2Evidence：让页面图像与文字一起成为 RAG 的证据",
+    "research.pix2evidence-multimodal-rag.summary": "研究把维基百科页面切片及其独立转写文字编码为一个检索向量，用可见证据描述辅助训练，再让阅读模型同时查看图文。同条件消融支持两种信息互补，但重排并非总有收益，公开表格的部分指标口径也需谨慎解读。",
+    "research.peel-retrieval-embedding-taxonomy.title": "PEEL：从检索向量中读出概念层级，但不把结构相似当成边全对",
+    "research.peel-retrieval-embedding-taxonomy.summary": "PEEL 在冻结检索向量上训练一个小型有监督探针，再把概念间关系解码成分类图。已知概念表的两域实验显示结构可以迁移，但精确父子边表现明显低于图结构分数，也没有验证下游问答或检索收益。",
+    "research.sealcall-confidential-agent-safety-auditing.title": "SealCall：把安全审计交出去，不必同时交出用户的明文资料",
+    "research.sealcall-confidential-agent-safety-auditing.summary": "研究用加密相似度计算分离审计服务与执行权限；1,252 条候选调用上的 F1 为 0.840，但授权变化诊断仍失败，加密结果一致不等于风险判断正确。",
+    "research.falcons-parallel-scientific-compression.title": "Falcons：让有界误差压缩跟上并行科学计算",
+    "research.falcons-parallel-scientific-compression.summary": "Falcons重排插值、编码与CPU并行执行，在六类科学数据上比较压缩效率。作者报告特定远程传输用例节时51.5%、WRF流程提速1.55倍；误差按数组值域设限，不能据此保证所有下游科学结论不受影响。"
   },
   "en": {
     "nav.about": "About",
@@ -1452,7 +1462,17 @@ window.SITE_MESSAGES = {
     "news.openai-chat-work-shared-allowance-plan.title": "OpenAI plans combined Chat and Work, with shared ChatGPT–Codex usage from December",
     "news.openai-chat-work-shared-allowance-plan.summary": "Plus, Pro and Business will share an allowance, excluding Instant chat. A combined Chat and Work experience will begin with a limited test; Codex will retain its separate interface.",
     "news.openai-gpt6-rosalind-research-controlled-rollout.title": "GPT-6 Rosalind Research begins a controlled rollout with separate institutional approval",
-    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "October 30 release notes confirm limited Work, Codex and approved API access. It shares GPT-6 Astra weights; Discovery stays on 5.5, and Enterprise starts with a two-week, default-off Admin Preview."
+    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "October 30 release notes confirm limited Work, Codex and approved API access. It shares GPT-6 Astra weights; Discovery stays on 5.5, and Enterprise starts with a two-week, default-off Admin Preview.",
+    "research.kite-structured-conversation-memory.title": "KITE turns conversational memory retrieval into an inspectable query plan",
+    "research.kite-structured-conversation-memory.summary": "KITE organizes conversations into dated, topical, source-linked memories and executes structured retrieval plans. Results improve on two long-term memory benchmarks and controlled store comparisons, but reproducible execution does not remove extraction or compilation errors; implicit preferences remain difficult.",
+    "research.pix2evidence-multimodal-rag.title": "Pix2Evidence joins page images and text as evidence for RAG",
+    "research.pix2evidence-multimodal-rag.summary": "Wikipedia tiles and independently transcribed text share a retrieval embedding, trained with descriptions of visible evidence and read together by a multimodal model. Controlled ablations support complementarity, but reranking does not always help and some reported metric conventions require caution.",
+    "research.peel-retrieval-embedding-taxonomy.title": "PEEL extracts concept hierarchies from retrieval embeddings—with limits on exact edges",
+    "research.peel-retrieval-embedding-taxonomy.summary": "A small supervised probe over frozen embeddings decodes concept relations into taxonomy graphs. Two-domain tests with supplied concept vocabularies show structural transfer, but exact parent–child edges score much lower than graph structure, and downstream QA or retrieval gains are untested.",
+    "research.sealcall-confidential-agent-safety-auditing.title": "SealCall separates outsourced safety auditing from access to private user context",
+    "research.sealcall-confidential-agent-safety-auditing.summary": "Encrypted similarity scoring separates the audit provider from execution authority. F1 reaches 0.840 on 1,252 candidate calls, but changed-authorization diagnostics expose failures: identical encrypted decisions need not be correct.",
+    "research.falcons-parallel-scientific-compression.title": "Falcons makes error-bounded compression faster for parallel science",
+    "research.falcons-parallel-scientific-compression.summary": "Falcons reorganizes interpolation, coding and CPU parallelism across six scientific datasets. Authors report a maximum 51.5% remote-transfer time reduction and a 1.55× WRF workflow speedup. Error is bounded against each array’s range, which does not guarantee unchanged downstream scientific conclusions."
   },
   "ja": {
     "nav.about": "私について",
@@ -2179,7 +2199,17 @@ window.SITE_MESSAGES = {
     "news.openai-chat-work-shared-allowance-plan.title": "OpenAI が Chat と Work の統合を計画、12 月から Codex と利用枠を共有",
     "news.openai-chat-work-shared-allowance-plan.summary": "Plus、Pro、Business が共有枠の対象で、Instant の会話は消費しない。統合体験は少人数から試験し、Codex の独立した入口は残す。",
     "news.openai-gpt6-rosalind-research-controlled-rollout.title": "GPT-6 Rosalind Research が限定提供を開始、研究機関の個別承認は引き続き必要",
-    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日の記録で Work、Codex、承認済み API への限定提供を確認。GPT-6 Astra と同じ重みを使い、Discovery は 5.5 を維持。Enterprise は初期設定オフで 2 週間の管理者プレビューに入る。"
+    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日の記録で Work、Codex、承認済み API への限定提供を確認。GPT-6 Astra と同じ重みを使い、Discovery は 5.5 を維持。Enterprise は初期設定オフで 2 週間の管理者プレビューに入る。",
+    "research.kite-structured-conversation-memory.title": "KITE：長期対話の記憶検索を、検査できる検索計画に変える",
+    "research.kite-structured-conversation-memory.summary": "会話を日時・話題・出典付きの記憶に整理し、構造化した計画で検索する。二つの長期記憶ベンチマークと同一記憶庫の比較で回答が改善したが、実行の再現性は抽出や計画生成の正しさを保証せず、暗黙の好みも難しい。",
+    "research.pix2evidence-multimodal-rag.title": "Pix2Evidence：ページ画像と文字を合わせて RAG の証拠にする",
+    "research.pix2evidence-multimodal-rag.summary": "Wikipedia の画像タイルと独立に転写した文字を一つの検索表現にし、見える証拠の記述で学習を補助する。同条件の比較では図文の補完性が示されたが、再順位付けの効果は一様でなく、一部の報告指標にも注意が必要だ。",
+    "research.peel-retrieval-embedding-taxonomy.title": "PEEL：検索ベクトルから概念階層を取り出す――構造の類似と辺の正しさを分けて読む",
+    "research.peel-retrieval-embedding-taxonomy.summary": "固定した検索ベクトルに小型の教師ありプローブを学習し、概念関係を分類グラフにする。既知の概念表を使う二領域で構造の転移を示したが、厳密な親子辺の成績は構造指標より低く、検索や質問応答の改善は未検証だ。",
+    "research.sealcall-confidential-agent-safety-auditing.title": "SealCall：安全監査を外部へ任せても、利用者の平文は渡さない",
+    "research.sealcall-confidential-agent-safety-auditing.summary": "暗号化した類似度計算で監査と実行権限を分離。1,252 件の候補呼び出しで F1 は 0.840 だが、権限変更の診断には失敗が残り、暗号化前後の判断一致は正しさを保証しない。",
+    "research.falcons-parallel-scientific-compression.title": "Falcons：誤差上限付き圧縮を並列科学計算に合わせる",
+    "research.falcons-parallel-scientific-compression.summary": "補間、符号化、CPU並列実行を再設計し、六つの科学データで評価。著者は特定の遠隔転送で51.5%の節時、WRF全工程で1.55倍を報告する。誤差は配列の値域で制限し、全ての科学的結論への無影響を保証するものではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2906,7 +2936,17 @@ window.SITE_MESSAGES = {
     "news.openai-chat-work-shared-allowance-plan.title": "OpenAI объединит Chat и Work: общая квота ChatGPT и Codex начнётся в декабре",
     "news.openai-chat-work-shared-allowance-plan.summary": "Общий лимит Plus, Pro и Business не будет включать Instant. Объединённый Chat и Work сначала испытает небольшая группа; Codex сохранит отдельный интерфейс.",
     "news.openai-gpt6-rosalind-research-controlled-rollout.title": "GPT-6 Rosalind Research выходит для ограниченного круга одобренных организаций",
-    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "Запись от 30 октября подтверждает доступ через Work, Codex и отдельно одобренный API. Веса совпадают с GPT-6 Astra, Discovery остаётся на 5.5; Enterprise начинает с двухнедельного отключённого по умолчанию Admin Preview."
+    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "Запись от 30 октября подтверждает доступ через Work, Codex и отдельно одобренный API. Веса совпадают с GPT-6 Astra, Discovery остаётся на 5.5; Enterprise начинает с двухнедельного отключённого по умолчанию Admin Preview.",
+    "research.kite-structured-conversation-memory.title": "KITE: проверяемый план поиска в долговременной памяти диалога",
+    "research.kite-structured-conversation-memory.summary": "KITE превращает беседы в записи с датами, темами и источниками и выполняет структурированные планы поиска. Результаты улучшились на двух тестах памяти и при сравнении одного хранилища, однако воспроизводимость исполнения не устраняет ошибки извлечения и составления плана; неявные предпочтения остаются трудными.",
+    "research.pix2evidence-multimodal-rag.title": "Pix2Evidence объединяет изображения страниц и текст как свидетельства для RAG",
+    "research.pix2evidence-multimodal-rag.summary": "Фрагмент Wikipedia и независимо распознанный текст получают общее поисковое представление; обучение дополняют описания видимых свидетельств. Контролируемые сравнения подтверждают взаимодополняемость, но повторное ранжирование помогает не всегда, а часть обозначений метрик неоднозначна.",
+    "research.peel-retrieval-embedding-taxonomy.title": "PEEL извлекает иерархию из поисковых векторов, но сходство графа не равно правильности рёбер",
+    "research.peel-retrieval-embedding-taxonomy.summary": "Небольшой обучаемый с учителем зонд поверх замороженных векторов декодирует таксономию. Два набора с заданными словарями показывают перенос структуры, однако точные связи родитель–потомок оцениваются гораздо ниже общей структуры; польза для поиска и ответов не проверена.",
+    "research.sealcall-confidential-agent-safety-auditing.title": "SealCall: внешняя проверка безопасности без передачи открытого пользовательского контекста",
+    "research.sealcall-confidential-agent-safety-auditing.summary": "Зашифрованное вычисление сходства отделяет аудит от разрешения действий. F1 на 1 252 вызовах — 0,840, но проверка изменений полномочий выявляет ошибки: совпадение решений не доказывает их правильность.",
+    "research.falcons-parallel-scientific-compression.title": "Falcons ускоряет сжатие с ограниченной ошибкой для параллельной науки",
+    "research.falcons-parallel-scientific-compression.summary": "Falcons перестраивает интерполяцию, кодирование и CPU-параллелизм на шести научных наборах. Авторы сообщают максимум 51,5% сокращения времени передачи и ускорение WRF в 1,55 раза. Ошибка ограничена относительно диапазона массива, но неизменность всех научных выводов не гарантируется."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3633,6 +3673,16 @@ window.SITE_MESSAGES = {
     "news.openai-chat-work-shared-allowance-plan.title": "OpenAI 擬合併 Chat 與 Work，12 月起共享 ChatGPT、Codex 額度",
     "news.openai-chat-work-shared-allowance-plan.summary": "官方確認 Plus、Pro、Business 將共享使用額度，Instant 聊天不計入。Chat 與 Work 的合併體驗先小範圍測試，Codex 仍保留獨立入口。",
     "news.openai-gpt6-rosalind-research-controlled-rollout.title": "GPT-6 Rosalind Research 開始受控開放，研究機構仍須單獨獲批",
-    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日釋出記錄確認有限開放 Work、Codex 和獲批 API；模型沿用 GPT-6 Astra 權重，Discovery 仍為 5.5，Enterprise 預設關閉並進入兩週管理員預覽。"
+    "news.openai-gpt6-rosalind-research-controlled-rollout.summary": "10 月 30 日釋出記錄確認有限開放 Work、Codex 和獲批 API；模型沿用 GPT-6 Astra 權重，Discovery 仍為 5.5，Enterprise 預設關閉並進入兩週管理員預覽。",
+    "research.kite-structured-conversation-memory.title": "KITE：把長期對話記憶檢索變成可檢查的查詢計劃",
+    "research.kite-structured-conversation-memory.summary": "KITE 把對話整理為有時間、主題和出處的記憶，再執行結構化檢索計劃。在兩套長期記憶基準及同記憶庫對照中提高回答表現；執行可復現不代表抽取與查詢編譯無誤，隱含偏好仍較難處理。",
+    "research.pix2evidence-multimodal-rag.title": "Pix2Evidence：讓頁面影象與文字一起成為 RAG 的證據",
+    "research.pix2evidence-multimodal-rag.summary": "研究把維基百科頁面切片及其獨立轉寫文字編碼為一個檢索向量，用可見證據描述輔助訓練，再讓閱讀模型同時檢視圖文。同條件消融支援兩種資訊互補，但重排並非總有收益，公開表格的部分指標口徑也需謹慎解讀。",
+    "research.peel-retrieval-embedding-taxonomy.title": "PEEL：從檢索向量中讀出概念層級，但不把結構相似當成邊全對",
+    "research.peel-retrieval-embedding-taxonomy.summary": "PEEL 在凍結檢索向量上訓練一個小型有監督探針，再把概念間關係解碼成分類圖。已知概念表的兩域實驗顯示結構可以遷移，但精確父子邊表現明顯低於圖結構分數，也沒有驗證下游問答或檢索收益。",
+    "research.sealcall-confidential-agent-safety-auditing.title": "SealCall：把安全審計交出去，不必同時交出使用者的明文資料",
+    "research.sealcall-confidential-agent-safety-auditing.summary": "研究用加密相似度計算分離審計服務與執行許可權；1,252 條候選呼叫上的 F1 為 0.840，但授權變化診斷仍失敗，加密結果一致不等於風險判斷正確。",
+    "research.falcons-parallel-scientific-compression.title": "Falcons：讓有界誤差壓縮跟上並行科學計算",
+    "research.falcons-parallel-scientific-compression.summary": "Falcons重排插值、編碼與CPU並行執行，在六類科學資料上比較壓縮效率。作者報告特定遠端傳輸用例節時51.5%、WRF流程提速1.55倍；誤差按陣列值域設限，不能據此保證所有下游科學結論不受影響。"
   }
 };

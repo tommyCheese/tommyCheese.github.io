@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01",
+  "updated_at": "2026-11-02",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,76 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "kite-structured-conversation-memory",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Feng Li et al. · arXiv · 2610.41521v1",
+      "url": "https://arxiv.org/abs/2610.41521v1"
+    },
+    {
+      "id": "pix2evidence-multimodal-rag",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Ziniu Liu et al. · arXiv · 2610.41335v1",
+      "url": "https://arxiv.org/abs/2610.41335v1"
+    },
+    {
+      "id": "peel-retrieval-embedding-taxonomy",
+      "kind": "conference-paper",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "tags": [
+        "ai",
+        "ontology",
+        "papers",
+        "conferences"
+      ],
+      "source": "Eunchan Kim, Inwhee Joe · arXiv · 2610.41785v1",
+      "url": "https://arxiv.org/abs/2610.41785v1",
+      "venue": "EMNLP 2026 main conference"
+    },
+    {
+      "id": "sealcall-confidential-agent-safety-auditing",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "security",
+        "papers"
+      ],
+      "source": "Yixiang Luo, Ziheng Ma, Ke Chang, Jian Wang, Jiqiang Liu · arXiv:2610.41401v1",
+      "url": "https://arxiv.org/abs/2610.41401v1"
+    },
+    {
+      "id": "falcons-parallel-scientific-compression",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-02",
+      "tags": [
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Lu et al. · arXiv:2610.41209v1",
+      "url": "https://arxiv.org/abs/2610.41209v1"
+    },
     {
       "id": "value-indexed-memory-persistent-traversal",
       "kind": "conference-paper",
