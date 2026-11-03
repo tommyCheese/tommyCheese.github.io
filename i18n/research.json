@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-02",
+  "updated_at": "2026-11-03",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,76 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "archor-structural-skill-arbitration",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-03",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Anran Liu et al. · arXiv · 2610.41909v1",
+      "url": "https://arxiv.org/abs/2610.41909v1"
+    },
+    {
+      "id": "multi-tool-retrieval-completeness-cost",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-03",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Shuyang Zhang · arXiv · 2610.41905v1",
+      "url": "https://arxiv.org/abs/2610.41905v1"
+    },
+    {
+      "id": "reliability-process-reward-agentic-search",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-03",
+      "tags": [
+        "ai",
+        "agents",
+        "rag",
+        "papers"
+      ],
+      "source": "Minhao Sun, Zhijing Wu, Xian-Ling Mao · arXiv · 2610.41738v1",
+      "url": "https://arxiv.org/abs/2610.41738v1"
+    },
+    {
+      "id": "privacytrace-tool-call-profile-leakage",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-03",
+      "tags": [
+        "ai",
+        "agents",
+        "data-governance",
+        "security",
+        "papers"
+      ],
+      "source": "Donghang Duan et al. · arXiv:2610.41885v1",
+      "url": "https://arxiv.org/abs/2610.41885v1"
+    },
+    {
+      "id": "memx-memory-aware-heterogeneous-training",
+      "kind": "preprint",
+      "published_at": "2026-10-30",
+      "collected_at": "2026-11-03",
+      "tags": [
+        "systems",
+        "papers",
+        "results"
+      ],
+      "source": "Lin Meng et al. · arXiv · 2610.41525v1",
+      "url": "https://arxiv.org/abs/2610.41525v1"
+    },
     {
       "id": "kite-structured-conversation-memory",
       "kind": "preprint",
@@ -1246,7 +1316,7 @@
     {
       "id": "omniverifier-graded-world-verification",
       "kind": "conference-paper",
-      "venue": "NeurIPS 2026",
+      "venue": "NeurIPS 2026 (author-reported; track unspecified)",
       "tags": [
         "ai",
         "papers",

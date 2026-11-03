@@ -32813,6 +32813,1926 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "archor-structural-skill-arbitration",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41909v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41909v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "同样是“安排运输”，一题可能允许连续分配，另一题却要求整车运输；文字相近，适用的优化模型也可能不同。ArchOR 要解决的是 Agent 从已有技能库里选错方法的问题。它把变量、约束和目标的结构加入检索，同时保留原来的语义选择路线，避免新筛选规则把原本正确的解法一并排除。",
+          "sections": [
+            {
+              "heading": "结构检索怎样接入已有技能库",
+              "paragraphs": [
+                "方法沿用 OptSkills 的 46 项技能、结构抽取器、求解流程和验证规则，不扩充技能库。CARL 将技能文本表示成词频权重向量，按已知问题类型计算原型，再用低秩残差轻推向对应原型；没有标签的技能先分配到最近原型。虽然名称中有“表示学习”，本实现没有梯度训练，也不增加语言模型调用，它主要改变缓存技能的排序，而不是学习新的求解能力。",
+                "另一部分给问题和技能标出变量模式、约束族、目标形式等结构属性，用属性重合度优先筛选八个候选，再做语义选择。系统同时保留原路线，只有新路线给出非空有限结果，并满足原选择置信度较低、新选择更有信心或所选技能位于候选后段等条件之一，才采用新答案。有限数值只是执行有效性检查，不代表数学建模正确；这些仲裁条件也不是正确性证明。"
+              ]
+            },
+            {
+              "heading": "1,100道题中的净收益与反例",
+              "paragraphs": [
+                "同条件比较使用 DeepSeek-V4.1-Flash 和同一已发布技能库。五个测试集分别为 OptiBench 605 题、OptMATH 166 题、Mamo.C 211 题、IndustryOR 100 题和 ComplexOR 18 题，共 1,100 题。每个系统每题运行一次，求解时限 120 秒、最多 12 个 Agent 回合。正确性按求解得到的有限目标值与标准值的舍入一致性判断；没有舍入值时允许不超过 0.005 的绝对差，不等同于完整证明所有约束建模无误。",
+                "作者报告正确数从 697 增至 715，按全部题加权的准确率由 63.36% 升至 65.00%，增加 1.64 个百分点。配对结果是改对 23 题、改错 5 题。相反，不做仲裁、始终采用结构路线只有 61.45%，改对 39 题却改错 60 题。最终系统在 374 题使用结构路线，其余 726 题保留原路线。这说明主要价值在于有选择地使用结构线索，不是证明结构检索可以无条件取代语义检索。"
+              ]
+            },
+            {
+              "heading": "局部改善，不是通用建模保证",
+              "paragraphs": [
+                "技能库内的留一检索诊断也有改善：同类型技能排第一的比例从 60.7% 升至 80.4%，但这不是端到端解题准确率。原文失败案例中，两条路线都选到看似合理的运输技能，新技能却用了不同流量假设，覆盖了原本正确的答案。问题类别太粗、属性漏抽或同义归一过度，都可能造成这种错误；检索排名变好并不能消除技能适用边界的差异。",
+                "论文于 10 月 30 日首次提交，未给出可核验会议录用证据。全局仲裁阈值尚未在独立校准数据上验证，测试每题仅一次；表中其他系统沿用原报告设置，不能当作全部同条件重跑。当前还会执行两条路线，八候选替代 46 项输入不等于总时延或总成本已经降低。值得继续验证的是更细的结构属性、独立阈值校准及只在需要时启动第二路线。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "抽取问题与技能的变量和约束结构",
+              "以结构重合筛选并重排八个候选",
+              "分别保留原路线与结构路线",
+              "按仲裁条件选择答案并核验结果"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Two requests to arrange transport may look alike while requiring different mathematics: one permits continuous allocation, another requires whole loads. ArchOR addresses an agent choosing the wrong reusable skill. It adds variables, constraints and objectives to retrieval while retaining the original semantic route, so a new filter does not automatically discard a solution that already works.",
+          "sections": [
+            {
+              "heading": "Add structural retrieval to an existing library",
+              "paragraphs": [
+                "The method retains OptSkills’ 46 skills, structural extractor, solver loop and verification rule without expanding the library. CARL represents skill text with term-weighted vectors, computes prototypes for known problem types and applies a low-rank residual toward the relevant prototype; unlabeled skills first join the nearest prototype. Despite “representation learning” in its name, this implementation uses no gradient training or additional language-model calls. It changes cached-skill ordering rather than learning new solving abilities.",
+                "A second component labels queries and skills with variable patterns, constraint families and objective forms. Attribute overlap prioritizes eight candidates before semantic selection. The original route is kept: the structural answer replaces it only if its solver output is nonempty and finite and a routing condition holds, such as low baseline confidence, higher structural confidence or selection near the candidate-list tail. A finite number establishes execution validity, not a correct formulation; the arbitration conditions are not correctness proofs."
+              ]
+            },
+            {
+              "heading": "Net gains and counterexamples across 1,100 problems",
+              "paragraphs": [
+                "The controlled comparison uses DeepSeek-V4.1-Flash and the same released library. There are 605 OptiBench problems, 166 OptMATH, 211 Mamo.C, 100 IndustryOR and 18 ComplexOR, totaling 1,100. Each system runs once per question, with a 120-second solver timeout and at most 12 agent turns. Correctness requires a finite objective matching the rounded reference, or an absolute gap no larger than 0.005 when rounded values are unavailable. This is not a complete proof that every modeled constraint is correct.",
+                "The authors report 697 correct answers rising to 715: question-weighted accuracy increases from 63.36% to 65.00%, a gain of 1.64 percentage points. Paired outcomes show 23 corrections and five regressions. In contrast, always using structural routing reaches only 61.45%, correcting 39 answers but breaking 60. The final system uses the structural branch on 374 questions and preserves the original on 726. The evidence favors selective structural guidance, not unconditional replacement of semantic retrieval."
+              ]
+            },
+            {
+              "heading": "A bounded improvement, not a modeling guarantee",
+              "paragraphs": [
+                "A leave-one-out diagnostic within the skill library improves the rate of retrieving a same-class skill first from 60.7% to 80.4%; that is not end-to-end solving accuracy. In a documented failure, both routes select plausible transport skills, but the new skill assumes different flow semantics and overrides a correct answer. Coarse classes, missing attributes and excessive synonym merging can cause such failures. Better ranking cannot eliminate differences in skills’ applicability conditions.",
+                "The first submission is October 30, without verifiable conference acceptance. Global arbitration thresholds have not been validated on independent calibration data, and evaluation runs each problem only once. Other systems in the table retain their original reported settings rather than being rerun uniformly. The current implementation also executes both routes: reducing the selector input from 46 skills to eight does not establish lower total latency or cost. Finer structural attributes, independent calibration and conditionally activating the second route remain useful next tests."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Extract variable and constraint structure",
+              "Filter and reorder eight candidate skills",
+              "Retain original and structural solution routes",
+              "Arbitrate and check the resulting answer"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "同じ「輸送を手配する」という依頼でも、連続量を配れる問題と、荷物を整数単位で運ぶ問題では必要な数理モデルが違う。ArchOR は Agent が既存スキルを選び間違える問題を扱う。変数、制約、目的の構造を検索に加えつつ、元の意味検索の経路も残す。",
+          "sections": [
+            {
+              "heading": "既存スキル集へ構造検索を追加する",
+              "paragraphs": [
+                "OptSkills の46スキル、構造抽出器、求解ループ、検証規則はそのまま使い、スキル集を増やさない。CARL はスキル文章を語の重み付きベクトルにし、問題型ごとの原型に低ランクの補正で近づける。ラベルがないスキルは最も近い原型へ割り当てる。名称に表現学習とあるが、この実装は勾配学習も追加の言語モデル呼び出しも行わず、既存スキルの順位を変えるもので、新しい解法を学ぶわけではない。",
+                "質問とスキルには変数の形、制約の種類、目的関数などの属性を付け、重なりで八候補を優先してから意味的に選ぶ。元の経路も保持し、新経路が空でない有限の値を返し、元の確信度が低い、新経路の確信度が高い、選んだスキルが候補の後方にあるなどの条件を満たす場合に置き換える。有限値は実行できたことの確認であり、正しいモデルの証明ではない。仲裁規則も正しさを保証しない。"
+              ]
+            },
+            {
+              "heading": "1,100問での改善と逆効果",
+              "paragraphs": [
+                "比較では同じ DeepSeek-V4.1-Flash と公開済みスキル集を使う。OptiBench 605問、OptMATH 166問、Mamo.C 211問、IndustryOR 100問、ComplexOR 18問の計1,100問で、各方式を各問一回実行した。ソルバーは120秒まで、Agent は最大12ターン。有限の目的値が丸めた正解と一致するか、丸め値がなければ絶対差0.005以内を正解とする。全制約のモデル化が正しいことを完全に証明する評価ではない。",
+                "著者による正答数は697から715に増え、問題数で重み付けした正答率は63.36%から65.00%へ1.64ポイント上昇した。23問を修正し、5問を誤りに変えた結果である。一方、仲裁せず構造経路を必ず使うと61.45%で、39問を修正する代わりに60問を誤らせた。最終方式は374問で構造経路、726問で元の経路を使う。構造情報を選択的に使う効果であり、意味検索を一律に置き換える根拠ではない。"
+              ]
+            },
+            {
+              "heading": "限定された改善であり一般的保証ではない",
+              "paragraphs": [
+                "スキル集内の一件抜き検証では、同じ問題型のスキルを一位に出す割合が60.7%から80.4%に上がったが、これは解題正答率とは別である。失敗例では、両経路とも輸送に見合うスキルを選びながら、新スキルの流量の仮定が異なり、元の正答を上書きした。分類が粗い、属性を落とす、同義語を統合しすぎるといった問題は、順位だけを改善しても残る。",
+                "初回投稿は10月30日で、会議採択を確認できる情報はない。共通の仲裁しきい値は独立した校正データで未検証で、各問の実行も一回だけである。他方式の表は元の報告設定を引き継ぎ、すべて同条件で再実行したものではない。現状は両経路を実行するため、候補が46から八になっても全体の遅延や費用低下を示したとはいえない。細かい構造属性、独立校正、必要時だけ第二経路を起動する方式が今後の課題だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "変数と制約の構造を抽出",
+              "八候補へ絞って並べ替える",
+              "元と構造の二経路を残す",
+              "仲裁して結果を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Два запроса на организацию перевозок могут выглядеть одинаково, но одному нужны непрерывные объёмы, а другому — целые партии. ArchOR исследует ошибочный выбор готового навыка агентом. Структура переменных, ограничений и цели дополняет поиск, а исходный семантический маршрут сохраняется, чтобы новый фильтр не уничтожил уже работающее решение.",
+          "sections": [
+            {
+              "heading": "Структурный поиск поверх готовой библиотеки",
+              "paragraphs": [
+                "Используются неизменные 46 навыков OptSkills, извлечение структуры, цикл решателя и правило проверки. CARL представляет текст навыков взвешенными векторами слов, строит прототипы известных типов задач и сдвигает вектор к подходящему прототипу низкоранговой поправкой. Навыки без меток относятся к ближайшему прототипу. Несмотря на название с обучением представлений, здесь нет градиентного обучения и дополнительных вызовов языковой модели: меняется порядок готовых навыков, а не способность решать новые задачи.",
+                "Другой компонент описывает запрос и навыки через типы переменных, семейства ограничений и форму цели. Пересечение атрибутов выделяет восемь кандидатов для семантического выбора. Исходный путь сохраняется: структурный ответ заменяет его лишь при непустом конечном результате решателя и выполнении условия, например низкой уверенности исходного селектора, большей уверенности нового или поздней позиции выбранного навыка. Конечное число подтверждает исполнение, но не правильность постановки; правило выбора тоже не является доказательством."
+              ]
+            },
+            {
+              "heading": "Выигрыш и контрпримеры на 1 100 задачах",
+              "paragraphs": [
+                "Контролируемое сравнение использует DeepSeek-V4.1-Flash и одну опубликованную библиотеку. Всего 1 100 задач: OptiBench — 605, OptMATH — 166, Mamo.C — 211, IndustryOR — 100, ComplexOR — 18. Каждый метод запускается один раз на задачу, с лимитом решателя 120 секунд и максимум 12 ходами агента. Правильность означает совпадение конечной целевой величины с округлённым эталоном, либо абсолютную ошибку не более 0,005, если округлённого значения нет. Это не полное доказательство корректности всех ограничений модели.",
+                "Авторы сообщают рост с 697 до 715 правильных ответов: точность по всем вопросам повышается с 63,36% до 65,00%, на 1,64 процентного пункта. Исправлены 23 ошибки, но появились пять новых. Обязательный структурный путь без арбитража даёт лишь 61,45%: исправляет 39 ответов и портит 60. Итоговая система выбирает структурную ветвь в 374 случаях и исходную в 726. Поддерживается избирательное использование структуры, а не безусловная замена семантического поиска."
+              ]
+            },
+            {
+              "heading": "Ограниченное улучшение, а не общая гарантия",
+              "paragraphs": [
+                "В проверке с исключением одной записи доля навыков того же класса на первом месте растёт с 60,7% до 80,4%, но это не точность решения задач. В опубликованном неудачном примере обе ветви выбирают правдоподобный транспортный навык, однако новая использует другие предположения о потоках и заменяет правильный ответ неверным. Слишком грубые классы, пропущенные свойства и чрезмерное объединение синонимов остаются проблемой независимо от улучшения ранжирования.",
+                "Первая версия подана 30 октября; проверяемых сведений о принятии на конференцию нет. Общие пороги арбитража ещё не проверены на независимой калибровочной выборке, а задачи запускаются только один раз. Строки других систем сохраняют исходные протоколы публикаций, а не единый повторный эксперимент. Сейчас исполняются обе ветви: сокращение входа селектора с 46 навыков до восьми не доказывает уменьшение общей задержки или стоимости. Следующие проверки — более точные свойства, независимая калибровка и запуск второй ветви только при необходимости."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Извлечь структуру переменных и ограничений",
+              "Отобрать и упорядочить восемь навыков",
+              "Сохранить исходный и структурный маршруты",
+              "Выбрать маршрут и проверить результат"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "同樣是“安排運輸”，一題可能允許連續分配，另一題卻要求整車運輸；文字相近，適用的最佳化模型也可能不同。ArchOR 要解決的是 Agent 從已有技能庫裡選錯方法的問題。它把變數、約束和目標的結構加入檢索，同時保留原來的語義選擇路線，避免新篩選規則把原本正確的解法一併排除。",
+          "sections": [
+            {
+              "heading": "結構檢索怎樣接入已有技能庫",
+              "paragraphs": [
+                "方法沿用 OptSkills 的 46 項技能、結構抽取器、求解流程和驗證規則，不擴充技能庫。CARL 將技能文字表示成詞頻權重向量，按已知問題型別計算原型，再用低秩殘差輕推向對應原型；沒有標籤的技能先分配到最近原型。雖然名稱中有“表示學習”，本實現沒有梯度訓練，也不增加語言模型呼叫，它主要改變快取技能的排序，而不是學習新的求解能力。",
+                "另一部分給問題和技能標出變數模式、約束族、目標形式等結構屬性，用屬性重合度優先篩選八個候選，再做語義選擇。系統同時保留原路線，只有新路線給出非空有限結果，並滿足原選擇置信度較低、新選擇更有信心或所選技能位於候選後段等條件之一，才採用新答案。有限數值只是執行有效性檢查，不代表數學建模正確；這些仲裁條件也不是正確性證明。"
+              ]
+            },
+            {
+              "heading": "1,100道題中的淨收益與反例",
+              "paragraphs": [
+                "同條件比較使用 DeepSeek-V4.1-Flash 和同一已釋出技能庫。五個測試集分別為 OptiBench 605 題、OptMATH 166 題、Mamo.C 211 題、IndustryOR 100 題和 ComplexOR 18 題，共 1,100 題。每個系統每題執行一次，求解時限 120 秒、最多 12 個 Agent 回合。正確性按求解得到的有限目標值與標準值的舍入一致性判斷；沒有舍入值時允許不超過 0.005 的絕對差，不等同於完整證明所有約束建模無誤。",
+                "作者報告正確數從 697 增至 715，按全部題加權的準確率由 63.36% 升至 65.00%，增加 1.64 個百分點。配對結果是改對 23 題、改錯 5 題。相反，不做仲裁、始終採用結構路線只有 61.45%，改對 39 題卻改錯 60 題。最終系統在 374 題使用結構路線，其餘 726 題保留原路線。這說明主要價值在於有選擇地使用結構線索，不是證明結構檢索可以無條件取代語義檢索。"
+              ]
+            },
+            {
+              "heading": "區域性改善，不是通用建模保證",
+              "paragraphs": [
+                "技能庫內的留一檢索診斷也有改善：同型別技能排第一的比例從 60.7% 升至 80.4%，但這不是端到端解題準確率。原文失敗案例中，兩條路線都選到看似合理的運輸技能，新技能卻用了不同流量假設，覆蓋了原本正確的答案。問題類別太粗、屬性漏抽或同義歸一過度，都可能造成這種錯誤；檢索排名變好並不能消除技能適用邊界的差異。",
+                "論文於 10 月 30 日首次提交，未給出可核驗會議錄用證據。全域性仲裁閾值尚未在獨立校準資料上驗證，測試每題僅一次；表中其他系統沿用原報告設定，不能當作全部同條件重跑。當前還會執行兩條路線，八候選替代 46 項輸入不等於總時延或總成本已經降低。值得繼續驗證的是更細的結構屬性、獨立閾值校準及只在需要時啟動第二路線。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "抽取問題與技能的變數和約束結構",
+              "以結構重合篩選並重排八個候選",
+              "分別保留原路線與結構路線",
+              "按仲裁條件選擇答案並核驗結果"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "multi-tool-retrieval-completeness-cost",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41905v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41905v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一个 Agent 找到了“发送结果”的工具，却没找到取得结果所需的查询工具，任务依然做不完。本文不再只问相关工具排得靠不靠前，而是检查一条请求所需的整套工具有没有进入候选集，并把训练数据、模型调用和等待时间的代价分开看。",
+          "sections": [
+            {
+              "heading": "把整套覆盖与单个召回分开",
+              "paragraphs": [
+                "完整率 C@k 的分母是请求数：只有全部必需工具都在前 k 项里，这条请求才算成功；召回率则允许只找到一部分。作者先检查 ToolRet 全部 7,961 条请求，在各自子语料工具池内检索。单目标请求的 C@10 约为 58%—67%，需要四个及以上工具时仅约 8%—17%。这些数值属于论文重新限定的检索范围，不能直接对比 ToolRet 原论文的全语料结果。",
+                "主要比较覆盖 AppWorld 的 345 条测试请求和 MCP-Bench 的 103 个任务，分别涉及 456 个 API 和 257 个工具。前者结合专家依赖标注加入产生输入参数的前置 API，去除始终提供的管理接口；后者从任务描述提取参考工具集合，其中 97 个任务需要多工具，但该集合不保证是唯一可行解。比较六类结构：平面检索、问题拆解、模型引导层级导航、先服务器后工具、依赖图和有监督的集合检索。"
+              ]
+            },
+            {
+              "heading": "更完整的候选来自不同投入",
+              "paragraphs": [
+                "在前 16 个候选里，COLT 的完整率为 AppWorld 32.8%、MCP-Bench 58.3%，AnyTool 为 30.1%、39.8%。两者在 AppWorld 的差异没有达到论文配对置信区间所能区分的程度。COLT 需要相同工具池内的标注请求，AppWorld 用 90 条训练，MCP 每折约 75 条；查询时无需语言模型调用，但仍有编码与此前训练成本。AnyTool 不需这些训练标签，却分别需中位数 31、38 次模型调用，语言模型阶段耗时约 307、311 秒，包含网络和排队时间。",
+                "这些实验中的其他免训练、至多一次模型调用的方法，在 AppWorld 的 C@16 最高为 9.6%；这不是所有现有工具检索器的理论上限。它们采用基础规模编码器，模型导航使用 DeepSeek-V3.2，部分实现为适配工具池而修改。一个醒目的例子是问题拆解把 AppWorld 的召回从 19.0% 提高到 41.7%，完整率却只从 2.0% 提高到 3.5%。更常找到相关工具，并不等于能把依赖链补齐。"
+              ]
+            },
+            {
+              "heading": "缺哪一个工具，比平均分更有解释力",
+              "paragraphs": [
+                "错误位置揭示了不同修复方向：COLT 在 AppWorld 漏掉的 698 个工具实例中，404 个其实排在第 17—50 位；AnyTool 常找到目标接口，却遗漏输入的生产者。额外的 60 题下游测试中，COLT 候选完整的 21 题全部完成，不完整的 39 题仅完成 2 题；给同样的 39 题标准工具集则完成 26 题。完整与不完整两组难度可能不同，因此不能仅凭前两个比例宣称普遍因果关系，但同题替换工具集的结果支持缺工具会造成实际障碍。",
+                "论文 10 月 30 日首次提交，无可核验录用信息。它比较的是每类的选定实现，而不是证明某类结构必然优劣；简化的 HYSET 也不代表完整原方法。两套工具全集都能放入所用模型上下文，作者没有比较全量暴露的端到端成本。因此可用的建议是：按所需工具数报告完整率，检查遗漏前置依赖，并明确成本发生在离线训练还是在线搜索，不能只凭一个总召回分数选架构。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "标注目标工具及前置依赖",
+              "比较六类结构返回的候选集",
+              "分别统计整套覆盖与在线调用成本",
+              "定位缺失工具并检查下游任务"
+            ]
+          }
+        },
+        "en": {
+          "lead": "An agent may find a tool that sends a result yet miss the query needed to obtain that result. The task still fails. This study asks whether the whole required tool set enters the candidate list, rather than merely whether related tools rank highly, and separates the cost of labeled training data from model calls and waiting time.",
+          "sections": [
+            {
+              "heading": "Separate complete sets from partial recall",
+              "paragraphs": [
+                "Completeness C@k is a fraction of requests: a request counts only when every required tool appears in the first k positions. Recall gives partial credit. The author first examines all 7,961 ToolRet requests, retrieving within each request’s own sub-dataset pool. C@10 is roughly 58–67% for one-target requests but only 8–17% for requests needing at least four tools. These values use a restricted retrieval setting and cannot be compared directly with ToolRet’s published full-corpus results.",
+                "The main comparison uses 345 AppWorld test requests over 456 APIs and 103 MCP-Bench tasks over 257 tools. Expert dependency annotations add prerequisite APIs that produce needed inputs in AppWorld, while always-provided supervisor interfaces are removed from scoring. MCP reference sets are extracted from task descriptions; 97 tasks need multiple tools, but those sets are not guaranteed to be unique valid solutions. Six families are compared: flat retrieval, query decomposition, model-navigated hierarchies, server-then-tool matching, dependency graphs and supervised set retrieval."
+              ]
+            },
+            {
+              "heading": "Different investments buy more complete sets",
+              "paragraphs": [
+                "At a 16-candidate budget, COLT’s completeness is 32.8% on AppWorld and 58.3% on MCP-Bench, versus AnyTool’s 30.1% and 39.8%. The AppWorld difference is not distinguishable within the reported paired confidence interval. COLT needs labeled requests from the same tool pool: 90 for AppWorld training and about 75 per MCP fold. It makes no query-time language-model calls, but encoding and prior training still cost resources. AnyTool needs no such training labels, yet uses median counts of 31 and 38 model calls and about 307 and 311 seconds in the model stage, including network and queueing.",
+                "Other tested training-free methods using at most one model call reach at most 9.6% C@16 on AppWorld; this is not a theoretical ceiling for all tool retrievers. The study uses base-size encoders, DeepSeek-V3.2 for navigation and some adaptations to fit the tool pools. Decomposition illustrates the distinction: AppWorld recall rises from 19.0% to 41.7%, while completeness rises only from 2.0% to 3.5%. Finding more related tools does not necessarily close a dependency chain."
+              ]
+            },
+            {
+              "heading": "Which tool is missing explains more than an average",
+              "paragraphs": [
+                "Error positions suggest different repairs. Of COLT’s 698 missing tool instances on AppWorld, 404 rank at positions 17–50. AnyTool often finds the target interface but omits its input producers. In a 60-task downstream check, all 21 tasks with complete COLT sets succeed, versus two of 39 with incomplete sets; giving those same 39 tasks gold tool sets yields 26 successes. Complete and incomplete groups may differ in difficulty, so the first two proportions alone do not establish a universal causal rule. The same-task exposure comparison nevertheless supports missing tools as a practical obstacle.",
+                "The first version appeared October 30 without verifiable acceptance information. Selected implementations represent each family rather than proving inherent superiority; the simplified HYSET arm is not the complete original method. Both full catalogs fit the model’s context, and full-exposure end-to-end cost is not compared. The practical lesson is to report completeness by tool-set size, examine missed prerequisites and distinguish offline training from online searching costs, instead of choosing an architecture from one aggregate recall score."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Identify target tools and their prerequisites",
+              "Compare candidate sets from six retrieval families",
+              "Measure complete coverage and online call cost separately",
+              "Locate missing tools and test downstream tasks"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "結果を送るツールが見つかっても、その結果を取得する照会ツールがなければ Agent は依頼を完了できない。本研究は、関連ツールの順位だけでなく必要な一式が候補に含まれるかを調べ、学習用ラベル、モデル呼び出し、待ち時間の負担を分けて比較する。",
+          "sections": [
+            {
+              "heading": "一式の完全カバーと部分的な再現率",
+              "paragraphs": [
+                "C@k の分母は依頼数で、必要なツール全部が上位 k 件に入って初めて一件成功となる。再現率なら一部だけでも点が付く。著者はまず ToolRet の全7,961依頼を、各依頼が属する部分集合のツール群で検索した。一対象の C@10 は約58–67%だが、四対象以上では約8–17%だった。原論文の全体コーパス検索とは範囲が違うため、数値を直接比較できない。",
+                "主比較は456 API を対象とする AppWorld の345依頼と、257ツールを対象とする MCP-Bench の103課題である。AppWorld は専門家の依存注釈から入力を作る前提 API も必要集合に加え、常時提供する管理用インターフェースは採点から除く。MCP の参照集合は課題記述から抽出し、97課題が複数ツールを必要とするが、唯一の実行可能解とは限らない。平面検索、質問分割、モデルによる階層探索、サーバー優先検索、依存グラフ、教師あり集合検索の六種類を比較する。"
+              ]
+            },
+            {
+              "heading": "完全性を得るための異なる投資",
+              "paragraphs": [
+                "16候補での完全率は COLT が AppWorld 32.8%、MCP-Bench 58.3%、AnyTool が30.1%、39.8%。AppWorld での差は報告された対応付き信頼区間では区別できない。COLT は同じツール群のラベル付き依頼を必要とし、AppWorld で90件、MCP は各分割で約75件を学習する。検索時の言語モデル呼び出しはゼロでも、符号化と事前学習の負担はある。AnyTool はそのラベルなしで動くが、呼び出し回数の中央値は31、38回、モデル処理の経過時間は約307、311秒で、通信と待ち行列も含む。",
+                "この比較のうち学習不要でモデル呼び出し一回以下の方式は、AppWorld の C@16 が最大9.6%だった。全ツール検索方式の理論限界ではなく、基礎サイズの符号化器、探索用 DeepSeek-V3.2、対象ツール群への実装調整に依存する。質問分割では AppWorld の再現率が19.0%から41.7%へ上がっても、完全率は2.0%から3.5%にしか上がらない。関連ツールを多く拾うだけでは依存の連鎖が揃わない。"
+              ]
+            },
+            {
+              "heading": "平均値より、何が欠けたかを見る",
+              "paragraphs": [
+                "COLT が AppWorld で落とした698個のツール出現のうち404個は17–50位にあり、AnyTool は目標 API を見つけても入力の生成元を落としやすい。60課題の実行確認では COLT の集合が完全な21課題は全成功、不完全な39課題は2件成功だった。同じ39課題に標準ツール集合を与えると26件成功する。二群の難しさは違い得るため最初の比率だけで普遍的因果関係を断言できないが、同じ課題での集合変更は欠落の実害を支持する。",
+                "初回投稿は10月30日で、採択を確認できる情報はない。各分類から選んだ実装の比較であり、分類そのものの必然的な優劣ではない。簡略化した HYSET も原方式全体を代表しない。全ツール一覧は今回のモデル文脈に収まるが、全量提示の総実行費用は比較していない。必要数別の完全率、欠けた前提ツール、費用が学習時か検索時かを分けて確認することが、平均再現率だけで設計を選ぶより有用である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "目標ツールと前提依存を確認",
+              "六種類の構造が返す集合を比較",
+              "完全カバーとオンライン負担を分けて測定",
+              "欠落箇所と下流課題を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Агент может найти инструмент отправки результата, но не запрос, которым этот результат получают. Задание всё равно не выполнено. Работа проверяет попадание всего необходимого набора в кандидаты, а не только высокий ранг похожих инструментов, и разделяет затраты на размеченные данные, вызовы модели и ожидание.",
+          "sections": [
+            {
+              "heading": "Полный набор отличается от частичного покрытия",
+              "paragraphs": [
+                "Знаменатель C@k — число запросов: успех засчитывается, только если все требуемые инструменты входят в первые k. Обычная полнота даёт частичный зачёт. Автор сначала проверяет все 7 961 запрос ToolRet, ограничивая поиск собственным подмножеством каждого запроса. C@10 составляет примерно 58–67% при одной цели и лишь 8–17% при четырёх и более. Этот ограниченный режим нельзя напрямую сравнивать с исходными опубликованными результатами поиска по всему корпусу.",
+                "Главное сравнение использует 345 запросов AppWorld с 456 API и 103 задания MCP-Bench с 257 инструментами. В AppWorld экспертные зависимости добавляют предварительные API, создающие нужные входы; постоянно доступные управляющие интерфейсы исключаются из оценки. Эталонные наборы MCP извлекаются из описаний заданий: 97 требуют нескольких инструментов, однако наборы не обязательно являются единственным допустимым решением. Сравниваются плоский поиск, декомпозиция, иерархическая навигация моделью, поиск сначала сервера, граф зависимостей и обученный поиск множеств."
+              ]
+            },
+            {
+              "heading": "Полнота достигается разными вложениями",
+              "paragraphs": [
+                "Для 16 кандидатов COLT достигает полноты наборов 32,8% на AppWorld и 58,3% на MCP-Bench; AnyTool — 30,1% и 39,8%. Разница на AppWorld неразличима в сообщённом парном доверительном интервале. COLT обучается на размеченных запросах того же пула: 90 для AppWorld и около 75 в каждом разбиении MCP. Нулевое число вызовов языковой модели при запросе не отменяет кодирование и предшествующее обучение. AnyTool не нужны такие метки, но медианы составляют 31 и 38 вызовов, около 307 и 311 секунд модельного этапа, включая сеть и очередь.",
+                "Остальные проверенные методы без обучения и максимум с одним вызовом модели достигают не более 9,6% C@16 на AppWorld. Это не теоретический предел всех поисковиков: применены базовые по размеру энкодеры, DeepSeek-V3.2 для навигации и адаптации реализаций. Декомпозиция повышает обычную полноту AppWorld с 19,0% до 41,7%, но полноту наборов только с 2,0% до 3,5%. Более частое нахождение связанных инструментов ещё не замыкает цепочку зависимостей."
+              ]
+            },
+            {
+              "heading": "Важно, какой инструмент отсутствует",
+              "paragraphs": [
+                "Из 698 пропущенных COLT экземпляров инструментов на AppWorld 404 стоят на местах 17–50. AnyTool часто находит конечный API, но теряет поставщиков его входов. В проверке исполнения 60 заданий все 21 с полным набором COLT успешны, а из 39 с неполным — только два. Если тем же 39 дать эталонный набор, успешны 26. Группы могут различаться по трудности, поэтому первые две доли сами по себе не доказывают общего причинного закона. Сравнение доступа на тех же заданиях всё же поддерживает практическую важность пропущенных инструментов.",
+                "Первая версия вышла 30 октября без проверяемых сведений о принятии. Выбранные реализации не доказывают неизбежного превосходства целого семейства; упрощённый HYSET не равен полной исходной системе. Оба каталога целиком помещаются в контекст модели, но общая стоимость полного доступа не сравнивается. Полезный вывод — оценивать полноту по числу нужных инструментов, искать потерянные зависимости и отделять офлайн-обучение от онлайн-поиска, а не выбирать архитектуру по одному среднему показателю."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Определить целевые инструменты и зависимости",
+              "Сравнить наборы шести семейств поиска",
+              "Раздельно измерить полноту и онлайн-затраты",
+              "Найти пропуски и проверить исполнение заданий"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一個 Agent 找到了“傳送結果”的工具，卻沒找到取得結果所需的查詢工具，任務依然做不完。本文不再只問相關工具排得靠不靠前，而是檢查一條請求所需的整套工具有沒有進入候選集，並把訓練資料、模型呼叫和等待時間的代價分開看。",
+          "sections": [
+            {
+              "heading": "把整套覆蓋與單個召回分開",
+              "paragraphs": [
+                "完整率 C@k 的分母是請求數：只有全部必需工具都在前 k 項裡，這條請求才算成功；召回率則允許只找到一部分。作者先檢查 ToolRet 全部 7,961 條請求，在各自子語料工具池內檢索。單目標請求的 C@10 約為 58%—67%，需要四個及以上工具時僅約 8%—17%。這些數值屬於論文重新限定的檢索範圍，不能直接對比 ToolRet 原論文的全語料結果。",
+                "主要比較覆蓋 AppWorld 的 345 條測試請求和 MCP-Bench 的 103 個任務，分別涉及 456 個 API 和 257 個工具。前者結合專家依賴標註加入產生輸入引數的前置 API，去除始終提供的管理介面；後者從任務描述提取參考工具集合，其中 97 個任務需要多工具，但該集合不保證是唯一可行解。比較六類結構：平面檢索、問題拆解、模型引導層級導航、先伺服器後工具、依賴圖和有監督的集合檢索。"
+              ]
+            },
+            {
+              "heading": "更完整的候選來自不同投入",
+              "paragraphs": [
+                "在前 16 個候選裡，COLT 的完整率為 AppWorld 32.8%、MCP-Bench 58.3%，AnyTool 為 30.1%、39.8%。兩者在 AppWorld 的差異沒有達到論文配對置信區間所能區分的程度。COLT 需要相同工具池內的標註請求，AppWorld 用 90 條訓練，MCP 每折約 75 條；查詢時無需語言模型呼叫，但仍有編碼與此前訓練成本。AnyTool 不需這些訓練標籤，卻分別需中位數 31、38 次模型呼叫，語言模型階段耗時約 307、311 秒，包含網路和排隊時間。",
+                "這些實驗中的其他免訓練、至多一次模型呼叫的方法，在 AppWorld 的 C@16 最高為 9.6%；這不是所有現有工具檢索器的理論上限。它們採用基礎規模編碼器，模型導航使用 DeepSeek-V3.2，部分實現為適配工具池而修改。一個醒目的例子是問題拆解把 AppWorld 的召回從 19.0% 提高到 41.7%，完整率卻只從 2.0% 提高到 3.5%。更常找到相關工具，並不等於能把依賴鏈補齊。"
+              ]
+            },
+            {
+              "heading": "缺哪一個工具，比平均分更有解釋力",
+              "paragraphs": [
+                "錯誤位置揭示了不同修復方向：COLT 在 AppWorld 漏掉的 698 個工具例項中，404 個其實排在第 17—50 位；AnyTool 常找到目標介面，卻遺漏輸入的生產者。額外的 60 題下游測試中，COLT 候選完整的 21 題全部完成，不完整的 39 題僅完成 2 題；給同樣的 39 題標準工具集則完成 26 題。完整與不完整兩組難度可能不同，因此不能僅憑前兩個比例宣稱普遍因果關係，但同題替換工具集的結果支援缺工具會造成實際障礙。",
+                "論文 10 月 30 日首次提交，無可核驗錄用資訊。它比較的是每類的選定實現，而不是證明某類結構必然優劣；簡化的 HYSET 也不代表完整原方法。兩套工具全集都能放入所用模型上下文，作者沒有比較全量暴露的端到端成本。因此可用的建議是：按所需工具數報告完整率，檢查遺漏前置依賴，並明確成本發生在離線訓練還是線上搜尋，不能只憑一個總召回分數選架構。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "標註目標工具及前置依賴",
+              "比較六類結構返回的候選集",
+              "分別統計整套覆蓋與線上呼叫成本",
+              "定位缺失工具並檢查下游任務"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "reliability-process-reward-agentic-search",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41738v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2610.41738v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "答对一道题，不表示中间每次搜索都有必要；答错也可能是后续推理出错，而不是搜索毫无价值。本文把训练信号放到局部决策上：此刻的信息是否足以继续，新找到的材料又增加了多少可靠性？目标不是一味减少搜索，而是把搜索留给确实还缺证据的步骤。",
+          "sections": [
+            {
+              "heading": "先校准可靠性，再评估搜索动作",
+              "paragraphs": [
+                "作者用每个基础模型在 50,000 个训练期搜索状态上分别生成 32 条局部结论，计算新结论 token 的平均负对数概率，并由模型结合参考结论判定正确性。由此拟合“不确定性到经验正确率”的映射，训练期间固定不变。这个量不是模型自己说“我有信心”，但也不是经过证明的真实正确概率；它依赖采样、参考结论、模型判定和校准数据所覆盖的状态。",
+                "训练中的一次搜索会构造两个匹配条件：保留相同问题、此前历史、当前推理和查询，一组加入这次返回的证据，另一组只删掉这次证据，二者都移除原来的局部结论，再生成探针结论。可靠性差值奖励提供有效信息的搜索；不搜索则按当前可靠性相对校准基准评分。这些分数按步骤平均，加到答案与格式奖励中供 GRPO 学习。推理部署时不再做这套额外探针，也不会在这里额外执行一次检索。"
+              ]
+            },
+            {
+              "heading": "按样本数加权的问答与搜索结果",
+              "paragraphs": [
+                "主模型 Qwen2.5-7B-Instruct 在七个问答集共 51,713 题上评测，均使用同一维基百科索引、E5-base 检索器，每次返回三篇、最多搜索四轮。指标 CEM 检查提取的最终答案是否包含标准答案字符串，允许解释性文字，不是严格整段完全匹配。作者按各集题数加权得到 69.3%，HiPRAG 重实现为 67.2%，提高 2.1 个百分点；这不是七个数据集分数的简单平均，也不是人工逐题事实核验。",
+                "同条件下每题平均搜索由 1.76 次降至 1.64 次，约减少 6.8%，分母包含完全不搜索的题。分组后，一跳问答减少 20.9%，多跳问答反而增加 6.6%。这更像重新分配搜索，而不是所有题都少搜。Qwen2.5-3B 的消融中，完整过程奖励为 65.9% CEM，只有答案与格式奖励为 61.2%；把经验校准映射换成原始置信度得到 61.9%。这些 3B 消融数值不能与 7B 主实验混为一个对照。"
+              ]
+            },
+            {
+              "heading": "可靠性是估计，效率也有训练代价",
+              "paragraphs": [
+                "策略优化只用 NQ 与 HotpotQA，但校准还用 TriviaQA、2Wiki 和 MuSiQue 的训练数据，所以相对于策略训练的跨数据集测试不等于全部流程都未接触该领域。作者另用外部模型评判 10,000 组匹配搜索状态，发现估计可靠性与结论正确性相关；这仍是参考引导的模型判定，不是对每个决策的校准保证。固定映射用于持续变化的策略，也留下状态分布变化后是否可靠的问题。",
+                "论文于 10 月 30 日首次提交，未给出会议录用证据，代码与检查点仅承诺未来开放。额外探针让每个训练优化步骤相对 HiPRAG 慢约 14.6%；线上少搜索并不直接证明整体 token、等待时间或费用都下降。实验限于知识问答、固定语料与检索预算，未验证开放网页或长期工具任务。可借鉴的是把“不必搜索”和“搜索有帮助”分开监督，同时保留最终答案检查，而不是把流畅或自信当作证据充分。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "用训练状态校准不确定性与经验正确率",
+              "比较相同查询有无新证据的局部结论",
+              "将搜索收益与不搜索可靠性加入训练奖励",
+              "部署时直接执行学到的搜索策略"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A correct answer does not mean every intermediate search was necessary; a wrong one may reflect later reasoning failure rather than useless retrieval. This paper trains local decisions: is the current information sufficient, and how much reliability does newly retrieved evidence add? The goal is to allocate searches to steps that still need evidence, not minimize them indiscriminately.",
+          "sections": [
+            {
+              "heading": "Calibrate reliability before scoring search actions",
+              "paragraphs": [
+                "For each backbone, the authors sample 32 local conclusions at each of 50,000 training-time search states. They compute the mean negative log probability of newly generated conclusion tokens and obtain reference-guided model correctness judgments. These observations fit a mapping from uncertainty to empirical accuracy, held fixed during training. This is more than a model declaring confidence, but it is not a proven probability of correctness: sampling, references, judging models and calibration-state coverage all matter.",
+                "For a search decision, two matched conditions retain the same question, preceding history, current reasoning and query. One includes the newly returned evidence; the other removes only that evidence. Both discard the original local conclusion before generating probes. Their estimated reliability difference rewards useful retrieval; a no-search decision is scored relative to a calibration reference. Step scores are averaged and added to answer and format rewards for GRPO. Deployment uses the learned policy without these extra probes, and the comparison itself does not issue another retrieval."
+              ]
+            },
+            {
+              "heading": "Sample-weighted answers and search counts",
+              "paragraphs": [
+                "The main Qwen2.5-7B-Instruct evaluation covers 51,713 questions across seven datasets, sharing a Wikipedia index and E5-base retriever, three passages per search and at most four search turns. Cover Exact Match, or CEM, checks whether the extracted final answer contains the reference answer string, allowing explanatory text; it is not strict equality of the whole response. The authors report 69.3%, versus 67.2% for their HiPRAG reimplementation, a 2.1-point gain weighted by dataset sample counts. It is neither an unweighted seven-dataset mean nor human fact-checking of every response.",
+                "Under matched conditions, mean searches per question fall from 1.76 to 1.64, about 6.8%, including questions answered without searching. Single-hop searches decrease 20.9%, while multi-hop searches increase 6.6%. This is reallocation rather than universal reduction. In the Qwen2.5-3B ablation, the full process reward reaches 65.9% CEM, versus 61.2% with answer and format rewards alone; replacing the empirical mapping with raw confidence yields 61.9%. These 3B ablations must not be mixed with the 7B main comparison."
+              ]
+            },
+            {
+              "heading": "Estimated reliability has a training cost",
+              "paragraphs": [
+                "Policy optimization uses only NQ and HotpotQA, but calibration also uses training data from TriviaQA, 2Wiki and MuSiQue. Cross-dataset evaluation relative to policy optimization therefore does not mean the entire pipeline has never encountered those domains. An external model judges 10,000 matched search states and finds an association between estimated reliability and local correctness. This remains reference-guided model evaluation, not a calibration guarantee for each decision. Applying a fixed mapping to a changing policy also leaves distribution-shift reliability unresolved.",
+                "The first submission is October 30 with no acceptance evidence; code and checkpoints are promised for a future release. Extra probes make each optimization step about 14.6% slower than HiPRAG. Fewer online searches do not establish lower total tokens, latency or monetary cost. The experiments cover knowledge QA with fixed retrieval resources, not open-web or long-running tool tasks. The transferable idea is to supervise “no search needed” separately from “this search helps,” while retaining final-answer checks rather than treating fluency or confidence as sufficient evidence."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Calibrate uncertainty against empirical local correctness",
+              "Compare matched conclusions with and without new evidence",
+              "Add search gains and no-search reliability to training rewards",
+              "Deploy the learned search policy without probes"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "答えが正しくても途中の検索がすべて必要だったとは限らず、誤答でも原因は検索後の推論かもしれない。本研究は「今の情報で進めるか」「追加証拠がどれだけ信頼性を高めたか」を学習信号にする。単純に検索を減らすのではなく、証拠が足りない段階へ割り当てる。",
+          "sections": [
+            {
+              "heading": "信頼性を校正してから検索行動を評価",
+              "paragraphs": [
+                "各基盤モデルについて、学習用の50,000検索状態それぞれで32個の局所結論を生成し、新しく生成した結論 token の平均負対数確率を計算する。参照結論に基づくモデル判定から、不確実性と経験的正答率の対応を作り、学習中は固定する。単にモデルが自信を述べる方式ではないが、真の正答確率の証明でもない。標本、参照、判定モデル、校正状態の範囲に依存する。",
+                "検索の評価では、質問、過去の履歴、現在の推論、検索語を共通にした二条件を作る。一方は今回の検索結果を含み、もう一方は今回の証拠だけを除き、どちらも元の局所結論を消して新たな結論を生成する。推定信頼性の差で有用な検索に報酬を与え、検索しない行動は校正基準に対する現在の信頼性で採点する。段階ごとの平均を回答と形式の報酬に加え GRPO で学習する。運用時はこの追加プローブを使わず、比較のために検索を再実行することもない。"
+              ]
+            },
+            {
+              "heading": "問題数で重み付けした回答と検索回数",
+              "paragraphs": [
+                "主モデル Qwen2.5-7B-Instruct は七データセット計51,713問で評価し、Wikipedia 索引、E5-base、検索一回三文書、最大四回という条件を共有する。CEM は抽出した最終回答が標準回答文字列を含むかを判定し、説明文を許すため、回答全体の厳密一致とは違う。著者の値は69.3%、HiPRAG の再実装は67.2%で2.1ポイント差だった。各集合の問題数で重み付けした値で、七集合の単純平均でも全件の人手による事実確認でもない。",
+                "一問あたりの平均検索は1.76回から1.64回へ約6.8%減り、検索しなかった問題も分母に含む。一段の質問では20.9%減る一方、多段では6.6%増えた。すべてを削るのでなく配分を変えた結果である。Qwen2.5-3B の比較では完全な過程報酬が65.9% CEM、回答と形式だけでは61.2%、経験的対応を生の確信度に替えると61.9%だった。この3Bの比較を7Bの主実験と混ぜてはいけない。"
+              ]
+            },
+            {
+              "heading": "推定の信頼性にも学習費用がある",
+              "paragraphs": [
+                "方策学習は NQ と HotpotQA だけだが、校正には TriviaQA、2Wiki、MuSiQue の学習データも使う。方策学習に対する別データセット評価でも、全工程にとって完全な未知領域とはいえない。別のモデルによる10,000組の検索状態評価では信頼性推定と正答に関連が見られたが、参照付きのモデル判定であり、各判断の校正を保証しない。変化する方策に固定対応を使うため、状態分布が変わる場合の信頼性も残る課題である。",
+                "初回投稿は10月30日で採択の証拠はない。コードとチェックポイントは将来公開の予告である。追加プローブで一最適化ステップは HiPRAG より約14.6%遅くなった。運用中の検索回数減少だけでは総 token、待ち時間、料金の低下を示さない。固定資料と検索予算の知識質問応答が対象で、公開ウェブや長期ツール作業は未検証である。「検索不要」と「この検索が役立つ」を別々に教え、最後の回答確認も残すという考えが示唆になる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "不確実性を局所結論の経験的正答率で校正",
+              "新証拠の有無だけを変えて結論を比較",
+              "検索利得と検索不要の信頼性を報酬に追加",
+              "運用ではプローブなしに学習済み方策を実行"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Правильный ответ не доказывает необходимости каждого поиска, а неправильный может возникнуть из-за ошибки последующего рассуждения. Работа обучает локальным решениям: достаточно ли информации сейчас и насколько новое свидетельство повышает надёжность? Цель — направить поиск туда, где не хватает оснований, а не сокращать его любой ценой.",
+          "sections": [
+            {
+              "heading": "Калибровка надёжности перед оценкой поиска",
+              "paragraphs": [
+                "Для каждой базовой модели авторы генерируют по 32 локальных заключения в 50 000 учебных поисковых состояниях. Средняя отрицательная логарифмическая вероятность новых токенов сопоставляется с правильностью, оценённой моделью по эталону. Полученное отображение неопределённости в эмпирическую точность фиксируется на время обучения. Это не просто заявление модели об уверенности, но и не доказанная вероятность истины: результат зависит от выборки, эталонов, судьи и покрытия калибровочных состояний.",
+                "Для поискового решения создаются два условия с одинаковыми вопросом, предшествующей историей, текущим рассуждением и запросом. Одно содержит найденные сейчас материалы, другое исключает только их. Исходное локальное заключение удаляется из обоих, после чего генерируются новые пробы. Разница оценок надёжности вознаграждает полезный поиск; отказ от поиска оценивается относительно калибровочной опоры. Баллы усредняются по шагам и добавляются к наградам за ответ и формат при GRPO. При эксплуатации дополнительные пробы не нужны, и само сравнение не вызывает повторного поиска."
+              ]
+            },
+            {
+              "heading": "Ответы и число поисков с весами по размеру выборок",
+              "paragraphs": [
+                "Основная Qwen2.5-7B-Instruct проверяется на 51 713 вопросах семи наборов с общими индексом Wikipedia, E5-base, тремя фрагментами на запрос и максимум четырьмя поисковыми ходами. CEM проверяет наличие эталонной строки в извлечённом окончательном ответе, допуская объяснение; это не строгое равенство всего ответа. Авторы сообщают 69,3% против 67,2% для своей реализации HiPRAG, выигрыш 2,1 пункта с весами по числу примеров. Это не простое среднее семи наборов и не ручная проверка фактов в каждом ответе.",
+                "В одинаковых условиях среднее число поисков падает с 1,76 до 1,64 на вопрос, примерно на 6,8%; учитываются и вопросы без поиска. Для одношаговых задач снижение составляет 20,9%, а для многошаговых число поисков растёт на 6,6%. Это перераспределение, а не повсеместное сокращение. В абляции Qwen2.5-3B полный процессный сигнал даёт 65,9% CEM против 61,2% только с наградами за ответ и формат; замена эмпирической калибровки сырой уверенностью даёт 61,9%. Эти результаты 3B нельзя смешивать с главным сравнением 7B."
+              ]
+            },
+            {
+              "heading": "Надёжность остаётся оценкой и требует обучения",
+              "paragraphs": [
+                "Политика оптимизируется только на NQ и HotpotQA, однако калибровка использует также обучающие данные TriviaQA, 2Wiki и MuSiQue. Межнаборная проверка относительно обучения политики не означает полностью незнакомые области для всего процесса. Внешняя модель оценивает 10 000 пар поисковых состояний и обнаруживает связь оценки надёжности с правильностью заключений. Это всё ещё модельная проверка по эталону, а не гарантия калибровки каждого решения. Неизменное отображение при изменяющейся политике оставляет открытым вопрос сдвига распределения.",
+                "Первая версия подана 30 октября без свидетельств принятия; код и контрольные точки пока обещаны к будущей публикации. Дополнительные пробы замедляют один шаг оптимизации примерно на 14,6% относительно HiPRAG. Меньше онлайн-поисков не доказывает снижения общего числа токенов, задержки или цены. Проверена работа с вопросами о знаниях при фиксированных ресурсах, а не открытый веб или длительные инструментальные задачи. Полезная идея — отдельно обучать «поиск не нужен» и «этот поиск помогает», сохраняя проверку окончательного ответа."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Откалибровать неопределённость по локальной правильности",
+              "Сравнить заключения с новым свидетельством и без него",
+              "Добавить надёжность и пользу поиска в награду",
+              "Исполнять обученную политику без дополнительных проб"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "答對一道題，不表示中間每次搜尋都有必要；答錯也可能是後續推理出錯，而不是搜尋毫無價值。本文把訓練訊號放到區域性決策上：此刻的資訊是否足以繼續，新找到的材料又增加了多少可靠性？目標不是一味減少搜尋，而是把搜尋留給確實還缺證據的步驟。",
+          "sections": [
+            {
+              "heading": "先校準可靠性，再評估搜尋動作",
+              "paragraphs": [
+                "作者用每個基礎模型在 50,000 個訓練期搜尋狀態上分別生成 32 條區域性結論，計算新結論 token 的平均負對數機率，並由模型結合參考結論判定正確性。由此擬合“不確定性到經驗正確率”的對映，訓練期間固定不變。這個量不是模型自己說“我有信心”，但也不是經過證明的真實正確機率；它依賴取樣、參考結論、模型判定和校準資料所覆蓋的狀態。",
+                "訓練中的一次搜尋會構造兩個匹配條件：保留相同問題、此前歷史、當前推理和查詢，一組加入這次返回的證據，另一組只刪掉這次證據，二者都移除原來的區域性結論，再生成探針結論。可靠性差值獎勵提供有效資訊的搜尋；不搜尋則按當前可靠性相對校準基準評分。這些分數按步驟平均，加到答案與格式獎勵中供 GRPO 學習。推理部署時不再做這套額外探針，也不會在這裡額外執行一次檢索。"
+              ]
+            },
+            {
+              "heading": "按樣本數加權的問答與搜尋結果",
+              "paragraphs": [
+                "主模型 Qwen2.5-7B-Instruct 在七個問答集共 51,713 題上評測，均使用同一維基百科索引、E5-base 檢索器，每次返回三篇、最多搜尋四輪。指標 CEM 檢查提取的最終答案是否包含標準答案字串，允許解釋性文字，不是嚴格整段完全匹配。作者按各集題數加權得到 69.3%，HiPRAG 重實現為 67.2%，提高 2.1 個百分點；這不是七個資料集分數的簡單平均，也不是人工逐題事實核驗。",
+                "同條件下每題平均搜尋由 1.76 次降至 1.64 次，約減少 6.8%，分母包含完全不搜尋的題。分組後，一跳問答減少 20.9%，多跳問答反而增加 6.6%。這更像重新分配搜尋，而不是所有題都少搜。Qwen2.5-3B 的消融中，完整過程獎勵為 65.9% CEM，只有答案與格式獎勵為 61.2%；把經驗校準對映換成原始置信度得到 61.9%。這些 3B 消融數值不能與 7B 主實驗混為一個對照。"
+              ]
+            },
+            {
+              "heading": "可靠性是估計，效率也有訓練代價",
+              "paragraphs": [
+                "策略最佳化只用 NQ 與 HotpotQA，但校準還用 TriviaQA、2Wiki 和 MuSiQue 的訓練資料，所以相對於策略訓練的跨資料集測試不等於全部流程都未接觸該領域。作者另用外部模型評判 10,000 組匹配搜尋狀態，發現估計可靠性與結論正確性相關；這仍是參考引導的模型判定，不是對每個決策的校準保證。固定對映用於持續變化的策略，也留下狀態分佈變化後是否可靠的問題。",
+                "論文於 10 月 30 日首次提交，未給出會議錄用證據，程式碼與檢查點僅承諾未來開放。額外探針讓每個訓練最佳化步驟相對 HiPRAG 慢約 14.6%；線上少搜尋並不直接證明整體 token、等待時間或費用都下降。實驗限於知識問答、固定語料與檢索預算，未驗證開放網頁或長期工具任務。可借鑑的是把“不必搜尋”和“搜尋有幫助”分開監督，同時保留最終答案檢查，而不是把流暢或自信當作證據充分。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "用訓練狀態校準不確定性與經驗正確率",
+              "比較相同查詢有無新證據的區域性結論",
+              "將搜尋收益與不搜尋可靠性加入訓練獎勵",
+              "部署時直接執行學到的搜尋策略"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "privacytrace-tool-call-profile-leakage",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "PrivacyTrace · original abstract and submission history",
+          "url": "https://arxiv.org/abs/2610.41885v1"
+        },
+        {
+          "label": "PrivacyTrace · full paper, methods, results and limitations",
+          "url": "https://arxiv.org/html/2610.41885v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "不给工具服务商看聊天记录，并不代表它无法推断用户特征。PrivacyTrace研究的是另一种隐私风险：Agent为完成正常任务留下的工具名称、参数、返回内容与调用顺序，可能拼出超出任务需要的个人画像。作者以合成人物和真实工具交互构建基准，在默认实验中，读取这些记录使属性预测正确率从17.97%升到26.25%。这不是一次真实用户泄露事件，也不是26.25%的完整身份被破解。",
+          "sections": [
+            {
+              "heading": "正常调用为什么也会产生额外线索",
+              "paragraphs": [
+                "MCP是Agent连接外部工具的一种协议。即便服务商按约完成请求、不植入恶意指令，它仍可能保留自己接收的参数和返回结果。集中式网关还能看到一次任务跨多个服务的记录；若会话可关联到同一人，就能进一步串联不同领域的活动。论文区分这几种可见范围，没有假设每个服务都能读取全部聊天或模型内部推理。",
+                "基准先构造1,000份含17项属性的合成人物资料，并用公开人口统计的25组低维分布校准。随后在旅行、健康、购物和职业学习四个领域生成任务，由模拟用户与Agent交互，实际调用25个MCP服务器的工具，得到4,000条轨迹和67,950次调用。校准只能让某些总体分布接近统计目标，不能保证合成人物的行为就是现实用户行为。"
+              ]
+            },
+            {
+              "heading": "用合成人物衡量属性推断",
+              "paragraphs": [
+                "评测让模型预测预先规定的属性，并与合成标签比较。默认单领域实验有4,000个观察视图，每个17项，共68,000个属性位置；无效或失败预测也算错。评分先用确定规则，未解决的语义匹配再交给GLM-5.2判断。因此分数受属性粒度和模型裁判影响，不等于独立人工确认的个人身份识别率。",
+                "默认DeepSeek-V4-Flash只知道属性定义时正确率17.97%，看到单领域调用记录后为26.25%，提高8.28个百分点。四个推断模型在相同视图上的成绩为25.29%—28.32%。精确标识类的16,000个预测中只有35个正确，说明总体增益主要不是来自恢复完整身份号码。研究展示的是属性层面的额外信息，而非对所有人均有相同程度的识别能力。"
+              ]
+            },
+            {
+              "heading": "看见更多不总是得分更高",
+              "paragraphs": [
+                "关联四领域记录的汇总分数为32.77%，单个服务视图为24.24%，但两者的观察样本组成不同，不能简单当作同一组样本的因果差值。配对比较从单服务到同任务完整视图增加3.09个百分点，支持线索散布在不同服务之间。只保留名称等元数据和顺序时分数14.53%；加入参数后为27.71%，甚至高于完整记录的26.25%，所以不能说返回内容越多必然越容易推断。",
+                "作者提出减少暴露内容、缩短保留时间、限制跨会话关联等方向，但没有验证这些防护的效果或对任务完成的代价。两阶段推断的结果也不能证明模型内部一定按同样步骤思考。本站的工程解读是：隐私审查应同时关注服务看到什么、保留多久、是否能串联；这些是由研究启发的检查问题，不是论文已经证明有效的部署方案。当前证据仍来自合成任务、有限工具集合与模型评分。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文观察范围重绘的解释图：展示记录如何形成可推断线索，不包含任何真实用户资料，也不是攻击复现步骤或实测结果图。",
+            "steps": [
+              "合成人物产生四类任务",
+              "正常工具调用留下可见记录",
+              "按单服务、单任务或跨会话范围评估",
+              "与无记录基线比较并保留推断不确定性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Keeping a conversation away from a tool provider does not necessarily prevent it from inferring user characteristics. PrivacyTrace examines the extra information contained in ordinary agent tool names, arguments, results and call order. Using synthetic people and real tool interactions, the authors find that the default attribute-prediction score rises from 17.97% without traces to 26.25% with them. This is a benchmark result, not a reported breach of real users or the recovery of 26.25% of complete identities.",
+          "sections": [
+            {
+              "heading": "Ordinary requests can reveal more than their immediate purpose",
+              "paragraphs": [
+                "MCP is a protocol through which agents connect to external tools. A provider can execute requests honestly while retaining the arguments and responses it sees. A central gateway may observe a task across several services; linking sessions can additionally connect activities in different domains. The paper separates these observer scopes rather than assuming that every service sees the conversation or the model’s private reasoning.",
+                "The benchmark creates 1,000 synthetic profiles with 17 attributes, calibrating them to 25 low-dimensional population-statistics margins. Simulated users then interact with an agent in travel, health, shopping and career-learning tasks. Actual tools from 25 MCP servers produce 4,000 trajectories containing 67,950 calls. Matching selected population distributions does not establish that synthetic behavior represents how real people act."
+              ]
+            },
+            {
+              "heading": "Measuring inference with synthetic profiles",
+              "paragraphs": [
+                "An inference model must predict predefined attributes, which are compared with the synthetic labels. The default single-domain evaluation contains 4,000 views and 17 attributes each: 68,000 prediction slots. Failed or invalid outputs count as incorrect. Deterministic rules score predictions first; unresolved semantic matches go to GLM-5.2. The result depends on attribute granularity and model judgment, not an independent human assessment of identity recovery.",
+                "With DeepSeek-V4-Flash as the default inference model, access to attribute definitions alone yields 17.97%; single-domain traces yield 26.25%, an increase of 8.28 percentage points. Four inference models score between 25.29% and 28.32% on the same views. Only 35 of 16,000 exact-identifier predictions are correct. The aggregate improvement is therefore chiefly evidence about attributes, not the recovery of complete personal identifiers or uniform identification of every user."
+              ]
+            },
+            {
+              "heading": "More visibility does not guarantee a higher score",
+              "paragraphs": [
+                "Linked four-domain traces score 32.77%, compared with 24.24% for individual-server views. These pooled populations differ, so subtracting them is not a controlled causal comparison. A paired analysis finds a 3.09-point gain from one server’s view to the complete same-task view. Metadata and order alone score 14.53%; adding arguments raises this to 27.71%, above the complete trace’s 26.25%. Additional returned content does not invariably make inference easier.",
+                "The authors suggest reducing exposed content, shortening retention and limiting session linkage, but do not test those defenses or their task-performance costs. A two-stage inference experiment also does not prove that a one-shot model internally follows the same reasoning. Our engineering interpretation is to review what each service sees, how long it retains it and whether observations can be joined. Those are questions motivated by the study, not validated deployment remedies. Evidence remains limited to synthetic tasks, a finite tool collection and model-based scoring."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the paper’s observer scopes. It shows how records can carry clues, without real personal data, attack instructions or a fabricated results plot.",
+            "steps": [
+              "Synthetic profiles generate four task domains",
+              "Ordinary tool interactions produce visible records",
+              "Evaluate single-service, task-wide and linked-session views",
+              "Compare with a no-trace baseline and retain uncertainty"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "会話そのものをツール提供者に見せなくても、利用者の特徴を推測される可能性は残る。PrivacyTraceは、通常のAgent利用で生じるツール名、引数、応答、呼び出し順序から、目的外の人物属性が推定できるかを調べた研究だ。合成人物と実際のツール実行を使った標準条件では、属性予測の正答率が17.97%から26.25%になった。実利用者の漏えい事件でも、完全な身元の26.25%が特定されたという結果でもない。",
+          "sections": [
+            {
+              "heading": "正常な処理でも残る手掛かり",
+              "paragraphs": [
+                "MCPはAgentと外部ツールを接続するためのプロトコルだ。提供者が依頼を正常に実行していても、受け取った引数や返した結果を保持する可能性がある。中央のゲートウェイなら複数サービスにまたがる一つの作業を観測でき、セッションを同一利用者に結び付ければ異なる分野の活動もまとめられる。論文はこれらの観測範囲を分け、すべての提供者が会話や内部推論を読めるとは仮定していない。",
+                "基準データは17属性を持つ1,000人分の合成人物を作り、公開人口統計の25組の低次元分布に合わせて調整したものだ。旅行、健康、買い物、職業学習の四分野で模擬利用者とAgentが対話し、25のMCPサーバーの実際のツールを使う。得られた4,000軌跡には67,950回の呼び出しが含まれる。ただし、一部の人口分布への一致は、合成人物の行動が現実と同じである保証にはならない。"
+              ]
+            },
+            {
+              "heading": "合成人物で何を測ったのか",
+              "paragraphs": [
+                "推論モデルは定義済みの属性を予測し、合成時の正解と照合される。標準の単一分野条件は4,000の観測視点に各17属性、合計68,000の予測枠を持ち、失敗や不正な出力も誤答に数える。まず決定的な規則で採点し、未解決の意味的一致をGLM-5.2が判定する。属性の細かさとモデル判定に依存する指標であり、人間が独立に確認した本人特定率ではない。",
+                "標準モデルDeepSeek-V4-Flashは属性定義だけなら17.97%、単一分野の記録を読むと26.25%で、差は8.28パーセントポイントだった。同じ観測データに対する四つの推論モデルの値は25.29%〜28.32%。厳密な識別情報の16,000予測では正解が35件だけであり、総合値の増加は主に属性に関する追加情報を表す。全員を同じ程度に識別できることや、完全な身元情報の復元を示してはいない。"
+              ]
+            },
+            {
+              "heading": "情報が増えても単純には得点が上がらない",
+              "paragraphs": [
+                "四分野を結び付けた集計値は32.77%、単一サーバーの観測は24.24%だったが、観測対象の構成が異なるため、その差を同じ標本への因果効果とは扱えない。同一作業で対応を取った比較では、単一サービスから作業全体への可視範囲拡大で3.09ポイント増えた。メタデータと順序だけでは14.53%、引数を加えると27.71%で、完全な記録の26.25%を上回る。応答を増やせば必ず推定しやすくなるわけではない。",
+                "著者は公開する内容の削減、保持期間の短縮、セッション間の結合制限を提案するが、防御効果や作業達成への費用は検証していない。二段階推論の実験も、一度で答えるモデルの内部思考を証明しない。当サイトの工学的な解釈は、各サービスが何を見て、どれだけ保持し、他の観測と結合できるかを点検することだ。これは研究から得られる検討事項であり、実証済みの導入対策ではない。証拠は合成タスク、限られたツール群、モデル採点に基づく。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の観測範囲を基に当サイトが描いた説明図。実在する利用者の情報、攻撃の再現手順、架空の実験グラフは含まない。",
+            "steps": [
+              "合成人物から四分野の作業を生成",
+              "正常なツール利用が観測可能な記録を残す",
+              "単一サービス・作業全体・複数セッションを評価",
+              "記録なしの基準と比較し不確実性を残す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Если поставщик инструмента не видит переписку, это ещё не исключает выводов о пользователе. PrivacyTrace изучает сведения, которые несут обычные названия инструментов, аргументы, ответы и порядок вызовов агента. На синтетических профилях и реальных взаимодействиях с инструментами авторы получили рост точности предсказания атрибутов с 17,97% до 26,25% в основном эксперименте. Это результат теста, а не утечка данных реальных людей и не восстановление 26,25% полных личностей.",
+          "sections": [
+            {
+              "heading": "Обычные запросы оставляют дополнительные признаки",
+              "paragraphs": [
+                "MCP — протокол подключения агентов к внешним инструментам. Поставщик может честно выполнять запросы и одновременно сохранять доступные ему аргументы и ответы. Центральный шлюз способен видеть обращения к нескольким сервисам в рамках одной задачи; связывание сеансов добавляет сведения из разных областей деятельности. Авторы разделяют эти границы наблюдения, не предполагая, что любой сервис получает всю переписку или скрытые рассуждения модели.",
+                "В тесте созданы 1 000 синтетических профилей с 17 атрибутами и калибровкой по 25 низкоразмерным распределениям публичной демографической статистики. Имитируемый пользователь взаимодействует с агентом в четырёх областях: путешествия, здоровье, покупки и профессиональное обучение. Реальные инструменты 25 MCP-серверов дали 4 000 траекторий и 67 950 вызовов. Совпадение отдельных распределений не доказывает, что синтетическое поведение реалистично."
+              ]
+            },
+            {
+              "heading": "Как измеряли выводы о синтетических пользователях",
+              "paragraphs": [
+                "Модель должна предсказать заранее определённые атрибуты, после чего ответы сравнивают с синтетическими метками. Основная оценка охватывает 4 000 представлений одной предметной области, по 17 атрибутов каждое: всего 68 000 позиций. Ошибки выполнения и некорректные ответы остаются в знаменателе как неверные. Сначала работают детерминированные правила, затем GLM-5.2 проверяет неразрешённые смысловые совпадения. Поэтому показатель зависит от детализации атрибутов и модельного судьи, а не от независимой человеческой проверки личности.",
+                "Для основной модели DeepSeek-V4-Flash знание одних определений атрибутов даёт 17,97%, а доступ к следу одной области — 26,25%, то есть на 8,28 процентного пункта больше. Четыре модели на одинаковых представлениях получают 25,29–28,32%. Из 16 000 предсказаний точных идентификаторов верны лишь 35. Значит, совокупный прирост главным образом отражает дополнительные сведения об атрибутах, а не восстановление полных идентификаторов или одинаковую возможность распознать каждого человека."
+              ]
+            },
+            {
+              "heading": "Больше видимых данных не всегда означает более высокий результат",
+              "paragraphs": [
+                "Связанные записи четырёх областей дают 32,77%, представления отдельного сервера — 24,24%. Но состав наблюдений различается: их разность нельзя считать контролируемым причинным эффектом. Парное сравнение показывает прирост 3,09 пункта от одного сервиса к полной видимости той же задачи. Только метаданные и порядок дают 14,53%; добавление аргументов — 27,71%, больше, чем полная запись с её 26,25%. Дополнительные ответы инструментов не обязательно облегчают выводы.",
+                "Авторы предлагают сокращать раскрываемое содержание и сроки хранения, а также ограничивать связывание сеансов, но не проверяют эффективность этих мер и потери качества выполнения задач. Двухэтапный эксперимент также не доказывает, что модель с единственным ответом рассуждает внутри именно так. Наш инженерный вывод — проверять, что сервис видит, сколько хранит и с чем может объединить наблюдения. Это вопросы, подсказанные исследованием, а не подтверждённые способы защиты в эксплуатации. Доказательства пока ограничены синтетическими задачами, конечным набором инструментов и модельным оцениванием."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Оригинальная поясняющая схема по границам наблюдения из статьи. Она не содержит реальных личных данных, инструкций по атаке или вымышленного графика результатов.",
+            "steps": [
+              "Синтетические профили задают четыре области задач",
+              "Обычные обращения оставляют видимые записи",
+              "Оцениваются отдельный сервис, вся задача и связанные сеансы",
+              "Сравнение с базовой оценкой без записей сохраняет неопределённость"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "不給工具服務商看聊天記錄，並不代表它無法推斷使用者特徵。PrivacyTrace研究的是另一種隱私風險：Agent為完成正常任務留下的工具名稱、引數、返回內容與呼叫順序，可能拼出超出任務需要的個人畫像。作者以合成人物和真實工具互動構建基準，在預設實驗中，讀取這些記錄使屬性預測正確率從17.97%升到26.25%。這不是一次真實使用者洩露事件，也不是26.25%的完整身份被破解。",
+          "sections": [
+            {
+              "heading": "正常呼叫為什麼也會產生額外線索",
+              "paragraphs": [
+                "MCP是Agent連線外部工具的一種協議。即便服務商按約完成請求、不植入惡意指令，它仍可能保留自己接收的引數和返回結果。集中式閘道器還能看到一次任務跨多個服務的記錄；若會話可關聯到同一人，就能進一步串聯不同領域的活動。論文區分這幾種可見範圍，沒有假設每個服務都能讀取全部聊天或模型內部推理。",
+                "基準先構造1,000份含17項屬性的合成人物資料，並用公開人口統計的25組低維分佈校準。隨後在旅行、健康、購物和職業學習四個領域生成任務，由模擬使用者與Agent互動，實際呼叫25個MCP伺服器的工具，得到4,000條軌跡和67,950次呼叫。校準只能讓某些總體分佈接近統計目標，不能保證合成人物的行為就是現實使用者行為。"
+              ]
+            },
+            {
+              "heading": "用合成人物衡量屬性推斷",
+              "paragraphs": [
+                "評測讓模型預測預先規定的屬性，並與合成標籤比較。預設單領域實驗有4,000個觀察檢視，每個17項，共68,000個屬性位置；無效或失敗預測也算錯。評分先用確定規則，未解決的語義匹配再交給GLM-5.2判斷。因此分數受屬性粒度和模型裁判影響，不等於獨立人工確認的個人身份識別率。",
+                "預設DeepSeek-V4-Flash只知道屬性定義時正確率17.97%，看到單領域呼叫記錄後為26.25%，提高8.28個百分點。四個推斷模型在相同檢視上的成績為25.29%—28.32%。精確標識類的16,000個預測中只有35個正確，說明總體增益主要不是來自恢復完整身份號碼。研究展示的是屬性層面的額外資訊，而非對所有人均有相同程度的識別能力。"
+              ]
+            },
+            {
+              "heading": "看見更多不總是得分更高",
+              "paragraphs": [
+                "關聯四領域記錄的彙總分數為32.77%，單個服務檢視為24.24%，但兩者的觀察樣本組成不同，不能簡單當作同一組樣本的因果差值。配對比較從單服務到同任務完整檢視增加3.09個百分點，支援線索散佈在不同服務之間。只保留名稱等後設資料和順序時分數14.53%；加入引數後為27.71%，甚至高於完整記錄的26.25%，所以不能說返回內容越多必然越容易推斷。",
+                "作者提出減少暴露內容、縮短保留時間、限制跨會話關聯等方向，但沒有驗證這些防護的效果或對任務完成的代價。兩階段推斷的結果也不能證明模型內部一定按同樣步驟思考。本站的工程解讀是：隱私審查應同時關注服務看到什麼、保留多久、是否能串聯；這些是由研究啟發的檢查問題，不是論文已經證明有效的部署方案。當前證據仍來自合成任務、有限工具集合與模型評分。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文觀察範圍重繪的解釋圖：展示記錄如何形成可推斷線索，不包含任何真實使用者資料，也不是攻擊復現步驟或實測結果圖。",
+            "steps": [
+              "合成人物產生四類任務",
+              "正常工具呼叫留下可見記錄",
+              "按單服務、單任務或跨會話範圍評估",
+              "與無記錄基線比較並保留推斷不確定性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "memx-memory-aware-heterogeneous-training",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.41525v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.41525v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "把不同厂商、不同显存容量的GPU放进同一训练集群，并不意味着它们能自然分担工作。有的卡计算快却先耗尽显存，有的卡还剩空间却一直等待。MemX研究怎样自动选择大模型的并行配置，同时考虑每次训练迭代的时间、显存峰值和各卡负载是否均衡。论文于2026年10月30日提交，作者注明已投稿Future Generation Computer Systems、仍在审稿；它研究的是训练系统调度，不是模型记忆能力。",
+          "sections": [
+            {
+              "heading": "把显存从门槛变成优化目标",
+              "paragraphs": [
+                "常见搜索先排除显存装不下的配置，再选择最快的一项。MemX把时间、峰值显存和显存方差分别归一化，用加权乘积一起比较；用户可以更偏向吞吐、安全余量或均衡。它联合选择张量、流水线和数据并行，并允许不同流水线阶段采用不同重计算方式。重计算会丢弃部分中间激活，在反向传播时重新求出，用额外计算换取较小显存占用，因此不可能没有代价。",
+                "为避免每个候选都完整实测，系统先在少量关键维度上采样，再用通过检查的插值补充数据，训练同时预测迭代时间和显存的XGBoost模型，并缓存重复预测。主实验是20块GPU、三个节点，包含4块80GB A100和两组各8块32GB其他厂商GPU。作者报告36,740条测量记录、1,628个独特配置；时间预测的平均绝对百分比误差为12.17%。这是该实验设置中的预测误差，不是训练速度提高12.17%。"
+              ]
+            },
+            {
+              "heading": "小集群的结果揭示了真实取舍",
+              "paragraphs": [
+                "另一组真实实验使用两节点的4块V100与2块T4，训练六层Llama2变体。667次运行形成4,002条逐卡测量，覆盖226种独特配置。只追求迭代最快时，MemX与AMP、FaSOP都找到9,211毫秒的配置；改用显存均衡目标，MemX选择10,066毫秒、平均峰值显存7,587 MiB的方案，时间反而多9.3%。这个结果说明它能选择不同折中点，不能写成在所有目标下都更快。",
+                "更可比的是18组仅改变重计算方式的匹配配置：完整区块重计算使峰值显存的中位数节省7.6%，但迭代时间的中位数增加8.5%。这些百分比来自18组配置的汇总，不是任意模型的固定收益。完整搜索还会改变序列长度、注意力头等设置，因此不同赢家未必对应完全相同的训练任务；论文没有用最终模型质量证明这些配置在学习效果上等价。"
+              ]
+            },
+            {
+              "heading": "搜索很快，不代表训练普遍加速",
+              "paragraphs": [
+                "在已有性能测量与预测缓存支持下，扩展搜索评估31,240个配置耗时26.5秒。文中的约17天是把完整实测基线成本拟合外推到同样规模，并不是实际跑了17天的对照，也不能把26.5秒当作从零采样、训练预测器和完成模型训练的全部成本。快速筛选的意义在于缩小随后要验证的配置范围，而不是省去测量和校准。",
+                "40与60块GPU的扩展结果是由20块GPU的实测阶段数据构造的仿真，不是额外真实集群测试；新增网络竞争等效应仍需验证。测试序列主要在1K—4K范围，未覆盖超长上下文并行或混合专家并行。本站的工程判断是，这类多目标搜索适合帮助团队明确速度与显存余量的优先级，但权重、预测器和最佳配置都依赖目标硬件与负载，最终仍应在相同训练任务下实测。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据MemX方法重新绘制的解释流程，不是原论文实验曲线或GPU实测分布图。",
+            "steps": [
+              "测量少量代表性配置并校验插值",
+              "预测候选的迭代时间与显存",
+              "按速度、峰值和均衡权重排序",
+              "在目标训练负载上验证折中配置"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A training cluster made from different GPU vendors and memory capacities does not automatically share work efficiently. One device may exhaust memory while another has unused capacity and waits. MemX searches large-model parallel configurations while considering iteration time, peak memory and memory imbalance across devices. In the October 30, 2026 version, the authors state that it is submitted to Future Generation Computer Systems and under review. This is training-system scheduling research, not research into a model’s memory capabilities.",
+          "sections": [
+            {
+              "heading": "Make memory an objective, not just a constraint",
+              "paragraphs": [
+                "Conventional search often rejects configurations that exceed memory capacity and then chooses the fastest survivor. MemX normalizes iteration time, peak memory and memory variance and combines them through a weighted product. Weights can favour throughput, headroom or balance. It jointly chooses tensor, pipeline and data parallelism and permits different recomputation policies in different pipeline stages. Recomputing discarded intermediate activations during the backward pass trades additional computation for lower memory use; it is not a free improvement.",
+                "To avoid fully measuring every candidate, the system profiles a small set of influential dimensions, augments them using checked interpolation, fits an XGBoost predictor for both time and memory, and caches repeated predictions. The main cluster has twenty GPUs across three nodes: four 80 GB A100s and two groups of eight 32 GB GPUs from other vendors. The authors report 36,740 measurements covering 1,628 distinct configurations and 12.17% mean absolute percentage error for iteration-time prediction. That is prediction error under this setup, not a 12.17% training speedup."
+              ]
+            },
+            {
+              "heading": "A small real cluster exposes the trade-off",
+              "paragraphs": [
+                "A separate real experiment uses four V100s and two T4s across two nodes with a six-layer Llama2 variant. Its 667 runs produce 4,002 per-device measurements across 226 distinct configurations. For fastest iteration, MemX, AMP and FaSOP all select 9,211 ms. With a memory-balance objective, MemX instead chooses 10,066 ms and mean peak memory of 7,587 MiB—9.3% more time. The result demonstrates selection of different trade-offs, not that MemX is faster under every objective.",
+                "A cleaner comparison comprises eighteen matched configuration groups that change only recomputation. Full-block recomputation saves a median 7.6% of peak memory at a median 8.5% iteration-time overhead. These are summaries across those eighteen groups, not fixed benefits for arbitrary models. The broader search also varies sequence length and attention-head settings, so different winning configurations need not represent exactly the same training task. Final model quality is not used to establish learning-equivalence between them."
+              ]
+            },
+            {
+              "heading": "Fast search does not imply universal training acceleration",
+              "paragraphs": [
+                "With existing profiles and prediction caching, an expanded search evaluates 31,240 configurations in 26.5 seconds. The roughly seventeen-day full-profiling comparator is fitted extrapolation to that scale, not a seventeen-day measured baseline. Nor is 26.5 seconds the cost of obtaining profiles, fitting the predictor and completing model training from scratch. The useful interpretation is faster selection of configurations for subsequent validation, not elimination of calibration or measurement.",
+                "The forty- and sixty-GPU extensions are simulations constructed from measured twenty-GPU stage data, not additional physical-cluster tests. Emerging network contention still needs validation. Tested sequence lengths mainly span 1K–4K; very-long-context parallelism and mixture-of-experts parallelism are outside this evaluation. Our engineering interpretation is that multi-objective search helps teams state their speed-versus-headroom priorities, while weights, prediction accuracy and winning configurations remain hardware- and workload-dependent and must be verified on equivalent training tasks."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory process redrawn by this site from MemX; not an experimental curve or measured GPU distribution.",
+            "steps": [
+              "Profile representative configurations and validate interpolation",
+              "Predict iteration time and memory for candidates",
+              "Rank by speed, peak-memory and balance weights",
+              "Validate the chosen trade-off on the target training workload"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "異なるメーカーやメモリ容量のGPUを集めても、訓練の負荷が自然に均等になるわけではない。あるGPUは先にメモリ不足になり、別のGPUは容量を余らせて待つ。MemXは大規模モデルの並列構成を選ぶ際、反復時間、メモリのピーク、GPU間の偏りを同時に扱う。2026年10月30日の版で著者はFuture Generation Computer Systemsへ投稿し査読中と記す。対象は訓練システムの配置であり、モデルの記憶能力ではない。",
+          "sections": [
+            {
+              "heading": "メモリを制約だけでなく目的にする",
+              "paragraphs": [
+                "一般的な探索ではメモリに収まらない構成を除き、残った中で最速を選ぶ。MemXは反復時間、ピークメモリ、メモリ分散を正規化し、重み付き積で評価する。スループット、余裕、均衡のどれを優先するかは重みで変える。テンソル、パイプライン、データ並列を組み合わせ、段階ごとに再計算方式も選ぶ。中間活性を捨てて逆伝播時に計算し直すため、メモリ節約には追加計算という代価がある。",
+                "全候補の実測を避けるため、影響の大きい少数の次元を測り、妥当性を確認した補間でデータを補う。XGBoostで時間とメモリを予測し、同じ予測はキャッシュする。主実験は3ノード20GPUで、80 GB A100が4基、他メーカーの32 GB GPUが各8基の2群。著者は36,740件の測定、1,628種類の構成を報告し、反復時間の平均絶対百分率誤差は12.17%だった。訓練が12.17%速くなったという意味ではない。"
+              ]
+            },
+            {
+              "heading": "実機の小規模クラスタが示す交換条件",
+              "paragraphs": [
+                "別の実機実験では2ノードのV100 4基とT4 2基で6層のLlama2変種を使う。226構成、667回の実行からGPU単位で4,002件を測定した。時間だけを最小化するとMemX、AMP、FaSOPは同じ9,211ミリ秒を選ぶ。メモリ均衡を目的にするとMemXは10,066ミリ秒、平均ピーク7,587 MiBを選び、時間は9.3%増える。異なる交換条件を選べる結果であり、常に最速という結論ではない。",
+                "条件を揃えた18組では再計算方式だけを変更した。完全なブロック再計算はピークメモリを中央値で7.6%節約し、反復時間を中央値で8.5%増やした。これは18組の集計で、どんなモデルにも同率で効くわけではない。広い探索では系列長や注意ヘッド設定も変わるため、勝った構成同士が同一の訓練課題とは限らない。最終モデルの品質を測って学習効果の等価性を確認した研究でもない。"
+              ]
+            },
+            {
+              "heading": "探索の速さと訓練の速さを分ける",
+              "paragraphs": [
+                "既存の測定プロファイルと予測キャッシュを使う拡張探索は31,240構成を26.5秒で評価した。完全実測に約17日かかるという比較は、その規模へ費用を当てはめた外挿で、17日間の対照実験ではない。26.5秒にも、ゼロからの測定や予測器学習、モデル訓練全体は含まれない。意味があるのは後で実測する候補を絞る速さであり、校正そのものを不要にすることではない。",
+                "40GPUと60GPUの評価は20GPUの実測段階データを拡張したシミュレーションで、追加の実機クラスタではない。大規模化で生じるネットワーク競合などは別途検証が必要だ。系列長は主に1K〜4Kで、超長文脈や混合専門家の並列化は対象外。速度とメモリ余裕の優先順位を明確にする探索として有用だが、重み、予測精度、最適構成は機器と負荷に依存する。同じ訓練課題で確かめる必要がある、というのが本サイトの工学的解釈である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトがMemXの仕組みを描き直した説明図。実験曲線やGPUの実測分布ではない。",
+            "steps": [
+              "代表構成を測定し補間の妥当性を確認",
+              "候補の反復時間とメモリを予測",
+              "速度・ピーク・均衡の重みで順位付け",
+              "対象負荷で選んだ交換条件を実測"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Смешанный кластер из GPU разных производителей и с разной памятью не распределяет обучение равномерно сам по себе. Одной карте не хватает памяти, пока другая простаивает. MemX выбирает конфигурации параллельного обучения с учётом времени итерации, пиковой памяти и её разброса между устройствами. В версии от 30 октября 2026 года авторы указывают подачу в Future Generation Computer Systems и продолжающееся рецензирование. Работа посвящена системе обучения, а не памяти самой языковой модели.",
+          "sections": [
+            {
+              "heading": "Память как цель, а не только ограничение",
+              "paragraphs": [
+                "Обычный поиск часто отбрасывает варианты, не помещающиеся в память, и выбирает самый быстрый из остальных. MemX нормализует время, пик памяти и дисперсию её потребления, объединяя их взвешенным произведением. Весами задаётся приоритет скорости, запаса или баланса. Система выбирает тензорный, конвейерный и параллелизм данных, разрешая разные способы повторного вычисления на разных стадиях. Повторный расчёт удалённых промежуточных активаций при обратном проходе экономит память ценой дополнительных вычислений.",
+                "Вместо полного измерения каждого кандидата система профилирует несколько важных измерений, дополняет данные проверенной интерполяцией, обучает XGBoost предсказывать время и память и кэширует повторные прогнозы. Основной кластер содержит двадцать GPU на трёх узлах: четыре A100 с 80 GB и две группы по восемь GPU других производителей с 32 GB. Авторы сообщают 36 740 измерений и 1 628 уникальных конфигураций. Средняя абсолютная процентная ошибка времени равна 12,17%; это ошибка прогноза в данной постановке, не ускорение обучения на 12,17%."
+              ]
+            },
+            {
+              "heading": "Что показывает небольшой реальный кластер",
+              "paragraphs": [
+                "Отдельный реальный опыт использует четыре V100 и две T4 на двух узлах и шестислойный вариант Llama2. Для 226 конфигураций выполнено 667 запусков, давших 4 002 измерения отдельных устройств. При минимизации времени MemX, AMP и FaSOP выбирают одинаковые 9 211 мс. Для баланса памяти MemX выбирает 10 066 мс и средний пик 7 587 MiB, то есть на 9,3% больше времени. Это выбор другого компромисса, а не превосходство по скорости при любой цели.",
+                "Более строгий контроль — восемнадцать сопоставленных групп, где меняется только повторное вычисление. Полный блочный пересчёт экономит медианные 7,6% пиковой памяти при медианном увеличении времени итерации на 8,5%. Это сводка по восемнадцати группам, не универсальные проценты. Более широкий поиск меняет также длину последовательности и настройки голов внимания: победители могут представлять разные задачи обучения. Их эквивалентность по качеству итоговой модели не установлена."
+              ]
+            },
+            {
+              "heading": "Быстрый поиск не означает ускорение любого обучения",
+              "paragraphs": [
+                "Используя уже полученные профили и кэш прогнозов, расширенный поиск оценивает 31 240 конфигураций за 26,5 секунды. Около семнадцати дней для полного профилирования — экстраполяция стоимости на этот масштаб, а не измеренный семнадцатидневный контроль. В 26,5 секунды также не входят получение профилей с нуля, обучение предиктора и полное обучение модели. Практический смысл — быстрее сузить набор вариантов для проверки, а не отменить измерения и калибровку.",
+                "Расширения до сорока и шестидесяти GPU моделируются на основе измеренных стадий двадцатикарточного кластера; это не дополнительные физические испытания. Новые сетевые конфликты требуют проверки. Длины последовательностей преимущественно 1K–4K, без проверки сверхдлинного контекста и экспертного параллелизма MoE. Наша инженерная интерпретация: многокритериальный поиск помогает явно выбрать приоритет скорости или запаса памяти, но веса, точность прогнозов и лучшие конфигурации зависят от оборудования и нагрузки. Их следует проверять на эквивалентной задаче обучения."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема MemX, перерисованная сайтом; не экспериментальная кривая и не измеренное распределение GPU.",
+            "steps": [
+              "Измерить представительные конфигурации и проверить интерполяцию",
+              "Предсказать время итерации и память кандидатов",
+              "Ранжировать по весам скорости, пика и баланса",
+              "Проверить компромисс на целевой нагрузке"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "把不同廠商、不同顯示記憶體容量的GPU放進同一訓練叢集，並不意味著它們能自然分擔工作。有的卡計算快卻先耗盡顯示記憶體，有的卡還剩空間卻一直等待。MemX研究怎樣自動選擇大模型的並行配置，同時考慮每次訓練迭代的時間、顯示記憶體峰值和各卡負載是否均衡。論文於2026年10月30日提交，作者註明已投稿Future Generation Computer Systems、仍在審稿；它研究的是訓練系統排程，不是模型記憶能力。",
+          "sections": [
+            {
+              "heading": "把顯示記憶體從門檻變成最佳化目標",
+              "paragraphs": [
+                "常見搜尋先排除顯示記憶體裝不下的配置，再選擇最快的一項。MemX把時間、峰值顯示記憶體和顯示記憶體方差分別歸一化，用加權乘積一起比較；使用者可以更偏向吞吐、安全餘量或均衡。它聯合選擇張量、流水線和資料並行，並允許不同流水線階段採用不同重計算方式。重計算會丟棄部分中間活化，在反向傳播時重新求出，用額外計算換取較小顯示記憶體佔用，因此不可能沒有代價。",
+                "為避免每個候選都完整實測，系統先在少量關鍵維度上取樣，再用通過檢查的插值補充資料，訓練同時預測迭代時間和顯示記憶體的XGBoost模型，並快取重複預測。主實驗是20塊GPU、三個節點，包含4塊80GB A100和兩組各8塊32GB其他廠商GPU。作者報告36,740條測量記錄、1,628個獨特配置；時間預測的平均絕對百分比誤差為12.17%。這是該實驗設定中的預測誤差，不是訓練速度提高12.17%。"
+              ]
+            },
+            {
+              "heading": "小叢集的結果揭示了真實取捨",
+              "paragraphs": [
+                "另一組真實實驗使用兩節點的4塊V100與2塊T4，訓練六層Llama2變體。667次執行形成4,002條逐卡測量，覆蓋226種獨特配置。只追求迭代最快時，MemX與AMP、FaSOP都找到9,211毫秒的配置；改用顯示記憶體均衡目標，MemX選擇10,066毫秒、平均峰值顯示記憶體7,587 MiB的方案，時間反而多9.3%。這個結果說明它能選擇不同折中點，不能寫成在所有目標下都更快。",
+                "更可比的是18組僅改變重計算方式的匹配配置：完整區塊重計算使峰值顯示記憶體的中位數節省7.6%，但迭代時間的中位數增加8.5%。這些百分比來自18組配置的彙總，不是任意模型的固定收益。完整搜尋還會改變序列長度、注意力頭等設定，因此不同贏家未必對應完全相同的訓練任務；論文沒有用最終模型品質證明這些配置在學習效果上等價。"
+              ]
+            },
+            {
+              "heading": "搜尋很快，不代表訓練普遍加速",
+              "paragraphs": [
+                "在已有效能測量與預測快取支援下，擴展搜尋評估31,240個配置耗時26.5秒。文中的約17天是把完整實測基準方法成本擬合外推到同樣規模，並不是實際跑了17天的對照，也不能把26.5秒當作從零取樣、訓練預測器和完成模型訓練的全部成本。快速篩選的意義在於縮小隨後要驗證的配置範圍，而不是省去測量和校準。",
+                "40與60塊GPU的擴展結果是由20塊GPU的實測階段資料構造的模擬，不是額外真實叢集測試；新增網路競爭等效應仍需驗證。測試序列主要在1K—4K範圍，未覆蓋超長上下文並行或混合專家並行。本站的工程判斷是，這類多目標搜尋適合幫助團隊明確速度與顯示記憶體餘量的優先順序，但權重、預測器和最佳配置都依賴目標硬體與負載，最終仍應在相同訓練任務下實測。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據MemX方法重新繪製的解釋流程，不是原論文實驗曲線或GPU實測分佈圖。",
+            "steps": [
+              "測量少量代表性配置並校驗插值",
+              "預測候選的迭代時間與顯示記憶體",
+              "按速度、峰值和均衡權重排序",
+              "在目標訓練負載上驗證折中配置"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "diverse-scientific-ideas-set-rl",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.22324v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.22324v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让模型一次提出三个研究想法，并不难；难的是三条思路都值得追究，而且不是同一个点子的三种写法。《Training Reasoning Models to Generate Diverse Scientific Ideas》把评价对象从单个答案改成一组想法，用强化学习同时奖励质量与组内差异。作者在一款8B模型上观察到更高的自动评测分数，但人工与执行实验规模较小，不能据此宣称模型已经能独立做出科学发现。这份预印本注明仍在审稿。",
+          "sections": [
+            {
+              "heading": "奖励整组思路，而不是分别挑最好的一条",
+              "paragraphs": [
+                "输入是一组已有论文的资料卡，模型在一次生成中顺序写出三个想法，每个包含问题缺口、核心主张、方法和启发来源。后面的想法能看到前面写了什么。训练奖励先估计每条想法的质量，再乘以它与此前想法的最小语义距离；如果只是换个说法重复前一条，所得奖励就少。三个想法共享整组回报，通过GRPO更新，而不是各自独立拿高分。",
+                "质量由模型评委比较候选想法与留作参照的真实论文想法，差异则分别检查问题、主张与方法。模型先以Claude Opus 4.8生成的示范做监督训练，再在Qwen3-8B上强化学习，使用7,172个训练案例。测试包含1,740个案例、16个领域的2026年论文；自动评测换用不同的评委。所谓创意效用CU，是把质量、差异和阅读顺序折扣合成的0到1指标，不是发现被实验验证的概率。"
+              ]
+            },
+            {
+              "heading": "自动评分提高，也伴随来源依赖下降",
+              "paragraphs": [
+                "在这套测试上，不输出思考过程的训练模型CU为0.64，Claude Opus 4.8为0.38，GPT-6 Astra为0.28；这些是作者按特定资料和评委得到的结果，不能直接变成一般科研能力排名。来源依赖另行评估而没有放进训练奖励：不思考版本为0.61，思考版本为0.81。该指标衡量想法有多依赖引用资料，低分不自动意味着事实错误，但说明更有差异的输出可能离输入证据更远。",
+                "组内差异也不等于整个模型提出的方法更丰富。在IdeaSeed抽取的500个案例中，每例生成三条，方法类型的归一化熵在人类想法中为0.87，Claude为0.77，不思考训练模型为0.65。也就是说，同一次输出可避免重复，但跨很多问题仍可能偏爱少数套路。这个区别对科研助手很重要：只优化眼前这一组的多样性，不能保证长期探索覆盖足够广。"
+              ]
+            },
+            {
+              "heading": "值得探索的点子仍要靠研究验证",
+              "paragraphs": [
+                "人工试验由四位NLP博士各评15个案例，共60个；每组三条想法，训练模型平均有2.17条被认为有前景、2.83条不同，Claude分别为2.20与2.72。作者据此称质量相近、独特性略高，样本不足以支持广泛领先。另一次执行试验让编码Agent在每条90分钟、30美元、无GPU的预算内做概念验证；三条中至少一条被执行Agent自报支持的比例，训练模型在15例中为33%，Claude在15例中为27%，思考版本在14例中为29%。",
+                "执行结果并非独立实验室确认，作者检查发现部分自报结论强于实际证据，因此这些只能作为早期可执行性信号。训练以英语NLP资料为主，输入资料卡已整理好，系统没有证明自己能全面检索文献、确认研究从未被做过或稳定完成大型实验。更稳妥的用途是给研究者一组可比较的候选路线，再由人核对文献、设计对照并复现实验；来源约束和跨任务多样性仍是待解决的问题。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据集合级强化学习方法重绘的解释图，不是创意质量分布或已验证科研成果统计。",
+            "steps": [
+              "整理已有论文资料卡",
+              "在一次生成中依次提出三条研究思路",
+              "用质量与对前面思路的差异奖励整组",
+              "再用人工判断和有限概念验证检查可行性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Producing three research ideas is easy; producing three worthwhile ideas that are not paraphrases of one another is harder. Training Reasoning Models to Generate Diverse Scientific Ideas changes the unit of reinforcement-learning evaluation from one answer to an entire set. An 8B model improves on the authors’ automatic metric, but the human and execution studies are small and do not establish autonomous scientific discovery. The preprint is marked as under review.",
+          "sections": [
+            {
+              "heading": "Reward a set rather than isolated good answers",
+              "paragraphs": [
+                "The input consists of cards describing prior papers. In one sequential response, the model writes three ideas, each with a problem gap, core claim, method and stated inspiration. Later ideas can condition on earlier ones. Training estimates each idea’s quality and multiplies it by the minimum semantic distance to preceding ideas. A paraphrase earns little extra reward. All three share the set-level return used for GRPO updates instead of receiving independent quality rewards.",
+                "Model judges assess quality against an idea extracted from a held-out real paper and measure distance separately over problem, claim and method. Qwen3-8B first learns from Claude Opus 4.8 demonstrations, then receives reinforcement learning on 7,172 training instances. The main test comprises 1,740 instances based on 2026 papers across sixteen domains, using different evaluation judges. Creative Utility, CU, combines quality, diversity and a reading-order discount on a zero-to-one scale. It is not the probability of an experimentally verified discovery."
+              ]
+            },
+            {
+              "heading": "Higher scores come with weaker source dependence",
+              "paragraphs": [
+                "On this test, the trained no-think variant scores 0.64 CU, versus 0.38 for Claude Opus 4.8 and 0.28 for GPT-6 Astra. These author-reported values depend on the supplied literature and judges, not a universal ranking of scientific capability. Source dependence is measured separately and is absent from the training reward: the no-think model scores 0.61 and the thinking model 0.81. This metric asks how much an idea relies on its cited material. Lower dependence is not automatically factual error, but more distinctive output can move further from the input evidence.",
+                "Within-set diversity also differs from diversity across the model’s whole population of ideas. On five hundred sampled IdeaSeed instances, each producing three ideas, normalized entropy of method types is 0.87 for human ideas, 0.77 for Claude and 0.65 for the trained no-think model. A response can therefore avoid repetition while the model repeatedly favours a narrower menu of approaches across many questions. Optimizing diversity within the current set does not guarantee broad long-term exploration."
+              ]
+            },
+            {
+              "heading": "Promising ideas still require scientific validation",
+              "paragraphs": [
+                "Four NLP PhDs each assess fifteen instances, sixty in total. Of three ideas per set, the trained model averages 2.17 judged promising and 2.83 unique; Claude averages 2.20 and 2.72. This small pilot supports comparable promise and slightly higher uniqueness, not broad superiority. A separate coding-agent study allows ninety minutes, thirty dollars and no GPU per idea. The fraction of instances with at least one of three ideas self-reported as supported is 33% over fifteen no-think instances, 27% over fifteen Claude instances and 29% over fourteen thinking-model instances.",
+                "Those execution verdicts are not independent laboratory validation. The authors find some self-reported conclusions stronger than the evidence, so the experiment offers only early feasibility signals. Training concentrates on English NLP literature; source cards are already prepared. Comprehensive literature search, verified originality and reliable large experiments are not demonstrated. A defensible use is to give researchers alternative directions to compare, followed by literature checking, controlled experiments and replication. Source constraints and population-level diversity remain unresolved."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from set-level reinforcement learning; not a distribution of creativity or a count of validated discoveries.",
+            "steps": [
+              "Prepare cards describing prior literature",
+              "Generate three research directions sequentially in one response",
+              "Reward set-level quality and distance from previous ideas",
+              "Check promise with human review and bounded proof-of-concept runs"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "研究案を三つ出すことと、三つとも有望で互いに異なることは別の問題だ。「Training Reasoning Models to Generate Diverse Scientific Ideas」は、強化学習の評価単位を個別回答から案の集合へ変え、品質と集合内の違いを同時に報酬へ入れる。8Bモデルの自動評価は改善したが、人手と実行の実験は小規模で、自律的な科学的発見を実証したわけではない。プレプリントは査読中と記されている。",
+          "sections": [
+            {
+              "heading": "個別の良案ではなく集合に報酬を与える",
+              "paragraphs": [
+                "入力は先行論文を整理した資料カードである。モデルは一回の生成で三案を順番に書き、各案に未解決問題、主張、方法、着想源を含める。後の案は前の案を参照できる。報酬は各案の品質に、それ以前の案との最小意味距離を掛ける。同じ案の言い換えでは追加報酬が小さい。三案は集合全体の報酬を共有し、GRPOで更新するため、個別の品質だけを高める方式とは異なる。",
+                "モデル審査員が、保留した実論文の着想と候補を比較して品質を判定し、問題・主張・方法の違いを測る。Qwen3-8BをClaude Opus 4.8の例で教師あり学習し、7,172事例で強化学習した。主評価は2026年の論文に基づく16分野1,740事例で、訓練とは別の評価モデルを使う。創造的効用CUは品質、多様性、読む順番による割引を組み合わせた0〜1の指標で、発見が実験で立証される確率ではない。"
+              ]
+            },
+            {
+              "heading": "得点上昇と資料への依存低下を併せて読む",
+              "paragraphs": [
+                "この評価では思考過程を出さない学習モデルのCUが0.64、Claude Opus 4.8が0.38、GPT-6 Astraが0.28だった。資料と審査方式に依存する著者報告で、科研能力一般の順位とはいえない。訓練報酬には含めない出典依存度は、非思考版0.61、思考版0.81。案が引用資料にどれだけ依存するかの指標であり、低いことが直ちに事実誤認を意味するわけではないが、差異を増やすと入力証拠から離れる場合がある。",
+                "集合内の違いと、モデルが全体として使う方法の幅も異なる。IdeaSeedの500事例から各三案を生成した際、方法タイプの正規化エントロピーは人間0.87、Claude0.77、非思考学習モデル0.65だった。一回の回答は重複を避けても、多くの問いを通して少数の型を好む可能性がある。目の前の三案の多様性だけでは長期的な探索範囲の広さを保証できない。"
+              ]
+            },
+            {
+              "heading": "有望さは科学的な検証の代わりにならない",
+              "paragraphs": [
+                "人手評価ではNLP博士4人が各15事例、計60事例を評価した。三案中の有望な案は学習モデル平均2.17、Claude2.20、異なる案はそれぞれ2.83と2.72。小規模な結果が示すのは有望さが近く、独自性がわずかに高いことだ。別の実行試験ではコード作成Agentに一案90分・30ドル・GPUなしの予算を与えた。三案のうち少なくとも一案をAgent自身が支持と判定した割合は、非思考版15事例で33%、Claude15事例で27%、思考版14事例で29%だった。",
+                "実行判定は独立研究室の検証ではなく、著者も実際の証拠以上に強い自己判定を見つけている。したがって初期的な実行可能性の手掛かりにとどまる。訓練は英語NLP文献が中心で、入力カードは準備済み。網羅的な文献探索、新規性の確証、大規模実験の安定した遂行は示していない。研究者に比較可能な候補を提示し、人が文献、対照実験、再現性を確かめる用途が妥当であり、出典制約と課題をまたぐ多様性は今後の課題である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトが集合単位の強化学習を描き直した説明図。創造性の実測分布や検証済み発見数ではない。",
+            "steps": [
+              "先行論文の資料カードを用意",
+              "一回の生成で三つの研究案を順に作る",
+              "品質と先行案との違いで集合を評価",
+              "人の評価と限定的な概念実証で確かめる"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Предложить три исследовательские идеи проще, чем сделать все три перспективными и непохожими. Работа Training Reasoning Models to Generate Diverse Scientific Ideas переносит оценку в обучении с подкреплением с отдельного ответа на набор идей, награждая качество и различия внутри него. Автоматическая метрика модели на 8 млрд параметров улучшается, но небольшие человеческие и исполнительные проверки не доказывают автономное научное открытие. Препринт помечен как находящийся на рецензировании.",
+          "sections": [
+            {
+              "heading": "Награждать набор, а не отдельные удачные ответы",
+              "paragraphs": [
+                "Входом служат карточки предыдущих статей. За один последовательный ответ модель создаёт три идеи с пробелом в знаниях, основным утверждением, методом и источником вдохновения. Следующие идеи видят предыдущие. Качество каждой умножается на минимальное семантическое расстояние до предшественниц: перефразирование почти не приносит дополнительной награды. Все три получают общий возврат для обновления GRPO, вместо независимого вознаграждения только за качество.",
+                "Модели-судьи сравнивают качество с идеей из отложенной реальной статьи и отдельно оценивают расстояния по проблеме, утверждению и методу. Qwen3-8B сначала обучается на примерах Claude Opus 4.8, затем с подкреплением на 7 172 случаях. Основной тест — 1 740 случаев на основе статей 2026 года из шестнадцати областей; оценочные судьи отличаются от обучающих. Creative Utility, CU, объединяет качество, разнообразие и дисконт порядка чтения на шкале 0–1. Это не вероятность подтверждённого экспериментом открытия."
+              ]
+            },
+            {
+              "heading": "Рост оценки сопровождается меньшей зависимостью от источников",
+              "paragraphs": [
+                "В этом тесте обученная версия без вывода рассуждений получает CU 0,64, Claude Opus 4.8 — 0,38, GPT-6 Astra — 0,28. Это авторские результаты для конкретных материалов и судей, а не общий рейтинг научных способностей. Зависимость от источников оценивается отдельно и не входит в награду: 0,61 у версии без рассуждений и 0,81 у рассуждающей. Метрика отражает, насколько идея нуждается в цитируемом материале. Меньшее значение не обязательно означает фактическую ошибку, но более разные идеи могут сильнее отходить от исходных свидетельств.",
+                "Разнообразие внутри набора не равно разнообразию всей популяции идей модели. На пятистах выбранных случаях IdeaSeed, по три идеи на случай, нормированная энтропия типов методов составляет 0,87 у человеческих идей, 0,77 у Claude и 0,65 у обученной версии без рассуждений. Один ответ может избегать повторов, а модель на множестве вопросов всё равно предпочитать ограниченный набор подходов. Оптимизация текущей тройки не гарантирует широкий долговременный поиск."
+              ]
+            },
+            {
+              "heading": "Перспективная идея ещё требует научной проверки",
+              "paragraphs": [
+                "Четыре специалиста с PhD по NLP оценивают по пятнадцать случаев, всего шестьдесят. Из трёх идей обученной модели перспективными признаются в среднем 2,17, уникальными 2,83; у Claude — 2,20 и 2,72. Малый пилот указывает на близкую перспективность и немного большую уникальность, не на широкое превосходство. В отдельном опыте программирующему агенту дают на идею девяносто минут, тридцать долларов и ни одного GPU. Хотя бы одна из трёх идей получает от самого агента вердикт о поддержке в 33% пятнадцати случаев без рассуждений, 27% пятнадцати случаев Claude и 29% четырнадцати случаев рассуждающей версии.",
+                "Эти вердикты не являются независимым лабораторным подтверждением. Авторы находят самооценки сильнее фактических свидетельств, поэтому опыт даёт лишь ранние сигналы осуществимости. Обучение сосредоточено на англоязычной NLP-литературе, карточки источников уже подготовлены. Полнота поиска публикаций, доказанная новизна и надёжное выполнение крупных экспериментов не показаны. Обоснованный сценарий — предложить исследователю альтернативы, после чего проверять литературу, контрольные условия и воспроизводимость. Ограничение отрыва от источников и разнообразие между задачами остаются открытыми."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема обучения набора, перерисованная сайтом; не распределение креативности и не число доказанных открытий.",
+            "steps": [
+              "Подготовить карточки предыдущих работ",
+              "Последовательно создать три направления в одном ответе",
+              "Наградить качество набора и расстояние от предыдущих идей",
+              "Проверить перспективность экспертами и ограниченными опытами"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓模型一次提出三個研究想法，並不難；難的是三條思路都值得追究，而且不是同一個點子的三種寫法。《Training Reasoning Models to Generate Diverse Scientific Ideas》把評價對象從單個答案改成一組想法，用強化學習同時獎勵品質與組內差異。作者在一款8B模型上觀察到更高的自動評測分數，但人工與執行實驗規模較小，不能據此宣稱模型已經能獨立做出科學發現。這份預印本註明仍在審稿。",
+          "sections": [
+            {
+              "heading": "獎勵整組思路，而不是分別挑最好的一條",
+              "paragraphs": [
+                "輸入是一組已有論文的資料卡，模型在一次生成中順序寫出三個想法，每個包含問題缺口、核心主張、方法和啟發來源。後面的想法能看到前面寫了什麼。訓練獎勵先估計每條想法的品質，再乘以它與此前想法的最小語義距離；如果只是換個說法重複前一條，所得獎勵就少。三個想法共享整組回報，透過GRPO更新，而不是各自獨立拿高分。",
+                "品質由模型評委比較候選想法與留作參照的真實論文想法，差異則分別檢查問題、主張與方法。模型先以Claude Opus 4.8生成的示範做監督訓練，再在Qwen3-8B上強化學習，使用7,172個訓練案例。測試包含1,740個案例、16個領域的2026年論文；自動評測換用不同的評委。所謂創意效用CU，是把品質、差異和閱讀順序折扣合成的0到1指標，不是發現被實驗驗證的機率。"
+              ]
+            },
+            {
+              "heading": "自動評分提高，也伴隨來源依賴下降",
+              "paragraphs": [
+                "在這套測試上，不輸出思考過程的訓練模型CU為0.64，Claude Opus 4.8為0.38，GPT-6 Astra為0.28；這些是作者按特定資料和評委得到的結果，不能直接變成一般科研能力排名。來源依賴另行評估而沒有放進訓練獎勵：不思考版本為0.61，思考版本為0.81。該指標衡量想法有多依賴引用資料，低分不自動意味著事實錯誤，但說明更有差異的輸出可能離輸入證據更遠。",
+                "組內差異也不等於整個模型提出的方法更豐富。在IdeaSeed抽取的500個案例中，每例生成三條，方法類型的歸一化熵在人類想法中為0.87，Claude為0.77，不思考訓練模型為0.65。也就是說，同一次輸出可避免重複，但跨很多問題仍可能偏愛少數套路。這個區別對科研助手很重要：只最佳化眼前這一組的多樣性，不能保證長期探索覆蓋足夠廣。"
+              ]
+            },
+            {
+              "heading": "值得探索的點子仍要靠研究驗證",
+              "paragraphs": [
+                "人工試驗由四位NLP博士各評15個案例，共60個；每組三條想法，訓練模型平均有2.17條被認為有前景、2.83條不同，Claude分別為2.20與2.72。作者據此稱品質相近、獨特性略高，樣本不足以支持廣泛領先。另一次執行試驗讓編碼Agent在每條90分鐘、30美元、無GPU的預算內做概念驗證；三條中至少一條被執行Agent自報支持的比例，訓練模型在15例中為33%，Claude在15例中為27%，思考版本在14例中為29%。",
+                "執行結果並非獨立實驗室確認，作者檢查發現部分自報結論強於實際證據，因此這些只能作為早期可執行性訊號。訓練以英語NLP資料為主，輸入資料卡已整理好，系統沒有證明自己能全面檢索文獻、確認研究從未被做過或穩定完成大型實驗。更穩妥的用途是給研究者一組可比較的候選路線，再由人核對文獻、設計對照並復現實驗；來源約束和跨任務多樣性仍是待解決的問題。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據集合級強化學習方法重繪的解釋圖，不是創意品質分佈或已驗證科研成果統計。",
+            "steps": [
+              "整理已有論文資料卡",
+              "在一次生成中依次提出三條研究思路",
+              "用品質與對前面思路的差異獎勵整組",
+              "再用人工判斷和有限概念驗證檢查可行性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "omniverifier-graded-world-verification",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2610.22355v1"
+        },
+        {
+          "label": "arXiv publication and version metadata",
+          "url": "https://arxiv.org/abs/2610.22355v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一张生成图像可能画对了物体，却画错数量或位置。如果训练只得到“全对”或“全错”，模型很难知道改进发生在哪里。OmniVerifier-C1把要求拆成可检查的小问题，再将满足的比例汇成分级奖励；在迷宫、数独等有明确规则的任务中，还让验证器对照标准答案图。论文于2026年10月15日发表预印本，作者注明NeurIPS 2026，但未在所核对元数据中说明轨道，不能据此补写为已独立核实的主会录用。",
+          "sections": [
+            {
+              "heading": "把部分正确保留在奖励里",
+              "paragraphs": [
+                "验证器先把文字要求拆成若干子问题，例如对象是否出现、数量是否正确、关系是否满足；逐项判断后，以通过项数占总项数的比例打分。这样，两张都不完美的图仍能区分谁满足更多条件。训练采用解耦强化学习，同时优化局部二元判断与整体匹配评分。它不是取消对错判断，而是把判断放到更细的层级，避免所有有瑕疵的输出都收到同一个零分。",
+                "普通文生图未必有唯一答案，主要按提示逐项评估。规则任务则分两种：单图验证必须先推理目标状态再判断生成图；成对验证直接看到标准答案图，比较生成结果与目标。理论分析假设要求能无损拆分、子判断正确，用满足条件的数量代表质量；真实验证器仍可能漏拆或误判，所以形式上的排序优势不能解释成绝不会奖励投机或出错。"
+              ]
+            },
+            {
+              "heading": "实验检验了什么能力",
+              "paragraphs": [
+                "附录用200条未参与训练的二元子问题检查局部判断，三位作者和两位博士生各标注40条，共同覆盖全部样本。相对这些人类标签，Qwen3-VL-8B基础验证器准确率为67.0%，监督训练后为74.5%，再加解耦强化学习为94.0%。这是200个子问题的标签一致率，不是完整世界任务的成功率，也不是五人对每条都一致通过；评判者与论文团队的关联亦应保留。",
+                "图像生成实验使用Stable Diffusion 3.5 Medium和FLUX.1-dev，规则任务使用Qwen-Image-Edit-2509，均按文中设置训练200步、使用16块A800 80GB。Stable Diffusion的GenEval综合分从0.66提升到0.77，二元奖励对照为0.68；FLUX从0.68到0.79，二元对照0.70。GenEval检查对象、计数、颜色、位置等语义要求，这些综合分不等于所有图都完全正确。训练曲线另在500条留出提示上评估，不应把500误当作上述GenEval分数的样本分母。"
+              ]
+            },
+            {
+              "heading": "有答案可对照，是重要前提",
+              "paragraphs": [
+                "规则实验涵盖迷宫、4×4数独、辅助线构造、序列预测、找词与三维投影，并加入更大或更复杂、未用于训练的困难版本。成对验证在这些任务及RISEBench、UniREditBench上优于单图验证；但模型先经过任务域的监督训练，不能把全部提升都归于奖励形式。训练中冻结文字编码器，只更新图像生成骨干，结果说明所测视觉变换能通过这部分参数学习，并不证明已经获得真实世界通用推理。",
+                "最重要的边界是标准答案图的可用性。真实场景可能有多个合理终态，或者根本没有可供验证器查看的答案，此时成对方案的条件就不成立。训练进展还借助另一个多模态模型评分，即使它没有参与数据处理，也不是独立物理环境中的真实性检验。论文自身将世界建模评估限制在显式规则游戏。本站的理解是，细化奖励和提供可核验参照能够改善受控任务的学习，但开放环境、长时交互和不唯一目标仍需新证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据OmniVerifier-C1机制重绘的解释图，不是实验图，也不表示所有真实环境都有唯一答案。",
+            "steps": [
+              "将提示或规则拆成可核验子问题",
+              "逐项判断，规则任务可加入答案图对照",
+              "汇总满足比例并训练分级验证器",
+              "用分级奖励优化生成器，再检查困难任务"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A generated image may contain the right object but the wrong count or position. An all-correct or all-wrong training signal hides such partial progress. OmniVerifier-C1 decomposes requirements into checkable questions and aggregates the satisfied proportion into a graded reward. For explicit-rule tasks such as mazes and Sudoku, the verifier also receives a ground-truth image. The October 15, 2026 preprint carries an author comment saying NeurIPS 2026, with no track specified in the checked metadata; this is not independently verified main-track acceptance.",
+          "sections": [
+            {
+              "heading": "Preserve partial correctness in the reward",
+              "paragraphs": [
+                "The verifier breaks a prompt into questions about object presence, counts and relationships, judges each and scores the proportion satisfied. Two imperfect images can therefore receive different feedback. Decoupled reinforcement learning jointly optimizes local binary decisions and global alignment scores. Binary judgments are not removed: they are moved to a finer level so that every flawed output need not receive the same zero.",
+                "Ordinary text-to-image generation may have no unique answer and is checked against prompt components. For rule-based tasks, pointwise verification must infer the target state before judging the generated result; pairwise verification instead sees a ground-truth image and compares directly. The theoretical argument assumes lossless decomposition, correct subjudgments and quality represented by the number of satisfied conditions. A real verifier can omit requirements or misjudge them, so the formal ranking advantage is not a guarantee against errors or reward exploitation."
+              ]
+            },
+            {
+              "heading": "What the experiments actually measure",
+              "paragraphs": [
+                "An appendix checks local judgments on two hundred held-out binary subquestions. Three authors and two PhD students each label forty, collectively covering the set. Accuracy against these human labels is 67.0% for the Qwen3-VL-8B base verifier, 74.5% after supervised adaptation and 94.0% after additional decoupled reinforcement learning. This is agreement on two hundred subquestion labels, not complete world-task success or five-rater consensus on every question. The annotators’ connection to the study also matters.",
+                "Generation experiments use Stable Diffusion 3.5 Medium and FLUX.1-dev; rule tasks use Qwen-Image-Edit-2509. The reported setup trains each for two hundred steps on sixteen A800 80 GB GPUs. Stable Diffusion’s aggregate GenEval score rises from 0.66 to 0.77, compared with 0.68 using binary rewards; FLUX rises from 0.68 to 0.79, versus 0.70 with binary rewards. GenEval tests object, counting, colour and spatial requirements; these aggregate scores do not mean all images are completely correct. Training curves separately evaluate five hundred held-out prompts, not the denominator for the quoted GenEval scores."
+              ]
+            },
+            {
+              "heading": "An available reference answer is a major condition",
+              "paragraphs": [
+                "The rule benchmark includes mazes, 4×4 Sudoku, auxiliary-line construction, sequence prediction, word search and 3D projection, with larger or more compositional hard variants excluded from training. Pairwise verification outperforms pointwise verification on these tasks, RISEBench and UniREditBench. However, task-domain supervised adaptation precedes reinforcement learning, so all improvement cannot be attributed to reward design alone. The text encoder stays frozen and only the image-generation backbone is updated. This shows that those parameters can learn the tested visual transformations, not general real-world reasoning.",
+                "The central limitation is availability of the ground-truth image. Real environments may have multiple valid end states or no answer for the verifier to inspect, invalidating the pairwise setup. Training progress is also assessed by another multimodal model; being uninvolved in data processing does not make it an independent physical-world test. The paper itself limits world-modeling evidence to explicit-rule games. Our interpretation is that finer rewards and verifiable references improve learning in controlled tasks, while open environments, long interactions and non-unique goals require further evidence."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from OmniVerifier-C1; not an experimental figure or a claim that real environments always have unique answers.",
+            "steps": [
+              "Decompose prompts or rules into checkable questions",
+              "Judge components, optionally against a rule-task reference image",
+              "Aggregate satisfaction and train the graded verifier",
+              "Optimize the generator and test harder tasks"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "生成画像は物体が合っていても、個数や位置が違うことがある。訓練信号が「全部正しい」か「全部違う」だけでは部分的な進歩を見分けにくい。OmniVerifier-C1は要件を確認可能な小問へ分け、満たした割合を段階的な報酬にする。迷路や数独では検証器に正解画像も与える。2026年10月15日のプレプリントの著者コメントはNeurIPS 2026と記すが、確認したメタデータにはトラックがなく、独立に確認された本会議採択とは扱えない。",
+          "sections": [
+            {
+              "heading": "部分的な正しさを報酬に残す",
+              "paragraphs": [
+                "検証器は指示を物体の存在、数、関係などの小問に分け、個別に判定して満たした数の割合を得点にする。完全ではない二枚にも異なるフィードバックを返せる。分離型の強化学習は局所の二値判断と全体の一致得点を同時に最適化する。二値判断をなくすのでなく細かな単位へ移し、欠点のある画像がすべて同じゼロ点になるのを避ける。",
+                "通常の文からの画像生成には唯一の正解がないため、指示の各要素を点検する。規則課題の単体検証では、正しい終状態を推論してから画像を評価する。対比較検証は正解画像を直接見て比較する。理論は要件を情報損失なく分解でき、小問判定が正しく、満たした条件数が品質を表すと仮定する。実際には要件の落としや誤判定があり得るため、順位付けの形式的優位は誤りや報酬の抜け道を完全になくす保証ではない。"
+              ]
+            },
+            {
+              "heading": "何を測った実験なのか",
+              "paragraphs": [
+                "付録は未学習の二値小問200件で局所判断を調べる。著者3人と博士課程学生2人が各40件を担当し、全体を覆う。人のラベルに対する正解率はQwen3-VL-8Bの基礎検証器67.0%、教師あり適応後74.5%、分離型強化学習を加えた後94.0%。200件のラベル一致率であり、世界課題全体の成功率でも全問について5人が一致した結果でもない。評価者が研究チームと関係する点も残る。",
+                "画像生成にはStable Diffusion 3.5 MediumとFLUX.1-dev、規則課題にはQwen-Image-Edit-2509を用い、設定上は各200ステップ、A800 80 GBを16基使用する。Stable DiffusionのGenEval総合得点は0.66から0.77、二値報酬では0.68。FLUXは0.68から0.79、二値では0.70だった。GenEvalは物体、計数、色、位置などを検査する総合指標で、画像のすべてが完全に正しいという意味ではない。訓練曲線用の別の留保提示500件を、このGenEval得点の分母と混同してはならない。"
+              ]
+            },
+            {
+              "heading": "正解画像を使えることが大きな条件",
+              "paragraphs": [
+                "規則課題は迷路、4×4数独、補助線、系列予測、単語探索、三次元投影の六種。大きさや構成を難しくした未学習版も含む。対比較はこれらとRISEBench、UniREditBenchで単体検証を上回るが、先に課題領域の教師あり適応を行っており、改善全体を報酬だけに帰せない。文字エンコーダは固定し画像生成の基幹部だけを更新する。そこで学べたのは試した視覚変換で、実世界一般の推論を証明したわけではない。",
+                "最大の制約は正解画像の存在だ。現実には妥当な終状態が複数あったり、検証器が見られる答え自体がなかったりする。そうした場合は対比較の条件が成立しない。学習進捗も別のマルチモーダルモデルで評価しており、データ処理に参加していなくても物理世界での独立検証ではない。論文自身も世界モデルの実証を明示規則ゲームに限定する。細かな報酬と検証可能な参照は制御された課題に有用だが、開放環境、長期相互作用、非一意目標には別の証拠が必要、というのが本サイトの解釈である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本サイトがOmniVerifier-C1の機構を描き直した説明図。実験図ではなく、現実の全環境に唯一の正解があるという主張でもない。",
+            "steps": [
+              "提示や規則を確認可能な小問へ分解",
+              "各項目を判定し、規則課題では正解画像とも比較",
+              "満たした割合を集計して検証器を学習",
+              "報酬で生成器を改善し難しい課題で評価"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "На сгенерированном изображении объект может быть правильным, а его количество или положение — нет. Сигнал «всё верно» либо «всё неверно» скрывает частичный прогресс. OmniVerifier-C1 разбивает требования на проверяемые вопросы и использует долю выполненных как градуированную награду. В лабиринтах и судоку проверяющая модель также видит эталонное изображение. У препринта от 15 октября 2026 года есть авторский комментарий NeurIPS 2026 без указанного трека; это не независимое подтверждение принятия в основной трек.",
+          "sections": [
+            {
+              "heading": "Сохранить частичную правильность в награде",
+              "paragraphs": [
+                "Верификатор превращает запрос в вопросы о наличии объектов, количестве и отношениях, проверяет каждый и вычисляет долю выполненных требований. Два несовершенных изображения получают различную обратную связь. Разделённое обучение с подкреплением совместно оптимизирует локальные бинарные решения и глобальное соответствие. Бинарная проверка не исчезает: она переносится на более мелкий уровень, чтобы любая ошибка не обнуляла весь результат.",
+                "При обычной генерации по тексту единственного ответа может не быть, поэтому проверяются компоненты запроса. В задачах с правилами поточечная проверка сначала выводит целевое состояние и затем судит изображение; парная получает эталон и сравнивает непосредственно. Теория предполагает разложение без потерь, правильные локальные решения и качество, определяемое числом соблюдённых условий. Реальный верификатор может пропустить условие или ошибиться, поэтому формальное преимущество ранжирования не гарантирует отсутствия ошибок и эксплуатации награды."
+              ]
+            },
+            {
+              "heading": "Что именно проверяют эксперименты",
+              "paragraphs": [
+                "Приложение оценивает локальные решения на двухстах отложенных бинарных вопросах. Три автора и два аспиранта размечают по сорок, вместе покрывая набор. Точность относительно этих человеческих меток составляет 67,0% у базового Qwen3-VL-8B, 74,5% после обучения с учителем и 94,0% после добавления разделённого обучения с подкреплением. Это совпадение меток двухсот подвопросов, не успех полной задачи и не согласие всех пяти людей по каждому вопросу. Связь разметчиков с исследованием также существенна.",
+                "Генерация проверяется на Stable Diffusion 3.5 Medium и FLUX.1-dev, задачи с правилами — на Qwen-Image-Edit-2509. Описанный режим — двести шагов на шестнадцати A800 с 80 GB для каждой модели. Общая оценка GenEval у Stable Diffusion растёт с 0,66 до 0,77 против 0,68 с бинарной наградой; у FLUX — с 0,68 до 0,79 против 0,70. GenEval проверяет объекты, счёт, цвет и расположение. Эти агрегаты не означают полную правильность всех картинок. Пятьсот отложенных запросов для кривых обучения — отдельная оценка, не знаменатель приведённых баллов GenEval."
+              ]
+            },
+            {
+              "heading": "Доступный эталон — существенное условие",
+              "paragraphs": [
+                "Задачи с правилами включают лабиринты, судоку 4×4, вспомогательные линии, продолжение последовательности, поиск слов и трёхмерные проекции, а также более крупные или составные трудные варианты вне обучения. Парная проверка превосходит поточечную здесь, на RISEBench и UniREditBench. Но перед обучением с подкреплением выполняется предметная адаптация с учителем: весь прирост нельзя приписать награде. Текстовый энкодер заморожен, меняется только основа генератора изображений. Это показывает обучение конкретным визуальным преобразованиям, не общее рассуждение о реальном мире.",
+                "Главное ограничение — доступность эталонного изображения. В реальной среде возможны несколько правильных конечных состояний либо вообще нет ответа для сравнения, и предпосылка парной проверки исчезает. Прогресс обучения оценивает ещё одна мультимодальная модель; её неучастие в подготовке данных не превращает оценку в независимый физический эксперимент. Авторы ограничивают свидетельства мирового моделирования играми с явными правилами. Наша интерпретация: детальная награда и проверяемый эталон помогают в контролируемых задачах, но открытые среды, длительное взаимодействие и неоднозначные цели требуют новых доказательств."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема OmniVerifier-C1, перерисованная сайтом; не экспериментальный рисунок и не утверждение о единственном ответе в любой реальной среде.",
+            "steps": [
+              "Разбить запрос или правила на проверяемые вопросы",
+              "Проверить части, при наличии — относительно эталонной картинки",
+              "Агрегировать долю выполнения и обучить верификатор",
+              "Оптимизировать генератор и проверить трудные задачи"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一張生成影像可能畫對了物體，卻畫錯數量或位置。如果訓練只得到“全對”或“全錯”，模型很難知道改進發生在哪裡。OmniVerifier-C1把要求拆成可檢查的小問題，再將滿足的比例匯成分級獎勵；在迷宮、數獨等有明確規則的任務中，還讓驗證器對照標準答案圖。論文於2026年10月15日發表預印本，作者註明NeurIPS 2026，但未在所核對後設資料中說明軌道，不能據此補寫為已獨立核實的主會錄用。",
+          "sections": [
+            {
+              "heading": "把部分正確保留在獎勵裡",
+              "paragraphs": [
+                "驗證器先把文字要求拆成若干子問題，例如物件是否出現、數量是否正確、關係是否滿足；逐項判斷後，以通過項數佔總項數的比例打分。這樣，兩張都不完美的圖仍能區分誰滿足更多條件。訓練採用解耦強化學習，同時最佳化局部二元判斷與整體匹配評分。它不是取消對錯判斷，而是把判斷放到更細的層級，避免所有有瑕疵的輸出都收到同一個零分。",
+                "普通文生圖未必有唯一答案，主要按提示逐項評估。規則任務則分兩種：單圖驗證必須先推理目標狀態再判斷生成圖；成對驗證直接看到標準答案圖，比較生成結果與目標。理論分析假設要求能無損拆分、子判斷正確，用滿足條件的數量代表品質；真實驗證器仍可能漏拆或誤判，所以形式上的排序優勢不能解釋成絕不會獎勵投機或出錯。"
+              ]
+            },
+            {
+              "heading": "實驗檢驗了什麼能力",
+              "paragraphs": [
+                "附錄用200條未參與訓練的二元子問題檢查局部判斷，三位作者和兩位博士生各標註40條，共同覆蓋全部樣本。相對這些人類標籤，Qwen3-VL-8B基礎驗證器準確率為67.0%，監督訓練後為74.5%，再加解耦強化學習為94.0%。這是200個子問題的標籤一致率，不是完整世界任務的成功率，也不是五人對每條都一致通過；評判者與論文團隊的關聯亦應保留。",
+                "影像生成實驗使用Stable Diffusion 3.5 Medium和FLUX.1-dev，規則任務使用Qwen-Image-Edit-2509，均按文中設定訓練200步、使用16塊A800 80GB。Stable Diffusion的GenEval綜合分從0.66提升到0.77，二元獎勵對照為0.68；FLUX從0.68到0.79，二元對照0.70。GenEval檢查物件、計數、顏色、位置等語義要求，這些綜合分不等於所有圖都完全正確。訓練曲線另在500條留出提示上評估，不應把500誤當作上述GenEval分數的樣本分母。"
+              ]
+            },
+            {
+              "heading": "有答案可對照，是重要前提",
+              "paragraphs": [
+                "規則實驗涵蓋迷宮、4×4數獨、輔助線構造、序列預測、找詞與三維投影，並加入更大或更複雜、未用於訓練的困難版本。成對驗證在這些任務及RISEBench、UniREditBench上優於單圖驗證；但模型先經過任務域的監督訓練，不能把全部提升都歸於獎勵形式。訓練中凍結文字編碼器，只更新影像生成骨幹，結果說明所測視覺變換能透過這部分參數學習，並不證明已經獲得真實世界通用推理。",
+                "最重要的邊界是標準答案圖的可用性。真實場景可能有多個合理終態，或者根本沒有可供驗證器檢視的答案，此時成對方案的條件就不成立。訓練進展還藉助另一個多模態模型評分，即使它沒有參與資料處理，也不是獨立物理環境中的真實性檢驗。論文自身將世界建模評估限制在顯式規則遊戲。本站的理解是，細化獎勵和提供可核驗參照能夠改善受控任務的學習，但開放環境、長時互動和不唯一目標仍需新證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據OmniVerifier-C1機制重繪的解釋圖，不是實驗圖，也不表示所有真實環境都有唯一答案。",
+            "steps": [
+              "將提示或規則拆成可核驗子問題",
+              "逐項判斷，規則任務可加入答案圖對照",
+              "彙總滿足比例並訓練分級驗證器",
+              "用分級獎勵最佳化生成器，再檢查困難任務"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "mpt-decentralized-agent-self-orchestration",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "Learning Self-Orchestration in Decentralized Agent Swarms · original v1",
+          "url": "https://arxiv.org/html/2610.22322v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22322v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "多 Agent 系统不只需要每个成员会做事，还要知道什么时候该由谁接手。固定轮流或主管分派容易忽略一个变化：成员在训练中进步，原来的分工未必仍然合适。MPT 把行动能力与参与选择一起学习，让每个 Agent 根据当前情境表达参与意愿，再把任务结果反馈给实际参与的成员。",
+          "sections": [
+            {
+              "heading": "竞价同时决定行动机会和训练反馈",
+              "paragraphs": [
+                "每轮各 Agent 独立给出一个参与分数，最高者行动，分数相同时随机选择；全为零则跳过该轮。这里的竞价是分配工作机会的机制，不涉及金钱交易。被选中的分数还决定它将多少后续价值传回此前的参与者：后面的成功能奖励前面准备资源或寻找证据的步骤，而不只奖励最后作答的人。各成员有独立参数，行动更新只使用自己实际执行的步骤。",
+                "学习“何时接手”需要另一类证据。系统保存一个发生竞争的环境状态，在副本中降低原赢家的分数，让第二位成员行动，再比较两条分支后续的总回报。表现较好的竞价被用于偏好学习。训练交替进行行动与竞价更新，两者修改同一个 Agent 的参数。因此它不是给现成成员套上固定路由器，而是让能力和分工相互适应；代价是需要能够恢复环境及成员状态。"
+              ]
+            },
+            {
+              "heading": "把协作收益与单体能力分开比较",
+              "paragraphs": [
+                "作者考察三种环境，每种使用三个互补角色：Minecraft 制作中的采木、采矿和制作；Habitat 仿真导航中的转向、前进和停止；文档研究中的搜索、打开和查找。导航结果来自仿真，不是实体机器人试验。与单体强化学习的训练计算量对齐时，作者计入所有成员的竞价、行动生成、反事实分支和参数更新，避免只计算最终行动那一部分成本。",
+                "独立评估包含 32 个未见游戏世界种子、88 个未见导航回合和 50 道研究问题，每个实例运行三次后求平均。MPT 与单体对照的平均回合奖励分别为制作 41.5 对 20.3、导航 1.23 对 0.52；这些奖励不是完成率，不能跨任务直接比较。研究问答正确率为 21.0% 对 9.0%。固定训练后的行动策略、只换协调方式时，制作任务的 MPT 奖励为 41.5，最强替代方式 Graph-of-Agents 为 25.4，对应相对提升 63.4%，不是成功率提高 63.4 个百分点。"
+              ]
+            },
+            {
+              "heading": "增加成员有帮助，但仍依赖可验证环境",
+              "paragraphs": [
+                "把已经训练好的三个角色各复制一至四份，可将推理群体从 3 个成员扩到 12 个。作者在同样的 32 个世界种子上每个运行三次，以三次至少成功一次的 pass@3 评估制作里程碑，观察到更多成员带来改善，并缓解随机成员不可用的影响。这说明学到的参与机制能利用额外候选，但增加竞价者仍有计算开销，结果并不证明成员越多就一定越经济。",
+                "方法依赖可靠的外部任务奖励；结果主观或难以核实时，行动与竞价可能一起学偏。反事实训练还要从同一状态重试不同选择，难以直接搬到无法撤销的真实操作。作者没有验证由多个超过 10B 参数模型组成的训练群体，也没有共同训练大规模成员网络。对系统设计的启发是把“谁来做”作为可学习决策，并单独评估它的贡献；这仍有别于证明任意开放协作都能自行形成有效分工。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释图：竞价分配行动机会，实际回报与反事实比较分别训练行动和参与选择，不复现实验曲线。",
+            "steps": [
+              "成员依据情境提出参与分数",
+              "最高分成员行动并得到环境反馈",
+              "将后续回报分配给先前参与步骤",
+              "比较可恢复分支并更新行动与竞价"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A multi-agent system needs more than capable members: it must decide who should take over and when. Fixed rotation or managerial assignment can miss a changing fact—members improve during training, so yesterday’s division of work may no longer fit. MPT learns actions and participation together. Agents express their willingness to act in the current situation, and task outcomes provide feedback to those who participated.",
+          "sections": [
+            {
+              "heading": "Bids allocate both opportunities and learning credit",
+              "paragraphs": [
+                "Each agent independently submits a participation score. The highest bidder acts, ties are broken randomly, and a turn is skipped if all bids are zero. This is a work-allocation mechanism, not a monetary transaction. The winning bid also controls how much downstream value passes back to earlier participants, allowing later success to reward preparatory resource gathering or evidence search rather than only the final answer. Members have separate parameters and update action behaviour from turns in which they actually acted.",
+                "Learning when to participate requires another comparison. The system restores a contested environment state in a replica, lowers the original winner’s bid so that the runner-up acts, and compares the subsequent returns of both branches. The better bid becomes a preference-learning target. Action and bidding updates alternate and affect the same agent parameters. This jointly adapts skills and division of labour rather than placing a fixed router over unchanged agents, but requires restoring both environment and agent states."
+              ]
+            },
+            {
+              "heading": "Separate coordination gains from individual capability",
+              "paragraphs": [
+                "Three environments each use three complementary roles: gathering wood, mining and crafting in Minecraft; turning, moving and stopping in Habitat navigation; and searching, opening and finding within document research. Navigation is simulated, not a physical robot experiment. Training-compute comparisons with monolithic reinforcement learning include every member’s bid generation, actions, counterfactual branches and parameter updates, rather than counting only the selected action.",
+                "Held-out evaluation uses 32 unseen game-world seeds, 88 unseen navigation episodes and 50 research questions, with three runs averaged per instance. MPT versus the monolithic baseline achieves mean episode rewards of 41.5 versus 20.3 for crafting and 1.23 versus 0.52 for navigation. These are rewards, not completion rates, and are not comparable across tasks. Research-answer accuracy is 21.0% versus 9.0%. Holding trained action policies fixed while changing coordination yields a crafting reward of 41.5 for MPT versus 25.4 for the strongest alternative, Graph-of-Agents: a relative gain of 63.4%, not a 63.4-percentage-point gain in success."
+              ]
+            },
+            {
+              "heading": "Larger populations still need verifiable environments",
+              "paragraphs": [
+                "Copying each trained role one to four times expands the inference population from 3 to 12 agents. Across the same 32 seeds with three runs each, the authors evaluate crafting milestones using pass@3, meaning success in at least one of three attempts. Additional members improve performance and reduce the effect of random member unavailability. This shows that the participation mechanism can use extra candidates, but more bidders still consume computation; it does not establish that larger populations are always more economical.",
+                "The method depends on reliable external rewards. Subjective or difficult-to-verify outcomes could misdirect both action learning and bidding. Counterfactual training also needs alternative attempts from the same state, limiting direct application to irreversible real-world operations. The authors do not evaluate training swarms with multiple models above 10B parameters or jointly training substantially larger populations. Treating “who acts” as a learnable decision and measuring its contribution separately is the design lesson; effective self-organization in arbitrary open-ended collaboration remains unproven."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: bids allocate turns, while returns and counterfactual comparisons train actions and participation; not an experimental curve.",
+            "steps": [
+              "Agents propose participation scores from context",
+              "The highest bidder acts and receives environmental feedback",
+              "Allocate downstream returns to earlier participation",
+              "Compare restorable branches and update actions and bids"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "複数 Agent のシステムでは、各メンバーが作業できるだけでなく、誰がいつ引き継ぐかも重要です。固定の順番や管理役の割り当てでは、学習でメンバーが成長した後も古い分担を続ける可能性があります。MPT は動作と参加の選択を一緒に学習します。各 Agent が状況に応じて参加意欲を示し、実際に参加したメンバーへ課題の結果を返します。",
+          "sections": [
+            {
+              "heading": "入札で行動機会と学習上の貢献を配分する",
+              "paragraphs": [
+                "各 Agent は独立に参加スコアを出し、最高得点のメンバーが動作します。同点ならランダムに選び、全員ゼロならそのターンを飛ばします。この入札は仕事の割り当てであり、金銭取引ではありません。選ばれたスコアは後続の価値を先行メンバーへどれだけ戻すかも決めます。最後の回答だけでなく、資源収集や証拠探しなどの準備にも後の成功を反映できます。メンバーは別々のパラメータを持ち、自分が行動したターンから動作を学びます。",
+                "いつ参加すべきかは別の比較で学びます。競合があった状態を複製環境で復元し、元の勝者のスコアを下げて次点のメンバーを動かし、二つの分岐の後続リターンを比べます。良い結果を出した入札を選好学習の目標にします。動作と入札の更新を交互に行い、同じ Agent のパラメータを変更するため、固定ルーターを載せるのではなく能力と分担が一緒に適応します。ただし環境と Agent の状態を復元できることが必要です。"
+              ]
+            },
+            {
+              "heading": "個体の能力と協調の効果を分ける",
+              "paragraphs": [
+                "三種類の環境でそれぞれ三つの役割を使います。Minecraft の木材収集・採掘・制作、Habitat の方向転換・前進・停止、文書調査の検索・閲覧・文中探索です。ナビゲーションはシミュレーションで、実機ロボットの試験ではありません。単一 Agent の強化学習と計算量をそろえる際は、全員の入札、行動生成、反実仮想の分岐、パラメータ更新を含め、実行された動作だけを数えないようにしています。",
+                "留出評価は未見のゲーム世界シード 32 個、未見の移動エピソード 88 件、調査問題 50 問で、各例を三回実行して平均します。MPT と単体対照の平均エピソード報酬は制作で 41.5 対 20.3、移動で 1.23 対 0.52 でした。報酬は完了率ではなく、異なる課題間で直接比較できません。調査回答の正答率は 21.0% 対 9.0% です。訓練済み動作方策を固定し協調だけ変えると、制作報酬は MPT の 41.5 に対して最良の代替 Graph-of-Agents が 25.4。相対改善 63.4% であり、成功率が 63.4 ポイント増えた意味ではありません。"
+              ]
+            },
+            {
+              "heading": "人数を増やしても検証可能な環境が必要",
+              "paragraphs": [
+                "学習済みの各役割を一つから四つに複製し、推論時の人数を 3 から 12 に増やします。同じ 32 シードで三回ずつ試し、三回のうち少なくとも一度成功する pass@3 で制作の中間目標を評価すると、人数の増加で改善し、メンバーがランダムに使えなくなる影響も小さくなりました。参加機構が追加候補を利用できる結果ですが、入札者が増えれば計算も増えるため、大人数が常に安価という証拠ではありません。",
+                "手法は信頼できる外部報酬に依存し、結果が主観的だったり検証困難だったりすれば、行動と入札の両方を誤って学び得ます。同じ状態から別の選択を試す必要があり、取り消せない実世界の操作への直接適用も未解決です。10B を超えるモデルを複数含む群れの訓練や、さらに大規模な集団の共同訓練は検証していません。「誰が動くか」も学習し、その寄与を個体能力と分けて測る点が設計上の示唆であり、任意の共同作業で有効な分担が自然に生じる保証ではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。入札でターンを配分し、報酬と反実仮想比較から動作・参加を学ぶ流れで、実験曲線ではありません。",
+            "steps": [
+              "各メンバーが状況から参加スコアを提示",
+              "最高得点のメンバーが行動し反応を得る",
+              "後続の報酬を先行する参加へ配分",
+              "復元可能な分岐を比較し動作と入札を更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Системе из нескольких агентов нужны не только умелые участники, но и понимание того, кто и когда должен действовать. Фиксированная очередь или распределение задач руководителем могут устаревать по мере обучения участников. MPT совместно обучает действия и выбор участия: агент выражает готовность действовать в текущей ситуации, а результат задачи становится обратной связью для тех, кто действительно участвовал.",
+          "sections": [
+            {
+              "heading": "Заявки распределяют действия и обучающий сигнал",
+              "paragraphs": [
+                "Каждый агент независимо выдаёт оценку готовности участвовать. Действует участник с максимальной оценкой; равенство разрешается случайно, а при всех нулевых оценках ход пропускается. Это механизм распределения работы, а не денежная торговля. Победившая заявка также определяет, какая доля последующей ценности передаётся предыдущим участникам. Успех может поощрять подготовительный сбор ресурсов или поиск свидетельств, а не только финальный ответ. У агентов отдельные параметры, и действия они обучают на ходах, которые выполняли сами.",
+                "Для обучения моменту участия нужно дополнительное сравнение. Система восстанавливает спорное состояние в копии среды, снижает заявку прежнего победителя, чтобы действовал следующий участник, и сравнивает дальнейшую суммарную награду двух ветвей. Более удачная заявка становится предпочтительной в обучении. Обновления действий и заявок чередуются и меняют параметры одного агента. Так умения и разделение работы адаптируются вместе, вместо фиксированной маршрутизации неизменных исполнителей; однако требуются восстановимые состояния среды и агентов."
+              ]
+            },
+            {
+              "heading": "Отделить координацию от индивидуальной способности",
+              "paragraphs": [
+                "В трёх средах используются по три взаимодополняющие роли: сбор дерева, добыча и изготовление в Minecraft; поворот, движение и остановка в Habitat; поиск, открытие и нахождение сведений при работе с документами. Навигация проверяется в симуляторе, а не на физическом роботе. Сопоставляя вычислительные бюджеты с монолитным обучением с подкреплением, авторы учитывают генерацию заявок всеми участниками, действия, контрфактические ветви и обновления параметров, а не только выбранное действие.",
+                "Отложенная оценка включает 32 новых начальных состояния игровых миров, 88 новых навигационных эпизодов и 50 исследовательских вопросов, каждый пример повторяется трижды. Средняя награда MPT и монолитного варианта равна 41.5 и 20.3 для изготовления, 1.23 и 0.52 для навигации. Это награды, а не доли завершения; сравнивать их между задачами нельзя. Точность исследовательских ответов — 21.0% против 9.0%. При фиксированных обученных действиях и смене только координации награда MPT равна 41.5 против 25.4 у лучшей альтернативы Graph-of-Agents: относительный выигрыш 63.4%, не прирост успешности на 63.4 процентного пункта."
+              ]
+            },
+            {
+              "heading": "Больше участников не отменяет требования к среде",
+              "paragraphs": [
+                "Копируя каждую обученную роль от одного до четырёх раз, авторы увеличивают число участников при выводе с 3 до 12. На тех же 32 начальных состояниях с тремя запусками оценивают промежуточные цели по pass@3 — успех хотя бы в одной из трёх попыток. Дополнительные участники улучшают результат и уменьшают влияние случайной недоступности членов группы. Механизм использует дополнительных кандидатов, но их заявки тоже требуют вычислений; большая группа не обязательно экономичнее.",
+                "Нужна надёжная внешняя оценка результата. Субъективная или трудно проверяемая награда может неверно направлять и действия, и заявки. Контрфактическое обучение требует альтернативных попыток из одного состояния, что ограничивает прямое применение к необратимым реальным операциям. Не проверено обучение групп из нескольких моделей крупнее 10B параметров или совместное обучение значительно более крупных коллективов. Выбор исполнителя полезно делать обучаемым и оценивать отдельно от его способности, но эффективная самоорганизация в произвольном открытом сотрудничестве пока не доказана."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: заявки распределяют ходы, а награды и контрфактические сравнения обучают действия и участие; это не экспериментальная кривая.",
+            "steps": [
+              "Участники оценивают готовность действовать",
+              "Победитель действует и получает обратную связь среды",
+              "Передать часть последующих наград прежним участникам",
+              "Сравнить восстановимые ветви и обновить действия и заявки"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "多 Agent 系統不只需要每個成員會做事，還要知道什麼時候該由誰接手。固定輪流或主管分派容易忽略一個變化：成員在訓練中進步，原來的分工未必仍然合適。MPT 把行動能力與參與選擇一起學習，讓每個 Agent 根據當前情境表達參與意願，再把任務結果回饋給實際參與的成員。",
+          "sections": [
+            {
+              "heading": "競價同時決定行動機會和訓練回饋",
+              "paragraphs": [
+                "每輪各 Agent 獨立給出一個參與分數，最高者行動，分數相同時隨機選擇；全為零則跳過該輪。這裡的競價是分配工作機會的機制，不涉及金錢交易。被選中的分數還決定它將多少後續價值傳回此前的參與者：後面的成功能獎勵前面準備資源或尋找證據的步驟，而不只獎勵最後作答的人。各成員有獨立參數，行動更新只使用自己實際執行的步驟。",
+                "學習“何時接手”需要另一類證據。系統儲存一個發生競爭的環境狀態，在副本中降低原贏家的分數，讓第二位成員行動，再比較兩條分支後續的總回報。表現較好的競價被用於偏好學習。訓練交替進行行動與競價更新，兩者修改同一個 Agent 的參數。因此它不是給現成成員套上固定路由器，而是讓能力和分工相互適應；代價是需要能夠恢復環境及成員狀態。"
+              ]
+            },
+            {
+              "heading": "把協作收益與單體能力分開比較",
+              "paragraphs": [
+                "作者考察三種環境，每種使用三個互補角色：Minecraft 製作中的採木、採礦和製作；Habitat 模擬導航中的轉向、前進和停止；文件研究中的搜尋、開啟和查詢。導航結果來自模擬，不是實體機器人試驗。與單體強化學習的訓練計算量對齊時，作者計入所有成員的競價、行動生成、反事實分支和參數更新，避免只計算最終行動那一部分成本。",
+                "獨立評估包含 32 個未見遊戲世界種子、88 個未見導航回合和 50 道研究問題，每個實例執行三次後求平均。MPT 與單體對照的平均回合獎勵分別為製作 41.5 對 20.3、導航 1.23 對 0.52；這些獎勵不是完成率，不能跨任務直接比較。研究問答正確率為 21.0% 對 9.0%。固定訓練後的行動策略、只換協調方式時，製作任務的 MPT 獎勵為 41.5，最強替代方式 Graph-of-Agents 為 25.4，對應相對提升 63.4%，不是成功率提高 63.4 個百分點。"
+              ]
+            },
+            {
+              "heading": "增加成員有幫助，但仍依賴可驗證環境",
+              "paragraphs": [
+                "把已經訓練好的三個角色各複製一至四份，可將推理群體從 3 個成員擴到 12 個。作者在同樣的 32 個世界種子上每個執行三次，以三次至少成功一次的 pass@3 評估製作里程碑，觀察到更多成員帶來改善，並緩解隨機成員不可用的影響。這說明學到的參與機制能利用額外候選，但增加競價者仍有計算開銷，結果並不證明成員越多就一定越經濟。",
+                "方法依賴可靠的外部任務獎勵；結果主觀或難以核實時，行動與競價可能一起學偏。反事實訓練還要從同一狀態重試不同選擇，難以直接搬到無法撤銷的真實操作。作者沒有驗證由多個超過 10B 參數模型組成的訓練群體，也沒有共同訓練大規模成員網路。對系統設計的啟發是把“誰來做”作為可學習決策，並單獨評估它的貢獻；這仍有別於證明任意開放協作都能自行形成有效分工。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋圖：競價分配行動機會，實際回報與反事實比較分別訓練行動和參與選擇，不重現實驗曲線。",
+            "steps": [
+              "成員依據情境提出參與分數",
+              "最高分成員行動並得到環境回饋",
+              "將後續回報分配給先前參與步驟",
+              "比較可恢復分支並更新行動與競價"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "knowgpo-knowledge-grouped-search",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "KnowGPO: Knowledge-Grouped Policy Optimization for Search Agents · original v1",
+          "url": "https://arxiv.org/html/2610.22331v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22331v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "搜索 Agent 最后答对了，不代表中间每次搜索都有价值；答错了，也不代表已经找到的关键证据没有帮助。KnowGPO 试图把训练反馈分得更细：先问系统已经掌握哪些回答所需的事实，再比较从相同知识起点出发的搜索，奖励真正带来新证据的步骤，而不只把最终成败平均分给整条轨迹。",
+          "sections": [
+            {
+              "heading": "把已知事实作为可比较的状态",
+              "paragraphs": [
+                "训练时，每道问题都有参考答案和至少一条成功的参考搜索轨迹。系统先从问题提取推理框架，为未知实体留出位置，再用答案与成功轨迹补齐，形成一组单步、可核验的事实条件。另一个语言模型检查搜索获得的资料支持了哪些条件，系统把已满足条件累计起来。这些集合相同的搜索步骤，即使访问的页面或措辞不同，也可以被放进同一组比较。",
+                "每一步新满足了多少条件，就提供多少知识增量信号；在相同先前知识状态的组内比较，避免把已经找到大部分答案的步骤与刚开始探索的步骤混为一谈。训练同时保留最终回答正确与否的奖励，防止模型只顾收集局部信息却不完成任务。这里的知识检查是训练监督，不是让部署时的 Agent 预先拿到问题答案；它也不是模型单纯根据自己的信心给自己打分。"
+              ]
+            },
+            {
+              "heading": "哪些实验支持这种奖励分配",
+              "paragraphs": [
+                "核心对照都从同一 Qwen3-8B 监督微调模型出发，使用相同数据、工具环境和训练配置，只改变奖励与优势估计。强化学习使用 649 道筛选后的训练问题。评估覆盖 Xbench 的两个分集、BrowseComp-ZH 和 GAIA 的纯文本子集，每项报告三次独立运行的平均正确率，由 GPT-4o 按参考答案判断最终回答。GAIA 结果因此不能解释为完整多模态基准的成绩。",
+                "在 BrowseComp-ZH 上，作者报告 KnowGPO 为 38.8%，仅使用终局奖励的 GRPO 为 32.9%，最强过程监督对照 GiGPO 为 37.3%；差值分别是 5.9 和 1.5 个百分点。GAIA 纯文本上为 40.2%，对比 GRPO 的 35.0% 和 IGPO 的 37.9%，对应 5.2 和 2.3 个百分点。这些是被判定答对的问题比例，不是检索召回率。另列的较大搜索系统使用不同数据或工具，其分数只作背景，不能视为严格控制变量的模型规模比较。"
+              ]
+            },
+            {
+              "heading": "知识条件的质量决定监督是否可靠",
+              "paragraphs": [
+                "在 500 道问题产生的 5,922 条有效轨迹、55,571 个步骤上，知识分组让 97.8% 的步骤进入至少含两个步骤的组，按检索内容相似度分组则为 51.8%。这意味着更多步骤有可比较的同伴，不等于它们的知识判断都有 97.8% 的准确率。检查器另在 200 对留出的问题与轨迹上评估，DeepSeek-v3.2 的逐条件判断与人工标注一致率为 94.7%，仍有误差可能传入训练反馈。",
+                "方法要求进展能拆成有限、可验证的事实，并能以合理成本取得成功参考轨迹，因而不天然适合开放式创作或难以定义正确答案的任务。已满足条件只增加不撤回，可以缓解短暂判断波动，却也可能保留错误认定。作者只训练了 Qwen3-8B，尚未证明效果能迁移到明显更大、更小或不同推理训练的骨干。实践上的启发是把搜索进展与最终答案一起评估，而不是把知识检查器当作不会出错的真值来源。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释图：在训练中按已获知识比较搜索步骤，并结合最终回答奖励；不是部署时向 Agent 提供标准答案。",
+            "steps": [
+              "从问题与成功参考构建事实条件",
+              "检查每步取得的证据并累计知识状态",
+              "比较相同起点下的新增知识",
+              "结合最终回答结果更新搜索策略"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A correct final answer does not make every intermediate search useful, and a wrong answer does not erase the value of evidence already found. KnowGPO makes training feedback more specific: identify which necessary facts are already known, compare searches that start from the same knowledge position, and reward steps that acquire new evidence rather than broadcasting a single final outcome across the whole trajectory.",
+          "sections": [
+            {
+              "heading": "Represent progress as a set of established facts",
+              "paragraphs": [
+                "During training, each question has a reference answer and at least one successful reference trajectory. The system first extracts a reasoning skeleton with placeholders for unknown entities, then grounds it using the answer and successful search. This produces atomic, verifiable factual conditions. Another language model checks which conditions are supported by retrieved material, and satisfied conditions accumulate. Steps with the same acquired set can be compared even if their pages or wording differ.",
+                "The number of newly satisfied conditions supplies an incremental reward. Comparing within groups that share the same preceding knowledge state avoids treating early exploration as equivalent to a step taken after most evidence is known. Training also retains the reward for final-answer correctness so that local information gathering does not replace finishing the task. Knowledge checking is training supervision, not a requirement to hand deployment-time agents the answer in advance, and not merely self-reported confidence."
+              ]
+            },
+            {
+              "heading": "Controlled evidence for the credit-assignment method",
+              "paragraphs": [
+                "The main comparisons start from the same supervised Qwen3-8B checkpoint with identical data, tools and training settings; reward design and advantage estimation differ. Reinforcement learning uses 649 selected training questions. Evaluation covers two Xbench splits, BrowseComp-ZH and the text-only subset of GAIA. Scores are mean accuracy over three independent runs, with GPT-4o judging final responses against reference answers. The GAIA result therefore does not represent the complete multimodal benchmark.",
+                "On BrowseComp-ZH, the authors report 38.8% for KnowGPO, 32.9% for outcome-only GRPO and 37.3% for the strongest process-supervision comparison, GiGPO: gains of 5.9 and 1.5 percentage points. On text-only GAIA, 40.2% compares with GRPO’s 35.0% and IGPO’s 37.9%, differences of 5.2 and 2.3 points. These measure questions judged correctly answered, not retrieval recall. Separately listed larger search systems use different data or tools; their scores provide context rather than a controlled test of model scale."
+              ]
+            },
+            {
+              "heading": "The supervision is only as sound as its knowledge checks",
+              "paragraphs": [
+                "An analysis of 500 questions produces 5,922 valid trajectories and 55,571 steps. Knowledge grouping places 97.8% of steps in groups containing at least two steps, compared with 51.8% when grouping by retrieved-content similarity. More steps therefore have peers for comparison; this is not 97.8% knowledge-verification accuracy. In a separate assessment of 200 held-out question–trajectory pairs, DeepSeek-v3.2’s condition-level judgements agree with human annotations 94.7% of the time. Remaining errors can enter the learning signal.",
+                "The approach assumes progress can be expressed as a finite set of verifiable facts and that successful reference trajectories can be obtained at reasonable cost. It does not naturally extend to open-ended creation or tasks without clear correct answers. Monotonically accumulating satisfied conditions can suppress transient judgement changes but may retain mistaken confirmations. Only Qwen3-8B is trained here; transfer to much smaller, larger or differently reasoning-trained backbones remains unverified. The useful lesson is to evaluate search progress alongside final answers, without treating the verifier as an infallible source of truth."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: compare acquired knowledge during training and retain the final-answer reward; it does not show supplying deployment agents with answers.",
+            "steps": [
+              "Construct factual conditions from a question and successful reference",
+              "Check each step’s evidence and accumulate knowledge",
+              "Compare new knowledge from equivalent starting states",
+              "Update search policy using progress and final correctness"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "最後に正答しても、途中の検索がすべて有用だったとは限りません。誤答しても、すでに集めた重要な証拠の価値まで消えるわけではありません。KnowGPO は必要な事実のうち何を把握したかを表し、同じ知識状態から始めた検索を比較します。最終的な成否を全手順に一様に配る代わりに、新しい証拠を得た段階へ具体的な学習信号を与えます。",
+          "sections": [
+            {
+              "heading": "既知の事実を比較可能な状態にする",
+              "paragraphs": [
+                "学習問題には参照回答と、少なくとも一つの成功した参照検索履歴があります。まず問題から推論の骨組みを取り出し、未知の実体を空欄にして、参照回答と成功履歴で埋めます。こうして一段階の検証可能な事実条件を作ります。別の言語モデルが検索資料の裏付ける条件を判定し、満たした条件を累積します。同じ集合に到達した手順は、開いたページや表現が違っても比較できます。",
+                "新たに満たした条件の数を知識増分として報酬にし、直前の知識が同じグループ内で比べます。探索を始めた直後と、ほぼ証拠がそろった段階を混同しないためです。最終回答の正誤に対する報酬も残し、局所的な情報集めだけで課題を終えなくなることを防ぎます。知識検証は学習用の監督であり、運用時の Agent に先に答えを渡す仕組みではありません。自分の自信だけで自分を採点する方法とも異なります。"
+              ]
+            },
+            {
+              "heading": "報酬配分を検証した対照実験",
+              "paragraphs": [
+                "主要な対照は同じ教師あり微調整済み Qwen3-8B から始め、データ、ツール、学習設定を共通にし、報酬設計と優位度推定だけを変えます。強化学習には選別した 649 問を使います。評価は Xbench の二つの分割、BrowseComp-ZH、GAIA のテキストのみの部分集合で、三回の独立実行の平均正答率を報告します。GPT-4o が参照回答に照らして最終回答を判定するため、GAIA 全体のマルチモーダル性能を表す数字ではありません。",
+                "BrowseComp-ZH の著者報告は KnowGPO が 38.8%、終端報酬だけの GRPO が 32.9%、最良の過程監督対照 GiGPO が 37.3% で、差は 5.9 ポイントと 1.5 ポイントです。GAIA のテキスト部分では 40.2% に対して GRPO が 35.0%、IGPO が 37.9% で、差は 5.2 と 2.3 ポイント。正答と判定された問題の割合であり、検索再現率ではありません。別掲載の大型検索システムはデータやツールが異なり、モデル規模の厳密な対照比較にはできません。"
+              ]
+            },
+            {
+              "heading": "知識の検証も誤り得る",
+              "paragraphs": [
+                "500 問から得た有効な 5,922 軌跡、55,571 ステップの分析では、知識分けによって 97.8% のステップが二つ以上の要素を持つグループに入り、取得内容の類似度による方法では 51.8% でした。比較相手を得るステップが増えたという意味で、知識検証が 97.8% 正しいという意味ではありません。別途、留出した問題と軌跡の 200 組で検証器を調べると、DeepSeek-v3.2 の条件ごとの判定は人の注釈と 94.7% 一致しました。残る誤りは学習信号に伝わり得ます。",
+                "進捗を有限の検証可能な事実に分けられ、成功参照軌跡を妥当な費用で取得できることが前提です。自由な創作や正解の定義が難しい課題にはそのまま適用できません。満たした条件を取り消さず蓄積する方式は一時的な判定揺れを抑えますが、誤った確認を残す可能性もあります。訓練したのは Qwen3-8B だけで、著しく大小の違うモデルや別の推論訓練済みモデルへの一般化は未確認です。検索進捗と最終回答を一緒に評価することが示唆であり、検証器を無謬の真実と見なすことではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。学習時の既知事実の比較と最終回答の報酬を示し、運用時に正解を渡す図ではありません。",
+            "steps": [
+              "問題と成功した参照から事実条件を作る",
+              "各手順の証拠を検証し知識を蓄積",
+              "同じ出発状態で知識増分を比較",
+              "進捗と最終回答を使い検索方策を更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Правильный итоговый ответ не означает, что каждый поиск был полезен; неправильный ответ не обесценивает уже найденные свидетельства. KnowGPO уточняет обучающую обратную связь: определяет, какие необходимые факты известны, сравнивает поисковые решения из одинакового состояния знаний и поощряет шаги, добавившие новые свидетельства, вместо единственного сигнала успеха для всей траектории.",
+          "sections": [
+            {
+              "heading": "Описать прогресс набором установленных фактов",
+              "paragraphs": [
+                "При обучении у вопроса есть эталонный ответ и хотя бы одна успешная эталонная траектория поиска. Сначала выделяется каркас рассуждения с местами для неизвестных сущностей, затем он заполняется по ответу и успешной траектории. Получаются атомарные проверяемые фактические условия. Другая языковая модель определяет, какие условия подтверждены найденными материалами, а подтверждения накапливаются. Шаги с одинаковым набором знаний можно сравнивать, даже если страницы и формулировки различаются.",
+                "Число новых выполненных условий задаёт награду за прирост знаний. Сравнение внутри групп с одинаковым предшествующим состоянием не смешивает начало исследования с поиском, когда почти все свидетельства уже собраны. Сохраняется и награда за правильность конечного ответа, чтобы локальный сбор сведений не вытеснял завершение задачи. Проверка знаний служит обучающей разметкой, а не передачей готового ответа агенту при эксплуатации; она также не сводится к оценке собственной уверенности."
+              ]
+            },
+            {
+              "heading": "Что показывают контролируемые сравнения",
+              "paragraphs": [
+                "Основные варианты начинают с одной и той же дообученной с учителем Qwen3-8B, имеют одинаковые данные, инструменты и настройки; меняются награды и оценка преимуществ действий. Для обучения с подкреплением отобраны 649 вопросов. Оценка охватывает два раздела Xbench, BrowseComp-ZH и текстовую часть GAIA. Публикуется средняя точность трёх независимых запусков, а GPT-4o сравнивает финальные ответы с эталоном. Число для GAIA поэтому не описывает весь мультимодальный тест.",
+                "На BrowseComp-ZH авторы получают 38.8% у KnowGPO, 32.9% у GRPO с одной конечной наградой и 37.3% у лучшего процессного сравнения GiGPO: различия 5.9 и 1.5 процентного пункта. На текстовой GAIA показатель 40.2% сравнивается с 35.0% у GRPO и 37.9% у IGPO — приросты 5.2 и 2.3 пункта. Это доля вопросов, ответы на которые признаны правильными, а не полнота поиска. Отдельно приведённые крупные поисковые системы используют другие данные или инструменты, поэтому дают контекст, но не контролируемое сравнение масштаба моделей."
+              ]
+            },
+            {
+              "heading": "Проверяющая модель тоже может ошибаться",
+              "paragraphs": [
+                "Анализ 500 вопросов включает 5,922 действительные траектории и 55,571 шаг. Группировка знаний помещает 97.8% шагов в группы минимум из двух элементов; группировка по сходству найденных текстов — 51.8%. Больше шагов получает сопоставимых соседей, но это не точность проверки знаний в 97.8%. В отдельной оценке 200 отложенных пар вопрос–траектория решения DeepSeek-v3.2 по отдельным условиям совпадают с человеческой разметкой в 94.7% случаев. Оставшиеся ошибки способны переходить в обучающий сигнал.",
+                "Метод предполагает конечный набор проверяемых фактов и возможность получить успешные эталонные траектории за приемлемую цену. Он не переносится автоматически на свободное творчество или задачи без ясного правильного ответа. Необратимое накопление подтверждённых условий сглаживает кратковременные колебания проверки, но может сохранять ошибочные подтверждения. Обучалась только Qwen3-8B; перенос на существенно меньшие, большие или иначе обученные рассуждению модели не проверен. Практический вывод — оценивать поисковый прогресс вместе с ответом, не считая проверяющую модель безошибочным источником истины."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: знания сравниваются при обучении вместе с итоговой наградой; готовые ответы рабочему агенту не передаются.",
+            "steps": [
+              "Построить фактические условия по вопросу и успешному эталону",
+              "Проверять свидетельства и накапливать знания",
+              "Сравнивать прирост из одинаковых исходных состояний",
+              "Обновлять поиск по прогрессу и правильности ответа"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "搜尋 Agent 最後答對了，不代表中間每次搜尋都有價值；答錯了，也不代表已經找到的關鍵證據沒有幫助。KnowGPO 試圖把訓練回饋分得更細：先問系統已經掌握哪些回答所需的事實，再比較從相同知識起點出發的搜尋，獎勵真正帶來新證據的步驟，而不只把最終成敗平均分給整條軌跡。",
+          "sections": [
+            {
+              "heading": "把已知事實作為可比較的狀態",
+              "paragraphs": [
+                "訓練時，每道問題都有參考答案和至少一條成功的參考搜尋軌跡。系統先從問題提取推理框架，為未知實體留出位置，再用答案與成功軌跡補齊，形成一組單步、可核驗的事實條件。另一個語言模型檢查搜尋獲得的資料支持了哪些條件，系統把已滿足條件累計起來。這些集合相同的搜尋步驟，即使訪問的頁面或措辭不同，也可以被放進同一組比較。",
+                "每一步新滿足了多少條件，就提供多少知識增量訊號；在相同先前知識狀態的組內比較，避免把已經找到大部分答案的步驟與剛開始探索的步驟混為一談。訓練同時保留最終回答正確與否的獎勵，防止模型只顧收集局部資訊卻不完成任務。這裡的知識檢查是訓練監督，不是讓部署時的 Agent 預先拿到問題答案；它也不是模型單純根據自己的信心給自己打分。"
+              ]
+            },
+            {
+              "heading": "哪些實驗支持這種獎勵分配",
+              "paragraphs": [
+                "核心對照都從同一 Qwen3-8B 監督微調模型出發，使用相同資料、工具環境和訓練配置，只改變獎勵與優勢估計。強化學習使用 649 道篩選後的訓練問題。評估覆蓋 Xbench 的兩個分集、BrowseComp-ZH 和 GAIA 的純文字子集，每項報告三次獨立執行的平均正確率，由 GPT-4o 按參考答案判斷最終回答。GAIA 結果因此不能解釋為完整多模態基準的成績。",
+                "在 BrowseComp-ZH 上，作者報告 KnowGPO 為 38.8%，僅使用終局獎勵的 GRPO 為 32.9%，最強過程監督對照 GiGPO 為 37.3%；差值分別是 5.9 和 1.5 個百分點。GAIA 純文字上為 40.2%，對比 GRPO 的 35.0% 和 IGPO 的 37.9%，對應 5.2 和 2.3 個百分點。這些是被判定答對的問題比例，不是檢索召回率。另列的較大搜尋系統使用不同資料或工具，其分數只作背景，不能視為嚴格控制變數的模型規模比較。"
+              ]
+            },
+            {
+              "heading": "知識條件的品質決定監督是否可靠",
+              "paragraphs": [
+                "在 500 道問題產生的 5,922 條有效軌跡、55,571 個步驟上，知識分組讓 97.8% 的步驟進入至少含兩個步驟的組，按檢索內容相似度分組則為 51.8%。這意味著更多步驟有可比較的同伴，不等於它們的知識判斷都有 97.8% 的準確率。檢查器另在 200 對留出的問題與軌跡上評估，DeepSeek-v3.2 的逐條件判斷與人工標註一致率為 94.7%，仍有誤差可能傳入訓練回饋。",
+                "方法要求進展能拆成有限、可驗證的事實，並能以合理成本取得成功參考軌跡，因而不天然適合開放式創作或難以定義正確答案的任務。已滿足條件只增加不撤回，可以緩解短暫判斷波動，卻也可能保留錯誤認定。作者只訓練了 Qwen3-8B，尚未證明效果能遷移到明顯更大、更小或不同推理訓練的骨幹。實踐上的啟發是把搜尋進展與最終答案一起評估，而不是把知識檢查器當作不會出錯的真值來源。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋圖：在訓練中按已獲知識比較搜尋步驟，並結合最終回答獎勵；不是部署時向 Agent 提供標準答案。",
+            "steps": [
+              "從問題與成功參考構建事實條件",
+              "檢查每步取得的證據並累計知識狀態",
+              "比較相同起點下的新增知識",
+              "結合最終回答結果更新搜尋策略"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "leash-uncertainty-agent-escalation",
+      "written_at": "2026-11-03",
+      "sources": [
+        {
+          "label": "LEASH: Uncertainty-Aware Weak-to-Strong Escalation and Oversight for Computer-Use Agents · original v1",
+          "url": "https://arxiv.org/html/2610.22280v1"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22280v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让昂贵的大模型执行每一步电脑操作，成本较高；全交给较小模型，又容易在长任务中失败。LEASH 研究何时把执行权交给更强模型，以及交接后谁来发现它也走偏了。它用弱模型内部状态与历史成败经验的距离作为风险线索，把初始路由、运行时升级和交接后监督连在一起。",
+          "sections": [
+            {
+              "heading": "不训练新监控器，仍需要参考经验",
+              "paragraphs": [
+                "研究先收集弱模型完成任务的历史轨迹，分别保存起始指令和动作生成时的隐藏表示，并用任务或子目标成败标注。系统拟合成功与失败表示的统计分布，检查新状态更靠近哪一侧；越接近失败参考，越可能触发升级。“无需训练”指不做额外的梯度训练，不是无需数据、标签或拟合。弱模型正常执行时复用生成动作已有的表示，不必为这一检测再做一次模型前向计算。",
+                "整个工作流还有一个强模型担任的 Manager，负责拆分子目标和验证进展，因此并非只有转交执行权时才使用强模型。升级可以发生在任务开始，也可以在后续步骤；接管后强模型继续持有控制权，弱模型改为影子观察者。它在首次接管步骤和此后每三步进行探测，生成候选动作以取得内部表示，但不执行这个动作，也不把它推荐给强模型。高风险信号会要求强模型重新审视当前步骤，而不是让弱模型替它操作。"
+              ]
+            },
+            {
+              "heading": "实验中的成功率与成本",
+              "paragraphs": [
+                "实验使用 OSWorld 的 262 个评估任务，每题共享 50 次动作预算，另有不重叠的 99 任务参考池用于建立经验与校准阈值。作者比较四种弱模型骨干，强执行者和 Manager 均为 Claude Opus 5。校准按任务分组，避免同一轨迹的相邻步骤跨入训练与验证两侧；阈值针对升级比例，而非宣称某个分数就是准确的失败概率。评估中的实际升级比例还会受数据分布变化影响。",
+                "以 Qwen3.5-35B-A3B 为弱模型时，作者报告 64.1% 的任务发生升级，最终任务成功率为 73.66%，每题估算成本为 0.4117 美元。始终用 Opus 5 单独执行的对照为 72.90% 和 0.5094 美元，LEASH 的成本约低 19.2%。这些费用按固定参考价格和词元用量计算，包含弱模型、Manager、强执行者及监控调用，不是实际硬件成本测量或当前报价。对照也没有同一个 Manager，不能把两者的差异全部归结为模型路由这一项。"
+              ]
+            },
+            {
+              "heading": "影子监督有作用，但不是安全保证",
+              "paragraphs": [
+                "同一骨干的消融更能说明组件作用：有 Manager 但不升级时，成功率为 41.15%；加入升级为 67.94%；再加影子监督为 73.66%。后一变化伴随每题估算成本从 0.4050 到 0.4117 美元，而非免费检查。影子干预每题最多触发六次，若已有两次改变了强模型提议的动作，就停止进一步干预。这限制了开销，也意味着并非每次不确定都能得到额外纠正。",
+                "风险分数衡量与过往失败的相似程度，不能证明一个具体动作必然错误。论文指出，不同模型和阶段的识别效果不同，运行时判别能力仍属中等；运行标签来自 Manager 评估的子目标结果，不是每个动作的真值。弱模型是否也能察觉强模型的困难，是影子监督依赖的假设。更换应用、模型或任务分布后需要重新检查参考池与阈值，这属于研究边界带来的部署考虑，不能把本次成本收益当作所有桌面任务的固定节约或安全自主操作保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释图：弱模型风险信号决定是否升级，交接后仅触发强模型重新检查，不把弱模型候选动作直接执行。",
+            "steps": [
+              "从历史成功与失败建立参考表示",
+              "弱模型执行并检查初始及逐步风险",
+              "风险触发强模型接管",
+              "弱模型影子观察并按限额请求重新判断"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Running an expensive large model for every computer action can be costly, while relying entirely on a smaller model often fails on long tasks. LEASH asks when to transfer execution to a stronger model and who should notice if that model subsequently goes off track. Distances between the weak model’s internal representations and past successes or failures drive initial routing, runtime escalation and oversight after handoff.",
+          "sections": [
+            {
+              "heading": "No new monitor training does not mean no reference data",
+              "paragraphs": [
+                "The study collects weak-agent trajectories and stores hidden representations at the initial instruction and generated actions, labelled by task or subgoal outcomes. It fits statistical distributions of successful and failed representations and checks which side a new state resembles. Greater resemblance to failures can trigger escalation. “Training-free” means no additional gradient-based training, not an absence of data, labels or statistical fitting. During normal weak-agent execution, detection reuses representations already produced for actions without another forward pass.",
+                "The workflow also includes a strong-model Manager that decomposes subgoals and verifies progress, so the strong model is not used only when execution is escalated. Handoff may happen initially or later. The strong agent then retains control, while the weak model becomes a shadow observer. It probes at the first post-handoff step and every third step thereafter, generating a candidate action to obtain its representation. That action is neither executed nor recommended to the stronger model. A high-risk signal instead asks the strong agent to reassess its current step."
+              ]
+            },
+            {
+              "heading": "Success and cost belong to a specific workflow",
+              "paragraphs": [
+                "Evaluation uses 262 OSWorld tasks with a shared budget of 50 actions per task, plus a disjoint 99-task reference pool for experience and threshold calibration. Four weak-model backbones are tested; Claude Opus 5 serves as both strong executor and Manager. Calibration groups observations by task to prevent neighbouring steps from leaking across fitting and validation folds. Thresholds target escalation frequency, not calibrated claims that a score is an exact failure probability. Distribution changes can alter the realized escalation rate.",
+                "With Qwen3.5-35B-A3B as the weak model, the authors report escalation on 64.1% of tasks, 73.66% final task success and an estimated cost of $0.4117 per task. Always-on Opus 5 alone achieves 72.90% at $0.5094, making LEASH’s estimated cost approximately 19.2% lower. These estimates use fixed reference token prices and include weak-agent, Manager, strong-executor and monitoring calls. They are not measured hardware costs or current quotations. The always-on comparison lacks the same Manager, so the entire difference cannot be attributed solely to routing."
+              ]
+            },
+            {
+              "heading": "Shadow oversight helps without guaranteeing safety",
+              "paragraphs": [
+                "Within-backbone ablations clarify component contributions: Manager without escalation achieves 41.15% success, adding escalation reaches 67.94%, and adding shadow oversight reaches 73.66%. The last change increases estimated cost from $0.4050 to $0.4117 per task; monitoring is not free. Interventions may fire at most six times per task and stop once two have changed the strong agent’s proposed action. This bounds overhead but also means not every uncertain moment receives another correction.",
+                "The score measures resemblance to historical failure, not proof that a particular action is wrong. Detection varies by model and stage, and runtime discrimination remains moderate. Runtime labels come from Manager-assessed subgoal outcomes, not ground truth for every action. Shadow oversight assumes that the weak model’s difficulty is informative about the strong model’s difficulty too. New applications, models or task distributions require reassessing reference data and thresholds—an implication of these limitations, not evidence of fixed savings or guaranteed safe autonomy across desktop tasks."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn by this site from the paper: weak-model risk signals trigger escalation and strong-model reassessment; candidate weak actions are not directly executed.",
+            "steps": [
+              "Build reference representations from successes and failures",
+              "Execute with the weak model and check initial and step risks",
+              "Hand control to the strong model when triggered",
+              "Use bounded shadow checks to request reconsideration"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "高価な大規模モデルにすべてのコンピューター操作を任せると費用が増え、小型モデルだけでは長い課題で失敗しやすくなります。LEASH は強いモデルへ実行権を渡す時機と、渡した後にそのモデルが迷った場合の監督を研究します。弱いモデルの内部表現と過去の成功・失敗との距離を使い、初期振り分け、実行途中の昇格、引き継ぎ後の監視をつなぎます。",
+          "sections": [
+            {
+              "heading": "監視器の追加学習は不要でも参考経験は必要",
+              "paragraphs": [
+                "弱いモデルの過去の実行履歴から、初期指示と動作生成時の隠れ表現を集め、課題や部分目標の成否を付けます。成功と失敗の表現分布を統計的に当てはめ、新しい状態がどちらに近いかを調べます。失敗側に近いほど昇格しやすくなります。「学習不要」は追加の勾配学習をしない意味で、データ、ラベル、分布の推定が不要ではありません。弱いモデルの通常実行中は動作生成で得た表現を再利用し、この検査だけの追加前向き計算は不要です。",
+                "全体には強いモデルを使う Manager もいて、部分目標の分解と進捗確認を担当します。従って強いモデルを使うのは実行権を渡した後だけではありません。昇格は最初にも途中にも起き、接管後は強いモデルが制御を保持し、弱いモデルが影の観測役になります。接管直後と以後三ステップごとに候補動作を生成して内部表現を得ますが、その動作は実行せず、強いモデルにも勧めません。リスクが高いときは強いモデル自身に現在の手順の再検討を求めます。"
+              ]
+            },
+            {
+              "heading": "特定の作業構成で測った成功率と費用",
+              "paragraphs": [
+                "評価は OSWorld の 262 課題で、一課題あたり共有の動作予算は 50 回です。別の重複しない 99 課題を参考集とし、分布推定と閾値調整に使います。四種類の弱いモデルを比較し、強い実行者と Manager は Claude Opus 5 です。調整は課題単位で分割し、同じ履歴の隣り合う手順が学習側と検証側に漏れることを防ぎます。閾値は昇格頻度を目標にしたもので、スコアが正確な失敗確率だという意味ではありません。実際の昇格率は分布の変化でも変わります。",
+                "弱いモデルが Qwen3.5-35B-A3B の場合、著者報告は課題の 64.1% を昇格し、最終成功率 73.66%、一課題の推定費用 0.4117 ドルです。Opus 5 単独を常時使う対照は 72.90%、0.5094 ドルで、LEASH の費用は約 19.2% 低くなります。固定の参照単価とトークン使用量による推計で、弱いモデル、Manager、強い実行者、監視の呼び出しを含みます。実測ハードウェア費用や現在の価格ではありません。対照には同じ Manager がないため、差のすべてを振り分けだけに帰することもできません。"
+              ]
+            },
+            {
+              "heading": "影の監視は役立つが安全を保証しない",
+              "paragraphs": [
+                "同じ骨格モデルの要素別比較では、Manager だけで成功率 41.15%、昇格を加えて 67.94%、影の監視も加えて 73.66% です。最後の変更は一課題の推定費用を 0.4050 から 0.4117 ドルに増やすため、無料の検査ではありません。介入は一課題六回までで、強いモデルの提案動作を二回変更した時点で以後の介入を止めます。費用を抑える一方、不確かな場面が毎回修正されるとは限りません。",
+                "リスク値は過去の失敗への近さであり、個々の動作が必ず誤りだという証明ではありません。検出力はモデルと段階で変わり、実行時の判別力も中程度です。実行中のラベルは Manager の部分目標評価で、全動作の正解ラベルではありません。弱いモデルが感じる難しさが強いモデルにも有用な手掛かりだという仮定が、影の監視を支えます。アプリ、モデル、課題分布が変われば参考集や閾値を再確認する必要があり、これは研究範囲からの運用上の示唆です。全デスクトップ課題で一定の節約や安全な自律性を保証するものではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文をもとに本サイトが描き直した説明図です。弱いモデルのリスク信号で昇格と再検討を促し、その候補動作を直接実行しません。",
+            "steps": [
+              "過去の成功と失敗から参考表現を作る",
+              "弱いモデルが実行し初期・各段階のリスクを調べる",
+              "条件に達したら強いモデルへ制御を渡す",
+              "上限付きの影の監視で再検討を求める"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Использовать дорогую большую модель для каждого компьютерного действия затратно, но небольшая модель часто не справляется с длинными задачами. LEASH изучает момент передачи исполнения более сильной модели и надзор за ней после передачи. Расстояния между внутренними представлениями слабой модели и её прежними успехами или неудачами связывают начальную маршрутизацию, передачу управления во время работы и дальнейший контроль.",
+          "sections": [
+            {
+              "heading": "Без нового обучения мониторинга, но с эталонным опытом",
+              "paragraphs": [
+                "Из прошлых траекторий слабой модели собирают скрытые представления начальной инструкции и сгенерированных действий, помечая их исходом задачи или подцели. Статистические распределения успехов и неудач позволяют оценить, к какой стороне ближе новое состояние. Близость к неудачам может вызвать передачу управления. Отсутствие обучения означает отсутствие дополнительного градиентного обучения, а не данных, меток или статистической подгонки. При обычной работе слабого агента используются уже вычисленные для действия представления, без ещё одного прямого прохода ради проверки.",
+                "В процессе также есть Manager на сильной модели, который разбивает задачу на подцели и проверяет прогресс. Сильная модель поэтому используется не только после передачи ей исполнения. Передача возможна сразу или позднее; затем сильный агент сохраняет управление, а слабый становится теневым наблюдателем. Он проверяет первый шаг после передачи и далее каждый третий, генерируя кандидат действия ради скрытого представления. Этот кандидат не исполняется и не рекомендуется сильному агенту. Высокий риск вместо этого заставляет сильную модель пересмотреть текущий шаг."
+              ]
+            },
+            {
+              "heading": "Успех и стоимость относятся к конкретному процессу",
+              "paragraphs": [
+                "Оценка включает 262 задачи OSWorld с общим бюджетом 50 действий на задачу и отдельный непересекающийся набор из 99 задач для эталонных представлений и настройки порогов. Проверены четыре слабые модели; Claude Opus 5 служит сильным исполнителем и Manager. Калибровка разделяет данные по задачам, чтобы соседние шаги одной траектории не попадали по разные стороны подгонки и проверки. Пороги задают частоту передачи, а не точную вероятность неудачи. Смена распределения способна изменить фактическую частоту.",
+                "Для Qwen3.5-35B-A3B авторы сообщают передачу 64.1% задач, конечную успешность 73.66% и оценочную стоимость 0.4117 доллара на задачу. Постоянно работающий Opus 5 без дополнительных компонентов даёт 72.90% при 0.5094 доллара, то есть LEASH обходится примерно на 19.2% дешевле. Расчёт использует фиксированные справочные цены токенов и включает слабого агента, Manager, сильного исполнителя и мониторинг. Это не измеренные аппаратные расходы и не текущий тариф. У сравнения нет такого же Manager, поэтому всю разницу нельзя приписать одной маршрутизации."
+              ]
+            },
+            {
+              "heading": "Теневой надзор полезен, но не гарантирует безопасность",
+              "paragraphs": [
+                "Поэлементное сравнение одной базовой модели показывает 41.15% успеха с Manager без передачи, 67.94% после добавления передачи и 73.66% с теневым надзором. Последнее изменение повышает оценочную стоимость с 0.4050 до 0.4117 доллара на задачу: проверки не бесплатны. Допускается не более шести вмешательств; дальнейшие прекращаются, если два уже изменили предложенное сильным агентом действие. Это ограничивает расходы, но не позволяет исправлять каждый момент неопределённости.",
+                "Оценка измеряет сходство с прежними неудачами, а не доказывает ошибочность конкретного действия. Качество распознавания зависит от модели и стадии и во время исполнения остаётся умеренным. Метки отражают исходы подцелей по оценке Manager, а не истинную правильность каждого действия. Теневой надзор предполагает, что трудности слабой модели информативны и для сильной. Новые приложения, модели и распределения задач требуют повторной проверки эталонного опыта и порогов. Это следствие границ исследования, а не обещание постоянной экономии или безопасной автономности во всех настольных задачах."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: риск слабой модели вызывает передачу управления и пересмотр решения сильной; кандидат слабой модели напрямую не исполняется.",
+            "steps": [
+              "Создать эталонные представления успехов и неудач",
+              "Выполнять задачу слабой моделью и проверять риск",
+              "Передать управление сильной модели при срабатывании",
+              "Запрашивать пересмотр через ограниченный теневой надзор"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓昂貴的大模型執行每一步電腦操作，成本較高；全交給較小模型，又容易在長任務中失敗。LEASH 研究何時把執行權交給更強模型，以及交接後誰來發現它也走偏了。它用弱模型內部狀態與歷史成敗經驗的距離作為風險線索，把初始路由、執行時升級和交接後監督連在一起。",
+          "sections": [
+            {
+              "heading": "不訓練新監控器，仍需要參考經驗",
+              "paragraphs": [
+                "研究先收集弱模型完成任務的歷史軌跡，分別儲存起始指令和動作生成時的隱藏表示，並用任務或子目標成敗標註。系統擬合成功與失敗表示的統計分佈，檢查新狀態更靠近哪一側；越接近失敗參考，越可能觸發升級。“無需訓練”指不做額外的梯度訓練，不是無需資料、標籤或擬合。弱模型正常執行時重用生成動作已有的表示，不必為這一檢測再做一次模型前向計算。",
+                "整個工作流還有一個強模型擔任的 Manager，負責拆分子目標和驗證進展，因此並非只有轉交執行權時才使用強模型。升級可以發生在任務開始，也可以在後續步驟；接管後強模型繼續持有控制權，弱模型改為影子觀察者。它在首次接管步驟和此後每三步進行探測，生成候選動作以取得內部表示，但不執行這個動作，也不把它推薦給強模型。高風險訊號會要求強模型重新審視當前步驟，而不是讓弱模型替它操作。"
+              ]
+            },
+            {
+              "heading": "實驗中的成功率與成本",
+              "paragraphs": [
+                "實驗使用 OSWorld 的 262 個評估任務，每題共享 50 次動作預算，另有不重疊的 99 任務參考池用於建立經驗與校準閾值。作者比較四種弱模型骨幹，強執行者和 Manager 均為 Claude Opus 5。校準按任務分組，避免同一軌跡的相鄰步驟跨入訓練與驗證兩側；閾值針對升級比例，而非宣稱某個分數就是準確的失敗機率。評估中的實際升級比例還會受資料分佈變化影響。",
+                "以 Qwen3.5-35B-A3B 為弱模型時，作者報告 64.1% 的任務發生升級，最終任務成功率為 73.66%，每題估算成本為 0.4117 美元。始終用 Opus 5 單獨執行的對照為 72.90% 和 0.5094 美元，LEASH 的成本約低 19.2%。這些費用按固定參考價格和詞元用量計算，包含弱模型、Manager、強執行者及監控呼叫，不是實際硬體成本測量或當前報價。對照也沒有同一個 Manager，不能把兩者的差異全部歸結為模型路由這一項。"
+              ]
+            },
+            {
+              "heading": "影子監督有作用，但不是安全保證",
+              "paragraphs": [
+                "同一骨幹的消融更能說明元件作用：有 Manager 但不升級時，成功率為 41.15%；加入升級為 67.94%；再加影子監督為 73.66%。後一變化伴隨每題估算成本從 0.4050 到 0.4117 美元，而非免費檢查。影子干預每題最多觸發六次，若已有兩次改變了強模型提議的動作，就停止進一步干預。這限制了開銷，也意味著並非每次不確定都能得到額外糾正。",
+                "風險分數衡量與過往失敗的相似程度，不能證明一個具體動作必然錯誤。論文指出，不同模型和階段的識別效果不同，執行時判別能力仍屬中等；執行標籤來自 Manager 評估的子目標結果，不是每個動作的真值。弱模型是否也能察覺強模型的困難，是影子監督依賴的假設。更換應用、模型或任務分佈後需要重新檢查參考池與閾值，這屬於研究邊界帶來的部署考慮，不能把本次成本收益當作所有桌面任務的固定節約或安全自主操作保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋圖：弱模型風險訊號決定是否升級，交接後僅觸發強模型重新檢查，不把弱模型候選動作直接執行。",
+            "steps": [
+              "從歷史成功與失敗建立參考表示",
+              "弱模型執行並檢查初始及逐步風險",
+              "風險觸發強模型接管",
+              "弱模型影子觀察並按限額請求重新判斷"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
