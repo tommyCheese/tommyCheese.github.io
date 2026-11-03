@@ -739,7 +739,17 @@ window.SITE_MESSAGES = {
     "news.openai-grid-protectors-demand-response-plan.title": "OpenAI 提出电网需求响应计划，以佐治亚园区协议为起点",
     "news.openai-grid-protectors-demand-response-plan.summary": "Grid Protectors 拟让未来计算园区在电网紧张时降低负荷。佐治亚既有协议约定最多 1,000 兆瓦响应，园区仍在开发，实际节电和电费影响尚待验证。",
     "news.hubble-glow-dwarf-galaxy-oxygen-budget.title": "哈勃档案研究：37 个矮星系平均只保留约 11% 的恒星产氧",
-    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW 将气体、恒星与尘埃中的氧同恒星累计产量比较，发现保留比例约为 4%—25%。结果为星系反馈模型提供新约束，但多数缺失氧留在周边还是进入星系际空间仍未确定。"
+    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW 将气体、恒星与尘埃中的氧同恒星累计产量比较，发现保留比例约为 4%—25%。结果为星系反馈模型提供新约束，但多数缺失氧留在周边还是进入星系际空间仍未确定。",
+    "research.archor-structural-skill-arbitration.title": "ArchOR：按问题结构找技能，也给原来的解法留退路",
+    "research.archor-structural-skill-arbitration.summary": "ArchOR 在不改变技能库与基础模型的情况下，按变量和约束筛选技能，再选择是否替换原路线。五个优化建模测试中净增18道正确答案；直接强制使用结构路线反而下降，说明检索更准不等于执行更可靠。",
+    "research.multi-tool-retrieval-completeness-cost.title": "工具检索不能只找得“差不多”：多工具任务需要整套能力",
+    "research.multi-tool-retrieval-completeness-cost.summary": "研究在 AppWorld 和 MCP-Bench 比较六类检索结构，把完整工具集覆盖与调用成本分开统计。域内训练与多次模型导航各有代价；平均召回不错仍可能漏掉关键前置工具，且完整性结果受参考集合与基础模型限制。",
+    "research.reliability-process-reward-agentic-search.title": "什么时候值得再搜一次：用局部可靠性训练 Agent 的搜索决策",
+    "research.reliability-process-reward-agentic-search.summary": "研究比较相同推理状态在有无新证据时的可靠性估计，用过程奖励训练搜索选择。七套问答中加权答案覆盖分数提高，单跳少搜、多跳多搜；校准依赖模型评判，训练更慢，也不能把少搜次数直接等同于总成本下降。",
+    "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：正常工具调用也可能暴露用户画像",
+    "research.privacytrace-tool-call-profile-leakage.summary": "1,000份合成资料与4,000条真实工具交互轨迹显示，调用参数和返回内容能支持额外属性推断。默认属性正确率从17.97%升至26.25%；不是完整身份恢复率，防护措施尚未验证。",
+    "research.memx-memory-aware-heterogeneous-training.title": "MemX：在混合GPU训练中权衡速度、显存与负载均衡",
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX联合搜索并行与重计算策略，将迭代时间、显存峰值和显存均衡纳入同一目标。真实六GPU实验中，最速方案与基线并列，均衡方案则接受9.3%的时间增加；40与60GPU结果仅为仿真，未验证最终模型质量等价。"
   },
   "en": {
     "nav.about": "About",
@@ -1480,7 +1490,17 @@ window.SITE_MESSAGES = {
     "news.openai-grid-protectors-demand-response-plan.title": "OpenAI proposes grid demand-response program based on Georgia campus agreement",
     "news.openai-grid-protectors-demand-response-plan.summary": "Grid Protectors would reduce demand at future compute campuses when grids are strained. Georgia’s existing agreement allows up to 1,000 MW; the campus is still in development and outcomes remain unproven.",
     "news.hubble-glow-dwarf-galaxy-oxygen-budget.title": "Hubble archive study finds 37 dwarf galaxies retain about 11% of their stellar oxygen",
-    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW compares oxygen in gas, stars and dust with cumulative stellar production, finding retention of roughly 4%–25%. The result challenges feedback models, but most missing oxygen’s location remains unresolved."
+    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW compares oxygen in gas, stars and dust with cumulative stellar production, finding retention of roughly 4%–25%. The result challenges feedback models, but most missing oxygen’s location remains unresolved.",
+    "research.archor-structural-skill-arbitration.title": "ArchOR retrieves skills by problem structure while keeping a fallback",
+    "research.archor-structural-skill-arbitration.summary": "With the skill library and backbone fixed, ArchOR filters skills by variables and constraints and decides whether to replace the original route. It adds 18 correct answers across five optimization tests; mandatory structural routing instead hurts, showing that better retrieval is not automatically better execution.",
+    "research.multi-tool-retrieval-completeness-cost.title": "Nearly enough tools is not enough: evaluating complete retrieval for agents",
+    "research.multi-tool-retrieval-completeness-cost.summary": "Six retrieval families are compared on AppWorld and MCP-Bench using complete-set coverage and retrieval cost. In-domain training and repeated model navigation spend different resources. High average recall can still miss essential prerequisites, while results depend on reference sets and model choices.",
+    "research.reliability-process-reward-agentic-search.title": "When is another search worthwhile? Training agent decisions with local reliability",
+    "research.reliability-process-reward-agentic-search.summary": "The method compares estimated reliability with and without new evidence and rewards search decisions accordingly. Weighted answer coverage improves across seven QA sets, with fewer single-hop and more multi-hop searches. Calibration uses model judgments and training takes longer; fewer searches do not establish lower total cost.",
+    "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace: ordinary tool calls can expose user attributes",
+    "research.privacytrace-tool-call-profile-leakage.summary": "Using 1,000 synthetic profiles and 4,000 tool trajectories, the study measures inference from arguments and results. Default attribute accuracy rises from 17.97% to 26.25%; this is not complete-identity recovery, and proposed defenses remain untested.",
+    "research.memx-memory-aware-heterogeneous-training.title": "MemX balances speed, memory and load in heterogeneous GPU training",
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX jointly searches parallelism and recomputation using iteration time, peak memory and memory balance. In a real six-GPU experiment its fastest choice ties baselines, while the balanced choice takes 9.3% longer. Forty- and sixty-GPU results are simulated; final model-quality equivalence is untested."
   },
   "ja": {
     "nav.about": "私について",
@@ -2221,7 +2241,17 @@ window.SITE_MESSAGES = {
     "news.openai-grid-protectors-demand-response-plan.title": "OpenAI、ジョージア州の契約を基に計算拠点の電力需要調整を計画",
     "news.openai-grid-protectors-demand-response-plan.summary": "Grid Protectors は将来拠点の負荷を電力網のひっ迫時に減らす構想。既存契約は最大 1,000 MW の調整を含むが、拠点は開発中で実際の効果は未確認。",
     "news.hubble-glow-dwarf-galaxy-oxygen-budget.title": "ハッブルの保存データで調査、矮小銀河37個の酸素保持率は平均約11%",
-    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW はガス・恒星・塵の酸素を恒星の累積生産量と比較し、保持率を約4%〜25%と推定。銀河のフィードバックモデルを検証する材料になるが、不足分の多くが周囲にあるのか銀河間空間にあるのかは未確定だ。"
+    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW はガス・恒星・塵の酸素を恒星の累積生産量と比較し、保持率を約4%〜25%と推定。銀河のフィードバックモデルを検証する材料になるが、不足分の多くが周囲にあるのか銀河間空間にあるのかは未確定だ。",
+    "research.archor-structural-skill-arbitration.title": "ArchOR：問題の構造でスキルを探し、元の解法も残す",
+    "research.archor-structural-skill-arbitration.summary": "スキル集と基盤モデルを変えず、変数や制約で候補を絞って元の経路を置き換えるか判断する。五つの最適化テストで正答が差し引き18問増えたが、構造経路の強制使用は逆効果だった。検索の改善だけでは実行の信頼性を保証しない。",
+    "research.multi-tool-retrieval-completeness-cost.title": "ツール検索は「ほぼ揃う」だけでは足りない――Agent に必要な一式を測る",
+    "research.multi-tool-retrieval-completeness-cost.summary": "AppWorld と MCP-Bench で六種類の検索構造を比較し、必要ツールの完全なカバーと費用を分けて測った。領域内学習と反復的なモデル探索には別の負担がある。平均再現率が高くても前提ツールを落とし得るうえ、結果は参照集合とモデルに依存する。",
+    "research.reliability-process-reward-agentic-search.title": "もう一度検索すべきか――局所的な信頼性で Agent の判断を学習する",
+    "research.reliability-process-reward-agentic-search.summary": "同じ推論状態で新しい証拠がある場合とない場合の信頼性を比較し、検索判断に報酬を与える。七つの質問応答で重み付き回答指標が改善し、一段課題では検索減、多段では増となった。校正はモデル判定に依存し、学習負担も増える。",
+    "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：通常のツール呼び出しからも利用者属性を推測",
+    "research.privacytrace-tool-call-profile-leakage.summary": "合成プロフィール1,000件とツール実行軌跡4,000件で、引数や応答が伝える追加情報を評価。標準条件の属性正答率は17.97%から26.25%へ上昇したが、完全な身元特定率ではなく、防御策は未検証。",
+    "research.memx-memory-aware-heterogeneous-training.title": "MemX：混在GPUで訓練速度、メモリ、負荷均衡を調整",
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemXは並列化と再計算を共同探索し、反復時間、ピークメモリ、均衡を評価する。実機6GPUでは最速構成が基準手法と並び、均衡構成は時間を9.3%増やす。40・60GPUはシミュレーションで、最終モデル品質の等価性は未検証。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -2962,7 +2992,17 @@ window.SITE_MESSAGES = {
     "news.openai-grid-protectors-demand-response-plan.title": "OpenAI предложила регулировать спрос кампусов на электроэнергию по примеру Джорджии",
     "news.openai-grid-protectors-demand-response-plan.summary": "Grid Protectors предусматривает снижение нагрузки будущих кампусов при напряжении в сети. Существующий договор в Джорджии допускает до 1 000 МВт; объект ещё в разработке, результаты не подтверждены.",
     "news.hubble-glow-dwarf-galaxy-oxygen-budget.title": "Архив «Хаббла»: 37 карликовых галактик удержали в среднем около 11% звёздного кислорода",
-    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW сопоставляет кислород в газе, звёздах и пыли с его накопленной звёздной выработкой: доля удержания составляет примерно 4–25%. Это проверка моделей обратной связи, но местонахождение большей части недостающего кислорода пока не установлено."
+    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW сопоставляет кислород в газе, звёздах и пыли с его накопленной звёздной выработкой: доля удержания составляет примерно 4–25%. Это проверка моделей обратной связи, но местонахождение большей части недостающего кислорода пока не установлено.",
+    "research.archor-structural-skill-arbitration.title": "ArchOR: поиск навыков по структуре задачи с сохранением запасного решения",
+    "research.archor-structural-skill-arbitration.summary": "При неизменных библиотеке навыков и базовой модели ArchOR отбирает кандидатов по переменным и ограничениям и решает, менять ли исходный маршрут. На пяти тестах получено на 18 правильных ответов больше; обязательный структурный маршрут ухудшает результат, поэтому улучшение поиска не гарантирует исполнения.",
+    "research.multi-tool-retrieval-completeness-cost.title": "Почти полный набор инструментов недостаточен: как оценивать поиск для агента",
+    "research.multi-tool-retrieval-completeness-cost.summary": "Шесть семейств поиска сравниваются на AppWorld и MCP-Bench по полноте наборов и затратам. Обучение внутри области и многократная навигация моделью требуют разных ресурсов. Высокая средняя полнота отдельных инструментов может скрывать пропуск обязательных зависимостей.",
+    "research.reliability-process-reward-agentic-search.title": "Когда нужен ещё один поиск: обучение решениям агента по локальной надёжности",
+    "research.reliability-process-reward-agentic-search.summary": "Метод сравнивает оценку надёжности с новым свидетельством и без него и вознаграждает поисковые решения. На семи QA-наборах улучшается взвешенная метрика ответа: простые задачи ищут меньше, многошаговые — больше. Калибровка зависит от модельной оценки, а обучение становится медленнее.",
+    "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace: обычные вызовы инструментов раскрывают атрибуты пользователя",
+    "research.privacytrace-tool-call-profile-leakage.summary": "На 1 000 синтетических профилях и 4 000 траекториях проверены выводы из аргументов и ответов. Точность атрибутов растёт с 17,97% до 26,25%; это не восстановление полной личности, а предложенная защита пока не проверена.",
+    "research.memx-memory-aware-heterogeneous-training.title": "MemX: компромисс скорости, памяти и баланса в смешанном GPU-кластере",
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX совместно выбирает параллелизм и повторные вычисления по времени итерации, пику и балансу памяти. На шести реальных GPU самый быстрый вариант совпадает с базовыми, а сбалансированный требует на 9,3% больше времени. 40 и 60 GPU моделируются; равенство качества моделей не проверено."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3703,6 +3743,16 @@ window.SITE_MESSAGES = {
     "news.openai-grid-protectors-demand-response-plan.title": "OpenAI 提出電網需求響應計劃，以佐治亞園區協議為起點",
     "news.openai-grid-protectors-demand-response-plan.summary": "Grid Protectors 擬讓未來計算園區在電網緊張時降低負荷。佐治亞既有協議約定最多 1,000 兆瓦響應，園區仍在開發，實際節電和電費影響尚待驗證。",
     "news.hubble-glow-dwarf-galaxy-oxygen-budget.title": "哈勃檔案研究：37 個矮星系平均只保留約 11% 的恆星產氧",
-    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW 將氣體、恆星與塵埃中的氧同恆星累計產量比較，發現保留比例約為 4%—25%。結果為星系反饋模型提供新約束，但多數缺失氧留在周邊還是進入星系際空間仍未確定。"
+    "news.hubble-glow-dwarf-galaxy-oxygen-budget.summary": "GLOW 將氣體、恆星與塵埃中的氧同恆星累計產量比較，發現保留比例約為 4%—25%。結果為星系反饋模型提供新約束，但多數缺失氧留在周邊還是進入星系際空間仍未確定。",
+    "research.archor-structural-skill-arbitration.title": "ArchOR：按問題結構找技能，也給原來的解法留退路",
+    "research.archor-structural-skill-arbitration.summary": "ArchOR 在不改變技能庫與基礎模型的情況下，按變數和約束篩選技能，再選擇是否替換原路線。五個最佳化建模測試中淨增18道正確答案；直接強制使用結構路線反而下降，說明檢索更準不等於執行更可靠。",
+    "research.multi-tool-retrieval-completeness-cost.title": "工具檢索不能只找得“差不多”：多工具任務需要整套能力",
+    "research.multi-tool-retrieval-completeness-cost.summary": "研究在 AppWorld 和 MCP-Bench 比較六類檢索結構，把完整工具集覆蓋與呼叫成本分開統計。域內訓練與多次模型導航各有代價；平均召回不錯仍可能漏掉關鍵前置工具，且完整性結果受參考集合與基礎模型限制。",
+    "research.reliability-process-reward-agentic-search.title": "什麼時候值得再搜一次：用區域性可靠性訓練 Agent 的搜尋決策",
+    "research.reliability-process-reward-agentic-search.summary": "研究比較相同推理狀態在有無新證據時的可靠性估計，用過程獎勵訓練搜尋選擇。七套問答中加權答案覆蓋分數提高，單跳少搜、多跳多搜；校準依賴模型評判，訓練更慢，也不能把少搜次數直接等同於總成本下降。",
+    "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：正常工具呼叫也可能暴露使用者畫像",
+    "research.privacytrace-tool-call-profile-leakage.summary": "1,000份合成資料與4,000條真實工具互動軌跡顯示，呼叫引數和返回內容能支援額外屬性推斷。預設屬性正確率從17.97%升至26.25%；不是完整身份恢復率，防護措施尚未驗證。",
+    "research.memx-memory-aware-heterogeneous-training.title": "MemX：在混合GPU訓練中權衡速度、顯示記憶體與負載均衡",
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX聯合搜尋並行與重計算策略，將迭代時間、顯示記憶體峰值和顯示記憶體均衡納入同一目標。真實六GPU實驗中，最速方案與基準方法並列，均衡方案則接受9.3%的時間增加；40與60GPU結果僅為模擬，未驗證最終模型品質等價。"
   }
 };
