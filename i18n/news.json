@@ -1,6 +1,39 @@
 {
-  "updated_at": "2026-11-02",
+  "updated_at": "2026-11-03",
   "items": [
+    {
+      "id": "google-xcpe-botnet-disruption",
+      "category": "security",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-03",
+      "source": "Google / Synthient / TrendAI / BleepingComputer",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/shutting-the-door-on-the-xcpe-botnet",
+      "image": "https://tommycheese.github.io/images/news/xcpe-disruption-boundaries.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not measured infection data",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-grid-protectors-demand-response-plan",
+      "category": "ai",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-03",
+      "source": "OpenAI / Georgia Power / The Next Web",
+      "url": "https://openai.com/index/grid-protectors-program/",
+      "image": "https://tommycheese.github.io/images/news/openai-grid-demand-response-plan.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not an operational measurement",
+      "image_fit": "contain"
+    },
+    {
+      "id": "hubble-glow-dwarf-galaxy-oxygen-budget",
+      "category": "science",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-03",
+      "source": "NASA / GLOW / Rutgers",
+      "url": "https://science.nasa.gov/missions/hubble/nasas-hubble-uncovers-case-of-missing-oxygen-in-nearby-dwarf-galaxies/",
+      "image": "https://tommycheese.github.io/images/news/hubble-glow-oxygen-budget.svg",
+      "image_credit": "Tech Daily · original explanatory diagram; not a telescope image or measured spatial map",
+      "image_fit": "contain"
+    },
     {
       "id": "openai-chat-work-shared-allowance-plan",
       "category": "ai",
@@ -731,8 +764,8 @@
       "published_at": "2026-10-15",
       "source": "IT之家",
       "url": "https://www.ithome.com/1/013/246.htm",
-      "image": "https://img.ithome.com/newsuploadfiles/2026/10/78ac68e4-ebcc-404d-a930-a046f9a095b5.png",
-      "image_credit": "吉利控股集团 · IT之家",
+      "image": "https://tommycheese.github.io/images/news/geely-nine-month-sales-scopes.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -751,8 +784,9 @@
       "published_at": "2026-10-14",
       "source": "NVIDIA Newsroom",
       "url": "https://nvidianews.nvidia.com/news/nvidia-and-semiconductor-leaders-advance-ai-across-chip-design-and-manufacturing-for-ai-defined-labs",
-      "image": "https://iprsoftwaremedia.com/219/files/202610/91e4671418fd42dd611fce974f821286/6aceab1a3d6332051d5dc521_nvidia-and-semiconductor-leaders/nvidia-and-semiconductor-leaders_5ac54765-981c-4c26-b6c2-cdd8daa42e94-prv.jpg?v=5ac54765-981c-4c26-b6c2-cdd8daa42e94",
-      "image_credit": "NVIDIA"
+      "image": "https://tommycheese.github.io/images/news/cupotential-simulation-validation.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
+      "image_fit": "contain"
     },
     {
       "id": "grok-voice-3-api",
@@ -760,8 +794,8 @@
       "published_at": "2026-10-14",
       "source": "SpaceXSI",
       "url": "https://x.ai/news/grok-voice-3",
-      "image": "https://media.x.ai/v1/website/og-grok-voice-3-0-b281361b.webp",
-      "image_credit": "SpaceXSI",
+      "image": "https://tommycheese.github.io/images/news/grok-voice3-task-boundaries.svg",
+      "image_credit": "本站解释性重绘 · Original explanatory diagram",
       "image_fit": "contain"
     },
     {
@@ -769,19 +803,11 @@
       "category": "semiconductors",
       "published_at": "2026-10-14",
       "source": "GlobalFoundries",
-      "url": "https://investors.gf.com/news-releases/news-release-details/globalfoundries-selected-operate-two-new-semiconductor-fabs-new",
-      "image": "https://assets.gf.com/image/328833518282/image_4ee35772ot5879lie0o53bl61h/-C1350x900%2C225%2C0-S1920x1280-FWEBP",
-      "image_credit": "GlobalFoundries",
-      "file_photo": true
-    },
-    {
-      "id": "sk-hynix-3d-fenand-compute-research",
-      "category": "semiconductors",
-      "published_at": "2026-10-14",
-      "source": "SK hynix",
-      "url": "https://news.skhynix.com/en/research-inside-ep2/",
-      "image": "https://d18r0a86za96sg.cloudfront.net/wp-content/uploads/2026/10/08132621/research-inside-ep2-Thumb.jpg",
-      "image_credit": "SK hynix"
+      "url": "https://gf.com/news-and-events/news/globalfoundries-selected-to-operate-two-new-semiconductor-fabs-in-new-york-under-landmark-us-japan-initiative/",
+      "image": "https://tommycheese.github.io/images/news/gf-japan-phased-fab-plan.svg",
+      "image_credit": "Original explanatory diagram",
+      "file_photo": false,
+      "image_fit": "contain"
     },
     {
       "id": "samsung-health-sleep-coaching-update",
@@ -807,9 +833,10 @@
       "category": "ai",
       "published_at": "2026-10-09",
       "source": "Anthropic",
-      "url": "https://www.anthropic.com/news/investigating-unintended-model-actions",
-      "image": "https://www-cdn.anthropic.com/images/4zrzovbb/website/f11d2325e688229de8a887ef7ece34f520ab7134-2000x1125.jpg",
-      "image_credit": "Anthropic"
+      "url": "https://www.anthropic.com/research/investigating-unintended-model-actions",
+      "image": "https://tommycheese.github.io/images/news/anthropic-evaluation-action-boundaries.svg",
+      "image_credit": "Original explanatory diagram",
+      "image_fit": "contain"
     },
     {
       "id": "globalfoundries-fdx-fusion-roadmap",
