@@ -749,7 +749,17 @@ window.SITE_MESSAGES = {
     "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：正常工具调用也可能暴露用户画像",
     "research.privacytrace-tool-call-profile-leakage.summary": "1,000份合成资料与4,000条真实工具交互轨迹显示，调用参数和返回内容能支持额外属性推断。默认属性正确率从17.97%升至26.25%；不是完整身份恢复率，防护措施尚未验证。",
     "research.memx-memory-aware-heterogeneous-training.title": "MemX：在混合GPU训练中权衡速度、显存与负载均衡",
-    "research.memx-memory-aware-heterogeneous-training.summary": "MemX联合搜索并行与重计算策略，将迭代时间、显存峰值和显存均衡纳入同一目标。真实六GPU实验中，最速方案与基线并列，均衡方案则接受9.3%的时间增加；40与60GPU结果仅为仿真，未验证最终模型质量等价。"
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX联合搜索并行与重计算策略，将迭代时间、显存峰值和显存均衡纳入同一目标。真实六GPU实验中，最速方案与基线并列，均衡方案则接受9.3%的时间增加；40与60GPU结果仅为仿真，未验证最终模型质量等价。",
+    "research.fde-enterprise-requirements-delivery.title": "Agent 能接下企业项目吗？先问清需求，再过交付验收",
+    "research.fde-enterprise-requirements-delivery.summary": "研究把企业文本转 SQL 项目拆成需求发现和交付两关。450段模拟沟通仅恢复约60%的隐藏事实；八次主要交付运行中两次通过全部门槛。生产测试衡量编译有效性，并不证明 SQL 语义正确，单一案例和自动评审也限制了结论。",
+    "research.dmreranker-clause-wise-instruction-reranking.title": "DMReranker：把检索要求拆开判断，排名改善也有代价",
+    "research.dmreranker-clause-wise-instruction-reranking.summary": "DMReranker 将主题相关性与来源、语言等条件分别评分，再相乘重排。InfoSearch 六维平均 WISE 达50.9，高于引用的 GPT-4o 基线33.5，但原始分数口径 SICR 反而下降；120条测试查询参与开发，且未验证端到端答案质量。",
+    "research.glad-evidence-contamination-fact-checking.title": "GLAD：检索证据看起来相关，也可能把事实核验器教错",
+    "research.glad-evidence-contamination-fact-checking.summary": "GLAD 用语义一致性与词汇孤立程度过滤证据。在训练证据被污染、测试检索保持干净的设置下，LIAR-RAW 的 F1 损失恢复约73%—80%。这是训练污染防御实验，不能视为已解决在线 RAG 注入；正式收录于 Findings of EMNLP 2026。",
+    "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共享溯源，让知识图谱答案的概率不重复计算证据",
+    "research.sparqlcirc-shared-provenance-probabilities.summary": "研究用标准查询构建共享溯源电路，保留不同答案的事实依赖，再计算概率。Wikidata上复杂推导子集有优势，但全部可比查询未普遍加速；分解计划需要写权限，输入概率不代表事实已核实。",
+    "research.dynsl-resource-adaptive-split-training.title": "DynSL：随设备和网络状态调整边缘训练的模型切分",
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL联合考虑设备、网络和服务器负载，训练中动态迁移模型层。24台异构设备实验显示，单设备降频时部分任务较次优方法节时约33%；稳定环境下预先测量的固定版本常更快，短暂振荡、能耗与共享头收敛仍有边界。"
   },
   "en": {
     "nav.about": "About",
@@ -1500,7 +1510,17 @@ window.SITE_MESSAGES = {
     "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace: ordinary tool calls can expose user attributes",
     "research.privacytrace-tool-call-profile-leakage.summary": "Using 1,000 synthetic profiles and 4,000 tool trajectories, the study measures inference from arguments and results. Default attribute accuracy rises from 17.97% to 26.25%; this is not complete-identity recovery, and proposed defenses remain untested.",
     "research.memx-memory-aware-heterogeneous-training.title": "MemX balances speed, memory and load in heterogeneous GPU training",
-    "research.memx-memory-aware-heterogeneous-training.summary": "MemX jointly searches parallelism and recomputation using iteration time, peak memory and memory balance. In a real six-GPU experiment its fastest choice ties baselines, while the balanced choice takes 9.3% longer. Forty- and sixty-GPU results are simulated; final model-quality equivalence is untested."
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX jointly searches parallelism and recomputation using iteration time, peak memory and memory balance. In a real six-GPU experiment its fastest choice ties baselines, while the balanced choice takes 9.3% longer. Forty- and sixty-GPU results are simulated; final model-quality equivalence is untested.",
+    "research.fde-enterprise-requirements-delivery.title": "Can agents deliver an enterprise project? Requirements come before acceptance",
+    "research.fde-enterprise-requirements-delivery.summary": "An enterprise text-to-SQL study separates requirement discovery from delivery. Across 450 simulated conversations, agents recover about 60% of hidden facts; two of eight main delivery runs meet every gate. Production testing measures compilation validity, not SQL semantics, and one engagement plus automated judging limits generalization.",
+    "research.dmreranker-clause-wise-instruction-reranking.title": "DMReranker checks retrieval clauses separately, improving ranks with trade-offs",
+    "research.dmreranker-clause-wise-instruction-reranking.summary": "DMReranker scores topical relevance and conditions such as source or language separately, then multiplies them. Mean WISE across six InfoSearch dimensions reaches 50.9 versus a cited GPT-4o baseline of 33.5, while raw-score SICR declines. Development used 120 test queries, and downstream answer quality was not evaluated.",
+    "research.glad-evidence-contamination-fact-checking.title": "GLAD filters relevant-looking evidence that can mis-train a fact checker",
+    "research.glad-evidence-contamination-fact-checking.summary": "GLAD combines semantic coherence and lexical isolation to filter retrieved evidence. With contaminated training evidence but clean test retrieval, it recovers roughly 73–80% of the LIAR-RAW F1 loss. This is not proof of protection against online RAG injection. The paper appears in Findings of EMNLP 2026.",
+    "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc: shared provenance for knowledge-graph answer probabilities",
+    "research.sparqlcirc-shared-provenance-probabilities.summary": "Standard queries build a shared provenance circuit before probability computation. Complex-derivation Wikidata subsets benefit, but speedups are not universal. Factored plans need write access, and assigned probabilities do not verify source facts.",
+    "research.dynsl-resource-adaptive-split-training.title": "DynSL adapts split training to changing edge devices and networks",
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL jointly models devices, networks and server load to move model layers during training. On 24 heterogeneous devices, selected throttling cases reduce epoch time by about 33% versus the next-best method. Profile-first fixed splits often win in stable conditions; oscillations, energy and shared-head convergence remain limitations."
   },
   "ja": {
     "nav.about": "私について",
@@ -2251,7 +2271,17 @@ window.SITE_MESSAGES = {
     "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：通常のツール呼び出しからも利用者属性を推測",
     "research.privacytrace-tool-call-profile-leakage.summary": "合成プロフィール1,000件とツール実行軌跡4,000件で、引数や応答が伝える追加情報を評価。標準条件の属性正答率は17.97%から26.25%へ上昇したが、完全な身元特定率ではなく、防御策は未検証。",
     "research.memx-memory-aware-heterogeneous-training.title": "MemX：混在GPUで訓練速度、メモリ、負荷均衡を調整",
-    "research.memx-memory-aware-heterogeneous-training.summary": "MemXは並列化と再計算を共同探索し、反復時間、ピークメモリ、均衡を評価する。実機6GPUでは最速構成が基準手法と並び、均衡構成は時間を9.3%増やす。40・60GPUはシミュレーションで、最終モデル品質の等価性は未検証。"
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemXは並列化と再計算を共同探索し、反復時間、ピークメモリ、均衡を評価する。実機6GPUでは最速構成が基準手法と並び、均衡構成は時間を9.3%増やす。40・60GPUはシミュレーションで、最終モデル品質の等価性は未検証。",
+    "research.fde-enterprise-requirements-delivery.title": "Agent は企業案件を任せられるか――要件の聞き取りから納品判定まで",
+    "research.fde-enterprise-requirements-delivery.summary": "企業向けの自然言語から SQL への変換を、要件発見と実装の二段階で評価した。模擬対話450件で隠された事実の約60%を回収し、主要な納品実験は八回中二回だけが全条件を満たした。本番用評価は構文・コンパイル上の有効性であり、SQL の意味の正しさは保証しない。",
+    "research.dmreranker-clause-wise-instruction-reranking.title": "DMReranker：検索条件を個別に判定すると、順位とスコアで評価が分かれる",
+    "research.dmreranker-clause-wise-instruction-reranking.summary": "話題との関連性と出典・言語などの条件を別々に採点して掛け合わせる。InfoSearch 六次元平均 WISE は50.9で引用した GPT-4o の33.5を上回るが、生スコア版 SICR は低下した。開発にテスト質問120件を使い、最終回答の品質は未評価である。",
+    "research.glad-evidence-contamination-fact-checking.title": "GLAD：関連しそうな証拠が事実検証器を誤って学習させる問題に対処",
+    "research.glad-evidence-contamination-fact-checking.summary": "意味のまとまりと語彙上の孤立度を合わせて証拠を選別する。訓練証拠だけを汚染し、テスト検索は清潔に保った設定で LIAR-RAW の F1 損失を約73〜80%回復した。オンライン RAG 注入への防御を証明したものではない。Findings of EMNLP 2026 掲載論文。",
+    "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共有来歴で知識グラフの証拠依存を保つ",
+    "research.sparqlcirc-shared-provenance-probabilities.summary": "標準問い合わせから共有来歴回路を作り、答えの確率を計算する。Wikidataの導出が多い部分集合で利点があるが、一律の高速化ではない。分解計画には書き込み権限が必要で、入力確率は事実確認を意味しない。",
+    "research.dynsl-resource-adaptive-split-training.title": "DynSL：端末と通信の変化に合わせて分割学習を調整",
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSLは端末・通信・サーバー負荷を考慮して学習中に層を移す。異種端末24台では、一台の低速化時に次点方式より約33%短い例がある。安定条件では事前測定による固定版が速い場合も多く、振動、電力、共有ヘッド収束は課題を残す。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3002,7 +3032,17 @@ window.SITE_MESSAGES = {
     "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace: обычные вызовы инструментов раскрывают атрибуты пользователя",
     "research.privacytrace-tool-call-profile-leakage.summary": "На 1 000 синтетических профилях и 4 000 траекториях проверены выводы из аргументов и ответов. Точность атрибутов растёт с 17,97% до 26,25%; это не восстановление полной личности, а предложенная защита пока не проверена.",
     "research.memx-memory-aware-heterogeneous-training.title": "MemX: компромисс скорости, памяти и баланса в смешанном GPU-кластере",
-    "research.memx-memory-aware-heterogeneous-training.summary": "MemX совместно выбирает параллелизм и повторные вычисления по времени итерации, пику и балансу памяти. На шести реальных GPU самый быстрый вариант совпадает с базовыми, а сбалансированный требует на 9,3% больше времени. 40 и 60 GPU моделируются; равенство качества моделей не проверено."
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX совместно выбирает параллелизм и повторные вычисления по времени итерации, пику и балансу памяти. На шести реальных GPU самый быстрый вариант совпадает с базовыми, а сбалансированный требует на 9,3% больше времени. 40 и 60 GPU моделируются; равенство качества моделей не проверено.",
+    "research.fde-enterprise-requirements-delivery.title": "Сможет ли агент выполнить корпоративный проект: от требований до приёмки",
+    "research.fde-enterprise-requirements-delivery.summary": "Исследование корпоративного text-to-SQL разделяет выяснение требований и поставку решения. В 450 имитированных диалогах восстановлено около 60% скрытых фактов; все условия приёмки выполнены в двух из восьми основных запусков. Проверка производственных запросов оценивает компиляцию, а не смысл SQL; выводы ограничены одним проектом и автоматическим судейством.",
+    "research.dmreranker-clause-wise-instruction-reranking.title": "DMReranker проверяет условия поиска отдельно: выигрыш ранга с оговорками",
+    "research.dmreranker-clause-wise-instruction-reranking.summary": "Тематическая релевантность и условия источника или языка оцениваются отдельно, затем перемножаются. Средний WISE по шести измерениям InfoSearch составляет 50,9 против цитируемых 33,5 у GPT-4o, но SICR по исходным баллам снижается. В разработке использованы 120 тестовых запросов; качество конечных ответов не проверялось.",
+    "research.glad-evidence-contamination-fact-checking.title": "GLAD: релевантное на вид свидетельство может неправильно обучить проверку фактов",
+    "research.glad-evidence-contamination-fact-checking.summary": "GLAD фильтрует найденные свидетельства по семантической связности и лексической изоляции. При загрязнённых обучающих свидетельствах и чистом поиске на тесте восстановлено около 73–80% потери F1 на LIAR-RAW. Это не доказательство защиты онлайн-RAG от инъекций. Статья опубликована в Findings of EMNLP 2026.",
+    "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc: общее происхождение вероятностных ответов графа знаний",
+    "research.sparqlcirc-shared-provenance-probabilities.summary": "Стандартные запросы строят общую схему происхождения для расчёта вероятностей. Выигрыш на Wikidata зависит от сложности выводов и не универсален. Факторизованный план требует записи; заданная вероятность не подтверждает истинность факта.",
+    "research.dynsl-resource-adaptive-split-training.title": "DynSL адаптирует разделённое обучение к устройствам и сети",
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL учитывает устройства, сеть и сервер, перемещая слои во время обучения. На 24 устройствах отдельные случаи снижения частоты сокращают эпоху примерно на 33% против ближайшего конкурента. В стабильных условиях часто быстрее фиксированный вариант; колебания, энергия и общая голова требуют дальнейшей проверки."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3753,6 +3793,16 @@ window.SITE_MESSAGES = {
     "research.privacytrace-tool-call-profile-leakage.title": "PrivacyTrace：正常工具呼叫也可能暴露使用者畫像",
     "research.privacytrace-tool-call-profile-leakage.summary": "1,000份合成資料與4,000條真實工具互動軌跡顯示，呼叫引數和返回內容能支援額外屬性推斷。預設屬性正確率從17.97%升至26.25%；不是完整身份恢復率，防護措施尚未驗證。",
     "research.memx-memory-aware-heterogeneous-training.title": "MemX：在混合GPU訓練中權衡速度、顯示記憶體與負載均衡",
-    "research.memx-memory-aware-heterogeneous-training.summary": "MemX聯合搜尋並行與重計算策略，將迭代時間、顯示記憶體峰值和顯示記憶體均衡納入同一目標。真實六GPU實驗中，最速方案與基準方法並列，均衡方案則接受9.3%的時間增加；40與60GPU結果僅為模擬，未驗證最終模型品質等價。"
+    "research.memx-memory-aware-heterogeneous-training.summary": "MemX聯合搜尋並行與重計算策略，將迭代時間、顯示記憶體峰值和顯示記憶體均衡納入同一目標。真實六GPU實驗中，最速方案與基準方法並列，均衡方案則接受9.3%的時間增加；40與60GPU結果僅為模擬，未驗證最終模型品質等價。",
+    "research.fde-enterprise-requirements-delivery.title": "Agent 能接下企業專案嗎？先問清需求，再過交付驗收",
+    "research.fde-enterprise-requirements-delivery.summary": "研究把企業文字轉 SQL 專案拆成需求發現和交付兩關。450段模擬溝通僅恢復約60%的隱藏事實；八次主要交付執行中兩次通過全部門檻。生產測試衡量編譯有效性，並不證明 SQL 語義正確，單一案例和自動評審也限制了結論。",
+    "research.dmreranker-clause-wise-instruction-reranking.title": "DMReranker：把檢索要求拆開判斷，排名改善也有代價",
+    "research.dmreranker-clause-wise-instruction-reranking.summary": "DMReranker 將主題相關性與來源、語言等條件分別評分，再相乘重排。InfoSearch 六維平均 WISE 達50.9，高於引用的 GPT-4o 基線33.5，但原始分數口徑 SICR 反而下降；120條測試查詢參與開發，且未驗證端到端答案品質。",
+    "research.glad-evidence-contamination-fact-checking.title": "GLAD：檢索證據看起來相關，也可能把事實核驗器教錯",
+    "research.glad-evidence-contamination-fact-checking.summary": "GLAD 用語義一致性與詞彙孤立程度過濾證據。在訓練證據被汙染、測試檢索保持乾淨的設定下，LIAR-RAW 的 F1 損失恢復約73%—80%。這是訓練汙染防禦實驗，不能視為已解決線上 RAG 注入；正式收錄於 Findings of EMNLP 2026。",
+    "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共享溯源，讓知識圖譜答案的機率不重複計算證據",
+    "research.sparqlcirc-shared-provenance-probabilities.summary": "研究用標準查詢構建共享溯源電路，保留不同答案的事實依賴，再計算機率。Wikidata上複雜推導子集有優勢，但全部可比查詢未普遍加速；分解計劃需要寫權限，輸入機率不代表事實已核實。",
+    "research.dynsl-resource-adaptive-split-training.title": "DynSL：隨裝置和網路狀態調整邊緣訓練的模型切分",
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL聯合考慮裝置、網路和伺服器負載，訓練中動態遷移模型層。24臺異構裝置實驗顯示，單裝置降頻時部分任務較次優方法節時約33%；穩定環境下預先測量的固定版本常更快，短暫振盪、能耗與共享頭收斂仍有邊界。"
   }
 };
