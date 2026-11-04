@@ -30,7 +30,7 @@ for catalog in (NEWS, RESEARCH):
             if file.suffix == '.svg':
                 check_text(file.read_text(), 'public SVG cover')
 
-for pattern in ('*sources*.md', '*review*.md', 'content-update*.md'):
+for pattern in ('*sources*.md', '*review*.md', '*correction*.md', 'content-update*.md'):
     for file in (ROOT / 'i18n').glob(pattern):
         check_text(file.read_text(), file.name, private_only=True)
 

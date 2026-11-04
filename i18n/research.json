@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-03",
+  "updated_at": "2026-11-04",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,78 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "fde-enterprise-requirements-delivery",
+      "kind": "preprint",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-04",
+      "tags": [
+        "ai",
+        "agents",
+        "databases",
+        "papers"
+      ],
+      "source": "Marianne Menglin Liu et al. · arXiv · 2611.03551v1",
+      "url": "https://arxiv.org/abs/2611.03551v1"
+    },
+    {
+      "id": "dmreranker-clause-wise-instruction-reranking",
+      "kind": "preprint",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-04",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "S. M. Mahbub Uddin Ahmed and Abdullah Al Musaddiq · arXiv · 2611.03179v1",
+      "url": "https://arxiv.org/abs/2611.03179v1"
+    },
+    {
+      "id": "glad-evidence-contamination-fact-checking",
+      "kind": "conference-paper",
+      "published_at": "2026-11-01",
+      "collected_at": "2026-11-04",
+      "tags": [
+        "ai",
+        "rag",
+        "security",
+        "papers",
+        "conferences"
+      ],
+      "source": "Alamgir Munir Qazi, John Philip McCrae and Jamal Abdul Nasir · arXiv · 2611.02139v1",
+      "url": "https://arxiv.org/abs/2611.02139v1",
+      "venue": "Findings of EMNLP 2026"
+    },
+    {
+      "id": "sparqlcirc-shared-provenance-probabilities",
+      "kind": "preprint",
+      "published_at": "2026-10-29",
+      "collected_at": "2026-11-04",
+      "tags": [
+        "databases",
+        "data-governance",
+        "papers",
+        "results"
+      ],
+      "source": "Jingcheng Wu et al. · arXiv:2611.00128v1",
+      "url": "https://arxiv.org/abs/2611.00128"
+    },
+    {
+      "id": "dynsl-resource-adaptive-split-training",
+      "kind": "conference-paper",
+      "venue": "SoCC 2026 (author-reported; track unspecified)",
+      "published_at": "2026-11-02",
+      "collected_at": "2026-11-04",
+      "tags": [
+        "systems",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Boris Radovič et al. · arXiv · 2611.03209v1",
+      "url": "https://arxiv.org/abs/2611.03209v1"
+    },
     {
       "id": "archor-structural-skill-arbitration",
       "kind": "preprint",
