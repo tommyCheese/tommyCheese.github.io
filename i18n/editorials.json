@@ -36657,6 +36657,1959 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "cpguard-update-channel-compromise",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "OPSSHIELD · updated incident disclosure",
+          "url": "https://opsshield.com/notice/security-incident-disclosure-servermanage.html"
+        },
+        {
+          "label": "OPSSHIELD · initial advisory and evolving findings",
+          "url": "https://opsshield.com/notice/cpguard-update-channel-compromise.html"
+        },
+        {
+          "label": "BleepingComputer · independent reporting",
+          "url": "https://www.bleepingcomputer.com/news/security/hackers-hijack-cpguard-autoupdate-to-deploy-backdoor-steal-data/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "本来用于保护网站服务器的软件，反而通过更新渠道把风险带进了客户系统。OPSSHIELD 在 11 月 3 日披露，攻击者侵入其计费与许可基础设施后，利用被盗的更新发布权限分发了恶意 cPGuard 更新。事件发生在 11 月 1—2 日；新增信息是供应链被突破的过程、受影响范围以及后续处置，而不是又发现一个等待修补的普通软件漏洞。",
+          "sections": [
+            {
+              "heading": "从服务商业务系统进入更新链",
+              "paragraphs": [
+                "cPGuard 是面向 Linux 网站服务器的安全套件。更新渠道通常受到客户信任，具有安装和维护软件所需的权限，因此发布端出问题会把风险传给下游。新版披露称，攻击者先进入服务商的计费与许可系统，再取得更新存储的访问密钥；关键入口请求没有被完整记录，确切利用方式仍在审查，不能写成某个漏洞已被最终确认。",
+                "厂商将客户收到恶意更新的窗口细化为 11 月 2 日 02:08—03:20 UTC，约 72 分钟。早期公告列出受影响版本 5.88.12—5.88.19，并表示在 12 小时内发现异常；“发现所用时间”与“恶意更新实际分发窗口”不是同一统计。旧更新记录能提示暴露，但缺少记录也不能单凭这一点证明安全。"
+              ]
+            },
+            {
+              "heading": "影响数字有不同分母",
+              "paragraphs": [
+                "后续披露估计，约 2,950 台客户服务器运行了恶意更新，约 7,900 个计费门户账户记录被窃。前者统计服务器，后者统计业务账户，不能相加成独立受害人数。BleepingComputer 独立报道引述厂商给出的 2,946 台，与后续约数接近；这些都是厂商调查口径，本站没有逐台独立取证。",
+                "恶意程序针对高权限账户的密码哈希、远程登录密钥、数据库凭据及可能含有秘密的历史信息。计费账户涉及联系方式与经过哈希处理的密码。哈希不是明文，但仍可能面临离线猜测；未在攻击窗口运行 cPGuard 的服务器，与存放在服务商处的计费账户也属于不同暴露面。早期“32 个收集文件”的描述不是完整受影响规模，更不是每位客户均丢失 32 个文件的结论。"
+              ]
+            },
+            {
+              "heading": "清理程序与收回访问能力是两件事",
+              "paragraphs": [
+                "早期建议升级到 5.88.25 或以上；后续披露已列出 5.88.26 清理版本和追加清理措施。厂商称已撤销被盗发布凭据、重建受影响基础设施，并重新签发许可密钥。读者应以最新正式处置说明为准，而不能只看到某个版本号就认为调查结束。",
+                "这里的关键区别是：更新可以移除已知恶意组件，却不能让此前复制走的密码和密钥自动失效。厂商要求轮换可能暴露的账户、数据库和远程访问凭据，并检查信任这些旧密钥的其他系统；已确认存在人工登录的服务器需要按其指引重建。本站的解释是，恢复应同时覆盖软件完整性和身份访问两条线。入口细节与逐台数据范围仍有待核实，不能宣称所有影响已经消除。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据前后两份公告重绘的解释图：更新渠道清理与凭据失效需要分别完成；不是攻击操作图或受害规模测量。",
+            "steps": [
+              "计费与许可系统被侵入",
+              "更新发布权限被盗用",
+              "客户更新引入凭据暴露风险",
+              "清理组件并轮换相关访问凭据"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Software intended to protect web servers became the route by which a compromise reached customer systems. On November 3, OPSSHIELD disclosed that an attacker entered its billing and licensing infrastructure and abused stolen publishing access to distribute a malicious cPGuard update. The incident occurred on November 1–2. The news is a confirmed supply-chain incident and an evolving response, rather than an ordinary vulnerability awaiting a patch.",
+          "sections": [
+            {
+              "heading": "A business system led into the update chain",
+              "paragraphs": [
+                "cPGuard is a security suite for Linux web servers. Its trusted update channel has the permissions needed to maintain software, making publishing infrastructure a consequential boundary. The later disclosure says the attacker reached the billing and licensing system and obtained an update-storage key. The precise entry request was not fully logged; the exploit mechanism remains under review.",
+                "The vendor narrowed the installation window to November 2, 02:08–03:20 UTC, roughly 72 minutes. Its earlier advisory identified versions 5.88.12–5.88.19 and detection within 12 hours. Detection time and the distribution window measure different things. Update records can indicate exposure, but missing records alone cannot establish safety."
+              ]
+            },
+            {
+              "heading": "Different counts describe different exposure",
+              "paragraphs": [
+                "The later disclosure estimates about 2,950 customer servers ran the update and about 7,900 billing-portal accounts had records stolen. Servers and business accounts are different units and cannot be added into a unique victim count. BleepingComputer separately quoted the vendor naming 2,946 servers, consistent with the rounded estimate. These remain vendor investigation figures, not our independent forensic measurements.",
+                "Targets included password hashes, remote-access keys, database credentials and historical information that could contain secrets. Billing records included contact details and hashed passwords. Hashing is not plaintext storage, but it can still permit offline guessing. A server offline during the distribution window and its billing account have distinct exposure. An early estimate of 32 collected files did not describe the full affected population or establish 32 files stolen from every customer."
+              ]
+            },
+            {
+              "heading": "Cleanup does not revoke stolen access",
+              "paragraphs": [
+                "The initial advisory recommended 5.88.25 or later; the subsequent disclosure names cleanup release 5.88.26 and additional removal measures. OPSSHIELD says it revoked publishing credentials, rebuilt affected infrastructure and began reissuing license keys. Current official guidance matters more than treating one version number as proof that the investigation is finished.",
+                "Removing known malicious components cannot invalidate passwords or keys already copied elsewhere. The vendor calls for rotating exposed account, database and remote-access credentials, checking systems that trusted old keys, and rebuilding servers where it confirmed manual attacker access. Our interpretation is that recovery has two tracks: software integrity and identity access. The exact entry mechanism and per-server data exposure still need verification; complete eradication cannot be assumed."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from the two advisories: software cleanup and credential revocation are separate tasks, not attack instructions or measured victim totals.",
+            "steps": [
+              "Billing and licensing system compromised",
+              "Update-publishing access stolen",
+              "Customer updates expose credentials",
+              "Clean components and rotate access credentials"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Web サーバーを守るはずのソフトウェアが、更新経路を通じて顧客システムに被害を広げた。OPSSHIELD は11月3日、課金・ライセンス基盤への侵入後、盗まれた配布権限によって不正な cPGuard 更新が送られたと公表した。事件は11月1～2日に発生した。今回の新情報は通常の脆弱性修正ではなく、供給網への侵入経路、影響範囲と復旧対応である。",
+          "sections": [
+            {
+              "heading": "業務システムから更新経路へ",
+              "paragraphs": [
+                "cPGuard は Linux の Web サーバー向けセキュリティ製品である。信頼される更新経路はソフトウェア保守に必要な権限を持ち、配布側の侵害が顧客へ波及しうる。後続の説明によると、攻撃者は課金・ライセンス基盤から更新ストレージの鍵を取得した。ただし侵入を成立させた正確なリクエストは記録されておらず、具体的な侵入手法は調査中だ。",
+                "顧客が不正更新を導入した時間帯は11月2日02:08～03:20 UTC、約72分とされた。初期の勧告は対象を5.88.12～5.88.19とし、12時間以内に検知したと説明していた。検知までの時間と実際の配布時間は別の尺度である。更新履歴は影響の手掛かりになるが、記録がないことだけでは安全を証明できない。"
+              ]
+            },
+            {
+              "heading": "数字ごとに集計対象が違う",
+              "paragraphs": [
+                "後続の公表値は、不正更新を実行した顧客サーバー約2,950台、記録が盗まれた課金ポータルのアカウント約7,900件。台数と業務アカウント数を足して被害者の人数にはできない。BleepingComputer が別途取材して報じた2,946台は丸めた値と近い。いずれも提供元の調査値であり、本站の独立した実機検証ではない。",
+                "対象にはパスワードのハッシュ、遠隔接続の鍵、データベース認証情報、秘密を含みうる履歴情報があった。課金側では連絡先やハッシュ化されたパスワードが含まれる。ハッシュは平文ではないが、オフラインでの推測リスクは残る。配布時間中に停止していたサーバーと、提供元にある課金アカウントの露出は別問題だ。初期の「収集ファイル32個」は全体規模でも、各顧客から32個ずつ盗まれたとの結論でもない。"
+              ]
+            },
+            {
+              "heading": "削除とアクセス無効化を分ける",
+              "paragraphs": [
+                "初期勧告は5.88.25以降への更新を求め、後続説明では5.88.26と追加の除去策が示された。提供元は配布用認証情報を失効させ、侵害された基盤を再構築し、ライセンス鍵を再発行しているという。特定バージョンを導入しただけで調査が終わったとは考えず、最新の正式な対応案内を確認する必要がある。",
+                "既知の不正コンポーネントを削除しても、すでにコピーされた鍵やパスワードは自動的に無効にならない。提供元は該当するアカウント、データベース、遠隔接続の認証情報の交換、旧鍵を信頼していた他システムの確認を求め、攻撃者による手動接続が確認されたサーバーには再構築を案内する。本站の解釈では、復旧にはソフトウェアの完全性と認証権限の両方が必要だ。入口の詳細と個々のサーバーから流出した範囲は未確定で、影響の完全解消は断言できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "二つの公告を基に本站が描き直した説明図。ソフトウェア除去と認証情報の失効を区別し、攻撃手順や被害数の実測を表すものではない。",
+            "steps": [
+              "課金・ライセンス基盤への侵入",
+              "更新配布権限の悪用",
+              "顧客更新による認証情報の露出",
+              "コンポーネント除去と認証情報の交換"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Программа для защиты веб-серверов сама стала каналом распространения компрометации. 3 ноября OPSSHIELD сообщила, что после проникновения в инфраструктуру оплаты и лицензирования злоумышленник использовал похищенные права публикации для доставки вредоносного обновления cPGuard. События произошли 1–2 ноября. Новость состоит в раскрытии инцидента в цепочке поставки, его масштаба и мер восстановления, а не обычной уязвимости, ожидающей исправления.",
+          "sections": [
+            {
+              "heading": "От бизнес-системы к каналу обновлений",
+              "paragraphs": [
+                "cPGuard защищает веб-серверы Linux. Доверенный канал обновлений обладает правами для обслуживания программы, поэтому компрометация издателя может затронуть клиентов. Согласно последующему раскрытию, из системы оплаты и лицензирования атакующий получил ключ хранилища обновлений. Точный запрос, обеспечивший проникновение, не был полностью записан: конкретный механизм ещё проверяется.",
+                "Поставщик уточнил окно установки вредоносного обновления: 2 ноября, 02:08–03:20 UTC, около 72 минут. Ранняя рекомендация называла версии 5.88.12–5.88.19 и обнаружение в пределах 12 часов. Время обнаружения и длительность распространения — разные показатели. История обновлений помогает оценить риск, но отсутствие записей само по себе не доказывает безопасность."
+              ]
+            },
+            {
+              "heading": "Разные числа описывают разные объекты",
+              "paragraphs": [
+                "В последующем сообщении указаны примерно 2 950 клиентских серверов, выполнивших обновление, и около 7 900 учётных записей платёжного портала, данные которых похищены. Серверы и бизнес-аккаунты нельзя складывать в число уникальных пострадавших. BleepingComputer отдельно получила от поставщика число 2 946 серверов, близкое к округлённой оценке. Это результаты расследования компании, а не нашей независимой экспертизы.",
+                "Среди целей были хеши паролей, ключи удалённого доступа, реквизиты баз данных и история действий, которая могла содержать секреты. Записи портала включали контактные сведения и хешированные пароли. Хеш не является открытым паролем, но допускает риск автономного подбора. Сервер, выключенный во время распространения, и его аккаунт у поставщика имеют разные поверхности риска. Ранняя оценка в 32 собранных файла не была полным масштабом инцидента и не означала 32 файла у каждого клиента."
+              ]
+            },
+            {
+              "heading": "Очистка не отзывает похищенный доступ",
+              "paragraphs": [
+                "Сначала рекомендовалась версия 5.88.25 или новее; последующее раскрытие называет очистку в 5.88.26 и дополнительные меры удаления. OPSSHIELD сообщает об отзыве реквизитов публикации, восстановлении затронутой инфраструктуры и перевыпуске лицензионных ключей. Следует ориентироваться на актуальное официальное руководство, а не считать отдельный номер версии свидетельством завершённого расследования.",
+                "Удаление известных вредоносных компонентов не делает недействительными уже скопированные пароли и ключи. Поставщик требует заменить затронутые реквизиты аккаунтов, баз данных и удалённого доступа, проверить системы, доверявшие старым ключам, и переустановить серверы с подтверждённым ручным входом атакующего. Наша интерпретация: восстановление должно охватывать целостность ПО и права доступа одновременно. Точка входа и объём данных по каждому серверу ещё уточняются; полное устранение последствий не установлено."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема, заново составленная сайтом по двум уведомлениям: очистка ПО и отзыв реквизитов — разные задачи; это не инструкция атаки и не измерение числа жертв.",
+            "steps": [
+              "Проникновение в оплату и лицензирование",
+              "Кража прав публикации обновлений",
+              "Обновление создаёт риск утечки реквизитов",
+              "Очистка компонентов и замена реквизитов"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "本來用於保護網站伺服器的軟體，反而透過更新渠道把風險帶進了客戶系統。OPSSHIELD 在 11 月 3 日披露，攻擊者侵入其計費與許可基礎設施後，利用被盜的更新發布權限分發了惡意 cPGuard 更新。事件發生在 11 月 1—2 日；新增資訊是供應鏈被突破的過程、受影響範圍以及後續處置，而不是又發現一個等待修補的普通軟體漏洞。",
+          "sections": [
+            {
+              "heading": "從服務商業務系統進入更新鏈",
+              "paragraphs": [
+                "cPGuard 是面向 Linux 網站伺服器的安全套件。更新渠道通常受到客戶信任，具有安裝和維護軟體所需的權限，因此釋出端出問題會把風險傳給下游。新版披露稱，攻擊者先進入服務商的計費與許可系統，再取得更新儲存的訪問金鑰；關鍵入口請求沒有被完整記錄，確切利用方式仍在審查，不能寫成某個漏洞已被最終確認。",
+                "廠商將客戶收到惡意更新的時段細化為 11 月 2 日 02:08—03:20 UTC，約 72 分鐘。早期公告列出受影響版本 5.88.12—5.88.19，並表示在 12 小時內發現異常；“發現所用時間”與“惡意更新實際分發時段”不是同一統計。舊更新記錄能提示暴露，但缺少記錄也不能單憑這一點證明安全。"
+              ]
+            },
+            {
+              "heading": "影響數字有不同分母",
+              "paragraphs": [
+                "後續披露估計，約 2,950 臺客戶伺服器執行了惡意更新，約 7,900 個計費門戶帳戶記錄被竊。前者統計伺服器，後者統計業務帳戶，不能相加成獨立受害人數。BleepingComputer 獨立報道引述廠商給出的 2,946 臺，與後續約數接近；這些都是廠商調查口徑，本站沒有逐臺獨立取證。",
+                "惡意程式針對高權限帳戶的密碼雜湊、遠端登入金鑰、資料庫憑據及可能含有秘密的歷史資訊。計費帳戶涉及聯絡方式與經過雜湊處理的密碼。雜湊不是明文，但仍可能面臨離線猜測；未在攻擊時段執行 cPGuard 的伺服器，與存放在服務商處的計費帳戶也屬於不同暴露面。早期“32 個收集檔案”的描述不是完整受影響規模，更不是每位客戶均丟失 32 個檔案的結論。"
+              ]
+            },
+            {
+              "heading": "清理程式與收回訪問能力是兩件事",
+              "paragraphs": [
+                "早期建議升級到 5.88.25 或以上；後續披露已列出 5.88.26 清理版本和追加清理措施。廠商稱已撤銷被盜釋出憑據、重建受影響基礎設施，並重新簽發許可金鑰。讀者應以最新正式處置說明為準，而不能只看到某個版本號就認為調查結束。",
+                "這裡的關鍵區別是：更新可以移除已知惡意元件，卻不能讓此前複製走的密碼和金鑰自動失效。廠商要求輪換可能暴露的帳戶、資料庫和遠端訪問憑據，並檢查信任這些舊金鑰的其他系統；已確認存在人工登入的伺服器需要按其指引重建。本站的解釋是，恢復應同時覆蓋軟體完整性和身分訪問兩條線。入口細節與逐臺資料範圍仍有待核實，不能宣稱所有影響已經消除。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據前後兩份公告重繪的解釋圖：更新渠道清理與憑據失效需要分別完成；不是攻擊操作圖或受害規模測量。",
+            "steps": [
+              "計費與許可系統被侵入",
+              "更新發布權限被盜用",
+              "客戶更新引入憑據暴露風險",
+              "清理元件並輪換相關訪問憑據"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "workos-sales-support-data-incident",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "WorkOS · incident bulletin",
+          "url": "https://workos.com/security/bulletins/october-30th-2026-data-security-incident"
+        },
+        {
+          "label": "BleepingComputer · independent reporting",
+          "url": "https://www.bleepingcomputer.com/news/security/workos-says-attacker-used-artex-ai-to-breach-internal-sales-app/"
+        },
+        {
+          "label": "Wiz · separate October investigation, contextual evidence only",
+          "url": "https://www.wiz.io/blog/artex-in-the-wild-storm-0940-expands-targeting-of-it-and-software-vendors"
+        },
+        {
+          "label": "Google GTIG / Mandiant · separate investigation and limitations",
+          "url": "https://cloud.google.com/blog/topics/threat-intelligence/artex-and-friends-enter-agentic-offensive-frameworks"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "WorkOS 在 11 月 2 日发布安全通报，说明公司于 10 月 30 日发现销售与客户服务工具遭未经授权访问。被访问的是客户关系和支持信息，可能包含业务联系人、沟通内容与产品使用元数据。对提供身份基础设施的公司而言，这类外围业务系统也持有有价值的信息；但不能因此把事件说成所有客户的登录系统已被攻破。",
+          "sections": [
+            {
+              "heading": "先分清业务记录与生产服务",
+              "paragraphs": [
+                "官方列出的信息包括业务联系人联系方式、客户账户历史、销售电话与支持讨论的摘要或节选，以及产品使用、连接或目录健康状态等元数据。这里的“客户沟通”是销售及服务场景中的内容，不等于整个客户工作区或所有私人消息都被复制。公司正在逐条核查各组织受到的影响，尚未公开完整数量。",
+                "WorkOS 表示，目前没有证据显示其应用数据或生产服务被访问或受影响。这个说法限定了当时掌握的证据，既不能扩大为生产身份系统已经失陷，也不能理解为未来调查一定不会修正结论。11 月 2 日是通报发布日期，10 月 30 日是发现日期，11 月 3 日的独立报道也不会改变这两个时间。"
+              ]
+            },
+            {
+              "heading": "AI 辅助是调查归因，不是完整攻击结论",
+              "paragraphs": [
+                "通报称攻击者借助 AI 辅助的进攻性安全框架，自动执行侦察和利用尝试。BleepingComputer 随后报道，创始人将工具归因为 ARTEX。本文保留这一归因等级：官方书面通报没有命名该框架，也没有公布足以独立重建整个事件的技术证据，因此不能从名称推出攻击者身份、模型提供商或完全无人参与。",
+                "作为背景，Wiz 10 月 22 日和 Google 威胁情报团队 10 月 30 日的其他调查观察到，Agent 能依据前一步结果选择后续动作，持续尝试既有薄弱点。它们说明自动化可以缩短攻击步骤间的间隔，也记录了失败与噪声；并不是对 WorkOS 事件的独立取证。本站据此解释：AI 可能改变执行节奏，但不能代替对入口、授权缺陷和影响范围的具体调查。"
+              ]
+            },
+            {
+              "heading": "真正需要关注的是后续冒充风险",
+              "paragraphs": [
+                "WorkOS 已关闭受影响工具的外部访问，并聘请独立数字取证与事件响应机构，同时扩大内部工具的访问控制审查。公司表示会直接联系受影响客户并继续更新信息。切断入口属于遏制措施，不能证明此前复制出去的业务资料已经被收回。",
+                "泄露的真实联系人和历史沟通背景可能让后续冒充请求更可信。官方建议对意外的信息索取或行动请求另行核实，即使来信提到了真实同事或支持记录。对读者更有意义的后续证据，是逐组织通知、数据范围和入口原因的确认；目前没有公开材料支持“全部客户受害”、某个国家归因或精确成功率，也不应把其他公司的事件细节移植到这次通报中。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释图：销售支持记录的暴露可能增加后续冒充风险；生产服务状态是独立证据边界，不是同一条已证实入侵链。",
+            "steps": [
+              "销售支持工具被未经授权访问",
+              "业务记录与沟通摘要暴露",
+              "关闭外部入口并核查范围",
+              "核实异常请求与后续客户通知"
+            ]
+          }
+        },
+        "en": {
+          "lead": "WorkOS published a security bulletin on November 2 after discovering unauthorized access to a sales and customer-facing tool on October 30. The information involved customer relationships and support, including business contacts, communications and product-use metadata. Such peripheral business systems can hold valuable context at an identity-infrastructure provider. That does not establish that its customers’ sign-in systems were compromised.",
+          "sections": [
+            {
+              "heading": "Separate business records from production services",
+              "paragraphs": [
+                "The bulletin lists business contact details, account histories, summaries or excerpts of sales and support conversations, and metadata about product use and connection or directory health. Customer communications here mean material in these business workflows, not proof that entire customer workspaces or all private messages were copied. Record-level impact is still being reviewed, with no complete affected total published.",
+                "WorkOS says it has no evidence of access to application data or production services, or of production impact. That describes the evidence available at the time. It neither establishes a production identity-system breach nor guarantees that later findings cannot change the assessment. November 2 is the bulletin date; October 30 is the discovery date. Independent reporting on November 3 does not move either date."
+              ]
+            },
+            {
+              "heading": "AI assistance is an attribution, not a complete explanation",
+              "paragraphs": [
+                "The company attributes automated reconnaissance and exploitation attempts to an AI-assisted offensive framework. BleepingComputer subsequently reported the founder identifying ARTEX. The written bulletin does not name it or publish enough technical evidence to independently reconstruct the incident. A framework name alone cannot identify the operator, model provider or degree of human involvement.",
+                "For context, separate Wiz research on October 22 and Google threat-intelligence research on October 30 describe agents choosing follow-up actions from prior results and repeatedly testing familiar weaknesses. Those investigations also observed failures and noisy activity. They are not independent forensics of WorkOS. Our interpretation is that AI can change operational tempo without replacing investigation of the actual entry point, authorization failure and scope."
+              ]
+            },
+            {
+              "heading": "The downstream risk is credible impersonation",
+              "paragraphs": [
+                "WorkOS disabled external access to the affected tool, engaged an independent digital-forensics and incident-response firm, and expanded its review of internal-tool access controls. It says it will contact affected customers and provide updates. Closing an access path is containment; it does not retrieve business information already copied elsewhere.",
+                "Real contacts and prior conversation details can make impersonation more convincing. The bulletin advises independently verifying unexpected requests even when they reference genuine colleagues or support exchanges. The useful next evidence is organization-specific notification, confirmed data scope and the entry mechanism. Public material does not establish that all customers were affected, a national attribution or a precise attack success rate. Details from unrelated incidents should not be imported into this one."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw: exposed sales and support context can increase impersonation risk. Production-service status remains a separate evidence boundary, not a proven extension of this intrusion.",
+            "steps": [
+              "Unauthorized access to a sales/support tool",
+              "Business records and conversation excerpts exposed",
+              "External access closed; scope investigated",
+              "Verify unusual requests and customer notices"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "WorkOS は11月2日、営業・顧客対応ツールへの不正アクセスを10月30日に発見したと公表した。対象は顧客関係管理やサポートの情報で、業務連絡先、会話の内容、製品利用のメタデータなどが含まれる。認証基盤を提供する企業では、周辺の業務システムにも価値の高い情報がある。ただし、これだけで顧客のログイン基盤が侵害されたとはいえない。",
+          "sections": [
+            {
+              "heading": "業務記録と本番サービスを区別する",
+              "paragraphs": [
+                "通報には業務連絡先、顧客アカウント履歴、営業やサポートでの会話の要約・抜粋、製品利用と接続・ディレクトリの健全性に関するメタデータが挙げられた。顧客との会話とは、この業務の文脈にある情報であり、顧客のワークスペース全体や全私信がコピーされた証拠ではない。組織ごとの影響は記録単位で確認中で、全体数は公表されていない。",
+                "WorkOS は、アプリケーションデータや本番サービスへのアクセス、または本番への影響を示す証拠はないとしている。これは現時点の証拠の範囲を示す表現であり、本番認証システムの侵害とも、今後の調査で見解が変わらない保証とも違う。11月2日は公表日、10月30日は発見日であり、11月3日の独立報道を新たな発生日にしてはいけない。"
+              ]
+            },
+            {
+              "heading": "AI 利用の帰属と事件の全容は別",
+              "paragraphs": [
+                "同社は、AI 支援の攻撃的セキュリティ・フレームワークが探索と侵入の試行を自動化したと説明する。BleepingComputer は後に、創業者が ARTEX と特定したと報じた。ただし正式な書面は名前を挙げず、事件全体を独立に再構成できる技術的証拠も公開していない。名称だけから実行者、モデル提供企業、人間の関与の程度は決められない。",
+                "背景として、Wiz の10月22日と Google 脅威分析チームの10月30日の別の調査は、Agent が直前の結果から次の行動を選び、既知の弱点を繰り返し試す様子を報告した。失敗や大量の痕跡も観察されている。これらは WorkOS 事件の独立した鑑識ではない。本站の解釈では、AI は実行の速度を変えうるが、実際の入口、認可の欠陥、影響範囲の調査を不要にはしない。"
+              ]
+            },
+            {
+              "heading": "今後のなりすましに結び付く情報",
+              "paragraphs": [
+                "WorkOS は対象ツールへの外部アクセスを止め、独立したデジタル鑑識・対応機関を起用し、内部ツールのアクセス制御も広く点検している。影響を受けた顧客へ直接連絡し、確認後に情報を更新するとしている。入口の閉鎖は封じ込めであり、すでにコピーされた業務情報を回収できたことにはならない。",
+                "実在する連絡先や過去のやり取りがあると、後のなりすまし要求が本物らしく見える。公式通報は、本当の同僚やサポート履歴に触れた連絡でも、予期しない情報提供や操作の要求は別途確認するよう促す。今後重要なのは組織別通知、流出範囲と侵入原因の確定だ。全顧客の被害、国家への帰属、正確な成功率を裏付ける公開証拠はなく、他社事件の詳細を当てはめるべきではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站による説明用の描き直し。営業・サポート情報の露出となりすましリスクを示す。本番サービスの状態は独立した証拠の境界であり、侵入の拡大が確認されたという図ではない。",
+            "steps": [
+              "営業・サポートツールへの不正アクセス",
+              "業務記録と会話抜粋の露出",
+              "外部アクセスの停止と範囲調査",
+              "異常な要求と顧客通知の確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "2 ноября WorkOS выпустила уведомление о несанкционированном доступе к инструменту отдела продаж и клиентского обслуживания, обнаруженном 30 октября. Затронуты сведения о деловых контактах, коммуникациях и использовании продуктов. У поставщика инфраструктуры идентификации даже вспомогательные бизнес-системы содержат ценный контекст. Однако это не доказывает взлом систем входа его клиентов.",
+          "sections": [
+            {
+              "heading": "Деловые записи и рабочие сервисы — разные границы",
+              "paragraphs": [
+                "Компания перечисляет контактные данные, историю клиентских аккаунтов, резюме и выдержки из разговоров с продажами и поддержкой, сведения об использовании продуктов и состоянии подключений или каталогов. Речь о коммуникациях в этих рабочих процессах, а не о доказанной краже целых клиентских рабочих пространств или всей личной переписки. Влияние на отдельные организации ещё проверяется; полное число пострадавших не опубликовано.",
+                "WorkOS сообщает, что доказательств доступа к данным приложений или производственным сервисам, а также влияния на последние нет. Это описание имеющихся свидетельств: оно не подтверждает взлом основной системы идентификации и не гарантирует неизменность будущих выводов. 2 ноября — дата уведомления, 30 октября — обнаружения. Независимая публикация 3 ноября не меняет эти даты."
+              ]
+            },
+            {
+              "heading": "Использование ИИ не объясняет весь инцидент",
+              "paragraphs": [
+                "Компания связывает автоматизацию разведки и попыток эксплуатации с наступательным фреймворком, использующим ИИ. Позже BleepingComputer сообщила, что основатель назвал ARTEX. В письменном уведомлении название отсутствует, а технических свидетельств недостаточно для независимой реконструкции всего инцидента. Название инструмента не устанавливает личность оператора, поставщика модели или степень участия человека.",
+                "Для контекста: отдельные исследования Wiz от 22 октября и Google от 30 октября описывают агентов, выбирающих следующие действия по предыдущим результатам и многократно проверяющих известные слабые места. Они также наблюдали неудачи и шумную активность. Это не независимая экспертиза случая WorkOS. Наша интерпретация: ИИ способен изменить темп действий, но не заменяет выяснение точки входа, дефекта авторизации и масштаба ущерба."
+              ]
+            },
+            {
+              "heading": "Дальнейший риск — убедительная подмена личности",
+              "paragraphs": [
+                "WorkOS отключила внешний доступ к инструменту, привлекла независимых специалистов по цифровой криминалистике и реагированию и расширила проверку доступа к внутренним инструментам. Компания обещает прямые уведомления затронутым клиентам и новые подтверждённые сведения. Закрытие входа сдерживает инцидент, но не возвращает уже скопированную деловую информацию.",
+                "Настоящие контакты и детали прошлых разговоров могут сделать последующие мошеннические запросы убедительнее. Уведомление рекомендует отдельно проверять неожиданные просьбы даже со ссылками на реальных коллег и обращения в поддержку. Далее важны адресные уведомления, подтверждённый состав данных и причина проникновения. Публичные материалы не подтверждают ущерб всем клиентам, государственную атрибуцию или точный процент успешности атаки. Детали чужих расследований нельзя переносить на этот случай."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема сайта: контекст продаж и поддержки может повысить убедительность обмана. Состояние производственных сервисов — отдельная граница доказательств, а не подтверждённое продолжение этой атаки.",
+            "steps": [
+              "Несанкционированный доступ к бизнес-инструменту",
+              "Раскрытие записей и выдержек из разговоров",
+              "Закрытие внешнего доступа и расследование",
+              "Проверка необычных запросов и уведомлений"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "WorkOS 在 11 月 2 日釋出安全通報，說明公司於 10 月 30 日發現銷售與客戶服務工具遭未經授權訪問。被訪問的是客戶關係和支援資訊，可能包含業務聯絡人、溝通內容與產品使用後設資料。對提供身分基礎設施的公司而言，這類外圍業務系統也持有有價值的資訊；但不能因此把事件說成所有客戶的登入系統已被攻破。",
+          "sections": [
+            {
+              "heading": "先分清業務記錄與生產服務",
+              "paragraphs": [
+                "官方列出的資訊包括業務聯絡人聯絡方式、客戶帳戶歷史、銷售電話與支援討論的摘要或節選，以及產品使用、連線或目錄健康狀態等後設資料。這裡的“客戶溝通”是銷售及服務場景中的內容，不等於整個客戶工作區或所有私人訊息都被複製。公司正在逐條核查各組織受到的影響，尚未公開完整數量。",
+                "WorkOS 表示，目前沒有證據顯示其應用資料或生產服務被訪問或受影響。這個說法限定了當時掌握的證據，既不能擴大為生產身分系統已經失陷，也不能理解為未來調查一定不會修正結論。11 月 2 日是通報釋出日期，10 月 30 日是發現日期，11 月 3 日的獨立報道也不會改變這兩個時間。"
+              ]
+            },
+            {
+              "heading": "AI 輔助是調查歸因，不是完整攻擊結論",
+              "paragraphs": [
+                "通報稱攻擊者藉助 AI 輔助的進攻性安全框架，自動執行偵察和利用嘗試。BleepingComputer 隨後報道，創始人將工具歸因為 ARTEX。本文保留這一歸因等級：官方書面通報沒有命名該框架，也沒有公佈足以獨立重建整個事件的技術證據，因此不能從名稱推出攻擊者身分、模型提供商或完全無人參與。",
+                "作為背景，Wiz 10 月 22 日和 Google 威脅情報團隊 10 月 30 日的其他調查觀察到，Agent 能依據前一步結果選擇後續動作，持續嘗試既有薄弱點。它們說明自動化可以縮短攻擊步驟間的間隔，也記錄了失敗與噪聲；並不是對 WorkOS 事件的獨立取證。本站據此解釋：AI 可能改變執行節奏，但不能代替對入口、授權缺陷和影響範圍的具體調查。"
+              ]
+            },
+            {
+              "heading": "真正需要關注的是後續冒充風險",
+              "paragraphs": [
+                "WorkOS 已關閉受影響工具的外部訪問，並聘請獨立數字取證與事件響應機構，同時擴大內部工具的訪問控制審查。公司表示會直接聯絡受影響客戶並繼續更新資訊。切斷入口屬於遏制措施，不能證明此前複製出去的業務資料已經被收回。",
+                "洩露的真實聯絡人和歷史溝通背景可能讓後續冒充請求更可信。官方建議對意外的資訊索取或行動請求另行核實，即使來信提到了真實同事或支援記錄。對讀者更有意義的後續證據，是逐組織通知、資料範圍和入口原因的確認；目前沒有公開材料支援“全部客戶受害”、某個國家歸因或精確成功率，也不應把其他公司的事件細節移植到這次通報中。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解釋圖：銷售支援記錄的暴露可能增加後續冒充風險；生產服務狀態是獨立證據邊界，不是同一條已證實入侵鏈。",
+            "steps": [
+              "銷售支援工具被未經授權訪問",
+              "業務記錄與溝通摘要暴露",
+              "關閉外部入口並核查範圍",
+              "核實異常請求與後續客戶通知"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-security-bounty-quality-bonuses",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "OpenAI · Rewarding defenders with bigger bug bounties",
+          "url": "https://openai.com/index/rewarding-defenders-with-bigger-bug-bounties/"
+        },
+        {
+          "label": "OpenAI · Preparing the next security sprint",
+          "url": "https://openai.com/index/preparing-our-next-security-sprint-to-harden-openai/"
+        },
+        {
+          "label": "OpenAI · Defense Factory public architecture",
+          "url": "https://openai.com/the-defense-factory/"
+        },
+        {
+          "label": "Help Net Security · Independent coverage, November 3",
+          "url": "https://www.helpnetsecurity.com/2026/11/03/openai-bigger-bug-bounty-rewards/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 11 月 2 日调整了安全漏洞奖励计划：ChatGPT、Codex 和 API Platform 等核心产品的严重漏洞，基础奖励最高为 3 万美元；特别严重的发现仍可获得最高 10 万美元，叠加符合条件的奖金后约为 17.2 万美元。此次变化还包括报告质量、持续贡献与重点测试项目的奖励规则，以及部分旧报告的补差安排。它是一项漏洞披露制度更新，不能被理解为所有报告都会拿到最高金额，或产品已经因此更安全。",
+          "sections": [
+            {
+              "heading": "提高的是哪些奖励",
+              "paragraphs": [
+                "公司说，中等、高危和严重发现的奖励区间中点，平均提高到原来的四倍以上。这里比较的是不同等级区间的中点，不能改写成“每份报告至少涨四倍”，也不等于最高奖金翻了四倍。特别严重发现的 10 万美元基础上限并非这次新设，新增奖金组合才把可能的总额推到约 17.2 万美元。",
+                "奖励仍取决于目标资产、漏洞等级和具体条件。官方给出的若干计算情形明确只是示例，不是新披露的真实入侵事件或实际付款记录。对读者而言，这次可确认的是公开奖励结构发生了变化，而不是某个示例中的问题正在影响用户。独立媒体 Help Net Security 的报道也将基础金额与叠加奖金分别说明。"
+              ]
+            },
+            {
+              "heading": "报告质量与旧报告如何处理",
+              "paragraphs": [
+                "第一类新增激励针对报告质量。可复现证据、明确的影响范围和触发条件有助于工程师判断与修复问题，因此可能获得额外系数。第二类是五级持续贡献奖励，第三类是为新功能重点测试设置的短期专项奖金。三者各有条件，不能把公告中的一组示例系数当成每个提交者都能获得的固定加成。",
+                "尚未授予奖金的既有报告，将适用新奖励区间。对于公告前 30 天内已授奖的报告，如果按新规则应获得更多，公司表示将补足差额；公告将这部分计算限定为基础奖励与持续贡献奖励。它没有承诺给全部历史报告追溯补发，也没有说明质量和专项奖金都可以追溯叠加。"
+              ]
+            },
+            {
+              "heading": "外部披露与内部加固是两条互补路径",
+              "paragraphs": [
+                "同日另一份公告说，OpenAI 正准备下一轮内部安全冲刺，并与 Cathedral 合作。外部研究人员将和公司团队一起使用模型检验防御、帮助发现弱点；公告没有给出这轮行动已经完成的结果。公司描述的上一轮行动包括在隔离环境中复现问题、准备补丁并交由人员审核，公开的 Defense Factory 资料也强调持续发现、验证、修复的流程。",
+                "漏洞奖励让外部研究者有渠道报告公司自己可能遗漏的问题，内部加固则负责把线索转化为经验证的修复。本站认为，值得关注的是奖励开始更明确地重视证据质量和长期协作，而不只是报出一个高额上限。实际效果仍要看有效报告、审核速度和修复表现；当前公告没有提供足以证明新制度已减少安全事件的数据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开规则绘制的解释图：报告经核验后确定基础奖励，再按适用条件计算奖金。金额是上限，不代表实际授奖或安全效果。",
+            "steps": [
+              "研究者提交有效安全发现及证据",
+              "核验目标、严重性与报告质量",
+              "按条件确定基础奖励和奖金",
+              "修复与复查；部分旧报告可补差"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI changed its Security Bug Bounty program on November 2. Critical findings in core products such as ChatGPT, Codex and the API Platform can receive base awards up to $30,000. Exceptional critical findings remain eligible for up to $100,000, with applicable bonuses taking the possible total to about $172,000. The update also changes incentives for useful reports and continuing contributions, and provides limited adjustments for earlier awards. These are program rules, not guaranteed payments or evidence of improved security already achieved.",
+          "sections": [
+            {
+              "heading": "Which amounts changed?",
+              "paragraphs": [
+                "OpenAI says the midpoints of its medium, high and critical reward ranges have more than quadrupled on average. That is not a promise to quadruple every report’s award, nor a fourfold increase in the maximum payout. The $100,000 exceptional base ceiling already existed; the bonus structure raises the possible combined amount.",
+                "Payment still depends on the affected asset, severity and applicable conditions. The announcement explicitly labels its calculations as illustrative. They are not disclosures of new attacks or records of money actually paid. Help Net Security’s independent coverage likewise distinguishes base awards from bonuses. The confirmed change is the published incentive structure."
+              ]
+            },
+            {
+              "heading": "Evidence quality and earlier reports",
+              "paragraphs": [
+                "One incentive rewards reports with clear, reproducible evidence of a weakness and its impact, helping engineers assess and fix it. Another is a five-tier program for sustained contributions. Short priority campaigns add separate bonus pools for testing new features. Each has conditions: the multipliers in an example are not automatic additions for every researcher.",
+                "Reports submitted but not yet awarded will use the new ranges. For awards made during the 30 days before the announcement, OpenAI says it will pay the difference where the new rules would have produced more. That retrospective calculation covers base and loyalty awards. It is not an unlimited promise to revisit all historical reports or apply every quality and campaign bonus retroactively."
+              ]
+            },
+            {
+              "heading": "External reports complement internal hardening",
+              "paragraphs": [
+                "A separate same-day announcement says OpenAI is preparing another internal security sprint with Cathedral. External researchers will work alongside its teams and models to challenge defenses. Results from that upcoming sprint have not been announced. OpenAI describes its earlier work as reproducing weaknesses in isolated environments and preparing patches for human review; its public Defense Factory material describes a continuing discovery, validation and remediation process.",
+                "Bounties provide an external route for reporting weaknesses a company may have missed, while internal teams turn evidence into tested repairs. Our assessment is that rewarding evidence quality and sustained collaboration is more consequential than the headline ceiling alone. Outcomes will depend on valid findings, review speed and remediation. The announcement does not establish that the new incentives have already reduced security incidents."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanation of the published rules: validated findings receive a base award and applicable bonuses. Ceilings are not records of actual payments or security outcomes.",
+            "steps": [
+              "Submit a valid security finding with evidence",
+              "Check asset, severity and report quality",
+              "Apply the relevant base award and bonuses",
+              "Fix and review; some earlier awards qualify for adjustment"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月2日、セキュリティ上の脆弱性に対する報奨制度を変更した。ChatGPT、Codex、API Platform など主要製品の重大な問題には基本報奨金として最大3万ドル、特に重大な発見には従来通り最大10万ドルを設定し、条件に合う追加報奨を含めると総額は約17万2,000ドルになる。報告の品質や継続的な貢献への評価、過去の一部報告に対する差額支給も含む制度改定だ。すべての報告への最高額支給や、安全性向上が既に実現したことを意味するものではない。",
+          "sections": [
+            {
+              "heading": "どの金額が上がったのか",
+              "paragraphs": [
+                "同社によれば、中程度・高・重大の各区分における報奨額の範囲の中点は、平均で従来の4倍超になった。各報告の支給額が必ず4倍になるという意味でも、最高額が4倍になったという意味でもない。特別に重大な発見の基本上限10万ドルは既存のもので、追加報奨の組み合わせが総額の上限を引き上げる。",
+                "金額は対象資産、重大性、適用条件によって変わる。公式発表の計算例は説明用と明記されており、新たな侵入事件や実際の支給記録を示していない。Help Net Security の独立報道も基本額と追加報奨を分けて説明している。確認できる変化は制度であり、例示された問題が現在利用者に発生しているという発表ではない。"
+              ]
+            },
+            {
+              "heading": "証拠の質と過去の報告の扱い",
+              "paragraphs": [
+                "新しい評価の一つは報告品質だ。再現可能な証拠、発生条件、影響が明確なら、技術者が問題を判断して修正しやすくなるため、追加係数の対象となり得る。ほかに継続的な貢献を評価する5段階の制度、新機能の重点テストに対する期間限定の追加枠がある。計算例の係数がすべての報告者に一律適用されるわけではない。",
+                "提出済みでまだ授賞されていない報告には新しい範囲を適用する。発表前30日間に授賞されたものも、新ルールで高額になる場合は差額を支給するとしている。ただし遡及計算は基本報奨と継続貢献の報奨が対象だ。過去の全報告を無期限に再計算する約束や、品質・重点企画の追加額まで遡って加算する約束ではない。"
+              ]
+            },
+            {
+              "heading": "外部報告と社内の強化を組み合わせる",
+              "paragraphs": [
+                "同日、OpenAI は Cathedral と次の社内セキュリティ集中検証を準備しているとも発表した。外部研究者が同社のチームやモデルと協力して防御を検証する予定で、その回の成果はまだ公表されていない。過去の取り組みは隔離環境で問題を再現し、人が確認する修正案を作るものだったと説明している。公開された Defense Factory 資料も、発見・検証・修正を継続する流れを示す。",
+                "外部の報奨制度は社内で見落とした問題を届ける窓口になり、内部の強化活動は証拠を検証済みの修正へつなぐ。当サイトでは、最高額だけでなく証拠の質と継続協力を評価する点が今回の実質的な変化と考える。効果は有効な報告、審査の速さ、修正の実績で判断すべきで、新制度によって事故が既に減ったことを示すデータはない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開ルールを基にした当サイトの説明図。検証後に基本額と適用される追加報奨を決める。上限額は実際の支給や安全効果を示さない。",
+            "steps": [
+              "有効な問題と証拠を報告",
+              "対象・重大性・報告品質を確認",
+              "条件に合う基本額と追加報奨を計算",
+              "修正と再確認、一部の過去報告は差額調整"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "2 ноября OpenAI изменила программу вознаграждений за уязвимости. За критические находки в ChatGPT, Codex и API Platform базовая выплата может достигать 30 тысяч долларов. Для особо серьёзных находок сохраняется базовый предел в 100 тысяч, а применимые бонусы повышают возможную сумму примерно до 172 тысяч долларов. Изменения также касаются качества отчётов, постоянного сотрудничества и ограниченного пересчёта прежних выплат. Это правила программы, а не гарантированный заработок или доказательство уже достигнутого улучшения защиты.",
+          "sections": [
+            {
+              "heading": "Какие суммы изменились",
+              "paragraphs": [
+                "По данным OpenAI, середины диапазонов вознаграждений за находки средней, высокой и критической серьёзности выросли в среднем более чем в четыре раза. Это не обещание увеличить каждую выплату вчетверо и не четырёхкратный рост максимума. Базовый потолок в 100 тысяч долларов для исключительных случаев существовал раньше; новая комбинация бонусов повышает возможную итоговую сумму.",
+                "Награда зависит от затронутого ресурса, серьёзности и условий программы. Расчёты в объявлении прямо названы иллюстративными: это не раскрытие новых атак и не записи о фактических выплатах. Независимое издание Help Net Security также разделяет базовые суммы и бонусы. Подтверждённое изменение — структура стимулов, а не наличие у пользователей проблем из примеров."
+              ]
+            },
+            {
+              "heading": "Качество доказательств и прежние заявки",
+              "paragraphs": [
+                "Один бонус учитывает качество отчёта: воспроизводимые доказательства, условия проявления и понятный ущерб помогают инженерам оценить проблему и исправить её. Другой — пятиуровневая система для постоянных участников. Краткосрочные приоритетные кампании предусматривают отдельные бонусные фонды для новых функций. У каждой надбавки свои условия; коэффициенты из примера не полагаются автоматически каждому исследователю.",
+                "Поданные, но ещё не награждённые отчёты будут оценивать по новым диапазонам. Для наград, назначенных в течение 30 дней до объявления, компания обещает доплатить разницу, если новые правила дали бы большую сумму. Такой пересчёт включает базовую награду и бонус за постоянное участие. Он не распространяется без ограничений на всю историю и не обещает задним числом начислить все бонусы за качество и специальные кампании."
+              ]
+            },
+            {
+              "heading": "Внешние отчёты дополняют внутреннюю защиту",
+              "paragraphs": [
+                "В отдельном объявлении того же дня OpenAI сообщила о подготовке следующего внутреннего этапа проверки безопасности с Cathedral. Внешние исследователи будут работать с её командами и моделями, проверяя защиту. Результаты будущего этапа пока не представлены. Предыдущую работу компания описывает как воспроизведение проблем в изолированных средах и подготовку исправлений к проверке людьми. Публичные материалы Defense Factory также описывают непрерывный цикл поиска, подтверждения и устранения слабых мест.",
+                "Программа наград даёт внешним специалистам канал для сообщений о пропущенных компанией проблемах, а внутренние команды превращают доказательства в проверенные исправления. По нашей оценке, внимание к качеству доказательств и длительному сотрудничеству важнее одного громкого потолка. Эффект нужно оценивать по полезным находкам, скорости рассмотрения и исправлениям. Объявление не доказывает, что новые стимулы уже сократили число инцидентов."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Оригинальная схема опубликованных правил: после проверки определяются базовая награда и применимые бонусы. Предельные суммы не означают реальные выплаты или результат защиты.",
+            "steps": [
+              "Сообщить о действительной проблеме с доказательствами",
+              "Проверить ресурс, серьёзность и качество отчёта",
+              "Рассчитать базовую награду и применимые бонусы",
+              "Исправить и проверить; часть прежних наград пересчитывается"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 11 月 2 日調整了安全漏洞獎勵計劃：ChatGPT、Codex 和 API Platform 等核心產品的嚴重漏洞，基礎獎勵最高為 3 萬美元；特別嚴重的發現仍可獲得最高 10 萬美元，疊加符合條件的獎金後約為 17.2 萬美元。此次變化還包括報告質量、持續貢獻與重點測試專案的獎勵規則，以及部分舊報告的補差安排。它是一項漏洞披露制度更新，不能被理解為所有報告都會拿到最高金額，或產品已經因此更安全。",
+          "sections": [
+            {
+              "heading": "提高的是哪些獎勵",
+              "paragraphs": [
+                "公司說，中等、高危和嚴重發現的獎勵區間中點，平均提高到原來的四倍以上。這裡比較的是不同等級區間的中點，不能改寫成“每份報告至少漲四倍”，也不等於最高獎金翻了四倍。特別嚴重發現的 10 萬美元基礎上限並非這次新設，新增獎金組合才把可能的總額推到約 17.2 萬美元。",
+                "獎勵仍取決於目標資產、漏洞等級和具體條件。官方給出的若干計算情形明確只是示例，不是新披露的真實入侵事件或實際付款記錄。對讀者而言，這次可確認的是公開獎勵結構發生了變化，而不是某個示例中的問題正在影響使用者。獨立媒體 Help Net Security 的報道也將基礎金額與疊加獎金分別說明。"
+              ]
+            },
+            {
+              "heading": "報告質量與舊報告如何處理",
+              "paragraphs": [
+                "第一類新增激勵針對報告質量。可復現證據、明確的影響範圍和觸發條件有助於工程師判斷與修復問題，因此可能獲得額外係數。第二類是五級持續貢獻獎勵，第三類是為新功能重點測試設定的短期專項獎金。三者各有條件，不能把公告中的一組示例係數當成每個提交者都能獲得的固定加成。",
+                "尚未授予獎金的既有報告，將適用新獎勵區間。對於公告前 30 天內已授獎的報告，如果按新規則應獲得更多，公司表示將補足差額；公告將這部分計算限定為基礎獎勵與持續貢獻獎勵。它沒有承諾給全部歷史報告追溯補發，也沒有說明質量和專項獎金都可以追溯疊加。"
+              ]
+            },
+            {
+              "heading": "外部披露與內部加固是兩條互補路徑",
+              "paragraphs": [
+                "同日另一份公告說，OpenAI 正準備下一輪內部安全衝刺，並與 Cathedral 合作。外部研究人員將和公司團隊一起使用模型檢驗防禦、幫助發現弱點；公告沒有給出這輪行動已經完成的結果。公司描述的上一輪行動包括在隔離環境中復現問題、準備補丁並交由人員稽核，公開的 Defense Factory 資料也強調持續發現、驗證、修復的流程。",
+                "漏洞獎勵讓外部研究者有渠道報告公司自己可能遺漏的問題，內部加固則負責把線索轉化為經驗證的修復。本站認為，值得關注的是獎勵開始更明確地重視證據質量和長期協作，而不只是報出一個高額上限。實際效果仍要看有效報告、稽核速度和修復表現；當前公告沒有提供足以證明新制度已減少安全事件的資料。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開規則繪製的解釋圖：報告經核驗後確定基礎獎勵，再按適用條件計算獎金。金額是上限，不代表實際授獎或安全效果。",
+            "steps": [
+              "研究者提交有效安全發現及證據",
+              "核驗目標、嚴重性與報告質量",
+              "按條件確定基礎獎勵和獎金",
+              "修復與複查；部分舊報告可補差"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-lifeval-personalized-agent-evaluation",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "OpenAI · LifeVal announcement, November 2",
+          "url": "https://openai.com/index/lifeval/"
+        },
+        {
+          "label": "OpenAI · LifeVal technical report, November 3",
+          "url": "https://cdn.openai.com/pdf/lifeval.pdf"
+        },
+        {
+          "label": "ALFW · External analysis of average and selected scores",
+          "url": "https://alfw.ai/article/openai-lifeval-806-average-best-recorded/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 11 月 2 日介绍 LifeVal，随后公开了封面日期为 11 月 3 日的技术报告，说明如何测试 AI 是否能按个人需求完成日常事务。评测包含 169 个任务，把用户背景、操作环境和评分标准放在一起，要求模型实际留下可检查的结果。论文给出了此前展示页没有讲清的任务构建、评分和失败分析；其中一个重要发现是，把关键信息藏在历史对话里，模型往往不如直接得到这些信息时表现好。",
+          "sections": [
+            {
+              "heading": "从“会回答”转向“能替这个人办妥”",
+              "paragraphs": [
+                "一般知识题有统一答案，但安排日程、准备材料或处理家庭事务，必须结合当事人的需求和已有信息。LifeVal 先从时间使用调查整理活动，再用消费者的自报付费意愿决定收集重点。148 个活动类别用于指导任务收集，正式模型比较使用的是 169 个任务，两者不能当成同一个数量。",
+                "任务编写者要有相关实际经验，并提供要求、个人背景、必要文件、起始环境与评分细则。论文说，使用的历史对话和记忆经同意提供并去标识化，任务中的个人身份信息以合成内容替换；任务至少经过三轮人工审核。这里是在评估个性化任务设计，没有依据说它开放了真实用户资料或允许其他人读取参与者的记录。"
+              ]
+            },
+            {
+              "heading": "检查产物和操作结果，而不只听模型说完成了",
+              "paragraphs": [
+                "模型在可控的模拟应用环境中操作，并通过浏览工具访问离线网页资料；每次运行最长 8 小时。GPT-5.6 评分器读取要求、评分项、最终答复、生成的文件和环境前后状态，只对证据支持的完成项给分。另一个检查器识别绕过正常界面、利用评测环境捷径的行为，发现后该次得分归零。两个检查器都属于厂商自己的评估体系。",
+                "论文比较 GPT-5.2、5.4、5.5、5.6 与 GPT-6 Astra，不包含其他厂商模型。图中平均分允许部分任务项得分，不能直接解释成同样比例的现实事务全部办成。团队另请 17 名人工评分者核对一个含 30 条 GPT-5.5 运行轨迹的子集，人工与自动分数相关系数为 0.864；这支持有限范围的一致性，却不是对全部任务、所有模型和真实世界结果的独立认证。"
+              ]
+            },
+            {
+              "heading": "历史里有信息，不等于模型会用",
+              "paragraphs": [
+                "消融实验分别移除历史对话、移除额外任务背景，或把额外背景改放进旧对话。直接拿走额外背景会明显降分；把同样的信息放入历史对话后，表现也下降到相近程度。作者据此认为，许多关键事实来自显式提供的背景，模型寻找和使用历史信息仍有困难。错误建议、遗漏信息和未完成所要求的行动依然存在。",
+                "这项评测的价值是公开一种可追查证据的个性化 Agent 测试方法，而不是证明助手已经能稳定代办所有事务。调查以美国英语受访者为主，付费意愿是想象中的理想助手价值，并非真实消费收益；网页缓存也未完全冻结，重复运行可能变化。完整任务集尚未公开供外部复现，结果仍是厂商自评。公告的调查人数为 3,995，论文则记 3,837 人完成、筛选后保留 1,826 人，口径差异尚未解释；因此本文不将其市场估值当作已经验证的经济规模。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据 LifeVal 技术报告重绘的评测流程。示意的是任务、证据与评分关系，不是模型排行榜，也不包含任何参与者个人资料。",
+            "steps": [
+              "根据个人需求建立任务与评分细则",
+              "模型在可控环境中执行",
+              "检查产物、状态变化及环境捷径",
+              "分析得分与历史信息利用失败"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI introduced LifeVal on November 2 and released a technical report dated November 3 describing how it evaluates personalized everyday tasks. The evaluation compares models on 169 tasks that combine personal context, an action environment and a grading rubric. It checks observable results rather than accepting an assistant’s claim of completion. The report adds construction, grading and failure analysis beyond the initial showcase. One important finding is that information buried in past conversations is harder for a model to use than the same information supplied directly.",
+          "sections": [
+            {
+              "heading": "A correct answer depends on the person",
+              "paragraphs": [
+                "A knowledge question may have one common answer, whereas arranging a schedule or preparing household paperwork depends on someone’s preferences and circumstances. LifeVal starts from time-use surveys and uses consumers’ stated willingness to pay to prioritize task collection. The 148 activity categories guide collection; the reported model comparison uses 169 tasks. Those counts describe different things.",
+                "Experienced task writers provide a request, personal context, reference material, a starting state and a rubric. The report says contributed conversations and memories were consented and deidentified, with identifying details replaced by synthetic information. Tasks undergo at least three rounds of human review. This describes a research setup, not a public release of participants’ private records."
+              ]
+            },
+            {
+              "heading": "Check artifacts and actions, not just the final message",
+              "paragraphs": [
+                "Models operate in controlled application environments with browsing over offline web material, with an eight-hour timeout per attempt. A GPT-5.6 grader examines the request, rubric, response, artifacts and changes in environment state, awarding credit for evidence-supported completion. A second checker detects shortcuts through the evaluation environment rather than normal interfaces; a detected violation sets the attempt’s score to zero. Both are part of the vendor’s own assessment.",
+                "The paper compares GPT-5.2, 5.4, 5.5, 5.6 and GPT-6 Astra, without competing vendors’ models. Average reward permits partial credit, so it is not the percentage of real-life errands fully completed. For a limited validation, 17 human graders examined a subset of 30 GPT-5.5 trajectories; correlation with automated grades was 0.864. That supports agreement on this subset, not independent certification across every task, model or real-world outcome."
+              ]
+            },
+            {
+              "heading": "Available history is not necessarily usable context",
+              "paragraphs": [
+                "Ablations remove conversation history, remove additional task context, or move that additional context into past conversations. Removing the explicit task context substantially reduces performance. Placing the same information in conversation history causes a similarly large decline. The authors conclude that explicit context supplies much of the necessary information and that retrieving relevant facts from history remains difficult. Incorrect recommendations, omitted information and unfinished actions still occur.",
+                "LifeVal’s contribution is a more inspectable method for personalized agent evaluation, not proof of dependable assistance with every errand. Its willingness-to-pay survey is US-centered and English-language; it values an imagined perfect assistant rather than realized benefits. The web cache is not fully frozen, so runs can vary. The complete task set is not publicly reproducible, and results remain vendor-reported. The announcement lists 3,995 survey respondents, whereas the paper reports 3,837 completions and 1,826 retained after screening; the discrepancy is unexplained. We therefore do not treat its market valuation as an established economic outcome."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory reconstruction of the LifeVal workflow. It shows tasks, evidence and grading, not a model leaderboard, and includes no participant personal data.",
+            "steps": [
+              "Build a personalized task and rubric",
+              "Execute in a controlled environment",
+              "Check artifacts, state changes and evaluation shortcuts",
+              "Analyze reward and failures to use historical context"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月2日に LifeVal を紹介し、11月3日付の技術報告で、個人に合わせた日常業務を AI がどう遂行するかを評価する方法を示した。169個の課題に個人の背景、操作環境、採点基準を組み合わせ、「完了した」という返答だけでなく確認できる結果を調べる。報告書は最初の紹介ページより詳しく、課題の作成、採点、失敗分析を説明している。特に、同じ重要情報でも過去の会話に埋め込むと、直接渡した場合よりモデルが利用しにくいという結果がある。",
+          "sections": [
+            {
+              "heading": "正しい対応は利用者によって変わる",
+              "paragraphs": [
+                "知識問題には共通の正解があっても、予定調整や家庭の書類準備には、その人の希望や事情が必要になる。LifeVal は生活時間調査から活動を整理し、消費者の自己申告による支払意思額で収集の重点を決めた。148の活動分類は課題収集を導く区分で、モデル比較に用いた課題数は169個だ。同じ数を別の形で表しているわけではない。",
+                "実務経験のある課題作成者が、要求、個人の背景、参照資料、初期状態、採点基準を用意する。論文によれば、会話履歴や記憶は同意を得て提供され、識別情報を除去し、個人を特定する内容は合成情報に置き換えた。課題は少なくとも3回の人による審査を受ける。参加者の実際の個人記録を一般公開したという説明ではない。"
+              ]
+            },
+            {
+              "heading": "成果物と操作結果を確かめる",
+              "paragraphs": [
+                "モデルは制御されたアプリ環境で操作し、ブラウザーでオフラインのウェブ資料を参照する。1回の実行時間は最長8時間。GPT-5.6 を使う採点器が要求、採点項目、最終回答、生成物、環境の前後差を調べ、証拠がある達成項目に点を与える。別の検査器は通常の画面操作を回避する評価環境の抜け道を検出し、見つかればその実行を0点にする。どちらも開発元自身の評価の一部だ。",
+                "比較対象は GPT-5.2、5.4、5.5、5.6、GPT-6 Astra で、他社モデルは含まない。平均得点には部分点があるため、その割合の現実の用事を完全に終えたという意味ではない。限定的な検証では、17人が GPT-5.5 の実行記録30件を採点し、自動採点との相関は0.864だった。この部分集合の一致を示すが、すべての課題・モデル・現実の成果を独立に認証したわけではない。"
+              ]
+            },
+            {
+              "heading": "履歴にある情報を使えるとは限らない",
+              "paragraphs": [
+                "追加実験では、会話履歴を除く、追加の課題背景を除く、その背景を過去の会話へ移す、という条件を比べた。背景を直接渡さなくなると得点は大きく下がり、同じ内容を履歴に移しても同程度に低下した。著者らは、必要な情報の多くが明示された背景にあり、履歴から適切な事実を見つけて使う能力には課題が残ると考察している。誤った提案、情報の見落とし、必要な行動の未完了も続いている。",
+                "意義は個人向け Agent の評価を証拠とともに検討できる方法を示した点で、万能な代行能力の証明ではない。調査は米国中心・英語で、支払意思額は理想的な助手の想定価値であり実現済みの便益ではない。ウェブキャッシュも完全固定ではなく、実行ごとに変わり得る。全課題は外部が再現できる形で公開されておらず、結果は開発元の自己評価だ。紹介ページは調査人数3,995人、論文は回答完了3,837人・選別後1,826人とし、差の説明はない。このため市場価値の推計を確立した経済的成果として扱わない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "技術報告を基に当サイトが描いた評価フロー。課題・証拠・採点の関係を示し、モデル順位表や参加者の個人資料ではない。",
+            "steps": [
+              "個人の条件に合う課題と採点基準を用意",
+              "制御された環境で実行",
+              "生成物・状態変化・環境の抜け道を確認",
+              "得点と履歴情報を使えない失敗を分析"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "OpenAI представила LifeVal 2 ноября, а технический отчёт датирован 3 ноября. Он объясняет проверку персонализированных повседневных задач: в оценке используются 169 заданий с личным контекстом, средой действий и критериями. Проверяются наблюдаемые результаты, а не одно заявление помощника о завершении. Документ добавляет методику создания, оценивания и анализа ошибок. Важный вывод: нужные сведения из прошлых разговоров модель использует хуже, чем те же сведения, переданные ей напрямую.",
+          "sections": [
+            {
+              "heading": "Правильный результат зависит от конкретного человека",
+              "paragraphs": [
+                "У вопроса на знание может быть единый ответ, но расписание или подготовка домашних документов зависят от предпочтений и обстоятельств человека. LifeVal начинает с обследований использования времени, а приоритеты сбора задач определяет по заявленной готовности потребителей платить. Для сбора используются 148 категорий деятельности; сравнение моделей проведено на 169 заданиях. Это разные величины.",
+                "Авторы задач с практическим опытом задают запрос, персональный контекст, справочные материалы, исходное состояние и критерии. Согласно отчёту, разговоры и память предоставлены с согласия и обезличены, а идентифицирующие детали заменены синтетическими. Задания проходят минимум три этапа проверки людьми. Речь о процедуре исследования, а не об открытой публикации частных записей участников."
+              ]
+            },
+            {
+              "heading": "Проверять созданное и сделанное, а не только ответ",
+              "paragraphs": [
+                "Модели работают в контролируемых приложениях и просматривают офлайн-материалы веба; предел одного запуска — восемь часов. Оценщик на GPT-5.6 проверяет запрос, критерии, ответ, созданные материалы и изменение состояния среды. Баллы начисляются за подтверждённые действия. Отдельный проверяющий выявляет обход обычных интерфейсов через особенности оценочной среды; при таком нарушении попытка получает ноль. Оба механизма принадлежат самой компании.",
+                "Сравниваются GPT-5.2, 5.4, 5.5, 5.6 и GPT-6 Astra, без моделей конкурентов. Средняя оценка допускает частичные баллы и не равна доле полностью выполненных реальных поручений. В ограниченной проверке 17 оценщиков рассмотрели 30 траекторий GPT-5.5; корреляция ручных и автоматических оценок составила 0,864. Это свидетельство согласованности на подвыборке, а не независимая сертификация всех задач, моделей и практических результатов."
+              ]
+            },
+            {
+              "heading": "Доступ к истории не гарантирует использования информации",
+              "paragraphs": [
+                "В дополнительных опытах удаляли историю разговоров, убирали отдельный контекст задания либо переносили этот контекст в прежние беседы. Удаление явно заданного контекста заметно снижало результат. Перенос той же информации в историю давал сопоставимое падение. Авторы заключают, что значительная часть нужных фактов поступает напрямую, а поиск и использование релевантных сведений в истории остаются сложными. Сохраняются ошибочные рекомендации, пропуски информации и невыполненные действия.",
+                "Ценность LifeVal — в более проверяемой методике оценки персональных агентов, а не в доказательстве надёжного выполнения любых поручений. Опрос ориентирован на США и английский язык; готовность платить относится к воображаемому идеальному помощнику, а не к полученной выгоде. Веб-кеш не полностью зафиксирован, поэтому запуски могут различаться. Полный набор не опубликован для внешнего воспроизведения, результаты сообщены разработчиком. В анонсе указано 3 995 респондентов, в отчёте — 3 837 завершивших опрос и 1 826 оставшихся после отбора; расхождение не объяснено. Поэтому мы не трактуем оценку рынка как установленный экономический результат."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Оригинальная поясняющая схема по техническому отчёту: задания, доказательства и оценка. Это не рейтинг моделей; личные данные участников не используются.",
+            "steps": [
+              "Составить персональную задачу и критерии",
+              "Выполнить действия в контролируемой среде",
+              "Проверить материалы, изменения состояния и обход среды",
+              "Разобрать оценки и ошибки использования истории"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 11 月 2 日介紹 LifeVal，隨後公開了封面日期為 11 月 3 日的技術報告，說明如何測試 AI 是否能按個人需求完成日常事務。評測包含 169 個任務，把使用者背景、操作環境和評分標準放在一起，要求模型實際留下可檢查的結果。論文給出了此前展示頁沒有講清的任務構建、評分和失敗分析；其中一個重要發現是，把關鍵資訊藏在歷史對話裡，模型往往不如直接得到這些資訊時表現好。",
+          "sections": [
+            {
+              "heading": "從“會回答”轉向“能替這個人辦妥”",
+              "paragraphs": [
+                "一般知識題有統一答案，但安排日程、準備材料或處理家庭事務，必須結合當事人的需求和已有資訊。LifeVal 先從時間使用調查整理活動，再用消費者的自報付費意願決定收集重點。148 個活動類別用於指導任務收集，正式模型比較使用的是 169 個任務，兩者不能當成同一個數量。",
+                "任務編寫者要有相關實際經驗，並提供要求、個人背景、必要檔案、起始環境與評分細則。論文說，使用的歷史對話和記憶經同意提供並去標識化，任務中的個人身份資訊以合成內容替換；任務至少經過三輪人工稽核。這裡是在評估個性化任務設計，沒有依據說它開放了真實使用者資料或允許其他人讀取參與者的記錄。"
+              ]
+            },
+            {
+              "heading": "檢查產物和操作結果，而不只聽模型說完成了",
+              "paragraphs": [
+                "模型在可控的模擬應用環境中操作，並透過瀏覽工具訪問離線網頁資料；每次執行最長 8 小時。GPT-5.6 評分器讀取要求、評分項、最終答覆、生成的檔案和環境前後狀態，只對證據支援的完成項給分。另一個檢查器識別繞過正常介面、利用評測環境捷徑的行為，發現後該次得分歸零。兩個檢查器都屬於廠商自己的評估體系。",
+                "論文比較 GPT-5.2、5.4、5.5、5.6 與 GPT-6 Astra，不包含其他廠商模型。圖中平均分允許部分任務項得分，不能直接解釋成同樣比例的現實事務全部辦成。團隊另請 17 名人工評分者核對一個含 30 條 GPT-5.5 執行軌跡的子集，人工與自動分數相關係數為 0.864；這支援有限範圍的一致性，卻不是對全部任務、所有模型和真實世界結果的獨立認證。"
+              ]
+            },
+            {
+              "heading": "歷史裡有資訊，不等於模型會用",
+              "paragraphs": [
+                "消融實驗分別移除歷史對話、移除額外任務背景，或把額外背景改放進舊對話。直接拿走額外背景會明顯降分；把同樣的資訊放入歷史對話後，表現也下降到相近程度。作者據此認為，許多關鍵事實來自顯式提供的背景，模型尋找和使用歷史資訊仍有困難。錯誤建議、遺漏資訊和未完成所要求的行動依然存在。",
+                "這項評測的價值是公開一種可追查證據的個性化 Agent 測試方法，而不是證明助手已經能穩定代辦所有事務。調查以美國英語受訪者為主，付費意願是想象中的理想助手價值，並非真實消費收益；網頁快取也未完全凍結，重複執行可能變化。完整任務集尚未公開供外部復現，結果仍是廠商自評。公告的調查人數為 3,995，論文則記 3,837 人完成、篩選後保留 1,826 人，口徑差異尚未解釋；因此本文不將其市場估值當作已經驗證的經濟規模。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據 LifeVal 技術報告重繪的評測流程。示意的是任務、證據與評分關係，不是模型排行榜，也不包含任何參與者個人資料。",
+            "steps": [
+              "根據個人需求建立任務與評分細則",
+              "模型在可控環境中執行",
+              "檢查產物、狀態變化及環境捷徑",
+              "分析得分與歷史資訊利用失敗"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "samsung-health-sleep-coaching-update",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "Samsung: Sleep Coaching update and eligibility notes",
+          "url": "https://news.samsung.com/global/samsung-health-makes-sleep-coaching-easier-to-start-and-tailors-weekly-guidance"
+        },
+        {
+          "label": "Digital Trends: three-day entry requirement and weekly guidance",
+          "url": "https://www.digitaltrends.com/phones/samsung-health-now-needs-just-3-days-of-sleep-data-to-coach-you-toward-better-sleep/"
+        },
+        {
+          "label": "Edaily: Samsung Health update report",
+          "url": "https://en.edaily.co.kr/news/eda202610145622/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "三星 10 月 14 日公布的 Samsung Health 更新，改变了睡眠指导的启动条件和后续反馈方式：过去要在一个月内积累七天睡眠数据，现在最近两周内有三天记录即可开始；建议会随着每周记录继续调整。这里的“三天”是进入指导流程的数据门槛，不是承诺三天改善睡眠。更新同时细化了跑步训练分级，自十月起逐步推出。",
+          "sections": [
+            {
+              "heading": "从记录开始，到形成个人计划",
+              "paragraphs": [
+                "用户开始前还要填写调查，内容包括作息规律、夜间中断、酒精和咖啡因摄入，以及自己对睡眠的感受。应用结合这些回答与设备记录，给出睡眠类型，并按个人目标组织四至八周的指导。缩短等待期的直接效果，是让记录较少的用户更早进入这一流程；计划本身并没有缩短为三天。",
+                "这套流程不是只读取手表上的一个分数。设备记录提供时间与活动相关信息，问卷和每天填写的满意度补充主观体验。两类信息反映的内容不同，缺少连续记录或填报变化，都可能影响应用所见的趋势。新闻稿没有提供对照研究，无法据此判断降低门槛后，建议的准确性或实际睡眠效果是否发生变化。"
+              ]
+            },
+            {
+              "heading": "周报把几种变化放在一起看",
+              "paragraphs": [
+                "原有计划加入按周调整的指导，并将每日提示、每周回顾与最终报告连接起来。睡眠平衡图用五个方面呈现变化：睡眠时间、规律性、夜间清醒时间、睡眠满意度和 Energy Score。它把不同维度放到同一张图上，便于回看，并不意味着五项都来自同一种测量，更不能将图形扩大直接当作临床改善。",
+                "对于读者，值得关注的是反馈周期变得更清楚：夜间记录之后有晨间提示，再通过一周记录观察变化。这是应用交互与信息组织的更新。三星将 Energy Score 定位为个人参考，而非医疗用途；现有公告和媒体报道没有给出独立临床效果验证，因此不能把这次更新描述为睡眠疾病诊断或治疗能力的升级。"
+              ]
+            },
+            {
+              "heading": "跑步分级更细，支持范围仍要分开看",
+              "paragraphs": [
+                "Running Coach 的训练等级由十级扩展到十二级，增加中高级训练层次。它可依据十二分钟跑步测试或既有跑步数据安排个人训练计划。此次更新也加入 Strava 路线导入，用于跑步、越野跑和骑行；这些是训练组织和路线使用上的改变，不代表所有健康功能都具备相同设备要求。",
+                "公告的资格说明区分了各项功能：睡眠指导支持部分既有 Galaxy Watch、Fit 和 Ring 设备，Running Coach 则要求 Galaxy Watch8 系列或更新机型等条件。功能按地区、设备和软件版本逐步开放，Strava 路线导入在中国、俄罗斯、韩国等列明地区不可用。因而发布日期不等于每名用户收到全部功能的日期，也不能仅凭应用已更新就判断所有入口都应出现。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公告重绘的解释性流程图，展示数据如何进入指导与回顾流程，不表示医疗效果或实际用户测量结果。",
+            "steps": [
+              "最近两周内三天睡眠记录与问卷",
+              "进入四至八周个人指导",
+              "每周回顾记录并调整建议"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Samsung’s October 14 Samsung Health update changes how Sleep Coaching begins and how it follows progress. Three days of sleep records within the previous two weeks replace the earlier requirement of seven days within a month. Guidance then adapts weekly. The three-day figure is an entry requirement, not a promise to improve sleep in three days. A more detailed running-coach scale accompanies the phased October rollout.",
+          "sections": [
+            {
+              "heading": "A shorter wait to begin a longer programme",
+              "paragraphs": [
+                "An initial survey asks about regularity, interruptions, alcohol and caffeine intake, and perceived sleep satisfaction. Samsung Health combines those answers with device records to assign a sleep type and organise a four-to-eight-week programme around personal goals. People with fewer records can enter the process earlier; the programme itself has not become a three-day course.",
+                "Device observations and self-reported experience serve different purposes. Timing and activity-related records do not fully describe how rested someone feels, while daily satisfaction responses add a subjective perspective. Gaps in recording or changes in reporting can affect the apparent trend. The announcement supplies no controlled study establishing whether the shorter entry requirement changes recommendation accuracy or sleep outcomes."
+              ]
+            },
+            {
+              "heading": "Weekly feedback connects several kinds of information",
+              "paragraphs": [
+                "The revised experience links daily insights, weekly reviews and a final report. A Sleep Balance graph shows five dimensions: sleep duration, regularity, time awake at night, satisfaction and Energy Score. Placing them in one diagram makes changes easier to review, but does not make them equivalent measurements. A larger shape is not, by itself, evidence of clinical improvement.",
+                "The tangible change is a clearer feedback cycle: a night’s records inform morning guidance, while weekly records inform subsequent adjustments. This is an update to interaction and information organisation. Samsung describes Energy Score as a personal reference rather than a medical function. Neither the announcement nor the reporting reviewed establishes independent clinical effectiveness, so the release does not demonstrate improved diagnosis or treatment of sleep disorders."
+              ]
+            },
+            {
+              "heading": "Running features have their own eligibility rules",
+              "paragraphs": [
+                "Running Coach expands from ten to twelve levels, adding intermediate and advanced steps. A twelve-minute running test or previous running records can inform the personalised plan. Strava route importing is also added for running, trail running and cycling. These changes concern training organisation and route use; they do not give every health feature the same device requirements.",
+                "The eligibility notes distinguish the features. Sleep Coaching supports certain existing Galaxy Watch, Fit and Ring devices, whereas Running Coach requires the Galaxy Watch8 series or later, among other conditions. Availability depends on region, device and software version. Strava route importing is unavailable in listed locations including China, Russia and South Korea. Announcement day therefore is not the date every user receives every feature."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on the announcement. It shows the information-to-guidance cycle, not clinical effectiveness or measured user results.",
+            "steps": [
+              "Three days of records within two weeks, plus survey",
+              "Begin a four-to-eight-week programme",
+              "Review each week and adjust guidance"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Samsung が10月14日に発表した Samsung Health の更新は、睡眠コーチングの開始条件と振り返りの仕組みを変えるものだ。従来は1か月以内に7日分の記録が必要だったが、直近2週間に3日分あれば始められる。開始後は週ごとに助言を調整する。「3日」は参加に必要なデータ量であり、3日で睡眠が改善するという約束ではない。ランニングの段階も細分化され、10月から順次提供される。",
+          "sections": [
+            {
+              "heading": "記録が少なくても計画に入りやすくなる",
+              "paragraphs": [
+                "開始時の質問では、生活リズム、夜間の中断、アルコールやカフェインの摂取、睡眠への満足度を尋ねる。アプリは回答と機器の記録を組み合わせ、睡眠タイプを示して、個人の目標に沿った4〜8週間の計画を構成する。待ち時間を短くしたことで記録の少ない人も参加しやすくなるが、計画そのものが3日間になったわけではない。",
+                "機器が記録する時間や活動に関する情報と、本人が感じる休息感は同じものではない。毎日の満足度は主観的な情報を補う一方、記録の欠落や回答の変化は見えてくる傾向にも影響する。発表には比較試験がなく、開始条件の緩和によって助言の精度や実際の睡眠状態がどう変わるかは確認できない。"
+              ]
+            },
+            {
+              "heading": "毎日の情報を週ごとの振り返りへ",
+              "paragraphs": [
+                "更新版は日々の説明、週次の振り返り、最終報告をつなぐ。Sleep Balance の図には、睡眠時間、規則性、夜間の覚醒時間、満足度、Energy Score の5項目を表示する。同じ図で変化を見やすくする仕組みだが、すべてが同じ方法で測られた指標ではない。図形が広がることだけで医学的な改善を判断することもできない。",
+                "具体的な変化は、夜間の記録から朝の情報へ、さらに1週間の振り返りへと続く流れが明確になる点にある。これは操作と情報整理の更新だ。Samsung は Energy Score を個人向けの参考情報とし、医療用途ではないと説明する。確認した発表と報道は独立した臨床効果を示しておらず、睡眠障害の診断や治療能力の向上を立証したものではない。"
+              ]
+            },
+            {
+              "heading": "ランニング機能とは対応条件が異なる",
+              "paragraphs": [
+                "Running Coach は10段階から12段階へ増え、中級・上級の区分が細かくなる。12分間の走行テスト、または過去の走行記録を計画に利用できる。ランニング、トレイルラン、サイクリング向けに Strava のルート取り込みも加わる。いずれも練習の組み立てや経路利用の変更で、全機能が同じ機器で使えるという意味ではない。",
+                "条件の注記によると、睡眠コーチングは既存の Galaxy Watch、Fit、Ring の一部に対応する一方、Running Coach は Galaxy Watch8 シリーズ以降などの条件がある。地域、機器、ソフトの版に応じて順次提供され、Strava の取り込みは中国、ロシア、韓国など指定地域では利用できない。発表日に全員へ全機能が届くわけではなく、アプリの更新だけで対応を判断することはできない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "発表に基づく当サイトの説明用再描画。記録から助言へ進む流れを示し、医療効果や利用者の実測結果は表さない。",
+            "steps": [
+              "直近2週間の3日分の記録と質問への回答",
+              "4〜8週間の個人向け計画を開始",
+              "週ごとに振り返って助言を調整"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Обновление Samsung Health, объявленное 14 октября, меняет начало Sleep Coaching и последующую обратную связь. Вместо семи дней записей за месяц теперь достаточно трёх дней за последние две недели. Далее рекомендации корректируются еженедельно. Три дня — это порог входных данных, а не обещание улучшить сон за такой срок. Поэтапное распространение с октября включает и более подробную шкалу тренировок по бегу.",
+          "sections": [
+            {
+              "heading": "Меньше ожидания перед началом программы",
+              "paragraphs": [
+                "Первоначальная анкета охватывает регулярность сна, ночные пробуждения, употребление алкоголя и кофеина, а также субъективную удовлетворённость сном. Приложение объединяет ответы с записями устройства, определяет тип сна и формирует программу на четыре–восемь недель с учётом личных целей. Раньше начать смогут люди с меньшим объёмом записей; сама программа не превращается в трёхдневную.",
+                "Наблюдения устройства и ощущения человека выполняют разные роли. Данные о времени и активности не полностью отражают чувство отдыха, а ежедневная оценка удовлетворённости добавляет субъективную информацию. Пропуски записей и изменения ответов могут повлиять на видимую тенденцию. В объявлении нет контролируемого исследования, которое показывало бы влияние сокращённого порога на точность рекомендаций или результаты сна."
+              ]
+            },
+            {
+              "heading": "Недельный обзор связывает разные показатели",
+              "paragraphs": [
+                "Новый процесс соединяет ежедневные объяснения, недельные обзоры и итоговый отчёт. График Sleep Balance показывает пять сторон: продолжительность сна, регулярность, время бодрствования ночью, удовлетворённость и Energy Score. Общая диаграмма облегчает сравнение изменений, но не делает показатели одинаковыми измерениями. Увеличение фигуры само по себе не доказывает клиническое улучшение.",
+                "Практическое изменение — более понятный цикл обратной связи: ночные записи используются утром, а недельная история помогает корректировать дальнейшие рекомендации. Речь идёт об интерфейсе и организации информации. Samsung определяет Energy Score как личный справочный показатель, не предназначенный для медицинских целей. Прочитанные объявление и публикации не дают независимого клинического подтверждения эффективности и не доказывают улучшение диагностики или лечения нарушений сна."
+              ]
+            },
+            {
+              "heading": "У беговых функций другие условия поддержки",
+              "paragraphs": [
+                "Running Coach расширяется с десяти до двенадцати уровней, добавляя промежуточные и продвинутые ступени. План может учитывать двенадцатиминутный беговой тест или предыдущие записи тренировок. Также появляется импорт маршрутов Strava для бега, трейлраннинга и велосипеда. Это изменения организации тренировок и использования маршрутов, а не единые требования ко всем функциям здоровья.",
+                "Примечания разделяют совместимость функций. Sleep Coaching поддерживает некоторые существующие Galaxy Watch, Fit и Ring; для Running Coach требуется серия Galaxy Watch8 или новее и выполнение других условий. Доступность зависит от региона, устройства и версии приложения. Импорт Strava недоступен в перечисленных регионах, включая Китай, Россию и Южную Корею. Дата объявления поэтому не означает одновременное получение всех функций каждым пользователем."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по объявлению: переход от записей к рекомендациям. Это не клинический результат и не измерения пользователей.",
+            "steps": [
+              "Три дня записей за две недели и анкета",
+              "Начало программы на четыре–восемь недель",
+              "Еженедельный обзор и корректировка рекомендаций"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "三星 10 月 14 日公佈的 Samsung Health 更新，改變了睡眠指導的啟動條件和後續回饋方式：過去要在一個月內積累七天睡眠資料，現在最近兩週內有三天記錄即可開始；建議會隨著每週記錄繼續調整。這裡的“三天”是進入指導流程的資料門檻，不是承諾三天改善睡眠。更新同時細化了跑步訓練分級，自十月起逐步推出。",
+          "sections": [
+            {
+              "heading": "從記錄開始，到形成個人計畫",
+              "paragraphs": [
+                "使用者開始前還要填寫調查，內容包括作息規律、夜間中斷、酒精和咖啡因攝入，以及自己對睡眠的感受。應用結合這些回答與裝置記錄，給出睡眠類型，並按個人目標組織四至八週的指導。縮短等待期的直接效果，是讓記錄較少的使用者更早進入這一流程；計畫本身並沒有縮短為三天。",
+                "這套流程不是只讀取手錶上的一個分數。裝置記錄提供時間與活動相關資訊，問卷和每天填寫的滿意度補充主觀體驗。兩類資訊反映的內容不同，缺少連續記錄或填報變化，都可能影響應用所見的趨勢。新聞稿沒有提供對照研究，無法據此判斷降低門檻後，建議的準確性或實際睡眠效果是否發生變化。"
+              ]
+            },
+            {
+              "heading": "週報把幾種變化放在一起看",
+              "paragraphs": [
+                "原有計畫加入按週調整的指導，並將每日提示、每週回顧與最終報告串連起來。睡眠平衡圖用五個方面呈現變化：睡眠時間、規律性、夜間清醒時間、睡眠滿意度和 Energy Score。它把不同維度放到同一張圖上，便於回看，並不意味著五項都來自同一種測量，更不能將圖形擴大直接當作臨床改善。",
+                "對於讀者，值得關注的是回饋週期變得更清楚：夜間記錄之後有晨間提示，再透過一週記錄觀察變化。這是應用互動與資訊組織的更新。三星將 Energy Score 定位為個人參考，而非醫療用途；現有公告和媒體報導沒有給出獨立臨床效果驗證，因此不能把這次更新描述為睡眠疾病診斷或治療能力的升級。"
+              ]
+            },
+            {
+              "heading": "跑步分級更細，支援範圍仍要分開看",
+              "paragraphs": [
+                "Running Coach 的訓練等級由十級擴展到十二級，增加中高階訓練層次。它可依據十二分鐘跑步測試或既有跑步資料安排個人訓練計畫。此次更新也加入 Strava 路線匯入，用於跑步、越野跑和騎乘；這些是訓練組織和路線使用上的改變，不代表所有健康功能都具備相同裝置要求。",
+                "公告的資格說明區分了各項功能：睡眠指導支援部分既有 Galaxy Watch、Fit 和 Ring 裝置，Running Coach 則要求 Galaxy Watch8 系列或更新機型等條件。功能按地區、裝置和軟體版本逐步開放，Strava 路線匯入在中國、俄羅斯、韓國等列明地區不可用。因而釋出日期不等於每名使用者收到全部功能的日期，也不能僅憑應用已更新就判斷所有入口都應出現。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公告重繪的解釋性流程圖，展示資料如何進入指導與回顧流程，不表示醫療效果或實際使用者測量結果。",
+            "steps": [
+              "最近兩週內三天睡眠記錄與問卷",
+              "進入四至八週個人指導",
+              "每週回顧記錄並調整建議"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "google-gemini4-argon-cloud",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "Google Cloud: Gemini 4 Argon launch",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud"
+        },
+        {
+          "label": "Google: Gemini 4 Argon announcement, October 13",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/"
+        },
+        {
+          "label": "Google Cloud: current Argon developer guide",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-argon"
+        },
+        {
+          "label": "Google Developers: ADK optimisation case and measurements",
+          "url": "https://developers.googleblog.com/optimizing-a-200000-line-python-codebase-overnight-with-gemini-4-argon/"
+        },
+        {
+          "label": "Search Engine Land: independent report of the rollout",
+          "url": "https://searchengineland.com/gemini-4-argon-rolling-out-in-google-ai-mode-gemini-495592"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Google 在 10 月 13 日将 Gemini 4 Argon 引入 Google Cloud，并通过 AI Studio 和 Gemini 平台向开发者及企业提供 API。此次发布面向需要多步推理、长材料分析与编程的工作。它已经进入托管服务，而不是只有模型预告；公告没有交付可自行部署的模型权重。理解这次更新，需要把可调用的新模型、上下文使用规则和厂商展示的工程结果分开。",
+          "sections": [
+            {
+              "heading": "长上下文是共同预算，不是无限输入",
+              "paragraphs": [
+                "Google 将 Argon 定位于复杂工程和专业工作，能够处理文本、表格、图表和图像等材料。相较只回答一个短问题，这类任务可能要持续阅读文件、调用工具、比较中间结果，再生成结论。模型能容纳更多材料，为减少反复拆分提供了条件，但材料装得下，并不直接证明所有细节都能被正确检索和引用。",
+                "本次复核时的开发指南规定，总上下文上限为 1,048,576 个 token，输入与输出共用这一额度；输出还包括推理、工具调用和最终回答。不能把这个数字理解为可先塞满同样数量的输入，再额外生成任意长度的答案。长任务需要为后续步骤留出空间。指南也区分单次输出与跨请求延续，因此总上下文容量不是一次回复长度的承诺。"
+              ]
+            },
+            {
+              "heading": "一项工程案例说明了收益，也说明了审核的作用",
+              "paragraphs": [
+                "Google 公布的 ADK 案例让模型对智能体开发框架进行约十一小时的自动优化探索，最后提出六项修改，人工审查后采用两项、拒绝四项。被采用的做法包括先筛选历史事件再复制，以及按需加载较重的组件。前者减少不必要的数据处理，后者把一部分启动工作推迟到真正需要时；它们针对的是框架开销，而非让模型本身生成得更快。",
+                "Google 在保留测试任务中的测量显示，长会话的内存会话准备时间减少约 40%，冷启动导入加快约 21%。测试用即时返回的模型与工具隔离框架开销。新进程启动到发出首次模型请求的耗时从 3.07 秒变为 3.09 秒，基本未变：推迟加载并没有消除全部工作。这些是 Google 自述的特定框架和测试条件下的结果，不能换算成所有智能体快 40%，也不是独立机构对 Argon 整体能力的验证。"
+              ]
+            },
+            {
+              "heading": "发布状态明确，业务效果仍取决于工作流程",
+              "paragraphs": [
+                "独立报道确认了 10 月 13 日的公开推出，也提到 Gemini 应用与搜索 AI Mode 的逐步开放；这些消费入口与云端 API 是不同使用方式。云端调用意味着开发者使用托管模型，仍需自行组织工具、数据和任务边界。Google 关于遵守系统约束、遇到不可逆操作时暂停的说明，描述的是训练目标和预期行为，不能替代应用自身的权限与确认机制。",
+                "开发指南提供不同推理强度，复杂任务可以分配更多推理预算，但较长生成也可能增加等待。对采用者而言，ADK 案例提供的具体启发是同时看最终结果和完整流程成本，并保留人工筛选，而不是只看局部速度或厂商排名。六项建议只采用两项，恰好说明生成候选修改与确认它们可用，是两个不同环节。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据发布公告、开发指南与工程案例重绘的解释性流程图，展示共享上下文预算与人工审核，不代表模型基准测试结果。",
+            "steps": [
+              "材料进入输入与输出共享的上下文",
+              "模型组织推理并调用工具",
+              "核对结果与完整任务成本后采用"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Google brought Gemini 4 Argon to Google Cloud on October 13, offering developers and enterprises API access through AI Studio and Gemini platform. The release targets multistep reasoning, lengthy material and coding work. This is hosted availability rather than an announcement of a future model; it is not a release of model weights for self-hosting. Access, context rules and the engineering results used to illustrate the model need to be understood separately.",
+          "sections": [
+            {
+              "heading": "A long context is a shared budget",
+              "paragraphs": [
+                "Google positions Argon for complex engineering and professional work involving text, tables, charts and images. Such tasks can require repeated reading, tool use and comparison of intermediate results before a conclusion. A larger context can reduce the need to split material, but fitting documents into the window does not establish that every detail will be retrieved or cited correctly.",
+                "The developer guide reviewed for this article specifies a total context limit of 1,048,576 tokens shared by input and output. Output includes reasoning, tool calls and the final answer. Filling that allowance with input would not leave an additional unlimited answer budget. Later steps need room. The guide also distinguishes per-request output from continuation across requests: total context capacity is not a promise about the length of one response."
+              ]
+            },
+            {
+              "heading": "An engineering example also shows the role of review",
+              "paragraphs": [
+                "Google describes an approximately eleven-hour autonomous optimisation effort on its Agent Development Kit. The model proposed six changes; human review accepted two and rejected four. Accepted changes filtered historical events before copying them and loaded heavier components only when needed. These reduce unnecessary processing or defer startup work. They address framework overhead rather than accelerating the underlying model’s token generation.",
+                "Google’s measurements on held-out tasks reported about 40% less in-memory session preparation time for long sessions and 21% faster cold imports. The benchmark used instant models and tools to isolate framework overhead. Time from a fresh process to its first model request changed from 3.07 to 3.09 seconds, effectively flat: deferred work did not disappear. These are Google-reported results for a particular framework and test setup, not a 40% improvement for every agent or an independent evaluation of Argon’s overall capabilities."
+              ]
+            },
+            {
+              "heading": "Availability is established; workflow results remain contextual",
+              "paragraphs": [
+                "Independent reporting corroborated the October 13 rollout and covered access through the Gemini app and Search AI Mode. Those consumer interfaces are distinct from the cloud API. Hosted access leaves developers responsible for organising tools, data and task boundaries. Google’s statements about respecting system constraints and pausing before irreversible actions describe training aims and intended behaviour, not a substitute for application-level permissions and confirmation.",
+                "The guide offers different reasoning intensities, allowing more reasoning budget for difficult work while longer generation can add waiting time. The practical lesson of the ADK case is to assess completed results and whole-workflow cost, with human selection retained, rather than relying on a local speed gain or vendor ranking. Accepting two of six proposals illustrates the difference between generating plausible changes and establishing that they are usable."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw from the announcement, developer guide and engineering case. It depicts shared context and human review, not model benchmark results.",
+            "steps": [
+              "Materials enter a shared input-and-output budget",
+              "Reasoning and tool use develop the result",
+              "Check results and full task cost before adoption"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Google は10月13日、Gemini 4 Argon を Google Cloud に導入し、AI Studio と Gemini プラットフォームを通じて開発者・企業向け API を提供した。複数段階の推論、長い資料の分析、プログラミングを対象とする。将来のモデルの予告ではなく、ホスト型サービスでの提供開始だが、自社運用用のモデル重みの配布ではない。利用可能性、文脈の制限、紹介された実務成果は分けて理解する必要がある。",
+          "sections": [
+            {
+              "heading": "長い文脈も入出力で共有する容量",
+              "paragraphs": [
+                "Google は、文章、表、グラフ、画像を扱う複雑な技術・専門業務に Argon を位置付ける。こうした仕事では資料を読み、道具を呼び出し、中間結果を比較してから結論を出す。大きな文脈は資料を分割する手間を減らせるが、入れられた全情報を正しく取り出して引用できる証明にはならない。",
+                "今回確認した開発ガイドでは、文脈の合計上限は1,048,576トークンで、入力と出力が共有する。出力には推論、ツール呼び出し、最終回答も含む。同じ数の入力を先に詰め込み、さらに無制限の回答を追加できるという意味ではない。後続の作業に余裕が必要で、単一の出力と複数リクエストにまたがる継続も区別される。総容量は一回の回答の長さを保証しない。"
+              ]
+            },
+            {
+              "heading": "工程の改善と採用判断は別の段階",
+              "paragraphs": [
+                "Google が公表した ADK の事例では、エージェント開発基盤の最適化を約11時間自律的に探索し、6件の変更を提案した。人による審査で採用されたのは2件、却下は4件だった。採用例は、履歴を複製する前に必要なイベントへ絞ることと、重い部品を必要時に読み込むこと。不要な処理を減らす、または起動時の処理を後回しにする工夫であり、モデル自体の生成速度の改善ではない。",
+                "Google による未提示課題での測定では、長い会話でのメモリ内セッション準備が約40%短縮され、初回の部品読み込みが約21%速くなった。測定は即時応答のモデルとツールを使って基盤の処理時間を分離した。新しいプロセスの開始から最初のモデル要求を送るまでの時間は3.07秒から3.09秒へと、ほぼ変わらなかった。後回しにした処理が消えるわけではない。特定の基盤と条件における開発元の結果であり、全エージェントの40%高速化や、モデル能力の独立評価ではない。"
+              ]
+            },
+            {
+              "heading": "利用開始と業務の成果を混同しない",
+              "paragraphs": [
+                "独立報道も10月13日の公開を確認し、Gemini アプリや検索の AI Mode への展開を伝えた。これらとクラウド API は異なる利用形態だ。ホスト型モデルを呼び出しても、道具、データ、作業範囲を組み立てる責任は開発側に残る。システム制約の尊重や不可逆な操作前の停止という Google の説明は訓練の狙いと期待される動作で、アプリ自身の権限・確認機構の代わりにはならない。",
+                "ガイドは推論の強さを選べるようにしており、難しい作業に多くの予算を割り当てられる一方、長い生成は待ち時間を増やし得る。ADK の事例から読み取れるのは、局所的な速度やランキングだけでなく、完了した成果と工程全体の費用を見て、人による採否判断を残す重要性だ。6件中2件の採用は、候補を生成することと利用可能だと確かめることが別であると示している。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "発表、開発ガイド、工程事例に基づく当サイトの説明用再描画。共有文脈と人による確認を示し、モデルのベンチマーク結果は表さない。",
+            "steps": [
+              "入出力が共有する容量へ資料を投入",
+              "推論とツール利用で結果を作る",
+              "成果と作業全体の費用を確認して採用"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "13 октября Google представила Gemini 4 Argon в Google Cloud, предоставив разработчикам и предприятиям API через AI Studio и Gemini platform. Модель предназначена для многоэтапных рассуждений, анализа больших материалов и программирования. Это доступный управляемый сервис, а не только анонс будущей модели; веса для самостоятельного размещения не опубликованы в рамках этого объявления. Доступность, правила контекста и показанные инженерные результаты следует рассматривать отдельно.",
+          "sections": [
+            {
+              "heading": "Большой контекст остаётся общим бюджетом",
+              "paragraphs": [
+                "Google позиционирует Argon для сложных инженерных и профессиональных задач с текстом, таблицами, графиками и изображениями. Такая работа может требовать повторного чтения, вызовов инструментов и сопоставления промежуточных результатов. Большое окно снижает необходимость дробить материалы, но само размещение документов внутри него не доказывает правильное извлечение и цитирование каждой детали.",
+                "Изученное руководство разработчика задаёт общий предел 1 048 576 токенов для входа и выхода вместе. Выход включает рассуждения, обращения к инструментам и конечный ответ. Если заполнить весь бюджет входными материалами, сверх него не появится неограниченного места для ответа. Последующим шагам нужен запас. Руководство также различает один вывод и продолжение между запросами: общая ёмкость не гарантирует длину отдельного ответа."
+              ]
+            },
+            {
+              "heading": "Инженерный пример показывает и пользу проверки",
+              "paragraphs": [
+                "Google описывает примерно одиннадцать часов автономного поиска оптимизаций в своём Agent Development Kit. Модель предложила шесть изменений, из которых люди приняли два и отклонили четыре. Принятые решения фильтруют исторические события перед копированием и загружают тяжёлые компоненты по необходимости. Они сокращают лишнюю обработку или откладывают часть запуска; речь об издержках фреймворка, а не о скорости генерации самой модели.",
+                "В измерениях Google на отложенных задачах подготовка сессий в памяти для длинных разговоров сократилась примерно на 40%, а холодный импорт ускорился на 21%. Тест использовал мгновенные модель и инструменты, изолируя накладные расходы фреймворка. Время от запуска процесса до первого запроса к модели составило 3,09 секунды вместо 3,07 — практически без изменения: отложенная работа не исчезла. Это данные Google для конкретного фреймворка и условий, а не ускорение любого агента на 40% и не независимая оценка возможностей Argon в целом."
+              ]
+            },
+            {
+              "heading": "Доступность подтверждена, эффект зависит от процесса",
+              "paragraphs": [
+                "Независимая публикация подтвердила запуск 13 октября и рассказала о предоставлении модели в приложении Gemini и AI Mode поиска. Эти пользовательские интерфейсы отличаются от облачного API. Даже при использовании управляемой модели разработчик организует инструменты, данные и границы задания. Заявления Google о соблюдении системных ограничений и остановке перед необратимыми действиями описывают цели обучения и ожидаемое поведение, но не заменяют разрешения и подтверждения в приложении.",
+                "Руководство предусматривает разную интенсивность рассуждений: сложной задаче можно дать больший бюджет, хотя длинная генерация способна увеличить ожидание. Практический вывод из ADK — оценивать завершённый результат и стоимость всего процесса, сохраняя человеческий отбор, а не ориентироваться лишь на локальное ускорение или рейтинг поставщика. Принятие двух из шести предложений хорошо отделяет создание кандидатов от доказательства их пригодности."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по объявлению, руководству и инженерному примеру. Общий контекст и человеческая проверка, а не результаты бенчмарка.",
+            "steps": [
+              "Материалы занимают общий бюджет входа и выхода",
+              "Рассуждения и инструменты формируют результат",
+              "Проверка результата и полной стоимости задачи"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Google 在 10 月 13 日將 Gemini 4 Argon 引入 Google Cloud，並透過 AI Studio 和 Gemini 平臺向開發者及企業提供 API。此次釋出面向需要多步推理、長材料分析與程式設計的工作。它已經進入託管服務，而不是只有模型預告；公告沒有交付可自行部署的模型權重。理解這次更新，需要把可呼叫的新模型、上下文使用規則和廠商展示的工程結果分開。",
+          "sections": [
+            {
+              "heading": "長上下文是共同預算，不是無限輸入",
+              "paragraphs": [
+                "Google 將 Argon 定位於複雜工程和專業工作，能夠處理文字、表格、圖表和影像等材料。相較只回答一個短問題，這類任務可能要持續閱讀檔案、呼叫工具、比較中間結果，再生成結論。模型能容納更多材料，為減少反覆拆分提供了條件，但材料裝得下，並不直接證明所有細節都能被正確檢索和引用。",
+                "本次複核時的開發指南規定，總上下文上限為 1,048,576 個 token，輸入與輸出共用這一額度；輸出還包括推理、工具呼叫和最終回答。不能把這個數字理解為可先塞滿同樣數量的輸入，再額外生成任意長度的答案。長任務需要為後續步驟留出空間。指南也區分單次輸出與跨請求延續，因此總上下文容量不是一次回覆長度的承諾。"
+              ]
+            },
+            {
+              "heading": "一項工程案例說明了收益，也說明了稽核的作用",
+              "paragraphs": [
+                "Google 公佈的 ADK 案例讓模型對智慧代理開發框架進行約十一小時的自動最佳化探索，最後提出六項修改，人工審查後採用兩項、拒絕四項。被採用的做法包括先篩選歷史事件再複製，以及按需載入較重的元件。前者減少不必要的資料處理，後者把一部分啟動工作推遲到真正需要時；它們針對的是框架開銷，而非讓模型本身生成得更快。",
+                "Google 在保留測試任務中的測量顯示，長會話的記憶體會話準備時間減少約 40%，冷啟動匯入加快約 21%。測試用即時返回的模型與工具隔離框架開銷。新程序啟動到發出首次模型請求的耗時從 3.07 秒變為 3.09 秒，基本未變：推遲載入並沒有消除全部工作。這些是 Google 自述的特定框架和測試條件下的結果，不能換算成所有智慧代理快 40%，也不是獨立機構對 Argon 整體能力的驗證。"
+              ]
+            },
+            {
+              "heading": "釋出狀態明確，業務效果仍取決於工作流程",
+              "paragraphs": [
+                "獨立報導確認了 10 月 13 日的公開推出，也提到 Gemini 應用與搜尋 AI Mode 的逐步開放；這些消費入口與雲端 API 是不同使用方式。雲端呼叫意味著開發者使用託管模型，仍需自行組織工具、資料和任務邊界。Google 關於遵守系統約束、遇到不可逆操作時暫停的說明，描述的是訓練目標和預期行為，不能替代應用自身的權限與確認機制。",
+                "開發指南提供不同推理強度，複雜任務可以分配更多推理預算，但較長生成也可能增加等待。對採用者而言，ADK 案例提供的具體啟發是同時看最終結果和完整流程成本，並保留人工篩選，而不是只看局部速度或廠商排名。六項建議只採用兩項，恰好說明生成候選修改與確認它們可用，是兩個不同環節。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據釋出公告、開發指南與工程案例重繪的解釋性流程圖，展示共享上下文預算與人工稽核，不代表模型基準測試結果。",
+            "steps": [
+              "材料進入輸入與輸出共享的上下文",
+              "模型組織推理並呼叫工具",
+              "核對結果與完整任務成本後採用"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "globalfoundries-fdx-fusion-roadmap",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "GlobalFoundries: FDX Fusion roadmap and delivery milestones",
+          "url": "https://gf.com/news-and-events/news/gf-unveils-roadmap-to-deliver-worlds-most-advanced-platform-for-physical-ai/"
+        },
+        {
+          "label": "GlobalFoundries: FD-SOI platform architecture",
+          "url": "https://gf.com/technologies/cmos/fdx-fd-soi/"
+        },
+        {
+          "label": "Tom’s Hardware: FDX Fusion performance and node interpretation",
+          "url": "https://www.tomshardware.com/tech-industry/semiconductors/globalfoundries-unveils-7nm-class-fdx-fusion-node-fd-soi-node-doubles-22fdx-transistor-density-comes-7-years-after-firm-abandoned-finfet"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "格罗方德 10 月 9 日公布 FDX Fusion 路线图，希望把数字计算、射频、模拟电路和存储能力进一步集成到面向物理 AI 的 FD-SOI 平台中。公司提出七纳米级数字性能、相对第一代 FDX 超过两倍的密度等目标，并计划 2028 年在德累斯顿制造。这是工艺平台的开发计划，尚不是已完成的量产能力，也不是宣布一款可立即购买的七纳米芯片。",
+          "sections": [
+            {
+              "heading": "为什么不只追求更快的数字计算",
+              "paragraphs": [
+                "这里的物理 AI，指需要感知现实环境、进行判断并控制动作的系统，例如机器人、工业自动化和汽车电子。它们除了运行模型，还要处理传感器的模拟信号、保存状态，并通过无线或其他接口通信。格罗方德用感知、思考、行动、通信概括这些要求，FDX Fusion 的重点正是将多种能力放进更紧密的系统设计。",
+                "FD-SOI 是全耗尽绝缘体上硅工艺。格罗方德的 FDX 平台采用平面晶体管路线，强调低漏电，并可通过自适应体偏置在性能和能耗之间调节。Fusion 计划结合新的衬底、晶体管与后端互连技术，加入高密度逻辑、模拟和混合信号、射频、嵌入式非易失存储及存内计算能力。它的价值主张是减少系统拆分与数据搬运的复杂性，而不仅是一项数字速度排名。"
+              ]
+            },
+            {
+              "heading": "“七纳米级”与真实尺寸不能画等号",
+              "paragraphs": [
+                "公司说的是预期达到七纳米级数字性能，并将密度提升目标与第一代 FDX 相比。两个表述有各自的比较范围：性能级别不是晶体管某个结构的实际长度，超过两倍的密度也不是相较所有其他代工工艺。Tom’s Hardware 的分析指出，公告没有给出足以直接比较的栅极间距、最小金属间距或完整实际密度等参数。",
+                "因此，目前无法据这些目标判断它与其他厂商某个“七纳米”节点在面积、速度和功耗上全面相当。把模拟、射频和存储集成在一起，可能减少多芯片组合的开销，但最终收益还要看设计、良率、验证和应用要求。原公告强调的低延迟、低功耗和系统简化，应作为平台的开发方向，而非已经通过客户产品证明的普遍效果。"
+              ]
+            },
+            {
+              "heading": "先评估，再进入设计与制造",
+              "paragraphs": [
+                "公开计划给出了三个阶段：2027 年初向客户提供演示硅片用于评估，2027 年中提供首批工艺设计套件，2028 年在德累斯顿制造。演示硅片用于观察工艺能力，设计套件则让芯片设计团队依据工厂模型与规则开展工作；二者都不等于已经有完成认证的终端产品。更晚的制造目标也仍受开发和验证进度影响。",
+                "公告列出的客户与合作方表态，说明汽车、工业与通信企业对这一路线有兴趣，但不能当作已经落实的量产订单、销售额或市场份额。对产业观察者，后续更有判断价值的进展是评估硅片是否按期交付、设计套件是否可用，以及实际产品的数据。当前可确认的新闻增量，是平台架构取向和明确的验证阶段，而不是对未来性能承诺提前验收。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据路线图重绘的解释性示意图。所有年份均为格罗方德公布的计划节点，不是已完成里程碑或芯片实测结果。",
+            "steps": [
+              "计划 2027 年初：演示硅片评估",
+              "计划 2027 年中：首批设计套件",
+              "计划 2028 年：德累斯顿制造"
+            ]
+          }
+        },
+        "en": {
+          "lead": "GlobalFoundries announced its FDX Fusion roadmap on October 9, seeking tighter integration of digital computing, radio-frequency circuits, analogue functions and memory in an FD-SOI platform for physical AI. Targets include seven-nanometre-class digital performance and more than twice the density of first-generation FDX, with manufacturing planned in Dresden in 2028. This is a process-development roadmap, not demonstrated volume-production capability or an immediately available seven-nanometre chip.",
+          "sections": [
+            {
+              "heading": "Physical systems need more than digital speed",
+              "paragraphs": [
+                "Physical AI describes systems that sense their surroundings, make decisions and control actions, such as robots, industrial automation and automotive electronics. Alongside model computation, they must handle analogue sensor signals, retain state and communicate. GlobalFoundries groups these demands as sensing, thinking, acting and communicating. Fusion aims to support their combination within a more integrated system design.",
+                "FD-SOI means fully depleted silicon on insulator. The FDX family uses planar transistors, emphasises low leakage and can use adaptive body bias to balance performance and energy consumption. Fusion proposes new substrate, transistor and back-end interconnect technology alongside dense logic, analogue and mixed-signal functions, RF, embedded non-volatile memory and in-memory computing. The proposition concerns reducing system fragmentation and data-movement complexity, not just winning a digital-speed ranking."
+              ]
+            },
+            {
+              "heading": "Performance class is not a physical dimension",
+              "paragraphs": [
+                "The company describes an expected seven-nanometre class of digital performance and compares its density target with first-generation FDX. These are distinct comparisons: a performance class is not a transistor’s measured feature length, and a greater-than-twofold density gain is not a comparison with every competing process. Tom’s Hardware notes that the announcement lacks parameters such as contacted gate pitch, minimum metal pitch and actual density needed for direct comparisons.",
+                "The targets therefore do not establish parity in area, speed and power with another foundry’s particular seven-nanometre node. Combining analogue, RF and memory could reduce the overhead of a multichip design, but outcomes depend on implementation, yield, validation and application requirements. Lower latency, lower power and simpler systems remain development aims rather than universally demonstrated results in customer products."
+              ]
+            },
+            {
+              "heading": "Evaluation precedes design and manufacturing",
+              "paragraphs": [
+                "The published sequence has three stages: demonstration silicon for customer evaluation in early 2027, initial process design kits in mid-2027, and Dresden manufacturing in 2028. Demonstration silicon allows evaluation of process capabilities. A design kit lets chip designers work with a factory’s models and rules. Neither is equivalent to a qualified end product, and the later manufacturing target remains dependent on development and validation progress.",
+                "Supportive statements from customers and partners indicate interest across automotive, industry and communications. They are not evidence of committed volume orders, revenue or market share. More informative future milestones will be delivery of evaluation silicon, usable design kits and measured product data. The confirmed news is the platform’s technical direction and staged validation plan, not fulfilment of its future performance promises."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the roadmap. Dates are GlobalFoundries’ planned stages, not completed milestones or measured chip results.",
+            "steps": [
+              "Planned early 2027: evaluation silicon",
+              "Planned mid-2027: initial design kits",
+              "Planned 2028: Dresden manufacturing"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "GlobalFoundries は10月9日、物理 AI 向け FD-SOI 基盤「FDX Fusion」のロードマップを発表した。デジタル計算、無線周波数回路、アナログ機能、メモリをより密接に統合する計画で、7ナノメートル級のデジタル性能と初代 FDX 比で2倍超の密度を目指す。ドレスデンでの製造は2028年の予定だ。開発計画の発表であり、量産能力の実証や今すぐ入手できる7ナノメートルチップの発表ではない。",
+          "sections": [
+            {
+              "heading": "現実の環境を扱うには計算以外も必要",
+              "paragraphs": [
+                "物理 AI は、環境を感知し、判断し、動作を制御するシステムを指す。ロボット、工場の自動化、車載電子機器などは、モデルの計算に加え、センサーのアナログ信号を扱い、状態を保存し、通信する必要がある。同社はこれを感知・思考・行動・通信と整理し、Fusion で複数機能を一体化しやすい設計を目指している。",
+                "FD-SOI は完全空乏型 SOI 技術で、FDX は平面型トランジスタを用い、低い漏れ電流を重視する。適応的なボディバイアスによって性能と消費電力のバランスも調整できる。Fusion は基板、トランジスタ、後工程の配線技術を更新し、高密度ロジック、アナログ・混合信号、RF、組み込み不揮発メモリ、メモリ内計算を組み合わせる計画だ。狙いは速度競争だけでなく、機能の分散とデータ移動の複雑さを減らすことにある。"
+              ]
+            },
+            {
+              "heading": "「7ナノメートル級」は寸法そのものではない",
+              "paragraphs": [
+                "発表はデジタル性能の水準を7ナノメートル級と表現し、密度の目標を初代 FDX と比較している。性能の区分はトランジスタ構造の実測寸法ではなく、密度2倍超という比較も全競合工法を対象にしない。Tom’s Hardware は、ゲート間隔、最小配線間隔、実際の密度など、直接比較に必要な情報が公表されていないと指摘した。",
+                "この目標だけで、他社の特定の7ナノメートル工程と面積・速度・電力が全面的に同等とは判断できない。アナログ、RF、メモリの統合で複数チップ構成の負担を減らせる可能性はあるが、設計、歩留まり、検証、用途の条件に左右される。低遅延、省電力、システム簡素化は開発の方向であり、顧客製品で広く実証済みの効果ではない。"
+              ]
+            },
+            {
+              "heading": "評価から設計、製造へ進む計画",
+              "paragraphs": [
+                "予定は三段階で、2027年初めに顧客評価用の実証シリコン、同年半ばに初期のプロセス設計キット、2028年にドレスデンでの製造となる。実証シリコンは工程能力を調べる材料で、設計キットは工場のモデルや規則に従って回路設計を進めるためのものだ。どちらも認定を終えた完成製品と同じではなく、製造開始の目標も開発・検証の進み方に依存する。",
+                "顧客や協力企業の賛同は、車載、産業、通信分野の関心を示すが、確定した量産注文、売上、市場シェアを意味しない。今後の判断材料は、評価用シリコンの提供、利用可能な設計キット、実製品の測定値になる。現時点の新しい情報は技術の方向と検証段階の具体化であり、将来の性能目標の達成ではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "ロードマップに基づく当サイトの説明用再描画。年は同社の予定であり、完了済みの節目やチップの実測結果ではない。",
+            "steps": [
+              "2027年初めの予定：評価用シリコン",
+              "2027年半ばの予定：初期設計キット",
+              "2028年の予定：ドレスデンで製造"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "9 октября GlobalFoundries представила дорожную карту FDX Fusion — платформы FD-SOI для физического ИИ с более тесным объединением цифровых вычислений, радиочастотных и аналоговых схем, а также памяти. Заявлены цели по цифровой производительности класса семи нанометров и плотности более чем вдвое выше первого поколения FDX. Производство в Дрездене намечено на 2028 год. Это план разработки процесса, а не доказанная массовая производственная возможность или готовый семинанометровый чип.",
+          "sections": [
+            {
+              "heading": "Физическим системам нужны не только вычисления",
+              "paragraphs": [
+                "Физический ИИ относится к системам, которые воспринимают среду, принимают решения и управляют действиями: роботам, промышленной автоматике и автомобильной электронике. Помимо вычислений модели, им нужны обработка аналоговых сигналов датчиков, хранение состояния и связь. GlobalFoundries объединяет требования в восприятие, мышление, действие и коммуникацию. Fusion призвана поддержать их более тесную интеграцию.",
+                "FD-SOI означает полностью обеднённый кремний на изоляторе. Семейство FDX использует планарные транзисторы, делает акцент на низких утечках и позволяет адаптивно менять смещение подложки для баланса скорости и энергопотребления. Fusion предполагает новые подложки, транзисторы и межсоединения вместе с плотной логикой, аналоговыми и смешанными схемами, RF, встроенной энергонезависимой памятью и вычислениями в памяти. Идея — уменьшить разобщённость системы и сложность перемещения данных, а не только добиться цифрового рекорда скорости."
+              ]
+            },
+            {
+              "heading": "Класс производительности не равен размеру структуры",
+              "paragraphs": [
+                "Компания говорит об ожидаемой цифровой производительности семинанометрового класса, а плотность сравнивает с первым поколением FDX. Это разные базы сравнения: класс быстродействия не является измеренной длиной элемента транзистора, а рост более чем вдвое не относится ко всем конкурирующим процессам. Tom’s Hardware отмечает отсутствие параметров для прямого сопоставления, включая шаг затворов, минимальный шаг металлизации и фактическую плотность.",
+                "По этим целям нельзя установить полное равенство площади, скорости и энергопотребления с конкретным семинанометровым процессом другой фабрики. Интеграция аналоговых схем, RF и памяти потенциально уменьшает издержки многокристальной системы, но эффект зависит от реализации, выхода годных, проверки и требований применения. Меньшая задержка, расход энергии и сложность пока являются целями разработки, а не универсально подтверждёнными результатами клиентских продуктов."
+              ]
+            },
+            {
+              "heading": "Оценка предшествует проектированию и производству",
+              "paragraphs": [
+                "Объявлены три этапа: демонстрационный кремний для клиентской оценки в начале 2027 года, первоначальные комплекты проектирования процесса в середине 2027-го и производство в Дрездене в 2028-м. Первый позволяет изучить возможности технологии, второй — проектировать по моделям и правилам фабрики. Ни один не равнозначен квалифицированному конечному устройству. Более поздний производственный срок также зависит от хода разработки и проверки.",
+                "Положительные высказывания клиентов и партнёров показывают интерес автомобильной, промышленной и коммуникационной отраслей, но не доказывают объёмы заказов, выручку или долю рынка. Дальнейшими содержательными признаками станут поставка оценочного кремния, доступные проектные комплекты и измерения реальных продуктов. Сейчас подтверждены техническое направление платформы и этапы проверки, а не выполнение будущих обещаний производительности."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема дорожной карты. Даты — планы GlobalFoundries, не завершённые этапы и не измерения чипов.",
+            "steps": [
+              "План на начало 2027 года: оценочный кремний",
+              "План на середину 2027 года: проектные комплекты",
+              "План на 2028 год: производство в Дрездене"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "格羅方德 10 月 9 日公佈 FDX Fusion 路線圖，希望把數位運算、射頻、類比電路和儲存能力進一步整合到面向物理 AI 的 FD-SOI 平臺中。公司提出七奈米級數位效能、相對第一代 FDX 超過兩倍的密度等目標，並計畫 2028 年在德勒斯登製造。這是製程平臺的開發計畫，尚不是已完成的量產能力，也不是宣佈一款可立即購買的七奈米晶片。",
+          "sections": [
+            {
+              "heading": "為什麼不只追求更快的數位運算",
+              "paragraphs": [
+                "這裡的物理 AI，指需要感知現實環境、進行判斷並控制動作的系統，例如機器人、工業自動化和汽車電子。它們除了執行模型，還要處理感測器的類比訊號、儲存狀態，並透過無線或其他介面通訊。格羅方德用感知、思考、行動、通訊概括這些要求，FDX Fusion 的重點正是將多種能力放進更緊密的系統設計。",
+                "FD-SOI 是全耗盡絕緣體上矽製程。格羅方德的 FDX 平臺採用平面電晶體路線，強調低漏電，並可透過自適應體偏置在效能和能耗之間調節。Fusion 計畫結合新的襯底、電晶體與後端互連技術，加入高密度邏輯、類比和混合訊號、射頻、嵌入式非揮發性記憶體及記憶體內運算能力。它的價值主張是減少系統拆分與資料搬運的複雜性，而不僅是一項數位速度排名。"
+              ]
+            },
+            {
+              "heading": "“七奈米級”與真實尺寸不能畫等號",
+              "paragraphs": [
+                "公司說的是預期達到七奈米級數位效能，並將密度提升目標與第一代 FDX 相比。兩個表述有各自的比較範圍：效能級別不是電晶體某個結構的實際長度，超過兩倍的密度也不是相較所有其他代工製程。Tom’s Hardware 的分析指出，公告沒有給出足以直接比較的閘極間距、最小金屬間距或完整實際密度等參數。",
+                "因此，目前無法據這些目標判斷它與其他廠商某個“七奈米”節點在面積、速度和功耗上全面相當。把類比、射頻和儲存整合在一起，可能減少多晶片組合的開銷，但最終收益還要看設計、良率、驗證和應用要求。原公告強調的低延遲、低功耗和系統簡化，應作為平臺的開發方向，而非已經透過客戶產品證明的普遍效果。"
+              ]
+            },
+            {
+              "heading": "先評估，再進入設計與製造",
+              "paragraphs": [
+                "公開計畫給出了三個階段：2027 年初向客戶提供示範晶片用於評估，2027 年中提供首批製程設計套件，2028 年在德勒斯登製造。示範晶片用於觀察製程能力，設計套件則讓晶片設計團隊依據工廠模型與規則開展工作；二者都不等於已經有完成認證的終端產品。更晚的製造目標也仍受開發和驗證進度影響。",
+                "公告列出的客戶與合作方表態，說明汽車、工業與通訊企業對這一路線有興趣，但不能當作已經落實的量產訂單、銷售額或市占率。對產業觀察者，後續更有判斷價值的進展是評估矽片是否按期交付、設計套件是否可用，以及實際產品的資料。當前可確認的新聞增量，是平臺架構取向和明確的驗證階段，而不是對未來效能承諾提前驗收。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據路線圖重繪的解釋性示意圖。所有年份均為格羅方德公佈的計畫節點，不是已完成里程碑或晶片實測結果。",
+            "steps": [
+              "計畫 2027 年初：示範晶片評估",
+              "計畫 2027 年中：首批設計套件",
+              "計畫 2028 年：德勒斯登製造"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "tsmc-september-revenue",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "TSMC · September 2026 Revenue Report",
+          "url": "https://pr.tsmc.com/english/news/3343"
+        },
+        {
+          "label": "Anadolu · September revenue and semiconductor demand",
+          "url": "https://m.aa.com.tr/en/science-technology/tsmc-september-revenue-jumps-546-as-ai-chip-demand-fuels-growth/4081753"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "台积电在 2026 年 10 月 8 日公布 9 月营收：合并营收约为新台币 5,118.6 亿元，比去年同月增长 54.6%，但比 8 月减少 0.6%。两项数字并不矛盾：一项比较一年前的经营规模，另一项比较刚过去的一个月。这份公告提供了芯片代工业务的新数据，但没有给出利润或各类客户的贡献。",
+          "sections": [
+            {
+              "heading": "同一笔营收，三种比较方式",
+              "paragraphs": [
+                "同比增长 54.6% 的基准是 2025 年 9 月；环比下降 0.6% 的基准则是 2026 年 8 月。因此，不能把环比小幅回落解释成同比增长消失，也不能只看同比数字就说业务每个月都在加速。这里的单位是新台币，不能直接当作美元营收。",
+                "把观察范围拉长，2026 年 1 至 9 月累计营收约为新台币 3 兆 8,987.3 亿元，比 2025 年同期增长 41.1%。累计增速与单月增速的分母不同，不适合相减后当成增长速度的变化；前者描述九个月的总量，后者只描述一个月。"
+              ]
+            },
+            {
+              "heading": "为什么代工收入值得关注",
+              "paragraphs": [
+                "台积电为其他公司的芯片设计提供制造服务。Anadolu 的报道将这次披露放在 AI 基础设施投资和先进处理器需求的背景下，并提到英伟达与苹果等客户。相比品牌活动，这是一项有具体报告期和可核对金额的经营披露，能为观察半导体产业提供新的收入信号。",
+                "不过，月度公告只有合并营收总数，没有把 AI、手机或其他应用拆开，也没有逐个列出客户和制程的收入。AI 需求是理解行业的背景，不能据此断言这 54.6% 的增幅全部来自 AI，更不能用单月总额推算某个客户的订单。"
+              ]
+            },
+            {
+              "heading": "营收能说明什么，不能说明什么",
+              "paragraphs": [
+                "营收是经营收入，并不是扣除制造成本、研发和其他费用后的利润。即使营收明显增长，单凭这份月报也无法判断毛利率、净利润或新增产能的回报。它与完整季度财报回答的是不同问题：前者更新收入规模，后者才能进一步解释盈利情况。",
+                "在 10 月 8 日这一披露时点，完整第三季度业绩安排在 10 月 15 日发布，月报本身没有提供完整的盈利情况。对产业观察者而言，合理的读法是确认收入同比扩张、注意月度波动，再结合正式财报分析业务结构，而不是把单月增幅当成未来增长保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开资料重绘的解释图，帮助理解文中的比较口径或工作流程，不是实测结果。",
+            "steps": [
+              "9 月营收：新台币 5,118.6 亿元",
+              "与去年 9 月比较：+54.6%",
+              "与今年 8 月比较：−0.6%",
+              "1—9 月累计：同比 +41.1%"
+            ]
+          }
+        },
+        "en": {
+          "lead": "TSMC reported September revenue on October 8, 2026: approximately NT$511.86 billion, up 54.6% from a year earlier but down 0.6% from August. These are different comparisons, not conflicting findings. The disclosure adds a concrete observation about chip manufacturing revenue without establishing profitability or the contribution of individual customers.",
+          "sections": [
+            {
+              "heading": "Three comparisons, different denominators",
+              "paragraphs": [
+                "The 54.6% increase compares September 2026 with September 2025. The 0.6% decline compares September with August 2026. A small monthly fall does not erase annual growth; equally, strong annual growth does not mean revenue accelerated every month. All amounts here are in New Taiwan dollars, not US dollars.",
+                "Revenue for January through September totaled approximately NT$3,898.73 billion, 41.1% above the corresponding nine months of 2025. That cumulative rate has a different denominator from the September rate. Subtracting one percentage from the other would not measure an acceleration in growth."
+              ]
+            },
+            {
+              "heading": "What a foundry disclosure adds",
+              "paragraphs": [
+                "TSMC manufactures chips designed by other companies. Anadolu placed the release in the context of investment in AI infrastructure and demand for advanced processors, mentioning customers including Nvidia and Apple. Unlike a brand campaign, this announcement provides a dated financial observation that can be checked against the company’s disclosure.",
+                "The monthly release does not separate AI, smartphones and other applications, or disclose revenue by customer and manufacturing process. AI demand is relevant industry context, but the document cannot establish that AI caused the entire 54.6% increase. Nor does a consolidated total reveal a particular customer’s orders."
+              ]
+            },
+            {
+              "heading": "Revenue is not profit or a forecast",
+              "paragraphs": [
+                "Revenue precedes the deduction of manufacturing costs, research spending and other expenses. This report alone cannot establish gross margin, net income or returns on new capacity. Monthly revenue and full quarterly earnings answer different questions: one updates sales scale; the other provides a broader picture of profitability.",
+                "At the October 8 disclosure date, full third-quarter results were scheduled for October 15; the monthly release itself did not provide a complete picture of profitability. The useful conclusion is that revenue expanded year on year while fluctuating month to month. Future growth and the business mix require additional evidence, rather than treating one month’s growth rate as a guarantee."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from public sources, showing the comparisons or workflow discussed here; it is not a test result.",
+            "steps": [
+              "September revenue: NT$511.86 billion",
+              "Versus September 2025: +54.6%",
+              "Versus August 2026: −0.6%",
+              "January–September: +41.1% year on year"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "TSMC は 2026 年 10 月 8 日、9 月の連結売上高を約 5,118.6 億台湾ドルと発表しました。前年同月比では 54.6% 増、前月比では 0.6% 減です。比較する期間が異なるため、この二つの数字は矛盾しません。半導体製造の売上規模を示す新たな資料ですが、利益や顧客別の寄与までは分かりません。",
+          "sections": [
+            {
+              "heading": "比較期間を分けて読む",
+              "paragraphs": [
+                "54.6% 増の比較対象は 2025 年 9 月、0.6% 減の比較対象は 2026 年 8 月です。前月比の小幅減少を、前年からの成長がなくなったという意味には読めません。逆に、前年比が大きく伸びても、毎月成長が加速したとは限りません。金額の通貨は米ドルではなく台湾ドルです。",
+                "2026 年 1～9 月の累計売上高は約 3 兆 8,987.3 億台湾ドルで、前年同期比 41.1% 増でした。累計の増加率と単月の増加率では分母が違います。この二つを差し引いて、成長速度の変化と解釈することはできません。"
+              ]
+            },
+            {
+              "heading": "半導体産業を見る材料になる理由",
+              "paragraphs": [
+                "TSMC は他社が設計した半導体を製造します。Anadolu は今回の数字を、AI インフラ投資や先端プロセッサー需要の背景とともに報じ、Nvidia や Apple などの顧客にも触れました。ブランド活動とは異なり、対象期間と具体的な金額を検証できる経営情報です。",
+                "ただし、月次発表は AI、スマートフォン、その他の用途別売上や、顧客別・製造プロセス別の内訳を示していません。AI 需要は業界の背景として重要ですが、54.6% の増加がすべて AI によるものとは断定できません。合計額から特定顧客の発注量を推定することもできません。"
+              ]
+            },
+            {
+              "heading": "利益と将来の成長は別の問い",
+              "paragraphs": [
+                "売上高は製造費、研究開発費などを差し引く前の収入です。この月報だけでは、売上総利益率、純利益、新設備への投資収益を判断できません。月次売上は収入規模を更新し、四半期決算は利益の状況を含めて説明するという役割の違いがあります。",
+                "10 月 8 日の発表時点では、第三四半期の詳細な決算発表は 10 月 15 日に予定されており、月報自体に利益の全体像は示されていませんでした。前年比の拡大と月ごとの変動を確認したうえで、正式な決算と合わせて事業構成を読む必要があります。単月の増加率は将来の成長の保証にはなりません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料を基に本站が描き直した説明図です。本文の比較方法や処理の流れを示しており、実測結果ではありません。",
+            "steps": [
+              "9 月売上高：5,118.6 億台湾ドル",
+              "2025 年 9 月との比較：+54.6%",
+              "2026 年 8 月との比較：−0.6%",
+              "1～9 月累計：前年同期比 +41.1%"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "8 октября 2026 года TSMC сообщила о сентябрьской выручке примерно в 511,86 млрд новых тайваньских долларов: на 54,6% больше, чем годом ранее, и на 0,6% меньше, чем в августе. Противоречия нет: сравниваются разные периоды. Публикация добавляет конкретные данные о производстве микросхем, но не раскрывает прибыльность или вклад отдельных заказчиков.",
+          "sections": [
+            {
+              "heading": "Три сравнения с разной базой",
+              "paragraphs": [
+                "Рост на 54,6% относится к сравнению сентября 2026 года с сентябрём 2025-го. Снижение на 0,6% — к сравнению с августом 2026-го. Небольшое месячное снижение не отменяет годовой рост, а высокий годовой показатель не означает ежемесячного ускорения. Денежные суммы указаны в новых тайваньских, а не американских долларах.",
+                "За январь–сентябрь выручка составила около 3 898,73 млрд новых тайваньских долларов, на 41,1% больше аналогичных девяти месяцев 2025 года. У накопленного и месячного показателей разные базы. Их разность не является мерой ускорения роста."
+              ]
+            },
+            {
+              "heading": "Почему важна отчётность производителя",
+              "paragraphs": [
+                "TSMC выпускает микросхемы по разработкам других компаний. Anadolu рассматривало публикацию в контексте вложений в инфраструктуру ИИ и спроса на передовые процессоры, упоминая Nvidia и Apple среди заказчиков. В отличие от имиджевой кампании, здесь есть отчётный период и проверяемый финансовый результат.",
+                "Но месячное сообщение не разделяет выручку от ИИ, смартфонов и других применений, не приводит данные по клиентам и технологическим процессам. Спрос на ИИ важен как отраслевой фон, однако из документа не следует, что он обеспечил весь прирост в 54,6%. Консолидированная сумма также не раскрывает заказы конкретного клиента."
+              ]
+            },
+            {
+              "heading": "Выручка не равна прибыли и не гарантирует рост",
+              "paragraphs": [
+                "Выручка отражает доход до вычета производственных, исследовательских и прочих расходов. По одному месячному сообщению нельзя установить валовую рентабельность, чистую прибыль или отдачу от новых мощностей. Месячная статистика обновляет масштаб продаж; квартальная отчётность даёт более полное представление о финансовых результатах.",
+                "На момент публикации 8 октября полные результаты третьего квартала ожидались 15 октября; месячное сообщение само по себе не давало полной картины прибыльности. Обоснованный вывод — выручка выросла год к году при месячных колебаниях. Структура бизнеса и устойчивость будущего роста требуют дополнительных данных: темп одного месяца не является гарантией."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная редакцией по открытым источникам. Она показывает сравнения или последовательность действий, а не результаты испытаний.",
+            "steps": [
+              "Выручка сентября: 511,86 млрд NT$",
+              "К сентябрю 2025 года: +54,6%",
+              "К августу 2026 года: −0,6%",
+              "Январь–сентябрь: +41,1% год к году"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "臺積電在 2026 年 10 月 8 日公佈 9 月營收：合併營收約為新臺幣 5,118.6 億元，比去年同月增長 54.6%，但比 8 月減少 0.6%。兩項數字並不矛盾：一項比較一年前的經營規模，另一項比較剛過去的一個月。這份公告提供了晶片代工業務的新資料，但沒有給出利潤或各類客戶的貢獻。",
+          "sections": [
+            {
+              "heading": "同一筆營收，三種比較方式",
+              "paragraphs": [
+                "同比增長 54.6% 的基準是 2025 年 9 月；環比下降 0.6% 的基準則是 2026 年 8 月。因此，不能把環比小幅回落解釋成同比增長消失，也不能只看同比數字就說業務每個月都在加速。這裡的單位是新臺幣，不能直接當作美元營收。",
+                "把觀察範圍拉長，2026 年 1 至 9 月累計營收約為新臺幣 3 兆 8,987.3 億元，比 2025 年同期增長 41.1%。累計增速與單月增速的分母不同，不適合相減後當成增長速度的變化；前者描述九個月的總量，後者只描述一個月。"
+              ]
+            },
+            {
+              "heading": "為什麼代工收入值得關注",
+              "paragraphs": [
+                "臺積電為其他公司的晶片設計提供製造服務。Anadolu 的報道將這次披露放在 AI 基礎設施投資和先進處理器需求的背景下，並提到英偉達與蘋果等客戶。相比品牌活動，這是一項有具體報告期和可核對金額的經營披露，能為觀察半導體產業提供新的收入訊號。",
+                "不過，月度公告只有合併營收總數，沒有把 AI、手機或其他應用拆開，也沒有逐個列出客戶和製程的收入。AI 需求是理解行業的背景，不能據此斷言這 54.6% 的增幅全部來自 AI，更不能用單月總額推算某個客戶的訂單。"
+              ]
+            },
+            {
+              "heading": "營收能說明什麼，不能說明什麼",
+              "paragraphs": [
+                "營收是經營收入，並不是扣除製造成本、研發和其他費用後的利潤。即使營收明顯增長，單憑這份月報也無法判斷毛利率、淨利潤或新增產能的回報。它與完整季度財報回答的是不同問題：前者更新收入規模，後者才能進一步解釋盈利情況。",
+                "在 10 月 8 日這一披露時點，完整第三季度業績安排在 10 月 15 日釋出，月報本身沒有提供完整的盈利情況。對產業觀察者而言，合理的讀法是確認收入同比擴張、注意月度波動，再結合正式財報分析業務結構，而不是把單月增幅當成未來增長保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開資料重繪的解釋圖，幫助理解文中的比較口徑或工作流程，不是實測結果。",
+            "steps": [
+              "9 月營收：新臺幣 5,118.6 億元",
+              "與去年 9 月比較：+54.6%",
+              "與今年 8 月比較：−0.6%",
+              "1—9 月累計：同比 +41.1%"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-gpt6-intelligent-ui",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "OpenAI · GPT-6 and Intelligent UI for everyone",
+          "url": "https://openai.com/index/gpt-6-for-everyone/"
+        },
+        {
+          "label": "OpenAI · ChatGPT release notes, October 7",
+          "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+        },
+        {
+          "label": "TechRadar · Hands-on examples and limitations",
+          "url": "https://www.techradar.com/ai-platforms-assistants/chatgpt/chatgpt-just-changed-how-it-works-with-intelligent-ui-here-are-5-things-you-can-do-now-that-you-couldnt-before"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 在 2026 年 10 月 7 日宣布，将 GPT‑6 和 Intelligent UI 逐步带入 ChatGPT 的 Chat 对话入口。变化不仅是换了模型：回答可以把文字、图示和可操作的控件放在一起，让用户直接改变条件、比较结果或探索概念。它也能在继续思考时先给出部分回答，而不是始终等全部推理结束。",
+          "sections": [
+            {
+              "heading": "把回答变成可以操作的解释",
+              "paragraphs": [
+                "过去，一段文字解释之后，用户往往还要追问才能试验不同条件。Intelligent UI 可以让回答带有按钮、表单、图表等元素，适合并排比较或交互式示意。但它并不要求每个问题都生成界面；模型仍可在简单文字更合适时只给文字，也不保证首次回答就一定出现交互控件。",
+                "OpenAI 解释，这套能力使用可流式生成的原生组件库，以及随模型输出处理界面的编译器。模型决定内容和组件如何组合，界面逐步出现，无须等待整篇回答完成。这说明的是回答的组织和呈现机制，不等于模型生成的每个计算器、图示或数据都已经通过正确性验证。"
+              ]
+            },
+            {
+              "heading": "开放范围不能只看订阅名称",
+              "paragraphs": [
+                "公告中的上线顺序是：10 月 7 日起向 Plus、Pro、Business 和 Enterprise 推出，10 月 8 日起扩展到 Free 和 Go；Enterprise 还受工作区管理员设置影响。前一组在 Chat 使用 GPT‑6 Sol，后一组使用 GPT‑6 Luna。这是当时宣布的分批开放安排，不代表所有账号在同一时刻都拿到功能。",
+                "官方发布记录进一步说明，Intelligent UI 覆盖 Instant 到 Extra High 推理选项；名为 Pro 的推理选项仍使用 GPT‑6 Astra，并不支持它。Pro 订阅和 Pro 推理选项不是同一个概念。本次更新针对 Chat，Work 和 Codex 所用模型没有因此改变，不能把这则消息当成这些入口同时升级的公告。"
+              ]
+            },
+            {
+              "heading": "更早开始回答，不等于更早完成或更准确",
+              "paragraphs": [
+                "OpenAI 称，在需要网页搜索的问题上，GPT‑6 Instant 平均开始回答的时间比 GPT‑5.6 Instant 早 44%。这是厂商给出的比较，指标是开始回答的等待时间，不是整项任务完成时间，也不是本站独立测试。先展示部分结果，有助于用户早些阅读，但后续内容仍可能继续补充。",
+                "TechRadar 的实际体验显示，有些问题需要再次要求才出现交互元素，图形中的信息也仍需核对。本站据此作出的判断是：交互界面降低了试验不同输入的成本，却不会自动替底层事实、假设和计算背书。读者应把清晰的界面视为理解工具，并继续检查关键输入和来源，而不是把外观完整当成结论可靠。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开资料重绘的解释图，帮助理解文中的比较口径或工作流程，不是实测结果。",
+            "steps": [
+              "提出问题，模型选择合适的回答形式",
+              "组合文字、图示与原生交互组件",
+              "回答与界面逐步显示，推理可继续",
+              "调整输入探索结果，同时核对事实与假设"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On October 7, 2026, OpenAI announced a staged rollout of GPT‑6 and Intelligent UI in ChatGPT’s Chat tab. The change concerns how answers work as well as which model produces them: text can appear alongside diagrams and controls that let readers vary inputs or explore a concept. The model can also begin replying while continuing to reason.",
+          "sections": [
+            {
+              "heading": "An explanation readers can manipulate",
+              "paragraphs": [
+                "Instead of requiring a follow-up question for every variation, an answer can contain buttons, forms, charts or an interactive illustration. The model selects a format suitable for the question. Plain text remains an option, and an interactive control is not guaranteed in the first response.",
+                "OpenAI describes a library of native components that can stream into the conversation, with a compiler processing the interface as the model generates it. The model chooses their arrangement, so the interface need not wait for the entire answer. This explains presentation, not a guarantee that every generated calculation, diagram or fact is correct."
+              ]
+            },
+            {
+              "heading": "A subscription tier is not a reasoning option",
+              "paragraphs": [
+                "The announced rollout began October 7 for Plus, Pro, Business and Enterprise, expanding to Free and Go from October 8. Enterprise access also depends on administrator settings. The first group uses GPT‑6 Sol in Chat; Free and Go use GPT‑6 Luna. A staged rollout does not mean every account receives access simultaneously.",
+                "The release notes specify Intelligent UI support from Instant through Extra High reasoning. The option called Pro still uses GPT‑6 Astra and does not support Intelligent UI. A Pro subscription and the Pro reasoning option are different things. This release changes Chat; it does not change the models powering Work or Codex."
+              ]
+            },
+            {
+              "heading": "Starting sooner is not finishing sooner",
+              "paragraphs": [
+                "OpenAI reports that GPT‑6 Instant starts answering web-search questions 44% sooner on average than GPT‑5.6 Instant. This is the company’s comparison of the wait for an answer to begin, not total task duration or an independent test by this site. Reading can start earlier while further findings are still being added.",
+                "TechRadar’s hands-on account found that interaction sometimes required an additional request and that information inside an attractive interface still needed checking. Our interpretation is that controls make alternative inputs easier to explore without validating the underlying assumptions or facts. A polished diagram should help readers investigate a result, not substitute for checking its sources."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from public sources, showing the comparisons or workflow discussed here; it is not a test result.",
+            "steps": [
+              "Ask a question and select a suitable answer format",
+              "Combine text, diagrams and native controls",
+              "Display progressively while reasoning can continue",
+              "Explore inputs and verify facts and assumptions"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は 2026 年 10 月 7 日、ChatGPT の Chat タブで GPT‑6 と Intelligent UI の段階的な提供を発表しました。変更点はモデルだけではありません。回答の中に文章、図、操作できる部品を組み合わせ、条件を変えたり概念を試したりできるようにします。推論を続けながら先に回答の一部を表示する仕組みも導入しました。",
+          "sections": [
+            {
+              "heading": "読むだけでなく、条件を変えられる回答",
+              "paragraphs": [
+                "条件を一つ変えるたびに追加質問をする代わりに、ボタン、フォーム、グラフ、対話式の図を回答内で使えます。形式は質問に応じて選ばれ、短い文章の方が適切なら文章だけで答えます。最初の回答から必ず操作部品が現れるわけではありません。",
+                "OpenAI によると、生成途中から表示できるネイティブ部品のライブラリと、出力に合わせて画面を処理するコンパイラを使用します。モデルが部品の配置を決めるため、回答全体の完成を待たずに表示できます。ただし、これは表示の仕組みであり、生成した計算や図の内容がすべて検証済みという意味ではありません。"
+              ]
+            },
+            {
+              "heading": "契約プランと推論オプションを区別する",
+              "paragraphs": [
+                "発表時の予定では、Plus、Pro、Business、Enterprise は 10 月 7 日から、Free と Go は 10 月 8 日から段階的に提供されます。Enterprise は管理者の設定にも左右されます。前者の Chat は GPT‑6 Sol、後者は GPT‑6 Luna を使用します。すべてのアカウントへの同時提供を意味する発表ではありません。",
+                "公式更新記録では、Intelligent UI は Instant から Extra High までの推論オプションに対応します。Pro という推論オプションは引き続き GPT‑6 Astra を使い、Intelligent UI には対応しません。Pro 契約と Pro 推論オプションは別です。また、今回の対象は Chat であり、Work と Codex のモデル変更ではありません。"
+              ]
+            },
+            {
+              "heading": "表示開始の速さと正しさは別",
+              "paragraphs": [
+                "OpenAI は、ウェブ検索を伴う質問で GPT‑6 Instant が回答を始めるまでの時間は GPT‑5.6 Instant より平均 44% 短いとしています。これは企業側の比較で、課題全体の完了時間でも本站の独立測定でもありません。読み始められても、その後に情報が追加されることがあります。",
+                "TechRadar の利用報告では、操作部品を出すために追加の依頼が必要な場合があり、画面内の情報にも確認が必要でした。本站の解釈では、入力を変えて試す負担は軽くなりますが、前提や事実まで保証されるわけではありません。整った画面は理解を助ける道具として使い、重要な入力と出典は別途確かめる必要があります。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料を基に本站が描き直した説明図です。本文の比較方法や処理の流れを示しており、実測結果ではありません。",
+            "steps": [
+              "質問に合った回答形式を選ぶ",
+              "文章・図・操作部品を組み合わせる",
+              "推論を続けながら段階的に表示する",
+              "入力を変えて調べ、事実と前提を確認する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "7 октября 2026 года OpenAI объявила о поэтапном появлении GPT‑6 и Intelligent UI во вкладке Chat в ChatGPT. Меняется не только модель: ответ может объединять текст, схемы и элементы управления, позволяющие менять условия или исследовать понятие. Модель также может начинать ответ до завершения всех рассуждений.",
+          "sections": [
+            {
+              "heading": "Объяснение, с которым можно взаимодействовать",
+              "paragraphs": [
+                "Вместо нового запроса для каждого изменения условий ответ может содержать кнопки, формы, графики и интерактивные иллюстрации. Формат выбирается под вопрос. Обычный текст остаётся возможным, а интерактивные элементы не гарантированы в первом же ответе.",
+                "По описанию OpenAI, система использует библиотеку нативных компонентов с постепенным отображением и компилятор, обрабатывающий интерфейс по мере генерации. Модель определяет расположение элементов, поэтому не нужно ждать завершения всего ответа. Это механизм представления, а не подтверждение правильности каждого расчёта, рисунка или факта."
+              ]
+            },
+            {
+              "heading": "Тариф и режим рассуждений — разные вещи",
+              "paragraphs": [
+                "Объявленный порядок запуска предусматривал Plus, Pro, Business и Enterprise с 7 октября, Free и Go — с 8 октября. Доступ Enterprise зависит также от настроек администратора. Первая группа использует в Chat GPT‑6 Sol, вторая — GPT‑6 Luna. Поэтапный запуск не означает одновременного доступа для всех аккаунтов.",
+                "В журнале обновлений указана поддержка Intelligent UI от Instant до Extra High. Режим рассуждений Pro по-прежнему использует GPT‑6 Astra и не поддерживает Intelligent UI. Подписка Pro и одноимённый режим — не одно и то же. Обновление касается Chat и не меняет модели в Work или Codex."
+              ]
+            },
+            {
+              "heading": "Раньше начать — не значит раньше закончить",
+              "paragraphs": [
+                "OpenAI сообщает, что GPT‑6 Instant начинает отвечать на вопросы с веб-поиском в среднем на 44% раньше GPT‑5.6 Instant. Это сравнение компании, измеряющее ожидание начала ответа, а не длительность всей задачи; редакция не проводила независимого теста. Пользователь может читать первые результаты, пока модель добавляет остальные.",
+                "В практическом обзоре TechRadar интерактивность иногда требовала дополнительного запроса, а сведения внутри интерфейса нуждались в проверке. Наш вывод: элементы управления упрощают исследование разных входных условий, но не подтверждают исходные факты и допущения. Убедительно оформленная схема должна помогать проверять результат, а не заменять проверку источников."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная редакцией по открытым источникам. Она показывает сравнения или последовательность действий, а не результаты испытаний.",
+            "steps": [
+              "Задать вопрос и выбрать подходящий формат",
+              "Объединить текст, схемы и элементы управления",
+              "Показывать ответ постепенно, продолжая рассуждение",
+              "Менять входные условия и проверять факты"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 在 2026 年 10 月 7 日宣佈，將 GPT‑6 和 Intelligent UI 逐步帶入 ChatGPT 的 Chat 對話入口。變化不僅是換了模型：回答可以把文字、圖示和可操作的控制元件放在一起，讓使用者直接改變條件、比較結果或探索概念。它也能在繼續思考時先給出部分回答，而不是始終等全部推理結束。",
+          "sections": [
+            {
+              "heading": "把回答變成可以操作的解釋",
+              "paragraphs": [
+                "過去，一段文字解釋之後，使用者往往還要追問才能試驗不同條件。Intelligent UI 可以讓回答帶有按鈕、表單、圖表等元素，適合並排比較或互動式示意。但它並不要求每個問題都生成介面；模型仍可在簡單文字更合適時只給文字，也不保證首次回答就一定出現互動控制元件。",
+                "OpenAI 解釋，這套能力使用可流式生成的原生元件庫，以及隨模型輸出處理介面的編譯器。模型決定內容和元件如何組合，介面逐步出現，無須等待整篇回答完成。這說明的是回答的組織和呈現機制，不等於模型生成的每個計算器、圖示或資料都已經透過正確性驗證。"
+              ]
+            },
+            {
+              "heading": "開放範圍不能只看訂閱名稱",
+              "paragraphs": [
+                "公告中的上線順序是：10 月 7 日起向 Plus、Pro、Business 和 Enterprise 推出，10 月 8 日起擴充套件到 Free 和 Go；Enterprise 還受工作區管理員設定影響。前一組在 Chat 使用 GPT‑6 Sol，後一組使用 GPT‑6 Luna。這是當時宣佈的分批開放安排，不代表所有賬號在同一時刻都拿到功能。",
+                "官方釋出記錄進一步說明，Intelligent UI 覆蓋 Instant 到 Extra High 推理選項；名為 Pro 的推理選項仍使用 GPT‑6 Astra，並不支援它。Pro 訂閱和 Pro 推理選項不是同一個概念。本次更新針對 Chat，Work 和 Codex 所用模型沒有因此改變，不能把這則訊息當成這些入口同時升級的公告。"
+              ]
+            },
+            {
+              "heading": "更早開始回答，不等於更早完成或更準確",
+              "paragraphs": [
+                "OpenAI 稱，在需要網頁搜尋的問題上，GPT‑6 Instant 平均開始回答的時間比 GPT‑5.6 Instant 早 44%。這是廠商給出的比較，指標是開始回答的等待時間，不是整項任務完成時間，也不是本站獨立測試。先展示部分結果，有助於使用者早些閱讀，但後續內容仍可能繼續補充。",
+                "TechRadar 的實際體驗顯示，有些問題需要再次要求才出現互動元素，圖形中的資訊也仍需核對。本站據此作出的判斷是：互動介面降低了試驗不同輸入的成本，卻不會自動替底層事實、假設和計算背書。讀者應把清晰的介面視為理解工具，並繼續檢查關鍵輸入和來源，而不是把外觀完整當成結論可靠。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開資料重繪的解釋圖，幫助理解文中的比較口徑或工作流程，不是實測結果。",
+            "steps": [
+              "提出問題，模型選擇合適的回答形式",
+              "組合文字、圖示與原生互動元件",
+              "回答與介面逐步顯示，推理可繼續",
+              "調整輸入探索結果，同時核對事實與假設"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "samsung-smartthings-now",
+      "written_at": "2026-11-04",
+      "sources": [
+        {
+          "label": "Samsung · SmartThings Now platform update",
+          "url": "https://news.samsung.com/global/samsung-introduces-smartthings-now-in-new-platform-update-that-brings-more-intuitive-user-experiences"
+        },
+        {
+          "label": "Android Authority · SmartThings update and local controls",
+          "url": "https://www.androidauthority.com/samsung-smartthings-now-brief-update-3719415/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "三星在 2026 年 10 月 6 日公布 SmartThings 更新，除了在首页加入 SmartThings Now 情境卡片，还扩展了通过家中中枢直接控制设备的能力，并宣布支持 Matter 1.6。对已有智能家居用户而言，实质变化在于操作如何被建议、指令走哪条连接，以及外部互联网中断时哪些控制仍能继续。",
+          "sections": [
+            {
+              "heading": "首页建议与自动执行有区别",
+              "paragraphs": [
+                "SmartThings Now 放在 Home 页顶部，把相关状态与可以立即采取的操作放在一起。三星举例说，当用户接近预先登记的家庭位置时，界面可建议打开灯或空气净化器；用户采取操作后，再提示建立日后自动执行的例程。建议卡片、用户操作和创建自动化是不同步骤，不能理解为平台会未经选择就执行所有建议。",
+                "卡片还会参考过去一周的使用情况，建议调整常用设备、服务和例程。Routine Insight 可以查看这一周的自动化活动并删除不再需要的例程。页面底部增加常用功能入口，设备卡片也重新组织；这些界面调整的作用是减少寻找控制项的步骤，而不是证明系统已经理解家庭里发生的一切。"
+              ]
+            },
+            {
+              "heading": "在家控制可以不绕行云端",
+              "paragraphs": [
+                "更有技术意义的变化是局域网控制：手机与兼容的 SmartThings 中枢处于同一 Wi‑Fi 网络时，指令可直接发往中枢，不必先经由互联网访问云端。平台会在家中本地连接和外出时的云端远程连接之间切换。这改变了控制路径，但不代表所有服务都已摆脱云端。",
+                "三星称，在其受控测试中，响应速度改善约 30%，实际结果取决于网络与设备环境。这是厂商自报，不是本站实测，也不能套用于每一款设备。外网中断时，本地控制有机会继续工作，但家中 Wi‑Fi、中枢和设备仍须正常运行；它不能解决断电或整个家庭网络失效。"
+              ]
+            },
+            {
+              "heading": "互通范围扩大，仍要看具体设备",
+              "paragraphs": [
+                "公告同时宣布支持 Matter 1.6，提到群组控制、稳定性改进，以及电能表、门和闸门等开合装置、灌溉设备和土壤传感器等类别。Matter 用来帮助不同品牌的兼容设备互通，但支持标准版本不等于所有旧设备都会自动获得全部新功能，仍要看产品能力和更新。",
+                "官方脚注为本地控制列出 Android、iOS 及兼容中枢，包括 SmartThings Station、V2/V3/V4 中枢和具备中枢功能的部分电视、Family Hub 设备。Android Authority 的同期报道也确认了首页、本地控制与 Matter 更新，但没有提供覆盖所有兼容设备的独立测试。对用户而言，应分别确认界面是否已更新、家中的控制链路是否满足本地连接条件、具体设备是否支持所需功能，不能把约 30% 的测试结果当成普遍保证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据公开资料重绘的解释图，帮助理解文中的比较口径或工作流程，不是实测结果。",
+            "steps": [
+              "在同一家庭 Wi‑Fi 中连接手机与兼容中枢",
+              "本地指令直接到中枢，再到设备",
+              "外网中断仍依赖正常工作的家庭网络",
+              "离家后按支持情况使用云端远程连接"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Samsung announced a SmartThings update on October 6, 2026, adding contextual SmartThings Now cards, expanding direct control through a home hub and announcing Matter 1.6 support. Beyond the redesigned screen, the relevant changes concern how actions are suggested, which connection carries a command and what may keep working when external internet service fails.",
+          "sections": [
+            {
+              "heading": "Suggestions are not automatic execution",
+              "paragraphs": [
+                "SmartThings Now puts relevant status and available actions at the top of Home. Samsung’s example suggests switching on lights or an air purifier when a user approaches a registered home location. After the user acts, it prompts them to create a routine. A suggestion, a user action and an automation rule are separate steps; the announcement does not say every suggestion is executed without a choice.",
+                "The cards can also use the previous week’s activity to suggest changes to favorite devices, services and routines. Routine Insight lets users review that week’s automation activity and remove unnecessary routines. Reorganized device cards and a bottom floating bar shorten the route to controls; they do not demonstrate a complete understanding of events in the home."
+              ]
+            },
+            {
+              "heading": "Home commands can avoid a trip through the cloud",
+              "paragraphs": [
+                "When the phone and a compatible SmartThings hub share a Wi-Fi network, local control can send commands directly to the hub instead of routing them through an internet cloud service. The platform switches between local connections at home and cloud-based remote access away. This changes the command path, not the dependency of every service.",
+                "Samsung reports approximately 30% better responsiveness in its controlled tests, with results varying by network and device environment. This is a vendor result, not this site’s measurement or a promise for every device. External internet failure need not stop local control, but Wi-Fi, the hub and devices must still operate. A power outage or failed home network remains a different problem."
+              ]
+            },
+            {
+              "heading": "A wider standard still has device-level limits",
+              "paragraphs": [
+                "The announcement describes Matter 1.6 support, including group control and stability improvements, and categories such as energy meters, closures including doors and gates, irrigation equipment and soil sensors. Matter helps compatible products from different brands interoperate. Supporting a standard does not automatically give every older device all its new features.",
+                "The local-control footnote lists Android and iOS with compatible hubs, including SmartThings Station, V2/V3/V4 hubs and hub-enabled televisions and Family Hub devices. Android Authority also reported the Home, local-control and Matter changes, without independently testing every compatible device. Users therefore need to distinguish an updated interface from a working local command path and support for a particular device feature. The reported 30% improvement is not a universal guarantee."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from public sources, showing the comparisons or workflow discussed here; it is not a test result.",
+            "steps": [
+              "Connect phone and compatible hub to the same home Wi-Fi",
+              "Send local commands directly through the hub to devices",
+              "External internet may fail; the home network must still work",
+              "Use supported cloud-based remote access when away"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Samsung は 2026 年 10 月 6 日、SmartThings Now の状況に応じたカード、家庭内ハブを通じた直接制御の拡張、Matter 1.6 対応を発表しました。画面の変更だけでなく、操作をどう提案するか、命令をどの経路で送るか、外部インターネットが止まったときに何を続けられるかが実質的な変更点です。",
+          "sections": [
+            {
+              "heading": "提案と自動実行は別の段階",
+              "paragraphs": [
+                "SmartThings Now は Home の上部に状態と操作候補をまとめます。Samsung の例では、登録した自宅に近づいた際に照明や空気清浄機の起動を提案し、利用者が操作した後で自動化ルーチンの作成を促します。提案、利用者の操作、自動化の設定は別であり、すべての提案を無条件で実行するという説明ではありません。",
+                "過去一週間の利用状況から、お気に入りの機器、サービス、ルーチンの見直しも提案します。Routine Insight では一週間の自動化の動作を確認し、不要なルーチンを削除できます。機器カードの整理や画面下部の操作バーは操作までの手間を減らしますが、家庭内の出来事をすべて理解している証拠にはなりません。"
+              ]
+            },
+            {
+              "heading": "家庭内の命令をクラウド経由にしない",
+              "paragraphs": [
+                "スマートフォンと対応する SmartThings ハブが同じ Wi‑Fi に接続していれば、ローカル制御では命令を直接ハブに送れます。インターネット上のクラウドを経由する必要がありません。在宅時のローカル接続と外出時のクラウド接続を切り替えますが、すべてのサービスがクラウド不要になるという意味ではありません。",
+                "Samsung は自社の管理された試験で応答性が約 30% 改善したとしています。ネットワークや機器により結果は変わり、本站による測定でも全機種への保証でもありません。外部インターネットが停止しても、家庭内 Wi‑Fi、ハブ、機器が動いていれば制御を続けられる場合があります。停電や家庭内ネットワーク全体の故障は別問題です。"
+              ]
+            },
+            {
+              "heading": "標準対応にも機器ごとの条件がある",
+              "paragraphs": [
+                "発表では Matter 1.6 への対応としてグループ制御、安定性の改善、電力量計、扉やゲートなどの開閉機構、灌漑機器、土壌センサーといった種類を挙げています。Matter は異なるブランドの対応機器の連携を助けますが、古い機器すべてに新機能が自動追加されるわけではありません。",
+                "ローカル制御の脚注には Android、iOS と対応ハブの組み合わせが示され、SmartThings Station、V2/V3/V4 ハブ、ハブ機能を持つテレビや Family Hub 機器が含まれます。Android Authority も同時期にホーム画面、ローカル制御、Matter の変更を報道しましたが、全対応機器を独立に検証したものではありません。画面が更新されたこと、家庭内の接続条件が整ったこと、個々の機能が使えることを区別する必要があり、約 30% の改善が一律に保証されるわけではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料を基に本站が描き直した説明図です。本文の比較方法や処理の流れを示しており、実測結果ではありません。",
+            "steps": [
+              "同じ家庭内 Wi‑Fi にスマートフォンと対応ハブを接続",
+              "ローカル命令をハブ経由で機器へ直接送信",
+              "外部回線が止まっても家庭内ネットワークは必要",
+              "外出時は対応するクラウド経由の遠隔接続を使用"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "6 октября 2026 года Samsung объявила об обновлении SmartThings: контекстных карточках SmartThings Now, расширении прямого управления через домашний хаб и поддержке Matter 1.6. Существенен не только новый экран, но и то, как предлагаются действия, по какому пути идут команды и что может работать при потере внешнего интернета.",
+          "sections": [
+            {
+              "heading": "Предложение не означает автоматическое выполнение",
+              "paragraphs": [
+                "SmartThings Now объединяет состояние устройств и доступные действия в верхней части Home. В примере Samsung при приближении к зарегистрированному дому предлагается включить свет или очиститель воздуха. После действия пользователя система предлагает создать сценарий. Рекомендация, действие человека и правило автоматизации — разные этапы; речь не идёт о безусловном выполнении всех предложений.",
+                "Активность за последнюю неделю также используется для предложений изменить избранные устройства, службы и сценарии. Routine Insight позволяет просмотреть работу автоматизации за неделю и удалить ненужные сценарии. Перестроенные карточки и нижняя панель сокращают путь к управлению, но не доказывают полного понимания всего происходящего дома."
+              ]
+            },
+            {
+              "heading": "Домашней команде не всегда нужен облачный маршрут",
+              "paragraphs": [
+                "Если телефон и совместимый хаб SmartThings находятся в одной сети Wi‑Fi, локальное управление может передать команду прямо хабу, без обращения к облаку через интернет. Платформа переключается между локальным соединением дома и облачным удалённым доступом вне дома. Это изменение маршрута команд, а не отказ всех служб от облачной зависимости.",
+                "Samsung сообщает примерно о 30% улучшении отклика в собственных контролируемых испытаниях; результат зависит от сети и устройств. Это данные производителя, не измерение редакции и не обещание для каждой модели. При отказе внешнего интернета локальное управление может сохраниться, но Wi‑Fi, хаб и устройства должны работать. Отключение питания или отказ всей домашней сети остаются отдельной проблемой."
+              ]
+            },
+            {
+              "heading": "Совместимость стандарта не отменяет условий устройств",
+              "paragraphs": [
+                "В сообщении о Matter 1.6 перечислены групповое управление, улучшение стабильности и категории: счётчики электроэнергии, механизмы открытия дверей и ворот, полив и датчики почвы. Matter помогает совместимым изделиям разных брендов взаимодействовать. Поддержка версии стандарта не наделяет все старые устройства всеми новыми возможностями автоматически.",
+                "В примечании о локальном управлении указаны Android и iOS с совместимыми хабами, включая SmartThings Station, V2/V3/V4, а также телевизоры и устройства Family Hub с функцией хаба. Android Authority тоже сообщило об обновлении Home, локального управления и Matter, но не провело независимую проверку всех совместимых устройств. Пользователю важно различать обновление экрана, наличие рабочего локального маршрута и поддержку конкретной функции. Заявленное улучшение на 30% не является универсальной гарантией."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная редакцией по открытым источникам. Она показывает сравнения или последовательность действий, а не результаты испытаний.",
+            "steps": [
+              "Подключить телефон и совместимый хаб к одной домашней Wi‑Fi сети",
+              "Направить локальную команду через хаб к устройству",
+              "При отказе внешнего интернета домашняя сеть должна работать",
+              "Вне дома использовать поддерживаемый облачный доступ"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "三星在 2026 年 10 月 6 日公佈 SmartThings 更新，除了在首頁加入 SmartThings Now 情境卡片，還擴充套件了透過家中中樞直接控制裝置的能力，並宣佈支援 Matter 1.6。對已有智慧家居使用者而言，實質變化在於操作如何被建議、指令走哪條連線，以及外部網際網路中斷時哪些控制仍能繼續。",
+          "sections": [
+            {
+              "heading": "首頁建議與自動執行有區別",
+              "paragraphs": [
+                "SmartThings Now 放在 Home 頁頂部，把相關狀態與可以立即採取的操作放在一起。三星舉例說，當使用者接近預先登記的家庭位置時，介面可建議開啟燈或空氣清淨機；使用者採取操作後，再提示建立日後自動執行的例程。建議卡片、使用者操作和建立自動化是不同步驟，不能理解為平臺會未經選擇就執行所有建議。",
+                "卡片還會參考過去一週的使用情況，建議調整常用裝置、服務和例程。Routine Insight 可以檢視這一週的自動化活動並刪除不再需要的例程。頁面底部增加常用功能入口，裝置卡片也重新組織；這些介面調整的作用是減少尋找控制項的步驟，而不是證明系統已經理解家庭裡發生的一切。"
+              ]
+            },
+            {
+              "heading": "在家控制可以不繞行雲端",
+              "paragraphs": [
+                "更有技術意義的變化是區域網控制：手機與相容的 SmartThings 中樞處於同一 Wi‑Fi 網路時，指令可直接發往中樞，不必先經由網際網路存取雲端。平臺會在家中本地連線和外出時的雲端遠端連線之間切換。這改變了控制路徑，但不代表所有服務都已擺脫雲端。",
+                "三星稱，在其受控測試中，響應速度改善約 30%，實際結果取決於網路與裝置環境。這是廠商自報，不是本站實測，也不能套用於每一款裝置。外網中斷時，本地控制有機會繼續工作，但家中 Wi‑Fi、中樞和裝置仍須正常執行；它不能解決斷電或整個家庭網路失效。"
+              ]
+            },
+            {
+              "heading": "互通範圍擴大，仍要看具體裝置",
+              "paragraphs": [
+                "公告同時宣佈支援 Matter 1.6，提到群組控制、穩定性改進，以及電能表、門和閘門等開合裝置、灌溉裝置和土壤感測器等類別。Matter 用來幫助不同品牌的相容裝置互通，但支援標準版本不等於所有舊裝置都會自動獲得全部新功能，仍要看產品能力和更新。",
+                "官方腳註為本地控制列出 Android、iOS 及相容中樞，包括 SmartThings Station、V2/V3/V4 中樞和具備中樞功能的部分電視、Family Hub 裝置。Android Authority 的同期報道也確認了首頁、本地控制與 Matter 更新，但沒有提供覆蓋所有相容裝置的獨立測試。對使用者而言，應分別確認介面是否已更新、家中的控制鏈路是否滿足本地連線條件、具體裝置是否支援所需功能，不能把約 30% 的測試結果當成普遍保證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據公開資料重繪的解釋圖，幫助理解文中的比較口徑或工作流程，不是實測結果。",
+            "steps": [
+              "在同一家庭 Wi‑Fi 中連線手機與相容中樞",
+              "本地指令直接到中樞，再到裝置",
+              "外網中斷仍依賴正常工作的家庭網路",
+              "離家後按支援情況使用雲端遠端連線"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

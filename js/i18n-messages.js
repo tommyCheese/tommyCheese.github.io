@@ -759,7 +759,15 @@ window.SITE_MESSAGES = {
     "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共享溯源，让知识图谱答案的概率不重复计算证据",
     "research.sparqlcirc-shared-provenance-probabilities.summary": "研究用标准查询构建共享溯源电路，保留不同答案的事实依赖，再计算概率。Wikidata上复杂推导子集有优势，但全部可比查询未普遍加速；分解计划需要写权限，输入概率不代表事实已核实。",
     "research.dynsl-resource-adaptive-split-training.title": "DynSL：随设备和网络状态调整边缘训练的模型切分",
-    "research.dynsl-resource-adaptive-split-training.summary": "DynSL联合考虑设备、网络和服务器负载，训练中动态迁移模型层。24台异构设备实验显示，单设备降频时部分任务较次优方法节时约33%；稳定环境下预先测量的固定版本常更快，短暂振荡、能耗与共享头收敛仍有边界。"
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL联合考虑设备、网络和服务器负载，训练中动态迁移模型层。24台异构设备实验显示，单设备降频时部分任务较次优方法节时约33%；稳定环境下预先测量的固定版本常更快，短暂振荡、能耗与共享头收敛仍有边界。",
+    "news.cpguard-update-channel-compromise.title": "cPGuard 更新链遭入侵：约 2,950 台服务器受影响，清理后仍须轮换凭据",
+    "news.cpguard-update-channel-compromise.summary": "OPSSHIELD 11 月 3 日披露，攻击者从计费与许可基础设施取得更新发布权限，并影响约 7,900 个门户账户记录。后续公告细化了分发窗口与清理措施；服务器数、账户数和早期文件数不能混算。",
+    "news.workos-sales-support-data-incident.title": "WorkOS 披露销售支持数据遭访问，暂无生产服务受侵入证据",
+    "news.workos-sales-support-data-incident.summary": "11 月 2 日通报涉及业务联系人、沟通摘要和使用元数据。公司关闭外部入口并聘请独立调查机构，称攻击使用 AI 辅助框架；工具归因、生产边界与逐组织影响须分别看待。",
+    "news.openai-security-bounty-quality-bonuses.title": "OpenAI 调整漏洞奖励：新增质量奖金与部分旧报告补差",
+    "news.openai-security-bounty-quality-bonuses.summary": "核心产品严重漏洞基础奖励最高 3 万美元，特别严重发现叠加奖金后可达约 17.2 万美元。新规重视报告质量与持续贡献；最高金额和示例均不代表保证授奖。",
+    "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI 公开 LifeVal 评测方法：169 个日常任务检验个性化 Agent",
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技术报告解释任务构建、双评分器与失败分析。将关键背景移入历史对话会明显降分，说明模型利用个人历史仍有短板；结果为厂商自评，平均得分不等于现实任务成功率。"
   },
   "en": {
     "nav.about": "About",
@@ -1520,7 +1528,15 @@ window.SITE_MESSAGES = {
     "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc: shared provenance for knowledge-graph answer probabilities",
     "research.sparqlcirc-shared-provenance-probabilities.summary": "Standard queries build a shared provenance circuit before probability computation. Complex-derivation Wikidata subsets benefit, but speedups are not universal. Factored plans need write access, and assigned probabilities do not verify source facts.",
     "research.dynsl-resource-adaptive-split-training.title": "DynSL adapts split training to changing edge devices and networks",
-    "research.dynsl-resource-adaptive-split-training.summary": "DynSL jointly models devices, networks and server load to move model layers during training. On 24 heterogeneous devices, selected throttling cases reduce epoch time by about 33% versus the next-best method. Profile-first fixed splits often win in stable conditions; oscillations, energy and shared-head convergence remain limitations."
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL jointly models devices, networks and server load to move model layers during training. On 24 heterogeneous devices, selected throttling cases reduce epoch time by about 33% versus the next-best method. Profile-first fixed splits often win in stable conditions; oscillations, energy and shared-head convergence remain limitations.",
+    "news.cpguard-update-channel-compromise.title": "cPGuard update compromise affects about 2,950 servers; credential recovery remains essential",
+    "news.cpguard-update-channel-compromise.summary": "OPSSHIELD disclosed stolen publishing access and exposure of about 7,900 billing accounts. Its later notice narrows the distribution window and updates remediation; server, account and early file counts measure different things.",
+    "news.workos-sales-support-data-incident.title": "WorkOS discloses sales and support data exposure; no evidence of production access",
+    "news.workos-sales-support-data-incident.summary": "The November 2 bulletin covers contacts, conversation excerpts and usage metadata. WorkOS closed external access and hired independent investigators; AI-framework attribution, production boundaries and organization-level impact remain distinct questions.",
+    "news.openai-security-bounty-quality-bonuses.title": "OpenAI revises bug bounties with quality bonuses and limited back payments",
+    "news.openai-security-bounty-quality-bonuses.summary": "Critical findings in core products can earn up to $30,000 in base awards; exceptional cases can reach about $172,000 with bonuses. New rules reward evidence quality and sustained contributions, with ceilings rather than guaranteed payouts.",
+    "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI details LifeVal: 169 everyday tasks test personalized agents",
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "The report explains task construction, dual graders and failure analysis. Moving key context into conversation history reduces performance. Results remain vendor-reported, and average reward is not a real-world task success rate."
   },
   "ja": {
     "nav.about": "私について",
@@ -2281,7 +2297,15 @@ window.SITE_MESSAGES = {
     "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共有来歴で知識グラフの証拠依存を保つ",
     "research.sparqlcirc-shared-provenance-probabilities.summary": "標準問い合わせから共有来歴回路を作り、答えの確率を計算する。Wikidataの導出が多い部分集合で利点があるが、一律の高速化ではない。分解計画には書き込み権限が必要で、入力確率は事実確認を意味しない。",
     "research.dynsl-resource-adaptive-split-training.title": "DynSL：端末と通信の変化に合わせて分割学習を調整",
-    "research.dynsl-resource-adaptive-split-training.summary": "DynSLは端末・通信・サーバー負荷を考慮して学習中に層を移す。異種端末24台では、一台の低速化時に次点方式より約33%短い例がある。安定条件では事前測定による固定版が速い場合も多く、振動、電力、共有ヘッド収束は課題を残す。"
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSLは端末・通信・サーバー負荷を考慮して学習中に層を移す。異種端末24台では、一台の低速化時に次点方式より約33%短い例がある。安定条件では事前測定による固定版が速い場合も多く、振動、電力、共有ヘッド収束は課題を残す。",
+    "news.cpguard-update-channel-compromise.title": "cPGuard の更新経路が侵害：約2,950台に影響、除去後も認証情報の交換が必要",
+    "news.cpguard-update-channel-compromise.summary": "OPSSHIELD は11月3日、配布権限の窃取と約7,900件の課金アカウントの流出も公表。後続公告で配布時間と対応を更新しており、サーバー・アカウント・初期ファイル数は区別が必要だ。",
+    "news.workos-sales-support-data-incident.title": "WorkOS が営業・サポート情報の不正アクセスを公表、本番サービス侵害の証拠はなし",
+    "news.workos-sales-support-data-incident.summary": "11月2日の通報は業務連絡先、会話の抜粋、利用メタデータを対象とする。外部アクセスを停止し独立調査機関を起用。AI ツールの帰属、本番への影響、組織別の被害は区別して読む必要がある。",
+    "news.openai-security-bounty-quality-bonuses.title": "OpenAI が脆弱性報奨制度を改定、品質評価と一部の差額支給を追加",
+    "news.openai-security-bounty-quality-bonuses.summary": "主要製品の重大な問題は基本額最大3万ドル、特別に重大な発見は追加報奨込みで約17万2,000ドル。報告品質と継続貢献を評価するが、最高額や計算例は支給の保証ではない。",
+    "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI が LifeVal の手法を公開、169課題で個人向け Agent を評価",
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告は課題作成、2つの採点・検査器、失敗分析を説明。重要な背景を会話履歴へ移すと得点が下がる。結果は開発元の自己評価で、平均得点は現実の用事の成功率ではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3042,7 +3066,15 @@ window.SITE_MESSAGES = {
     "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc: общее происхождение вероятностных ответов графа знаний",
     "research.sparqlcirc-shared-provenance-probabilities.summary": "Стандартные запросы строят общую схему происхождения для расчёта вероятностей. Выигрыш на Wikidata зависит от сложности выводов и не универсален. Факторизованный план требует записи; заданная вероятность не подтверждает истинность факта.",
     "research.dynsl-resource-adaptive-split-training.title": "DynSL адаптирует разделённое обучение к устройствам и сети",
-    "research.dynsl-resource-adaptive-split-training.summary": "DynSL учитывает устройства, сеть и сервер, перемещая слои во время обучения. На 24 устройствах отдельные случаи снижения частоты сокращают эпоху примерно на 33% против ближайшего конкурента. В стабильных условиях часто быстрее фиксированный вариант; колебания, энергия и общая голова требуют дальнейшей проверки."
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL учитывает устройства, сеть и сервер, перемещая слои во время обучения. На 24 устройствах отдельные случаи снижения частоты сокращают эпоху примерно на 33% против ближайшего конкурента. В стабильных условиях часто быстрее фиксированный вариант; колебания, энергия и общая голова требуют дальнейшей проверки.",
+    "news.cpguard-update-channel-compromise.title": "Компрометация обновлений cPGuard затронула около 2 950 серверов; реквизиты требуют замены",
+    "news.cpguard-update-channel-compromise.summary": "OPSSHIELD раскрыла кражу прав публикации и утечку записей примерно 7 900 платёжных аккаунтов. Последующее уведомление уточняет окно распространения и меры восстановления; серверы, аккаунты и ранние оценки файлов нельзя смешивать.",
+    "news.workos-sales-support-data-incident.title": "WorkOS раскрыла доступ к данным продаж и поддержки; признаков доступа к рабочим сервисам нет",
+    "news.workos-sales-support-data-incident.summary": "Уведомление от 2 ноября охватывает контакты, фрагменты разговоров и метаданные. Внешний доступ закрыт, привлечены независимые эксперты; атрибуция ИИ-инструмента и влияние на клиентов требуют отдельной проверки.",
+    "news.openai-security-bounty-quality-bonuses.title": "OpenAI меняет награды за уязвимости: бонусы за качество и ограниченные доплаты",
+    "news.openai-security-bounty-quality-bonuses.summary": "Базовая награда за критические находки в основных продуктах — до 30 тысяч долларов; исключительные случаи с бонусами могут дать около 172 тысяч. Правила учитывают качество доказательств и постоянство, но не гарантируют максимальную выплату.",
+    "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI раскрывает методику LifeVal: 169 повседневных задач для персональных агентов",
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "Отчёт описывает создание задач, два проверяющих механизма и ошибки. Перенос важного контекста в историю разговоров снижает оценку. Результаты сообщены разработчиком, а средний балл не равен успеху в реальной жизни."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3803,6 +3835,14 @@ window.SITE_MESSAGES = {
     "research.sparqlcirc-shared-provenance-probabilities.title": "SPARQLcirc：共享溯源，讓知識圖譜答案的機率不重複計算證據",
     "research.sparqlcirc-shared-provenance-probabilities.summary": "研究用標準查詢構建共享溯源電路，保留不同答案的事實依賴，再計算機率。Wikidata上複雜推導子集有優勢，但全部可比查詢未普遍加速；分解計劃需要寫權限，輸入機率不代表事實已核實。",
     "research.dynsl-resource-adaptive-split-training.title": "DynSL：隨裝置和網路狀態調整邊緣訓練的模型切分",
-    "research.dynsl-resource-adaptive-split-training.summary": "DynSL聯合考慮裝置、網路和伺服器負載，訓練中動態遷移模型層。24臺異構裝置實驗顯示，單裝置降頻時部分任務較次優方法節時約33%；穩定環境下預先測量的固定版本常更快，短暫振盪、能耗與共享頭收斂仍有邊界。"
+    "research.dynsl-resource-adaptive-split-training.summary": "DynSL聯合考慮裝置、網路和伺服器負載，訓練中動態遷移模型層。24臺異構裝置實驗顯示，單裝置降頻時部分任務較次優方法節時約33%；穩定環境下預先測量的固定版本常更快，短暫振盪、能耗與共享頭收斂仍有邊界。",
+    "news.cpguard-update-channel-compromise.title": "cPGuard 更新鏈遭入侵：約 2,950 臺伺服器受影響，清理後仍須輪換憑據",
+    "news.cpguard-update-channel-compromise.summary": "OPSSHIELD 11 月 3 日披露，攻擊者從計費與許可基礎設施取得更新發布權限，並影響約 7,900 個門戶帳戶記錄。後續公告細化了分發時段與清理措施；伺服器數、帳戶數和早期檔案數不能混算。",
+    "news.workos-sales-support-data-incident.title": "WorkOS 披露銷售支援資料遭訪問，暫無生產服務受侵入證據",
+    "news.workos-sales-support-data-incident.summary": "11 月 2 日通報涉及業務聯絡人、溝通摘要和使用後設資料。公司關閉外部入口並聘請獨立調查機構，稱攻擊使用 AI 輔助框架；工具歸因、生產邊界與逐組織影響須分別看待。",
+    "news.openai-security-bounty-quality-bonuses.title": "OpenAI 調整漏洞獎勵：新增質量獎金與部分舊報告補差",
+    "news.openai-security-bounty-quality-bonuses.summary": "核心產品嚴重漏洞基礎獎勵最高 3 萬美元，特別嚴重發現疊加獎金後可達約 17.2 萬美元。新規重視報告質量與持續貢獻；最高金額和示例均不代表保證授獎。",
+    "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI 公開 LifeVal 評測方法：169 個日常任務檢驗個性化 Agent",
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告解釋任務構建、雙評分器與失敗分析。將關鍵背景移入歷史對話會明顯降分，說明模型利用個人歷史仍有短板；結果為廠商自評，平均得分不等於現實任務成功率。"
   }
 };
