@@ -777,7 +777,19 @@ window.SITE_MESSAGES = {
     "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 审计：文件合法，跨文件身份仍可能错位",
     "research.huggingbench-cross-file-identity-audit.summary": "研究复现十一种推荐方法，发现四个外部知识图谱中三个存在身份映射错误。修正改变部分配置排名；收益依赖训练预算，单次快照和弱偏好数据也限制结论外推。",
     "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：让Tensix加速器的计算与等待过程可观察",
-    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基于公开文档和硬件测量模拟Wormhole与Blackhole，并通过可选时序模型解释计算、访存及通信瓶颈。Nekbone单块实验的总周期误差为3.9%，但阶段误差更大、整数除法误差达82%；工具面向诊断，不代表全面周期准确。SC26官方确认是RISC-V for HPC工作坊研究论文。"
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基于公开文档和硬件测量模拟Wormhole与Blackhole，并通过可选时序模型解释计算、访存及通信瓶颈。Nekbone单块实验的总周期误差为3.9%，但阶段误差更大、整数除法误差达82%；工具面向诊断，不代表全面周期准确。SC26官方确认是RISC-V for HPC工作坊研究论文。",
+    "news.openai-images26-gif-svg-controls.title": "Images 2.6 上线：新增 GIF、SVG 与可调规划的图像生成",
+    "news.openai-images26-gif-svg-controls.summary": "OpenAI 向 ChatGPT、Codex 和 API 开放新模型。文档区分规划投入与画面质量，并明确 GIF、SVG 仅作为生成端输出；速度提升为厂商自报，复杂布局与连续编辑仍需核对。",
+    "news.openai-pierre-acquisition-agreement.title": "OpenAI 拟收购 Pierre，将代码存储与审阅工具进一步带入 Codex",
+    "news.openai-pierre-acquisition-agreement.summary": "Trees、Diffs 已用于 Codex，Code Storage 的进一步整合仍是计划。交易尚待交割及监管批准；OpenAI 承诺延续开源项目，并让现有客户继续使用服务，未披露金额或整合时间表。",
+    "news.nasa-ka-band-relay-concept-awards.title": "NASA 授予三份 Ka 波段中继方案合同，重点兼容现有航天器",
+    "news.nasa-ka-band-relay-concept-awards.summary": "Astranis、Global Enterprise Solutions 与 Viasat 将开发商业中继方案。合同上限包含未来选项；初始阶段至 2027 年 5 月，尚不代表在轨服务已经完成。",
+    "news.openai-linux-security-pipeline-findings.title": "OpenAI 公布 Linux 自动化安全研究，修复仍需人工复核",
+    "news.openai-linux-security-pipeline-findings.summary": "研究动态复现 1,724 项问题，以 948 项不同补丁统计独立提权漏洞。结果不全是新漏洞；约 121 万美元仅为 API 费用，候选修复仍需维护者审核。",
+    "news.nasa-splice-drone-landing-demonstration.title": "NASA 披露 SPLICE 无人机着陆导航试验，验证感知与引导的协同",
+    "news.nasa-splice-drone-landing-demonstration.summary": "11 月 4 日报告回顾 8 月 27 日模拟下降试验：系统由地形数据评估落点并在不安全时引导改向。尚未披露着陆误差或成功率；地球演示不等于月球任务验证，软件交付仍属计划。",
+    "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明确 GS1900 新漏洞修复，六月更新仍不足",
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十个 GS1900 型号的 2.90 Patch 2 及更早版本仍受新漏洞影响，对应 Patch 3 提供修复。调查纠正了此前攻击的漏洞归因；996 台设备是八月相关活动的观察数，不是本周新增。"
   },
   "en": {
     "nav.about": "About",
@@ -1556,7 +1568,19 @@ window.SITE_MESSAGES = {
     "research.huggingbench-cross-file-identity-audit.title": "HuggingBench audit: valid files can still connect the wrong identities",
     "research.huggingbench-cross-file-identity-audit.summary": "An audit reproduces eleven recommenders and finds identity mismatches in three of four external graphs. Corrections change some rankings, but gains depend on training budgets and evidence is limited to a fixed snapshot of weak preference data.",
     "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine makes Tensix computation and stalls observable",
-    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine models Wormhole and Blackhole from public documentation and hardware measurements, adding optional timing estimates for compute, memory and communication. A single-tile Nekbone case has 3.9% total cycle error, but larger phase errors and 82% integer-division error limit generalization. SC26 confirms it as a RISC-V for HPC workshop research paper."
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine models Wormhole and Blackhole from public documentation and hardware measurements, adding optional timing estimates for compute, memory and communication. A single-tile Nekbone case has 3.9% total cycle error, but larger phase errors and 82% integer-division error limit generalization. SC26 confirms it as a RISC-V for HPC workshop research paper.",
+    "news.openai-images26-gif-svg-controls.title": "Images 2.6 launches with GIFs, SVGs and adjustable image planning",
+    "news.openai-images26-gif-svg-controls.summary": "OpenAI opens the models in ChatGPT, Codex and its API. Planning and rendering quality are separate controls; GIF and SVG output is generation-only. Speed claims are vendor-reported, and layouts and successive edits still need review.",
+    "news.openai-pierre-acquisition-agreement.title": "OpenAI plans Pierre acquisition to extend Codex storage and review tools",
+    "news.openai-pierre-acquisition-agreement.summary": "Trees and Diffs already serve Codex; further Code Storage integration is planned. Closing and regulatory approval remain pending. OpenAI promises open-source continuity and continued customer access, without disclosing a price or integration timetable.",
+    "news.nasa-ka-band-relay-concept-awards.title": "NASA awards three Ka-band relay concept contracts for existing spacecraft",
+    "news.nasa-ka-band-relay-concept-awards.summary": "Astranis, Global Enterprise Solutions and Viasat will develop commercial relay concepts. Award ceilings include future options; the initial phase runs through May 2027 and does not represent completed in-orbit service.",
+    "news.openai-linux-security-pipeline-findings.title": "OpenAI reports automated Linux security research; fixes still need review",
+    "news.openai-linux-security-pipeline-findings.summary": "The study reproduced 1,724 issues and counted distinct escalation flaws through 948 different patches. Not all were new; about $1.21 million covers API credits only, and proposed fixes require maintainer review.",
+    "news.nasa-splice-drone-landing-demonstration.title": "NASA details SPLICE drone test linking terrain sensing to landing guidance",
+    "news.nasa-splice-drone-landing-demonstration.summary": "The November 4 report covers an August 27 simulated descent: terrain data informs site assessment and a diversion if needed. Landing error and success rates remain undisclosed; this Earth demonstration is not lunar mission validation, and software delivery is still planned.",
+    "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel clarifies GS1900 fix: the June update is not enough",
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Ten GS1900 models on 2.90 Patch 2 or earlier need the matching Patch 3 for the newly identified flaw. Researchers corrected earlier attack attribution; 996 devices refers to August observations, not new victims this week."
   },
   "ja": {
     "nav.about": "私について",
@@ -2335,7 +2359,19 @@ window.SITE_MESSAGES = {
     "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 監査：正しい形式でも資源の対応はずれる",
     "research.huggingbench-cross-file-identity-audit.summary": "十一の推薦法を再現し、四つの外部グラフ中三つに同一性の対応不良を確認。修正で一部の順位が変わるが、改善幅は学習予算に依存し、固定時点の弱い選好データという制約が残る。",
     "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：Tensixの演算と待ち時間を観察する",
-    "research.wolfpine-tensix-hardware-simulator.summary": "公開文書と実機測定からWormholeとBlackholeを再現し、追加の時間モデルで演算・メモリ・通信の律速を調べる。Nekboneの単一タイル実験では総周期誤差3.9%だが、段階別誤差は大きく整数除算は82%。全操作の厳密再現ではない。SC26公式でRISC-V for HPCワークショップ研究論文と確認できる。"
+    "research.wolfpine-tensix-hardware-simulator.summary": "公開文書と実機測定からWormholeとBlackholeを再現し、追加の時間モデルで演算・メモリ・通信の律速を調べる。Nekboneの単一タイル実験では総周期誤差3.9%だが、段階別誤差は大きく整数除算は82%。全操作の厳密再現ではない。SC26公式でRISC-V for HPCワークショップ研究論文と確認できる。",
+    "news.openai-images26-gif-svg-controls.title": "Images 2.6 公開、GIF・SVG と計画量の調整に対応",
+    "news.openai-images26-gif-svg-controls.summary": "ChatGPT、Codex、API に新モデルを提供。計画量と描画品質を分け、GIF・SVG 出力は生成操作に限定する。速度は開発元の報告値で、複雑な配置や連続編集は確認が必要。",
+    "news.openai-pierre-acquisition-agreement.title": "OpenAI が Pierre 買収を計画、Codex の保存・レビュー機能を拡充へ",
+    "news.openai-pierre-acquisition-agreement.summary": "Trees と Diffs は利用済みで、Code Storage の追加統合は今後の計画。買収完了と規制承認はまだで、開発元はオープンソースと既存顧客の利用継続を約束。金額や統合日程は未公表。",
+    "news.nasa-ka-band-relay-concept-awards.title": "NASA、既存宇宙機に対応する Ka 帯中継構想を 3 社に発注",
+    "news.nasa-ka-band-relay-concept-awards.summary": "Astranis、Global Enterprise Solutions、Viasat が商用中継構想を開発します。契約上限には将来のオプションを含み、初期段階は 2027 年 5 月まで。軌道上サービスの完成を意味しません。",
+    "news.openai-linux-security-pipeline-findings.title": "OpenAI が Linux の自動安全監査を報告、修正には人の確認が必要",
+    "news.openai-linux-security-pipeline-findings.summary": "1,724件を動的に再現し、異なる修正案948件を独立した権限昇格の数として集計。すべて新規の欠陥ではなく、約121万ドルは API 費用のみ。修正案は保守担当者の審査を要する。",
+    "news.nasa-splice-drone-landing-demonstration.title": "NASA、SPLICE 無人機試験で地形認識と着陸誘導の連動を報告",
+    "news.nasa-splice-drone-landing-demonstration.summary": "11月4日の報告は8月27日の模擬降下を説明。地形データで着陸地点を評価し、危険なら進路を変更する。着陸誤差や成功率は未公表で、月面任務での検証ではない。ソフト提供も計画段階。",
+    "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel が GS1900 の新問題の修正版を明示、6月更新だけでは不十分",
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "10機種の 2.90 Patch 2 以前は新たな問題の影響を受け、対応する Patch 3 が修正する。過去の攻撃の説明も訂正。996台は8月の関連活動の観測数で、今週の新規被害数ではない。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3114,7 +3150,19 @@ window.SITE_MESSAGES = {
     "research.huggingbench-cross-file-identity-audit.title": "Аудит HuggingBench: правильные файлы могут связывать чужие объекты",
     "research.huggingbench-cross-file-identity-audit.summary": "Воспроизведены одиннадцать рекомендателей; в трёх из четырёх внешних графов обнаружено неверное соответствие объектов. Исправления меняют часть рейтинга, но выигрыш зависит от бюджета обучения и ограничен данными одного снимка.",
     "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine: наблюдение за вычислениями и ожиданиями в Tensix",
-    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine моделирует Wormhole и Blackhole по открытым документам и аппаратным измерениям, оценивая время вычислений, памяти и связи. Для Nekbone на одном тайле общая ошибка тактов составляет 3,9%, но по фазам она выше, а для целочисленного деления достигает 82%. SC26 подтверждает статус исследовательской статьи воркшопа RISC-V for HPC."
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine моделирует Wormhole и Blackhole по открытым документам и аппаратным измерениям, оценивая время вычислений, памяти и связи. Для Nekbone на одном тайле общая ошибка тактов составляет 3,9%, но по фазам она выше, а для целочисленного деления достигает 82%. SC26 подтверждает статус исследовательской статьи воркшопа RISC-V for HPC.",
+    "news.openai-images26-gif-svg-controls.title": "Images 2.6: GIF, SVG и отдельная настройка планирования изображения",
+    "news.openai-images26-gif-svg-controls.summary": "Модели доступны в ChatGPT, Codex и API. Планирование отделено от качества, GIF и SVG поддерживаются как результаты генерации. Ускорение заявлено разработчиком; композицию и последовательные правки нужно проверять.",
+    "news.openai-pierre-acquisition-agreement.title": "OpenAI планирует купить Pierre для расширения хранения и проверки в Codex",
+    "news.openai-pierre-acquisition-agreement.summary": "Trees и Diffs уже используются; интеграция Code Storage ещё планируется. Сделка ждёт закрытия и одобрений. Обещаны сохранение открытых проектов и доступ клиентов; цена и сроки интеграции не раскрыты.",
+    "news.nasa-ka-band-relay-concept-awards.title": "NASA выбрало три компании для совместимой Ka-ретрансляции действующих аппаратов",
+    "news.nasa-ka-band-relay-concept-awards.summary": "Astranis, Global Enterprise Solutions и Viasat разработают концепции коммерческой ретрансляции. Предельные суммы включают будущие опции; начальный этап длится до мая 2027 года, а не означает готовую орбитальную услугу.",
+    "news.openai-linux-security-pipeline-findings.title": "OpenAI представила автоматизированный аудит Linux: исправления требуют проверки",
+    "news.openai-linux-security-pipeline-findings.summary": "Воспроизведено 1 724 проблемы; 948 различных исправлений служат основой подсчёта уникальных повышений привилегий. Не все проблемы новые, около $1,21 млн — лишь API-кредиты; решения проверяют сопровождающие.",
+    "news.nasa-splice-drone-landing-demonstration.title": "NASA описало испытание SPLICE: от карты рельефа к выбору посадочной площадки",
+    "news.nasa-splice-drone-landing-demonstration.summary": "Отчёт от 4 ноября посвящён имитации снижения 27 августа: оценка рельефа позволяет сменить небезопасную цель. Ошибка посадки и доля успехов не раскрыты; наземная демонстрация не подтверждает лунную миссию, а выпуск программы ещё планируется.",
+    "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel уточнила исправление GS1900: июньского обновления недостаточно",
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Десять моделей с 2.90 Patch 2 или старее требуют соответствующей Patch 3 для новой проблемы. Объяснение прошлых атак уточнено; 996 устройств — августовские наблюдения, а не новые жертвы этой недели."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3893,6 +3941,18 @@ window.SITE_MESSAGES = {
     "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 稽核：檔案合法，跨檔案身分仍可能錯位",
     "research.huggingbench-cross-file-identity-audit.summary": "研究重現十一種推薦方法，發現四個外部知識圖譜中三個存在身分對應錯誤。修正改變部分設定排名；收益依賴訓練預算，單次快照和弱偏好資料也限制結論外推。",
     "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：讓Tensix加速器的計算與等待過程可觀察",
-    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基於公開文件和硬體測量模擬Wormhole與Blackhole，並透過可選時序模型解釋計算、訪存及通訊瓶頸。Nekbone單塊實驗的總週期誤差為3.9%，但階段誤差更大、整數除法誤差達82%；工具面向診斷，不代表全面週期準確。SC26官方確認是RISC-V for HPC工作坊研究論文。"
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基於公開文件和硬體測量模擬Wormhole與Blackhole，並透過可選時序模型解釋計算、訪存及通訊瓶頸。Nekbone單塊實驗的總週期誤差為3.9%，但階段誤差更大、整數除法誤差達82%；工具面向診斷，不代表全面週期準確。SC26官方確認是RISC-V for HPC工作坊研究論文。",
+    "news.openai-images26-gif-svg-controls.title": "Images 2.6 上線：新增 GIF、SVG 與可調規劃的影象生成",
+    "news.openai-images26-gif-svg-controls.summary": "OpenAI 向 ChatGPT、Codex 和 API 開放新模型。文件區分規劃投入與畫面質量，並明確 GIF、SVG 僅作為生成端輸出；速度提升為廠商自報，複雜佈局與連續編輯仍需核對。",
+    "news.openai-pierre-acquisition-agreement.title": "OpenAI 擬收購 Pierre，將程式碼儲存與審閱工具進一步帶入 Codex",
+    "news.openai-pierre-acquisition-agreement.summary": "Trees、Diffs 已用於 Codex，Code Storage 的進一步整合仍是計劃。交易尚待交割及監管批准；OpenAI 承諾延續開源專案，並讓現有客戶繼續使用服務，未披露金額或整合時間表。",
+    "news.nasa-ka-band-relay-concept-awards.title": "NASA 授予三份 Ka 波段中繼方案合同，重點相容現有航天器",
+    "news.nasa-ka-band-relay-concept-awards.summary": "Astranis、Global Enterprise Solutions 與 Viasat 將開發商業中繼方案。合同上限包含未來選項；初始階段至 2027 年 5 月，尚不代表在軌服務已經完成。",
+    "news.openai-linux-security-pipeline-findings.title": "OpenAI 公布 Linux 自動化安全研究，修正仍需人工複核",
+    "news.openai-linux-security-pipeline-findings.summary": "研究動態重現 1,724 項問題，以 948 項不同修補程式統計獨立權限提升漏洞。結果並非全是新漏洞；約 121 萬美元僅為 API 費用，候選修正仍需維護者審查。",
+    "news.nasa-splice-drone-landing-demonstration.title": "NASA 披露 SPLICE 無人機著陸導航試驗，驗證感知與引導的協同",
+    "news.nasa-splice-drone-landing-demonstration.summary": "11 月 4 日報告回顧 8 月 27 日模擬下降試驗：系統由地形資料評估落點並在不安全時引導改向。尚未披露著陸誤差或成功率；地球演示不等於月球任務驗證，軟體交付仍屬計劃。",
+    "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明確 GS1900 新漏洞修正，六月更新仍不足",
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十個 GS1900 型號的 2.90 Patch 2 及更早版本仍受新漏洞影響，對應 Patch 3 提供修正。調查更正先前攻擊的漏洞歸因；996 台設備是八月相關活動的觀察數，並非本週新增。"
   }
 };

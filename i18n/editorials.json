@@ -40546,6 +40546,1222 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-images26-gif-svg-controls",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "OpenAI · Images 2.6 announcement",
+          "url": "https://openai.com/index/introducing-images-2-6/"
+        },
+        {
+          "label": "OpenAI · Image generation guide",
+          "url": "https://developers.openai.com/api/docs/guides/image-generation"
+        },
+        {
+          "label": "OpenAI · Image prompting guide",
+          "url": "https://developers.openai.com/api/docs/guides/image-prompting"
+        },
+        {
+          "label": "OpenAI · Images 2.6 system card",
+          "url": "https://deploymentsafety.openai.com/chatgpt-images-2-6"
+        },
+        {
+          "label": "OpenAI · Sunburst model documentation",
+          "url": "https://developers.openai.com/api/docs/models/gpt-image-2.6-sunburst"
+        },
+        {
+          "label": "OpenAI · Flare model documentation",
+          "url": "https://developers.openai.com/api/docs/models/gpt-image-2.6-flare"
+        },
+        {
+          "label": "The Next Web · GIF launch reporting",
+          "url": "https://thenextweb.com/news/chatgpt-animated-gifs-images-2-6-openai"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 11 月 4 日发布 Images 2.6，将 GIF 动图、图像标注编辑和 SVG 输出纳入新一代图像工具。公司宣布当天向全球 ChatGPT、Codex 各订阅层级开放，并提供 GPT-Image-2.6 Flare 和 Sunburst 两个 API 模型。这次变化不只是增加一组演示图片：开发者可以分别控制构图前的规划投入与画面细节，还能直接取得适合后续编辑的矢量图。不过，不同输出方式支持的操作并不相同。",
+          "sections": [
+            {
+              "heading": "从单张图片到可编辑的素材",
+              "paragraphs": [
+                "Flare 定位于快速迭代，Sunburst 面向更精细的构图与编辑。OpenAI 自报生成速度提高 50%，并称 Flare 在低画质设置下最快约六秒完成；公告没有给出足以把这两个数字推广到所有尺寸、任务和负载的对照条件。因此，这些是厂商描述的表现，不是本站测得的平均速度，也不是每次请求的时限保证。The Next Web 独立报道了 GIF 功能上线，但没有提供统一条件下的性能测试。",
+                "API 文档进一步说明，GIF 与 SVG 都是图像生成端的输出形式，图像编辑端暂不支持输出这两种格式。GIF 可指定 2—64 帧，帧数和尺寸要共同满足请求的像素限制；它适合短循环动画，不能据此理解为任意长度视频生成。SVG 则先生成参考图，再据此形成静态矢量内容，支持后续调整路径、形状和颜色；文档排除了脚本、外部资源和嵌入位图。它并不意味着把任何复杂照片无损转成矢量图。"
+              ]
+            },
+            {
+              "heading": "规划多少与画得多细是两件事",
+              "paragraphs": [
+                "新增的 complexity 控制模型绘制前投入多少规划，quality 控制画面渲染细节。前者有低、中、高三档，两个模型省略设置时都使用高档。官方提示，更高的规划投入可能帮助安排密集文字、复杂布局和物体关系，也可能增加等待时间或产生不需要的改动。本站的理解是：只想调整局部颜色时，多做构图规划未必更合适；页面关系复杂但纹理要求不高时，也不必把两项设置一起调高。",
+                "标注编辑把“改这里”变成单独的透明图层：原图保留为输入，圈选或草图表达目标区域，再用文字解释需要怎样改。文档要求标注层与第一张输入图尺寸一致，标注只作用于这张图，其他图像可作参考。它提供定位信息，并非保证目标区域之外逐像素不变。官方提示指南仍要求检查文字、布局、人物或物体的一致性，以及连续编辑后是否发生偏移。"
+              ]
+            },
+            {
+              "heading": "能力开放不等于结果可以直接采信",
+              "paragraphs": [
+                "系统卡将安全评估与产品能力分开说明。在同一组 3,077 个刻意设置的挑战请求上，Flare 经所评估检查后仍未拦截的不合规输出比例由 2.5 的 1.49% 变为 2.6 的 2.14%；总体差异没有达到统计显著。这个离线压力测试既不是日常用户收到问题图片的概率，也不能证明新版本在所有方面更安全。动图还需要判断跨帧含义，官方承认相关防护无法捕获所有违规情况。",
+                "对实际工作而言，新增输出形式减少了图像生成与素材整理之间的一些转换步骤，但技术图中的关系、图中文字和动图连续性仍须人工核对。系统卡还说明继续使用 C2PA 来源信息，并在 ChatGPT、Codex 和 API 中结合 SynthID 不可见水印；这些是来源识别手段，不是图中事实准确的证明。本站认为，应按相同任务比较可用成品、修改次数与等待时间，而不是仅凭最快六秒或一张精选样例判断是否替换原有流程。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公告与 API 文档重绘的解释图，展示规划、渲染和输出的分工；不是模型生成样例或性能比较。",
+            "steps": [
+              "描述需求，必要时附原图与标注",
+              "分别选择规划投入和画面质量",
+              "按支持范围生成静态图、SVG 或 GIF",
+              "核对内容、编辑偏移与来源标记"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI released Images 2.6 on November 4, adding animated GIFs, annotation-guided editing and SVG output to its image tools. The company announced availability that day across ChatGPT and Codex subscription tiers worldwide, with GPT-Image-2.6 Flare and Sunburst also offered through the API. Developers can now distinguish planning effort from rendering detail and obtain vector artwork for subsequent editing. The important qualification is that these capabilities do not all apply to the same operations.",
+          "sections": [
+            {
+              "heading": "Different outputs serve different jobs",
+              "paragraphs": [
+                "Flare targets fast iteration, while Sunburst targets detailed composition and editing. OpenAI reports 50% faster generation and says low-quality Flare output can take as little as six seconds. The announcement does not supply comparison conditions sufficient to generalize those figures across sizes, tasks and service loads. They are vendor claims, not our measured averages or a response-time guarantee. The Next Web independently reported the GIF launch, without a controlled performance comparison.",
+                "The API guide makes the output boundaries clearer. GIF and SVG are generation outputs; the image-editing endpoint does not output either format. GIF requests can contain 2–64 frames, subject to a shared pixel budget with frame dimensions. That supports short loops, not an inference of unrestricted video generation. SVG creation uses a reference image to produce static vector content whose paths, shapes and colors can be edited. Scripts, external resources and embedded raster images are excluded. This is not a promise of lossless vector conversion for any photograph."
+              ]
+            },
+            {
+              "heading": "Planning and detail are separate controls",
+              "paragraphs": [
+                "The new complexity control changes how much planning happens before rendering. Quality controls visual detail. Both models offer low, medium and high complexity, defaulting to high when unspecified. OpenAI warns that extra planning may help with dense text, layout and relationships, but can also increase latency or introduce unwanted changes. Our interpretation is that a small recoloring job and a complex diagram need different choices; raising every setting together is not necessarily useful.",
+                "Markup-guided editing provides a separate transparent annotation layer over the original image, accompanied by a description of the change. The annotation dimensions must match the first input image, to which the markup applies; additional images can act as references. This supplies location guidance rather than a guarantee that every surrounding pixel remains untouched. The prompting guide still asks users to inspect text, layout, identity and unintended drift after successive edits."
+              ]
+            },
+            {
+              "heading": "Availability is not proof of reliability",
+              "paragraphs": [
+                "The system card separately evaluates safeguards using 3,077 deliberately challenging requests. For Flare, outputs judged noncompliant and not blocked by the evaluated checks rose from 1.49% for version 2.5 to 2.14% for 2.6; the overall difference was not statistically significant. This offline stress test does not estimate what ordinary users receive and does not establish improvement in every safety measure. OpenAI also acknowledges remaining difficulty detecting problematic meaning across GIF frames.",
+                "For practical use, the new formats remove some conversion steps between generation and asset preparation, but factual diagrams, lettering and animation continuity still need review. The system card describes C2PA provenance metadata combined with invisible SynthID watermarking across ChatGPT, Codex and the API. Provenance signals are not proof that depicted information is true. In our assessment, a useful comparison should hold the task constant and examine usable results, revisions and waiting time, rather than relying on a fastest-case claim or a selected demonstration."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on the announcement and API documentation. It separates planning, rendering and output; it is not generated model artwork or a benchmark.",
+            "steps": [
+              "Describe the task and add image references or markup",
+              "Choose planning effort and rendering quality separately",
+              "Generate a supported still image, SVG or GIF",
+              "Review content, edit drift and provenance signals"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月4日、画像ツール Images 2.6 を公開した。GIF アニメーション、画像への注釈による編集、SVG 出力が加わり、同日から世界の ChatGPT と Codex の全契約階層で利用可能と発表した。API には GPT-Image-2.6 Flare と Sunburst を提供する。構図を考える処理と描画の細かさを別々に調整でき、後で編集するためのベクター素材も出力できる。ただし、すべての操作で同じ出力形式を使えるわけではない。",
+          "sections": [
+            {
+              "heading": "出力形式ごとにできることが違う",
+              "paragraphs": [
+                "Flare は素早い試行、Sunburst は細かな構図や編集を重視する。OpenAI は生成が50%高速化し、Flare の低画質設定では最短約6秒と説明する。ただし、公告には画像サイズ、課題、負荷をまたいで一般化できる比較条件が示されていない。開発元の報告値であり、当サイトの実測平均や応答時間の保証ではない。The Next Web も GIF 公開を報じたが、条件をそろえた性能比較は行っていない。",
+                "API ガイドでは、GIF と SVG は画像生成側の出力であり、画像編集側の出力には対応しない。GIF は2〜64フレームを指定できるが、フレーム数と寸法を合わせた画素数の制約がある。短いループ用であり、無制限の動画生成という意味ではない。SVG は参照画像を作ってから静的なベクター表現に変換し、パス、形状、色を後で編集できる。スクリプト、外部リソース、埋め込みラスター画像は含められず、あらゆる写真を無損失で変換する保証でもない。"
+              ]
+            },
+            {
+              "heading": "構図の検討量と描画品質を分ける",
+              "paragraphs": [
+                "新しい complexity は描画前の計画量、quality は画面の細部を調整する。計画量は低・中・高の3段階で、省略時は両モデルとも高となる。公式資料は、複雑な配置や密集した文字には多くの計画が役立つ一方、遅延や不要な変更が増える場合もあるとする。当サイトの解釈では、部分的な色変更と複雑な図解を同じ設定で扱う必要はなく、すべてを最高にすればよいわけではない。",
+                "注釈編集では、元画像とは別の透明レイヤーに丸や線を描き、文章で変更内容を伝える。レイヤーの寸法は最初の入力画像と一致させ、注釈はその画像に作用する。他の画像は参考資料にできる。変更場所を伝える仕組みであって、周囲の全画素を完全に維持する保証ではない。公式の入力ガイドも、文字、配置、人物や物体の一貫性、編集を重ねた際の意図しない変化を確認するよう求めている。"
+              ]
+            },
+            {
+              "heading": "公開と信頼性の確認は別の話",
+              "paragraphs": [
+                "システムカードは、意図的に難しくした3,077件の要求で安全対策を評価している。Flare で規則に反すると判定され、評価対象の検査にも止められなかった出力の割合は、2.5の1.49%から2.6の2.14%になったが、全体の差は統計的に有意ではない。このオフライン試験は日常利用で問題画像を受け取る確率ではなく、全項目で安全性が向上した証拠でもない。GIF の複数フレームにまたがる意味の検出には難しさが残ると同社は認める。",
+                "新形式は生成後の素材変換を減らし得るが、図の事実関係、文字、動きの連続性は人の確認が必要だ。システムカードは C2PA の来歴情報と、ChatGPT、Codex、API での SynthID 不可視透かしの併用も説明する。来歴の手がかりは内容の正しさを保証しない。当サイトでは、最短6秒や選ばれた作例よりも、同じ課題で使える完成品、修正回数、待ち時間を比較することが重要だと考える。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公告と API 資料に基づく当サイト独自の説明図。計画・描画・出力の役割を示し、モデルの生成例や性能比較ではない。",
+            "steps": [
+              "要件と必要な元画像・注釈を用意",
+              "計画量と描画品質を別々に選択",
+              "対応する静止画・SVG・GIF を生成",
+              "内容、編集のずれ、来歴情報を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "4 ноября OpenAI выпустила Images 2.6: инструменты получили создание GIF, редактирование по графическим пометкам и вывод SVG. Компания объявила доступность в ChatGPT и Codex по всему миру на всех уровнях подписки, а модели GPT-Image-2.6 Flare и Sunburst — через API. Разработчики могут отдельно задавать объём планирования и детализацию изображения, а также получать векторные материалы для дальнейшей работы. Однако набор доступных форматов зависит от операции.",
+          "sections": [
+            {
+              "heading": "Формат определяет возможности",
+              "paragraphs": [
+                "Flare предназначена для быстрых итераций, Sunburst — для подробных композиций и редактирования. OpenAI сообщает об ускорении генерации на 50% и минимальном времени около шести секунд для Flare при низком качестве. Анонс не раскрывает условия сравнения, позволяющие распространить эти цифры на любые размеры, задания и нагрузку. Это заявления разработчика, а не наши средние замеры или гарантия времени ответа. The Next Web независимо сообщило о запуске GIF, но не проводило сравнение производительности в одинаковых условиях.",
+                "Руководство API уточняет: GIF и SVG доступны при генерации, но не как результат операции редактирования изображений. GIF может содержать 2–64 кадра; их количество и размеры совместно ограничены бюджетом пикселей запроса. Это возможность создавать короткие циклы, а не обещание неограниченного видео. Для SVG система сначала создаёт опорное изображение, затем статические векторные объекты с редактируемыми контурами, формами и цветами. Скрипты, внешние ресурсы и встроенные растровые изображения исключены; преобразование любой фотографии без потерь не обещано."
+              ]
+            },
+            {
+              "heading": "Планирование и детализация регулируются отдельно",
+              "paragraphs": [
+                "Параметр complexity задаёт объём планирования перед отрисовкой, quality — визуальную детализацию. У обеих моделей три уровня сложности: низкий, средний и высокий; по умолчанию выбран высокий. Документация предупреждает: дополнительное планирование может помочь с плотным текстом, сложной композицией и взаимным положением объектов, но также увеличить задержку и вызвать ненужные изменения. По нашей оценке, локальная смена цвета и сложная схема требуют разных решений; повышение всех настроек одновременно необязательно полезно.",
+                "При редактировании по пометкам используется отдельный прозрачный слой с обозначением нужной области и текстовое описание изменения. Размер слоя должен совпадать с первым входным изображением; пометки относятся именно к нему, а остальные изображения могут служить образцами. Это подсказка о расположении изменения, а не гарантия неизменности каждого соседнего пикселя. Официальное руководство по запросам требует проверять текст, композицию, постоянство персонажей и объектов, а также отклонения после последовательных правок."
+              ]
+            },
+            {
+              "heading": "Доступность не доказывает надёжность",
+              "paragraphs": [
+                "В системной карте описан отдельный тест защит на 3 077 намеренно сложных запросах. Доля результатов Flare, признанных нарушающими правила и не остановленных проверяемыми механизмами, изменилась с 1,49% у версии 2.5 до 2,14% у 2.6; общая разница статистически незначима. Такой офлайн-тест не измеряет частоту проблемных изображений у обычных пользователей и не доказывает улучшение всех показателей безопасности. Компания также признаёт трудности распознавания смысла, возникающего между кадрами GIF.",
+                "Новые форматы могут сократить промежуточное преобразование материалов, но факты в схемах, надписи и непрерывность анимации требуют проверки человеком. Системная карта описывает сочетание метаданных происхождения C2PA с невидимыми водяными знаками SynthID в ChatGPT, Codex и API. Эти сигналы не подтверждают достоверность изображённого. По нашей оценке, сравнивать следует пригодность результатов, число исправлений и ожидание на одинаковых заданиях, а не минимальное время или специально выбранный пример."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Оригинальная поясняющая схема по анонсу и документации API. Она разделяет планирование, отрисовку и вывод; это не результат генерации или тест производительности.",
+            "steps": [
+              "Описать задачу, добавить исходник и пометки",
+              "Отдельно выбрать планирование и качество",
+              "Создать поддерживаемое изображение, SVG или GIF",
+              "Проверить содержание, отклонения и происхождение"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 11 月 4 日釋出 Images 2.6，將 GIF 動圖、影象標註編輯和 SVG 輸出納入新一代影象工具。公司宣佈當天向全球 ChatGPT、Codex 各訂閱層級開放，並提供 GPT-Image-2.6 Flare 和 Sunburst 兩個 API 模型。這次變化不只是增加一組演示圖片：開發者可以分別控制構圖前的規劃投入與畫面細節，還能直接取得適合後續編輯的向量圖。不過，不同輸出方式支援的操作並不相同。",
+          "sections": [
+            {
+              "heading": "從單張圖片到可編輯的素材",
+              "paragraphs": [
+                "Flare 定位於快速迭代，Sunburst 面向更精細的構圖與編輯。OpenAI 自報生成速度提高 50%，並稱 Flare 在低畫質設定下最快約六秒完成；公告沒有給出足以把這兩個數字推廣到所有尺寸、任務和負載的對照條件。因此，這些是廠商描述的表現，不是本站測得的平均速度，也不是每次請求的時限保證。The Next Web 獨立報道了 GIF 功能上線，但沒有提供統一條件下的效能測試。",
+                "API 文件進一步說明，GIF 與 SVG 都是影象生成端的輸出形式，影象編輯端暫不支援輸出這兩種格式。GIF 可指定 2—64 幀，幀數和尺寸要共同滿足請求的畫素限制；它適合短迴圈動畫，不能據此理解為任意長度影片生成。SVG 則先生成參考圖，再據此形成靜態向量內容，支援後續調整路徑、形狀和顏色；文件排除了指令碼、外部資源和嵌入點陣圖。它並不意味著把任何複雜照片無損轉成向量圖。"
+              ]
+            },
+            {
+              "heading": "規劃多少與畫得多細是兩件事",
+              "paragraphs": [
+                "新增的 complexity 控制模型繪製前投入多少規劃，quality 控制畫面渲染細節。前者有低、中、高三檔，兩個模型省略設定時都使用高檔。官方提示，更高的規劃投入可能幫助安排密集文字、複雜佈局和物體關係，也可能增加等待時間或產生不需要的改動。本站的理解是：只想調整區域性顏色時，多做構圖規劃未必更合適；頁面關係複雜但紋理要求不高時，也不必把兩項設定一起調高。",
+                "標註編輯把“改這裡”變成單獨的透明圖層：原圖保留為輸入，圈選或草圖表達目標區域，再用文字解釋需要怎樣改。文件要求標註層與第一張輸入圖尺寸一致，標註只作用於這張圖，其他影象可作參考。它提供定位資訊，並非保證目標區域之外逐畫素不變。官方提示指南仍要求檢查文字、佈局、人物或物體的一致性，以及連續編輯後是否發生偏移。"
+              ]
+            },
+            {
+              "heading": "能力開放不等於結果可以直接採信",
+              "paragraphs": [
+                "系統卡將安全評估與產品能力分開說明。在同一組 3,077 個刻意設定的挑戰請求上，Flare 經所評估檢查後仍未攔截的不合規輸出比例由 2.5 的 1.49% 變為 2.6 的 2.14%；總體差異沒有達到統計顯著。這個離線壓力測試既不是日常使用者收到問題圖片的機率，也不能證明新版本在所有方面更安全。動圖還需要判斷跨幀含義，官方承認相關防護無法捕獲所有違規情況。",
+                "對實際工作而言，新增輸出形式減少了影象生成與素材整理之間的一些轉換步驟，但技術圖中的關係、圖中文字和動圖連續性仍須人工核對。系統卡還說明繼續使用 C2PA 來源資訊，並在 ChatGPT、Codex 和 API 中結合 SynthID 不可見水印；這些是來源識別手段，不是圖中事實準確的證明。本站認為，應按相同任務比較可用成品、修改次數與等待時間，而不是僅憑最快六秒或一張精選樣例判斷是否替換原有流程。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公告與 API 文件重繪的解釋圖，展示規劃、渲染和輸出的分工；不是模型生成樣例或效能比較。",
+            "steps": [
+              "描述需求，必要時附原圖與標註",
+              "分別選擇規劃投入和畫面質量",
+              "按支援範圍生成靜態圖、SVG 或 GIF",
+              "核對內容、編輯偏移與來源標記"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-pierre-acquisition-agreement",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "OpenAI · Planned Pierre acquisition",
+          "url": "https://openai.com/index/openai-to-acquire-pierre/"
+        },
+        {
+          "label": "Goodwin · Counsel confirms Pierre acquisition agreement",
+          "url": "https://www.goodwinlaw.com/en/news-and-events/news/2026/11/announcements-technology-goodwin-advises-pierre-computer-company-agreement-acquired-openai"
+        },
+        {
+          "label": "Pierre · Code Storage introduction",
+          "url": "https://code.storage/docs/getting-started/introduction"
+        },
+        {
+          "label": "Pierre · Diffs documentation",
+          "url": "https://diffs.com/docs"
+        },
+        {
+          "label": "Pierre · Trees documentation",
+          "url": "https://trees.software/docs"
+        },
+        {
+          "label": "Axios · Independent transaction reporting",
+          "url": "https://www.axios.com/2026/11/04/openai-pierre-computer-github"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 11 月 4 日宣布计划收购 Pierre Computer Company，后者开发了 Code Storage 和一组开源开发者工具。这笔交易不是已经完成的并购：交割仍需满足通常条件，包括监管批准，双方在此之前继续独立运营。Pierre 的律师 Goodwin 同日确认已就收购协议提供法律服务，Axios 也报道了交易。值得关注的变化是，Codex 将不只依赖外部界面组件，而是计划进一步吸收代码存储与版本管理能力。",
+          "sections": [
+            {
+              "heading": "已有合作与未来整合要分开看",
+              "paragraphs": [
+                "Pierre 并非首次进入 Codex。OpenAI 明确表示，Codex 应用目前已经用 Trees 显示和浏览项目文件，用 Diffs 展示修改前后的差异。前者帮助人找到文件，后者帮助人理解究竟改了什么；它们是查看与审阅工具，不是自动判断程序正确的评测器。Diffs 的公开文档还说明，它可以比较两个文件版本或呈现已有补丁，并提供处理合并冲突的界面。",
+                "此次公告提到 Diffs 的就地编辑能力，以及随输入或 Agent 输出更新显示的 Highlights 语法高亮工具。它们让查看和修订发生在相近的位置，但“能在这里修改”不等于修改已经通过测试。Trees 文档仍标注为测试阶段，接口可能继续调整。本站认为，把这些能力放进同一工作界面有助于减少上下文切换，但公告并未提供能够证明审阅更快或错误更少的独立对照结果。"
+              ]
+            },
+            {
+              "heading": "Code Storage 补上的是版本与状态这一层",
+              "paragraphs": [
+                "Code Storage 是基于 Git 的可编程存储服务。Git 可以保存每次修改形成的版本，让团队比较前后状态、分开尝试不同方案，再决定如何合并。公开文档将创建仓库、保存提交、合并分支、导入和同步既有仓库列为能力，并把保存 Agent 中间状态、并行尝试作为使用场景。这些是服务公开说明的用途，并非独立测得的处理能力。",
+                "这说明收购对象同时涉及两层工作：一层让人看懂修改，另一层保存和组织修改。多个 Agent 同时工作时，是否能区分各自的尝试、保留可追溯版本，比单次生成多少内容更直接关系到后续审阅。这个意义是本站对产品结构的分析，并不代表交易已经解决并行协作问题。公告另提及 OpenAI 自建的 Pando 后端；它与 Pierre 的 Code Storage 不能混成一个已向公众推出的新服务。"
+              ]
+            },
+            {
+              "heading": "开源与现有客户有哪些承诺",
+              "paragraphs": [
+                "OpenAI 承诺 Pierre 的开源项目继续开源，并会继续贡献；还表示交割后 Code Storage 客户可以继续使用服务，同时逐步把相关能力带入 Codex。开源组件与托管服务是不同交付方式，前者的延续不等于后者所有商业条件永远不变。公告没有宣布强制迁移，也没有公布完整整合产品的交付日期，因此不能把收购新闻写成新的代码托管平台已上线。",
+                "目前公开资料未披露交易金额、确定交割时间或具体整合安排。对现有使用者而言，首先需要区分当下已用上的组件、未来承诺与尚待批准的交易；对行业而言，这体现出编码 Agent 的竞争正在延伸到保存、查看与组织工作成果的工具。本站的判断是，这比单纯增加生成能力更值得观察，但最终效果仍取决于服务连续性、兼容性和后续产品交付，不能仅凭并购公告下结论。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开资料重绘的解释图：Trees、Diffs 已用于 Codex；Code Storage 的进一步整合是交割后的计划。虚线表示尚未完成的整合，不是正式产品架构。",
+            "steps": [
+              "现有工具帮助浏览文件与审阅差异",
+              "Code Storage 保存版本和工作状态",
+              "收购仍需满足交割条件与监管批准",
+              "交割后计划整合，承诺延续开源与客户使用"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI announced plans on November 4 to acquire Pierre Computer Company, the maker of Code Storage and several open-source developer tools. The acquisition has not closed: customary conditions, including regulatory approval, remain, and the businesses will operate independently until then. Pierre’s counsel Goodwin confirmed its work on the acquisition agreement that day; Axios also reported the deal. The substantive development is a proposed extension of Codex’s underlying tooling, from components already used for review toward storage and version-management capabilities.",
+          "sections": [
+            {
+              "heading": "Existing integration is different from the plan",
+              "paragraphs": [
+                "Pierre is already present in Codex. OpenAI says the application uses Trees for browsing project files and Diffs for displaying changes. One helps a person locate material; the other makes differences visible. Neither is an evaluator that proves a program is correct. The Diffs documentation describes comparisons between two file versions, rendering an existing patch, and a dedicated interface for resolving merge conflicts. These are established capabilities rather than products created by the acquisition announcement.",
+                "The announcement also highlights editing directly within Diffs and Highlights, a syntax highlighter that updates as a person types or an agent produces text. Keeping inspection and correction close together can reduce movement between interfaces, in our assessment, but that is not evidence that a change passes testing. Trees is still labeled beta in its documentation, with further interface refinements expected. No independent comparison establishing faster review or fewer defects accompanies the deal."
+              ]
+            },
+            {
+              "heading": "Storage adds a different layer of work",
+              "paragraphs": [
+                "Code Storage is a programmable service built on Git. Version control preserves successive states, allowing teams to compare changes, explore separate alternatives and decide what to combine. Its documentation lists repository creation, commits, branch merging, imports and synchronization with existing hosts. It also describes saving intermediate agent state and isolating parallel attempts. These are documented service functions, rather than independently measured capacity claims.",
+                "The proposed acquisition therefore spans two layers: making changes understandable and retaining the history needed to organize them. When agents operate in parallel, identifying separate attempts and preserving traceable versions matters to subsequent human review. That is our interpretation of the product structure, not proof that the transaction solves coordination problems. OpenAI also references its internally developed Pando backend. Pando and Pierre’s Code Storage should not be presented as one newly available public hosting product."
+              ]
+            },
+            {
+              "heading": "What remains conditional",
+              "paragraphs": [
+                "OpenAI promises to keep Pierre’s open-source projects open and continue contributing to them. It also says Code Storage customers can continue using the service after closing while its capabilities are brought into Codex. Open-source components and a hosted service are different forms of delivery: continuity for the former does not establish permanently unchanged commercial terms for the latter. No mandatory migration or dated release of a fully integrated platform was announced.",
+                "Public materials disclose neither a purchase price, a firm closing date nor detailed integration arrangements. Existing users therefore need to distinguish tools available now from commitments dependent on a future transaction. For the industry, the deal illustrates how coding-agent competition extends into storing, inspecting and organizing work. In our assessment, that is more consequential than a branding announcement, but its actual effect will depend on continuity, compatibility and delivered products. An acquisition agreement alone cannot establish those outcomes."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram based on public documentation. Trees and Diffs already serve Codex; further Code Storage integration is a post-closing plan. A dashed connection denotes an uncompleted plan, not a released architecture.",
+            "steps": [
+              "Existing tools support file browsing and change review",
+              "Code Storage preserves versions and work state",
+              "Acquisition remains subject to closing conditions and approval",
+              "Post-closing integration is planned, with continuity commitments"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月4日、Code Storage と複数のオープンソース開発者ツールを手がける Pierre Computer Company の買収計画を発表した。買収は完了しておらず、規制当局の承認など通常の条件を満たす必要がある。それまでは両社が独立して運営を続ける。Pierre 側の法律事務所 Goodwin も同日、買収契約への助言を確認し、Axios も取引を報じた。注目点は、Codex が既存のレビュー部品に加え、保存と版管理の能力も取り込もうとしていることだ。",
+          "sections": [
+            {
+              "heading": "すでに使われる部品と将来の計画",
+              "paragraphs": [
+                "Pierre の技術はすでに Codex に入っている。OpenAI によると、アプリは Trees でプロジェクトのファイルを閲覧し、Diffs で変更前後の差分を表示する。前者は目的のファイルを探し、後者は何が変わったかを理解するためのものだ。プログラムの正しさを自動的に証明する評価器ではない。Diffs の公開資料には、2つの版の比較、既存パッチの表示、マージ競合を解決する画面も説明されている。",
+                "公告は Diffs 内でその場で修正する機能と、人の入力や Agent の出力に追随する構文強調ツール Highlights も挙げる。閲覧と修正を近づけることは画面の行き来を減らし得るが、修正内容がテスト済みになるわけではない。Trees の資料には現在もベータ版とあり、インターフェースは調整され得る。レビュー速度や欠陥減少を示す独立した比較結果は、この取引の発表には付いていない。"
+              ]
+            },
+            {
+              "heading": "保存するのは成果だけでなく履歴",
+              "paragraphs": [
+                "Code Storage は Git に基づくプログラム操作可能な保存サービスだ。版管理は変更ごとの状態を残し、前後の比較、異なる案の試行、採用する変更の統合を可能にする。公開資料は、リポジトリ作成、変更の保存、分岐の統合、既存リポジトリの取り込みと同期を説明し、Agent の途中状態の保存や並列試行の分離も用途として挙げる。これらは公開された機能説明であり、処理能力を独立に測定した結果ではない。",
+                "買収対象には、変更を人が理解するための層と、変更の履歴を整理して保持する層がある。複数の Agent が並行して動く場合、各試行を区別し、追跡できる版を残すことが後のレビューに関わる。これは当サイトによる製品構造の解釈であり、取引によって協調作業の問題が解決済みという意味ではない。公告が触れる OpenAI 自社開発の Pando と Pierre の Code Storage を、公開済みの単一新サービスとして扱うこともできない。"
+              ]
+            },
+            {
+              "heading": "開発者と既存顧客への約束",
+              "paragraphs": [
+                "OpenAI は Pierre のオープンソースプロジェクトを開いたまま維持し、貢献を続けると約束する。また、買収完了後も Code Storage の顧客はサービスを利用でき、その間に機能を Codex へ取り込むという。オープンソース部品とホスティングサービスは提供形態が異なる。前者の継続から後者の商用条件が永久に変わらないとは言えない。強制移行や統合済み製品の公開日も発表されていない。",
+                "取引額、確定した完了日、詳しい統合手順は公表資料にない。既存利用者は、現在使える部品、将来の約束、承認待ちの取引を区別する必要がある。業界としては、コーディング Agent の競争が成果の保存、閲覧、整理にも広がる例と読める。当サイトでは単なるブランド発表より重要な変化と考えるが、実際の効果は継続性、互換性、今後の製品提供に左右され、契約発表だけでは判断できない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開資料に基づく当サイト独自の説明図。Trees と Diffs は Codex で利用済み、Code Storage の追加統合は買収完了後の計画。破線は未完了の計画を示し、正式な製品構成図ではない。",
+            "steps": [
+              "既存ツールでファイル閲覧と差分レビュー",
+              "Code Storage が版と作業状態を保存",
+              "規制承認など買収完了の条件が残る",
+              "完了後の統合と開発・利用継続を約束"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "4 ноября OpenAI объявила о намерении приобрести Pierre Computer Company — разработчика Code Storage и открытых инструментов для программистов. Сделка ещё не закрыта: необходимы обычные условия, включая разрешения регуляторов; до этого компании сохраняют самостоятельность. Юридический консультант Pierre, Goodwin, подтвердил работу над соглашением, а Axios также сообщило о сделке. Существенное изменение — намерение дополнить уже используемые в Codex средства просмотра возможностями хранения и управления версиями.",
+          "sections": [
+            {
+              "heading": "Что уже работает, а что только планируется",
+              "paragraphs": [
+                "По сообщению OpenAI, приложение Codex уже использует Trees для просмотра файлов проекта и Diffs для отображения изменений. Первый инструмент помогает найти нужный материал, второй — понять разницу между версиями. Они не являются оценщиками, подтверждающими корректность программы. Документация Diffs описывает сравнение двух версий файла, отображение готового набора изменений и отдельный интерфейс разрешения конфликтов слияния. Эти возможности существовали до объявления покупки.",
+                "В анонсе также упомянуты правки непосредственно в Diffs и Highlights — подсветка синтаксиса, обновляющаяся при вводе человеком или выдаче текста агентом. По нашей оценке, близость просмотра и исправления может сократить переходы между интерфейсами, но не означает, что правка прошла тестирование. Документация Trees по-прежнему обозначает продукт как бета-версию и допускает изменения интерфейса. Независимых сравнений скорости проверки или сокращения дефектов к объявлению не приложено."
+              ]
+            },
+            {
+              "heading": "Хранение — отдельная часть процесса",
+              "paragraphs": [
+                "Code Storage представляет собой программируемый сервис на основе Git. Управление версиями сохраняет последовательные состояния: команда может сравнить изменения, попробовать разные варианты отдельно и решить, что объединить. Документация перечисляет создание репозиториев, сохранение изменений, слияние ветвей, импорт и синхронизацию с существующими площадками. Среди сценариев — сохранение промежуточного состояния агента и разделение параллельных попыток. Это публичное описание функций сервиса, а не независимые замеры мощности.",
+                "Покупка затрагивает два слоя: представление изменений для человека и сохранение истории, позволяющей их организовать. При параллельной работе агентов различимость попыток и прослеживаемость версий важны для последующей проверки. Это наша интерпретация структуры продуктов, а не доказательство решения проблем координации после сделки. OpenAI также упоминает собственную внутреннюю систему Pando. Её и Code Storage нельзя выдавать за единый новый общедоступный сервис хранения."
+              ]
+            },
+            {
+              "heading": "Какие обязательства заявлены",
+              "paragraphs": [
+                "OpenAI обещает сохранить открытость проектов Pierre и продолжить вклад в них. Компания также говорит, что после закрытия сделки клиенты смогут пользоваться Code Storage, пока его возможности интегрируются в Codex. Открытые компоненты и размещённый у поставщика сервис — разные формы поставки. Сохранение первых не означает неизменности всех коммерческих условий второго навсегда. Обязательная миграция и дата выпуска полностью объединённой платформы не объявлены.",
+                "Публичные материалы не раскрывают цену, точную дату закрытия или подробный план интеграции. Пользователям необходимо различать доступные сейчас инструменты, будущие обязательства и ещё не завершённую сделку. Для отрасли это пример расширения конкуренции агентов с написания программ на хранение, просмотр и организацию результатов. По нашей оценке, изменение заслуживает внимания, однако практический эффект зависит от непрерывности сервиса, совместимости и реально выпущенных продуктов. Само соглашение этих результатов не доказывает."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Оригинальная схема по публичным материалам. Trees и Diffs уже используются в Codex, дальнейшая интеграция Code Storage запланирована после закрытия. Пунктир показывает незавершённый план, а не готовую архитектуру.",
+            "steps": [
+              "Существующие инструменты показывают файлы и изменения",
+              "Code Storage сохраняет версии и состояние работы",
+              "Для закрытия нужны условия и разрешения",
+              "После закрытия планируются интеграция и продолжение поддержки"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 11 月 4 日宣佈計劃收購 Pierre Computer Company，後者開發了 Code Storage 和一組開源開發者工具。這筆交易不是已經完成的併購：交割仍需滿足通常條件，包括監管批准，雙方在此之前繼續獨立運營。Pierre 的律師 Goodwin 同日確認已就收購協議提供法律服務，Axios 也報道了交易。值得關注的變化是，Codex 將不只依賴外部介面元件，而是計劃進一步吸收程式碼儲存與版本管理能力。",
+          "sections": [
+            {
+              "heading": "已有合作與未來整合要分開看",
+              "paragraphs": [
+                "Pierre 並非首次進入 Codex。OpenAI 明確表示，Codex 應用目前已經用 Trees 顯示和瀏覽專案檔案，用 Diffs 展示修改前後的差異。前者幫助人找到檔案，後者幫助人理解究竟改了什麼；它們是檢視與審閱工具，不是自動判斷程式正確的評測器。Diffs 的公開文件還說明，它可以比較兩個檔案版本或呈現已有補丁，並提供處理合併衝突的介面。",
+                "此次公告提到 Diffs 的就地編輯能力，以及隨輸入或 Agent 輸出更新顯示的 Highlights 語法高亮工具。它們讓檢視和修訂發生在相近的位置，但“能在這裡修改”不等於修改已經透過測試。Trees 文件仍標註為測試階段，介面可能繼續調整。本站認為，把這些能力放進同一工作介面有助於減少上下文切換，但公告並未提供能夠證明審閱更快或錯誤更少的獨立對照結果。"
+              ]
+            },
+            {
+              "heading": "Code Storage 補上的是版本與狀態這一層",
+              "paragraphs": [
+                "Code Storage 是基於 Git 的可程式設計儲存服務。Git 可以儲存每次修改形成的版本，讓團隊比較前後狀態、分開嘗試不同方案，再決定如何合併。公開文件將建立倉庫、儲存提交、合併分支、匯入和同步既有倉庫列為能力，並把儲存 Agent 中間狀態、並行嘗試作為使用場景。這些是服務公開說明的用途，並非獨立測得的處理能力。",
+                "這說明收購物件同時涉及兩層工作：一層讓人看懂修改，另一層儲存和組織修改。多個 Agent 同時工作時，是否能區分各自的嘗試、保留可追溯版本，比單次生成多少內容更直接關係到後續審閱。這個意義是本站對產品結構的分析，並不代表交易已經解決並行協作問題。公告另提及 OpenAI 自建的 Pando 後端；它與 Pierre 的 Code Storage 不能混成一個已向公眾推出的新服務。"
+              ]
+            },
+            {
+              "heading": "開源與現有客戶有哪些承諾",
+              "paragraphs": [
+                "OpenAI 承諾 Pierre 的開源專案繼續開源，並會繼續貢獻；還表示交割後 Code Storage 客戶可以繼續使用服務，同時逐步把相關能力帶入 Codex。開源元件與託管服務是不同交付方式，前者的延續不等於後者所有商業條件永遠不變。公告沒有宣佈強制遷移，也沒有公佈完整整合產品的交付日期，因此不能把收購新聞寫成新的程式碼託管平臺已上線。",
+                "目前公開資料未披露交易金額、確定交割時間或具體整合安排。對現有使用者而言，首先需要區分當下已用上的元件、未來承諾與尚待批准的交易；對行業而言，這體現出編碼 Agent 的競爭正在延伸到儲存、檢視與組織工作成果的工具。本站的判斷是，這比單純增加生成能力更值得觀察，但最終效果仍取決於服務連續性、相容性和後續產品交付，不能僅憑併購公告下結論。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開資料重繪的解釋圖：Trees、Diffs 已用於 Codex；Code Storage 的進一步整合是交割後的計劃。虛線表示尚未完成的整合，不是正式產品架構。",
+            "steps": [
+              "現有工具幫助瀏覽檔案與審閱差異",
+              "Code Storage 儲存版本和工作狀態",
+              "收購仍需滿足交割條件與監管批准",
+              "交割後計劃整合，承諾延續開源與客戶使用"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nasa-ka-band-relay-concept-awards",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "NASA · Ka-band relay contract awards, November 4",
+          "url": "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/"
+        },
+        {
+          "label": "NASA · Communications Services Project",
+          "url": "https://www.nasa.gov/communicating-with-missions/communications-services-project/"
+        },
+        {
+          "label": "NASA · Tracking and Data Relay Satellites",
+          "url": "https://www.nasa.gov/mission/tracking-and-data-relay-satellites/"
+        },
+        {
+          "label": "Via Satellite · Ka-band relay awards and contract context",
+          "url": "https://www.satellitetoday.com/government-military/2026/11/04/viasat-ses-and-astranis-win-nasa-ka-band-relay-contracts/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "NASA 在 2026 年 11 月 4 日选定三家公司，开发能与现有航天器兼容的 Ka 波段通信中继方案。目标是在旧有中继卫星逐步退出时，让那些无法方便更换通信硬件的在轨任务继续传送数据。这次已经发生的是合同授予；方案设计、降低技术风险和可能的在轨演示仍是后续工作。",
+          "sections": [
+            {
+              "heading": "先解决旧航天器怎么接入的问题",
+              "paragraphs": [
+                "通信中继卫星相当于航天器与地面站之间的转接点，既传回科学数据，也承接遥测和指令。NASA 的跟踪与数据中继卫星系统 TDRS 长期为哈勃望远镜、国际空间站等任务提供连接。NASA 正逐步将近地空间通信转向商业服务，但更换网络并不意味着已经在轨的设备也能随之换新。",
+                "这批合同因此聚焦 Ka 波段无线电中继的向后兼容：新方案需要适配现有任务，而不是要求任务修改机载系统。NASA 希望购买的也不只是一颗卫星，而是覆盖空间段、地面段、发射、运行和集成的完整解决方案，并作为商业市场中的一个客户使用服务。"
+              ]
+            },
+            {
+              "heading": "三份金额都是包含未来选项的上限",
+              "paragraphs": [
+                "官方列出的最高潜在合同价值为：Astranis 2.643 亿美元，Global Enterprise Solutions 3.404 亿美元，Viasat 4.609 亿美元。Via Satellite 将 Global Enterprise Solutions 对应为 SES Space & Defense。三项金额都包括未来全部可选阶段，不能理解为 NASA 已经支付了这些金额，也不能当作已交付服务的收入。",
+                "合同采用固定总价形式，初始执行期从 2026 年 11 月 4 日至 2027 年 5 月 3 日；另设可延续至 2029 年的定价选项。NASA 可以通过后续选项继续投入，使工作从初期概念完善和降低风险，推进到系统集成与在轨飞行演示。选项是否执行与演示是否成功是不同问题，公告并未宣布两者已经发生。"
+              ]
+            },
+            {
+              "heading": "这是通信服务转型的一步，不是切换已经完成",
+              "paragraphs": [
+                "NASA 的通信服务项目 CSP 此前已开展商业中继能力开发与验证：2022 年向六家美国公司提供了合计 2.785 亿美元，用于低地球轨道用户的相关演示。这一背景说明，11 月 4 日的增量是为旧任务兼容需求选定具体方案供应方，而不是首次提出商业中继，也不能与过去的演示合同混成一次新支出。",
+                "对任务运营方而言，关键是未来网络能否在旧航天器不改硬件的前提下持续提供可靠连接。本站的判断是，端到端采购把兼容性和运营能力放到了同一项要求中，但合同上限并不证明能力已实现。覆盖、实际性能、集成结果以及从现有系统平稳过渡的效果，还要看后续验证；这则公告没有宣布 TDRS 已全部退役，也没有宣布三家公司已完成新服务部署。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据 NASA 公告重绘的阶段解释图；后续步骤有条件，非在轨运行实测或已完成进度。",
+            "steps": [
+              "合同授予：确定三家方案开发方",
+              "初始阶段：完善概念并降低技术风险",
+              "可选阶段：集成、在轨演示与能力验证",
+              "面向现有航天器的兼容服务仍需验证"
+            ]
+          }
+        },
+        "en": {
+          "lead": "On November 4, 2026, NASA selected three companies to develop Ka-band relay concepts compatible with spacecraft already in orbit. The aim is to maintain communications for missions that cannot readily replace their onboard hardware as the older relay fleet is gradually retired. The completed event is the contract award; design, risk reduction and possible flight demonstrations remain subsequent work.",
+          "sections": [
+            {
+              "heading": "A new network must accommodate existing spacecraft",
+              "paragraphs": [
+                "A relay satellite passes data between spacecraft and ground stations, carrying scientific information as well as telemetry and commands. NASA’s Tracking and Data Relay Satellite system, TDRS, has long connected missions including Hubble and the International Space Station. Moving near-Earth communications toward commercial services does not automatically update equipment already in orbit.",
+                "The awards therefore focus on backward-compatible Ka-band radio relay concepts: the proposed service must accommodate existing missions without requiring modifications to onboard systems. NASA wants an end-to-end solution covering space and ground elements, launch, operations and integration, rather than simply a satellite. It intends to use the service as one customer in a commercial market."
+              ]
+            },
+            {
+              "heading": "The stated values include every future option",
+              "paragraphs": [
+                "The maximum potential values are $264.3 million for Astranis, $340.4 million for Global Enterprise Solutions and $460.9 million for Viasat. Via Satellite identifies Global Enterprise Solutions as SES Space & Defense. Each amount includes all future options; none should be read as money already paid or revenue from services already delivered.",
+                "The firm-fixed-price contracts initially run from November 4, 2026 through May 3, 2027, with priced options extending work through 2029. NASA can use those options to advance from concept maturation and risk reduction toward integration and an in-orbit flight demonstration. Exercising an option and successfully completing a demonstration are separate events, neither established by this award announcement."
+              ]
+            },
+            {
+              "heading": "One step in a transition, not a completed switchover",
+              "paragraphs": [
+                "NASA’s Communications Services Project, CSP, had already funded commercial relay development and demonstrations. In 2022 it awarded $278.5 million across six US companies for services intended for low Earth orbit users. The November 4 increment is the selection of providers for compatibility-focused concepts, not the first commercial-relay initiative or a new payment of those earlier awards.",
+                "For mission operators, the essential question is whether a future network can maintain reliable links without changing spacecraft hardware. Our interpretation is that end-to-end procurement brings compatibility and operations into the same requirement, but a contract ceiling proves neither capability nor readiness. Coverage, actual performance, integration and continuity still depend on verification. NASA did not announce that all TDRS satellites had retired or that the three new services were already deployed."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory sequence redrawn by this site from NASA’s announcement. Later stages are conditional, not measured operations or completed milestones.",
+            "steps": [
+              "Award contracts to three concept providers",
+              "Mature concepts and reduce technical risks",
+              "Optional integration, flight demonstration and verification",
+              "Validate compatibility with existing spacecraft"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "NASA は 2026 年 11 月 4 日、すでに宇宙で運用中の機体と互換性を持つ Ka 帯通信中継の構想を開発するため、3 社を選定しました。旧来の中継衛星群を段階的に退役させる際にも、通信装置を容易に交換できないミッションの接続を維持する狙いです。今回完了したのは契約先の選定であり、設計、リスク低減、軌道上実証は今後の工程です。",
+          "sections": [
+            {
+              "heading": "新しいネットワークを既存機に合わせる",
+              "paragraphs": [
+                "通信中継衛星は宇宙機と地上局の間でデータを受け渡し、科学データだけでなく機体の状態情報や指令も運びます。NASA の追跡・データ中継衛星システム TDRS は、ハッブル宇宙望遠鏡や国際宇宙ステーションなどを長く支えてきました。近地球通信を商用サービスへ移しても、軌道上の機器が自動的に更新されるわけではありません。",
+                "そこで今回重視するのが、既存機の搭載システムを改修せずに使える Ka 帯の無線中継です。NASA が求めるのは衛星単体ではなく、宇宙側と地上側の設備、打ち上げ、運用、統合を含む一連のサービスです。政府専用システムとしてすべてを保有するのではなく、商用市場の一顧客として利用する方針です。"
+              ]
+            },
+            {
+              "heading": "金額は将来のオプションを含む上限",
+              "paragraphs": [
+                "最大潜在契約額は Astranis が 2 億 6,430 万ドル、Global Enterprise Solutions が 3 億 4,040 万ドル、Viasat が 4 億 6,090 万ドルです。Via Satellite は Global Enterprise Solutions を SES Space & Defense と説明しています。いずれも将来の全オプションを含み、支払い済みの金額や提供済みサービスの売上ではありません。",
+                "固定価格契約の初期期間は 2026 年 11 月 4 日から 2027 年 5 月 3 日までで、価格を定めた追加オプションにより 2029 年まで継続できます。NASA は構想の具体化とリスク低減から、統合や軌道上飛行実証へ進めることができます。ただし、オプションの行使と実証の成功は別の出来事であり、今回の発表はその完了を示しません。"
+              ]
+            },
+            {
+              "heading": "商用移行の一段階であって、切り替え完了ではない",
+              "paragraphs": [
+                "NASA の Communications Services Project（CSP）は以前から商用中継の開発と実証を進めており、2022 年には低地球軌道の利用者向けサービスのため、米国 6 社に合計 2 億 7,850 万ドルを授与しました。今回の新しい点は、既存ミッションとの互換性を重視した構想の担当企業を選んだことです。過去の実証契約と今回を一つの新規支出として合算するものではありません。",
+                "運用者にとって重要なのは、機上装置を変更せず、将来のネットワークが信頼できる通信を維持できるかです。本站の解釈では、一体的な調達によって互換性と運用を同じ要件に含めていますが、契約上限額は性能や準備完了の証拠ではありません。通信範囲、実性能、統合結果、移行時の継続性は検証が必要です。TDRS 全体の退役や 3 社の新サービスの配備完了を発表したものではありません。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "NASA の発表を基に本站が描き直した工程説明図です。後続工程には条件があり、運用の実測値や完了済み工程を示すものではありません。",
+            "steps": [
+              "3 社に構想開発の契約を授与",
+              "構想を具体化し技術リスクを低減",
+              "追加オプションで統合・軌道上実証・検証",
+              "既存宇宙機との互換性を検証"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "4 ноября 2026 года NASA выбрало три компании для разработки концепций ретрансляции в Ka-диапазоне, совместимых с уже работающими космическими аппаратами. Цель — сохранить связь для миссий, которым сложно заменить бортовое оборудование, по мере постепенного вывода старых ретрансляторов. Уже состоялось заключение контрактов; проектирование, снижение рисков и возможные орбитальные демонстрации ещё предстоят.",
+          "sections": [
+            {
+              "heading": "Новая сеть должна учитывать уже летающие аппараты",
+              "paragraphs": [
+                "Спутник-ретранслятор передаёт данные между космическим аппаратом и наземной станцией: научную информацию, телеметрию и команды. Система NASA TDRS давно обслуживает, в частности, телескоп Hubble и Международную космическую станцию. Переход околоземной связи на коммерческие услуги сам по себе не обновляет аппаратуру на орбите.",
+                "Поэтому новые контракты сосредоточены на обратной совместимости радиоретрансляции в Ka-диапазоне: решение должно поддерживать действующие миссии без изменения их бортовых систем. NASA намерено приобретать комплексную услугу, включающую космический и наземный сегменты, запуск, эксплуатацию и интеграцию, а не только отдельный спутник. Агентство хочет стать одним из клиентов коммерческого рынка."
+              ]
+            },
+            {
+              "heading": "Опубликованные суммы — пределы со всеми опциями",
+              "paragraphs": [
+                "Максимальная потенциальная стоимость составляет 264,3 млн долларов для Astranis, 340,4 млн для Global Enterprise Solutions и 460,9 млн для Viasat. Via Satellite указывает, что Global Enterprise Solutions соответствует SES Space & Defense. Все суммы включают будущие опции; это не уже выплаченные средства и не выручка от завершённых услуг.",
+                "Начальный период контрактов с фиксированной ценой — с 4 ноября 2026 года по 3 мая 2027 года. Дополнительные опции с установленной ценой позволяют продолжить работы до 2029 года, перейдя от проработки концепции и снижения рисков к интеграции и орбитальной демонстрации. Использование опции и успешная демонстрация — разные события; объявление о контрактах не подтверждает завершения ни того, ни другого."
+              ]
+            },
+            {
+              "heading": "Этап перехода, а не готовая замена системы",
+              "paragraphs": [
+                "Программа NASA Communications Services Project, CSP, уже поддерживала разработку и испытания коммерческой ретрансляции. В 2022 году шесть американских компаний получили в общей сложности 278,5 млн долларов на услуги для пользователей низкой околоземной орбиты. Новость 4 ноября — выбор исполнителей концепций с акцентом на совместимость, а не первое предложение коммерческой связи. Старые контракты нельзя считать новой выплатой в составе нынешних.",
+                "Для операторов миссий главное — сможет ли будущая сеть сохранять надёжную связь без замены бортовой аппаратуры. По нашей оценке, комплексная закупка объединяет требования совместимости и эксплуатации, но финансовый потолок не доказывает готовности технологии. Покрытие, реальные характеристики, интеграцию и непрерывность перехода ещё нужно проверить. NASA не сообщало ни о полном выводе TDRS, ни о завершённом развёртывании трёх новых услуг."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная редакцией по объявлению NASA. Последующие этапы условны: это не измерения работы системы и не перечень завершённых испытаний.",
+            "steps": [
+              "Заключить контракты с тремя разработчиками концепций",
+              "Уточнить решения и снизить технические риски",
+              "По опциям провести интеграцию, орбитальную демонстрацию и проверку",
+              "Подтвердить совместимость с действующими аппаратами"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "NASA 在 2026 年 11 月 4 日選定三家公司，開發能與現有航天器相容的 Ka 波段通訊中繼方案。目標是在舊有中繼衛星逐步退出時，讓那些無法方便更換通訊硬體的在軌任務繼續傳送資料。這次已經發生的是合同授予；方案設計、降低技術風險和可能的在軌演示仍是後續工作。",
+          "sections": [
+            {
+              "heading": "先解決舊航天器怎麼接入的問題",
+              "paragraphs": [
+                "通訊中繼衛星相當於航天器與地面站之間的轉接點，既傳回科學資料，也承接遙測和指令。NASA 的跟蹤與資料中繼衛星系統 TDRS 長期為哈勃望遠鏡、國際空間站等任務提供連線。NASA 正逐步將近地空間通訊轉向商業服務，但更換網路並不意味著已經在軌的裝置也能隨之換新。",
+                "這批合同因此聚焦 Ka 波段無線電中繼的向後相容：新方案需要適配現有任務，而不是要求任務修改機載系統。NASA 希望購買的也不只是一顆衛星，而是覆蓋空間段、地面段、發射、執行和整合的完整解決方案，並作為商業市場中的一個客戶使用服務。"
+              ]
+            },
+            {
+              "heading": "三份金額都是包含未來選項的上限",
+              "paragraphs": [
+                "官方列出的最高潛在合同價值為：Astranis 2.643 億美元，Global Enterprise Solutions 3.404 億美元，Viasat 4.609 億美元。Via Satellite 將 Global Enterprise Solutions 對應為 SES Space & Defense。三項金額都包括未來全部可選階段，不能理解為 NASA 已經支付了這些金額，也不能當作已交付服務的收入。",
+                "合同採用固定總價形式，初始執行期從 2026 年 11 月 4 日至 2027 年 5 月 3 日；另設可延續至 2029 年的定價選項。NASA 可以透過後續選項繼續投入，使工作從初期概念完善和降低風險，推進到系統整合與在軌飛行演示。選項是否執行與演示是否成功是不同問題，公告並未宣佈兩者已經發生。"
+              ]
+            },
+            {
+              "heading": "這是通訊服務轉型的一步，不是切換已經完成",
+              "paragraphs": [
+                "NASA 的通訊服務專案 CSP 此前已開展商業中繼能力開發與驗證：2022 年向六家美國公司提供了合計 2.785 億美元，用於低地球軌道使用者的相關演示。這一背景說明，11 月 4 日的增量是為舊任務相容需求選定具體方案供應方，而不是首次提出商業中繼，也不能與過去的演示合同混成一次新支出。",
+                "對任務運營方而言，關鍵是未來網路能否在舊航天器不改硬體的前提下持續提供可靠連線。本站的判斷是，端到端採購把相容性和運營能力放到了同一項要求中，但合同上限並不證明能力已實現。覆蓋、實際效能、整合結果以及從現有系統平穩過渡的效果，還要看後續驗證；這則公告沒有宣佈 TDRS 已全部退役，也沒有宣佈三家公司已完成新服務部署。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據 NASA 公告重繪的階段解釋圖；後續步驟有條件，非在軌執行實測或已完成進度。",
+            "steps": [
+              "合同授予：確定三家方案開發方",
+              "初始階段：完善概念並降低技術風險",
+              "可選階段：整合、在軌演示與能力驗證",
+              "面向現有航天器的相容服務仍需驗證"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-linux-security-pipeline-findings",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "OpenAI: A thousand fewer paths to root, full methodology and limitations",
+          "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/"
+        },
+        {
+          "label": "Linux kernel documentation: Security bugs and responsible AI-assisted reporting",
+          "url": "https://docs.kernel.org/process/security-bugs.html"
+        },
+        {
+          "label": "IT Home: report of the November 4 research",
+          "url": "https://m.ithome.com/html/1022476.htm"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 11 月 4 日公布一项 Linux 内核安全研究：用尚未发布的网络安全模型，把寻找疑似问题、复现、评估影响和生成候选补丁连接起来，再交由研究人员复核。十月中旬的一次运行产生了 2,308 项候选发现，其中 1,724 项得到动态复现。报告以 948 项不同补丁作为去重后的本地提权漏洞统计口径。这项研究展示了自动审计能形成多少可验证材料，以及修复工作仍卡在哪些环节；这些数字不表示发现了 948 个全部未知、仍未修复的漏洞。",
+          "sections": [
+            {
+              "heading": "先区分候选、复现和不同漏洞",
+              "paragraphs": [
+                "Linux 内核负责操作系统的核心资源与权限管理。本地提权是已经拥有某种低权限本地访问的一方，越过权限边界取得更高控制权，与无需任何接入条件的远程入侵不同。此次系统先选出 5,034 个审计目标，覆盖约 280 万行、约占内核代码的 7%。这是有选择的审计范围，不是已检查全部内核，更不能由未发现问题推断其余部分安全。",
+                "动态复现检验疑似问题能否实际出现；可利用性评估再判断它是否能造成更严重影响。原文详细结果包括 291 个信息泄露验证案例和 1,169 个有效本地提权利用，经变体分析后形成 948 项不同补丁，作者以此统计独立提权漏洞。候选数、成功利用数和补丁去重数不能混用。主实验使用常规桌面系统及其正常防护，但结论仍受测试版本、配置和本地访问条件限制，不等于所有 Linux 设备都存在同样的风险。"
+              ]
+            },
+            {
+              "heading": "成功复现之后，还要确认修的是哪一个问题",
+              "paragraphs": [
+                "研究中的一个失误说明了人工复核的价值：早期一轮曾报告 200 次提权成功，其中 20 次实际依赖了另一个问题，而不是指定要验证的漏洞。研究人员随后增加了独立核对。候选补丁同样不自动等于可合入修复；一些初稿虽然能阻止已知测试案例，却存在不必要改动、性能代价、风格偏差或遗漏相似变体等问题，需要继续修改。",
+                "扫描和人工分析历时十天，其间团队观察到 61 项相关提权问题已由社区修复并合入上游，43 项有待合入补丁，299 项正在公开报告或讨论。这是当时的状态，不是今天仍未修复数量的清单，也不能都归功于这次研究。Linux 官方安全文档要求报告给出明确版本、可复现证据和条件，并在近期代码上重新确认；它还指出低质量 AI 报告会增加维护者负担。生成更多报告只是起点，及时去重、复核并完成可靠修复才真正减轻风险。"
+              ]
+            },
+            {
+              "heading": "成本和模型进步，都有比较边界",
+              "paragraphs": [
+                "主运行花费 1,213,430 美元 API 额度，除以 948 得到每项约 1,279 美元。这个均值包含本次流程的不同阶段，并非只生成一个成功案例的费用，也不能当作涵盖人力、基础设施等项目总成本。原文用历史漏洞奖励标准计算的潜在金额属于假设估值，不是已经获批或到账的奖金。另一次改编的 kernelCTF 环境实验还因兼容性移除了一项防护，因此不能将其结果视为完整原始配置下的直接成绩。",
+                "七月使用 GPT-5.6 Sol 的运行记录为 166 项独立提权漏洞，十月较新模型的记录为 948 项；两轮扫描的是各自当时的最新内核，时间、代码和流程条件不同，不能仅用比值衡量模型能力提升。新研究没有公布该模型的正式名称、发布日或开放访问安排。现有报道转述了 OpenAI 的结果，尚不是独立复验。对防守方而言，更实际的启发是按最新版本复核、优先修复经过验证的严重问题，并让维护者审查贯穿自动化流程。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据研究报告重绘的解释性流程。数字是 OpenAI 自报的不同阶段计数，不是本站测量，也不表示补丁已经全部合入。",
+            "steps": [
+              "2,308 项候选发现",
+              "1,724 项动态复现",
+              "948 项不同补丁用于去重统计",
+              "人工复核与维护者修复流程"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI published a Linux kernel security study on November 4, connecting candidate discovery, reproduction, impact assessment and proposed fixes through an unreleased cybersecurity model, followed by human review. A mid-October run produced 2,308 candidate findings and dynamically reproduced 1,724. The authors use 948 distinct patches as their deduplicated count of local privilege-escalation vulnerabilities. The study shows how much testable evidence an automated audit can produce—and the remaining work needed to turn it into reliable repairs. It does not establish 948 entirely unknown, still-unfixed flaws.",
+          "sections": [
+            {
+              "heading": "Candidates, reproductions and distinct flaws are different counts",
+              "paragraphs": [
+                "The Linux kernel manages core operating-system resources and permissions. Local privilege escalation means someone who already has a form of low-privileged local access crosses a boundary to obtain greater control; it is not the same as remote compromise without an initial access condition. The system selected 5,034 audit targets spanning roughly 2.8 million lines, about 7% of the kernel. This was a targeted audit, not a comprehensive examination of every component or evidence that the remainder is safe.",
+                "Dynamic reproduction checks whether a suspected problem actually occurs. Impact assessment then asks whether it can lead to a more serious security outcome. The detailed results contain 291 information-disclosure demonstrations and 1,169 working local privilege-escalation exploits. Variant analysis produced 948 distinct patches, which the authors use to count unique escalation vulnerabilities. Candidate, successful-exploit and patch-deduplicated totals are not interchangeable. The main experiment used a stock desktop system with normal protections, but its conclusions remain bounded by versions, configuration and local-access requirements—not every Linux device shares the same exposure."
+              ]
+            },
+            {
+              "heading": "A successful test still needs the correct explanation and fix",
+              "paragraphs": [
+                "One early mistake illustrates why human checks matter. Of 200 reported escalation successes in an earlier run, 20 relied on a different flaw from the one assigned for validation. The team subsequently added an independent check. Proposed patches also were not automatically ready for acceptance: some initial fixes blocked the demonstrated behaviour but introduced unnecessary changes, performance trade-offs, style problems or gaps covering related variants. Further iteration was required before those proposals could become dependable repairs.",
+                "During ten days of scanning and human analysis, OpenAI observed 61 related escalation issues already fixed upstream by the community, 43 with staging patches and 299 publicly reported or discussed. These are statuses at that point, not a current inventory of unresolved flaws or repairs all attributable to this project. Linux’s official security guidance requires precise affected versions, reproducible evidence and conditions, with checks against recent code. It also warns that poor AI-generated reports overload maintainers. Producing findings is only a first step; deduplication, verification and accepted repairs determine the defensive value."
+              ]
+            },
+            {
+              "heading": "Cost and model comparisons need their denominators",
+              "paragraphs": [
+                "The main run consumed $1,213,430 in API credits, or roughly $1,279 when divided by 948. That average spans the workflow rather than just generating one successful demonstration, and is not a fully loaded project cost covering people and infrastructure. The report’s possible bounty values are hypothetical calculations using historical reward schedules, not approved or received payments. A separate adapted kernelCTF experiment also removed one protection for compatibility, so its outcome should not be presented as a result under the complete original configuration.",
+                "A July run with GPT-5.6 Sol recorded 166 distinct escalation flaws, compared with 948 for the newer October model. Each scanned the latest kernel at its own time; dates, code and workflow conditions differ, so the ratio is not an isolated measure of model improvement. The new study does not announce that model’s formal name, release date or public access arrangements. Reporting repeats OpenAI’s results rather than independently reproducing them. For defenders, the useful lesson is to recheck recent versions, prioritise verified serious issues and keep maintainer review inside the automated process."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the report. Numbers are OpenAI-reported stage counts, not our measurements, and do not mean every patch has been accepted.",
+            "steps": [
+              "2,308 candidate findings",
+              "1,724 dynamic reproductions",
+              "948 distinct patches used for deduplication",
+              "Human review and maintainer-led remediation"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月4日、未公開のサイバーセキュリティモデルを使い、Linux カーネルの疑わしい問題の発見、再現、影響評価、修正案の生成をつないだ研究を公表した。最後は研究者が確認する。10月中旬の実行では候補2,308件のうち1,724件を動的に再現し、異なる修正案948件を、重複を除いたローカル権限昇格の件数として用いた。自動監査が検証可能な材料をどれだけ作り、修正まで何が残るかを示す研究であり、948件がすべて未知で未修正の欠陥という意味ではない。",
+          "sections": [
+            {
+              "heading": "候補、再現、独立した欠陥は別の数",
+              "paragraphs": [
+                "Linux カーネルは OS の中核的な資源と権限を管理する。ローカル権限昇格とは、すでに何らかの低権限のローカルアクセスを持つ主体が境界を越えて高い権限を得ることで、事前アクセスなしの遠隔侵入とは異なる。システムは5,034の監査対象を選び、約280万行、全体の約7%を扱った。重点を絞った調査で、全カーネルの検査完了や残りの安全性を証明するものではない。",
+                "動的な再現では、疑われる動作が実際に起こるかを確かめる。その後の影響評価で、より深刻な結果につながるかを調べる。詳細結果は情報漏えいの検証例291件、動作する権限昇格の実証1,169件で、類似例を分析して異なる修正案948件に整理し、独立した欠陥の数とした。候補数、成功例数、修正単位で整理した数は交換できない。主実験は通常の防御を有効にした標準的なデスクトップ環境だが、版、設定、ローカルアクセスの条件があり、全 Linux 機器に同じ危険があるとは限らない。"
+              ]
+            },
+            {
+              "heading": "成功した後にも原因と修正の確認が必要",
+              "paragraphs": [
+                "初期の実行では、成功と報告された200件のうち20件が、指定した問題ではなく別の欠陥を使っていた。研究チームは後から独立した確認を追加した。修正案もそのまま採用できるとは限らず、既知の検証例を防いでも、不要な変更、性能上の代償、記述規約との不一致、類似問題の取りこぼしなどがあった。信頼できる修正にするには追加の見直しが必要だった。",
+                "調査と人による分析の10日間に、関連する権限昇格問題61件はコミュニティが上流で修正済み、43件には取り込み前の修正案があり、299件は公開の報告・議論中だったという。当時の状態であり、現在の未修正一覧でも、すべて同研究の功績でもない。Linux の公式文書は正確な影響対象の版、再現証拠、条件と新しいコードでの再確認を求め、質の低い AI 報告が保守担当者の負荷になると指摘する。発見数を増やすだけでなく、重複を除いて検証し、修正を取り込むことが防御につながる。"
+              ]
+            },
+            {
+              "heading": "費用とモデル比較には範囲がある",
+              "paragraphs": [
+                "主実行の API 利用額は1,213,430米ドルで、948で割ると約1,279ドルになる。これは工程全体の平均で、一つの成功例を生成する費用だけではなく、人件費や基盤を含む事業総額でもない。過去の報奨金水準で計算した潜在価値も、承認・支払い済みの賞金ではない。別の kernelCTF 実験は互換性のため防御の一つを外した改変環境なので、元の構成を完全に保った成績として扱えない。",
+                "7月の GPT-5.6 Sol の実行は独立した権限昇格166件、10月の新モデルは948件だった。それぞれの時点の最新カーネルを調べており、日時、コード、工程条件が異なるため、この比率だけでモデル能力の向上を測れない。新研究はモデルの正式名、公開日、一般向け提供を発表していない。報道も OpenAI の結果の紹介で、独立した再現ではない。防御側への具体的な示唆は、新しい版で確認し、検証済みの重大な問題を優先し、自動化の中に保守担当者の審査を残すことだ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "報告に基づく当サイトの説明用再描画。数値は OpenAI が報告した各段階の件数で、当サイトの測定や全修正の採用完了を意味しない。",
+            "steps": [
+              "候補2,308件",
+              "動的再現1,724件",
+              "異なる修正案948件で重複を整理",
+              "人の確認と保守担当者による修正"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "4 ноября OpenAI опубликовала исследование безопасности ядра Linux. Ещё не выпущенная кибермодель связывает поиск подозрительных проблем, воспроизведение, оценку влияния и подготовку исправлений; затем результаты проверяют люди. Запуск в середине октября дал 2 308 кандидатов и 1 724 динамически воспроизведённые уязвимости. Для подсчёта уникальных случаев локального повышения привилегий авторы используют 948 различных исправлений. Исследование показывает масштаб проверяемых материалов и оставшуюся работу по их превращению в надёжные исправления, а не наличие 948 полностью неизвестных и до сих пор неустранённых проблем.",
+          "sections": [
+            {
+              "heading": "Кандидаты, воспроизведения и уникальные проблемы",
+              "paragraphs": [
+                "Ядро Linux управляет основными ресурсами и разрешениями операционной системы. Локальное повышение привилегий предполагает, что уже имеющий некоторый ограниченный локальный доступ субъект пересекает границу полномочий. Это не удалённое проникновение без исходного доступа. Система выбрала 5 034 объекта аудита — около 2,8 миллиона строк, примерно 7% ядра. Это целевой анализ, а не завершённая проверка всех компонентов и не доказательство безопасности оставшейся части.",
+                "Динамическое воспроизведение проверяет, происходит ли предполагаемая ошибка на практике. Следующая оценка устанавливает серьёзность возможных последствий. В подробных результатах указаны 291 демонстрация раскрытия информации и 1 169 работающих демонстраций повышения привилегий. После анализа вариантов получилось 948 различных исправлений — основа подсчёта уникальных уязвимостей авторами. Эти три вида количества нельзя подменять друг другом. Главный эксперимент использовал обычную настольную систему со стандартной защитой, но результат ограничен версиями, конфигурацией и условиями локального доступа, а не относится одинаково ко всем устройствам Linux."
+              ]
+            },
+            {
+              "heading": "Успех теста ещё не доказывает правильность исправления",
+              "paragraphs": [
+                "В одном раннем запуске из 200 объявленных успешных случаев повышения привилегий 20 опирались на другую проблему, а не на заданную для проверки. После этого команда добавила независимую проверку соответствия. Предложенные исправления тоже не были автоматически готовы к принятию: некоторые устраняли показанное поведение, но вносили лишние изменения, издержки производительности, нарушения стиля либо не охватывали родственные варианты. Для надёжного ремонта потребовалась дополнительная доработка.",
+                "За десять дней сканирования и ручного анализа OpenAI наблюдала 61 связанную проблему, уже исправленную сообществом в основной разработке, ещё 43 с подготовленными исправлениями и 299 в публичных сообщениях или обсуждениях. Это состояние на тот момент, а не текущий список незакрытых проблем и не работы, целиком выполненные этой группой. Официальная документация Linux требует точных версий, доказательств воспроизведения, условий и проверки свежего кода; она также предупреждает о нагрузке от слабых ИИ-отчётов. Защитная ценность появляется после устранения дубликатов, проверки и принятия исправлений."
+              ]
+            },
+            {
+              "heading": "Затраты и сравнение моделей имеют границы",
+              "paragraphs": [
+                "Основной запуск израсходовал 1 213 430 долларов API-кредитов, около 1 279 долларов при делении на 948. Среднее охватывает этапы процесса, а не только создание одного успешного примера, и не является полной стоимостью проекта с персоналом и инфраструктурой. Возможные суммы вознаграждений в статье — расчёты по историческим ставкам, не одобренные или полученные выплаты. Отдельный эксперимент kernelCTF проводился в адаптированной среде с удалённой ради совместимости одной защитой, поэтому его нельзя выдавать за результат при полной исходной конфигурации.",
+                "Июльский запуск GPT-5.6 Sol дал 166 уникальных проблем повышения привилегий, октябрьский с новой моделью — 948. Каждый проверял актуальное ядро своего времени: даты, код и условия процесса различаются, поэтому отношение чисел не изолирует улучшение модели. Исследование не объявляет её официальное название, дату выпуска или общедоступность. Публикации пересказывают данные OpenAI, а не независимо воспроизводят их. Для защитников полезнее повторная проверка свежих версий, приоритет подтверждённых серьёзных проблем и сохранение участия сопровождающих проекта в автоматизированном процессе."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по исследованию. Числа сообщены OpenAI для разных этапов; это не наши измерения и не подтверждение принятия всех исправлений.",
+            "steps": [
+              "2 308 кандидатов",
+              "1 724 динамических воспроизведения",
+              "948 различных исправлений для устранения дублей",
+              "Проверка людьми и исправления с участием сопровождающих"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 11 月 4 日公佈一項 Linux 核心安全研究：用尚未發布的資安模型，把尋找疑似問題、重現、評估影響和生成候選修補程式串連起來，再交由研究人員複核。十月中旬的一次執行產生了 2,308 項候選發現，其中 1,724 項得到動態重現。報告以 948 項不同修補程式作為去除重複後的本機權限提升漏洞統計口徑。這項研究展示了自動審計能形成多少可驗證材料，以及修復工作仍卡在哪些環節；這些數字不表示發現了 948 個全部未知、仍未修復的漏洞。",
+          "sections": [
+            {
+              "heading": "先區分候選、重現和不同漏洞",
+              "paragraphs": [
+                "Linux 核心負責作業系統的核心資源與權限管理。本機權限提升是已經擁有某種低權限本機存取的一方，越過權限邊界取得更高控制權，與無需任何接入條件的遠端入侵不同。此次系統先選出 5,034 個審計目標，覆蓋約 280 萬行、約佔核心程式碼的 7%。這是有選擇的審計範圍，不是已檢查全部核心，更不能由未發現問題推斷其餘部分安全。",
+                "動態重現檢驗疑似問題能否實際出現；可利用性評估再判斷它是否能造成更嚴重影響。原文詳細結果包括 291 個資訊外洩驗證案例和 1,169 個有效本機權限提升利用，經變體分析後形成 948 項不同修補程式，作者以此統計獨立權限提升漏洞。候選數、成功利用數和依修補程式去除重複後的數量不能混用。主實驗使用常規桌面系統及其正常防護，但結論仍受測試版本、設定和本機存取條件限制，不等於所有 Linux 裝置都存在同樣的風險。"
+              ]
+            },
+            {
+              "heading": "成功重現之後，還要確認修的是哪一個問題",
+              "paragraphs": [
+                "研究中的一個失誤說明了人工複核的價值：早期一輪曾報告 200 次權限提升成功，其中 20 次實際依賴了另一個問題，而不是指定要驗證的漏洞。研究人員隨後增加了獨立核對。候選修補程式同樣不自動等於可合併修復；一些初稿雖然能阻止已知測試案例，卻存在不必要改動、效能代價、風格偏差或遺漏相似變體等問題，需要繼續修改。",
+                "掃描和人工分析歷時十天，其間團隊觀察到 61 項相關權限提升問題已由社群修復並合併至上游，43 項有待合併修補程式，299 項正在公開報告或討論。這是當時的狀態，不是今天仍未修復數量的清單，也不能都歸功於這次研究。Linux 官方安全文件要求報告給出明確版本、可重現證據和條件，並在近期程式碼上重新確認；它還指出低品質 AI 報告會增加維護者負擔。生成更多報告只是起點，及時去除重複、複核並完成可靠修復才真正減輕風險。"
+              ]
+            },
+            {
+              "heading": "成本和模型進步，都有比較邊界",
+              "paragraphs": [
+                "主要實驗花費 1,213,430 美元 API 額度，除以 948 得到每項約 1,279 美元。這個均值包含本次流程的不同階段，並非只生成一個成功案例的費用，也不能當作涵蓋人力、基礎設施等專案總成本。原文用歷史漏洞獎勵標準計算的潛在金額屬於假設估值，不是已經獲批或到賬的獎金。另一次改編的 kernelCTF 環境實驗還因相容性移除了一項防護，因此不能將其結果視為完整原始設定下的直接成績。",
+                "七月使用 GPT-5.6 Sol 的執行記錄為 166 項獨立權限提升漏洞，十月較新模型的記錄為 948 項；兩輪掃描的是各自當時的最新核心，時間、程式碼和流程條件不同，不能僅用比值衡量模型能力提升。新研究沒有公佈該模型的正式名稱、發布日或開放使用安排。現有報導轉述了 OpenAI 的結果，尚不是獨立複驗。對防守方而言，更實際的啟發是按最新版本複核、優先修復經過驗證的嚴重問題，並讓維護者審查貫穿自動化流程。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據研究報告重繪的解釋性流程。數字是 OpenAI 自報的不同階段計數，不是本站測量，也不表示修補程式已經全部合併。",
+            "steps": [
+              "2,308 項候選發現",
+              "1,724 項動態重現",
+              "948 項不同修補程式用於去除重複統計",
+              "人工複核與維護者修復流程"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nasa-splice-drone-landing-demonstration",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "NASA · November 4 flight-test account",
+          "url": "https://www.nasa.gov/centers-and-facilities/armstrong/nasa-navigation-experiment-shows-promise-for-planetary-landings/"
+        },
+        {
+          "label": "NASA · SPLICE technologies and milestones",
+          "url": "https://www.nasa.gov/safe-and-precise-landing-integrated-capabilities-evolution-splice/"
+        },
+        {
+          "label": "SpaceAndSky · Independent account and measurement boundaries",
+          "url": "https://spaceandsky.com/nasa-splice-drone-lunar-landing-navigation-test/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "NASA 11 月 4 日披露了一次把着陆导航系统接到无人机上检验的试验：Alta-X 携带 SPLICE 载荷，在加利福尼亚州 Rogers 干湖模拟月球下降和着陆。飞行实际发生在 8 月 27 日，近期新增的是试验说明，并非刚完成一次登月。它检验的关键环节，是让地形感知、着陆点判断与引导动作相互配合，而不只是让传感器单独测出距离。",
+          "sections": [
+            {
+              "heading": "先让载荷与飞行器协同工作",
+              "paragraphs": [
+                "SPLICE 是一组导航、制导、计算机和传感器技术。导航回答飞行器在哪里、怎样运动，制导则决定往哪里去。Johnson 航天中心研制载荷，Armstrong 飞行研究中心协助将其装上无人机。NASA 说明，6 月和 7 月先检查了通信、数据处理、遥测和指令控制，8 月的飞行再模拟下降与着陆。把实验设备接到真实飞行器上，是检验这些环节能否配合的一步。",
+                "据 NASA 报告，载荷利用传感数据生成高分辨率地形高程图，评估候选落点；系统若判断原目标不安全，就引导无人机转向更安全的位置。高程图表示地面各处的高度，而不是普通航拍照片。这有助于区分平坦区域与可能妨碍着陆的坡面或岩石。本次报道并未公布每次飞行的详细轨迹或成功率，因此只能按机构披露的演示范围理解结果。"
+              ]
+            },
+            {
+              "heading": "看清位置与判断能否落下是两个问题",
+              "paragraphs": [
+                "NASA 项目资料把整个技术组合分为不同职能。地形相对导航将实时影像与已有地图匹配，用来估计相对位置；多普勒激光雷达测量速度和高度；危险探测激光雷达形成三维地形，软件据此标出风险区域与候选安全落点。下降与着陆计算机整合这些信息，再由制导算法规划转向。这里说明的是 SPLICE 的整体设计，不能据此宣称这次无人机飞行逐项验证了全部组件。",
+                "本站的理解是，落在预定坐标附近和落在安全地面上并不等价：地图定位可以告诉飞行器接近了目标，却未必足以判断脚下是否有障碍；单独发现障碍，也不代表飞行器仍有条件改换落点。把感知结果接入引导环节，才能研究这两个问题如何共同解决。项目资料提到的高度和覆盖范围属于设计说明，本文不把它们当成 8 月试验的实测性能。"
+              ]
+            },
+            {
+              "heading": "离月球任务可用还有哪些证据要补",
+              "paragraphs": [
+                "项目负责人称此次飞行提高了技术成熟度，但公告没有给出具体等级、着陆误差、样本规模或与旧方案的对照数据。独立媒体 SpaceAndSky 也明确区分项目设计指标与本次未披露的飞行测量结果。因此，这是一项集成演示的进展，不能推出月球任务成功率，也不能把地球无人机上的表现直接等同于真实行星着陆。后续仍需在目标任务的条件下检验可靠性。",
+                "NASA 表示正与产业界讨论制导系统的使用，软件进入 NASA 软件目录仍被表述为当年秋季的计划，而不是公告中已经确认的交付。公开页面对后续 Mojave 试验的时间叙述也不完全一致，本文不据此给出新的试飞日程。对读者更有意义的变化，是看到自主选点如何从分立算法走向飞行器集成，同时保留对实际任务性能、发布状态和后续验证的判断空间。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据 NASA 公开资料重绘的解释性示意，展示感知、判断和制导的关系；不是实测航迹、月球照片或性能结果。",
+            "steps": [
+              "传感数据构成地形高程图",
+              "评估原定落点与地面危险",
+              "选择可接受的替代落点",
+              "将判断交给制导系统调整方向"
+            ]
+          }
+        },
+        "en": {
+          "lead": "NASA’s November 4 account describes a drone test of planetary landing navigation. An Alta-X carrying the SPLICE payload rehearsed lunar descent and landing at Rogers Dry Lake in California on August 27. The recent development is the published account, not a new Moon landing. Its central engineering question is whether terrain sensing, landing-site assessment and guidance can work together aboard a flying vehicle, beyond testing a sensor in isolation.",
+          "sections": [
+            {
+              "heading": "Making the payload and aircraft work together",
+              "paragraphs": [
+                "SPLICE combines navigation, guidance, computing and sensors. Navigation estimates where a vehicle is and how it is moving; guidance determines where it should go. Johnson Space Center developed the payload, with Armstrong specialists integrating it into the drone. NASA says June and July flights checked communications, data handling, telemetry and command-and-control before the August descent and landing exercises. Integration into an aircraft makes those connections part of the experiment.",
+                "According to NASA, the payload generated high-resolution digital elevation maps from sensor data and assessed possible touchdown areas. If the original target was judged unsafe, the system directed the drone toward a safer site. An elevation map represents ground height, rather than simply showing an aerial photograph, helping distinguish flatter areas from slopes or rocks. The report does not publish individual flight tracks or a success rate, so the result remains bounded by the demonstration NASA describes."
+              ]
+            },
+            {
+              "heading": "Knowing the location is different from judging the ground",
+              "paragraphs": [
+                "NASA’s project description assigns distinct jobs to the technology suite. Terrain-relative navigation matches live images to existing maps for positioning. Doppler lidar estimates speed and altitude, while hazard-detection lidar produces three-dimensional terrain information. Software marks hazardous regions and candidate safe sites; a descent-and-landing computer brings the information together, and guidance plans a diversion. This explains the overall SPLICE design, not proof that every component was separately validated in this drone flight.",
+                "Our interpretation is that reaching a coordinate and reaching safe ground are different requirements. Map-based positioning can identify proximity to a target without resolving every obstacle beneath the vehicle. Detecting an obstacle alone also does not establish that a diversion remains feasible. Feeding perception into guidance allows their interaction to be studied. Altitudes and coverage dimensions elsewhere in the project description are design information; we do not present them as measurements from the August test."
+              ]
+            },
+            {
+              "heading": "What the demonstration does not establish",
+              "paragraphs": [
+                "The project manager says the flight increased technology readiness. However, the announcement supplies no numbered readiness level, landing error, sample size or controlled comparison with an earlier approach. SpaceAndSky’s independent account likewise separates design figures from undisclosed flight measurements. This is progress in integration, not a quantified prediction of lunar mission success. Performance aboard an Earth-based drone cannot by itself establish reliability under the conditions of a planetary landing.",
+                "NASA says it is discussing industrial use of the guidance system. Availability through its software catalog is still described as a plan for that fall, rather than a delivery confirmed by this announcement. Public pages also differ in how they date subsequent Mojave testing, so we do not infer a new flight schedule. The useful development is evidence of how autonomous site selection moves from separate functions toward aircraft integration, while actual mission performance, software delivery and further validation remain open."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw based on NASA material: sensing, site assessment and guidance. This is not a measured flight track, lunar photograph or performance result.",
+            "steps": [
+              "Build a terrain elevation map from sensor data",
+              "Assess the target and surface hazards",
+              "Select an acceptable alternative site",
+              "Pass the decision to guidance for a diversion"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "NASA は11月4日、惑星着陸用の航法システムを無人機に搭載した試験の内容を公表した。SPLICE ペイロードを積んだ Alta-X が、カリフォルニア州のロジャース乾湖で月面への降下と着陸を模擬した。飛行自体は8月27日であり、今回新しいのはその説明であって、月面着陸を実施したというニュースではない。焦点は、地形の認識、着陸地点の判断、誘導を実際の飛行機体上で連動させられるかにある。",
+          "sections": [
+            {
+              "heading": "ペイロードと機体を連動させる",
+              "paragraphs": [
+                "SPLICE は航法、誘導、計算機、センサーを組み合わせた技術群だ。航法が位置や運動を推定し、誘導は進む方向を決める。ジョンソン宇宙センターがペイロードを開発し、アームストロング飛行研究センターが無人機への統合を支援した。NASA によれば、6月と7月には通信、データ処理、テレメトリー、指令制御を確認し、8月に降下と着陸を模擬した。実機への搭載は、それらの接続が一体として機能するかを試す段階になる。",
+                "NASA の説明では、センサーデータから高解像度の数値標高図を作り、着陸候補を評価した。元の目標が危険だと判断すれば、システムが無人機をより安全な場所へ誘導する。標高図は空撮写真とは異なり、地面の各地点の高さを表すため、平坦な場所と斜面や岩などを区別する助けとなる。ただし、各飛行の詳細な軌跡や成功率は公表されておらず、結果は NASA が説明した実証の範囲で読む必要がある。"
+              ]
+            },
+            {
+              "heading": "位置が分かることと安全に降りられること",
+              "paragraphs": [
+                "NASA のプロジェクト資料では、技術群の役割が分かれている。地形相対航法はリアルタイム画像を既存の地図と照合して位置を求める。ドップラーライダーは速度と高度を、危険検知ライダーは三次元の地形を測る。ソフトウェアが危険区域と安全な候補地点を抽出し、降下・着陸用計算機が情報を統合して、誘導が進路変更を計画する。これは SPLICE 全体の設計説明であり、今回の無人機飛行で全構成要素を個別に実証したという意味ではない。",
+                "本サイトの解釈では、予定座標に近づくことと安全な地面に降りることは別の要件だ。地図による位置推定だけでは足元の障害物をすべて判断できず、障害物を見つけただけでも回避可能とは限らない。認識を誘導へつなぐことで、その相互作用を検討できる。プロジェクト資料にある高度や範囲の数値は設計上の説明であり、8月の試験で得た実測性能としては扱わない。"
+              ]
+            },
+            {
+              "heading": "実証から実際の月面任務まで",
+              "paragraphs": [
+                "責任者は飛行によって技術成熟度が上がったと述べているが、公告には具体的な成熟度の段階、着陸誤差、試行数、旧方式との比較結果がない。独立メディア SpaceAndSky も、設計値と未公表の飛行測定値を区別している。したがって、統合実証の進展ではあるものの、月面任務の成功率を算出できる結果ではない。地球上の無人機での動作だけから、惑星着陸の条件での信頼性を結論づけることはできない。",
+                "NASA は誘導システムの産業利用を協議中としている。NASA のソフトウェアカタログへの掲載は同年秋の計画とされ、この公告で提供済みと確認されたわけではない。公開ページには後続のモハーベ試験の時期について一致しない説明もあるため、ここでは新たな飛行日程を推定しない。注目点は、自律的な着陸地点選択を個々の機能から機体統合へ進める過程であり、任務での性能、提供状況、追加検証にはなお確認が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "NASA の公開資料に基づく本サイトの説明用再描画。認識・地点判断・誘導の関係を示すもので、実測軌跡、月面写真、性能結果ではない。",
+            "steps": [
+              "センサーから地形の標高図を作る",
+              "目標地点と地表の危険を評価する",
+              "許容できる代替地点を選ぶ",
+              "判断を誘導へ渡して進路を変える"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "4 ноября NASA опубликовало описание испытания навигации для посадки на другие небесные тела. Беспилотник Alta-X с оборудованием SPLICE имитировал снижение и посадку на Луну над высохшим озером Роджерс в Калифорнии. Полёт состоялся 27 августа: новость касается опубликованного отчёта, а не новой посадки на Луну. Главный инженерный вопрос — как связать измерение рельефа, выбор площадки и управление траекторией на летательном аппарате, выйдя за рамки проверки отдельного датчика.",
+          "sections": [
+            {
+              "heading": "Согласовать оборудование с аппаратом",
+              "paragraphs": [
+                "SPLICE объединяет навигацию, наведение, вычислитель и датчики. Навигация определяет положение и движение аппарата, наведение — куда ему двигаться. Полезную нагрузку разработал Космический центр Джонсона, а специалисты центра Армстронга помогли установить её на беспилотник. По данным NASA, в июне и июле проверяли связь, обработку данных, телеметрию и передачу управляющих команд; затем в августе имитировали снижение и посадку. Установка на реальный аппарат позволяет проверить совместную работу этих связей.",
+                "NASA сообщает, что оборудование строило цифровые карты высот высокого разрешения и оценивало возможные посадочные площадки. Если исходная цель признавалась небезопасной, система направляла беспилотник в более безопасное место. Карта высот показывает высоту участков поверхности, а не просто изображение сверху, помогая отличать ровные зоны от склонов или камней. Однако подробные траектории отдельных полётов и доля успешных попыток не опубликованы. Выводы ограничены описанной агентством демонстрацией."
+              ]
+            },
+            {
+              "heading": "Определить координаты и оценить поверхность",
+              "paragraphs": [
+                "В описании проекта разные компоненты выполняют разные задачи. Навигация относительно рельефа сопоставляет текущие изображения с имеющимися картами. Доплеровский лидар оценивает скорость и высоту, а лидар обнаружения опасностей строит трёхмерное представление местности. Программа отмечает опасные зоны и подходящие площадки. Посадочный вычислитель объединяет сведения, после чего система наведения планирует изменение траектории. Это описание общей архитектуры SPLICE, а не доказательство отдельной проверки каждого компонента в данном полёте.",
+                "По нашей интерпретации, попасть к заданным координатам и сесть на безопасную поверхность — разные требования. Определение положения по карте ещё не раскрывает все препятствия под аппаратом. Обнаружение препятствия само по себе также не гарантирует возможности изменить путь. Связь восприятия с наведением позволяет исследовать их взаимодействие. Высоты и размеры областей, приведённые в материалах проекта, относятся к проектному описанию; мы не представляем их как измеренные результаты августовского испытания."
+              ]
+            },
+            {
+              "heading": "Чего демонстрация пока не доказывает",
+              "paragraphs": [
+                "Руководитель проекта говорит о повышении технологической готовности, но в сообщении нет номера её уровня, ошибки посадки, числа испытаний или контролируемого сравнения с прежней системой. Независимое издание SpaceAndSky также отделяет проектные параметры от неопубликованных измерений полёта. Это прогресс интеграции, а не количественный прогноз успешности лунной миссии. Работа беспилотника на Земле сама по себе не подтверждает надёжность при реальной посадке на другое небесное тело.",
+                "NASA обсуждает использование системы наведения промышленностью. Появление в каталоге программ агентства пока описано как план на осень того года, а не как подтверждённая в этом сообщении поставка. Публичные страницы также расходятся в датировке последующих испытаний в Мохаве, поэтому новый график полётов здесь не выводится. Значимое изменение — переход автономного выбора площадки от отдельных функций к интеграции на аппарате. Рабочие характеристики для миссий, доступность программ и дальнейшая проверка остаются отдельными вопросами."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема по материалам NASA: измерения, оценка площадки и наведение. Это не измеренная траектория, снимок Луны или результат сравнения характеристик.",
+            "steps": [
+              "Построить карту высот по данным датчиков",
+              "Оценить цель и опасности на поверхности",
+              "Выбрать допустимую запасную площадку",
+              "Передать решение системе наведения для изменения пути"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "NASA 11 月 4 日披露了一次把著陸導航系統接到無人機上檢驗的試驗：Alta-X 攜帶 SPLICE 載荷，在加利福尼亞州 Rogers 幹湖模擬月球下降和著陸。飛行實際發生在 8 月 27 日，近期新增的是試驗說明，並非剛完成一次登月。它檢驗的關鍵環節，是讓地形感知、著陸點判斷與引導動作相互配合，而不只是讓感測器單獨測出距離。",
+          "sections": [
+            {
+              "heading": "先讓載荷與飛行器協同工作",
+              "paragraphs": [
+                "SPLICE 是一組導航、制導、計算機和感測器技術。導航回答飛行器在哪裡、怎樣運動，制導則決定往哪裡去。Johnson 航天中心研製載荷，Armstrong 飛行研究中心協助將其裝上無人機。NASA 說明，6 月和 7 月先檢查了通訊、資料處理、遙測和指令控制，8 月的飛行再模擬下降與著陸。把實驗裝置接到真實飛行器上，是檢驗這些環節能否配合的一步。",
+                "據 NASA 報告，載荷利用感測資料生成高解析度地形高程圖，評估候選落點；系統若判斷原目標不安全，就引導無人機轉向更安全的位置。高程圖表示地面各處的高度，而不是普通航拍照片。這有助於區分平坦區域與可能妨礙著陸的坡面或岩石。本次報道並未公佈每次飛行的詳細軌跡或成功率，因此只能按機構披露的演示範圍理解結果。"
+              ]
+            },
+            {
+              "heading": "看清位置與判斷能否落下是兩個問題",
+              "paragraphs": [
+                "NASA 專案資料把整個技術組合分為不同職能。地形相對導航將實時影像與已有地圖匹配，用來估計相對位置；多普勒鐳射雷達測量速度和高度；危險探測鐳射雷達形成三維地形，軟體據此標出風險區域與候選安全落點。下降與著陸計算機整合這些資訊，再由制導演算法規劃轉向。這裡說明的是 SPLICE 的整體設計，不能據此宣稱這次無人機飛行逐項驗證了全部元件。",
+                "本站的理解是，落在預定座標附近和落在安全地面上並不等價：地圖定位可以告訴飛行器接近了目標，卻未必足以判斷腳下是否有障礙；單獨發現障礙，也不代表飛行器仍有條件改換落點。把感知結果接入引導環節，才能研究這兩個問題如何共同解決。專案資料提到的高度和覆蓋範圍屬於設計說明，本文不把它們當成 8 月試驗的實測效能。"
+              ]
+            },
+            {
+              "heading": "離月球任務可用還有哪些證據要補",
+              "paragraphs": [
+                "專案負責人稱此次飛行提高了技術成熟度，但公告沒有給出具體等級、著陸誤差、樣本規模或與舊方案的對照資料。獨立媒體 SpaceAndSky 也明確區分專案設計指標與本次未披露的飛行測量結果。因此，這是一項整合演示的進展，不能推出月球任務成功率，也不能把地球無人機上的表現直接等同於真實行星著陸。後續仍需在目標任務的條件下檢驗可靠性。",
+                "NASA 表示正與產業界討論制導系統的使用，軟體進入 NASA 軟體目錄仍被表述為當年秋季的計劃，而不是公告中已經確認的交付。公開頁面對後續 Mojave 試驗的時間敘述也不完全一致，本文不據此給出新的試飛日程。對讀者更有意義的變化，是看到自主選點如何從分立演算法走向飛行器整合，同時保留對實際任務效能、釋出狀態和後續驗證的判斷空間。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據 NASA 公開資料重繪的解釋性示意，展示感知、判斷和制導的關係；不是實測航跡、月球照片或效能結果。",
+            "steps": [
+              "感測資料構成地形高程圖",
+              "評估原定落點與地面危險",
+              "選擇可接受的替代落點",
+              "將判斷交給制導系統調整方向"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "zyxel-gs1900-vulnerability-reclassification",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Zyxel: November 3 advisory and model-specific fixed versions",
+          "url": "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-out-of-bounds-write-vulnerability-in-gs1900-series-switches-11-03-2026"
+        },
+        {
+          "label": "Zyxel: June 16 advisory for the older vulnerability",
+          "url": "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-stack-based-buffer-overflow-vulnerability-in-gs1900-series-switches-06-16-2026"
+        },
+        {
+          "label": "Binarly: investigation and revised vulnerability attribution",
+          "url": "https://www.binarly.io/blog/zyxel-gs1900-rce-cve-2026-107441"
+        },
+        {
+          "label": "GreyNoise: September report containing August device observations",
+          "url": "https://www.greynoise.io/blog/open-season-on-kapibala-attacker-steals-government-records-wordpress-exploitation"
+        },
+        {
+          "label": "BleepingComputer: November 4 independent reporting",
+          "url": "https://www.bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Zyxel 在 11 月 3 日公布 GS1900 系列交换机的新安全公告，明确 CVE-2026-107441 的受影响型号与修复版本。关键变化是：六月用于修复旧漏洞的 2.90 Patch 2，仍不能防住后来确认的这一问题，需要对应型号的 Patch 3。Binarly 的调查也纠正了此前攻击活动的漏洞归因。对已经完成过六月升级的管理员而言，“打过补丁”并不等于这次风险已经消除。",
+          "sections": [
+            {
+              "heading": "同一系列设备，两份公告解决不同问题",
+              "paragraphs": [
+                "六月 16 日公告针对 CVE-2026-7273，将相应型号的 2.90 Patch 2 列为修复版本。十一月的新公告针对越界写入问题：网页管理组件处理输入时可能写到预留内存之外，导致未获授权的系统操作。厂商限定条件是攻击方能够从局域网接触相关接口，且无需先通过身份认证。无需登录与无需网络可达条件不是一回事，不能据此说任何互联网用户都能直接控制全部此类设备。",
+                "新公告列出十个型号：GS1900-8、8HP、10HP、16、24、24E、24EP、24HPv2、48 和 48HPv2。它们各自的 2.90 Patch 2 及更早版本受影响，表中修复版本均为对应型号的 2.90 Patch 3。型号后的固件标识不同，不能把同一系列理解为所有机型共用一个更新包。实际判断应同时核对型号与完整版本，而不是只看软件主版本是否仍为 2.90。"
+              ]
+            },
+            {
+              "heading": "旧漏洞归因为什么被改写",
+              "paragraphs": [
+                "GreyNoise 在九月 21 日的报告中，将一批 GS1900 攻击归因于六月已经披露的旧漏洞。Binarly 随后分析相关材料，发现六月修复后的固件仍然受影响，并在九月 28 日确认十个对应修复版本都存在问题。研究人员九月 29 日向厂商报告，十月 11 日获得新漏洞确认；据 Binarly 时间线，新的固件修复在十月 22 日发布，十一月 3 日公开公告。因此这次是明确新缺陷和正确修复边界，不是证明六月那个漏洞从未被修复。",
+                "“996 台设备、48 个国家”来自 GreyNoise 对八月 17 日前后相关活动的观察，九月报告已经给出该数字，并称设备配置及认证相关信息被复制。它不是十一月这一周新增受害者的总量，也不是所有受影响型号的全球存量。后来变化的是对所利用漏洞的解释；观察数量与漏洞编号应分别追溯来源。现有资料也不足以确认攻击工具是否专门为绕过六月更新而开发，不能把这一动机当作已查明事实。"
+              ]
+            },
+            {
+              "heading": "更新与事后处置是两项工作",
+              "paragraphs": [
+                "Binarly 解释，新修复加强了对网页管理输入的边界检查，使相关数据在处理前受到正确限制。对用户来说，可落实的变化是有了新公告明确支持的固件版本，而不是只有一个漏洞编号或风险评分。其价值也在于提示资产管理需要跟随修复范围更新：曾记录旧问题已关闭的设备，应重新核对这份公告；原来的修复记录不能替代对新问题的确认。",
+                "从一般防御处置看，安装修复版本可以关闭已知缺陷，但不会自动收回此前已经被复制的数据。若组织发现设备可能曾被访问，还需评估管理配置与认证资料是否受影响，并按自身响应流程处理；这不是认定每台旧固件设备都已被攻破。限制管理接口的可达范围可减少暴露，但不能替代厂商修复。此次报道的确定进展，是漏洞被重新区分、十个型号的修复版本得到明确，以及管理员不应继续把六月更新视为全部风险的终点。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据两次厂商公告和调查时间线重绘的解释图，区分旧漏洞修复与新漏洞修复；不展示攻击过程或把历史受害统计视作当前总量。",
+            "steps": [
+              "六月：旧漏洞对应 Patch 2",
+              "后续调查：Patch 2 仍受新问题影响",
+              "十一月公告：十个型号对应 Patch 3",
+              "分别核对更新状态与潜在历史影响"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Zyxel’s November 3 advisory identifies affected GS1900 switch models and fixes for CVE-2026-107441. The important distinction is that 2.90 Patch 2, supplied for an earlier June vulnerability, does not address this subsequently confirmed problem; the relevant model’s Patch 3 is required. Binarly’s investigation also corrects the vulnerability previously associated with observed attacks. For administrators who completed the June update, a record saying “patched” is therefore not enough to establish that the newer risk is resolved.",
+          "sections": [
+            {
+              "heading": "Two advisories cover different problems in the same family",
+              "paragraphs": [
+                "The June 16 notice covered CVE-2026-7273 and listed the relevant 2.90 Patch 2 firmware as its fix. The November advisory concerns an out-of-bounds write: handling input in the web-management component can write beyond reserved memory and allow unauthorised system actions. Zyxel describes a LAN-based attacker who can reach the interface without first authenticating. No login requirement does not mean no network-reachability requirement, and does not establish that any Internet user can directly control every device in the family.",
+                "The new advisory lists ten models: GS1900-8, 8HP, 10HP, 16, 24, 24E, 24EP, 24HPv2, 48 and 48HPv2. Their respective 2.90 Patch 2 releases and earlier versions are affected, with the matching 2.90 Patch 3 releases listed as fixes. Firmware identifiers differ between models: belonging to one product family does not make their update packages interchangeable. The useful check is the model and complete installed version, not merely whether the major firmware version says 2.90."
+              ]
+            },
+            {
+              "heading": "Why the earlier attribution changed",
+              "paragraphs": [
+                "GreyNoise’s September 21 report associated a group of GS1900 attacks with the vulnerability disclosed in June. Binarly subsequently analysed related material and found the June-fixed firmware still vulnerable. On September 28 it confirmed the problem across all ten corresponding fixed releases, reported it on September 29 and obtained vendor confirmation of a new vulnerability on October 11. Binarly’s timeline dates the newer firmware fixes to October 22 and public disclosure to November 3. This establishes a separate defect and the correct repair boundary, rather than proving that the June issue itself was never fixed.",
+                "The figure of 996 devices in 48 countries comes from GreyNoise’s observations of activity around August 17, already reported in September. It said device configuration and authentication-related information had been copied. This is not the number of new victims this November week or a worldwide inventory of vulnerable models. The later change concerns which flaw explains those attacks; the observed count and vulnerability identifier need separate provenance. The available evidence also does not establish whether the tool was deliberately developed to bypass the June update."
+              ]
+            },
+            {
+              "heading": "Updating and responding to past exposure are separate jobs",
+              "paragraphs": [
+                "Binarly explains that the newer fix strengthens boundary checks on web-management input so that relevant data is properly limited before processing. Users now have a vendor-supported firmware version to address the problem, rather than just a new identifier or severity score. The operational implication is that asset records must follow the actual scope of fixes: a device previously marked remediated for the older flaw needs checking against the new advisory. The earlier closure record cannot establish resolution of a different defect.",
+                "As a general defensive principle, installing a fix can close a known weakness but cannot automatically retrieve information already copied. If an organisation finds possible past access, it also needs to assess management configuration and authentication information under its incident-response process; that does not mean every older-firmware device was compromised. Restricting access to management interfaces reduces exposure but does not replace the vendor fix. The confirmed development is the corrected distinction between flaws, explicit fixed releases for ten models and the need to look beyond the June update."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram from the two vendor advisories and investigation timeline. It separates the old and new fixes, without attack instructions or treating historical victim counts as current totals.",
+            "steps": [
+              "June: Patch 2 addresses the older flaw",
+              "Later investigation: Patch 2 remains affected by the new issue",
+              "November advisory: matching Patch 3 fixes for ten models",
+              "Check both update status and possible historical exposure"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Zyxel は11月3日、GS1900 シリーズの交換機について CVE-2026-107441 の対象機種と修正版を示した。重要なのは、6月の別の脆弱性に対応した 2.90 Patch 2 では、後に確認されたこの問題を防げず、各機種に対応する Patch 3 が必要な点だ。Binarly の調査は、既に観測されていた攻撃の脆弱性に関する説明も修正した。6月に更新済みでも、「修正適用済み」という記録だけでは新しい問題の解消を確認できない。",
+          "sections": [
+            {
+              "heading": "同じシリーズでも二つの問題を区別する",
+              "paragraphs": [
+                "6月16日の公告は CVE-2026-7273 を対象とし、各機種の 2.90 Patch 2 を修正版とした。11月の公告は境界外書き込みの問題で、ウェブ管理機能が入力を扱う際に確保領域を越えて書き込み、不正なシステム操作につながる可能性がある。Zyxel の説明は、LAN 側から該当機能へ到達でき、認証を経ない攻撃者を条件とする。ログインが不要でも通信上の到達条件は残り、インターネット上の誰もが全機器を直接操作できるという意味ではない。",
+                "対象は GS1900-8、8HP、10HP、16、24、24E、24EP、24HPv2、48、48HPv2 の10機種。各機種の 2.90 Patch 2 以前が影響を受け、対応する 2.90 Patch 3 が修正版として記載される。機種ごとにファームウェア識別子は異なり、同一シリーズだからといって更新用ファイルが共通とは限らない。主バージョンの 2.90 だけでなく、機種と完全な版を照合する必要がある。"
+              ]
+            },
+            {
+              "heading": "過去の攻撃の説明が変わった経緯",
+              "paragraphs": [
+                "GreyNoise は9月21日の報告で、GS1900 を狙った攻撃を6月公開の脆弱性に結び付けていた。その後 Binarly が関連資料を分析し、6月修正版にも影響が残ることを発見。9月28日に対応する10種類の修正版で確認し、翌29日に報告、10月11日に新しい脆弱性として確認を得た。Binarly の時系列では新修正版の提供は10月22日、公告は11月3日だ。新たな欠陥と修正範囲を区別する話で、6月の欠陥自体が修正されなかったという証明ではない。",
+                "「48か国、996台」は GreyNoise が8月17日前後の活動について観測し、9月に報告済みの数値だ。同社は設定や認証関連の情報が複製されたとする。11月の今週、新たに被害を受けた機器数でも、世界中の脆弱な対象機種の総数でもない。後から変わったのは攻撃を説明する欠陥であり、観測数と識別番号はそれぞれ出典をたどる必要がある。また、攻撃ツールが6月更新を回避する目的で作られたかは、確認された事実ではない。"
+              ]
+            },
+            {
+              "heading": "更新と過去の影響調査は別の仕事",
+              "paragraphs": [
+                "Binarly は、新修正がウェブ管理入力の境界確認を強化し、処理前に適切な制限を加えると説明する。利用側には新しい識別番号や点数だけでなく、メーカーが明示する修正版が用意された。資産管理上は修正の対象範囲に合わせて記録を見直す必要がある。旧問題を解決済みとした機器も新公告と照合し、以前の完了記録だけで別の欠陥まで解消したと判断しないことが重要だ。",
+                "一般的な防御対応として、更新は既知の欠陥を閉じても、既に複製された情報を自動で取り戻すことはできない。過去の不正アクセスの可能性がある場合は、組織の対応手順に沿って管理設定や認証情報への影響を調べる必要があるが、旧版の全機器が侵害済みという意味ではない。管理機能の到達範囲を狭めることも有用だが修正の代わりではない。確定した進展は、欠陥の区別、10機種の修正版の明示、6月更新だけで判断し続けられないことだ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "二つのメーカー公告と調査時系列に基づく当サイトの説明図。旧問題と新問題の修正を区別し、攻撃手順や過去の件数を現在の総数として示さない。",
+            "steps": [
+              "6月：旧問題に Patch 2",
+              "後の調査：Patch 2 にも別の問題",
+              "11月公告：10機種に対応する Patch 3",
+              "更新状況と過去の影響をそれぞれ確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "3 ноября Zyxel опубликовала перечень затронутых коммутаторов GS1900 и исправлений для CVE-2026-107441. Главное отличие: версия 2.90 Patch 2, выпущенная для другой июньской уязвимости, не устраняет позднее подтверждённую проблему; нужна соответствующая модели Patch 3. Расследование Binarly также уточняет, какая уязвимость использовалась в ранее наблюдавшихся атаках. Для администраторов, завершивших июньское обновление, отметка «исправлено» сама по себе не подтверждает устранение нового риска.",
+          "sections": [
+            {
+              "heading": "Два уведомления о разных проблемах одной серии",
+              "paragraphs": [
+                "Уведомление от 16 июня касалось CVE-2026-7273 и называло соответствующую 2.90 Patch 2 исправленной версией. Ноябрьская проблема — запись за границами памяти при обработке данных веб-управлением, которая может допустить несанкционированные системные действия. Zyxel описывает неаутентифицированного нарушителя с доступом из локальной сети. Отсутствие необходимости входа не отменяет сетевую достижимость и не означает, что любой пользователь Интернета может напрямую управлять всеми устройствами серии.",
+                "Новый список включает десять моделей: GS1900-8, 8HP, 10HP, 16, 24, 24E, 24EP, 24HPv2, 48 и 48HPv2. Затронуты их версии 2.90 Patch 2 и более ранние; исправлениями указаны соответствующие 2.90 Patch 3. Идентификаторы прошивок различаются по моделям, поэтому принадлежность к одной серии не делает пакеты обновления взаимозаменяемыми. Проверять нужно конкретную модель и полную установленную версию, а не только основное обозначение 2.90."
+              ]
+            },
+            {
+              "heading": "Почему объяснение прошлых атак изменилось",
+              "paragraphs": [
+                "В отчёте 21 сентября GreyNoise связала группу атак GS1900 с июньской уязвимостью. Позднее Binarly изучила связанные материалы и обнаружила, что июньские исправленные прошивки остаются уязвимыми. 28 сентября это подтвердилось для всех десяти соответствующих выпусков; 29 сентября исследователи уведомили производителя, а 11 октября получили подтверждение новой проблемы. По хронологии Binarly новые прошивки появились 22 октября, публичное уведомление — 3 ноября. Это уточнение отдельного дефекта и границ исправления, а не доказательство того, что июньская проблема вообще не была исправлена.",
+                "Число 996 устройств в 48 странах относится к наблюдениям GreyNoise за активностью примерно 17 августа и уже содержалось в сентябрьской публикации. Компания сообщала о копировании конфигурации и сведений, связанных с аутентификацией. Это не количество новых жертв за текущую ноябрьскую неделю и не всемирная перепись уязвимых моделей. Позднее изменилось объяснение использованной уязвимости; число наблюдений и её идентификатор имеют разные источники. Данных также недостаточно, чтобы утверждать намеренную разработку инструмента именно для обхода июньского обновления."
+              ]
+            },
+            {
+              "heading": "Обновление не заменяет оценку прежнего воздействия",
+              "paragraphs": [
+                "Binarly объясняет, что новое исправление усиливает проверку границ входных данных веб-управления до их обработки. Пользователи получили определённую производителем исправленную прошивку, а не только новый идентификатор или оценку серьёзности. Для учёта активов важно следовать реальной области действия обновлений: устройство, ранее отмеченное исправленным по старой проблеме, требуется сопоставить с новым уведомлением. Прежнее закрытие одной уязвимости не подтверждает устранение другой.",
+                "Общий принцип защиты: установка исправления закрывает известный дефект, но не возвращает автоматически уже скопированную информацию. При признаках возможного прежнего доступа организации нужно оценить конфигурацию управления и данные аутентификации в рамках собственного реагирования. Это не означает, что каждое устройство со старой прошивкой взломано. Ограничение доступа к управлению уменьшает экспозицию, но не заменяет исправление. Подтверждённое изменение — уточнение уязвимости, исправленные версии для десяти моделей и необходимость выйти за рамки прежней июньской отметки об обновлении."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по двум уведомлениям производителя и хронологии расследования. Старое и новое исправления разделены; нет инструкций атаки или подмены текущей статистики исторической.",
+            "steps": [
+              "Июнь: Patch 2 для прежней проблемы",
+              "Позднейшая проверка: новая проблема остаётся в Patch 2",
+              "Ноябрь: соответствующие Patch 3 для десяти моделей",
+              "Отдельно проверить обновление и возможное прошлое воздействие"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Zyxel 在 11 月 3 日公布 GS1900 系列交換器的新安全公告，明確 CVE-2026-107441 的受影響型號與修復版本。關鍵變化是：六月用於修復舊漏洞的 2.90 Patch 2，仍不能防住後來確認的這一問題，需要對應型號的 Patch 3。Binarly 的調查也糾正了此前攻擊活動的漏洞歸因。對已經完成過六月升級的管理員而言，“已安裝修補程式”並不等於這次風險已經消除。",
+          "sections": [
+            {
+              "heading": "同一系列裝置，兩份公告解決不同問題",
+              "paragraphs": [
+                "六月 16 日公告針對 CVE-2026-7273，將相應型號的 2.90 Patch 2 列為修復版本。十一月的新公告針對越界寫入問題：網頁管理元件處理輸入時可能寫到預留記憶體之外，導致未獲授權的系統操作。廠商限定條件是攻擊方能夠從區域網路接觸相關介面，且無需先透過身分認證。無需登入與無需網路可達條件不是一回事，不能據此說任何網際網路使用者都能直接控制全部此類裝置。",
+                "新公告列出十個型號：GS1900-8、8HP、10HP、16、24、24E、24EP、24HPv2、48 和 48HPv2。它們各自的 2.90 Patch 2 及更早版本受影響，表中修復版本均為對應型號的 2.90 Patch 3。型號後的韌體標識不同，不能把同一系列理解為所有機型共用一個更新包。實際判斷應同時核對型號與完整版本，而不是只看軟體主版本是否仍為 2.90。"
+              ]
+            },
+            {
+              "heading": "舊漏洞歸因為什麼被改寫",
+              "paragraphs": [
+                "GreyNoise 在九月 21 日的報告中，將一批 GS1900 攻擊歸因於六月已經披露的舊漏洞。Binarly 隨後分析相關材料，發現六月修復後的韌體仍然受影響，並在九月 28 日確認十個對應修復版本都存在問題。研究人員九月 29 日向廠商報告，十月 11 日獲得新漏洞確認；據 Binarly 時間線，新的韌體修復在十月 22 日發布，十一月 3 日公開公告。因此這次是明確新缺陷和正確修復邊界，不是證明六月那個漏洞從未被修復。",
+                "“996 臺裝置、48 個國家”來自 GreyNoise 對八月 17 日前後相關活動的觀察，九月報告已經給出該數字，並稱裝置設定及認證相關資訊被複製。它不是十一月這一週新增受害者的總量，也不是所有受影響型號的全球存量。後來變化的是對所利用漏洞的解釋；觀察數量與漏洞編號應分別追溯來源。現有資料也不足以確認攻擊工具是否專門為繞過六月更新而開發，不能把這一動機當作已查明事實。"
+              ]
+            },
+            {
+              "heading": "更新與事後處置是兩項工作",
+              "paragraphs": [
+                "Binarly 解釋，新修復加強了對網頁管理輸入的邊界檢查，使相關資料在處理前受到正確限制。對使用者來說，可落實的變化是有了新公告明確支援的韌體版本，而不是只有一個漏洞編號或風險評分。其價值也在於提示資產管理需要跟隨修復範圍更新：曾記錄舊問題已關閉的裝置，應重新核對這份公告；原來的修復記錄不能替代對新問題的確認。",
+                "從一般防禦處置看，安裝修復版本可以關閉已知缺陷，但不會自動收回此前已經被複製的資料。若組織發現裝置可能曾被存取，還需評估管理設定與認證資料是否受影響，並按自身應變流程處理；這不是認定每臺舊韌體裝置都已被攻破。限制管理介面的可達範圍可減少暴露，但不能替代廠商修復。此次報導的確定進展，是漏洞被重新區分、十個型號的修復版本得到明確，以及管理員不應繼續把六月更新視為全部風險的終點。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據兩次廠商公告和調查時間線重繪的解釋圖，區分舊漏洞修復與新漏洞修復；不展示攻擊過程或把過往受害統計視作當前總量。",
+            "steps": [
+              "六月：舊漏洞對應 Patch 2",
+              "後續調查：Patch 2 仍受新問題影響",
+              "十一月公告：十個型號對應 Patch 3",
+              "分別核對更新狀態與潛在過往影響"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

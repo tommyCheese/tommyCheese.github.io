@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img">
+<title>From findings to reviewed fixes</title>
+<desc>OpenAI&#x27;s Linux study: each count describes a different stage. 1,169 successful demonstrations; proposed repairs still need human review.</desc>
+<rect width="1200" height="675" fill="#101d2a"/>
+<g font-family="Arial, sans-serif">
+<text x="70" y="85" fill="#86d4cf" font-size="21" letter-spacing="3">DEFENSIVE SECURITY RESEARCH</text>
+<text x="70" y="160" fill="#f0f7fa" font-size="46" font-weight="700">From findings to reviewed fixes</text>
+<text x="70" y="210" fill="#b7c7d1" font-size="24">OpenAI&#x27;s Linux study: each count describes a different stage.</text>
+<rect x="70" y="280" width="310" height="180" rx="18" fill="#1b3445" stroke="#3a6578"/>
+<text x="94" y="334" fill="#86d4cf" font-size="20">01</text>
+<text x="94" y="377" fill="#f0f7fa" font-size="25" font-weight="700">2,308 candidates</text>
+<text x="94" y="419" fill="#c4d3db" font-size="19">Selected audit findings</text>
+<path d="M 396 370 h 30 m -9 -8 l 9 8 -9 8" fill="none" stroke="#86d4cf" stroke-width="3"/>
+<rect x="445" y="280" width="310" height="180" rx="18" fill="#1b3445" stroke="#3a6578"/>
+<text x="469" y="334" fill="#86d4cf" font-size="20">02</text>
+<text x="469" y="377" fill="#f0f7fa" font-size="25" font-weight="700">1,724 reproduced</text>
+<text x="469" y="419" fill="#c4d3db" font-size="19">Observed in controlled tests</text>
+<path d="M 771 370 h 30 m -9 -8 l 9 8 -9 8" fill="none" stroke="#86d4cf" stroke-width="3"/>
+<rect x="820" y="280" width="310" height="180" rx="18" fill="#1b3445" stroke="#3a6578"/>
+<text x="844" y="334" fill="#86d4cf" font-size="20">03</text>
+<text x="844" y="377" fill="#f0f7fa" font-size="25" font-weight="700">948 distinct patches</text>
+<text x="844" y="419" fill="#c4d3db" font-size="19">Used to count unique flaws</text>
+<rect x="70" y="510" width="1060" height="64" rx="12" fill="#254337"/>
+<text x="94" y="550" fill="#d8eee1" font-size="22">1,169 successful demonstrations; proposed repairs still need human review.</text>
+<text x="70" y="625" fill="#91a9b8" font-size="18">Original explanatory diagram based on published sources.</text>
+</g></svg>
