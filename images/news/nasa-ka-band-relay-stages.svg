@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<title>NASA Ka-band relay development: initial concepts and conditional demonstration</title>
+<rect width="1200" height="675" fill="#102338"/>
+<style>text{font-family:Arial,sans-serif;fill:#edf5ff}.heading{font-size:38px;font-weight:700}.sub{font-size:20px;fill:#b3cce1}.stage{font-size:25px;font-weight:700}.detail{font-size:19px}.amount{font-size:27px;font-weight:700;fill:#7ce3d0}</style>
+<text x="60" y="76" class="heading">NASA Ka-band relay development</text>
+<text x="60" y="117" class="sub">November 4, 2026 awards • Compatibility with spacecraft already in orbit</text>
+<rect x="60" y="160" width="330" height="230" rx="22" fill="#24465f"/>
+<text x="86" y="210" class="stage">INITIAL PHASE</text>
+<text x="86" y="263" class="detail">Mature relay concepts</text><text x="86" y="300" class="detail">Reduce technical risk</text>
+<text x="86" y="355" class="sub">Nov 4, 2026 – May 3, 2027</text>
+<path d="M400 275h25l-8-8m8 8l-8 8" fill="none" stroke="#7ce3d0" stroke-width="4"/>
+<rect x="435" y="160" width="330" height="230" rx="22" fill="#1b354c" stroke="#7b9fb7" stroke-width="2" stroke-dasharray="8 7"/>
+<text x="461" y="210" class="stage">PRICED OPTIONS</text>
+<text x="461" y="263" class="detail">System integration</text><text x="461" y="300" class="detail">In-orbit demonstration</text>
+<text x="461" y="355" class="sub">Work may continue to 2029</text>
+<path d="M775 275h25l-8-8m8 8l-8 8" fill="none" stroke="#7ce3d0" stroke-width="4" stroke-dasharray="5 4"/>
+<rect x="810" y="160" width="330" height="230" rx="22" fill="#1b354c" stroke="#7b9fb7" stroke-width="2" stroke-dasharray="8 7"/>
+<text x="836" y="210" class="stage">VALIDATE CAPABILITY</text>
+<text x="836" y="263" class="detail">Existing spacecraft</text><text x="836" y="300" class="detail">Compatible relay service</text>
+<text x="836" y="355" class="sub">Subject to later verification</text>
+<text x="60" y="441" class="sub">Maximum potential contract values, including all future options</text>
+<text x="60" y="493" class="detail">Astranis</text><text x="60" y="533" class="amount">$264.3 million</text>
+<text x="435" y="493" class="detail">Global Enterprise Solutions</text><text x="435" y="533" class="amount">$340.4 million</text>
+<text x="810" y="493" class="detail">Viasat</text><text x="810" y="533" class="amount">$460.9 million</text>
+<text x="60" y="590" class="sub">Ceilings are not amounts already paid. Later stages are conditional.</text>
+<text x="60" y="636" class="sub">Original explanatory diagram • Source: NASA contract announcement</text>
+</svg>

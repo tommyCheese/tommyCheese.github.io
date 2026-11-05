@@ -1,6 +1,72 @@
 {
-  "updated_at": "2026-11-04",
+  "updated_at": "2026-11-05",
   "items": [
+    {
+      "id": "openai-images26-gif-svg-controls",
+      "category": "ai",
+      "published_at": "2026-11-04",
+      "collected_at": "2026-11-05",
+      "source": "OpenAI / OpenAI API documentation",
+      "url": "https://openai.com/index/introducing-images-2-6/",
+      "image": "https://tommycheese.github.io/images/news/openai-images26-gif-svg-controls.svg",
+      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not a product screenshot or measured result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-ka-band-relay-concept-awards",
+      "category": "science",
+      "published_at": "2026-11-04",
+      "collected_at": "2026-11-05",
+      "source": "NASA / Via Satellite",
+      "url": "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/",
+      "image": "https://tommycheese.github.io/images/news/nasa-ka-band-relay-stages.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not a completed flight demonstration",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-linux-security-pipeline-findings",
+      "category": "security",
+      "published_at": "2026-11-04",
+      "collected_at": "2026-11-05",
+      "source": "OpenAI / Linux kernel / IT Home",
+      "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/",
+      "image": "https://tommycheese.github.io/images/news/linux-security-evidence-review.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not independent measurements",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nasa-splice-drone-landing-demonstration",
+      "category": "science",
+      "published_at": "2026-11-04",
+      "collected_at": "2026-11-05",
+      "source": "NASA / SpaceAndSky",
+      "url": "https://www.nasa.gov/centers-and-facilities/armstrong/nasa-navigation-experiment-shows-promise-for-planetary-landings/",
+      "image": "https://tommycheese.github.io/images/news/nasa-splice-landing-feedback.svg",
+      "image_credit": "Tech Daily · original explanatory redraw based on NASA material; not a flight trace or lunar photograph",
+      "image_fit": "contain"
+    },
+    {
+      "id": "openai-pierre-acquisition-agreement",
+      "category": "software",
+      "published_at": "2026-11-04",
+      "collected_at": "2026-11-05",
+      "source": "OpenAI / Pierre / Goodwin",
+      "url": "https://openai.com/index/openai-to-acquire-pierre/",
+      "image": "https://tommycheese.github.io/images/news/openai-pierre-acquisition-agreement.svg",
+      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not a product screenshot or measured result",
+      "image_fit": "contain"
+    },
+    {
+      "id": "zyxel-gs1900-vulnerability-reclassification",
+      "category": "security",
+      "published_at": "2026-11-03",
+      "collected_at": "2026-11-05",
+      "source": "Zyxel / Binarly / GreyNoise / BleepingComputer",
+      "url": "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-out-of-bounds-write-vulnerability-in-gs1900-series-switches-11-03-2026",
+      "image": "https://tommycheese.github.io/images/news/zyxel-gs1900-repair-boundaries.svg",
+      "image_credit": "Tech Daily · original explanatory diagram, not attack telemetry",
+      "image_fit": "contain"
+    },
     {
       "id": "cpguard-update-channel-compromise",
       "category": "security",

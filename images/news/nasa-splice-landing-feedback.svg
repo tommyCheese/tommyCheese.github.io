@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">SPLICE: terrain sensing to landing guidance</title><desc id="desc">An original conceptual diagram: sensors build a terrain elevation map, software evaluates hazards, and guidance can redirect the vehicle. Not a measured flight track.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10" fill="none" stroke="#64e1c5" stroke-width="2"/></marker></defs>
+<rect width="1200" height="675" rx="30" fill="#0d2138"/><g font-family="Arial,sans-serif" fill="#f2f7fb"><text x="65" y="77" font-size="21" letter-spacing="3" fill="#64e1c5">PLANETARY LANDING · EARTH DEMONSTRATION</text><text x="65" y="139" font-size="43" font-weight="bold">SPLICE: sense, assess, redirect</text><text x="65" y="182" font-size="23" fill="#bed0df">August 27 flight · November 4 report · No published success rate</text>
+<g fill="#17344e" stroke="#3a607b" stroke-width="2"><rect x="65" y="232" width="305" height="275" rx="18"/><rect x="447" y="232" width="305" height="275" rx="18"/><rect x="829" y="232" width="305" height="275" rx="18"/></g>
+<g font-size="25" font-weight="bold"><text x="90" y="277">01  TERRAIN</text><text x="472" y="277">02  ASSESSMENT</text><text x="854" y="277">03  GUIDANCE</text></g>
+<g fill="none" stroke="#64e1c5" stroke-width="3"><path d="M386 363H429" marker-end="url(#arrow)"/><path d="M768 363H811" marker-end="url(#arrow)"/>
+<path d="M95 402L130 350L175 376L210 324L253 388L285 354L340 402M95 419L130 367L175 393L210 341L253 405L285 371L340 419"/>
+<rect x="480" y="325" width="234" height="95" rx="9" stroke="#83a8c4"/><path d="M505 348L537 385M537 348L505 385" stroke="#ffb38a"/><circle cx="665" cy="372" r="25"/><path d="M653 371L662 382L679 360"/>
+<path d="M866 328H925Q968 328 968 371V392H1087" marker-end="url(#arrow)"/>
+</g><g font-size="20" fill="#bed0df"><text x="91" y="462">Sensor data → elevation map</text><text x="472" y="462">Hazards → candidate sites</text><text x="854" y="462">Decision → adjusted route</text></g>
+<text x="65" y="559" font-size="24">Architecture explained; lunar mission performance remains unproven here.</text><text x="65" y="610" font-size="20" fill="#bed0df">Tech Daily · Original explanatory redraw based on NASA · Not measured flight data</text></g></svg>
