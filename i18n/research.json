@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-04",
+  "updated_at": "2026-11-05",
   "tags": [
     "ai",
     "agents",
@@ -15,6 +15,73 @@
     "data-governance"
   ],
   "items": [
+    {
+      "id": "meta2-task-local-agent-evolution",
+      "kind": "preprint",
+      "published_at": "2026-11-03",
+      "collected_at": "2026-11-05",
+      "tags": [
+        "ai",
+        "agents",
+        "papers"
+      ],
+      "source": "Lingzhi Yuan et al. · arXiv · 2611.05139v1",
+      "url": "https://arxiv.org/abs/2611.05139v1"
+    },
+    {
+      "id": "queryflow-adaptive-multihop-graph-retrieval",
+      "kind": "preprint",
+      "published_at": "2026-11-03",
+      "collected_at": "2026-11-05",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Manzong Huang, Chenyang Bu, Yi He, Jiapu Wang and Xindong Wu · arXiv · 2611.04625v1",
+      "url": "https://arxiv.org/abs/2611.04625v1"
+    },
+    {
+      "id": "event-order-constrained-document-retrieval",
+      "kind": "preprint",
+      "published_at": "2026-11-03",
+      "collected_at": "2026-11-05",
+      "tags": [
+        "ai",
+        "rag",
+        "papers"
+      ],
+      "source": "Alon Eirew, Lidan Avisar, Kfir Bar and Ido Dagan · arXiv · 2611.04343v1",
+      "url": "https://arxiv.org/abs/2611.04343v1"
+    },
+    {
+      "id": "huggingbench-cross-file-identity-audit",
+      "kind": "preprint",
+      "published_at": "2026-11-01",
+      "collected_at": "2026-11-05",
+      "tags": [
+        "data-governance",
+        "databases",
+        "papers"
+      ],
+      "source": "Michał Podstawski · NASK · arXiv · 2611.03727v1",
+      "url": "https://arxiv.org/abs/2611.03727"
+    },
+    {
+      "id": "wolfpine-tensix-hardware-simulator",
+      "kind": "conference-paper",
+      "venue": "SC 2026 RISC-V for HPC workshop",
+      "published_at": "2026-11-03",
+      "collected_at": "2026-11-05",
+      "tags": [
+        "systems",
+        "papers",
+        "results",
+        "conferences"
+      ],
+      "source": "Nick Brown & Daniyal Arshad · arXiv · 2611.04740v1",
+      "url": "https://arxiv.org/abs/2611.04740v1"
+    },
     {
       "id": "fde-enterprise-requirements-delivery",
       "kind": "preprint",
