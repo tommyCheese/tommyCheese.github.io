@@ -767,7 +767,17 @@ window.SITE_MESSAGES = {
     "news.openai-security-bounty-quality-bonuses.title": "OpenAI 调整漏洞奖励：新增质量奖金与部分旧报告补差",
     "news.openai-security-bounty-quality-bonuses.summary": "核心产品严重漏洞基础奖励最高 3 万美元，特别严重发现叠加奖金后可达约 17.2 万美元。新规重视报告质量与持续贡献；最高金额和示例均不代表保证授奖。",
     "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI 公开 LifeVal 评测方法：169 个日常任务检验个性化 Agent",
-    "news.openai-lifeval-personalized-agent-evaluation.summary": "技术报告解释任务构建、双评分器与失败分析。将关键背景移入历史对话会明显降分，说明模型利用个人历史仍有短板；结果为厂商自评，平均得分不等于现实任务成功率。"
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技术报告解释任务构建、双评分器与失败分析。将关键背景移入历史对话会明显降分，说明模型利用个人历史仍有短板；结果为厂商自评，平均得分不等于现实任务成功率。",
+    "research.meta2-task-local-agent-evolution.title": "Meta²：让 Agent 学会何时调整做法，也学会何时别动",
+    "research.meta2-task-local-agent-evolution.summary": "Meta² 从训练任务的对照轨迹提炼干预经验，测试时按当前进展调整 Agent 的提示、工具和记忆规则，改动只留在本次任务。两个测试中的通过率达81.00%与44.44%，但需额外模型调用，不能视作模型权重学习或跨领域通用保证。",
+    "research.queryflow-adaptive-multihop-graph-retrieval.title": "QueryFlow：找到中间线索后，让图检索改变下一步重点",
+    "research.queryflow-adaptive-multihop-graph-retrieval.summary": "QueryFlow 用已传播的实体信息更新查询状态，再引导后续图检索。四个多跳问答测试的前十篇完整证据召回率平均达70.38%，比 GFM-RAG 高8.40个百分点；生成答案由模型评分，效果仍依赖实体图、标注和限定语料。",
+    "research.event-order-constrained-document-retrieval.title": "同样提到洪灾和救援，检索还要分清事情先后",
+    "research.event-order-constrained-document-retrieval.summary": "研究用50条测试查询检查事件顺序约束：文档不仅要支持每件事，先后也要兼容。保序对齐把 MiniLM 的前十名平均精度从不保序的0.36提高到0.50；但数据仅来自灾害报道，模糊顺序被视为兼容，不能当作通用时间推理证明。",
+    "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 审计：文件合法，跨文件身份仍可能错位",
+    "research.huggingbench-cross-file-identity-audit.summary": "研究复现十一种推荐方法，发现四个外部知识图谱中三个存在身份映射错误。修正改变部分配置排名；收益依赖训练预算，单次快照和弱偏好数据也限制结论外推。",
+    "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：让Tensix加速器的计算与等待过程可观察",
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基于公开文档和硬件测量模拟Wormhole与Blackhole，并通过可选时序模型解释计算、访存及通信瓶颈。Nekbone单块实验的总周期误差为3.9%，但阶段误差更大、整数除法误差达82%；工具面向诊断，不代表全面周期准确。SC26官方确认是RISC-V for HPC工作坊研究论文。"
   },
   "en": {
     "nav.about": "About",
@@ -1536,7 +1546,17 @@ window.SITE_MESSAGES = {
     "news.openai-security-bounty-quality-bonuses.title": "OpenAI revises bug bounties with quality bonuses and limited back payments",
     "news.openai-security-bounty-quality-bonuses.summary": "Critical findings in core products can earn up to $30,000 in base awards; exceptional cases can reach about $172,000 with bonuses. New rules reward evidence quality and sustained contributions, with ceilings rather than guaranteed payouts.",
     "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI details LifeVal: 169 everyday tasks test personalized agents",
-    "news.openai-lifeval-personalized-agent-evaluation.summary": "The report explains task construction, dual graders and failure analysis. Moving key context into conversation history reduces performance. Results remain vendor-reported, and average reward is not a real-world task success rate."
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "The report explains task construction, dual graders and failure analysis. Moving key context into conversation history reduces performance. Results remain vendor-reported, and average reward is not a real-world task success rate.",
+    "research.meta2-task-local-agent-evolution.title": "Meta² teaches agents when to change their approach—and when to leave it alone",
+    "research.meta2-task-local-agent-evolution.summary": "Meta² distills intervention guidance from contrasting training trajectories, then adapts an agent’s prompts, tools and memory rules within each test task. Pass rates reach 81.00% and 44.44% on two evaluations. Extra model calls are required; this is neither weight learning nor a guarantee of transfer across domains.",
+    "research.queryflow-adaptive-multihop-graph-retrieval.title": "QueryFlow lets intermediate evidence redirect the next stage of graph retrieval",
+    "research.queryflow-adaptive-multihop-graph-retrieval.summary": "QueryFlow updates its query state from propagated entity information and uses it to guide subsequent graph retrieval. Macro full evidence recall within ten documents reaches 70.38% across four multi-hop QA tests, 8.40 points above GFM-RAG. Answer judgments are model-based, and results depend on graph quality, annotations and bounded corpora.",
+    "research.event-order-constrained-document-retrieval.title": "Finding the same events is not enough: retrieval must respect their order",
+    "research.event-order-constrained-document-retrieval.summary": "Fifty test queries examine whether documents support every event in a compatible chronology. Order-preserving alignment raises MiniLM’s mean average precision at ten from 0.36 without order constraints to 0.50. The collection covers disaster reports and treats ambiguous order as compatible; it is not a general proof of temporal reasoning.",
+    "research.huggingbench-cross-file-identity-audit.title": "HuggingBench audit: valid files can still connect the wrong identities",
+    "research.huggingbench-cross-file-identity-audit.summary": "An audit reproduces eleven recommenders and finds identity mismatches in three of four external graphs. Corrections change some rankings, but gains depend on training budgets and evidence is limited to a fixed snapshot of weak preference data.",
+    "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine makes Tensix computation and stalls observable",
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine models Wormhole and Blackhole from public documentation and hardware measurements, adding optional timing estimates for compute, memory and communication. A single-tile Nekbone case has 3.9% total cycle error, but larger phase errors and 82% integer-division error limit generalization. SC26 confirms it as a RISC-V for HPC workshop research paper."
   },
   "ja": {
     "nav.about": "私について",
@@ -2305,7 +2325,17 @@ window.SITE_MESSAGES = {
     "news.openai-security-bounty-quality-bonuses.title": "OpenAI が脆弱性報奨制度を改定、品質評価と一部の差額支給を追加",
     "news.openai-security-bounty-quality-bonuses.summary": "主要製品の重大な問題は基本額最大3万ドル、特別に重大な発見は追加報奨込みで約17万2,000ドル。報告品質と継続貢献を評価するが、最高額や計算例は支給の保証ではない。",
     "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI が LifeVal の手法を公開、169課題で個人向け Agent を評価",
-    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告は課題作成、2つの採点・検査器、失敗分析を説明。重要な背景を会話履歴へ移すと得点が下がる。結果は開発元の自己評価で、平均得点は現実の用事の成功率ではない。"
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告は課題作成、2つの採点・検査器、失敗分析を説明。重要な背景を会話履歴へ移すと得点が下がる。結果は開発元の自己評価で、平均得点は現実の用事の成功率ではない。",
+    "research.meta2-task-local-agent-evolution.title": "Meta²：Agent の進め方を変える時と、変えない時を学ぶ",
+    "research.meta2-task-local-agent-evolution.summary": "訓練軌跡の対照から介入の知識を整理し、テストでは現在の進捗に応じて指示・ツール・記憶規則を変更する。変更はそのタスク内に限定する。二つの評価で成功率81.00%と44.44%を得たが、追加のモデル呼び出しが必要で、重みの学習や領域横断の保証ではない。",
+    "research.queryflow-adaptive-multihop-graph-retrieval.title": "QueryFlow：途中で得た証拠を使い、グラフ検索の次の焦点を変える",
+    "research.queryflow-adaptive-multihop-graph-retrieval.summary": "伝播した実体情報からクエリ状態を更新し、後続のグラフ探索を導く。四つの多段問答で、上位十文書に必要証拠がすべて揃う割合の平均は70.38%、GFM-RAG より8.40ポイント高い。回答評価はモデルによるもので、実体グラフ・注釈・限定語料への依存が残る。",
+    "research.event-order-constrained-document-retrieval.title": "同じ出来事が書かれていても、検索では前後関係が重要になる",
+    "research.event-order-constrained-document-retrieval.summary": "50件のテスト質問で、全事象を支持し、時間順も両立する文書を探す。順序を保つ対応付けにより MiniLM の上位十件の平均適合率は、順序を無視した0.36から0.50へ上がった。ただし災害報告に限定され、曖昧な順序も適合扱いで、汎用的な時間推論の証明ではない。",
+    "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 監査：正しい形式でも資源の対応はずれる",
+    "research.huggingbench-cross-file-identity-audit.summary": "十一の推薦法を再現し、四つの外部グラフ中三つに同一性の対応不良を確認。修正で一部の順位が変わるが、改善幅は学習予算に依存し、固定時点の弱い選好データという制約が残る。",
+    "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：Tensixの演算と待ち時間を観察する",
+    "research.wolfpine-tensix-hardware-simulator.summary": "公開文書と実機測定からWormholeとBlackholeを再現し、追加の時間モデルで演算・メモリ・通信の律速を調べる。Nekboneの単一タイル実験では総周期誤差3.9%だが、段階別誤差は大きく整数除算は82%。全操作の厳密再現ではない。SC26公式でRISC-V for HPCワークショップ研究論文と確認できる。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3074,7 +3104,17 @@ window.SITE_MESSAGES = {
     "news.openai-security-bounty-quality-bonuses.title": "OpenAI меняет награды за уязвимости: бонусы за качество и ограниченные доплаты",
     "news.openai-security-bounty-quality-bonuses.summary": "Базовая награда за критические находки в основных продуктах — до 30 тысяч долларов; исключительные случаи с бонусами могут дать около 172 тысяч. Правила учитывают качество доказательств и постоянство, но не гарантируют максимальную выплату.",
     "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI раскрывает методику LifeVal: 169 повседневных задач для персональных агентов",
-    "news.openai-lifeval-personalized-agent-evaluation.summary": "Отчёт описывает создание задач, два проверяющих механизма и ошибки. Перенос важного контекста в историю разговоров снижает оценку. Результаты сообщены разработчиком, а средний балл не равен успеху в реальной жизни."
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "Отчёт описывает создание задач, два проверяющих механизма и ошибки. Перенос важного контекста в историю разговоров снижает оценку. Результаты сообщены разработчиком, а средний балл не равен успеху в реальной жизни.",
+    "research.meta2-task-local-agent-evolution.title": "Meta² учит агента менять подход вовремя — и не вмешиваться без причины",
+    "research.meta2-task-local-agent-evolution.summary": "Meta² извлекает рекомендации из сопоставленных обучающих траекторий, затем меняет инструкции, инструменты и правила памяти внутри отдельного тестового задания. Доля успехов достигает 81,00% и 44,44% в двух оценках. Нужны дополнительные вызовы модели; это не обучение весов и не гарантия переноса между областями.",
+    "research.queryflow-adaptive-multihop-graph-retrieval.title": "QueryFlow меняет направление графового поиска по промежуточным свидетельствам",
+    "research.queryflow-adaptive-multihop-graph-retrieval.summary": "QueryFlow обновляет состояние запроса из распространяемой информации о сущностях и направляет следующие слои поиска. Средняя полная полнота в первых десяти документах равна 70,38% на четырёх многошаговых QA-тестах, на 8,40 пункта выше GFM-RAG. Ответы оценивает модель; результат зависит от графа, разметки и ограниченных корпусов.",
+    "research.event-order-constrained-document-retrieval.title": "Найти те же события недостаточно: поиску нужен их порядок",
+    "research.event-order-constrained-document-retrieval.summary": "На 50 тестовых запросах проверяется поддержка всех событий и совместимость их хронологии. Сохранение порядка повышает MiniLM mAP@10 с 0,36 при свободном сопоставлении до 0,50. Коллекция ограничена отчётами о бедствиях и считает неясный порядок совместимым; общая способность временного рассуждения не доказана.",
+    "research.huggingbench-cross-file-identity-audit.title": "Аудит HuggingBench: правильные файлы могут связывать чужие объекты",
+    "research.huggingbench-cross-file-identity-audit.summary": "Воспроизведены одиннадцать рекомендателей; в трёх из четырёх внешних графов обнаружено неверное соответствие объектов. Исправления меняют часть рейтинга, но выигрыш зависит от бюджета обучения и ограничен данными одного снимка.",
+    "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine: наблюдение за вычислениями и ожиданиями в Tensix",
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine моделирует Wormhole и Blackhole по открытым документам и аппаратным измерениям, оценивая время вычислений, памяти и связи. Для Nekbone на одном тайле общая ошибка тактов составляет 3,9%, но по фазам она выше, а для целочисленного деления достигает 82%. SC26 подтверждает статус исследовательской статьи воркшопа RISC-V for HPC."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3843,6 +3883,16 @@ window.SITE_MESSAGES = {
     "news.openai-security-bounty-quality-bonuses.title": "OpenAI 調整漏洞獎勵：新增質量獎金與部分舊報告補差",
     "news.openai-security-bounty-quality-bonuses.summary": "核心產品嚴重漏洞基礎獎勵最高 3 萬美元，特別嚴重發現疊加獎金後可達約 17.2 萬美元。新規重視報告質量與持續貢獻；最高金額和示例均不代表保證授獎。",
     "news.openai-lifeval-personalized-agent-evaluation.title": "OpenAI 公開 LifeVal 評測方法：169 個日常任務檢驗個性化 Agent",
-    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告解釋任務構建、雙評分器與失敗分析。將關鍵背景移入歷史對話會明顯降分，說明模型利用個人歷史仍有短板；結果為廠商自評，平均得分不等於現實任務成功率。"
+    "news.openai-lifeval-personalized-agent-evaluation.summary": "技術報告解釋任務構建、雙評分器與失敗分析。將關鍵背景移入歷史對話會明顯降分，說明模型利用個人歷史仍有短板；結果為廠商自評，平均得分不等於現實任務成功率。",
+    "research.meta2-task-local-agent-evolution.title": "Meta²：讓 Agent 學會何時調整做法，也學會何時別動",
+    "research.meta2-task-local-agent-evolution.summary": "Meta² 從訓練任務的對照軌跡提煉干預經驗，測試時按當前進展調整 Agent 的提示、工具和記憶規則，改動只留在本次任務。兩個測試中的通過率達81.00%與44.44%，但需額外模型呼叫，不能視作模型權重學習或跨領域通用保證。",
+    "research.queryflow-adaptive-multihop-graph-retrieval.title": "QueryFlow：找到中間線索後，讓圖檢索改變下一步重點",
+    "research.queryflow-adaptive-multihop-graph-retrieval.summary": "QueryFlow 用已傳播的實體資訊更新查詢狀態，再引導後續圖檢索。四個多跳問答測試的前十篇完整證據召回率平均達70.38%，比 GFM-RAG 高8.40個百分點；生成答案由模型評分，效果仍依賴實體圖、標註和限定語料。",
+    "research.event-order-constrained-document-retrieval.title": "同樣提到洪災和救援，檢索還要分清事情先後",
+    "research.event-order-constrained-document-retrieval.summary": "研究用50條測試查詢檢查事件順序約束：文件不僅要支援每件事，先後也要相容。保序對齊把 MiniLM 的前十名平均精度從不保序的0.36提高到0.50；但資料僅來自災害報道，模糊順序被視為相容，不能當作通用時間推理證明。",
+    "research.huggingbench-cross-file-identity-audit.title": "HuggingBench 稽核：檔案合法，跨檔案身分仍可能錯位",
+    "research.huggingbench-cross-file-identity-audit.summary": "研究重現十一種推薦方法，發現四個外部知識圖譜中三個存在身分對應錯誤。修正改變部分設定排名；收益依賴訓練預算，單次快照和弱偏好資料也限制結論外推。",
+    "research.wolfpine-tensix-hardware-simulator.title": "Wolfpine：讓Tensix加速器的計算與等待過程可觀察",
+    "research.wolfpine-tensix-hardware-simulator.summary": "Wolfpine基於公開文件和硬體測量模擬Wormhole與Blackhole，並透過可選時序模型解釋計算、訪存及通訊瓶頸。Nekbone單塊實驗的總週期誤差為3.9%，但階段誤差更大、整數除法誤差達82%；工具面向診斷，不代表全面週期準確。SC26官方確認是RISC-V for HPC工作坊研究論文。"
   }
 };

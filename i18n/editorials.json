@@ -38610,6 +38610,1942 @@
           }
         }
       }
+    },
+    {
+      "catalog": "research",
+      "id": "meta2-task-local-agent-evolution",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2611.05139v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2611.05139v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Agent 做一项很长的任务，既可能一路沿用错误假设，也可能在本来顺利时被过度纠正。Meta² 研究的不是换一个更大的模型，而是怎样根据进展调整模型周围的工作安排：何时补充提醒，何时修改工具或记忆规则，何时继续原路。它把可复用的判断经验留下，把只适合当前任务的改动及时清掉。",
+          "sections": [
+            {
+              "heading": "训练的是干预经验，不是模型权重",
+              "paragraphs": [
+                "离线阶段在训练任务上比较三种运行：没有干预者、由当前经验指导的干预者，以及训练时可查看额外验证信息的干预者。系统从结果差异中归纳应该行动、应该保持和应该避开的修改，再跨任务合并为文字化的 Meta-Skill。第三种运行有助于找出普通尝试都失败时的修复线索，但作者要求不得直接把验证器特权信息传给执行者，并剔除未通过事后泄漏审查的轨迹。这是有特权训练信号的经验提炼，不是完全无监督地自我进化。",
+                "部署时基础模型和 Meta-Skill 均保持固定。执行者继续做任务，另一个使用同一模型的角色在检查点阅读当前进展，选择保持原状或进行有限修改；修改后沿用同一环境和已有进度，不从头重跑。默认先在第一步后检查，此后每五步检查，结束前也可要求继续完善。测试验证器的内容与最终判定不可见，当前任务产生的修改和对话不会写回共享经验；下一任务回到同一起点。因此系统会在任务内适应，却不在测试过程中跨任务累积新知识。"
+              ]
+            },
+            {
+              "heading": "在同一次任务里观察和修正",
+              "paragraphs": [
+                "主要实验用 GPT-5.6-Terra 中等推理设置。Terminal-Bench 2.1 分为29个训练任务、60个测试任务，每个测试任务五次，共300次；DeepSWE 1.1 为38个训练任务、75个测试任务，每题三次，共225次。报告的是重复运行的平均通过率，不是多次尝试中至少成功一次的概率。相同底座和公共起始配置下，Meta² 分别得到81.00%和44.44%，相较起始 Agent 的66.33%和34.67%，提高14.67与9.77个百分点。",
+                "对照实验支持两条区分：只加在线干预者而不提供经验，分数为74.67%和36.44%；把上一任务的修改继续带给下一任务，分数则从完整方法的81.00%和44.44%降到78.33%和39.11%。这些观察说明可复用的干预原则与任务专用修改不宜混在一起。另一个 DeepSeek 底座在终端任务上达到77.67%，但作者为它另建了经验，不能据此说同一份经验可以不经调整迁移到任何模型。"
+              ]
+            },
+            {
+              "heading": "成功率提升伴随成本与适用范围",
+              "paragraphs": [
+                "干预不是免费获得的能力。论文按当次调用记录核算，终端测试的在线费用由起始配置34.09美元增至64.72美元，还另有110.19美元一次性经验构建费用；这些是该评测总费用，不是单任务定价或当前服务报价。更频繁检查也没有更好：每步检查的分数79.00%，低于每五步的81.00%，并增加调用。只有后续任务能重复利用经验时，前期投入才有机会摊薄，不能将较某些复杂基线省钱说成比起始 Agent 更便宜。",
+                "论文11月3日首次提交，未提供可核验会议录用证据。训练对照是整条轨迹的结果，独立采样的运行可能在某次修改前已经不同，所以不能断言某一提醒直接造成最终成功。评估也限于能检查产物、自动验收的终端与软件任务，尚未证明对开放研究或实体控制同样有效。它给出的可用思路是让干预有条件、有范围，并保留不干预的选项；这仍需要目标场景中的失败检查和成本验证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "比较训练任务中的不同干预轨迹",
+              "提炼行动、保持与避免的共享经验",
+              "按当前任务进展决定有限修改",
+              "结束后清除局部改动并独立验收"
+            ]
+          }
+        },
+        "en": {
+          "lead": "During a long task, an agent can persist with a bad assumption or be disrupted by unnecessary correction while making progress. Meta² studies how to adjust the working arrangements around a frozen model: when to add guidance, change tools or memory rules, or simply continue. Reusable decision guidance is retained, while modifications that only fit the current task are discarded afterward.",
+          "sections": [
+            {
+              "heading": "Learn intervention guidance rather than model weights",
+              "paragraphs": [
+                "Offline construction compares three conditions on training tasks: no evolver, an evolver guided by the current knowledge, and an evolver allowed privileged training-time verifier information. Outcome contrasts yield textual guidance about acting, holding and avoiding particular edits, which is aggregated across tasks into a Meta-Skill. The privileged condition can reveal recoveries when ordinary attempts fail. However, the authors prohibit directly transferring privileged verifier information to the worker and discard trajectories that fail a subsequent leakage audit. This is guidance distilled with privileged training signals, not wholly unsupervised self-improvement.",
+                "At deployment, both the model and Meta-Skill remain frozen. A worker performs the task while another role using the same model reviews progress at checkpoints and either leaves the harness unchanged or makes a bounded edit. Execution continues in the same environment without resetting progress. The default checks after the first step, every five steps thereafter and before final submission. Test-verifier contents and outcomes are unavailable. Task-specific edits and checkpoint conversations never update shared knowledge; each new task starts from the same initial harness. Adaptation is local to an attempt rather than cumulative learning across test tasks."
+              ]
+            },
+            {
+              "heading": "Observe and adjust within the same attempt",
+              "paragraphs": [
+                "The main experiments use GPT-5.6-Terra with medium reasoning. Terminal-Bench 2.1 has 29 training tasks and 60 held-out tasks, each repeated five times, totaling 300 test runs. DeepSWE 1.1 has 38 training tasks and 75 held-out tasks, each repeated three times, totaling 225. Scores average binary outcomes across repetitions; they are not the probability of succeeding at least once after multiple attempts. Meta² reaches 81.00% and 44.44%, compared with 66.33% and 34.67% for the shared seed agent, gains of 14.67 and 9.77 percentage points.",
+                "Adding an online evolver without distilled guidance yields 74.67% and 36.44%. Carrying task-specific edits into later tasks instead of resetting lowers the complete method from 81.00% and 44.44% to 78.33% and 39.11%. These observations distinguish reusable intervention principles from modifications tied to a particular task. With a DeepSeek backbone, terminal-task performance reaches 77.67%, but the authors build a separate Meta-Skill for that backbone. This does not demonstrate zero-shot transfer of one frozen knowledge document across arbitrary models."
+              ]
+            },
+            {
+              "heading": "Higher success has costs and a defined scope",
+              "paragraphs": [
+                "Intervention is not free. Recorded online charges for the terminal evaluation increase from $34.09 for the seed to $64.72, with another $110.19 for one-time knowledge construction. These are aggregate experimental charges, not per-task prices or current service quotations. Checking every step scores 79.00%, below the five-step schedule’s 81.00%, while requiring more calls. Upfront construction can be amortized only when subsequent workloads reuse its guidance. Lower costs than some elaborate baselines should not be presented as lower costs than the original agent.",
+                "First submitted on November 3, the paper supplies no verified conference acceptance evidence. Training contrasts compare entire independently sampled trajectories that may already diverge before an edit, so they cannot establish the causal benefit of one intervention. Evaluation covers terminal and software tasks with inspectable artifacts and automatic verification, not open-ended research or embodied control. The practical idea is to constrain when and where intervention occurs and preserve the option to do nothing. Reliability and cost still need verification in each intended deployment setting."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Compare training trajectories with different interventions",
+              "Distill shared guidance to act, hold or avoid",
+              "Apply bounded edits using current-task evidence",
+              "Discard local changes and independently assess completion"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "長いタスクでは、誤った前提を引きずることも、順調なのに過剰な修正で脱線することもある。Meta² は固定モデルの周囲にある指示、ツール、記憶規則をいつ変えるべきかを研究する。再利用できる判断の知識は残し、そのタスクにしか合わない変更は終わった時点で捨てる設計だ。",
+          "sections": [
+            {
+              "heading": "重みではなく介入の知識を作る",
+              "paragraphs": [
+                "オフラインでは、介入者なし、現在の知識を使う介入者、訓練時だけ追加の検証情報を見られる介入者の三条件を比べる。結果の対照から、行動すべき時、維持すべき時、避けるべき変更を文章の Meta-Skill にまとめる。追加情報を持つ条件は通常の試行が失敗する場合の回復例を与えるが、実行役へ検証器の特権情報を直接渡すことは禁止し、事後監査で違反した軌跡は除外する。完全に教師なしの自己進化ではない。",
+                "運用ではモデルも Meta-Skill も固定する。実行役が作業を進め、同じモデルを使う別の役割が確認点で進捗を読み、維持または限定した変更を選ぶ。同じ環境と進捗のまま続け、最初からやり直さない。標準では第一歩の後、その後五歩ごと、提出前に確認する。テスト検証器の内容と判定結果は見せない。今回の変更や会話は共有知識に戻さず、次のタスクは同じ初期構成から始めるため、テストを通して知識を継続蓄積する方式ではない。"
+              ]
+            },
+            {
+              "heading": "同じ試行の進捗を見て修正する",
+              "paragraphs": [
+                "主要実験は GPT-5.6-Terra の中程度推論設定。Terminal-Bench 2.1 は訓練29件、テスト60件を各五回で300実行、DeepSWE 1.1 は訓練38件、テスト75件を各三回で225実行となる。報告値は反復実行の平均成功率であり、何回か試せば一回成功する確率ではない。Meta² は81.00%と44.44%、共通の初期 Agent は66.33%と34.67%で、差は14.67、9.77ポイントだった。",
+                "知識を与えずオンライン介入役だけを追加すると74.67%と36.44%。前のタスクの変更を次へ持ち越すと、完全方式の81.00%と44.44%から78.33%と39.11%へ下がった。再利用する判断原則と、その場専用の変更は分ける必要がある。DeepSeek を使うターミナルタスクでは77.67%だったが、そのモデル用に別の Meta-Skill を作っている。同じ知識を任意のモデルへそのまま移せる証拠ではない。"
+              ]
+            },
+            {
+              "heading": "成功率と費用、適用範囲を合わせて読む",
+              "paragraphs": [
+                "介入には費用がある。論文の呼び出し記録では、ターミナル評価のオンライン費用は初期構成の34.09ドルから64.72ドルに増え、別に知識構築110.19ドルを要した。これは実験全体の費用で、単一タスクの価格や現在の料金ではない。毎歩の確認は79.00%で、五歩ごとの81.00%より低く、呼び出しも多い。初期投資を薄めるには後続タスクで再利用する必要があり、複雑な基準方式より安いことを、元の Agent より安いことと混同できない。",
+                "初回投稿は11月3日で、確認可能な会議採択証拠はない。対照は独立にサンプリングした軌跡全体の結果であり、変更前から異なる可能性があるため、一つの介入の因果効果とは言えない。評価は成果物を検査できるターミナル・ソフトウェア課題に限られ、自由な研究や身体制御での有効性は未確認だ。介入を条件付きかつ局所的にして、何もしない選択も残す考え方には価値があるが、利用先で失敗と費用を検証する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "訓練で異なる介入の軌跡を比べる",
+              "行動・維持・回避の共通知識を整理する",
+              "現在の証拠に応じて限定的に変更する",
+              "局所変更を捨てて完了を独立評価する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "В длинном задании агент может упрямо следовать ошибочному предположению или потерять верное направление из-за лишних исправлений. Meta² исследует, когда менять инструкции, инструменты и правила памяти вокруг неизменной модели. Повторно используемые принципы сохраняются, а изменения, пригодные только для текущей задачи, после неё удаляются.",
+          "sections": [
+            {
+              "heading": "Обучается руководство по вмешательству, а не веса",
+              "paragraphs": [
+                "На обучающих заданиях сравниваются три режима: без корректирующего агента, с агентом под управлением текущего опыта и с агентом, которому доступна дополнительная информация проверяющей системы только при обучении. Различия исходов превращаются в текстовый Meta-Skill: когда действовать, сохранять подход или избегать определённого изменения. Привилегированный режим помогает найти восстановление там, где обычные попытки неудачны. Прямо передавать закрытые сведения проверки исполнителю запрещено; нарушившие это условие траектории исключаются после аудита. Это не полностью самостоятельное обучение без внешних сигналов.",
+                "При применении модель и Meta-Skill фиксированы. Исполнитель продолжает работу, а отдельная роль на той же модели в контрольных точках читает прогресс и выбирает сохранение или ограниченное изменение. Среда и сделанное не сбрасываются. По умолчанию проверка идёт после первого шага, затем каждые пять шагов и перед сдачей. Содержание и исход тестового верификатора недоступны. Изменения и разговоры текущего задания не пополняют общие знания, следующая задача начинается с исходной конфигурации. Адаптация локальна, а не накапливается между тестовыми задачами."
+              ]
+            },
+            {
+              "heading": "Наблюдать и исправлять внутри одной попытки",
+              "paragraphs": [
+                "Основные эксперименты используют GPT-5.6-Terra со средним режимом рассуждений. Terminal-Bench 2.1 делится на 29 обучающих и 60 тестовых задач, по пять повторений: 300 запусков. DeepSWE 1.1 содержит 38 обучающих и 75 тестовых задач, по три повторения: 225 запусков. Показатель — средняя доля успешных запусков, не вероятность хотя бы одного успеха после нескольких попыток. Meta² получает 81,00% и 44,44% против 66,33% и 34,67% общего исходного агента: прирост 14,67 и 9,77 процентного пункта.",
+                "Корректирующий агент без подготовленных знаний даёт 74,67% и 36,44%. Если переносить конкретные изменения в следующую задачу, результат полной системы снижается с 81,00% и 44,44% до 78,33% и 39,11%. Это поддерживает разделение общих принципов и локальных правок. На терминальных задачах с DeepSeek получено 77,67%, но для этой модели построен отдельный Meta-Skill. Перенос одного неизменного документа знаний на любые модели без подготовки не показан."
+              ]
+            },
+            {
+              "heading": "Рост успеха имеет цену и границы",
+              "paragraphs": [
+                "Вмешательства требуют ресурсов. По экспериментальным записям вызовов онлайн-затраты терминальной оценки растут с 34,09 доллара у исходной системы до 64,72 доллара, плюс 110,19 доллара на однократное построение знаний. Это общие расходы эксперимента, не цена задачи и не текущий тариф. Проверка на каждом шаге даёт 79,00% против 81,00% при интервале пять шагов и требует больше вызовов. Начальные расходы окупаются только при дальнейшем повторном использовании; экономия относительно некоторых сложных методов не означает дешевизну относительно исходного агента.",
+                "Первая версия подана 3 ноября; проверяемых свидетельств принятия на конференцию нет. Контрасты относятся к целым независимо выбранным траекториям, которые могут различаться ещё до правки, поэтому не доказывают причинный эффект одного вмешательства. Оценены терминальные и программные задачи с проверяемым результатом, а не открытые исследования или физическое управление. Полезный принцип — ограничивать условия и область изменений и оставлять возможность не вмешиваться. Надёжность и стоимость всё равно следует проверять в целевом применении."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Сопоставить обучающие траектории вмешательств",
+              "Выделить принципы действия, сохранения и отказа",
+              "Менять подход по данным текущей задачи",
+              "Удалить локальные правки и отдельно проверить итог"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Agent 做一項很長的任務，既可能一路沿用錯誤假設，也可能在本來順利時被過度糾正。Meta² 研究的不是換一個更大的模型，而是怎樣根據進展調整模型周圍的工作安排：何時補充提醒，何時修改工具或記憶規則，何時繼續原路。它把可複用的判斷經驗留下，把只適合當前任務的改動及時清掉。",
+          "sections": [
+            {
+              "heading": "訓練的是干預經驗，不是模型權重",
+              "paragraphs": [
+                "離線階段在訓練任務上比較三種執行：沒有干預者、由當前經驗指導的干預者，以及訓練時可檢視額外驗證資訊的干預者。系統從結果差異中歸納應該行動、應該保持和應該避開的修改，再跨任務合併為文字化的 Meta-Skill。第三種執行有助於找出普通嘗試都失敗時的修復線索，但作者要求不得直接把驗證器特權資訊傳給執行者，並剔除未通過事後洩漏審查的軌跡。這是有特權訓練訊號的經驗提煉，不是完全無監督地自我進化。",
+                "部署時基礎模型和 Meta-Skill 均保持固定。執行者繼續做任務，另一個使用同一模型的角色在檢查點閱讀當前進展，選擇保持原狀或進行有限修改；修改後沿用同一環境和已有進度，不從頭重跑。預設先在第一步後檢查，此後每五步檢查，結束前也可要求繼續完善。測試驗證器的內容與最終判定不可見，當前任務產生的修改和對話不會寫回共享經驗；下一任務回到同一起點。因此係統會在任務內適應，卻不在測試過程中跨任務累積新知識。"
+              ]
+            },
+            {
+              "heading": "在同一次任務裡觀察和修正",
+              "paragraphs": [
+                "主要實驗用 GPT-5.6-Terra 中等推理設定。Terminal-Bench 2.1 分為29個訓練任務、60個測試任務，每個測試任務五次，共300次；DeepSWE 1.1 為38個訓練任務、75個測試任務，每題三次，共225次。報告的是重複執行的平均通過率，不是多次嘗試中至少成功一次的機率。相同底座和公共起始配置下，Meta² 分別得到81.00%和44.44%，相較起始 Agent 的66.33%和34.67%，提高14.67與9.77個百分點。",
+                "對照實驗支援兩條區分：只加線上干預者而不提供經驗，分數為74.67%和36.44%；把上一任務的修改繼續帶給下一任務，分數則從完整方法的81.00%和44.44%降到78.33%和39.11%。這些觀察說明可複用的干預原則與任務專用修改不宜混在一起。另一個 DeepSeek 底座在終端任務上達到77.67%，但作者為它另建了經驗，不能據此說同一份經驗可以不經調整遷移到任何模型。"
+              ]
+            },
+            {
+              "heading": "成功率提升伴隨成本與適用範圍",
+              "paragraphs": [
+                "干預不是免費獲得的能力。論文按當次呼叫記錄核算，終端測試的線上費用由起始配置34.09美元增至64.72美元，還另有110.19美元一次性經驗構建費用；這些是該評測總費用，不是單任務定價或當前服務報價。更頻繁檢查也沒有更好：每步檢查的分數79.00%，低於每五步的81.00%，並增加呼叫。只有後續任務能重複利用經驗時，前期投入才有機會攤薄，不能將較某些複雜基線省錢說成比起始 Agent 更便宜。",
+                "論文11月3日首次提交，未提供可核驗會議錄用證據。訓練對照是整條軌跡的結果，獨立取樣的執行可能在某次修改前已經不同，所以不能斷言某一提醒直接造成最終成功。評估也限於能檢查產物、自動驗收的終端與軟體任務，尚未證明對開放研究或實體控制同樣有效。它給出的可用思路是讓干預有條件、有範圍，並保留不干預的選項；這仍需要目標場景中的失敗檢查和成本驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "比較訓練任務中的不同干預軌跡",
+              "提煉行動、保持與避免的共享經驗",
+              "按當前任務進展決定有限修改",
+              "結束後清除區域性改動並獨立驗收"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "queryflow-adaptive-multihop-graph-retrieval",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2611.04625v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2611.04625v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "有些问题要先找到人物与机构的关系，才知道下一步该查哪件事。如果始终拿最初的问题给每篇文档单独打分，中间线索可能找到了，另一半证据却仍排不进前几名。QueryFlow 让实体图中的信息与查询表示交替更新，研究的是在有限的文档预算内把一整套证据找齐，而不只是提高单篇相关度。",
+          "sections": [
+            {
+              "heading": "查询在向量空间里演变，原问题仍是锚点",
+              "paragraphs": [
+                "系统先把文档中的实体与关系组织成图，并保留实体出现在哪些文档里的对应关系。冻结的文本编码器表示问题和关系，问题中已链接的实体作为信息传播起点。每一层传播后，根据当前查询对图中实体状态做加权汇总，用循环单元更新共享查询向量；新向量既更新起点注入的信息，也调节关系特征，从而改变下一层的搜索重点。它不是反复请语言模型改写自然语言查询，图结构与实体链接也不会在这个过程中自动重建。",
+                "经过六层传播后，系统仍将实体状态与原始查询共同评分，避免最后的关注点完全偏离问题。实体的正贡献汇入其关联文档，出现在许多文档中的实体按文档频次分摊权重，减少泛化实体主导排序。这不是只保留前几个实体的路径搜索，也不等于文档越长就经过了长度归一化。模型在三个问答数据集各20,000个训练样例、共60,000例上学习，使用实体监督；文本编码器冻结不意味着检索器无需训练。"
+              ]
+            },
+            {
+              "heading": "完整证据与平均召回分开统计",
+              "paragraphs": [
+                "评估包含2WikiMultiHopQA与HotpotQA各1,000题、MuSiQue 1,003题及ConcurrentQA 1,600题，检索库由这些样例的支持与干扰文档组成。前十篇召回率衡量平均找回多少已标注支持文档，完整召回率则要求一题所需文档全都找齐。四数据集等权平均分别为81.93%与70.38%，GFM-RAG 为76.95%与61.98%，即增加4.98和8.40个百分点。这里的十篇是返回预算，不是图中只检查十个节点。",
+                "在共同可评价的4,596题配对分析中，QueryFlow 补齐434道基线未找全的题，也让原本完整的86题变得不完整，净增348题。按题数汇总的完整召回增幅是7.57个百分点，与前述数据集等权的8.40不同，不能混用。生成阶段所有方法使用 Qwen3.5-9B，模型裁判接受答案的等权平均比例为69.6%，LinearRAG 为61.6%；这不是人工复核准确率。论文另报严格答案匹配平均50.5%，也说明不同评分口径会给出不同绝对水平。"
+              ]
+            },
+            {
+              "heading": "图和评估协议决定可推广的范围",
+              "paragraphs": [
+                "消融中保持学习参数不变、关闭查询更新，完整召回降到61.78%，支持中间反馈有作用；改用最终查询而非原始查询评分也低于完整方法。不过这属于同一模型内部的干预，不是将固定查询版本从头充分重训后的公平上限。QueryFlow 在 MuSiQue 的普通前十篇召回61.60%还低于 HippoRAG 2 的64.42%，只是完整召回37.82%高于31.11%。方法并非每个数据集、每项指标都赢，优势更集中在成套证据的同时出现。",
+                "论文11月3日首次提交。正文模板带有2027年 Web Conference 字样，但未见明确录用证据，本条按预印本处理。实验的证据集合依赖标注与实体抽取，语料仅数千至万余篇；这不能证明在开放网络、噪声链接或不断更新的知识库中同样有效。模型裁判、单一训练种子和未完整报告的重复波动也限制结论。可借鉴的是让中间证据反馈检索条件，同时保留原问题和完整性检查，而不是把图表示视为天然可靠的知识。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "链接问题实体并建立文档对应关系",
+              "传播图中证据并汇总当前线索",
+              "更新查询向量以引导下一层传播",
+              "锚定原问题排序文档并检查证据完整性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Some questions require discovering a person’s connection to an organization before the next useful fact becomes identifiable. Scoring every document independently against the original question can find one clue while missing the evidence it points toward. QueryFlow alternates graph propagation with query-state updates, aiming to recover a complete supporting set within a limited document budget rather than merely raising individual relevance scores.",
+          "sections": [
+            {
+              "heading": "The query evolves in vector space but keeps its original anchor",
+              "paragraphs": [
+                "The system builds an entity-and-relation graph with links recording which documents contain each entity. A frozen text encoder represents questions and relations, and question-linked entities initialize propagation. After a layer, the current query weights a summary of entity states; a recurrent unit updates a shared query vector. That vector changes both information injected at starting entities and the relation features used in the next layer. This is not repeated natural-language rewriting by an LLM. Graph topology, document associations and initial entity grounding remain fixed throughout the process.",
+                "After six layers, final entity representations are scored together with the original query, anchoring relevance to the initial question. Positive entity contributions flow into associated documents, divided by document frequency so ubiquitous entities contribute less to each document. This is not path search restricted to a few selected entities, nor document-length normalization. The retriever learns from 20,000 examples each from three QA datasets, totaling 60,000, using entity-level supervision. Freezing the text encoder does not make the graph retriever training-free."
+              ]
+            },
+            {
+              "heading": "Measure complete evidence separately from average recall",
+              "paragraphs": [
+                "Evaluation contains 1,000 questions each from 2WikiMultiHopQA and HotpotQA, 1,003 from MuSiQue and 1,600 from ConcurrentQA. Supporting and distractor documents from those examples form the retrieval corpora. Recall within ten documents measures the average fraction of annotated support recovered; full recall requires every supporting document for a question. Equally weighting the four datasets gives 81.93% and 70.38%, compared with GFM-RAG’s 76.95% and 61.98%, gains of 4.98 and 8.40 percentage points. Ten is the returned-document budget, not a limit of ten visited graph nodes.",
+                "Across 4,596 jointly evaluable questions, QueryFlow completes 434 evidence sets missed by the baseline but loses completeness on 86 previously successful questions, a net gain of 348. Pooling questions gives a 7.57-point full-recall increase, distinct from the dataset-macro gain of 8.40. All methods generate answers with Qwen3.5-9B. Mean LLM-judge acceptance is 69.6%, versus LinearRAG’s 61.6%; this is not human-verified accuracy. The paper also reports mean exact answer matching of 50.5%, illustrating how different evaluation definitions produce different absolute levels."
+              ]
+            },
+            {
+              "heading": "Graph construction and evaluation define the scope",
+              "paragraphs": [
+                "Keeping learned parameters fixed while disabling query updates lowers full recall to 61.78%, supporting the contribution of intermediate feedback. Scoring with the final rather than original query also underperforms the complete method. These are interventions within the learned system, not a separately retrained fixed-query model’s best achievable result. QueryFlow’s ordinary recall on MuSiQue is 61.60%, below HippoRAG 2’s 64.42%, while full recall is higher at 37.82% versus 31.11%. The advantage is concentrated in retrieving complementary evidence together, not winning every metric on every dataset.",
+                "First submitted on November 3, the manuscript contains a 2027 Web Conference template header but no explicit verified acceptance evidence, so it is treated here as a preprint. Support sets depend on annotations and entity extraction, and corpora contain thousands to roughly ten thousand documents. Results do not establish robustness on the open web, noisy entity links or continuously changing knowledge bases. Model-based judging, one reported training seed and incomplete repeated-run uncertainty further limit conclusions. The useful idea is feedback from intermediate evidence while retaining the original question and explicit completeness checks—not assuming that graph structure makes knowledge inherently trustworthy."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Ground question entities and retain document links",
+              "Propagate evidence and summarize current clues",
+              "Update the query vector for the next graph layer",
+              "Anchor document ranking and check complete support"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "人物と組織の関係を見つけて初めて、次に探すべき事実が分かる質問がある。最初の質問だけで文書を個別採点すると、一つの手掛かりは得ても、それが示す次の証拠を落とし得る。QueryFlow はグラフの情報伝播とクエリ更新を交互に行い、限られた文書数で必要証拠を一式揃えることを目指す。",
+          "sections": [
+            {
+              "heading": "ベクトルを更新しても元の質問を基準にする",
+              "paragraphs": [
+                "実体と関係からなるグラフを作り、各実体が現れる文書への対応も残す。固定テキスト符号器が質問と関係を表し、質問にリンクした実体から伝播を始める。各層の後、現在のクエリで実体状態を重み付けして要約し、再帰ユニットで共通のクエリベクトルを更新する。その結果が次層の起点情報と関係特徴を変える。言語モデルに自然言語の質問を書き直させ続ける方式ではなく、グラフ構造や初期リンクは途中で自動再構築しない。",
+                "六層後の実体状態は元の質問と一緒に採点し、最終的な関心が元の要求から逸れすぎないようにする。各実体の正の寄与を関連文書に配り、多数の文書に現れる実体は文書頻度で重みを分ける。少数の実体だけを残す経路探索でも、文書長の正規化でもない。三つの問答集合から各20,000例、計60,000例を使って実体単位の教師信号で学ぶ。テキスト符号器が固定でも検索器は学習不要ではない。"
+              ]
+            },
+            {
+              "heading": "平均再現率と証拠一式の回収を分ける",
+              "paragraphs": [
+                "評価は2WikiMultiHopQA と HotpotQA 各1,000問、MuSiQue 1,003問、ConcurrentQA 1,600問で、支持文書と妨害文書から検索庫を作る。上位十文書の再現率は注釈付き証拠の何割を回収したか、完全再現率は各問の必要文書がすべて揃うかを測る。四集合の等重み平均は81.93%と70.38%、GFM-RAG は76.95%と61.98%で、差は4.98と8.40ポイント。十は返す文書数であり、調べるグラフ節点が十という意味ではない。",
+                "共通して評価可能な4,596問の対応比較では、基準が揃えられなかった434問を完全回収し、元は完全だった86問を失い、差し引き348問増えた。問数で重み付けすると増加は7.57ポイントで、集合等重みの8.40とは異なる。回答生成は全方式 Qwen3.5-9B を使い、モデル判定器が受け入れる割合の平均は69.6%、LinearRAG は61.6%だった。人間による正解確認ではない。厳密な回答一致は平均50.5%で、指標定義によって絶対値も違う。"
+              ]
+            },
+            {
+              "heading": "グラフと評価条件が一般化の範囲を決める",
+              "paragraphs": [
+                "学習済みパラメータを変えずクエリ更新を止めると完全再現率は61.78%に下がり、中間フィードバックの寄与を支持する。最終クエリで採点する方式も元質問を使う方式より低い。ただし同じ学習済み系への介入であり、固定クエリモデルを別途十分訓練した場合の上限ではない。MuSiQue の通常再現率は61.60%で HippoRAG 2 の64.42%より低い一方、完全再現率は37.82%対31.11%で高い。すべての指標で勝つのではなく、補完的証拠を同時に揃える点が中心だ。",
+                "初回投稿は11月3日。本文には2027年 Web Conference のテンプレート見出しがあるが、明確な採択証拠はなく、ここではプレプリントとする。証拠集合は注釈と実体抽出に依存し、検索庫は数千〜一万余の文書である。公開ウェブ、誤リンク、継続更新する知識庫で同様に働くとは未確認だ。モデル判定、一つの訓練乱数種、反復変動の報告不足も限界になる。中間証拠を検索に戻しつつ元質問と完全性を確認する設計が有用であって、グラフ化だけで知識が信頼できるわけではない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "質問の実体と文書対応を定める",
+              "証拠を伝播して途中の手掛かりを要約する",
+              "次の層に向けクエリベクトルを更新する",
+              "元質問を基準に文書順位と完全性を確認する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Иногда только найденная связь человека с организацией показывает, какой следующий факт нужен. Независимая оценка документов по исходному вопросу может найти первую зацепку, но пропустить вторую часть доказательства. QueryFlow чередует распространение информации по графу и обновление запроса, стремясь собрать весь комплект свидетельств при ограничении числа возвращаемых документов.",
+          "sections": [
+            {
+              "heading": "Запрос меняется в векторном пространстве, сохраняя исходный ориентир",
+              "paragraphs": [
+                "Система строит граф сущностей и отношений, сохраняя соответствия между сущностями и документами. Фиксированный текстовый кодировщик представляет вопросы и отношения; распространение начинается от связанных с вопросом сущностей. После каждого слоя текущий запрос взвешивает сводку состояний, а рекуррентный блок обновляет общий вектор запроса. Он меняет и входы начальных сущностей, и признаки отношений следующего слоя. Это не многократное переписывание текста вопроса языковой моделью. Структура графа, связи с документами и начальная привязка остаются неизменными.",
+                "После шести слоёв сущности оцениваются вместе с исходным запросом, чтобы итог не оторвался от первоначального вопроса. Положительные вклады распределяются по связанным документам с обратным весом документной частоты: распространённые сущности меньше влияют на каждый документ. Это не поиск только по нескольким выбранным сущностям и не нормализация длины документа. По 20 000 примеров из трёх QA-наборов, всего 60 000, обучают поиск по меткам сущностей. Неизменность текстового кодировщика не означает отсутствие обучения у всего поисковика."
+              ]
+            },
+            {
+              "heading": "Полный комплект отличается от средней полноты",
+              "paragraphs": [
+                "Оценка включает по 1 000 вопросов 2WikiMultiHopQA и HotpotQA, 1 003 MuSiQue и 1 600 ConcurrentQA. Корпуса собираются из поддерживающих и отвлекающих документов этих примеров. Полнота первых десяти документов измеряет долю найденных размеченных свидетельств, полная полнота — наличие всех требуемых документов вопроса. Среднее с равными весами наборов равно 81,93% и 70,38%, против 76,95% и 61,98% у GFM-RAG: прирост 4,98 и 8,40 пункта. Десять — бюджет выдачи, а не ограничение просмотренных узлов графа.",
+                "На 4 596 общих оцениваемых вопросах QueryFlow полностью восстанавливает 434 набора, пропущенных базовой системой, но теряет полноту в 86 ранее успешных: чистый прирост 348. При объединении вопросов рост полной полноты равен 7,57 пункта, а не макросредним 8,40. Ответы всех методов генерирует Qwen3.5-9B. Средняя доля принятия моделью-судьёй составляет 69,6% против 61,6% LinearRAG; это не человеческая проверка правильности. Строгое совпадение ответа в среднем равно 50,5%, что подчёркивает зависимость абсолютного уровня от метрики."
+              ]
+            },
+            {
+              "heading": "Граф и протокол ограничивают переносимость",
+              "paragraphs": [
+                "Отключение обновления запроса при неизменных обученных параметрах снижает полную полноту до 61,78%, поддерживая роль обратной связи. Оценивание по конечному, а не исходному запросу тоже хуже. Но это вмешательство в уже обученную систему, не предел отдельно переобученной модели с фиксированным запросом. Обычная полнота QueryFlow на MuSiQue равна 61,60%, ниже 64,42% HippoRAG 2, тогда как полная полнота выше: 37,82% против 31,11%. Выигрыш относится прежде всего к совместному получению дополняющих свидетельств, не ко всем метрикам без исключения.",
+                "Первая версия подана 3 ноября. Заголовок шаблона упоминает Web Conference 2027, но явного подтверждения принятия нет; материал учитывается как препринт. Целевые свидетельства зависят от разметки и извлечения сущностей, корпуса содержат тысячи или немногим более десяти тысяч документов. Открытый веб, ошибочные связи и постоянно меняющиеся базы не проверены. Модельное судейство, один указанный seed обучения и неполная оценка повторных колебаний дополнительно ограничивают выводы. Полезна обратная связь от промежуточных фактов при сохранении исходного вопроса и проверки комплектности, а не предположение о врождённой надёжности графа."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Связать сущности вопроса с документами",
+              "Распространить свидетельства и собрать промежуточные зацепки",
+              "Обновить вектор запроса для следующего слоя",
+              "Ранжировать по исходному вопросу и проверить комплект"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "有些問題要先找到人物與機構的關係，才知道下一步該查哪件事。如果始終拿最初的問題給每篇文件單獨打分，中間線索可能找到了，另一半證據卻仍排不進前幾名。QueryFlow 讓實體圖中的資訊與查詢表示交替更新，研究的是在有限的文件預算內把一整套證據找齊，而不只是提高單篇相關度。",
+          "sections": [
+            {
+              "heading": "查詢在向量空間裡演變，原問題仍是錨點",
+              "paragraphs": [
+                "系統先把文件中的實體與關係組織成圖，並保留實體出現在哪些文件裡的對應關係。凍結的文字編碼器表示問題和關係，問題中已連結的實體作為資訊傳播起點。每一層傳播後，根據當前查詢對圖中實體狀態做加權彙總，用迴圈單元更新共享查詢向量；新向量既更新起點注入的資訊，也調節關係特徵，從而改變下一層的搜尋重點。它不是反覆請語言模型改寫自然語言查詢，圖結構與實體連結也不會在這個過程中自動重建。",
+                "經過六層傳播後，系統仍將實體狀態與原始查詢共同評分，避免最後的關注點完全偏離問題。實體的正貢獻匯入其關聯文件，出現在許多文件中的實體按文件頻次分攤權重，減少泛化實體主導排序。這不是隻保留前幾個實體的路徑搜尋，也不等於文件越長就經過了長度歸一化。模型在三個問答資料集各20,000個訓練樣例、共60,000例上學習，使用實體監督；文字編碼器凍結不意味著檢索器無需訓練。"
+              ]
+            },
+            {
+              "heading": "完整證據與平均召回分開統計",
+              "paragraphs": [
+                "評估包含2WikiMultiHopQA與HotpotQA各1,000題、MuSiQue 1,003題及ConcurrentQA 1,600題，檢索庫由這些樣例的支援與干擾文件組成。前十篇召回率衡量平均找回多少已標註支援文件，完整召回率則要求一題所需文件全都找齊。四資料集等權平均分別為81.93%與70.38%，GFM-RAG 為76.95%與61.98%，即增加4.98和8.40個百分點。這裡的十篇是返回預算，不是圖中只檢查十個節點。",
+                "在共同可評價的4,596題配對分析中，QueryFlow 補齊434道基線未找全的題，也讓原本完整的86題變得不完整，淨增348題。按題數彙總的完整召回增幅是7.57個百分點，與前述資料集等權的8.40不同，不能混用。生成階段所有方法使用 Qwen3.5-9B，模型裁判接受答案的等權平均比例為69.6%，LinearRAG 為61.6%；這不是人工複核準確率。論文另報嚴格答案匹配平均50.5%，也說明不同評分口徑會給出不同絕對水平。"
+              ]
+            },
+            {
+              "heading": "圖和評估協議決定可推廣的範圍",
+              "paragraphs": [
+                "消融中保持學習引數不變、關閉查詢更新，完整召回降到61.78%，支援中間反饋有作用；改用最終查詢而非原始查詢評分也低於完整方法。不過這屬於同一模型內部的干預，不是將固定查詢版本從頭充分重訓後的公平上限。QueryFlow 在 MuSiQue 的普通前十篇召回61.60%還低於 HippoRAG 2 的64.42%，只是完整召回37.82%高於31.11%。方法並非每個資料集、每項指標都贏，優勢更集中在成套證據的同時出現。",
+                "論文11月3日首次提交。正文模板帶有2027年 Web Conference 字樣，但未見明確錄用證據，本條按預印本處理。實驗的證據集合依賴標註與實體抽取，語料僅數千至萬餘篇；這不能證明在開放網路、噪聲連結或不斷更新的知識庫中同樣有效。模型裁判、單一訓練種子和未完整報告的重複波動也限制結論。可借鑑的是讓中間證據反饋檢索條件，同時保留原問題和完整性檢查，而不是把圖表示視為天然可靠的知識。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "連結問題實體並建立文件對應關係",
+              "傳播圖中證據並彙總當前線索",
+              "更新查詢向量以引導下一層傳播",
+              "錨定原問題排序文件並檢查證據完整性"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "event-order-constrained-document-retrieval",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original paper · abstract and submission history",
+          "url": "https://arxiv.org/abs/2611.04343v1"
+        },
+        {
+          "label": "Original paper · methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2611.04343v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "先撤离再洪水淹没道路，与道路淹没后才撤离，可能包含几乎相同的关键词，却描述不同过程。本文检验检索模型能否分清这种先后关系。方法把问题中的多件事分别与文档匹配，再检查这些匹配能否按要求连起来。",
+          "sections": [
+            {
+              "heading": "文字顺序不一定就是事件顺序",
+              "paragraphs": [
+                "一条查询由三至十个按时间排列的事件描述组成。相关文档必须在语义上支持每件事，还不能明确违背它们的先后关系。研究使用较宽松的时间兼容定义：同时发生，或者上下文不足以判断谁先谁后，也算兼容；只有明确逆序才判冲突。因此这不是要求系统证明每个事件的严格时间点，更不能把“不知道顺序”当成已经证实了顺序。文章即便倒叙，也可能讲的是正确的事件过程。",
+                "作者从 ReliefWeb 灾害报告筛选连贯的单事件材料，并借助 GPT-5.2 生成和标注查询。最终有66条查询，其中16条开发、50条测试，平均每条六个事件；移除用于生成查询的66篇源文档后，剩6,079篇候选报告，覆盖15类灾害。全66条查询对应234个相关配对与400,980个不相关配对。人工验证只抽查50对，包含25个正例和25个时间顺序困难负例；两位作者之间 κ=0.83，各自与模型标签 κ=0.80，不能说所有配对都经过人工逐项确认。"
+              ]
+            },
+            {
+              "heading": "用相同语义分数比较是否保序",
+              "paragraphs": [
+                "方法先离线推断文档中句子的事件时间顺序，只重排原句，不让模型重写事实。随后用同一个交叉编码器为每个查询事件与每个文档句子计算匹配分数。保序版本用动态规划选择按顺序前进的对应关系，允许跳过无关背景，漏掉查询事件则受罚，并奖励覆盖更多事件。不保序版本使用同样的分数、缺口处罚和覆盖奖励，但允许任意对应顺序。这个对照将语义分数尽量保持一致，便于检验增加顺序约束的作用。",
+                "所有重排实验先用 BM25 取250篇候选，该集合中的相关文档都能进入这一候选池。50条测试查询上，MiniLM-L12 的保序版本前十名平均精度为0.50、首个相关结果倒数排名的均值为0.70；不保序版本分别为0.36和0.55。前十篇召回也从0.50升到0.62。这些是检索排名指标，不是问答正确率。直接将整条查询与全文一起打分的 MiniLM 平均精度为0.32，说明把局部匹配与顺序结合，比仅依赖整体语义相似度更适合本集合。"
+              ]
+            },
+            {
+              "heading": "小规模结果支持什么、不支持什么",
+              "paragraphs": [
+                "作者还比较了原文句序、推断的时间句序和随机句序。保序 MiniLM 的前十名平均精度分别为0.48、0.50和0.32；从原文重排到时间顺序的差别没有统计显著性。灾害报道往往本来就接近时间叙事，所以主要证据是有意义的顺序优于乱序，而不是证明昂贵的时间预处理在任何文档上都必不可少。给普通模型加“然后”等连接词或时间指令也未稳定改善，但不能由此断言所有新检索器都没有时间理解能力。",
+                "论文11月3日首次提交，没有提供可核验会议录用证据。它只有50条测试查询，使用单一报道领域，标注和时间重排都依赖语言模型；类别筛选节省了标注量，也可能遗漏少数跨类别相关文档。表格展示各配置的最佳结果，不能当作大规模、多种子重复评估。尚未测试医学记录、法律材料或完整 RAG 生成流程。较稳妥的启发是：如果请求关心事情怎样发生，就把顺序作为明确检索条件，并允许系统保留未知，而不是仅凭主题相近就认定证据吻合。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释性流程，不是原文实验图或性能曲线。",
+            "steps": [
+              "把查询写成有顺序的事件描述",
+              "保留原句并整理文档事件先后",
+              "用相同语义分数进行保序对齐",
+              "比较相关排名并保留模糊时间边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Evacuating before floodwater blocks a road and evacuating only after it is blocked use nearly identical vocabulary but describe different processes. This study asks whether retrieval systems distinguish such event order. It matches individual query statements to document evidence and then checks whether the matches can form a compatible sequence.",
+          "sections": [
+            {
+              "heading": "Textual order and event chronology are different",
+              "paragraphs": [
+                "A query contains three to ten event statements in chronological order. A relevant document must semantically support every statement and avoid clearly contradicting their progression. Temporal compatibility is deliberately broad: simultaneous events and relations that cannot be determined from context also count as compatible; only a clear reversal is inconsistent. The task therefore does not require proof of exact timestamps. Unknown order must not be presented as confirmed order. A report written retrospectively can still describe events in the requested chronology.",
+                "The authors filter ReliefWeb disaster reports for coherent single-event narratives and use GPT-5.2 to assist query creation and labeling. The final collection has 66 queries, split into 16 development and 50 test queries, averaging six events each. Removing the 66 documents that inspired queries leaves 6,079 candidate reports across 15 disaster categories. Across all 66 queries, there are 234 relevant and 400,980 irrelevant pairs. Human validation covers only 50 pairs: 25 positives and 25 difficult temporal-order negatives. The two author-annotators agree at kappa 0.83, each agreeing with model labels at 0.80. This is not exhaustive human verification of all pairs."
+              ]
+            },
+            {
+              "heading": "Compare order constraints using the same semantic scores",
+              "paragraphs": [
+                "Document sentences are first reordered offline by inferred event chronology, keeping their original text rather than rewriting facts. A cross-encoder then scores each query statement against each document sentence. Order-preserving alignment uses dynamic programming to select a monotonic sequence of matches, allowing irrelevant background to be skipped, penalizing unmatched query events and rewarding coverage. An order-agnostic counterpart uses the same scores, gap penalty and coverage reward but permits arbitrary matching order. This controlled comparison makes the contribution of an explicit ordering constraint more visible than comparing unrelated model families.",
+                "Every reranking experiment starts from BM25’s top 250 candidates, which contain all relevant documents in this collection. Over 50 test queries, MiniLM-L12 with order preservation reaches mean average precision at ten of 0.50 and mean reciprocal rank at ten of 0.70. Without order constraints, those values are 0.36 and 0.55. Recall within ten also rises from 0.50 to 0.62. These are retrieval-ranking metrics, not question-answering accuracy. Scoring the entire query and document directly with MiniLM yields average precision 0.32, supporting local compatibility plus ordering in this particular collection."
+              ]
+            },
+            {
+              "heading": "What a focused, small evaluation can establish",
+              "paragraphs": [
+                "The authors also compare original sentence order, inferred temporal order and random order. Order-preserving MiniLM scores 0.48, 0.50 and 0.32 respectively on average precision at ten. The difference between original and inferred chronology is not statistically significant. Disaster reports are often already approximately chronological, so the stronger evidence concerns meaningful order versus randomization—not the universal necessity of expensive chronological preprocessing. Adding temporal connectives or instructions to ordinary models does not consistently help here, but this cannot establish that every newer retriever lacks temporal understanding.",
+                "First submitted on November 3, the paper gives no verified conference acceptance evidence. Fifty test queries from one reporting domain provide limited coverage, and both labels and chronological preprocessing depend on language models. Category filtering saves annotation work but could miss rare relevant cross-category documents. Tables report each configuration’s best result rather than a large repeated-seed assessment. Medical records, legal material and complete RAG answer generation are not evaluated. The practical lesson is to make chronology explicit when it matters and preserve uncertainty, rather than treating topical resemblance as sufficient evidence of a matching event sequence."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram redrawn by this site from the paper; not an experimental figure or performance curve.",
+            "steps": [
+              "Represent the query as ordered event statements",
+              "Keep original sentences while inferring chronology",
+              "Align evidence using shared semantic scores and order constraints",
+              "Evaluate ranking while preserving ambiguous temporal relations"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "道路が冠水する前に避難した場合と、冠水してから避難した場合は、語彙がほぼ同じでも経過が違う。本研究は検索モデルがその順序を区別できるかを調べる。方法は質問の各事象を文書と対応付けてから、要求した順に結べるかを見る。",
+          "sections": [
+            {
+              "heading": "文章の順番と出来事の順番は違う",
+              "paragraphs": [
+                "質問は時間順に並ぶ三〜十の事象記述である。関連文書はすべてを意味的に支持し、その進行と明確に矛盾しない必要がある。ただし時間の両立は広く定義され、同時、あるいは文脈から前後を決められない場合も適合とする。明確な逆転だけが矛盾であり、厳密な時刻の証明を求める課題ではない。不明な順序を確認済みと扱ってよいわけでもない。回想形式の記事でも出来事の順番は合う可能性がある。",
+                "著者は ReliefWeb の災害報告から一つの出来事を扱う資料を選び、GPT-5.2 で質問生成と注釈を補助した。最終的に66質問、うち開発16、テスト50で、平均六事象を含む。質問の元になった66文書を除き、15災害分類の6,079報告を検索対象とする。全66質問では関連234組、非関連400,980組。人間の検証は正例25組と順序の難しい負例25組の計50組だけで、著者二人の κ は0.83、モデルラベルとの κ は各0.80だった。全組を人間が検証したわけではない。"
+              ]
+            },
+            {
+              "heading": "意味スコアをそろえて順序制約を比べる",
+              "paragraphs": [
+                "文書はオフラインで事象順を推定して原文の文だけを並べ替え、事実を書き直さない。その後、同じ交差符号器で質問の各事象と文書の各文の適合度を計算する。順序保持版は動的計画法で単調な対応を探し、無関係な背景を飛ばすことを許しつつ、質問事象の欠落を罰し、広いカバーを報いる。順序無視版は同じスコア、欠落罰、カバー報酬を使うが、対応する文の順は自由にする。これにより順序制約の効果を分離して見やすくする。",
+                "全再順位付け実験で BM25 の上位250文書を候補とし、本集合の関連文書はすべてこの中に入る。50テスト質問で、MiniLM-L12 の順序保持版は上位十件の平均適合率0.50、平均逆順位0.70で、順序無視版は0.36と0.55だった。上位十件の再現率も0.50から0.62に上がる。これは検索順位の指標で、回答正解率ではない。質問全体と文書を直接採点する MiniLM は平均適合率0.32であり、この集合では局所的な適合と順序の組合せが有効だった。"
+              ]
+            },
+            {
+              "heading": "限定的な評価から言える範囲",
+              "paragraphs": [
+                "原文順、推定時間順、ランダム順も比較し、順序保持 MiniLM の上位十件平均適合率は0.48、0.50、0.32となる。原文から時間順に変えた差は統計的に有意ではなかった。災害報告は元々おおむね時系列であるため、意味のある順番が乱順より良いという証拠が中心で、高価な前処理が常に必要とは言えない。通常モデルに「その後」などの接続詞や時間指示を加えても安定した改善はないが、すべての新しい検索器に時間理解がないと断定する根拠ではない。",
+                "初回投稿は11月3日で、確認可能な会議採択情報はない。テストは一分野の50質問で、ラベルも時間順の推定も言語モデルに依存する。分類による注釈候補の絞り込みは手間を減らす一方、まれな分類横断の関連を見落とす可能性がある。表は各設定の最良結果で、大規模な多乱数種反復ではない。医療記録、法律文書、RAG の最終回答までを検証していない。順番が重要な質問には明示的な条件を設け、不明な関係は不明なまま保ち、話題の近さだけで適合を決めないという示唆が得られる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文に基づき当サイトが描き直した説明図。実験図や性能曲線ではない。",
+            "steps": [
+              "質問を順序付きの事象列にする",
+              "原文を保ったまま出来事の前後を整理する",
+              "同じ意味スコアで順序を保つ対応を探す",
+              "曖昧な時間関係を残して検索順位を測る"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Эвакуация до затопления дороги и эвакуация только после него описываются почти одинаковыми словами, но означают разные процессы. Работа проверяет, различает ли поиск такой порядок. Отдельные утверждения запроса сопоставляются с документом, после чего проверяется совместимость их последовательности.",
+          "sections": [
+            {
+              "heading": "Порядок текста не равен хронологии событий",
+              "paragraphs": [
+                "Запрос содержит от трёх до десяти событий в хронологическом порядке. Релевантный документ должен подтверждать каждое и не противоречить их последовательности. Совместимость определена широко: одновременность и невозможность установить порядок из контекста тоже допустимы; несовместимостью считается лишь явное обращение порядка. Это не требование доказать точное время каждого события. Неизвестный порядок нельзя выдавать за подтверждённый. Ретроспективно написанный отчёт может описывать подходящую хронологию.",
+                "Из ReliefWeb выбраны связные отчёты об одном бедствии, а GPT-5.2 помогает создавать и размечать запросы. Получено 66 запросов: 16 для разработки и 50 для теста, в среднем по шесть событий. После удаления 66 исходных документов, послуживших основой запросов, остаются 6 079 отчётов из 15 категорий. Для всех запросов имеется 234 релевантные и 400 980 нерелевантных пар. Люди проверили лишь 50 пар: 25 положительных и 25 сложных отрицательных с несовместимым порядком. Согласие двух авторов — κ=0,83, каждого с моделью — κ=0,80. Все пары вручную не проверялись."
+              ]
+            },
+            {
+              "heading": "Одинаковые смысловые оценки, разные ограничения порядка",
+              "paragraphs": [
+                "Предложения документа заранее упорядочиваются по предполагаемой хронологии без переписывания исходного текста. Затем один cross-encoder оценивает совместимость каждого события запроса с каждым предложением. Вариант с сохранением порядка динамическим программированием ищет монотонное соответствие: фон можно пропускать, пропуски событий запроса штрафуются, охват поощряется. Вариант без порядка использует те же оценки, штрафы и награду за охват, но допускает произвольную последовательность совпадений. Сравнение позволяет выделить вклад ограничения порядка, а не просто различие моделей.",
+                "Все эксперименты переранжирования используют первые 250 результатов BM25, куда попадают все релевантные документы этой коллекции. На 50 тестовых запросах MiniLM-L12 с сохранением порядка получает mAP@10=0,50 и MRR@10=0,70 против 0,36 и 0,55 без ограничения. Полнота первых десяти также растёт с 0,50 до 0,62. Это показатели ранжирования, не правильности ответов. Прямое оценивание целого запроса вместе с документом моделью MiniLM даёт mAP=0,32. В этой коллекции локальная совместимость вместе с порядком полезнее одной общей смысловой близости."
+              ]
+            },
+            {
+              "heading": "Что показывает небольшая специализированная проверка",
+              "paragraphs": [
+                "При исходном порядке предложений, восстановленной хронологии и случайном порядке mAP@10 упорядоченного MiniLM составляет 0,48, 0,50 и 0,32. Разница между исходным и восстановленным порядком статистически незначима. Отчёты о бедствиях часто уже приблизительно хронологичны; сильнее подтверждается польза осмысленного порядка против случайного, не обязательность дорогой предварительной обработки везде. Добавление временных связок и инструкций обычным моделям не даёт стабильного улучшения, но не доказывает отсутствие понимания времени у всех новых поисковиков.",
+                "Первая версия подана 3 ноября, проверяемых сведений о конференционном принятии нет. Пятьдесят тестовых запросов охватывают одну область, а разметка и перестановка предложений зависят от языковых моделей. Фильтрация категорий сокращает работу, но может пропустить редкие релевантные межкатегорийные пары. Таблицы показывают лучший результат каждой конфигурации, не масштабную многократную оценку с разными seeds. Медицинские записи, юридические документы и конечные ответы RAG не проверены. Практический вывод — явно задавать важную хронологию и сохранять неопределённость, а не считать совпадение темы достаточным свидетельством нужной последовательности."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Поясняющая схема, заново составленная сайтом по статье; это не экспериментальный график.",
+            "steps": [
+              "Записать запрос как упорядоченные события",
+              "Сохранить исходные предложения и восстановить хронологию",
+              "Сопоставить общие смысловые оценки с ограничением порядка",
+              "Оценить ранжирование, сохранив неопределённые отношения"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "先撤離再洪水淹沒道路，與道路淹沒後才撤離，可能包含幾乎相同的關鍵詞，卻描述不同過程。本文檢驗檢索模型能否分清這種先後關係。方法把問題中的多件事分別與文件匹配，再檢查這些匹配能否按要求連起來。",
+          "sections": [
+            {
+              "heading": "文字順序不一定就是事件順序",
+              "paragraphs": [
+                "一條查詢由三至十個按時間排列的事件描述組成。相關文件必須在語義上支援每件事，還不能明確違背它們的先後關係。研究使用較寬鬆的時間相容定義：同時發生，或者上下文不足以判斷誰先誰後，也算相容；只有明確逆序才判衝突。因此這不是要求系統證明每個事件的嚴格時間點，更不能把“不知道順序”當成已經證實了順序。文章即便倒敘，也可能講的是正確的事件過程。",
+                "作者從 ReliefWeb 災害報告篩選連貫的單事件材料，並藉助 GPT-5.2 生成和標註查詢。最終有66條查詢，其中16條開發、50條測試，平均每條六個事件；移除用於生成查詢的66篇源文件後，剩6,079篇候選報告，覆蓋15類災害。全66條查詢對應234個相關配對與400,980個不相關配對。人工驗證只抽查50對，包含25個正例和25個時間順序困難負例；兩位作者之間 κ=0.83，各自與模型標籤 κ=0.80，不能說所有配對都經過人工逐項確認。"
+              ]
+            },
+            {
+              "heading": "用相同語義分數比較是否保序",
+              "paragraphs": [
+                "方法先離線推斷文件中句子的事件時間順序，只重排原句，不讓模型重寫事實。隨後用同一個交叉編碼器為每個查詢事件與每個文件句子計算匹配分數。保序版本用動態規劃選擇按順序前進的對應關係，允許跳過無關背景，漏掉查詢事件則受罰，並獎勵覆蓋更多事件。不保序版本使用同樣的分數、缺口處罰和覆蓋獎勵，但允許任意對應順序。這個對照將語義分數儘量保持一致，便於檢驗增加順序約束的作用。",
+                "所有重排實驗先用 BM25 取250篇候選，該集合中的相關文件都能進入這一候選池。50條測試查詢上，MiniLM-L12 的保序版本前十名平均精度為0.50、首個相關結果倒數排名的均值為0.70；不保序版本分別為0.36和0.55。前十篇召回也從0.50升到0.62。這些是檢索排名指標，不是問答正確率。直接將整條查詢與全文一起打分的 MiniLM 平均精度為0.32，說明把區域性匹配與順序結合，比僅依賴整體語義相似度更適合本集合。"
+              ]
+            },
+            {
+              "heading": "小規模結果支援什麼、不支援什麼",
+              "paragraphs": [
+                "作者還比較了原文句序、推斷的時間句序和隨機句序。保序 MiniLM 的前十名平均精度分別為0.48、0.50和0.32；從原文重排到時間順序的差別沒有統計顯著性。災害報道往往本來就接近時間敘事，所以主要證據是有意義的順序優於亂序，而不是證明昂貴的時間預處理在任何文件上都必不可少。給普通模型加“然後”等連線詞或時間指令也未穩定改善，但不能由此斷言所有新檢索器都沒有時間理解能力。",
+                "論文11月3日首次提交，沒有提供可核驗會議錄用證據。它只有50條測試查詢，使用單一報道領域，標註和時間重排都依賴語言模型；類別篩選節省了標註量，也可能遺漏少數跨類別相關文件。表格展示各配置的最佳結果，不能當作大規模、多種子重複評估。尚未測試醫學記錄、法律材料或完整 RAG 生成流程。較穩妥的啟發是：如果請求關心事情怎樣發生，就把順序作為明確檢索條件，並允許系統保留未知，而不是僅憑主題相近就認定證據吻合。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋性流程，不是原文實驗圖或效能曲線。",
+            "steps": [
+              "把查詢寫成有順序的事件描述",
+              "保留原句並整理文件事件先後",
+              "用相同語義分數進行保序對齊",
+              "比較相關排名並保留模糊時間邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "huggingbench-cross-file-identity-audit",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Audit paper — metadata and submission history",
+          "url": "https://arxiv.org/abs/2611.03727"
+        },
+        {
+          "label": "Audit paper — methods, experiments and limitations",
+          "url": "https://arxiv.org/html/2611.03727v1"
+        },
+        {
+          "label": "Original HuggingBench — data description and reported results",
+          "url": "https://github.com/nju-websoft/HuggingBench"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "文件格式正确，未必意味着几个文件中的同一编号指向同一个对象。NASK 研究者 Michał Podstawski 对模型资源推荐基准 HuggingBench 的审计发现，部分知识图谱把资源的附加信息接到了错误对象上。研究先复现原有结果，再只改变映射、训练预算或可用信息，检验排名为什么变化。这是一项数据质量与溯源研究，而不是新模型发布。",
+          "sections": [
+            {
+              "heading": "编号有效，连接仍可能错误",
+              "paragraphs": [
+                "HuggingBench 根据用户对模型、数据集和应用的点赞，测试系统能否推荐相关资源。审计中的推荐集合包括 38,624 名用户、25,080 个资源及 1,065,220 次点赞，按每名用户约 60%、20%、20% 划分训练、验证和测试。知识图谱为这些资源补充衍生关系、发布者等信息，推荐器必须先知道哪一个图实体对应哪一个资源。",
+                "四个外部图谱中有三个虽通过编号范围、唯一性等检查，却不满足资源与实体的身份对应。作者按名称核对连接，重新排列实体编号，使资源保留自己的交互编号；图谱事实和点赞记录本身并未因此增删。这把“文件各自合法”和“跨文件含义一致”分开验证，也解释了为什么原有计算能够运行而不报错。"
+              ]
+            },
+            {
+              "heading": "修正能改变排名，但增幅依赖实验条件",
+              "paragraphs": [
+                "作者复现了十一种推荐方法，并用三个训练随机种子比较修正前后。在一跳图谱、100 轮训练预算下，KGRec 的平均 Recall@10 从 0.0845 变为 0.1457，约为相对提升 72%，不是增加 72 个百分点。该指标先计算每名用户的测试点赞资源中有多少被前十个推荐覆盖，再取平均；它不是模型答题准确率。图谱修正使所比较的 27 对配置中有 10 对在三个种子下都逆转了排序。",
+                "训练预算也影响修正幅度。将同一配置搜索的上限提高至 500 轮、保留提前停止规则后，上述两种图谱的均值变成 0.1107 与 0.1481，差距缩小但修正版仍更好。原先被 100 轮上限截断的 23 个配置—种子组合中，21 个随后改善。因此，不能把一个预算下的最高相对增幅当成修复对任何训练流程都能带来的固定收益。"
+              ]
+            },
+            {
+              "heading": "简单基线与数据治理的启发",
+              "paragraphs": [
+                "研究还把已有的资源说明文字和资源关系加入简单线性推荐器。EASE 加文本与图谱的 Recall@10 达到 0.1860，比原论文报告的最佳 0.1578 高约 18%。这些新增基线按固定四分之一验证用户的 Recall@10 选参，而原方法沿用自己的验证与提前停止规则；结果说明本次条件下简单方法很强，不能据此宣布线性模型普遍胜过神经模型。",
+                "本站的工程解读是，评测前应验证跨文件身份、特征来自哪个时间与数据划分，以及训练是否过早结束。论文结果仍来自作者实验：点赞是弱偏好信号，数据是单个历史快照和固定的随机用户划分，三个种子没有检验未来时间段的迁移。原基准发表于 SIGIR 2025，不代表这篇 2026 年 11 月 1 日公开的审计已被同一会议录用；当前元数据没有该审计的会议录用证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文方法重绘的解释图：分别检查数据身份、修正连接与评测条件，不是重制的实验结果图。",
+            "steps": [
+              "对照资源名称核验跨文件身份",
+              "修正实体映射并保留原有事实",
+              "在相同条件下比较修正前后",
+              "再检查训练预算与简单基线"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Valid files can still disagree about what an identifier means. Michał Podstawski of NASK audits HuggingBench and finds that some knowledge graphs attach side information to the wrong recommended resources. The study reproduces existing results, then varies mappings, training budgets and available information to understand changes in rankings. Its contribution is an investigation of data quality and provenance, not a new model release.",
+          "sections": [
+            {
+              "heading": "Valid identifiers can form invalid joins",
+              "paragraphs": [
+                "HuggingBench recommends models, datasets and applications from user likes. The audited recommendation collection contains 38,624 users, 25,080 resources and 1,065,220 likes, split approximately 60/20/20 per user for training, validation and testing. External graphs add relationships such as derivation and publisher identity. A recommender must first associate each resource with the right graph entity.",
+                "Three of four external graphs pass checks such as identifier ranges and uniqueness but violate that identity link. The author joins by names and renumbers entities so resources retain their interaction identifiers. The underlying graph facts and likes are unchanged. This separates the validity of individual files from agreement across them, explaining why the original computation can run without an error."
+              ]
+            },
+            {
+              "heading": "The correction changes rankings, with conditions",
+              "paragraphs": [
+                "The author reproduces eleven recommenders and compares corrections across three training seeds. For KGRec on the one-hop graph with a 100-epoch budget, mean Recall@10 rises from 0.0845 to 0.1457: roughly a 72% relative increase, not 72 percentage points. Recall here measures the fraction of each user’s held-out liked items retrieved in the top ten, averaged across users. It is not model question-answering accuracy. Correcting the graphs reverses ten of 27 compared configuration orderings in all three seeds.",
+                "The budget changes the size of the effect. Raising the search budget to 500 epochs while preserving early stopping gives means of 0.1107 and 0.1481 for the released and corrected graph. The gap shrinks, but correction still helps. Of 23 configuration–seed pairs truncated by the original limit, 21 improve with more budget. A maximum gain under one protocol is therefore not a fixed benefit for every training process."
+              ]
+            },
+            {
+              "heading": "Simple baselines and the governance lesson",
+              "paragraphs": [
+                "Adding existing resource descriptions and graph information to a simple linear recommender produces Recall@10 of 0.1860 with EASE, versus the original paper’s best reported 0.1578, about 18% higher. These added baselines select parameters by Recall@10 on a fixed quarter of validation users; the original methods retain their own selection and stopping rules. This demonstrates strong simple methods under the tested conditions, not universal superiority over neural models.",
+                "Our engineering interpretation is to validate cross-file identity, the time and split from which features originate, and whether training stopped prematurely before interpreting a leaderboard. Results remain the author’s experiments: likes are weak preferences, the data are one historical snapshot with a fixed random per-user split, and three seeds do not test future temporal transfer. The original benchmark appeared at SIGIR 2025; that does not confer acceptance on this audit, first posted November 1, 2026. Its metadata provides no conference-acceptance evidence."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory redraw of the audit method: identity checks, corrected joins and evaluation conditions, not a reproduction of measured result figures.",
+            "steps": [
+              "Check cross-file identity using resource names",
+              "Repair entity mappings while retaining facts",
+              "Compare before and after under matched conditions",
+              "Examine training budgets and simple baselines"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "ファイルの形式が正しくても、同じ番号が同じ対象を指すとは限らない。NASK の Michał Podstawski はモデル資源推薦の基準 HuggingBench を監査し、一部の知識グラフが別の資源に付加情報を結び付けていると報告した。既存結果を再現した後、対応表、学習予算、利用情報を変えて順位の変化を調べる。新モデルの発表ではなく、データ品質と来歴の研究である。",
+          "sections": [
+            {
+              "heading": "番号の検査だけでは結合の誤りを見逃す",
+              "paragraphs": [
+                "HuggingBench は利用者の「いいね」からモデル、データセット、アプリを推薦する。監査対象には38,624人、25,080資源、1,065,220件の反応があり、利用者ごとにおよそ60%、20%、20%を学習・検証・テストへ分ける。外部グラフは派生関係や公開者などを補うため、資源とグラフのエンティティの正しい対応が前提になる。",
+                "四つの外部グラフのうち三つは、番号の範囲や一意性の検査を通る一方、資源とエンティティの同一性が崩れていた。著者は名称で照合し、資源が反応データと同じ番号になるようエンティティを並べ直した。元のグラフの事実や反応は増減させていない。個々のファイルの正しさと、ファイル間の意味の一致は別の条件なのである。"
+              ]
+            },
+            {
+              "heading": "修正の効果は学習条件とともに読む",
+              "paragraphs": [
+                "十一の推薦法を再現し、三つの学習乱数シードで修正前後を比較した。一ホップのグラフと100エポックの予算では、KGRec の平均 Recall@10 が0.0845から0.1457になった。約72%の相対改善であり、72ポイントの増加ではない。各利用者のテスト用「いいね」のうち上位十件に入った割合を平均する指標で、質問への正答率ではない。比較した27組の設定順位のうち10組が、三つのシードすべてで逆転した。",
+                "早期終了のルールを維持して予算を500エポックへ増やすと、元のグラフと修正版の平均は0.1107と0.1481になる。差は小さくなるが、修正版の優位は残る。元の上限で打ち切られた23の設定とシードの組合せのうち21は、延長後に改善した。一つの予算での最大改善率を、どの学習過程にも固定で得られる利益とはみなせない。"
+              ]
+            },
+            {
+              "heading": "単純な基準手法とデータ管理への示唆",
+              "paragraphs": [
+                "既存の資源説明文とグラフを単純な線形推薦器 EASE に加えると、Recall@10 は0.1860となり、元論文の最高報告値0.1578を約18%上回った。追加基準法は固定した四分の一の検証利用者に対する Recall@10 で設定を選び、元の方法は元の選択・早期終了規則を使う。今回の条件で単純な方法が強いという結果で、線形モデルが常にニューラルモデルより優れるとの証明ではない。",
+                "当サイトの工学的解釈は、順位を読む前に、ファイル間の同一性、特徴が得られた時点とデータ分割、学習の早期打切りを確認する必要があるということだ。実験は著者の報告であり、「いいね」は弱い選好情報、データは一つの過去の時点と固定されたランダム分割に限られる。三つのシードは将来の時期への転移を試していない。元の基準は SIGIR 2025 の論文だが、2026年11月1日公開の本監査の採択を意味せず、その会議採択証拠は現在のメタデータにない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文の手順を基に当サイトが描き直した説明図。同一性、結合修正、評価条件の関係を示し、実験結果の図を複製したものではない。",
+            "steps": [
+              "資源名でファイル間の同一性を確認",
+              "事実を保持して対応を修正",
+              "同条件で修正前後を比較",
+              "学習予算と単純な基準法も検討"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Корректный формат файлов ещё не означает, что одинаковый номер обозначает один объект. Michał Podstawski из NASK проверяет рекомендательный набор HuggingBench и обнаруживает, что некоторые графы связывают дополнительные сведения с чужими ресурсами. Сначала исследователь воспроизводит результаты, затем меняет соответствия, бюджет обучения и доступную информацию. Работа посвящена качеству и происхождению данных, а не выпуску новой модели.",
+          "sections": [
+            {
+              "heading": "Допустимые номера не гарантируют правильного соединения",
+              "paragraphs": [
+                "HuggingBench рекомендует модели, наборы данных и приложения по пользовательским отметкам «нравится». Проверенная коллекция содержит 38 624 пользователя, 25 080 ресурсов и 1 065 220 отметок. Для каждого пользователя они разделены примерно в пропорции 60/20/20 на обучение, валидацию и тест. Внешние графы добавляют связи происхождения и издателей; ресурс должен соответствовать правильной сущности графа.",
+                "Три из четырёх внешних графов проходят проверки диапазонов и уникальности номеров, но нарушают это соответствие. Автор сопоставляет объекты по названиям и перенумеровывает сущности, сохраняя за ресурсами номера из данных взаимодействий. Сами факты графа и отметки не меняются. Так отделяется корректность каждого файла от смысловой согласованности нескольких файлов: исходная программа могла работать без сообщения об ошибке."
+              ]
+            },
+            {
+              "heading": "Эффект исправления зависит от условий",
+              "paragraphs": [
+                "Автор воспроизводит одиннадцать рекомендательных методов и сравнивает исправления при трёх случайных инициализациях обучения. Для KGRec с одношаговым графом и бюджетом 100 эпох средний Recall@10 увеличивается с 0,0845 до 0,1457 — примерно на 72% относительно исходного уровня, а не на 72 процентных пункта. Показатель усредняет по пользователям долю их тестовых понравившихся ресурсов, попавших в первые десять рекомендаций; это не точность ответов модели. Исправление меняет порядок десяти из 27 сравниваемых пар конфигураций во всех трёх запусках.",
+                "При увеличении бюджета поиска конфигураций до 500 эпох с прежним правилом ранней остановки средние значения для исходного и исправленного графов становятся 0,1107 и 0,1481. Разрыв сокращается, но исправление остаётся полезным. Из 23 сочетаний конфигурации и инициализации, прерванных прежним лимитом, 21 улучшается при продлении. Максимальный относительный выигрыш одного протокола нельзя переносить на любой процесс обучения."
+              ]
+            },
+            {
+              "heading": "Простые методы и выводы для управления данными",
+              "paragraphs": [
+                "Простой линейный рекомендатель EASE с имеющимися описаниями ресурсов и графом достигает Recall@10 0,1860 против лучшего опубликованного исходного результата 0,1578 — примерно на 18% выше. Новые базовые методы подбирают параметры по Recall@10 на фиксированной четверти валидационных пользователей, тогда как исходные методы сохраняют свои правила выбора и остановки. Это сильный результат в проверенных условиях, а не универсальное превосходство линейных моделей над нейронными.",
+                "Наш инженерный вывод: до интерпретации рейтинга стоит проверить идентичность объектов между файлами, время и раздел данных, из которых получены признаки, а также преждевременное завершение обучения. Результаты сообщены автором: отметки — слабый сигнал предпочтений, данные представляют один исторический снимок и фиксированное случайное разбиение по пользователям. Три инициализации не проверяют перенос на будущие периоды. Исходный набор опубликован на SIGIR 2025, но это не означает принятия данного аудита, появившегося 1 ноября 2026 года; его метаданные не содержат подтверждения конференционного принятия."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная поясняющая схема по методике статьи: идентичность, исправление связей и условия оценки. Это не копия графиков экспериментальных результатов.",
+            "steps": [
+              "Сверить идентичность по названиям ресурсов",
+              "Исправить соответствия, сохранив факты",
+              "Сравнить исходные и исправленные данные",
+              "Проверить бюджет обучения и простые базовые методы"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "檔案格式正確，未必意味著幾個檔案中的同一編號指向同一個物件。NASK 研究者 Michał Podstawski 對模型資源推薦基準 HuggingBench 的稽核發現，部分知識圖譜把資源的附加資訊接到了錯誤物件上。研究先重現原有結果，再只改變對應、訓練預算或可用資訊，檢驗排名為什麼變化。這是一項資料品質與溯源研究，而不是新模型釋出。",
+          "sections": [
+            {
+              "heading": "編號有效，關聯仍可能錯誤",
+              "paragraphs": [
+                "HuggingBench 根據使用者對模型、資料集和應用的按讚，測試系統能否推薦相關資源。稽核中的推薦集合包括 38,624 名使用者、25,080 個資源及 1,065,220 次按讚，按每名使用者約 60%、20%、20% 劃分訓練、驗證和測試。知識圖譜為這些資源補充衍生關係、釋出者等資訊，推薦器必須先知道哪一個圖實體對應哪一個資源。",
+                "四個外部圖譜中有三個雖透過編號範圍、唯一性等檢查，卻不滿足資源與實體的身分對應。作者按名稱核對關聯，重新排列實體編號，使資源保留自己的互動編號；圖譜事實和按讚記錄本身並未因此增刪。這把“檔案各自合法”和“跨檔案含義一致”分開驗證，也解釋了為什麼原有計算能夠執行而不報錯。"
+              ]
+            },
+            {
+              "heading": "修正能改變排名，但增幅依賴實驗條件",
+              "paragraphs": [
+                "作者重現了十一種推薦方法，並用三個訓練隨機種子比較修正前後。在一跳圖譜、100 輪訓練預算下，KGRec 的平均 Recall@10 從 0.0845 變為 0.1457，約為相對提升 72%，不是增加 72 個百分點。該指標先計算每名使用者的測試按讚資源中有多少被前十個推薦覆蓋，再取平均；它不是模型答題準確率。圖譜修正使所比較的 27 對設定中有 10 對在三個種子下都逆轉了排序。",
+                "訓練預算也影響修正幅度。將同一設定搜尋的上限提高至 500 輪、保留提前停止規則後，上述兩種圖譜的均值變成 0.1107 與 0.1481，差距縮小但修正版仍更好。原先被 100 輪上限截斷的 23 個設定—種子組合中，21 個隨後改善。因此，不能把一個預算下的最高相對增幅當成修復對任何訓練流程都能帶來的固定收益。"
+              ]
+            },
+            {
+              "heading": "簡單基線與資料治理的啟發",
+              "paragraphs": [
+                "研究還把已有的資源說明文字和資源關係加入簡單線性推薦器。EASE 加文字與圖譜的 Recall@10 達到 0.1860，比原論文報告的最佳 0.1578 高約 18%。這些新增基線按固定四分之一驗證使用者的 Recall@10 選參，而原方法沿用自己的驗證與提前停止規則；結果說明本次條件下簡單方法很強，不能據此宣佈線性模型普遍勝過神經模型。",
+                "本站的工程解讀是，評測前應驗證跨檔案身分、特徵來自哪個時間與資料劃分，以及訓練是否過早結束。論文結果仍來自作者實驗：按讚是弱偏好訊號，資料是單個歷史快照和固定的隨機使用者劃分，三個種子沒有檢驗未來時間段的遷移。原基準發表於 SIGIR 2025，不代表這篇 2026 年 11 月 1 日公開的稽核已被同一會議錄用；當前後設資料沒有該稽核的會議錄用證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文方法重繪的解釋圖：分別檢查資料身分、修正關聯與評測條件，不是重製的實驗結果圖。",
+            "steps": [
+              "對照資源名稱核驗跨檔案身分",
+              "修正實體對應並保留原有事實",
+              "在相同條件下比較修正前後",
+              "再檢查訓練預算與簡單基線"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "wolfpine-tensix-hardware-simulator",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original paper, fixed version v1",
+          "url": "https://arxiv.org/html/2611.04740v1"
+        },
+        {
+          "label": "arXiv publication metadata",
+          "url": "https://arxiv.org/abs/2611.04740v1"
+        },
+        {
+          "label": "SC26 official workshop paper record",
+          "url": "https://sc26.conference-program.com/presentation/?id=ws_risc111&sess=sess154"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "只知道程序算出了正确答案，还不足以理解它为什么慢。爱丁堡大学的Wolfpine在软件中重建Tenstorrent Tensix加速器，让研究者观察计算单元、存储和片上通信如何相互等待。论文于11月3日公开，SC26官方页面确认它是RISC-V for HPC工作坊的研究论文。它提供的是可解释的硬件模拟工具，并未声称所有操作都能精确还原真实时钟周期。",
+          "sections": [
+            {
+              "heading": "把芯片拆成可观察的模块",
+              "paragraphs": [
+                "Wolfpine以公开架构文档、开源软件和真实硬件测量为依据，用Python组织处理器、计算协处理器、存储和通信模块。主动模块按时钟推进，被动存储在访问时响应；模块组成计算块，再组成整片设备。它支持Wormhole与Blackhole两代架构，接入TT-Metal软件栈，允许同一份已编译程序在真实设备与模拟器上运行。研究的重点不是预测模型准确率，而是解释加速器执行过程。",
+                "基本模拟保持确定的执行顺序，但按周期推进并不意味着周期数准确。可选成本模型为计算、访存和通信加入来自文档或测量的延迟，并把等待放在真正发生依赖的位置。例如读取结果尚未准备好时，后续无关指令仍可继续；片上网络分别考虑经过的链路、传输大小和链路竞争。系统还能汇总指令、数据移动、同步和停顿事件，使开发者区分算得慢、搬得慢与等得久。"
+              ]
+            },
+            {
+              "heading": "同一程序在模拟器与真实硬件上对照",
+              "paragraphs": [
+                "实验使用TT-Metal 0.74、Wolfpine 2.0和厂商模拟器ttsim 1.9.6。真实设备是运行在1350 MHz、报告120个Tensix计算块的p150 Blackhole；模拟器运行在Intel i7-12700H与48 GiB内存环境。五个基准从整数加法、数据回传、逐元素运算，扩展到单块矩阵乘法和40块参与的矩阵乘法。同一程序分别对照其主机端计算参考结果，报告Pearson相关系数；相关性高不是逐位相同的证明，也不是所有应用都正确的保证。",
+                "最有解释力的应用案例是流体计算相关的Nekbone算子：在单个Tensix块上处理4个16³大小的谱元素，共16,384个数据点。作者报告模拟总耗时44.49微秒，硬件46.30微秒，对应60,066与62,509周期，总误差3.9%；三个阶段各自仍有约9%至10%的误差，说明合计接近可能包含误差抵消。另一项四块填充基准通过跳过空闲块和固件忙等，将朴素模拟的6586.7秒降至启用成本模型后的21.2秒，约311倍；这是模拟器自身优化的加速，不是芯片提速。"
+              ]
+            },
+            {
+              "heading": "能定位瓶颈，但时序仍有误差",
+              "paragraphs": [
+                "可观察性有实际代价。五个基准中，Wolfpine比C++编写的ttsim慢约4至20倍；40块矩阵乘法耗时786秒，对照37.8秒。Python解释执行和更细的数据传输、竞争建模都会增加负担，因此它更适合小规模诊断与架构实验，而不能凭这组结果替代真实设备的吞吐量测试。论文同时展示了把等待归到计算单元或程序位置的能力，帮助确定下一步应优化哪里。",
+                "时序误差还取决于具体操作。整数除法的实测平均约33周期，而当前成本模型取6周期，误差达82%；部分Tensix指令成本来自文档，尚无公开硬件细粒度轨迹逐一验证。现有评估也仅覆盖单芯片，多芯片以太网通信和其他架构仍属后续工作。合理的使用方式是把模拟诊断当作待验证假设，再由硬件测量确认，而不是把单个算子的3.9%误差扩展为全平台准确率。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据论文重绘的解释性流程，非实验结果图。",
+            "steps": [
+              "公开文档与硬件测量",
+              "组合计算、存储和通信模块",
+              "记录依赖、竞争与停顿",
+              "与真实设备校准并定位瓶颈"
+            ]
+          }
+        },
+        "en": {
+          "lead": "A correct answer does not explain why an accelerator program is slow. Wolfpine, developed at the University of Edinburgh, models the Tenstorrent Tensix architecture so that researchers can inspect computation, storage and communication together. The paper was first posted on November 3 and is confirmed in the official SC26 program as a RISC-V for HPC workshop research paper. Its contribution is an inspectable simulator, not a claim that every hardware operation is reproduced with exact timing.",
+          "sections": [
+            {
+              "heading": "Making accelerator execution observable",
+              "paragraphs": [
+                "Wolfpine builds on public architecture documentation, open software and hardware measurements. Written in Python, it combines active processing blocks that advance with a clock and passive memory blocks that respond when accessed. These form tiles and then a complete device. It supports both Wormhole and Blackhole and connects to TT-Metal, allowing an identical compiled program to run on a simulator or the device. The research concerns hardware execution rather than predictive model quality.",
+                "The basic execution order is deterministic, but advancing in cycles does not make those cycles accurate hardware time. An optional cost model adds documented or measured delays at the point where a dependency actually blocks progress. Independent instructions can continue while a load result is pending. The on-chip network accounts separately for route length, transfer size and shared-link contention. Instruction, movement, synchronization and stall events help distinguish slow computation from slow communication or waiting."
+              ]
+            },
+            {
+              "heading": "Comparing identical programs across platforms",
+              "paragraphs": [
+                "The evaluation uses TT-Metal 0.74, Wolfpine 2.0 and the vendor simulator ttsim 1.9.6. Hardware measurements come from a p150 Blackhole reporting 120 Tensix tiles at 1350 MHz; simulations run on an Intel i7-12700H with 48 GiB of memory. Five benchmarks range from integer addition and data loopback through elementwise operations to single-tile and 40-tile matrix multiplication. Results are compared with each program’s host-computed reference using Pearson correlation. Strong correlation is neither proof of bitwise equality nor a guarantee for every application.",
+                "For the Nekbone operator from scientific computing, one Tensix tile processes four spectral elements of size 16 cubed, or 16,384 data points. The authors report 44.49 microseconds in simulation versus 46.30 on hardware: 60,066 versus 62,509 cycles, a 3.9% total error. Individual phases still differ by roughly 9–10%, so cancellation contributes to the closer total. Separately, a four-tile padding benchmark falls from 6,586.7 seconds with naive ticking to 21.2 seconds with optimizations and the cost model, about 311 times faster. That accelerates the simulator, not the chip."
+              ]
+            },
+            {
+              "heading": "Where the timing model still falls short",
+              "paragraphs": [
+                "Observability has a cost. Across the five benchmarks, Wolfpine is approximately four to twenty times slower than the C++ ttsim implementation. The 40-tile matrix multiplication takes 786 seconds versus 37.8. Python execution and more detailed modeling of transfer and contention both add overhead. The results support using the tool for focused diagnosis and architecture experiments; they do not make simulation a replacement for measuring hardware throughput. Attributing stalls to units and program locations helps decide what to investigate next.",
+                "Timing accuracy also varies sharply by operation. Integer division averages about 33 hardware cycles while the current model charges six, yielding an 82% error. Some Tensix instruction costs come from documentation without public fine-grained hardware traces for individual validation. Evaluation is single-chip; Ethernet-based multi-chip behavior and additional architectures remain future work. A useful engineering interpretation is to treat the simulator’s diagnoses as hypotheses to verify on hardware, rather than extending the 3.9% Nekbone total error to the whole platform."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram redrawn from the paper; not an experimental result plot.",
+            "steps": [
+              "Public specifications and measurements",
+              "Compose compute, memory and network blocks",
+              "Track dependencies, contention and stalls",
+              "Calibrate against hardware and locate bottlenecks"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "アクセラレータが正しい答えを返しても、遅さの原因までは分からない。エディンバラ大学のWolfpineはTenstorrent Tensixをソフトウェア上に再現し、演算・メモリ・通信の待ち合わせを観察できるようにする。論文は11月3日に公開され、SC26公式プログラムでRISC-V for HPCワークショップの研究論文と確認できる。全命令の実行時間を厳密に再現したという主張ではない。",
+          "sections": [
+            {
+              "heading": "実行の内側を見えるようにする",
+              "paragraphs": [
+                "Wolfpineは公開されたアーキテクチャ文書、オープンなソフトウェア、実機測定から構成される。Pythonで、クロックに従って動く演算ブロックと、アクセスに応じるメモリを組み合わせ、タイルからデバイス全体を作る。WormholeとBlackholeの両世代を扱い、TT-Metalと接続して同一のコンパイル済みプログラムを実機とシミュレータで動かす。研究対象はAIモデルの予測精度ではなく、ハードウェアの実行過程である。",
+                "基本モデルの実行順序は決定的だが、サイクル単位で進むことと実時間の正確さは別である。追加のコストモデルは、文書や測定で得た遅延を依存関係が待ちを生む位置に割り当てる。読み出し結果が未到着でも、それを使わない後続命令は進められる。チップ内通信では経路長、転送量、共有リンクの競合を分けて扱い、命令・転送・同期・停止を観察して、計算と通信のどちらが律速かを調べる。"
+              ]
+            },
+            {
+              "heading": "同じプログラムで実機と比較",
+              "paragraphs": [
+                "評価はTT-Metal 0.74、Wolfpine 2.0、メーカー製ttsim 1.9.6を使用する。実機は1350 MHzで動き、120のTensixタイルを持つp150 Blackhole。シミュレータ側はIntel i7-12700Hと48 GiBメモリである。整数加算、データ転送、要素単位演算、単一タイルおよび40タイルの行列積という5種類を比較した。各プログラムのホスト計算結果とのPearson相関係数を示しているが、高い相関はビット単位の一致や全アプリケーションの正しさを保証しない。",
+                "科学計算のNekbone演算子では、1タイルで16³のスペクトル要素4個、計16,384点を処理した。著者によると予測44.49マイクロ秒に対し実機46.30マイクロ秒、60,066対62,509サイクルで総誤差は3.9%。各段階の誤差は約9～10%なので、合計には誤差の相殺も含まれる。別の4タイルのパディング基準では、空きタイルや待機ループを省略し、単純実装6586.7秒からコストモデル込み21.2秒へ約311倍高速化した。これはシミュレータ自身の改善で、チップ性能の向上ではない。"
+              ]
+            },
+            {
+              "heading": "診断に使えるが、時間の予測には限界がある",
+              "paragraphs": [
+                "観察機能には代償がある。5つの基準でWolfpineはC++製ttsimより約4～20倍遅く、40タイルの行列積は786秒対37.8秒だった。Python実行に加え、通信や競合を細かく再現する負荷も大きい。用途としては小規模な原因診断や構成の実験が中心となり、実機の処理能力測定を置き換える結果ではない。一方、どの演算器や処理位置で待ちが発生したかを示すことで、次に調べるべき箇所を絞れる。",
+                "操作による精度差も大きい。整数除算は実測平均約33サイクルに対し現モデルが6サイクルを割り当て、誤差82%となる。一部Tensix命令のコストは文書由来で、個々の動作を検証する詳細な実機トレースは公開されていない。評価は単一チップに限られ、Ethernetを介した複数チップや別アーキテクチャは今後の課題だ。診断を実機で確かめる仮説として扱い、Nekbone合計の3.9%を装置全体の誤差と読み替えないことが重要である。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に本站が描き直した説明図。実験結果の図ではありません。",
+            "steps": [
+              "公開仕様と実機測定",
+              "演算・メモリ・通信を構成",
+              "依存と競合による待ちを観察",
+              "実機で校正し律速箇所を特定"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Правильный ответ ускорителя ещё не объясняет, почему программа работает медленно. Wolfpine, разработанный в Эдинбургском университете, моделирует Tenstorrent Tensix и позволяет совместно изучать вычисления, память и обмен данными. Статья опубликована 3 ноября; официальный каталог SC26 подтверждает её как исследовательскую работу воркшопа RISC-V for HPC. Это инструмент наблюдения за архитектурой, а не обещание точного воспроизведения времени каждой операции.",
+          "sections": [
+            {
+              "heading": "Как сделать работу ускорителя наблюдаемой",
+              "paragraphs": [
+                "Авторы используют открытые описания архитектуры, программное обеспечение и измерения оборудования. Реализация на Python объединяет активные блоки, изменяющиеся по тактам, и пассивную память, отвечающую на обращения. Из блоков строятся тайлы, затем устройство целиком. Поддерживаются Wormhole и Blackhole и программная среда TT-Metal: один скомпилированный вариант программы запускается на оборудовании и симуляторе. Предмет исследования — выполнение программ аппаратурой, а не точность предсказаний моделей ИИ.",
+                "Детерминированный порядок выполнения не означает точного соответствия тактов реальному времени. Дополнительная модель затрат размещает документированные или измеренные задержки там, где зависимость действительно блокирует работу. Пока результат чтения не готов, независимые инструкции могут продолжаться. В сети на кристалле отдельно учитываются длина маршрута, объём передачи и конкуренция за линии связи. Наблюдение за инструкциями, передачами, синхронизацией и остановками помогает отделять вычислительные ограничения от коммуникационных."
+              ]
+            },
+            {
+              "heading": "Одинаковые программы на симуляторах и устройстве",
+              "paragraphs": [
+                "Эксперименты используют TT-Metal 0.74, Wolfpine 2.0 и фирменный симулятор ttsim 1.9.6. Реальное устройство — p150 Blackhole со 120 тайлами Tensix на частоте 1350 МГц; симуляторы работают на Intel i7-12700H с 48 ГиБ памяти. Пять тестов охватывают сложение целых, возврат переданных данных, поэлементные операции и матричное умножение на одном и 40 тайлах. Результаты сравниваются с вычисленным на хосте эталоном через корреляцию Пирсона. Высокая корреляция не доказывает побитового совпадения или корректности всех приложений.",
+                "В примере научных вычислений Nekbone один тайл обрабатывает четыре спектральных элемента размером 16³, всего 16 384 точки. Авторы получают 44,49 микросекунды в модели против 46,30 на оборудовании: 60 066 и 62 509 тактов, общая ошибка 3,9%. При этом ошибки отдельных фаз составляют примерно 9–10%, то есть близость суммы частично связана с компенсацией отклонений. В отдельном тесте дополнения данных на четырёх тайлах пропуск бездействующих блоков и циклов ожидания сокращает время симуляции с 6586,7 до 21,2 секунды, примерно в 311 раз с моделью затрат. Это ускорение симулятора, а не чипа."
+              ]
+            },
+            {
+              "heading": "Диагностика с явно ограниченной точностью",
+              "paragraphs": [
+                "Наблюдаемость требует ресурсов. Во всех пяти тестах Wolfpine медленнее реализации ttsim на C++ примерно в 4–20 раз; матричное умножение на 40 тайлах занимает 786 против 37,8 секунды. Затраты создают и Python, и более подробная модель передачи данных и конкуренции. Инструмент подходит прежде всего для локальной диагностики и архитектурных экспериментов, но эти результаты не заменяют измерения пропускной способности оборудования. Привязка ожиданий к блокам и участкам программы помогает выбрать направление дальнейшей проверки.",
+                "Точность времени существенно зависит от операции. Для целочисленного деления оборудование даёт в среднем около 33 тактов, а текущая модель начисляет шесть: ошибка достигает 82%. Стоимости части инструкций Tensix основаны на документации без открытых детальных аппаратных трасс для индивидуальной проверки. Оценка ограничена одним чипом; Ethernet-связь нескольких устройств и другие архитектуры остаются дальнейшей работой. Выводы симулятора разумно считать гипотезами для проверки на аппаратуре, а ошибку 3,9% на сумме Nekbone нельзя переносить на платформу целиком."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема по статье, а не график экспериментальных результатов.",
+            "steps": [
+              "Открытые спецификации и измерения",
+              "Модель вычислений, памяти и связи",
+              "Наблюдение за зависимостями и ожиданием",
+              "Калибровка и поиск узких мест"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "只知道程式算出了正確答案，還不足以理解它為什麼慢。愛丁堡大學的Wolfpine在軟體中重建Tenstorrent Tensix加速器，讓研究者觀察計算單元、儲存和片上通訊如何相互等待。論文於11月3日公開，SC26官方頁面確認它是RISC-V for HPC工作坊的研究論文。它提供的是可解釋的硬體模擬工具，並未聲稱所有操作都能精確還原真實時鐘週期。",
+          "sections": [
+            {
+              "heading": "把晶片拆成可觀察的模組",
+              "paragraphs": [
+                "Wolfpine以公開架構文件、開源軟體和真實硬體測量為依據，用Python組織處理器、計算協處理器、儲存和通訊模組。主動模組按時鐘推進，被動儲存在訪問時響應；模組組成計算塊，再組成整片裝置。它支援Wormhole與Blackhole兩代架構，接入TT-Metal軟體棧，允許同一份已編譯程式在真實裝置與模擬器上執行。研究的重點不是預測模型準確率，而是解釋加速器執行過程。",
+                "基本模擬保持確定的執行順序，但按週期推進並不意味著週期數準確。可選成本模型為計算、訪存和通訊加入來自文件或測量的延遲，並把等待放在真正發生依賴的位置。例如讀取結果尚未準備好時，後續無關指令仍可繼續；片上網路分別考慮經過的鏈路、傳輸大小和鏈路競爭。系統還能彙總指令、資料移動、同步和停頓事件，使開發者區分算得慢、搬得慢與等得久。"
+              ]
+            },
+            {
+              "heading": "同一程式在模擬器與真實硬體上對照",
+              "paragraphs": [
+                "實驗使用TT-Metal 0.74、Wolfpine 2.0和廠商模擬器ttsim 1.9.6。真實裝置是執行在1350 MHz、報告120個Tensix計算塊的p150 Blackhole；模擬器執行在Intel i7-12700H與48 GiB記憶體環境。五個基準從整數加法、資料回傳、逐元素運算，擴展到單塊矩陣乘法和40塊參與的矩陣乘法。同一程式分別對照其主機端計算參考結果，報告Pearson相關係數；相關性高不是逐位相同的證明，也不是所有應用都正確的保證。",
+                "最有解釋力的應用案例是流體計算相關的Nekbone算子：在單個Tensix塊上處理4個16³大小的譜元素，共16,384個資料點。作者報告模擬總耗時44.49微秒，硬體46.30微秒，對應60,066與62,509週期，總誤差3.9%；三個階段各自仍有約9%至10%的誤差，說明合計接近可能包含誤差抵消。另一項四塊填充基準透過跳過空閒塊和韌體忙等，將樸素模擬的6586.7秒降至啟用成本模型後的21.2秒，約311倍；這是模擬器自身最佳化的加速，不是晶片提速。"
+              ]
+            },
+            {
+              "heading": "能定位瓶頸，但時序仍有誤差",
+              "paragraphs": [
+                "可觀察性有實際代價。五個基準中，Wolfpine比C++編寫的ttsim慢約4至20倍；40塊矩陣乘法耗時786秒，對照37.8秒。Python解釋執行和更細的資料傳輸、競爭建模都會增加負擔，因此它更適合小規模診斷與架構實驗，而不能憑這組結果替代真實裝置的吞吐量測試。論文同時展示了把等待歸到計算單元或程式位置的能力，幫助確定下一步應最佳化哪裡。",
+                "時序誤差還取決於具體操作。整數除法的實測平均約33週期，而當前成本模型取6週期，誤差達82%；部分Tensix指令成本來自文件，尚無公開硬體細粒度軌跡逐一驗證。現有評估也僅覆蓋單晶片，多晶片乙太網通訊和其他架構仍屬後續工作。合理的使用方式是把模擬診斷當作待驗證假設，再由硬體測量確認，而不是把單個算子的3.9%誤差擴展為全平臺準確率。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據論文重繪的解釋性流程，非實驗結果圖。",
+            "steps": [
+              "公開文件與硬體測量",
+              "組合計算、儲存和通訊模組",
+              "記錄依賴、競爭與停頓",
+              "與真實裝置校準並定位瓶頸"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "ai-expectations-gap-survey",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original institutional research report",
+          "url": "https://www.anthropic.com/research/ai-expectations-gap"
+        },
+        {
+          "label": "Full report PDF",
+          "url": "https://www-cdn.anthropic.com/a28f24814c56e2834a3eae7b13946f19d3e97ec4/The%20AI%20Expectations%20Gap.pdf"
+        },
+        {
+          "label": "Survey methods and additional analyses",
+          "url": "https://www-cdn.anthropic.com/1bc1a3067f9c9883d6d556b38f26fd4f1e1b640f/The%20AI%20Expectations%20Gap%20-%20Appendix.pdf"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "讨论AI会如何改变工作时，人们常把能力、采用速度和岗位变化混在一起。Sacher等人于10月16日发布的研究将这些问题拆开，比较美国成年人和Anthropic员工的回答。它发现两组人对AI未来能力与自身工作暴露程度的预期相差很大，但这是一项关于信念的调查，不能用来证明2030年的技术能力、经济增长或失业率会达到某个数值。",
+          "sections": [
+            {
+              "heading": "问的是预期，样本也有边界",
+              "paragraphs": [
+                "Morning Consult在2026年8月11日至23日获得16,395次完整访问，去掉同一受访者的重复记录后保留10,980名美国成年人，并重新按年龄、性别、族裔、教育、地区和家庭收入加权。8月9日至12日的Anthropic内部调查有1,334名员工回答，覆盖各部门但不加权。公众样本来自自愿加入的网络调查面板，未覆盖无法上网的人；人口加权也无法消除所有选择偏差。",
+                "部分未来问题随机让一半公众回答2027年、另一半回答2030年，员工则全部回答2030年。公众可以选“不确定”，各题约12%至21%的这类回答被逐题排除；员工没有这一选项，但可以跳题。因此10,980是去重后的总体样本，不是每个百分比的实际分母。自己的工作时数问题还采用不同量表：员工用滑块，公众选区间后取中点。比较结果必须保留这些测量差别。"
+              ]
+            },
+            {
+              "heading": "能力、采用与节省时间不是同一件事",
+              "paragraphs": [
+                "在“达到熟练专业人员水平”的八项任务中，两组对当前能力和任务难度顺序较接近，对未来进展却差异明显。关于AI到2030年能否作出诺贝尔奖级发现，公众回答比例为39%，员工为91%。受访在职公众平均认为AI届时能完成自己当前28%的工作时数，员工为75%。这些数字指受访者判断的技术可完成范围，不是已经测得的自动化比例，更不能直接解释为相同比例的人会失业。",
+                "即使技术上可以完成，组织也未必会实际采用。公众预计2030年在AI能够处理的任务中42%会使用AI，员工预计65%。节省时间的问题则让人选择一项当下AI擅长的任务，并把检查、修正输出的时间算进去：在工作中使用AI的公众里26%认为用时不超过原来的四分之一，员工为59%。这是针对选定合适任务的自报判断，不是随机分配工具后的计时实验，不能推广为整个岗位的生产率提升。"
+              ]
+            },
+            {
+              "heading": "工作受影响，不等于岗位按比例消失",
+              "paragraphs": [
+                "研究还告诉受访者当前美国失业率约为4.2%，再请他们估计2030年。认为自己工作更容易由AI完成的人，通常也给出更高的失业率预期；公众样本中，自报暴露比例每高10个百分点，对未来失业率的估计平均高0.4个百分点。两组人在相似工作暴露预期下的判断接近。这里观察到的是两种信念之间的关联，不是AI实际造成失业的因果估计，也不是经过验证的宏观预测。",
+                "这份机构研究报告最有价值的地方，是提示讨论应分开问：能做什么、是否采用、节省多少时间，以及谁会转换工作。员工身处高强度AI使用环境，其信息、职业结构和利益关系都与一般公众不同，不能把其中一组当作标准答案。9月另一次7,613人的公众调查中，“2030年诺贝尔奖级发现”的比例为44%，也说明预期会变化。合理结论是群体经验与判断存在显著差异；哪一种未来会发生，仍需要能力评测、实际采用和就业数据继续验证。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据调查设计重绘的解释性流程，非调查结果图。",
+            "steps": [
+              "区分公众与员工样本",
+              "分别询问能力、采用和时间",
+              "比较工作暴露与就业预期",
+              "保留量表、选择偏差和非因果边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Debates about AI and employment often mix up capability, adoption and job loss. The October 16 report by Sacher and colleagues separates these questions and compares US adults with Anthropic staff. It finds substantial differences in expectations about future AI capabilities and exposure of respondents’ own work. This is a study of beliefs: it does not establish what technology, growth or unemployment will actually look like in 2030.",
+          "sections": [
+            {
+              "heading": "What was surveyed, and who answered",
+              "paragraphs": [
+                "Morning Consult collected 16,395 completed interviews between August 11 and 23, 2026. Keeping only each respondent’s first interview left 10,980 US adults, with weights recalculated using age, gender, race and ethnicity, education, region and household income. An internal Anthropic poll on August 9–12 received 1,334 staff responses across departments, without weighting. The public survey used an opt-in online panel, excluding adults without internet access. Demographic weighting cannot remove every source of selection bias.",
+                "For several future-facing questions, half the public sample was randomly asked about 2027 and half about 2030; all staff were asked about 2030. The public could answer “not sure,” chosen by roughly 12–21% and excluded question by question. Staff could skip questions but had no equivalent option. Thus 10,980 is the deduplicated overall sample, not the denominator of every percentage. Own-work estimates also used different scales: staff moved a slider, while public respondents chose intervals converted to midpoints."
+              ]
+            },
+            {
+              "heading": "Capability, adoption and time savings differ",
+              "paragraphs": [
+                "Across eight tasks framed as matching a skilled professional, the groups were relatively close about current capability and task difficulty but diverged on future progress. For a Nobel-level discovery by 2030, the reported shares were 39% among the public and 91% among staff. Employed public respondents expected AI to be able to perform an average of 28% of their current work hours by then, compared with 75% for staff. These are perceived technical possibilities, not measured automation or corresponding shares of workers losing their jobs.",
+                "Ability does not guarantee use. Among tasks AI could perform, the public expected 42% to use AI by 2030, versus 65% among staff. A separate question asked about a task currently well suited to AI, counting time spent checking and fixing the output. Among public respondents who use AI at work, 26% thought it took one quarter of the original time or less; the staff share was 59%. These are self-reports about a selected suitable task, not timed randomized trials or estimates of productivity gains across an entire job."
+              ]
+            },
+            {
+              "heading": "Task exposure is not a count of disappearing jobs",
+              "paragraphs": [
+                "The researchers also supplied the current US unemployment rate of about 4.2% and requested a 2030 estimate. People expecting greater exposure of their own work generally anticipated higher unemployment. In the public sample, ten percentage points more expected work exposure was associated with a 0.4-percentage-point higher unemployment forecast. The groups’ forecasts were similar at comparable perceived exposure. This connects two beliefs; it does not estimate a causal effect of AI on actual unemployment or validate a macroeconomic forecast.",
+                "The report’s practical contribution is to separate questions about what AI can do, whether organizations use it, how much time it saves and how workers move between jobs. Staff in an intensive AI environment differ from the public in information, occupations and incentives; neither group is an established answer key. A separate September public survey of 7,613 people put the Nobel-level-discovery share at 44%, illustrating that expectations can shift. The supported finding is substantial variation in experience and beliefs. Capability tests, adoption records and employment data are still needed to determine which future materializes."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram of the survey design; not a plot of survey results.",
+            "steps": [
+              "Separate public and staff samples",
+              "Ask about ability, adoption and time",
+              "Compare task exposure and employment beliefs",
+              "Preserve measurement and non-causal limits"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "AIと雇用の議論では、何ができるか、企業が使うか、仕事が減るかが混ざりやすい。Sacherらが10月16日に公開した報告は、この三つを分けて米国の成人とAnthropic社員の回答を比較した。将来の能力と自分の仕事への影響について大きな差がある。ただし、測ったのは期待や認識であり、2030年の能力、成長率、失業率そのものではない。",
+          "sections": [
+            {
+              "heading": "誰に、どのように尋ねたか",
+              "paragraphs": [
+                "Morning Consultは2026年8月11～23日に16,395件の完了回答を集め、同じ人の重複を除いて10,980人を残した。年齢、性別、人種・民族、教育、地域、世帯収入に基づいて重みを再計算している。8月9～12日のAnthropic内部調査は各部門の1,334人が回答し、重み付けはない。一般向け調査は自発的に参加したオンラインパネルなので、インターネットを使えない人は含まれず、人口構成の補正だけでは選択の偏りをすべて取り除けない。",
+                "将来についての一部の問いは、一般参加者の半数に2027年、残り半数に2030年を無作為に割り当てた。社員は全員2030年について回答する。一般参加者には「分からない」があり、各問で約12～21%の該当回答を除外した。社員には同じ選択肢がなく、回答を飛ばせる。10,980人は重複除去後の全体数で、各割合の分母ではない。自分の作業時間も社員はスライダー、一般参加者は範囲選択を中点に変換しており、尺度の違いを伴う。"
+              ]
+            },
+            {
+              "heading": "能力と導入、時間短縮を分ける",
+              "paragraphs": [
+                "熟練した専門家と同等にできるかを尋ねた8種類の作業では、現在の能力と難しさの順序は比較的近かったが、将来像は大きく異なる。2030年までのノーベル賞級の発見について、一般参加者は39%、社員は91%が可能と答えた。就業している一般参加者は、自分の現在の作業時間の平均28%をAIが担えると予想し、社員は75%だった。技術的に可能と思う範囲であり、実測の自動化率でも、同じ割合の人が失職する予測でもない。",
+                "可能でも実際に使われるとは限らない。AIが処理できる作業のうち2030年にAIを使う割合は、一般参加者が42%、社員が65%と予想した。時間短縮は、現在AIが得意とする作業を一つ考え、確認や修正を含めて答える質問である。仕事でAIを使う一般参加者の26%、社員の59%が元の4分の1以下の時間で済むと答えた。適した作業を選んだ自己申告であり、無作為にツールを配布した時間測定でも、職務全体の生産性効果でもない。"
+              ]
+            },
+            {
+              "heading": "作業の自動化可能性は失職率ではない",
+              "paragraphs": [
+                "研究者は当時の米国失業率を約4.2%と伝え、2030年の予想も尋ねた。自分の仕事をAIが担えると考える割合が高い人ほど、失業率も高く予想する傾向がある。一般参加者では作業への影響の予想が10ポイント高いと、失業率予想は平均0.4ポイント高かった。同程度の作業への影響を予想する人同士なら両群の判断は近い。これは二つの信念の関連であり、AIが実際に失業を生む因果効果や、検証済みのマクロ予測ではない。",
+                "この機関報告の意義は、できる作業、導入、時間短縮、転職を別々に考える材料を示すことにある。AIを日常的に大量利用する社員は、一般社会と情報、職業構成、利害が異なり、どちらかが正解とは決められない。9月の別の一般調査7,613人ではノーベル賞級発見の割合は44%で、期待自体が動くことも分かる。裏付けられたのは経験と認識の大きな差であり、未来の実現には能力評価、導入実績、雇用データによる継続的な確認が必要だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "調査設計を基に本站が描き直した説明図。調査結果のグラフではありません。",
+            "steps": [
+              "一般参加者と社員を分ける",
+              "能力・導入・時間を別々に質問",
+              "作業への影響と雇用の予想を比較",
+              "尺度差と非因果の限界を残す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "В спорах об ИИ и занятости часто смешивают возможности технологии, её внедрение и сокращение рабочих мест. Доклад Сахера и соавторов от 16 октября разделяет эти вопросы и сопоставляет ответы взрослых жителей США и сотрудников Anthropic. Группы существенно расходятся в ожиданиях возможностей ИИ и его влияния на собственную работу. Однако исследование измеряет убеждения, а не будущие технологические возможности, рост экономики или безработицу в 2030 году.",
+          "sections": [
+            {
+              "heading": "Кого опрашивали и как считали ответы",
+              "paragraphs": [
+                "Morning Consult собрала 16 395 завершённых интервью 11–23 августа 2026 года. После сохранения только первого ответа каждого человека осталось 10 980 взрослых жителей США; веса пересчитали по возрасту, полу, расовой и этнической принадлежности, образованию, региону и доходу домохозяйства. Внутренний опрос Anthropic 9–12 августа получил 1334 ответа сотрудников разных подразделений без взвешивания. Общественная выборка состояла из добровольной онлайн-панели и не охватывала людей без доступа к интернету. Демографические веса не устраняют все смещения отбора.",
+                "Для части вопросов о будущем половину общественной выборки случайно спрашивали о 2027 году, другую — о 2030-м; сотрудники отвечали о 2030-м. Публика могла выбрать «не уверен»: такие ответы, примерно 12–21% в зависимости от вопроса, исключались отдельно для каждого расчёта. Сотрудники могли пропускать вопросы, но такой опции не имели. Поэтому 10 980 — общий размер очищенной выборки, а не знаменатель любого процента. Долю собственной работы сотрудники задавали ползунком, публика выбирала диапазон, заменённый его серединой."
+              ]
+            },
+            {
+              "heading": "Возможность, внедрение и экономия времени",
+              "paragraphs": [
+                "Для восьми задач на уровне квалифицированного специалиста группы сравнительно близко оценивали нынешние возможности и порядок сложности, но расходились в ожиданиях прогресса. Открытие нобелевского уровня к 2030 году считали возможным 39% публики и 91% сотрудников. Работающие общественные респонденты ожидали, что ИИ сможет выполнить в среднем 28% их нынешних рабочих часов, сотрудники — 75%. Это воспринимаемая техническая возможность, а не измеренная автоматизация и не доля людей, которые потеряют работу.",
+                "Техническая возможность не гарантирует внедрения. Из задач, доступных ИИ, публика ожидала фактического использования ИИ в 42% к 2030 году, сотрудники — в 65%. В отдельном вопросе нужно было выбрать задачу, для которой современный ИИ подходит, и учесть проверку и исправление результата. Среди использующих ИИ на работе общественных респондентов 26% считали, что она занимает четверть исходного времени или меньше; среди сотрудников — 59%. Это самооценка выбранной подходящей задачи, не хронометраж рандомизированного эксперимента и не производительность всей должности."
+              ]
+            },
+            {
+              "heading": "Автоматизируемые задачи не равны исчезающим должностям",
+              "paragraphs": [
+                "Исследователи сообщили текущую безработицу в США около 4,2% и попросили оценить её в 2030 году. Чем большую долю собственной работы человек считал доступной ИИ, тем выше обычно была ожидаемая безработица. В общественной выборке дополнительные десять процентных пунктов ожидаемой автоматизируемости соответствовали повышению прогноза безработицы в среднем на 0,4 пункта. При сходной воспринимаемой экспозиции группы давали близкие прогнозы. Это связь двух убеждений, а не причинная оценка реальной безработицы или проверенный макроэкономический прогноз.",
+                "Практическая ценность доклада — разделение вопросов о возможностях, внедрении, экономии времени и переходе работников между профессиями. Сотрудники интенсивно использующей ИИ компании отличаются от общества информацией, профессиями и интересами; ни одна группа не является установленным эталоном истины. В отдельном сентябрьском опросе 7613 взрослых доля ожидающих нобелевского открытия составила 44%, показывая изменчивость ожиданий. Данные подтверждают различия опыта и взглядов. Чтобы узнать, какое будущее реализуется, нужны дальнейшие проверки возможностей, фактического внедрения и занятости."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема дизайна опроса, а не график его результатов.",
+            "steps": [
+              "Разделить общественную и служебную выборки",
+              "Отдельно спросить о возможностях и использовании",
+              "Сопоставить ожидания о задачах и занятости",
+              "Сохранить ограничения измерения и причинности"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "討論AI會如何改變工作時，人們常把能力、採用速度和崗位變化混在一起。Sacher等人於10月16日釋出的研究將這些問題拆開，比較美國成年人和Anthropic員工的回答。它發現兩組人對AI未來能力與自身工作暴露程度的預期相差很大，但這是一項關於信念的調查，不能用來證明2030年的技術能力、經濟增長或失業率會達到某個數值。",
+          "sections": [
+            {
+              "heading": "問的是預期，樣本也有邊界",
+              "paragraphs": [
+                "Morning Consult在2026年8月11日至23日獲得16,395次完整訪談，去掉同一受訪者的重複記錄後保留10,980名美國成年人，並重新按年齡、性別、族裔、教育、地區和家庭收入加權。8月9日至12日的Anthropic內部調查有1,334名員工回答，覆蓋各部門但不加權。公眾樣本來自自願加入的網路調查面板，未覆蓋無法上網的人；人口加權也無法消除所有選擇偏差。",
+                "部分未來問題隨機讓一半公眾回答2027年、另一半回答2030年，員工則全部回答2030年。公眾可以選“不確定”，各題約12%至21%的這類回答被逐題排除；員工沒有這一選項，但可以跳題。因此10,980是去重後的總體樣本，不是每個百分比的實際分母。自己的工作時數問題還採用不同量表：員工用滑塊，公眾選區間後取中點。比較結果必須保留這些測量差別。"
+              ]
+            },
+            {
+              "heading": "能力、採用與節省時間不是同一件事",
+              "paragraphs": [
+                "在“達到熟練專業人員水平”的八項任務中，兩組對當前能力和任務難度順序較接近，對未來進展卻差異明顯。關於AI到2030年能否作出諾貝爾獎級發現，公眾回答比例為39%，員工為91%。受訪在職公眾平均認為AI屆時能完成自己當前28%的工作時數，員工為75%。這些數字指受訪者判斷的技術可完成範圍，不是已經測得的自動化比例，更不能直接解釋為相同比例的人會失業。",
+                "即使技術上可以完成，組織也未必會實際採用。公眾預計2030年在AI能夠處理的任務中42%會使用AI，員工預計65%。節省時間的問題則讓人選擇一項當下AI擅長的任務，並把檢查、修正輸出的時間算進去：在工作中使用AI的公眾裡26%認為用時不超過原來的四分之一，員工為59%。這是針對選定合適任務的自報判斷，不是隨機分配工具後的計時實驗，不能推廣為整個崗位的生產率提升。"
+              ]
+            },
+            {
+              "heading": "工作受影響，不等於崗位按比例消失",
+              "paragraphs": [
+                "研究還告訴受訪者當前美國失業率約為4.2%，再請他們估計2030年。認為自己工作更容易由AI完成的人，通常也給出更高的失業率預期；公眾樣本中，自報暴露比例每高10個百分點，對未來失業率的估計平均高0.4個百分點。兩組人在相似工作暴露預期下的判斷接近。這裡觀察到的是兩種信念之間的關聯，不是AI實際造成失業的因果估計，也不是經過驗證的宏觀預測。",
+                "這份機構研究報告最有價值的地方，是提示討論應分開問：能做什麼、是否採用、節省多少時間，以及誰會轉換工作。員工身處高強度AI使用環境，其資訊、職業結構和利益關係都與一般公眾不同，不能把其中一組當作標準答案。9月另一次7,613人的公眾調查中，“2030年諾貝爾獎級發現”的比例為44%，也說明預期會變化。合理結論是群體經驗與判斷存在顯著差異；哪一種未來會發生，仍需要能力評測、實際採用和就業資料繼續驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據調查設計重繪的解釋性流程，非調查結果圖。",
+            "steps": [
+              "區分公眾與員工樣本",
+              "分別詢問能力、採用和時間",
+              "比較工作暴露與就業預期",
+              "保留量表、選擇偏差和非因果邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "anthropic-employment-agent-work-study",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Original institutional research report",
+          "url": "https://www.anthropic.com/research/employment-at-anthropic"
+        },
+        {
+          "label": "Full report PDF",
+          "url": "https://www-cdn.anthropic.com/72628f1863c53432195db83279252dfd2cb53158/Employment%20at%20Anthropic.pdf"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "大量使用Agent以后，人是否会少工作，企业是否会少招人？Wilmers等人10月16日发布的Anthropic内部研究给出了一幅更复杂的图景：部分可计量产出增加，初级技术岗位占比下降，员工却花更多精力组织、检查和协调Agent的工作。报告结合公司记录与17次员工访谈，属于单一企业的观察研究；它有助于理解工作如何改变，但不能直接证明AI导致了这些变化，也不能代表整个劳动力市场。",
+          "sections": [
+            {
+              "heading": "岗位结构与Agent工时怎么计算",
+              "paragraphs": [
+                "研究汇合就业、工具使用、可计量产出、调查、沟通与日历等内部数据，再用17次访谈补充流程变化。自2025年初以来，技术部门中的初级员工占比从21%降至14%，技术新聘人员中初级岗位占比从27%降至9%。同期技术招聘的绝对数量仍在增加，只是销售、财务、招聘等部门扩张更快。因此这些数字首先说明人员构成改变，不能改写成“技术员工减少了三分之一”，也无法独立排除公司成长阶段的影响。",
+                "另一个醒目结果是，到8月，员工直接发起的交互式Agent活跃运行时数约为人类工时的6倍。分子汇总主Agent与子Agent的推理、工具活动，排除超过30分钟的等待；分母是人数乘以每周40小时的假定，而非逐人实测劳动时数。它描述并行计算活动的规模，不代表6倍有效产出，更不等于一个Agent替代6名员工。区分活跃时间、会话经过时间和人的投入，是理解这组比例的前提。"
+              ]
+            },
+            {
+              "heading": "产出增加的证据，还不足以确认因果",
+              "paragraphs": [
+                "为了不只看公司整体上升曲线，作者跟踪192名开始采用编程Agent的工程师，并与观察期内未采用的74名工程师比较。采用时点定义为首次在一个月内达到至少5次Agent会话；分析控制个人固定差异与共同的月份因素，置信区间按个人聚类计算。采用之后新增内容明显增加，但工具采用不是随机的：准备启动大项目的人可能同时更愿意使用Agent，业务增长也会影响产出。完全自主Agent的采用者在采用前已明显上升，更提醒读者不能把前后差值都归因于工具。",
+                "更多产出是否也意味着更多返工？作者在同一员工、同一月份、同一项目目录内，比较Agent生成与人直接编写的内容。质量代理指标包括90天内删除、缺陷修复导致的删除、整项回退以及跳过测试等，未观察到后续删除或回退比例的差异。这是特定记录与指标上的结果，不是完整软件质量、安全性或业务价值的证明；难以发现的错误可能不被这些指标捕捉。销售等岗位采用之后也出现产出增加，但更多商机本身可能同时促进自动化与成交。"
+              ]
+            },
+            {
+              "heading": "工作转向监督，人的注意力仍是限制",
+              "paragraphs": [
+                "产出变多后，监督并未消失。报告把输出量按每个token对应0.75个词、每分钟阅读250词换算，发现非技术人员若读完交互式Agent全部输出，也需要超过半个工作周；这是估算阅读负担，不是实际阅读时长。作者对2,000条单行会话摘要自动分类，估计用于制定Agent计划、评审、监控及整理工作方式的“元工作”，从2025年秋平均会话的10%升至2026年春的22%。增加的是管理自动化所需的活动，而非简单地把原任务全部取消。",
+                "本文的工程启发是，部署Agent时应同时观察完成了什么、审查花了多久，以及哪些责任仍须由人承担。这个判断来自对报告机制的解释，不是已验证的组织改造方案。研究对象是高速增长、工具访问和AI经验都特殊的模型公司，部分指标还依赖自动分类与自报材料；没有随机试验或跨企业代表性样本。报告提出的内部转岗也不能保护从未被录用的新人。更稳妥的结论是，自动化可能改变岗位内容和进入机会，需要把产出、质量、监督成本与就业结构放在一起看。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根据研究设计重绘的解释性流程，非因果关系或实验结果图。",
+            "steps": [
+              "联合工作记录与访谈",
+              "区分岗位占比、活跃时间和产出",
+              "比较采用前后并检查返工",
+              "观察监督成本与研究边界"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Does intensive agent use reduce human work or hiring? The October 16 report by Wilmers and colleagues describes a more complicated pattern inside Anthropic: some measured outputs rise, junior technical roles shrink as a share, and employees devote more effort to organizing, checking and coordinating agents. Combining company records with 17 employee interviews, it is an observational study of one firm. It helps explain changing work but cannot directly establish that AI caused the changes or represent the whole labor market.",
+          "sections": [
+            {
+              "heading": "What hiring shares and agent hours measure",
+              "paragraphs": [
+                "The study combines employment, tool-use, output, survey, communication and calendar records, contextualized by 17 interviews. Since early 2025, junior employees’ share of technical departments fell from 21% to 14%, while juniors’ share of technical hires fell from 27% to 9%. Technical hiring still grew in absolute terms, but sales, finance and recruiting expanded faster. These figures describe composition; they do not mean the technical workforce contracted by a third. Company maturation remains a possible contributor.",
+                "By August, active runtime of employee-directed interactive agents was about six times estimated human work hours. The numerator pools agents and subagents, counting inference and active tool use while excluding waits longer than 30 minutes. The denominator is headcount multiplied by an assumed 40-hour week, not directly measured individual labor time. This describes the scale of parallel computational activity, not sixfold useful output or six workers replaced by an agent. Active runtime, elapsed session time and human effort must remain distinct."
+              ]
+            },
+            {
+              "heading": "More output does not establish causality",
+              "paragraphs": [
+                "To go beyond aggregate growth, the authors follow 192 engineers adopting coding agents and compare them with 74 non-adopters during the observation period. Adoption begins in the first month with at least five agentic sessions. The analysis includes person and calendar-month fixed effects, with uncertainty clustered by person. Added output rises after adoption, but use is not randomized: employees preparing a major project may also choose agents, while business growth affects output. Fully autonomous-agent adopters were already improving beforehand, warning against attributing the entire before–after difference to the tool.",
+                "Does additional output create more rework? Within the same employee, month and project directory, the authors compare agent-written and directly human-written work. Quality proxies include deletion within 90 days, deletion in bug fixes, whole-commit reversal and test-skipping indicators. They report no difference in subsequent deletion or reversal rates. That concerns particular records and proxies, not complete software quality, security or business value; difficult-to-detect errors may escape them. Sales output also rises following adoption, but more sales opportunities could drive both automation and deals."
+              ]
+            },
+            {
+              "heading": "Supervision makes attention a continuing constraint",
+              "paragraphs": [
+                "More output does not remove supervision. Converting output at 0.75 words per token and a reading speed of 250 words per minute, the report estimates that even non-technical employees would need over half a work week to read all interactive-agent output. This is a hypothetical reading burden, not observed reading time. Automated classification of 2,000 one-line session summaries estimates that planning, reviewing and monitoring agents and documenting workflows rose from 10% of the average employee’s sessions in autumn 2025 to 22% in spring 2026. Managing automation creates work of its own.",
+                "An engineering implication is to track completed work alongside review effort and responsibilities that still require people. This is an interpretation of the reported mechanisms, not a tested organizational prescription. The firm is rapidly growing and unusual in tool access and AI experience; some measures rely on automated classifications or self-reports. There is no randomized trial or representative cross-company sample. Internal redeployment also cannot protect junior candidates who are never hired. The defensible conclusion is that automation may change job content and entry opportunities, requiring output, quality, oversight costs and workforce composition to be examined together."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Original explanatory diagram of the study design; not a causal or experimental result chart.",
+            "steps": [
+              "Combine work records and interviews",
+              "Separate hiring shares, runtime and output",
+              "Compare adoption periods and check rework",
+              "Assess supervision costs and study limits"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Agentを大量に使うと、人の仕事や採用は減るのだろうか。Wilmersらが10月16日に公開したAnthropic内部の研究は、もっと複雑な変化を描く。測定可能な産出の一部が増え、初級技術職の割合が下がる一方、社員はAgentの仕事の整理、確認、調整に力を使う。社内記録と17人へのインタビューを組み合わせた単一企業の観察研究であり、変化をAIの因果効果と断定したり、労働市場全体へ一般化したりはできない。",
+          "sections": [
+            {
+              "heading": "職種構成とAgent稼働時間の意味",
+              "paragraphs": [
+                "研究は雇用、ツール利用、産出、調査、コミュニケーション、カレンダーの記録を組み合わせ、17人のインタビューで仕事の変化を補足する。2025年初め以降、技術部門の初級社員比率は21%から14%、技術職の新規採用に占める初級職は27%から9%になった。ただし技術採用の絶対数は増え続け、営業、財務、採用担当の拡大がそれを上回った。構成比の変化であり、技術社員が3分の1減ったという意味ではなく、企業の成長段階も影響しうる。",
+                "8月には社員が直接使う対話型Agentの活動時間が、推定した人の労働時間の約6倍になった。分子は主Agentと子Agentの推論・ツール使用時間を合算し、30分超の待機を除く。分母は人数に週40時間を掛けた仮定で、各社員の実測労働時間ではない。並列に動く計算活動の規模を示しており、有用な産出が6倍という意味でも、Agent一つが6人を置き換えるという意味でもない。活動時間、セッション経過時間、人の投入は区別する必要がある。"
+              ]
+            },
+            {
+              "heading": "産出の増加だけでは因果は決まらない",
+              "paragraphs": [
+                "全社の増加傾向だけに頼らず、著者らはプログラミングAgentを導入した技術者192人と、観察期間中に導入しなかった74人を比較した。月内にAgentセッションが初めて5回以上となった月を導入時点とし、個人と暦月の固定効果を用い、不確実性は個人単位で集約して計算する。導入後の追加産出は増えたが、導入は無作為ではない。大きな案件の準備とツール利用が同時に進む可能性があり、完全自律Agentの利用者は導入前から産出が伸びていた。前後差を丸ごとツール効果とは読めない。",
+                "増えた成果が手戻りを生むかも調べている。同じ社員、同じ月、同じプロジェクト内で、Agentと人が直接作った成果を比較した。90日以内の削除、バグ修正による削除、変更全体の取り消し、テスト省略などを品質の代理指標とし、後の削除・取り消し率に差は見られなかった。ただし特定の記録と指標での結果であり、ソフトウェア全体の品質、安全性、事業価値の証明ではない。発見しにくい誤りは捕捉されない可能性があり、営業でも商談機会の増加が自動化と成果を同時に押し上げうる。"
+              ]
+            },
+            {
+              "heading": "監督が増え、人の注意は制約として残る",
+              "paragraphs": [
+                "出力が増えても監督は消えない。報告は1tokenを0.75語、読書速度を毎分250語として換算し、非技術職でも対話型Agentの全出力を読むには週の半分を超える時間が必要と推定した。これは仮想的な読解負担で、実際に読んだ時間ではない。2,000件の一行会話要約を自動分類すると、Agentの計画、レビュー、監視、作業手順の整理といった管理作業は、平均的社員の会話の10%から22%へ、2025年秋から2026年春に増えている。自動化を運用する仕事自体が生じる。",
+                "工学的な示唆としては、完成量だけでなく確認の負担と人が担う責任も一緒に測る必要がある。これは観察された仕組みからの解釈で、実証済みの組織改革策ではない。対象企業は急成長中で、ツールへのアクセスやAI経験も特殊であり、一部の指標は自動分類や自己申告に依存する。無作為試験や企業横断の代表的標本はない。社内配置転換も、最初から採用されない新人を守るものではない。産出、品質、監督コスト、雇用構成を合わせて見て初めて、職務内容と入口の変化を評価できる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "研究設計を基に本站が描き直した説明図。因果関係や実験結果の図ではありません。",
+            "steps": [
+              "作業記録とインタビューを結合",
+              "採用比率・稼働時間・産出を分ける",
+              "導入前後と手戻りを比較",
+              "監督負担と研究の限界を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Сокращает ли массовое использование агентов человеческую работу и найм? Доклад Уилмерса и соавторов от 16 октября описывает более сложную картину внутри Anthropic: некоторые показатели выпуска растут, доля младших технических ролей падает, а сотрудники больше организуют, проверяют и координируют агентов. Исследование объединяет корпоративные записи и 17 интервью. Это наблюдение одной компании, позволяющее изучать изменения труда, но не доказывающее их причинную связь с ИИ и не представляющее весь рынок труда.",
+          "sections": [
+            {
+              "heading": "Что означают структура найма и часы агентов",
+              "paragraphs": [
+                "Авторы объединяют данные о занятости, использовании инструментов, выпуске, опросах, коммуникациях и календарях, дополняя их 17 интервью. С начала 2025 года доля младших сотрудников технических подразделений снизилась с 21% до 14%, а их доля среди новых технических работников — с 27% до 9%. При этом технический найм продолжал расти в абсолютных числах; продажи, финансы и подбор персонала расширялись быстрее. Это изменение состава, а не сокращение технического штата на треть. Стадия развития компании также может влиять на результат.",
+                "К августу активное время интерактивных агентов, запускаемых сотрудниками, примерно в шесть раз превысило оценку человеческих рабочих часов. Числитель объединяет основных агентов и подагентов, учитывая вычисления и активное использование инструментов, но исключая ожидания свыше 30 минут. Знаменатель — численность персонала, умноженная на условные 40 часов в неделю, а не измеренное время каждого человека. Это масштаб параллельной вычислительной деятельности, не шестикратный полезный выпуск и не замена шести работников одним агентом. Активность, длительность сеанса и человеческие усилия различаются."
+              ]
+            },
+            {
+              "heading": "Рост выпуска ещё не доказывает причинность",
+              "paragraphs": [
+                "Для анализа за пределами общей динамики компании авторы наблюдают 192 инженеров, начавших использовать программирующих агентов, и сравнивают их с 74 не использовавшими такие инструменты в рассматриваемый период. Начало определяется первым месяцем минимум с пятью агентными сеансами. Учтены фиксированные эффекты человека и календарного месяца, неопределённость сгруппирована по человеку. После внедрения добавляемый объём работы растёт, но внедрение не случайно: запуск крупного проекта может одновременно стимулировать использование агентов. У пользователей полностью автономных агентов рост начался ещё до внедрения, поэтому всю разницу нельзя приписывать инструменту.",
+                "Порождает ли дополнительный выпуск больше переделок? Для одного сотрудника, месяца и каталога проекта исследователи сравнивают агентную и непосредственно человеческую работу. Прокси качества включают удаления в течение 90 дней, удаления при исправлении ошибок, отмену целого изменения и пропуск тестов. Различий в последующих удалениях или отменах не обнаружено. Но это вывод о конкретных записях и показателях, не доказательство общего качества, безопасности или деловой ценности программ. Сложные для обнаружения ошибки могут оставаться вне измерения. В продажах увеличение возможностей также способно одновременно повышать автоматизацию и количество сделок."
+              ]
+            },
+            {
+              "heading": "Контроль сохраняет внимание человека как ограничение",
+              "paragraphs": [
+                "Увеличение выпуска не устраняет надзор. При переводе одного токена в 0,75 слова и скорости чтения 250 слов в минуту даже нетехническим сотрудникам понадобилось бы свыше половины рабочей недели, чтобы прочесть весь вывод интерактивных агентов. Это расчётная нагрузка, а не реально наблюдаемое чтение. Автоматическая классификация 2000 однострочных описаний сеансов оценивает рост планирования, проверки и мониторинга агентов, а также описания рабочих процессов: с 10% сеансов среднего сотрудника осенью 2025 года до 22% весной 2026-го. Управление автоматизацией само создаёт работу.",
+                "Инженерный вывод — учитывать выполненные задачи вместе с усилиями на проверку и ответственностью, остающейся у людей. Это интерпретация механизмов отчёта, не экспериментально проверенная организационная рекомендация. Компания быстро растёт и отличается доступом к инструментам и опытом ИИ; часть измерений зависит от автоматической классификации и самоотчётов. Нет рандомизированного эксперимента или репрезентативной межфирменной выборки. Внутренний перевод также не защищает новичков, которых вообще не наняли. Обоснованно говорить об изменении содержания труда и возможностей входа, оценивая совместно выпуск, качество, стоимость контроля и структуру занятости."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Собственная пояснительная схема исследования, а не диаграмма причинности или экспериментальных результатов.",
+            "steps": [
+              "Объединить рабочие записи и интервью",
+              "Разделить доли найма, время и выпуск",
+              "Сравнить внедрение и последующие переделки",
+              "Оценить надзор и ограничения исследования"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "大量使用Agent以後，人是否會少工作，企業是否會少招人？Wilmers等人10月16日釋出的Anthropic內部研究給出了一幅更複雜的圖景：部分可計量產出增加，初級技術崗位佔比下降，員工卻花更多精力組織、檢查和協調Agent的工作。報告結合公司記錄與17次員工訪談，屬於單一企業的觀察研究；它有助於理解工作如何改變，但不能直接證明AI導致了這些變化，也不能代表整個勞動力市場。",
+          "sections": [
+            {
+              "heading": "崗位結構與Agent工時怎麼計算",
+              "paragraphs": [
+                "研究匯合就業、工具使用、可計量產出、調查、溝通與日曆等內部資料，再用17次訪談補充流程變化。自2025年初以來，技術部門中的初級員工佔比從21%降至14%，技術新聘人員中初級崗位佔比從27%降至9%。同期技術招聘的絕對數量仍在增加，只是銷售、財務、招聘等部門擴張更快。因此這些數字首先說明人員構成改變，不能改寫成“技術員工減少了三分之一”，也無法獨立排除公司成長階段的影響。",
+                "另一個醒目結果是，到8月，員工直接發起的互動式Agent活躍執行時數約為人類工時的6倍。分子彙總主Agent與子Agent的推理、工具活動，排除超過30分鐘的等待；分母是人數乘以每週40小時的假定，而非逐人實測勞動時數。它描述平行計算活動的規模，不代表6倍有效產出，更不等於一個Agent替代6名員工。區分活躍時間、會話經過時間和人的投入，是理解這組比例的前提。"
+              ]
+            },
+            {
+              "heading": "產出增加的證據，還不足以確認因果",
+              "paragraphs": [
+                "為了不只看公司整體上升曲線，作者跟蹤192名開始採用程式設計Agent的工程師，並與觀察期內未採用的74名工程師比較。採用時點定義為首次在一個月內達到至少5次Agent會話；分析控制個人固定差異與共同的月份因素，置信區間按個人聚類計算。採用之後新增內容明顯增加，但工具採用不是隨機的：準備啟動大專案的人可能同時更願意使用Agent，業務增長也會影響產出。完全自主Agent的採用者在採用前已明顯上升，更提醒讀者不能把前後差值都歸因於工具。",
+                "更多產出是否也意味著更多返工？作者在同一員工、同一月份、同一專案目錄內，比較Agent生成與人直接編寫的內容。品質代理指標包括90天內刪除、缺陷修復導致的刪除、整項回退以及跳過測試等，未觀察到後續刪除或回退比例的差異。這是特定記錄與指標上的結果，不是完整軟體品質、安全性或業務價值的證明；難以發現的錯誤可能不被這些指標捕捉。銷售等崗位採用之後也出現產出增加，但更多商機本身可能同時促進自動化與成交。"
+              ]
+            },
+            {
+              "heading": "工作轉向監督，人的注意力仍是限制",
+              "paragraphs": [
+                "產出變多後，監督並未消失。報告把輸出量按每個token對應0.75個詞、每分鐘閱讀250詞換算，發現非技術人員若讀完互動式Agent全部輸出，也需要超過半個工作週；這是估算閱讀負擔，不是實際閱讀時長。作者對2,000條單行會話摘要自動分類，估計用於制定Agent計劃、評審、監控及整理工作方式的“元工作”，從2025年秋平均會話的10%升至2026年春的22%。增加的是管理自動化所需的活動，而非簡單地把原任務全部取消。",
+                "本文的工程啟發是，部署Agent時應同時觀察完成了什麼、審查花了多久，以及哪些責任仍須由人承擔。這個判斷來自對報告機制的解釋，不是已驗證的組織改造方案。研究對象是高速增長、工具訪問和AI經驗都特殊的模型公司，部分指標還依賴自動分類與自報材料；沒有隨機試驗或跨企業代表性樣本。報告提出的內部轉崗也不能保護從未被錄用的新人。更穩妥的結論是，自動化可能改變崗位內容和進入機會，需要把產出、品質、監督成本與就業結構放在一起看。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站根據研究設計重繪的解釋性流程，非因果關係或實驗結果圖。",
+            "steps": [
+              "聯合工作記錄與訪談",
+              "區分崗位佔比、活躍時間和產出",
+              "比較採用前後並檢查返工",
+              "觀察監督成本與研究邊界"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "os-helix-hybrid-computer-agents",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "OS-Helix · original v1",
+          "url": "https://arxiv.org/html/2610.22234v1"
+        },
+        {
+          "label": "arXiv · version and publication record",
+          "url": "https://arxiv.org/abs/2610.22234v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "桌面任务往往需要两种能力：通过界面看懂布局，用程序精确处理文件。给一个只会点击的 Agent 加上执行程序的工具，并不会自动教会它何时切换。OS-Helix 把这种选择纳入训练，让同一个模型学习图形操作与程序操作如何接力，以及怎样检查两边看到的是不是同一份结果。",
+          "sections": [
+            {
+              "heading": "从能验证结果的桌面任务开始",
+              "paragraphs": [
+                "作者将固定版本的应用与真实文件按兼容关系组合，构造可重复的 Ubuntu 桌面环境。探索 Agent 先查看当前内容，再提出有明确成功条件的任务；另一个 Agent 独立生成检查器。任务只规定完成后的状态，不指定必须点击还是运行程序，避免评测先偏向某一种动作。检查器优先查看可持久保存的文件状态，难以程序化判断的视觉条件另作处理；强化学习主要使用规则检查器，而不是把不稳定的视觉评分直接当奖励。",
+                "模型先学习筛选后的 31,000 条成功桌面样本，并混合 40,000 条通用多模态样本，再在真实可执行环境中练习。一个问题随之出现：程序动作通常比点击长得多，按词元汇总训练权重会使长动作占主导。Step-balanced GSPO 先在每个动作内取平均，再让图形与程序动作等权参与重要性比率计算。它调整的是训练信号的汇总，不强制两种动作数量相等，也不保证所有参数梯度一样大。"
+              ]
+            },
+            {
+              "heading": "主要增益来自同骨干、同环境比较",
+              "paragraphs": [
+                "主测试使用 OSWorld-Verified 的 Ubuntu 任务，原有 369 项中排除八项 Google Drive 任务，最终分母为 361 项；每项最多 50 步，保留最多八张历史截图和文字历史。作者复测的骨干基线使用相同运行环境。Qwen3.5-27B 的混合动作基线成功率为 46.50%，监督训练后的 OS-Helix-27B 为 62.75%，再强化学习后为 66.44%。最后一步相对监督模型增加 3.69 个百分点，不应把全部进步归给强化学习。",
+                "在相同监督初始模型、数据、奖励和优化预算下，标准 GSPO 的成功率反而降至 60.47%，程序动作占比升至 40.0%；按动作平衡的版本达到 66.44%，占比为 26.1%。这一对照支持训练中避免长动作压过短动作的设计。改进也并不均匀：强化学习提升了专业软件、系统及日常任务，但办公和跨应用任务没有超过监督模型。论文另报告 WindowsAgentArena 上的迁移改善，不能因此推断任何操作系统或个人桌面都同样可靠。"
+              ]
+            },
+            {
+              "heading": "切换操作方式仍会丢失状态",
+              "paragraphs": [
+                "论文的失败案例说明，文件内容正确不一定代表用户要求的外观保留了。一次表格转换遗漏了交替行底色，Agent 虽从界面发现异常，却错误地补了货币符号。另一次先在界面完成修改，再用程序保存另一部分，未合并尚未落盘的界面状态，最终丢掉先前成果。这类问题不只是某一次点击失误，而是切换时没有对齐可见状态、文件状态和保存范围。",
+                "自动生成的检查器也会漏掉细节，或者因文件属性检查过严而把接近正确的结果判零。桌面版本、个性化配置和文件类型远比训练环境丰富；强化学习仅在稠密 27B 模型上进行，尚未证明同样方法能稳定扩展到其他规模。对实际系统的启发是同时设计动作选择、结果验证和状态交接，而不是单纯增加工具入口。原始 v1 为预印本，没有会议录用证据；其中的资源发布承诺也不能当作已经完成的开放交付。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据论文重绘的解释图：任务状态与检查器共同支持混合动作学习，强调结果验证和状态交接，不复现实验图表。",
+            "steps": [
+              "组合应用和文件形成可执行任务",
+              "分别生成任务要求与结果检查器",
+              "学习图形及程序动作并按动作平衡训练",
+              "切换操作方式后核对显示结果和保存状态"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Desktop work often needs two kinds of capability: reading the visible layout and manipulating files precisely through programs. Adding an execution tool to an agent trained to click does not automatically teach it when to switch. OS-Helix trains one model to coordinate graphical and programmatic actions, including checking whether the two routes actually produce the same intended state.",
+          "sections": [
+            {
+              "heading": "Start with desktop tasks whose outcomes can be checked",
+              "paragraphs": [
+                "The authors combine fixed-version applications with compatible real artifacts to create reproducible Ubuntu environments. An exploration agent inspects the current content and proposes a task with observable success conditions; another agent independently constructs its evaluator. Tasks specify the desired final state without prescribing graphical or programmatic execution, avoiding an evaluation that favours one route in advance. Checks primarily inspect persistent file state, with visual conditions handled separately when necessary. Reinforcement learning mainly uses rule-based evaluators rather than treating brittle visual judgments as rewards.",
+                "The model first learns from 31,000 filtered successful desktop samples mixed with 40,000 general multimodal samples, then practises in executable environments. Program actions are usually much longer than clicks, creating an optimisation imbalance when importance weights are averaged over tokens. Step-balanced GSPO averages within each action before combining graphical and programmatic steps with equal weights. This changes how the training ratio is aggregated. It neither forces equal numbers of the two action types nor guarantees equal parameter-gradient magnitudes."
+              ]
+            },
+            {
+              "heading": "Matched backbones and environments provide the clearest evidence",
+              "paragraphs": [
+                "The main evaluation uses Ubuntu tasks from OSWorld-Verified. Removing eight Google Drive tasks from the original 369 leaves a denominator of 361. Each episode allows at most 50 steps and retains up to eight historical screenshots plus textual history. Reproduced backbone baselines use the same evaluation environment. Qwen3.5-27B with hybrid actions reaches 46.50% success; supervised OS-Helix-27B reaches 62.75%, and subsequent reinforcement learning reaches 66.44%. The final stage adds 3.69 percentage points over the supervised model, so the entire improvement should not be attributed to reinforcement learning.",
+                "With the same supervised initialisation, data, rewards and optimisation budget, standard GSPO instead falls to 60.47% success while program actions rise to 40.0% of actions. The step-balanced version reaches 66.44% with a 26.1% program-action share. This supports preventing long actions from dominating shorter ones during training. Improvements are uneven: reinforcement learning helps professional-software, operating-system and daily tasks, while office and cross-application tasks do not surpass the supervised model. Transfer gains on WindowsAgentArena are additional evidence, not proof of equal reliability on every operating system or personalised desktop."
+              ]
+            },
+            {
+              "heading": "Changing execution routes can still lose work",
+              "paragraphs": [
+                "Failure cases show why correct file contents need not preserve the appearance a user requested. A converted table loses alternating row shading; the agent notices a visual discrepancy but adds currency symbols rather than restoring the shading. In another case, graphical edits remain unsaved when a program writes a second modification. The two states are not reconciled, and earlier work is discarded. These are more than isolated clicking mistakes: visible state, persistent file state and the scope of saving have become inconsistent during the handoff.",
+                "Automatically generated evaluators can miss details or assign zero to nearly correct results because file-attribute checks are too strict. Application versions, personal settings and artifact types are more diverse than the training environments. Reinforcement learning is performed only on the dense 27B model, without establishing stable scaling to other sizes. The practical lesson is to design action selection, verification and state handoff together, rather than merely expose another tool. The original v1 is a preprint with no acceptance evidence; its promised research-artifact release is not treated here as completed delivery."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the paper: task states and evaluators support mixed-action learning, with verification at handoffs. It is not an experimental plot.",
+            "steps": [
+              "Compose applications and artifacts into executable tasks",
+              "Generate requirements and evaluators separately",
+              "Learn both action types with step-balanced optimisation",
+              "Check rendered outcomes and saved state after switching"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "デスクトップ作業では、画面の配置を読む能力と、プログラムでファイルを正確に扱う能力の両方が必要になる。クリックを学習した Agent に実行ツールを追加しても、いつ切り替えるべきかは自動では身に付かない。OS-Helix は一つのモデルに GUI とプログラム操作の連携を学ばせ、両方から見た結果が意図した同じ状態になっているかも扱う。",
+          "sections": [
+            {
+              "heading": "結果を確認できるデスクトップ課題を作る",
+              "paragraphs": [
+                "固定バージョンのアプリと互換性のある実ファイルを組み合わせ、再現可能な Ubuntu 環境を構成する。探索 Agent が現在の内容を観察して成功条件付きの課題を提案し、別の Agent が独立に評価器を作る。課題が指定するのは最終状態であり、GUI とプログラムのどちらを使うかは指定しない。これにより評価が最初から片方を優遇するのを避ける。主に保存されたファイル状態を調べ、必要な視覚条件は別途扱う。強化学習では不安定な視覚判断をそのまま報酬にせず、主に規則に基づく評価器を使う。",
+                "モデルは選別済みの成功したデスクトップ例 31,000 件と一般的なマルチモーダル例 40,000 件で学び、実行可能な環境で追加学習する。プログラム操作はクリックより長いため、トークン単位の平均では長い操作が学習を支配しやすい。Step-balanced GSPO は各操作内で平均を取り、その後 GUI とプログラムの各ステップを等しい重みで重要度比に集約する。変えるのは学習比率のまとめ方であり、二種類の操作数を同じにしたり、全パラメータの勾配の大きさを等しくしたりする保証ではない。"
+              ]
+            },
+            {
+              "heading": "同じ基盤モデルと環境での比較",
+              "paragraphs": [
+                "主要評価は Ubuntu の OSWorld-Verified で、369 課題から Google Drive の八課題を除いた 361 課題を分母とする。一課題は最大 50 ステップ、過去のスクリーンショット八枚までと文章履歴を保持する。著者が再測定した基盤モデルは同じ環境で評価した。混合操作の Qwen3.5-27B は成功率 46.50%、教師あり学習後の OS-Helix-27B は 62.75%、さらに強化学習すると 66.44% だった。最後の段階の増分は教師ありモデルから 3.69 ポイントであり、全改善を強化学習の効果とはいえない。",
+                "教師あり初期値、データ、報酬、最適化予算を揃えると、標準 GSPO は成功率 60.47% に低下し、プログラム操作比率が 40.0% に増えた。ステップを均衡させた版は 66.44%、同操作比率 26.1% となる。長い操作が短い操作を圧倒しない学習設計を支持する比較だ。ただし強化学習の改善は専門ソフト、OS、日常課題に偏り、オフィスと複数アプリ課題は教師あり版を超えなかった。WindowsAgentArena への転移改善も示すが、すべての OS や個人のデスクトップで同じ信頼性を意味しない。"
+              ]
+            },
+            {
+              "heading": "操作方式の引き継ぎで状態を失うことがある",
+              "paragraphs": [
+                "失敗例では、ファイル内容が正しくても要求された見た目が保たれるとは限らない。表の変換で交互の行の背景色が失われ、Agent は画面の差に気付いたものの、背景色を直さず通貨記号を追加した。別の例では GUI の変更を未保存のままプログラムが別の変更を書き込み、状態を統合せず先の成果を捨てた。単発のクリック誤りではなく、画面上の状態、保存された状態、保存範囲の理解が切り替え時にずれた問題である。",
+                "自動生成の評価器は細部を見逃す一方、ファイル属性に厳しすぎてほぼ正しい結果をゼロにすることもある。アプリの版、個人設定、ファイル形式は学習環境より多様で、強化学習も密な 27B モデルに限られ、他規模への安定した拡張は未確認だ。実用上の示唆はツールの追加だけでなく、操作選択、結果確認、状態の引き継ぎを一緒に設計することにある。原版 v1 は採択根拠のないプレプリントであり、研究資産を公開するという予告も公開済みとは扱わない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "論文を基に当サイトが描き直した説明図。課題状態と評価器による混合操作の学習、切り替え後の検証を示す。実験グラフではない。",
+            "steps": [
+              "アプリとファイルから実行可能な課題を作る",
+              "要求と結果の評価器を別々に生成",
+              "両操作を学習しステップ単位で重みを均衡",
+              "切り替え後に表示結果と保存状態を確認"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Работа за компьютером часто требует и понимания видимого интерфейса, и точного изменения файлов программным способом. Добавление такого инструмента агенту, обученному нажимать кнопки, не объясняет, когда следует переключаться. OS-Helix обучает одну модель координировать графические и программные действия, включая проверку того, что оба пути приводят к одному ожидаемому состоянию.",
+          "sections": [
+            {
+              "heading": "Сначала нужны задачи с проверяемым результатом",
+              "paragraphs": [
+                "Авторы сочетают приложения фиксированных версий с совместимыми реальными файлами и создают воспроизводимые среды Ubuntu. Агент-исследователь осматривает содержимое и предлагает задачу с наблюдаемыми условиями успеха; отдельный агент независимо строит оценщик. Задача задаёт конечное состояние, а не обязательный способ его получения, чтобы проверка заранее не предпочитала интерфейс или программу. В основном проверяется сохранённое состояние файлов, а визуальные условия при необходимости оцениваются отдельно. Для обучения с подкреплением преимущественно используются правила, а не хрупкие визуальные суждения в качестве награды.",
+                "Начальное обучение включает 31 000 отобранных успешных настольных примеров и 40 000 общих мультимодальных примеров, затем модель практикуется в исполняемой среде. Программные действия обычно длиннее кликов, поэтому усреднение весов по токенам позволяет им доминировать. Step-balanced GSPO сначала усредняет внутри действия, а затем с одинаковыми весами объединяет графические и программные шаги в отношение важности. Меняется агрегация учебного сигнала, но не навязывается одинаковое число действий двух типов и не гарантируются равные нормы градиентов параметров."
+              ]
+            },
+            {
+              "heading": "Наиболее убедительно сравнение одинаковых основ",
+              "paragraphs": [
+                "Основная оценка использует Ubuntu-задачи OSWorld-Verified: из 369 исключены восемь задач Google Drive, остаётся 361. На задачу допускается максимум 50 шагов, сохраняются до восьми прежних снимков экрана и текстовая история. Повторно измеренные базовые модели работают в том же окружении. Qwen3.5-27B с гибридными действиями достигает 46.50% успеха, OS-Helix-27B после обучения с учителем — 62.75%, после подкрепления — 66.44%. Последний этап добавляет 3.69 процентного пункта, поэтому нельзя приписывать ему весь прирост.",
+                "При одинаковых начальной обученной модели, данных, награде и бюджете оптимизации стандартный GSPO снижает успех до 60.47%, увеличивая долю программных действий до 40.0%. Сбалансированный по шагам вариант получает 66.44% при доле 26.1%. Это подтверждает пользу ограничения доминирования длинных действий. Улучшение неоднородно: подкрепление помогает профессиональным приложениям, системным и повседневным задачам, но офисные и межприложенческие результаты не превышают вариант с учителем. Перенос на WindowsAgentArena даёт дополнительное свидетельство, но не гарантирует такую же надёжность любой ОС или персонального рабочего стола."
+              ]
+            },
+            {
+              "heading": "При переключении способы работы могут потерять общее состояние",
+              "paragraphs": [
+                "Примеры неудач показывают, что правильное содержимое файла не обязательно сохраняет требуемый вид. При преобразовании таблицы исчезает чередующаяся заливка строк; агент замечает расхождение, но добавляет знаки валюты вместо восстановления заливки. В другом случае изменения интерфейса остаются несохранёнными, когда программа записывает вторую правку. Состояния не согласуются, и прежняя работа теряется. Это не только ошибка отдельного клика: при передаче управления расходятся видимое состояние, файл и понимание области сохранения.",
+                "Автоматические оценщики могут пропускать детали или ставить ноль почти правильному результату из-за чрезмерно строгой проверки атрибутов. Версии приложений, личные настройки и типы файлов разнообразнее учебных сред. Подкрепление проверено только для плотной модели 27B, без доказанной стабильности на других масштабах. Практический вывод — совместно проектировать выбор действий, проверку результата и передачу состояния, а не просто добавлять инструмент. Исходная v1 остаётся препринтом без свидетельства принятия на конференцию; обещание опубликовать исследовательские материалы не считается уже выполненной публикацией."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: задачи и оценщики поддерживают смешанные действия, а переходы требуют проверки состояния. Это не график эксперимента.",
+            "steps": [
+              "Составить исполняемые задачи из приложений и файлов",
+              "Раздельно создать требования и оценщики",
+              "Обучить оба способа с равновесием по шагам",
+              "Проверить отображение и сохранённое состояние после перехода"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "桌面任務往往需要兩種能力：透過介面看懂佈局，用程式精確處理檔案。給一個只會點選的 Agent 加上執行程式的工具，並不會自動教會它何時切換。OS-Helix 把這種選擇納入訓練，讓同一個模型學習圖形操作與程式操作如何接力，以及怎樣檢查兩邊看到的是不是同一份結果。",
+          "sections": [
+            {
+              "heading": "從能驗證結果的桌面任務開始",
+              "paragraphs": [
+                "作者將固定版本的應用與真實檔案按相容關係組合，構造可重複的 Ubuntu 桌面環境。探索 Agent 先檢視當前內容，再提出有明確成功條件的任務；另一個 Agent 獨立生成檢查器。任務只規定完成後的狀態，不指定必須點選還是執行程式，避免評測先偏向某一種動作。檢查器優先檢視可持久儲存的檔案狀態，難以程式化判斷的視覺條件另作處理；強化學習主要使用規則檢查器，而不是把不穩定的視覺評分直接當獎勵。",
+                "模型先學習篩選後的 31,000 條成功桌面樣本，並混合 40,000 條通用多模態樣本，再在真實可執行環境中練習。一個問題隨之出現：程式動作通常比點選長得多，按詞元彙總訓練權重會使長動作佔主導。Step-balanced GSPO 先在每個動作內取平均，再讓圖形與程式動作等權參與重要性比率計算。它調整的是訓練訊號的彙總，不強制兩種動作數量相等，也不保證所有參數梯度一樣大。"
+              ]
+            },
+            {
+              "heading": "主要增益來自同骨幹、同環境比較",
+              "paragraphs": [
+                "主測試使用 OSWorld-Verified 的 Ubuntu 任務，原有 369 項中排除八項 Google Drive 任務，最終分母為 361 項；每項最多 50 步，保留最多八張歷史截圖和文字歷史。作者複測的骨幹基線使用相同執行環境。Qwen3.5-27B 的混合動作基線成功率為 46.50%，監督訓練後的 OS-Helix-27B 為 62.75%，再強化學習後為 66.44%。最後一步相對監督模型增加 3.69 個百分點，不應把全部進步歸給強化學習。",
+                "在相同監督初始模型、資料、獎勵和最佳化預算下，標準 GSPO 的成功率反而降至 60.47%，程式動作佔比升至 40.0%；按動作平衡的版本達到 66.44%，佔比為 26.1%。這一對照支持訓練中避免長動作壓過短動作的設計。改進也並不均勻：強化學習提升了專業軟體、系統及日常任務，但辦公和跨應用任務沒有超過監督模型。論文另報告 WindowsAgentArena 上的遷移改善，不能因此推斷任何作業系統或個人桌面都同樣可靠。"
+              ]
+            },
+            {
+              "heading": "切換操作方式仍會丟失狀態",
+              "paragraphs": [
+                "論文的失敗案例說明，檔案內容正確不一定代表使用者要求的外觀保留了。一次表格轉換遺漏了交替行底色，Agent 雖從介面發現異常，卻錯誤地補了貨幣符號。另一次先在介面完成修改，再用程式儲存另一部分，未合併尚未落盤的介面狀態，最終丟掉先前成果。這類問題不只是某一次點選失誤，而是切換時沒有對齊可見狀態、檔案狀態和儲存範圍。",
+                "自動生成的檢查器也會漏掉細節，或者因檔案屬性檢查過嚴而把接近正確的結果判零。桌面版本、個性化配置和檔案型別遠比訓練環境豐富；強化學習僅在稠密 27B 模型上進行，尚未證明同樣方法能穩定擴展到其他規模。對實際系統的啟發是同時設計動作選擇、結果驗證和狀態交接，而不是單純增加工具入口。原始 v1 為預印本，沒有會議錄用證據；其中的資源釋出承諾也不能當作已經完成的開放交付。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據論文重繪的解釋圖：任務狀態與檢查器共同支援混合動作學習，強調結果驗證和狀態交接，不重現實驗圖表。",
+            "steps": [
+              "組合應用和檔案形成可執行任務",
+              "分別生成任務要求與結果檢查器",
+              "學習圖形及程式動作並按動作平衡訓練",
+              "切換操作方式後核對顯示結果和儲存狀態"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "nist-curve-seed-origins",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Anthropic Research · Claude reveals ECDSA curve origins",
+          "url": "https://www.anthropic.com/research/ecdsa-curve-origins"
+        },
+        {
+          "label": "NIST · historical FIPS 186-2 specification",
+          "url": "https://csrc.nist.gov/files/pubs/fips/186-2/final/docs/fips186-2.pdf"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "一些广泛使用的椭圆曲线参数公开了几十年，但最初怎样选出那串“种子”一直缺少解释。Anthropic 在 2026 年 10 月 16 日公布了一项由模型辅助完成的历史重建：五条 NIST 素数曲线的种子可以由旧式伪随机数生成器与历史时间戳重新产生。找到的是公开数学参数的来历，不是用户的私钥，也不是破解 ECDSA 签名。",
+          "sections": [
+            {
+              "heading": "能验证参数，并不等于知道它的来历",
+              "paragraphs": [
+                "数字签名让接收者检查消息是否由持有私钥的一方签署。椭圆曲线方案还需要大家共享的公开曲线参数和基点。历史 FIPS 186-2 已说明如何从公开种子经过基于 SHA-1 的过程生成曲线系数，任何人都能检查两者是否对应；缺少的是更上游的一步：为什么最初选择这个种子。公开种子与签名者的秘密随机数用途不同，重建前者不能据此推导后者。",
+                "先前调查曾沿着“种子来自一句幽默短语的哈希”寻找。此次团队报告，模型转而考虑上世纪九十年代程序可能使用的随机数生成方式，比较候选生成器的输出模式，再从输出中恢复能够重现它的内部状态。素数曲线只保留了部分输出信息，研究用格基约简来处理这种截断；可以把它理解为利用多段数值之间的数学约束，找出共同的生成状态，而不是让模型凭语言猜出正确答案。"
+              ]
+            },
+            {
+              "heading": "重现覆盖了哪些参数",
+              "paragraphs": [
+                "报告将 NIST 的 P-192、P-224、P-256、P-384、P-521，以及五条 ANSI X9.62 示例素数曲线的种子对应到 lrand48。每条种子的全部 160 位都能由恢复的状态重新产生。逆向追溯的初始化数值对应 1997 年 5 月至 1998 年 4 月的时间戳，而不只是找到任意一个碰巧可用的状态。原文附有可复核的生成材料；这些匹配是研究团队报告的计算证据，本文没有把它表述为本站独立运行的结果。",
+                "二进制曲线中有四条也出现相关模式，但初始化时间需要额外解释：把恢复的时间数值加倍后才落在 1998 年 4 月，作者因此提出当年程序可能把时钟值减半。这个解释仍是推测，第五条 B-163 的种子没有被解释。研究还将 P-192 与五条 ANSI 示例曲线的基点联系到 FreeLIP 的另一种随机数生成器；基点并不是前述种子唯一决定的，所以这属于另一项核对。"
+              ]
+            },
+            {
+              "heading": "来源更透明，剩余问题仍然存在",
+              "paragraphs": [
+                "一些本来可能生成合格曲线的候选值被跳过了。P-256 最终采用同一序列中的第 1,842 个候选，但更早的第 876 个也能给出符合相关条件的素数阶曲线。作者不知道这是额外筛选规则还是实现造成的结果，也无法由现有数字知道当年总共运行过多少次。P-224、P-256、P-384、P-521 的基点，以及二进制曲线的基点来源仍不清楚。因此“重现种子”不能写成“完整还原所有参数选择过程”。",
+                "这项结果减少了部分参数来源的不透明性，但没有证明任何可能的选择偏差都不存在，也没有发现新的签名攻击。旧生成器容易追溯，不表示已经生成的曲线具有同样的随机性缺陷；曲线安全与私钥保护仍是不同问题。对 AI 研究而言，值得关注的是提出可检验假设、用独立计算筛选、再公开可重现证据的工作方式，而不是把机构对模型能力的宣传当作结论。当前来源是机构研究报告，没有会议录用证据；历史标准仅用于说明当年参数定义，不作为现行部署建议。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据公开研究与历史标准重绘的解释图：从已公开参数追溯生成过程，并标出未解释部分，不展示私钥恢复或攻击流程。",
+            "steps": [
+              "区分公开曲线种子与用户秘密值",
+              "比较历史生成器与公开种子的数学关系",
+              "核对完整种子、时间范围及部分基点",
+              "保留筛选规则和未解释参数的疑问"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Some widely used elliptic-curve parameters have been public for decades, while the origin of their initial “seeds” remained unexplained. On 16 October 2026, Anthropic reported a model-assisted reconstruction: seeds for five NIST prime-field curves can be regenerated using an old pseudorandom generator and historical timestamps. The finding concerns the provenance of public mathematical parameters, not users’ private keys or a break of ECDSA signatures.",
+          "sections": [
+            {
+              "heading": "Verifiable parameters can still have unexplained origins",
+              "paragraphs": [
+                "A digital signature lets a recipient check that a message was signed by a party holding a private key. Elliptic-curve schemes also require shared public curve parameters and a base point. Historical FIPS 186-2 describes deriving curve coefficients from a published seed through a SHA-1-based process, allowing others to verify that relationship. The missing step was earlier: why was that particular seed selected? A public parameter seed serves a different purpose from a signer’s secret randomness; reconstructing the former does not recover the latter.",
+                "Earlier investigations pursued the story that a seed was a hash of a humorous phrase. The team reports that the model instead considered generators likely to have appeared in 1990s software, compared output patterns and recovered internal states capable of reproducing those patterns. Prime-curve seeds reveal only part of each generator output, so the work applies lattice-basis reduction to the truncated information. In ordinary terms, mathematical constraints linking several pieces of evidence identify a shared generating state. The evidence is therefore a checkable construction, rather than a plausible verbal guess."
+              ]
+            },
+            {
+              "heading": "Which values were actually reproduced",
+              "paragraphs": [
+                "The report links NIST P-192, P-224, P-256, P-384 and P-521, plus five ANSI X9.62 example prime curves, to lrand48. The recovered states reproduce all 160 bits of each seed. Tracing the generator backwards gives initialisation values corresponding to timestamps between May 1997 and April 1998, rather than merely an arbitrary state that happens to work. The article supplies reproducible generation material. These matches are the research team’s reported computational evidence; they are not presented as independently executed experiments by this site.",
+                "Four binary-curve seeds show related structure, but their initialisation dates require an additional interpretation. Doubling the recovered timestamp values places them in April 1998, leading the authors to suggest that the original program may have halved the clock value. That explanation remains a hypothesis, and the fifth seed, B-163, remains unexplained. The work also links the base points of P-192 and five ANSI example curves to another generator in FreeLIP. A base point is not uniquely determined by the previously discussed seed, so this is a separate reconstruction."
+              ]
+            },
+            {
+              "heading": "Greater transparency does not close every question",
+              "paragraphs": [
+                "Some candidates capable of producing suitable curves were skipped. P-256 uses candidate 1,842 in its sequence, although earlier candidate 876 also yields a prime-order curve satisfying the relevant conditions. The authors do not know whether additional selection rules or implementation behaviour explain this, nor can the surviving numbers reveal how many generator runs originally occurred. The base points of P-224, P-256, P-384 and P-521, and those of the binary curves, remain unexplained. Reproducing seeds is therefore not a complete reconstruction of every parameter-selection decision.",
+                "The result reduces uncertainty about part of the provenance, but does not prove the absence of every possible selection bias or identify a new signature attack. An old generator being easy to reconstruct does not transfer its weakness directly to the resulting curve; curve security and protection of private keys remain different questions. For AI research, the useful pattern is proposing testable hypotheses, screening them through separate computation and releasing reproducible evidence—not treating institutional claims about model capability as a conclusion. This is an institutional research report without conference-acceptance evidence. The historical standard establishes the original definitions, not present-day deployment advice."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the public research and historical standard: trace public parameters and retain unresolved questions. It is not a private-key recovery or attack procedure.",
+            "steps": [
+              "Separate public curve seeds from secret user values",
+              "Compare generator mathematics with published seeds",
+              "Check complete seeds, historical dates and some base points",
+              "Retain questions about selection and unexplained parameters"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "広く使われる楕円曲線のパラメータは数十年前から公開されているが、最初の「シード」をどう選んだかは不明だった。Anthropic は 2026 年 10 月 16 日、モデルを使った歴史的な復元を報告した。NIST の五つの素数体曲線のシードを、古い擬似乱数生成器と当時のタイムスタンプから再生成できるという。対象は公開数学パラメータの来歴であり、利用者の秘密鍵や ECDSA 署名の解読ではない。",
+          "sections": [
+            {
+              "heading": "パラメータの検証と由来の説明は違う",
+              "paragraphs": [
+                "電子署名は、秘密鍵を持つ相手がメッセージに署名したかを受け手が確かめる仕組みだ。楕円曲線方式には共有する公開曲線パラメータと基点も必要になる。過去の FIPS 186-2 は、公開シードから SHA-1 を使う手順で係数を作る関係を規定し、その対応を検証可能にしている。不明だったのは、その前段でなぜ特定のシードを選んだかである。公開パラメータのシードは署名者の秘密の乱数とは役割が異なり、前者の復元から後者は得られない。",
+                "以前の調査は「冗談の文句をハッシュにした」という話を追っていた。今回のチームによれば、モデルは九十年代のソフトウェアにありそうな生成器を考え、出力の特徴を比べ、それを再現する内部状態を復元した。素数曲線のシードに残るのは出力の一部なので、格子基底簡約で切り詰められた情報を扱った。複数の数値をつなぐ数学的な制約から共通の生成状態を探す方法であり、言語だけで正解らしい由来を推測したわけではない。"
+              ]
+            },
+            {
+              "heading": "実際に再現された範囲",
+              "paragraphs": [
+                "NIST の P-192、P-224、P-256、P-384、P-521 と、ANSI X9.62 の五つの素数曲線例が lrand48 に対応する。復元状態は各シードの全 160 ビットを再生成する。逆向きにたどった初期値は 1997 年 5 月から 1998 年 4 月のタイムスタンプに相当し、単に任意の状態が一致しただけではない。報告には再確認できる生成資料がある。ここで述べる一致は研究チームの計算結果であり、当サイトが独立に実行した実験とはしていない。",
+                "二進体曲線の四つのシードにも関連する構造が見つかった。ただし復元した時間値を二倍にすると 1998 年 4 月になるため、著者は当時のプログラムが時計値を半分にした可能性を挙げる。この説明は仮説で、五つ目の B-163 は未解明だ。また P-192 と五つの ANSI 曲線例の基点は、FreeLIP の別の乱数生成器に対応した。基点は先のシードだけで一意に決まるものではなく、別の復元結果として区別する。"
+              ]
+            },
+            {
+              "heading": "透明性が増しても未解決の選択は残る",
+              "paragraphs": [
+                "適切な曲線を作れそうな候補が途中で飛ばされている。P-256 は系列の 1,842 番目を使うが、先の 876 番目も関連条件を満たす素数位数の曲線を与える。追加の選別規則か実装上の挙動かは分からず、残された数値から生成を何回実行したかも分からない。P-224、P-256、P-384、P-521 と二進体曲線の基点の由来も未解明である。シードを再現したことを、全パラメータの選択過程を完全復元したこととは扱えない。",
+                "結果は来歴の一部を明らかにするが、あらゆる選択偏りがなかった証明でも、新しい署名攻撃でもない。古い生成器の状態を復元しやすいことが、そのまま生成後の曲線の弱さになるわけではなく、曲線の安全性と秘密鍵の保護は別問題だ。AI 研究として重要なのは、検証可能な仮説を別の計算で絞り込み、再現資料を示す流れであり、企業の能力宣伝を結論にすることではない。これは採択根拠のない機関研究報告で、過去の標準も当時の定義を確認するために参照し、現行の導入助言には使わない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "公開研究と過去の標準を基に当サイトが描き直した説明図。公開パラメータの由来と未解決点を示し、秘密鍵の復元や攻撃手順は示さない。",
+            "steps": [
+              "公開曲線のシードと利用者の秘密値を分ける",
+              "生成器の数学的関係と公開値を比較",
+              "全シード・歴史的日付・一部基点を確認",
+              "選別規則と未解明パラメータの疑問を残す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Параметры широко используемых эллиптических кривых опубликованы десятилетия назад, но происхождение исходных «зёрен» долго оставалось неясным. 16 октября 2026 года Anthropic сообщила о реконструкции с помощью модели: зёрна пяти простых кривых NIST воспроизводятся старым генератором псевдослучайных чисел и историческими временными отметками. Это происхождение открытых математических параметров, а не восстановление секретных ключей пользователей или взлом подписей ECDSA.",
+          "sections": [
+            {
+              "heading": "Проверяемость параметров не объясняет их происхождение",
+              "paragraphs": [
+                "Цифровая подпись позволяет получателю проверить, что сообщение подписала сторона, владеющая секретным ключом. Схеме на эллиптических кривых также нужны общие открытые параметры и базовая точка. Исторический FIPS 186-2 описывает получение коэффициентов из опубликованного зерна через процедуру на основе SHA-1, позволяя проверить соответствие. Неясным оставался предыдущий шаг: почему выбрано именно это зерно? Оно служит иной цели, чем секретная случайность подписанта; восстановление первого не раскрывает вторую.",
+                "Прежние поиски следовали версии о хеше шуточной фразы. По отчёту команды, модель вместо этого рассмотрела генераторы, характерные для программ девяностых годов, сравнила закономерности выхода и восстановила внутренние состояния, воспроизводящие их. Зёрна простых кривых сохраняют только часть выхода, поэтому применяется редукция решётчатого базиса. Иными словами, математические ограничения связывают несколько фрагментов данных и позволяют найти общее порождающее состояние. Это проверяемая конструкция, а не правдоподобная словесная догадка."
+              ]
+            },
+            {
+              "heading": "Какие значения удалось воспроизвести",
+              "paragraphs": [
+                "Отчёт связывает NIST P-192, P-224, P-256, P-384 и P-521, а также пять примеров простых кривых ANSI X9.62 с lrand48. Восстановленные состояния дают все 160 бит каждого зерна. Обратное прослеживание приводит к инициализации, соответствующей времени между маем 1997 и апрелем 1998 года, а не просто произвольному подходящему состоянию. Статья содержит материалы для воспроизведения. Совпадения здесь представлены как вычислительные результаты исследовательской команды, а не независимо выполненные нашим сайтом эксперименты.",
+                "Четыре зерна двоичных кривых показывают сходную структуру, но даты требуют дополнительного толкования. Удвоенные временные значения попадают в апрель 1998 года, поэтому авторы предполагают, что исходная программа делила показание часов пополам. Это остаётся гипотезой; пятое зерно, B-163, не объяснено. Базовые точки P-192 и пяти примеров ANSI связываются с другим генератором из FreeLIP. Базовая точка не определяется однозначно уже рассмотренным зерном, поэтому это отдельная реконструкция."
+              ]
+            },
+            {
+              "heading": "Большая прозрачность не закрывает все вопросы",
+              "paragraphs": [
+                "Некоторые кандидаты, способные дать подходящие кривые, были пропущены. P-256 использует кандидат 1 842 своей последовательности, хотя более ранний 876 тоже даёт кривую простого порядка с нужными условиями. Неизвестно, объясняется ли выбор дополнительными правилами или поведением реализации; сохранившиеся числа также не показывают общее количество запусков генератора. Не объяснены базовые точки P-224, P-256, P-384, P-521 и двоичных кривых. Воспроизведение зёрен поэтому не означает полного восстановления всех решений при выборе параметров.",
+                "Работа уменьшает неопределённость происхождения, но не доказывает отсутствие любых предубеждений выбора и не выявляет новую атаку на подпись. Возможность восстановить старый генератор не переносит его слабость непосредственно на полученную кривую; безопасность кривой и защита секретных ключей — разные вопросы. Для исследования ИИ полезен сам подход: проверяемые гипотезы, отдельные вычисления для их отбора и воспроизводимые свидетельства, а не рекламные утверждения организации о модели. Это институциональный исследовательский отчёт без свидетельства конференционного принятия. Старый стандарт используется для первоначальных определений, не как совет по современному внедрению."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по исследованию и историческому стандарту: происхождение открытых параметров и нерешённые вопросы, без восстановления секретных ключей и процедур атаки.",
+            "steps": [
+              "Отделить открытое зерно от секретных значений пользователя",
+              "Сопоставить математику генератора с опубликованными зёрнами",
+              "Проверить целые зёрна, даты и часть базовых точек",
+              "Сохранить вопросы об отборе и необъяснённых параметрах"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "一些廣泛使用的橢圓曲線參數公開了幾十年，但最初怎樣選出那串“種子”一直缺少解釋。Anthropic 在 2026 年 10 月 16 日公佈了一項由模型輔助完成的歷史重建：五條 NIST 素數曲線的種子可以由舊式偽隨機數生成器與歷史時間戳重新產生。找到的是公開數學參數的來歷，不是使用者的私鑰，也不是破解 ECDSA 簽章。",
+          "sections": [
+            {
+              "heading": "能驗證參數，並不等於知道它的來歷",
+              "paragraphs": [
+                "數位簽章讓接收者檢查訊息是否由持有私鑰的一方簽署。橢圓曲線方案還需要大家共享的公開曲線參數和基點。歷史 FIPS 186-2 已說明如何從公開種子經過基於 SHA-1 的過程生成曲線係數，任何人都能檢查兩者是否對應；缺少的是更上游的一步：為什麼最初選擇這個種子。公開種子與簽署者的秘密隨機數用途不同，重建前者不能據此推導後者。",
+                "先前調查曾沿著“種子來自一句幽默短語的雜湊”尋找。此次團隊報告，模型轉而考慮上世紀九十年代程式可能使用的隨機數生成方式，比較候選生成器的輸出模式，再從輸出中恢復能夠重現它的內部狀態。素數曲線只保留了部分輸出資訊，研究用格基約簡來處理這種截斷；可以把它理解為利用多段數值之間的數學約束，找出共同的生成狀態，而不是讓模型憑語言猜出正確答案。"
+              ]
+            },
+            {
+              "heading": "重現覆蓋了哪些參數",
+              "paragraphs": [
+                "報告將 NIST 的 P-192、P-224、P-256、P-384、P-521，以及五條 ANSI X9.62 示例素數曲線的種子對應到 lrand48。每條種子的全部 160 位都能由恢復的狀態重新產生。逆向追溯的初始化數值對應 1997 年 5 月至 1998 年 4 月的時間戳，而不只是找到任意一個碰巧可用的狀態。原文附有可複核的生成材料；這些匹配是研究團隊報告的計算證據，本文沒有把它表述為本站獨立執行的結果。",
+                "二元體曲線中有四條也出現相關模式，但初始化時間需要額外解釋：把恢復的時間數值加倍後才落在 1998 年 4 月，作者因此提出當年程式可能把時鐘值減半。這個解釋仍是推測，第五條 B-163 的種子沒有被解釋。研究還將 P-192 與五條 ANSI 示例曲線的基點連結到 FreeLIP 的另一種隨機數生成器；基點並不是前述種子唯一決定的，所以這屬於另一項核對。"
+              ]
+            },
+            {
+              "heading": "來源更透明，剩餘問題仍然存在",
+              "paragraphs": [
+                "一些本來可能生成合格曲線的候選值被跳過了。P-256 最終採用同一序列中的第 1,842 個候選，但更早的第 876 個也能給出符合相關條件的素數階曲線。作者不知道這是額外篩選規則還是實現造成的結果，也無法由現有數字知道當年總共執行過多少次。P-224、P-256、P-384、P-521 的基點，以及二元體曲線的基點來源仍不清楚。因此“重現種子”不能寫成“完整還原所有參數選擇過程”。",
+                "這項結果減少了部分參數來源的不透明性，但沒有證明任何可能的選擇偏差都不存在，也沒有發現新的簽章攻擊。舊生成器容易追溯，不表示已經生成的曲線具有同樣的隨機性缺陷；曲線安全與私鑰保護仍是不同問題。對 AI 研究而言，值得關注的是提出可檢驗假設、用獨立計算篩選、再公開可重現證據的工作方式，而不是把機構對模型能力的宣傳當作結論。當前來源是機構研究報告，沒有會議錄用證據；歷史標準僅用於說明當年參數定義，不作為現行部署建議。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據公開研究與歷史標準重繪的解釋圖：從已公開參數追溯生成過程，並標出未解釋部分，不展示私鑰恢復或攻擊流程。",
+            "steps": [
+              "區分公開曲線種子與使用者秘密值",
+              "比較歷史生成器與公開種子的數學關係",
+              "核對完整種子、時間範圍及部分基點",
+              "保留篩選規則和未解釋參數的疑問"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "research",
+      "id": "claude-quantum-circuit-optimization",
+      "written_at": "2026-11-05",
+      "sources": [
+        {
+          "label": "Discovering state-of-the-art quantum circuits with large language models · v1",
+          "url": "https://arxiv.org/html/2610.22367v1"
+        },
+        {
+          "label": "Anthropic Research · Designing more efficient quantum circuits with Claude",
+          "url": "https://www.anthropic.com/research/designing-efficient-quantum-circuits"
+        },
+        {
+          "label": "arXiv · original version record",
+          "url": "https://arxiv.org/abs/2610.22367v1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "让量子算法更省资源，不一定只能等硬件进步。同一个计算目标可以写成很不一样的电路：有的多占量子比特，有的反复计算、消耗更多门。Anthropic 与哈佛研究者把电路设计交给模型搜索，再用独立评估器检查正确性和资源，研究这种闭环能否找到新的算法结构。这里比较的是逻辑电路资源，不是量子设备上的实测运行速度。",
+          "sections": [
+            {
+              "heading": "评估器检查的不只是最终答案",
+              "paragraphs": [
+                "研究选择的是计算经典函数、又能嵌入量子算法的一类电路。量子计算中的临时信息不能随意丢掉；辅助量子比特需要清理回初始状态，错误的相位也会影响后续干涉，即使输出数字看起来正确。所用电路模型允许在经典计算机上跟踪计算基底对应的位串及相位，因此评估器不仅检查答案，还检查应保留的输入、辅助位是否归零和相位是否正确。它不是对任意量子电路都适用的廉价验证方法。",
+                "人先提供固定任务规格和允许的电路操作，Claude Mythos 5 从空白方案出发提出不同算法家族，再用 OpenEvolve 分别改进，并定期交换表现较好的设计。模型收到错误与评分反馈后继续修改，不自行充当正确性裁判。评分把 Toffoli 门数与同时占用的逻辑量子比特峰值相乘：前者近似反映昂贵逻辑操作量，后者反映空间需求。这个乘积方便比较，但并不是硬件上的精确秒数，也不代表所有设备都同样重视两种资源。"
+              ]
+            },
+            {
+              "heading": "八项任务中，改善并非同一种形式",
+              "paragraphs": [
+                "任务涉及数值计算、化学、优化、量子模拟和数论。原论文报告八项中七项同时减少 Toffoli 门数和量子比特，第八项模逆计算改善的是二者之间的折中。以用于解码量子干涉算法的 Reed–Solomon 解码器为例，门数由约 510 万降至 44 万，峰值量子比特由 1,938 降至 1,837，资源乘积约改善 12 倍。该实例的表格列出 100,000 次测试，并允许在指定输入分布下最多 0.1% 的失败预算；这不是整个优化问题的实机运行快了 12 倍。",
+                "模逆中的关键困难是保留每轮算术选择的历史，才能把运算可逆地撤销。新设计证明可以从当前数值状态恢复一部分选择，不必全部存下来；对于恢复太贵的部分，仍保存历史，形成“多用一些门、少占一些空间”及相反方向的一组方案。报告称相关分支恢复结论经过数值检查和 Lean 形式化，不能扩大成所有电路均有完整形式化证明。论文所列完整模逆主导基准电路使用约 400 万 Toffoli 门和 935 个逻辑量子比特，没有给它指定一个统一的旧方案提升倍数。"
+              ]
+            },
+            {
+              "heading": "测试、容错预算和硬件仍是边界",
+              "paragraphs": [
+                "有些节省来自允许极少数难处理输入失败，或允许数值近似，而不是在所有输入上都实现零误差。评估器对大输入域采用抽样；论文的统计保证依赖候选在测试抽样前固定、样本独立以及规定的输入分布。抽样通过不能写成穷举证明。分支恢复的数学结果也不消除电路整体的截断、存储上限或近似条件；换一个输入分布，原来的失败预算需要重新核对。",
+                "这些结果说明，在正确性和代价可以可靠检查的任务上，模型能帮助重组算法，而不仅是微调现有门序列。它们没有演示实际量子硬件的优势，也不直接给出物理量子比特数量、纠错开销或可用设备时间。并行资源充足时，门的深度可能比总门数更影响运行时间；因此部署要换用对应硬件的代价模型。本条保留 10 月 16 日机构报告的原发布日期，所链论文 v1 于 10 月 15 日提交，未发现会议录用证据。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依据原论文重绘的解释图：模型提出电路，独立评估器检查并反馈，最后按误差条件比较资源折中；不代表实机实验曲线。",
+            "steps": [
+              "明确计算规格、允许操作和误差预算",
+              "并行探索不同电路算法家族",
+              "检查输出、相位及辅助位并反馈资源评分",
+              "在相同条件下比较门数和逻辑量子比特"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Making quantum algorithms less resource-intensive does not require waiting only for better hardware. The same computation can be expressed by circuits that use more qubits or repeat more work and consume more gates. Researchers at Anthropic and Harvard use model-guided search with an independent evaluator to ask whether this feedback loop can discover new algorithmic structures. The comparison concerns logical-circuit resources, not measured execution speed on a quantum device.",
+          "sections": [
+            {
+              "heading": "The evaluator checks more than the final answer",
+              "paragraphs": [
+                "The work selects circuits that compute classical functions while remaining suitable for use inside quantum algorithms. Temporary information cannot simply be discarded: auxiliary qubits must return to their initial state, and an incorrect phase can disrupt subsequent interference even when output numbers look correct. The circuit model permits classical tracking of computational-basis bit strings and phase. The evaluator therefore checks output, preservation of required inputs, auxiliary-qubit cleanup and phase correctness. This is not a cheap verification method for arbitrary quantum circuits.",
+                "People provide fixed task specifications and permitted circuit operations. Claude Mythos 5 starts from blank designs, proposes different algorithm families and improves them separately through OpenEvolve, periodically sharing strong candidates between families. Error reports and resource scores guide revision; the model is not its own correctness judge. The score multiplies Toffoli count by peak simultaneously allocated logical qubits. These approximate expensive logical work and space, respectively. Their product supports comparison but is neither exact hardware runtime nor evidence that every device values time and space equally."
+              ]
+            },
+            {
+              "heading": "Eight tasks do not all improve in the same way",
+              "paragraphs": [
+                "Tasks cover numerical computing, chemistry, optimisation, quantum simulation and number theory. The paper reports that seven of eight reduce both Toffoli count and qubits, while modular inversion improves their trade-off. For the Reed–Solomon decoder used in decoded quantum interferometry, about 5.1 million Toffolis fall to 440,000, and peak qubits fall from 1,938 to 1,837, improving the resource product by roughly twelvefold. The table lists 100,000 tests and a failure budget of at most 0.1% under the specified input distribution. This does not mean a complete optimisation problem runs twelve times faster on hardware.",
+                "Modular inversion normally requires storing the history of arithmetic choices so the computation can be reversed. The new construction shows how some choices can be recovered from the current numerical state instead. Where decoding is expensive, it retains history, producing a family of trade-offs between more gates and fewer qubits, or the reverse. The report describes numerical checks and Lean formalisation of the branch-recovery result; that is not a complete formal proof of every circuit. The reported complete benchmark circuit dominated by inversion uses about four million Toffolis and 935 logical qubits, without assigning it one universal improvement factor over all prior designs."
+              ]
+            },
+            {
+              "heading": "Testing, permitted failures and hardware remain important boundaries",
+              "paragraphs": [
+                "Some savings allow rare difficult inputs to fail or permit numerical approximation, rather than achieving zero error on every input. For large domains the evaluator samples trajectories. The paper’s statistical guarantees require a candidate fixed before test sampling, independent samples and the stated input distribution. Passing a sample is not exhaustive proof. The mathematical branch-recovery result also does not remove full-circuit truncation, storage limits or approximation conditions; a new input distribution requires reassessing the failure budget.",
+                "The evidence supports model-assisted algorithm restructuring where correctness and cost can be checked reliably, rather than only tweaking an existing gate sequence. It does not demonstrate quantum-hardware advantage or directly determine physical-qubit counts, error-correction overheads or device availability. With sufficient parallel resources, gate depth may matter more than total gate count, so deployment needs an appropriate hardware cost model. This entry retains the institutional report’s original publication date of 16 October; the linked paper’s v1 was submitted on 15 October, with no conference-acceptance evidence found."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Explanatory diagram redrawn by this site from the paper: models propose, an independent evaluator tests and scores, and resource trade-offs are compared under error conditions. It is not a hardware experiment plot.",
+            "steps": [
+              "Specify the function, permitted operations and error budget",
+              "Explore distinct circuit families in parallel",
+              "Check outputs, phases and auxiliary qubits and return scores",
+              "Compare gate counts and logical qubits under matched conditions"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "量子アルゴリズムの資源削減は、ハードウェアの進歩を待つだけではない。同じ計算でも、量子ビットを多く占める設計や、再計算で多くのゲートを使う設計がある。Anthropic とハーバードの研究者は、モデルの探索と独立評価器のフィードバックを組み合わせ、新しいアルゴリズム構造を見つけられるか調べた。比較するのは論理回路の資源であり、量子装置で実測した速度ではない。",
+          "sections": [
+            {
+              "heading": "評価器は答え以外も確認する",
+              "paragraphs": [
+                "対象は古典関数を計算し、量子アルゴリズムの中で使える特定の回路群だ。量子計算では一時情報を単に捨てられず、補助量子ビットを初期状態に戻す必要がある。出力の数字が正しくても位相が違えば、その後の干渉が変わる。この回路モデルでは古典計算機で計算基底のビット列と位相を追えるため、出力だけでなく必要な入力の保存、補助ビットの消去、位相の正しさも確認する。任意の量子回路を安価に検証できる方法ではない。",
+                "人が固定した課題仕様と許可される操作を与え、Claude Mythos 5 が白紙から異なるアルゴリズム群を提案する。OpenEvolve で各群を別々に改良し、良い候補を定期的に共有する。誤りと資源の評価を受けて修正するので、モデル自身が正解判定を担うわけではない。指標は Toffoli ゲート数と同時使用する論理量子ビットの最大数の積で、高価な論理演算量と空間を近似する。比較には便利だが、正確な実機秒数でも、すべての装置が両資源を等しく重視するという意味でもない。"
+              ]
+            },
+            {
+              "heading": "八課題の改善は一種類ではない",
+              "paragraphs": [
+                "課題は数値計算、化学、最適化、量子シミュレーション、数論にまたがる。原論文では八つのうち七つで Toffoli 数と量子ビットがともに減り、残るモジュラ逆数は両者のトレードオフが改善する。復号量子干渉法の Reed–Solomon 復号器では、ゲートが約 510 万から 44 万、最大量子ビットが 1,938 から 1,837 に減り、積の指標は約 12 倍改善した。表では 100,000 回の試験と、指定入力分布で最大 0.1% の失敗許容を示す。最適化問題全体が実機で 12 倍速くなる結果ではない。",
+                "モジュラ逆数の難しさは、計算を逆にたどるため各算術分岐の履歴を残すことにある。新構成は現在の数値状態から一部の選択を復元できると示す。復元が高価な部分は保存し、ゲートを増やしてビットを減らす、または逆方向の設計群を得る。報告は分岐復元の結論について数値検査と Lean による形式化を記すが、全回路の完全な形式証明とはいえない。逆数計算が費用を支配する完全な基準回路は約 400 万 Toffoli と 935 論理量子ビットで、過去の全設計に対する単一の改善倍率は付けていない。"
+              ]
+            },
+            {
+              "heading": "試験条件と実機の費用は別に確認する",
+              "paragraphs": [
+                "資源削減の一部は、まれな難しい入力での失敗や数値近似を許し、全入力のゼロ誤差を要求しないことから生まれる。大きな入力域では軌跡を抽出して検査する。統計保証は試験抽出前に候補が固定され、独立な標本と指定分布を使うことが前提だ。標本を通過しても全数証明にはならない。分岐復元の数学的結果も、回路全体の打ち切り、記憶容量制限、近似条件をなくさないため、入力分布が変われば失敗許容を再検討する必要がある。",
+                "正しさと費用を確かめやすい課題では、既存ゲート列の微調整以上にモデルがアルゴリズムの再構成を助ける、という証拠である。量子実機の優位性は示さず、物理量子ビット数、誤り訂正の負担、装置の利用時期を直接与えるものでもない。十分な並列資源があれば総ゲート数より深さが時間を左右し、導入時は対応する費用モデルが要る。本項目は機関報告の公開日 10 月 16 日を維持し、リンク先論文の v1 は 10 月 15 日提出、会議採択の根拠は確認していない。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "原論文を基に当サイトが描き直した説明図。モデルの提案を独立評価器が確認し、誤差条件付きで資源を比較する。量子実機の実験曲線ではない。",
+            "steps": [
+              "関数・許可操作・誤差予算を定める",
+              "異なる回路アルゴリズム群を並行探索",
+              "出力・位相・補助ビットを確認し採点を返す",
+              "同条件でゲート数と論理量子ビットを比較"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Снижать стоимость квантовых алгоритмов можно не только совершенствованием аппаратуры. Одна задача допускает схемы с большим числом кубитов либо с повторными вычислениями и большим числом вентилей. Исследователи Anthropic и Гарварда объединяют поиск модели с независимой проверкой, чтобы находить новые алгоритмические структуры. Сравниваются ресурсы логических схем, а не измеренная скорость квантового устройства.",
+          "sections": [
+            {
+              "heading": "Проверяется не только конечный ответ",
+              "paragraphs": [
+                "Работа рассматривает определённый класс схем, вычисляющих классические функции внутри квантовых алгоритмов. Временную информацию нельзя просто отбросить: вспомогательные кубиты должны вернуться в исходное состояние. Неверная фаза способна нарушить последующую интерференцию даже при правильных выходных числах. Выбранная модель схем позволяет классически отслеживать базисные битовые строки и фазу. Поэтому оценщик проверяет ответ, сохранение требуемых входов, очистку вспомогательных кубитов и фазу. Это не дешёвый способ проверки любых квантовых схем.",
+                "Люди задают фиксированные спецификации и допустимые операции. Claude Mythos 5 начинает с пустого проекта, предлагает разные семейства алгоритмов и раздельно улучшает их через OpenEvolve, периодически обмениваясь удачными кандидатами между семействами. Обратная связь содержит ошибки и оценки ресурсов; модель не назначается собственным судьёй правильности. Оценка умножает число Toffoli на максимальное число одновременно выделенных логических кубитов. Это приближения дорогой логической работы и пространства. Произведение удобно для сравнения, но не равно точному времени устройства и не означает одинаковую важность ресурсов для любой аппаратуры."
+              ]
+            },
+            {
+              "heading": "Восемь задач дают разные виды улучшения",
+              "paragraphs": [
+                "Задачи охватывают численные вычисления, химию, оптимизацию, квантовое моделирование и теорию чисел. В семи из восьми уменьшаются и Toffoli, и кубиты, а модульное обращение улучшает их компромисс. Для декодера Reed–Solomon в декодированной квантовой интерферометрии число вентилей падает примерно с 5.1 миллиона до 440 тысяч, пик кубитов — с 1 938 до 1 837, а произведение ресурсов улучшается примерно в 12 раз. Таблица указывает 100 000 испытаний и допустимую долю отказов до 0.1% на заданном распределении входов. Это не означает двенадцатикратного ускорения всей оптимизационной задачи на устройстве.",
+                "При модульном обращении обычно приходится хранить историю арифметических выборов, чтобы обратить вычисление. Новая конструкция восстанавливает часть выборов из текущего численного состояния. Если декодирование дорого, история сохраняется, создавая семейство компромиссов между дополнительными вентилями и меньшей памятью либо наоборот. Отчёт описывает численную проверку и формализацию результата о восстановлении ветвей в Lean; это не полное формальное доказательство всех схем. Полная тестовая схема с преобладающей стоимостью обращения использует около четырёх миллионов Toffoli и 935 логических кубитов, без одного универсального множителя улучшения над всеми прежними конструкциями."
+              ]
+            },
+            {
+              "heading": "Проверки, допустимые ошибки и аппаратура ограничивают выводы",
+              "paragraphs": [
+                "Часть экономии допускает отказы на редких трудных входах или численные приближения, а не нулевую ошибку для всех входов. На больших областях оценщик выбирает траектории случайно. Статистические гарантии предполагают фиксацию кандидата до выборки, независимые испытания и указанное распределение. Успешная выборочная проверка не является исчерпывающим доказательством. Математический результат восстановления ветвей также не устраняет усечение, ограничения памяти и приближения полной схемы; другое распределение требует повторной оценки бюджета отказов.",
+                "Результаты поддерживают перестройку алгоритмов с помощью модели там, где правильность и стоимость надёжно проверяются, а не только настройку готовой последовательности вентилей. Преимущество реальной квантовой аппаратуры не продемонстрировано; число физических кубитов, затраты коррекции ошибок и сроки доступности устройств прямо не следуют. При достаточном параллелизме глубина схемы может определять время сильнее общего числа вентилей, поэтому нужна соответствующая аппаратуре модель затрат. Запись сохраняет дату институционального отчёта 16 октября; v1 связанной статьи подана 15 октября, свидетельств конференционного принятия не найдено."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема заново подготовлена сайтом по статье: модель предлагает, независимый оценщик проверяет, затем сравниваются ресурсы при заданных ошибках. Это не график аппаратного эксперимента.",
+            "steps": [
+              "Задать функцию, допустимые операции и бюджет ошибок",
+              "Параллельно исследовать разные семейства схем",
+              "Проверить выходы, фазы и вспомогательные кубиты и вернуть оценку",
+              "Сопоставить вентили и логические кубиты в одинаковых условиях"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "讓量子演算法更省資源，不一定只能等硬體進步。同一個計算目標可以寫成很不一樣的電路：有的多佔量子位元，有的反覆計算、消耗更多閘。Anthropic 與哈佛研究者把電路設計交給模型搜尋，再用獨立評估器檢查正確性和資源，研究這種閉環能否找到新的演算法結構。這裡比較的是邏輯電路資源，不是量子裝置上的實測執行速度。",
+          "sections": [
+            {
+              "heading": "評估器檢查的不只是最終答案",
+              "paragraphs": [
+                "研究選擇的是計算古典函數、又能嵌入量子演算法的一類電路。量子計算中的臨時資訊不能隨意丟掉；輔助量子位元需要清理回初始狀態，錯誤的相位也會影響後續干涉，即使輸出數字看起來正確。所用電路模型允許在古典電腦上跟蹤計算基底對應的位元串及相位，因此評估器不僅檢查答案，還檢查應保留的輸入、輔助位是否歸零和相位是否正確。它不是對任意量子電路都適用的廉價驗證方法。",
+                "人先提供固定任務規格和允許的電路操作，Claude Mythos 5 從空白方案出發提出不同演算法家族，再用 OpenEvolve 分別改進，並定期交換表現較好的設計。模型收到錯誤與評分回饋後繼續修改，不自行充當正確性裁判。評分把 Toffoli 閘數與同時佔用的邏輯量子位元峰值相乘：前者近似反映昂貴邏輯操作量，後者反映空間需求。這個乘積方便比較，但並不是硬體上的精確秒數，也不代表所有裝置都同樣重視兩種資源。"
+              ]
+            },
+            {
+              "heading": "八項任務中，改善並非同一種形式",
+              "paragraphs": [
+                "任務涉及數值計算、化學、最佳化、量子模擬和數論。原論文報告八項中七項同時減少 Toffoli 閘數和量子位元，第八項模逆計算改善的是二者之間的折衷。以用於解碼量子干涉演算法的 Reed–Solomon 解碼器為例，閘數由約 510 萬降至 44 萬，峰值量子位元由 1,938 降至 1,837，資源乘積約改善 12 倍。該實例的表格列出 100,000 次測試，並允許在指定輸入分佈下最多 0.1% 的失敗預算；這不是整個最佳化問題的實機執行快了 12 倍。",
+                "模逆中的關鍵困難是保留每輪算術選擇的歷史，才能把運算可逆地撤銷。新設計證明可以從當前數值狀態恢復一部分選擇，不必全部存下來；對於恢復太貴的部分，仍儲存歷史，形成“多用一些閘、少佔一些空間”及相反方向的一組方案。報告稱相關分支恢復結論經過數值檢查和 Lean 形式化，不能擴大成所有電路均有完整形式化證明。論文所列完整模逆主導基準電路使用約 400 萬 Toffoli 閘和 935 個邏輯量子位元，沒有給它指定一個統一的舊方案提升倍數。"
+              ]
+            },
+            {
+              "heading": "測試、容錯預算和硬體仍是邊界",
+              "paragraphs": [
+                "有些節省來自允許極少數難處理輸入失敗，或允許數值近似，而不是在所有輸入上都實現零誤差。評估器對大輸入域採用抽樣；論文的統計保證依賴候選在測試抽樣前固定、樣本獨立以及規定的輸入分佈。抽樣檢查通過不能寫成窮舉證明。分支恢復的數學結果也不消除電路整體的截斷、儲存上限或近似條件；換一個輸入分佈，原來的失敗預算需要重新核對。",
+                "這些結果說明，在正確性和代價可以可靠檢查的任務上，模型能幫助重組演算法，而不僅是微調現有閘序列。它們沒有演示實際量子硬體的優勢，也不直接給出物理量子位元數量、糾錯開銷或可用裝置時間。並行資源充足時，閘的深度可能比總閘數更影響執行時間；因此部署要換用對應硬體的代價模型。本條保留 10 月 16 日機構報告的原發布日期，所鏈論文 v1 於 10 月 15 日提交，未發現會議錄用證據。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依據原論文重繪的解釋圖：模型提出電路，獨立評估器檢查並回饋，最後按誤差條件比較資源折衷；不代表實機實驗曲線。",
+            "steps": [
+              "明確計算規格、允許操作和誤差預算",
+              "並行探索不同電路演算法家族",
+              "檢查輸出、相位及輔助位並回饋資源評分",
+              "在相同條件下比較閘數和邏輯量子位元"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
