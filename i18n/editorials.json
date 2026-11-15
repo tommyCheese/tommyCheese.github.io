@@ -41762,6 +41762,210 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "deepseek-app-capabilities-api",
+      "written_at": "2026-11-15",
+      "sources": [
+        {
+          "label": "DeepSeek · Release announcement",
+          "url": "https://api-docs.deepseek.com/news/news261113/"
+        },
+        {
+          "label": "DeepSeek · API change log",
+          "url": "https://api-docs.deepseek.com/updates/"
+        },
+        {
+          "label": "DeepSeek · Chatbot guide",
+          "url": "https://api-docs.deepseek.com/guides/build_a_chatbot/"
+        },
+        {
+          "label": "DeepSeek · Demo project and license",
+          "url": "https://github.com/deepseek-ai/chat-demo"
+        },
+        {
+          "label": "CASRAI · Independent analysis",
+          "url": "https://casrai.org/news/deepseek-app-capabilities-api-2026"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "此前 DeepSeek 已在 10 月 17 日开放独立搜索接口。11 月 13 日的更新让开发者可以把多项应用能力放进同一次对话请求。服务端负责调用启用的工具，并把结果整理进模型本轮可以读取的材料。",
+          "sections": [
+            {
+              "heading": "一次请求怎样使用外部资料",
+              "paragraphs": [
+                "官方公告列出 Messages、Responses 和 Chat Completions 三种接口，使用现有的 V4.1 Flash。普通搜索可提供带引用的回答，开启思考模式后，模型可在多步推理中反复搜索和阅读网页。两种模式都需要启用相应工具。",
+                "上传 PDF、Office 文档或图片时，服务会提取文本或解析版面。启用链接读取后，消息中的网页可以进入回答所用的上下文。引用提供了核对入口，文章仍可能读取不全，引用也需要与回答中的具体主张对照。"
+              ]
+            },
+            {
+              "heading": "托管接口与开源客户端",
+              "paragraphs": [
+                "DeepSeek 也独立提供搜索、网页获取、文字识别、语音转写和语音合成接口。开发者可以让聊天服务统一处理工具，也可以只在自己的流程中使用某个环节。官方说明，扩展工具用量在模型 token 用量之外计费。",
+                "随发布提供的演示客户端采用 MIT 许可证，支持导入聊天历史。许可证覆盖演示项目，模型推理仍由托管 API 提供。这次公告的实际交付是开发接口与演示代码。"
+              ]
+            },
+            {
+              "heading": "资料进入服务之后",
+              "paragraphs": [
+                "官方说明，启用基础内容安全检查后会筛查输入和输出，识别到风险时返回拒绝标记。面向公众的应用需要启用检查，开发者仍负责自身的内容审核及适用的登记和标识义务。",
+                "CASRAI 将这项变化解读为数据流的扩大。对应用团队而言，发送附件或请求读取网页会改变交给服务处理的材料范围。发布公告没有列明具体留存周期，也没有给出独立验证的准确率和时延，部署判断仍需结合服务条款和实际测试。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重绘的解释示意图，展示托管工具与模型上下文的关系。",
+            "steps": [
+              "请求选择所需工具",
+              "服务端处理文件或链接",
+              "把结果放入对话上下文",
+              "生成回答并保留可核对的来源"
+            ]
+          }
+        },
+        "en": {
+          "lead": "DeepSeek opened a standalone search API on October 17. Its November 13 release gives developers a way to combine several app features in one conversation request. The hosted service runs the tools a developer enables and assembles their results into the material the model can see.",
+          "sections": [
+            {
+              "heading": "How a request gains outside context",
+              "paragraphs": [
+                "DeepSeek documents the features for the existing V4.1 Flash model across Messages, Responses and Chat Completions. Standard search can return answers with citations. With thinking mode enabled, the model can search and read pages across several reasoning steps. Both modes require the appropriate tool to be enabled.",
+                "When a request includes a PDF, Office document or image, the service extracts text or parses its layout. Link reading can bring web pages mentioned in the message into context. Citations make the material easier to inspect, and each citation still needs to be checked against the specific claim it is supposed to support."
+              ]
+            },
+            {
+              "heading": "The hosted service and the open demo",
+              "paragraphs": [
+                "DeepSeek also offers separate APIs for search, fetching pages, optical character recognition, speech recognition and speech synthesis. Developers can let the chat service coordinate tools or use individual services in their own workflows. The announcement says expanded tools are billed separately from model tokens.",
+                "The demonstration client supports importing chat history and carries an MIT license. That license covers the demo project. Model inference continues to run through the hosted API. The release delivers developer interfaces and demo code."
+              ]
+            },
+            {
+              "heading": "What happens to material sent for processing",
+              "paragraphs": [
+                "DeepSeek says its basic safety checks screen inputs and outputs when enabled, returning a refusal indicator when they detect a risk. Public-facing apps must enable the checks. Developers retain responsibility for moderation and applicable registration and labeling.",
+                "CASRAI describes the change as an expansion of data flows. For an application team, sending a document or requesting a page changes the set of material processed by the provider. The announcement does not give a retention period or independently verified accuracy and latency figures. Deployment decisions still depend on the service terms and testing with representative requests."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "An explanatory diagram drawn by this site to show how hosted tools feed model context.",
+            "steps": [
+              "Select tools for the request",
+              "Process files or links on the server",
+              "Add the results to conversation context",
+              "Generate an answer with sources where available"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "DeepSeek は10月17日に単独の検索 API を公開した。11月13日の更新では、複数のアプリ機能を一つの対話リクエストで利用できる。サービス側が有効化されたツールを動かし、結果をモデルが読める資料にまとめる。",
+          "sections": [
+            {
+              "heading": "外部の資料を回答に取り込む",
+              "paragraphs": [
+                "公式発表では既存の V4.1 Flash が Messages、Responses、Chat Completions に対応する。通常の検索は出典付きの回答を返せる。思考モードを有効にすると、推論の途中で複数回検索し、ページも読める。どちらも対応するツールの有効化が必要だ。",
+                "PDF、Office 文書、画像を渡すと、文字の抽出やレイアウトの解析が行われる。リンク読み取りを有効にすると、メッセージ内のページを回答の文脈に加えられる。出典は確認の手掛かりになるが、個々の主張を実際に裏付けているかは別途確かめる必要がある。"
+              ]
+            },
+            {
+              "heading": "ホスト型サービスと公開デモ",
+              "paragraphs": [
+                "検索、ウェブ取得、文字認識、音声認識、音声合成は個別の API でも提供される。対話サービスにツール処理をまとめる方法と、一部の機能だけを独自の処理に組み込む方法がある。公式説明では追加ツールの利用料はモデルのトークン料金と別に計上される。",
+                "会話履歴を取り込めるデモクライアントには MIT ライセンスが付く。適用範囲はデモプロジェクトで、モデル推論は引き続きホスト型 API が担う。今回提供されたのは開発用インターフェースとデモコードだ。"
+              ]
+            },
+            {
+              "heading": "サービスへ渡る情報の範囲",
+              "paragraphs": [
+                "基本的な安全検査を有効にすると入出力を判定し、リスクが見つかった場合に拒否を示す情報を返すと DeepSeek は説明する。公開アプリでは検査を有効にする必要があり、コンテンツ審査や適用される登録と表示は開発側が引き続き担う。",
+                "CASRAI は処理されるデータの流れが広がると指摘した。文書を送る場合やページ取得を依頼する場合、提供元のサービスが処理する資料の範囲が変わる。発表には保存期間や独立に検証された精度・遅延の数値が示されていないため、利用条件と実際のリクエストでの試験が判断材料になる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "サービス側のツールからモデルの文脈への流れを示す当サイトの説明図。",
+            "steps": [
+              "使うツールを選ぶ",
+              "サーバーで資料を処理する",
+              "結果を対話の文脈に加える",
+              "回答を生成し利用可能な出典を示す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "17 октября DeepSeek открыл отдельный поисковый API. Обновление от 13 ноября позволяет объединять несколько функций приложения в одном запросе диалога. Сервис запускает включённые инструменты и собирает их результаты в контекст, доступный модели в текущем запросе.",
+          "sections": [
+            {
+              "heading": "Как внешние материалы попадают в ответ",
+              "paragraphs": [
+                "Документация описывает поддержку существующей модели V4.1 Flash в интерфейсах Messages, Responses и Chat Completions. Обычный поиск может возвращать ответы со ссылками. В режиме рассуждения модель может искать и читать страницы на нескольких шагах. Оба режима требуют включения соответствующего инструмента.",
+                "При передаче PDF, офисного документа или изображения сервис извлекает текст либо разбирает структуру страницы. Чтение ссылок позволяет включать страницы из сообщения в контекст ответа. Ссылки упрощают проверку, однако их всё равно нужно сверять с конкретными утверждениями."
+              ]
+            },
+            {
+              "heading": "Облачный сервис и открытый демопроект",
+              "paragraphs": [
+                "Поиск, загрузка страниц, распознавание текста и речи, а также синтез речи доступны и через отдельные API. Разработчик может поручить чату управление инструментами или встроить отдельные операции в свой процесс. Согласно объявлению, использование дополнительных инструментов учитывается отдельно от токенов модели.",
+                "Демонстрационный клиент поддерживает импорт истории и распространяется по лицензии MIT. Лицензия охватывает демопроект. Вычисления модели продолжают выполняться через облачный API. В рамках обновления предоставлены интерфейсы разработчика и код демонстрации."
+              ]
+            },
+            {
+              "heading": "Какие материалы обрабатывает сервис",
+              "paragraphs": [
+                "DeepSeek сообщает, что включённая проверка безопасности анализирует вход и выход и возвращает признак отказа при обнаружении риска. Публичные приложения должны включать проверку. Ответственность за модерацию, применимую регистрацию и маркировку сохраняется у разработчиков.",
+                "CASRAI указывает, что обновление расширяет потоки данных. Передача документа или запрос страницы меняет состав материалов, которые обрабатывает поставщик. В объявлении нет срока хранения либо независимо проверенных показателей точности и задержки. Для решения о внедрении нужны условия сервиса и испытания на характерных запросах."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема сайта показывает, как облачные инструменты передают результаты в контекст модели.",
+            "steps": [
+              "Выбрать инструменты для запроса",
+              "Обработать файлы или ссылки на сервере",
+              "Включить результаты в контекст",
+              "Сформировать ответ и показать доступные источники"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "DeepSeek 先前已於 10 月 17 日開放獨立搜尋介面。11 月 13 日的更新讓開發者可以在同一個對話請求中使用多項應用功能。伺服器負責執行啟用的工具，並將結果整理成模型當輪可以讀取的資料。",
+          "sections": [
+            {
+              "heading": "一個請求如何取得外部資料",
+              "paragraphs": [
+                "官方公告指出，既有 V4.1 Flash 支援 Messages、Responses 和 Chat Completions 三種介面。一般搜尋可以傳回附引文的回答。啟用思考模式後，模型可以在多步推理中搜尋及讀取網頁。兩種模式都要先啟用相應工具。",
+                "上傳 PDF、Office 文件或圖片後，服務會擷取文字或解析版面。啟用連結讀取後，訊息中的網頁可以加入回答所用的脈絡。引文提供查核入口，仍應確認它確實支持回答中的個別主張。"
+              ]
+            },
+            {
+              "heading": "託管服務與開源示範",
+              "paragraphs": [
+                "搜尋、網頁擷取、文字辨識、語音辨識和語音合成也各有獨立介面。開發者可以交由對話服務統一處理工具，也可以在自己的流程中只呼叫個別功能。依官方說明，擴充工具用量與模型 token 用量分開計費。",
+                "隨發布提供的示範用戶端支援匯入聊天紀錄，採用 MIT 授權。這項授權涵蓋示範專案，模型推論仍由託管 API 提供。本次實際交付的是開發介面和示範程式碼。"
+              ]
+            },
+            {
+              "heading": "資料交給服務之後",
+              "paragraphs": [
+                "DeepSeek 表示，啟用基本內容安全檢查後，系統會檢查輸入及輸出，發現風險時傳回拒絕標記。面向大眾的應用需啟用檢查，開發者仍負責內容審核與適用的登記、標示義務。",
+                "CASRAI 指出，此次更新擴大了資料流。對應用團隊來說，上傳文件或要求讀取網頁會改變交由供應商處理的資料範圍。公告沒有列明留存週期，也沒有提供獨立驗證的準確度與延遲數字，部署仍須依服務條款及實際測試判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站重繪的解說示意圖，說明託管工具與模型脈絡之間的關係。",
+            "steps": [
+              "選擇請求所需工具",
+              "由伺服器處理檔案或連結",
+              "將結果加入對話脈絡",
+              "產生答案並列出可供查核的來源"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

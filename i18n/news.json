@@ -1,6 +1,17 @@
 {
-  "updated_at": "2026-11-05",
+  "updated_at": "2026-11-15",
   "items": [
+    {
+      "id": "deepseek-app-capabilities-api",
+      "category": "ai",
+      "published_at": "2026-11-13",
+      "collected_at": "2026-11-15",
+      "source": "DeepSeek / CASRAI",
+      "url": "https://api-docs.deepseek.com/news/news261113/",
+      "image": "https://tommycheese.github.io/images/news/deepseek-app-capabilities-api.svg",
+      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
+      "image_fit": "contain"
+    },
     {
       "id": "openai-images26-gif-svg-controls",
       "category": "ai",

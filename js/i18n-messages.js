@@ -789,7 +789,9 @@ window.SITE_MESSAGES = {
     "news.nasa-splice-drone-landing-demonstration.title": "NASA 披露 SPLICE 无人机着陆导航试验，验证感知与引导的协同",
     "news.nasa-splice-drone-landing-demonstration.summary": "11 月 4 日报告回顾 8 月 27 日模拟下降试验：系统由地形数据评估落点并在不安全时引导改向。尚未披露着陆误差或成功率；地球演示不等于月球任务验证，软件交付仍属计划。",
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明确 GS1900 新漏洞修复，六月更新仍不足",
-    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十个 GS1900 型号的 2.90 Patch 2 及更早版本仍受新漏洞影响，对应 Patch 3 提供修复。调查纠正了此前攻击的漏洞归因；996 台设备是八月相关活动的观察数，不是本周新增。"
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十个 GS1900 型号的 2.90 Patch 2 及更早版本仍受新漏洞影响，对应 Patch 3 提供修复。调查纠正了此前攻击的漏洞归因；996 台设备是八月相关活动的观察数，不是本周新增。",
+    "news.deepseek-app-capabilities-api.title": "DeepSeek 将搜索、文件与语音能力开放给 API 开发者",
+    "news.deepseek-app-capabilities-api.summary": "11 月 13 日起，开发者可在已有聊天接口中启用搜索、文档解析、网页读取和内容检查，也可单独调用语音等服务。此次更新扩展的是托管 API，开源部分为演示客户端。"
   },
   "en": {
     "nav.about": "About",
@@ -1580,7 +1582,9 @@ window.SITE_MESSAGES = {
     "news.nasa-splice-drone-landing-demonstration.title": "NASA details SPLICE drone test linking terrain sensing to landing guidance",
     "news.nasa-splice-drone-landing-demonstration.summary": "The November 4 report covers an August 27 simulated descent: terrain data informs site assessment and a diversion if needed. Landing error and success rates remain undisclosed; this Earth demonstration is not lunar mission validation, and software delivery is still planned.",
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel clarifies GS1900 fix: the June update is not enough",
-    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Ten GS1900 models on 2.90 Patch 2 or earlier need the matching Patch 3 for the newly identified flaw. Researchers corrected earlier attack attribution; 996 devices refers to August observations, not new victims this week."
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Ten GS1900 models on 2.90 Patch 2 or earlier need the matching Patch 3 for the newly identified flaw. Researchers corrected earlier attack attribution; 996 devices refers to August observations, not new victims this week.",
+    "news.deepseek-app-capabilities-api.title": "DeepSeek opens app search, file and voice features through its API",
+    "news.deepseek-app-capabilities-api.summary": "DeepSeek’s November 13 update adds managed search, document parsing, web reading and safety checks to existing chat APIs. Voice tools are available separately, and the accompanying demo client is open source."
   },
   "ja": {
     "nav.about": "私について",
@@ -2371,7 +2375,9 @@ window.SITE_MESSAGES = {
     "news.nasa-splice-drone-landing-demonstration.title": "NASA、SPLICE 無人機試験で地形認識と着陸誘導の連動を報告",
     "news.nasa-splice-drone-landing-demonstration.summary": "11月4日の報告は8月27日の模擬降下を説明。地形データで着陸地点を評価し、危険なら進路を変更する。着陸誤差や成功率は未公表で、月面任務での検証ではない。ソフト提供も計画段階。",
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel が GS1900 の新問題の修正版を明示、6月更新だけでは不十分",
-    "news.zyxel-gs1900-vulnerability-reclassification.summary": "10機種の 2.90 Patch 2 以前は新たな問題の影響を受け、対応する Patch 3 が修正する。過去の攻撃の説明も訂正。996台は8月の関連活動の観測数で、今週の新規被害数ではない。"
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "10機種の 2.90 Patch 2 以前は新たな問題の影響を受け、対応する Patch 3 が修正する。過去の攻撃の説明も訂正。996台は8月の関連活動の観測数で、今週の新規被害数ではない。",
+    "news.deepseek-app-capabilities-api.title": "DeepSeek、検索・ファイル・音声機能を API に開放",
+    "news.deepseek-app-capabilities-api.summary": "11月13日の更新で検索、文書解析、リンク取得、コンテンツ検査が既存の対話 API に加わった。音声機能は単独でも呼び出せ、付属のデモクライアントは公開された。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3162,7 +3168,9 @@ window.SITE_MESSAGES = {
     "news.nasa-splice-drone-landing-demonstration.title": "NASA описало испытание SPLICE: от карты рельефа к выбору посадочной площадки",
     "news.nasa-splice-drone-landing-demonstration.summary": "Отчёт от 4 ноября посвящён имитации снижения 27 августа: оценка рельефа позволяет сменить небезопасную цель. Ошибка посадки и доля успехов не раскрыты; наземная демонстрация не подтверждает лунную миссию, а выпуск программы ещё планируется.",
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel уточнила исправление GS1900: июньского обновления недостаточно",
-    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Десять моделей с 2.90 Patch 2 или старее требуют соответствующей Patch 3 для новой проблемы. Объяснение прошлых атак уточнено; 996 устройств — августовские наблюдения, а не новые жертвы этой недели."
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "Десять моделей с 2.90 Patch 2 или старее требуют соответствующей Patch 3 для новой проблемы. Объяснение прошлых атак уточнено; 996 устройств — августовские наблюдения, а не новые жертвы этой недели.",
+    "news.deepseek-app-capabilities-api.title": "DeepSeek открыл через API функции поиска, документов и речи",
+    "news.deepseek-app-capabilities-api.summary": "Обновление от 13 ноября добавляет в действующие интерфейсы чата поиск, разбор документов, чтение страниц и проверку контента. Голосовые функции доступны отдельно, а код демонстрационного клиента опубликован."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3953,6 +3961,8 @@ window.SITE_MESSAGES = {
     "news.nasa-splice-drone-landing-demonstration.title": "NASA 披露 SPLICE 無人機著陸導航試驗，驗證感知與引導的協同",
     "news.nasa-splice-drone-landing-demonstration.summary": "11 月 4 日報告回顧 8 月 27 日模擬下降試驗：系統由地形資料評估落點並在不安全時引導改向。尚未披露著陸誤差或成功率；地球演示不等於月球任務驗證，軟體交付仍屬計劃。",
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明確 GS1900 新漏洞修正，六月更新仍不足",
-    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十個 GS1900 型號的 2.90 Patch 2 及更早版本仍受新漏洞影響，對應 Patch 3 提供修正。調查更正先前攻擊的漏洞歸因；996 台設備是八月相關活動的觀察數，並非本週新增。"
+    "news.zyxel-gs1900-vulnerability-reclassification.summary": "十個 GS1900 型號的 2.90 Patch 2 及更早版本仍受新漏洞影響，對應 Patch 3 提供修正。調查更正先前攻擊的漏洞歸因；996 台設備是八月相關活動的觀察數，並非本週新增。",
+    "news.deepseek-app-capabilities-api.title": "DeepSeek 將搜尋、檔案與語音功能開放給 API 開發者",
+    "news.deepseek-app-capabilities-api.summary": "11 月 13 日的更新讓既有聊天介面可啟用搜尋、文件解析、網頁讀取及內容檢查，語音等功能也可單獨呼叫。此次擴展的是託管 API，開放原始碼的是示範用戶端。"
   }
 };

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">DeepSeek App API capabilities</title><desc id="desc">Original conceptual illustration of search, documents and speech connected to hosted model context.</desc>
+<rect width="1200" height="675" rx="24" fill="#102535"/>
+<g font-family="Arial,sans-serif" fill="#f4f9fd"><text x="72" y="105" font-size="28" fill="#8edbca">NOVEMBER 13, 2026 · API RELEASE</text><text x="72" y="177" font-size="57" font-weight="bold">DeepSeek App API</text>
+<g fill="#1d4255" stroke="#427388" stroke-width="2"><rect x="72" y="245" width="320" height="190" rx="20"/><rect x="440" y="245" width="320" height="190" rx="20"/><rect x="808" y="245" width="320" height="190" rx="20"/></g>
+<g fill="none" stroke="#8edbca" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><circle cx="224" cy="320" r="24"/><path d="m242 338 20 20M577 294h40l18 18v48h-58zm40 0v18h18m-44 18h29m-29 14h29M932 326v12m18-25v38m18-55v72m18-55v38m18-25v12"/></g>
+<g font-size="28" text-anchor="middle"><text x="232" y="401">Web search</text><text x="600" y="401">Files and links</text><text x="968" y="401">Speech services</text></g>
+<text x="72" y="516" font-size="29">Hosted tools for conversational applications</text><text x="72" y="595" font-size="23" fill="#8edbca">TECH DAILY · ORIGINAL EXPLANATORY ILLUSTRATION</text></g></svg>
