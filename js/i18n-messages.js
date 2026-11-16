@@ -791,7 +791,9 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明确 GS1900 新漏洞修复，六月更新仍不足",
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "十个 GS1900 型号的 2.90 Patch 2 及更早版本仍受新漏洞影响，对应 Patch 3 提供修复。调查纠正了此前攻击的漏洞归因；996 台设备是八月相关活动的观察数，不是本周新增。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek 将搜索、文件与语音能力开放给 API 开发者",
-    "news.deepseek-app-capabilities-api.summary": "11 月 13 日起，开发者可在已有聊天接口中启用搜索、文档解析、网页读取和内容检查，也可单独调用语音等服务。此次更新扩展的是托管 API，开源部分为演示客户端。"
+    "news.deepseek-app-capabilities-api.summary": "11 月 13 日起，开发者可在已有聊天接口中启用搜索、文档解析、网页读取和内容检查，也可单独调用语音等服务。此次更新扩展的是托管 API，开源部分为演示客户端。",
+    "news.craig-standard-model-lattice-refinement.title": "格点上的标准模型：Craig 解释 GPT-6 Astra 如何辅助构造候选方案",
+    "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科学博客文章介绍了 10 月 6 日预印本中的有限格点构造，并说明 AI 参与推导的环节。真实模拟、反射正性与完整相互作用理论的连续极限仍待研究。"
   },
   "en": {
     "nav.about": "About",
@@ -1584,7 +1586,9 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel clarifies GS1900 fix: the June update is not enough",
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "Ten GS1900 models on 2.90 Patch 2 or earlier need the matching Patch 3 for the newly identified flaw. Researchers corrected earlier attack attribution; 996 devices refers to August observations, not new victims this week.",
     "news.deepseek-app-capabilities-api.title": "DeepSeek opens app search, file and voice features through its API",
-    "news.deepseek-app-capabilities-api.summary": "DeepSeek’s November 13 update adds managed search, document parsing, web reading and safety checks to existing chat APIs. Voice tools are available separately, and the accompanying demo client is open source."
+    "news.deepseek-app-capabilities-api.summary": "DeepSeek’s November 13 update adds managed search, document parsing, web reading and safety checks to existing chat APIs. Voice tools are available separately, and the accompanying demo client is open source.",
+    "news.craig-standard-model-lattice-refinement.title": "Craig describes an Astra-assisted candidate for the Standard Model on a lattice",
+    "news.craig-standard-model-lattice-refinement.summary": "A November 15 science post explains the construction in an October 6 preprint and the AI model’s role in its proof. Reflection positivity, practical simulation and the interacting continuum limit remain open."
   },
   "ja": {
     "nav.about": "私について",
@@ -2377,7 +2381,9 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel が GS1900 の新問題の修正版を明示、6月更新だけでは不十分",
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "10機種の 2.90 Patch 2 以前は新たな問題の影響を受け、対応する Patch 3 が修正する。過去の攻撃の説明も訂正。996台は8月の関連活動の観測数で、今週の新規被害数ではない。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek、検索・ファイル・音声機能を API に開放",
-    "news.deepseek-app-capabilities-api.summary": "11月13日の更新で検索、文書解析、リンク取得、コンテンツ検査が既存の対話 API に加わった。音声機能は単独でも呼び出せ、付属のデモクライアントは公開された。"
+    "news.deepseek-app-capabilities-api.summary": "11月13日の更新で検索、文書解析、リンク取得、コンテンツ検査が既存の対話 API に加わった。音声機能は単独でも呼び出せ、付属のデモクライアントは公開された。",
+    "news.craig-standard-model-lattice-refinement.title": "標準模型の格子定式化に向けた候補案、クレイグ氏が Astra の役割を説明",
+    "news.craig-standard-model-lattice-refinement.summary": "11月15日の科学ブログで、10月6日のプレプリントにある有限格子の構成と AI の関与を解説した。反射正値性、実用的なシミュレーション、相互作用する理論の連続極限は今後の課題だ。"
   },
   "ru": {
     "nav.about": "Обо мне",
@@ -3170,7 +3176,9 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel уточнила исправление GS1900: июньского обновления недостаточно",
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "Десять моделей с 2.90 Patch 2 или старее требуют соответствующей Patch 3 для новой проблемы. Объяснение прошлых атак уточнено; 996 устройств — августовские наблюдения, а не новые жертвы этой недели.",
     "news.deepseek-app-capabilities-api.title": "DeepSeek открыл через API функции поиска, документов и речи",
-    "news.deepseek-app-capabilities-api.summary": "Обновление от 13 ноября добавляет в действующие интерфейсы чата поиск, разбор документов, чтение страниц и проверку контента. Голосовые функции доступны отдельно, а код демонстрационного клиента опубликован."
+    "news.deepseek-app-capabilities-api.summary": "Обновление от 13 ноября добавляет в действующие интерфейсы чата поиск, разбор документов, чтение страниц и проверку контента. Голосовые функции доступны отдельно, а код демонстрационного клиента опубликован.",
+    "news.craig-standard-model-lattice-refinement.title": "Крейг объяснил, как Astra помогла построить решёточную модель для Стандартной модели",
+    "news.craig-standard-model-lattice-refinement.summary": "Автор записи от 15 ноября объясняет конструкцию из препринта от 6 октября и роль ИИ в доказательстве. Положительность отражения, применение в расчётах и континуальный предел взаимодействующей теории остаются открытыми."
   },
   "zh-TW": {
     "nav.about": "關於",
@@ -3963,6 +3971,8 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.title": "Zyxel 明確 GS1900 新漏洞修正，六月更新仍不足",
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "十個 GS1900 型號的 2.90 Patch 2 及更早版本仍受新漏洞影響，對應 Patch 3 提供修正。調查更正先前攻擊的漏洞歸因；996 台設備是八月相關活動的觀察數，並非本週新增。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek 將搜尋、檔案與語音功能開放給 API 開發者",
-    "news.deepseek-app-capabilities-api.summary": "11 月 13 日的更新讓既有聊天介面可啟用搜尋、文件解析、網頁讀取及內容檢查，語音等功能也可單獨呼叫。此次擴展的是託管 API，開放原始碼的是示範用戶端。"
+    "news.deepseek-app-capabilities-api.summary": "11 月 13 日的更新讓既有聊天介面可啟用搜尋、文件解析、網頁讀取及內容檢查，語音等功能也可單獨呼叫。此次擴展的是託管 API，開放原始碼的是示範用戶端。",
+    "news.craig-standard-model-lattice-refinement.title": "格點上的標準模型：Craig 說明 GPT-6 Astra 如何協助建構候選方案",
+    "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科學部落格文章介紹 10 月 6 日預印本中的有限格點建構，並說明 AI 參與推導的環節。實際模擬、反射正性及完整交互作用理論的連續極限仍待研究。"
   }
 };

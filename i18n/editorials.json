@@ -41966,6 +41966,210 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "craig-standard-model-lattice-refinement",
+      "written_at": "2026-11-16",
+      "sources": [
+        {
+          "label": "Nathaniel Craig · November science post",
+          "url": "https://openai.com/index/step-toward-defining-the-standard-model/"
+        },
+        {
+          "label": "Nathaniel Craig · October preprint, including Figure 2",
+          "url": "https://arxiv.org/html/2610.09093v1"
+        },
+        {
+          "label": "arXiv · Submission record",
+          "url": "https://arxiv.org/abs/2610.09093"
+        },
+        {
+          "label": "Deyron Labs · Independent coverage",
+          "url": "https://deyronlabs.com/en/news/openai-science-standard-model-lattice/"
+        },
+        {
+          "label": "Creative Commons · Figure license",
+          "url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "加州大学圣巴巴拉分校物理学家 Nathaniel Craig 在 11 月 15 日发表的 OpenAI 科学博客客座文章中，解释了他如何与 GPT-6 Astra 一起研究粒子物理标准模型的格点定义。这次公开的是研究过程的说明。构造的技术细节已于 10 月 6 日随预印本发布。",
+          "sections": [
+            {
+              "heading": "为什么弱相互作用更难放上格点",
+              "paragraphs": [
+                "格点把连续时空暂时换成间距有限的网格，使研究者可以明确规定在不同位置如何描述粒子与相互作用。标准模型的弱相互作用对左手与右手粒子的处理不同。直接在网格上写下这类规则，可能产生多余的镜像粒子，改变原理论的粒子内容。",
+                "已有的重叠费米子方法提供了分辨手性并处理多余粒子的工具。接下来的难点是确定费米子对计算所作贡献的相位。当力场沿一条闭合路径变化并回到原点时，累积相位必须符合整套构造的一致性要求。"
+              ]
+            },
+            {
+              "heading": "用越来越细的格点核对相位",
+              "paragraphs": [
+                "Craig 提出在一系列更细的格点上表示同一个规范场，再比较相邻精度下描述手性的量。预印本给出如何汇总这些比较，构造依赖局部信息的相位修正规则。在满足场强约束的四维欧氏格点上，作者以此得到在等价的规范描述下保持一致的费米子测度。",
+                "据 Craig 及论文致谢，Astra 帮助确定规范场如何移到更细的网格，并参与发展收敛论证和详细证明。研究过程中也有外部专家提出问题。技术结论来自预印本中的论证，博客和媒体报道提供的是推导经过与背景。"
+              ]
+            },
+            {
+              "heading": "从有限格点到实际物理仍有距离",
+              "paragraphs": [
+                "预印本讨论的是有限格点上的数学构造，给出了适用的场配置条件，并留下若干待验证环节。反射正性关系到能否把欧氏格点的计算与通常的量子理论联系起来，作者在结论中把它列为开放问题。",
+                "将方案用于现实模拟还需可实施的计算方法。完整相互作用理论在去掉网格间距后如何定义也是另一项工作。独立报道核对了预印本和博客的时间线，未报告独立复现。此次报道的价值在于把具体构造、AI 参与的环节和后续验证分开说明。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站按预印本重绘的流程示意，与封面所用论文原图分开。",
+            "steps": [
+              "在有限格点表示规范场",
+              "向更细格点转移同一个场",
+              "比较相邻尺度并累加相位修正",
+              "核对有限格点测度的一致性"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Physicist Nathaniel Craig of the University of California, Santa Barbara used a November 15 guest post on OpenAI’s science blog to explain his work with GPT-6 Astra on a lattice formulation of particle physics. The post adds an account of the collaboration. The technical construction appeared in his October 6 preprint.",
+          "sections": [
+            {
+              "heading": "Why the weak force is harder to put on a grid",
+              "paragraphs": [
+                "A lattice replaces continuous spacetime with a grid of finite spacing, where rules for particles and forces can be specified explicitly. The weak interaction treats left- and right-handed particles differently. A straightforward discretization can produce unwanted mirror partners and alter the particle content.",
+                "Existing overlap fermions provide tools for separating handedness and addressing the extra particles. A further challenge is assigning a consistent phase to the fermion contribution. When the force field changes through a closed loop and returns to its initial configuration, the accumulated phase has to fit the same prescription."
+              ]
+            },
+            {
+              "heading": "Comparing successively finer grids",
+              "paragraphs": [
+                "Craig proposed representing the same gauge field on finer and finer grids, comparing quantities that select handed fermions at neighboring spacings. The preprint combines those comparisons into a local rule for correcting phase. For gauge fields obeying an admissibility bound on a four-dimensional Euclidean lattice, the author obtains a fermion measure that remains consistent under equivalent gauge descriptions.",
+                "Craig’s account and the paper’s acknowledgement credit Astra with helping transfer fields to finer grids and developing convergence arguments and proof details. Outside specialists also raised questions during the work. The preprint contains the technical argument. The blog and coverage explain its setting and development."
+              ]
+            },
+            {
+              "heading": "What remains between the proof and physical predictions",
+              "paragraphs": [
+                "The result concerns a finite-grid construction with conditions on the allowed fields. The paper’s conclusion lists reflection positivity as an open issue. This property helps connect calculations on a Euclidean lattice to the usual quantum description.",
+                "Using the construction for realistic simulations still requires practical computational methods. Defining the full interacting theory after removing the grid spacing is a separate open problem. Independent coverage checked the timeline and scope without reporting a reproduction. The new account gives readers a way to distinguish the construction, Astra’s contribution and the checks still needed."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial diagram redrawn from the paper’s method. The cover uses the original paper figure.",
+            "steps": [
+              "Represent the gauge field on a finite grid",
+              "Transfer the same field to finer grids",
+              "Compare neighboring scales and combine phase corrections",
+              "Check consistency of the finite-lattice measure"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "カリフォルニア大学サンタバーバラ校の物理学者ナサニエル・クレイグ氏は、11月15日に OpenAI の科学ブログへ寄稿し、GPT-6 Astra と標準模型の格子定式化を研究した経緯を説明した。構成の技術的な内容は10月6日のプレプリントで公表されている。",
+          "sections": [
+            {
+              "heading": "弱い相互作用を格子に載せる難しさ",
+              "paragraphs": [
+                "格子は連続した時空を有限の間隔を持つ網目に置き換え、粒子や力の計算規則を明示できるようにする。弱い相互作用では左手型と右手型の粒子の扱いが異なる。単純に離散化すると余分な鏡像の粒子が生じ、理論の粒子構成が変わり得る。",
+                "既存のオーバーラップフェルミオンの方法は、手性を区別し、余分な粒子に対処する手段を与える。残る難点はフェルミオンの寄与に一貫した位相を割り当てることだ。力の場を変化させて元へ戻したときも、蓄積する位相が構成全体の規則を満たす必要がある。"
+              ]
+            },
+            {
+              "heading": "間隔の異なる格子を比較する",
+              "paragraphs": [
+                "クレイグ氏は同じゲージ場を段階的に細かい格子へ移し、隣り合う間隔で手性を選ぶ量を比較することを提案した。プレプリントは比較を合成し、局所的な情報に依存する位相補正規則を導く。許容条件を満たす場では、四次元ユークリッド格子上でゲージの記述を変えても一貫したフェルミオン測度を構成する。",
+                "クレイグ氏の説明と論文の謝辞によると、Astra は場を細かい格子に移す方法、収束の議論、証明の詳細に貢献した。外部の専門家も研究中に質問や指摘を行った。技術的な根拠はプレプリントにあり、ブログと報道はその経緯を説明している。"
+              ]
+            },
+            {
+              "heading": "実際の計算に必要な検証",
+              "paragraphs": [
+                "成果の範囲は許容される場を条件とした有限格子上の構成である。結論に挙げられる未解決課題の一つが反射正値性だ。これはユークリッド格子の計算を通常の量子論と結びつけるための性質である。",
+                "現実的なシミュレーションには実装可能な計算法がさらに必要になる。格子間隔を取り除いた後の完全な相互作用理論の定義も残っている。独立報道は発表の順序と主張の範囲を確認しており、追試を報告していない。この経緯は、構成そのものと AI の関与、今後の検証を読み分ける助けになる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "プレプリントの方法に基づく当サイトの説明図。表紙には論文の原図を使用。",
+            "steps": [
+              "有限格子でゲージ場を表す",
+              "同じ場を細かい格子へ移す",
+              "隣接する尺度を比べ位相補正を合成する",
+              "有限格子で測度の整合性を確認する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Физик Натаниел Крейг из Калифорнийского университета в Санта-Барбаре рассказал в гостевой записи научного блога OpenAI от 15 ноября о работе с GPT-6 Astra над решёточной формулировкой физики частиц. Техническая конструкция была опубликована в его препринте 6 октября. Новая запись описывает ход совместной работы.",
+          "sections": [
+            {
+              "heading": "Почему слабое взаимодействие трудно перенести на решётку",
+              "paragraphs": [
+                "Решётка заменяет непрерывное пространство-время сеткой с конечным шагом. На ней можно явно задать правила для частиц и сил. Слабое взаимодействие различает левую и правую хиральность. При прямом переходе к сетке могут появиться лишние зеркальные партнёры, которые изменяют состав частиц теории.",
+                "Метод перекрывающихся фермионов позволяет различать хиральность и устранять лишние состояния. Остаётся согласованно задать фазу фермионного вклада. Когда поле проходит замкнутый путь и возвращается в исходную конфигурацию, накопленная фаза должна согласовываться с общим правилом."
+              ]
+            },
+            {
+              "heading": "Сравнение всё более мелких сеток",
+              "paragraphs": [
+                "Крейг предложил переносить одно калибровочное поле на последовательность всё более мелких сеток и сравнивать величины, выделяющие фермионы нужной хиральности. Препринт объединяет сравнения соседних шагов в правило локальной поправки фазы. Для допустимых полей на четырёхмерной евклидовой решётке автор строит меру фермионов, согласованную при эквивалентных калибровочных описаниях.",
+                "По словам Крейга и согласно благодарностям в статье, Astra помогла выбрать способ переноса полей и развить аргумент сходимости и детали доказательства. Внешние специалисты задавали вопросы в ходе исследования. Аргументация изложена в препринте, а запись и публикации рассказывают, как она появилась."
+              ]
+            },
+            {
+              "heading": "Что отделяет конструкцию от физических расчётов",
+              "paragraphs": [
+                "Доказательство относится к конечной решётке и полям, удовлетворяющим условию допустимости. Положительность отражения остаётся открытым вопросом, указанным в заключении статьи. Это свойство связывает вычисления на евклидовой решётке с обычным квантовым описанием.",
+                "Для реальных симуляций ещё нужны практические вычислительные методы. Определение полной взаимодействующей теории после устранения шага решётки также остаётся открытым. Независимая публикация сверила даты и границы результата, воспроизведение не описано. Новый рассказ помогает понять вклад автора и модели, а также задачи дальнейшей проверки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции по методу препринта. На обложке использован оригинальный рисунок из статьи.",
+            "steps": [
+              "Задать калибровочное поле на конечной решётке",
+              "Перенести то же поле на более мелкие сетки",
+              "Сравнить соседние масштабы и сложить поправки фазы",
+              "Проверить согласованность меры на конечной решётке"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "加州大學聖塔芭芭拉分校物理學家 Nathaniel Craig 在 11 月 15 日發表的 OpenAI 科學部落格客座文章中，說明他如何與 GPT-6 Astra 一起研究粒子物理標準模型的格點定義。這次公開的是研究過程的說明。技術細節已在 10 月 6 日的預印本發表。",
+          "sections": [
+            {
+              "heading": "弱交互作用為何較難放上格點",
+              "paragraphs": [
+                "格點把連續時空暫時換成間距有限的網格，讓研究者可以明確規定粒子與作用力的計算方式。弱交互作用對左手與右手粒子的處理不同。直接將規則離散化可能產生多餘的鏡像粒子，改變原有的粒子組成。",
+                "既有的重疊費米子方法提供區分手性並處理多餘粒子的工具。另一個問題是為費米子對計算所作的貢獻設定一致的相位。力場沿封閉路徑回到原始狀態時，累積的相位必須符合整套規則。"
+              ]
+            },
+            {
+              "heading": "比較一系列更細的格點",
+              "paragraphs": [
+                "Craig 提議在一系列越來越細的格點上表示相同的規範場，再比較相鄰尺度中用於挑選手性的量。預印本把這些比較合成依賴局部資訊的相位修正。在滿足允許性條件的四維歐幾里得格點上，作者構造出在等價規範描述下保持一致的費米子測度。",
+                "依 Craig 的說明和論文致謝，Astra 協助推導規範場如何轉移到較細格點，並參與發展收斂論證及證明細節。研究中也有外部專家提出問題。技術論證在預印本中，部落格及媒體報導說明其背景與形成過程。"
+              ]
+            },
+            {
+              "heading": "從有限格點走向實際物理",
+              "paragraphs": [
+                "這項數學建構針對有限格點，並限制可以使用的場配置。反射正性是結論列出的未解問題之一。這個性質有助於把歐幾里得格點上的計算與通常的量子理論連結起來。",
+                "實際模擬仍需要可以實作的計算方法。去除格點間距後，完整交互作用理論要如何定義，也是另一項未解工作。獨立報導查核了預印本和部落格的時間線及論證範圍，未報導獨立重現。這次說明讓讀者分清構造、AI 所做的工作與下一步的驗證。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "本站依預印本方法重繪的流程示意，封面另採論文原圖。",
+            "steps": [
+              "在有限格點表示規範場",
+              "將同一個場轉移到較細格點",
+              "比較相鄰尺度並合成相位修正",
+              "查核有限格點測度的一致性"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

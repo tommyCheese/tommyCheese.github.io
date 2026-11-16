@@ -1,6 +1,17 @@
 {
-  "updated_at": "2026-11-15",
+  "updated_at": "2026-11-16",
   "items": [
+    {
+      "id": "craig-standard-model-lattice-refinement",
+      "category": "science",
+      "published_at": "2026-11-15",
+      "collected_at": "2026-11-16",
+      "source": "Nathaniel Craig / OpenAI · arXiv · Deyron Labs",
+      "url": "https://openai.com/index/step-toward-defining-the-standard-model/",
+      "image": "https://tommycheese.github.io/images/news/craig-standard-model-lattice-refinement.png",
+      "image_credit": "Nathaniel Craig · A gauge-invariant measure for lattice chiral fermions · arXiv:2610.09093v1, Fig. 2 · CC BY 4.0 · unmodified",
+      "image_fit": "contain"
+    },
     {
       "id": "deepseek-app-capabilities-api",
       "category": "ai",
