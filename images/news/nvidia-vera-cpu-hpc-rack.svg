@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="title">
+  <title id="title">Editorial illustration of connected scientific computing nodes</title>
+  <defs>
+    <linearGradient id="background"><stop stop-color="#122538"/><stop offset="1" stop-color="#102f36"/></linearGradient>
+    <g id="node">
+      <rect width="124" height="76" rx="12" fill="#174659" stroke="#6dc5c8" stroke-width="3"/>
+      <rect x="14" y="16" width="36" height="44" rx="5" fill="#75dbd5"/>
+      <path d="M67 24h39M67 38h39M67 52h39" stroke="#95b9cc" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect width="960" height="480" fill="url(#background)"/>
+  <g fill="none" stroke="#6298b4" stroke-width="4">
+    <path d="M240 139v93h480v-93m-240 0v202M240 341v-109m480 109V232"/>
+  </g>
+  <g fill="#b0f4e4"><circle cx="240" cy="232" r="7"/><circle cx="480" cy="232" r="9"/><circle cx="720" cy="232" r="7"/></g>
+  <use href="#node" x="178" y="68"/>
+  <use href="#node" x="418" y="68"/>
+  <use href="#node" x="658" y="68"/>
+  <use href="#node" x="178" y="338"/>
+  <use href="#node" x="418" y="338"/>
+  <use href="#node" x="658" y="338"/>
+</svg>

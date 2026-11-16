@@ -42170,6 +42170,381 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "alibaba-qwen4-max-general-api",
+      "written_at": "2026-11-17",
+      "sources": [
+        {
+          "label": "Alibaba Cloud",
+          "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max"
+        },
+        {
+          "label": "Model Studio",
+          "url": "https://help.aliyun.com/en/model-studio/qwen4-max"
+        },
+        {
+          "label": "Token Plan",
+          "url": "https://docs.bailian.console.aliyun.com/en/model-studio/token-plan-product-updates"
+        },
+        {
+          "label": "Online Tech Tips",
+          "url": "https://www.online-tech-tips.com/alibaba-qwen4-max-complex-professional-tasks/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "阿里巴巴于 11 月 16 日发布 Qwen4-Max 正式版。11 月 11 日开始的预览限于 Token Plan，正式版在阿里云 Model Studio 另有模型标识和按量 API，文档列出北京、新加坡、法兰克福、弗吉尼亚、东京和香港六个区域。",
+          "sections": [
+            {
+              "heading": "输入、输出与工具",
+              "paragraphs": [
+                "正式 API 接受文本、图像和视频，返回文本。文档列出网页搜索、并行工具调用和结构化输出。后者允许程序规定结果应有哪些字段，方便后续软件读取。",
+                "百万 token 是上下文容量。文档将最大输入单列为常规模式 991,808 token、思考模式 983,616 token。单次请求可提交的长度取决于使用模式。"
+              ]
+            },
+            {
+              "heading": "模型规模与测试口径",
+              "paragraphs": [
+                "阿里巴巴称模型采用稀疏混合专家架构，共 2.4 万亿参数，每个 token 激活约 710 亿。模型会为各 token 选用部分计算模块，整体参数量和单步参与计算的参数量因此不同。",
+                "在阿里巴巴自设的 Work360 任务上，公司称高强度推理比 Qwen3.8-Max 少用 35% token，平均单项任务成本约低 60%。这些数字适用于所报任务和设置，真实业务成本还取决于输入规模、输出长度和调用方式。"
+              ]
+            },
+            {
+              "heading": "接入方式与权重",
+              "paragraphs": [
+                "Online Tech Tips 对照了预览和正式版的公开文档。本次旗舰开放的是托管推理，公告提到开放权重的是计划另行发布的较小 Qwen4 模型。厂商测试与实际工作流中的表现仍需分别评估。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解释性重绘，展示正式版托管 API 的请求与返回。",
+            "steps": [
+              "提交文本、图像或视频",
+              "调用模型和可用工具",
+              "返回文本或结构化结果"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Alibaba released the production version of Qwen4-Max on November 16. The November 11 preview was limited to Token Plan. The production model has its own identifier and metered API in Alibaba Cloud Model Studio, which lists Beijing, Singapore, Frankfurt, Virginia, Tokyo and Hong Kong.",
+          "sections": [
+            {
+              "heading": "Inputs, outputs and tools",
+              "paragraphs": [
+                "The production API accepts text, images and video and returns text. Its documentation lists web search, parallel tool calls and structured output. Structured output lets an application specify fields that downstream software can read.",
+                "The million-token figure is context capacity. The documentation separately lists a maximum input of 991,808 tokens in regular mode and 983,616 in thinking mode. The amount a request can contain depends on the mode."
+              ]
+            },
+            {
+              "heading": "Model size and benchmark scope",
+              "paragraphs": [
+                "Alibaba describes a sparse mixture of experts with 2.4 trillion parameters in total and around 71 billion active per token. The model selects a subset of its computational modules for each token, so total parameters and parameters used in a step measure different things.",
+                "On Alibaba’s own Work360 tasks at high reasoning effort, the company reports 35% fewer tokens and around 60% lower average cost per task than Qwen3.8-Max. Those figures apply to the reported tasks and settings. Production costs also depend on input size, output length and how the service is called."
+              ]
+            },
+            {
+              "heading": "Hosted access and weights",
+              "paragraphs": [
+                "Online Tech Tips compared the public documents for the preview and production release. This flagship release provides hosted inference. Alibaba’s announcement describes plans to release weights for smaller Qwen4 models separately. Benchmark results and performance on a specific production workflow need to be assessed separately."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial illustration of a request through the production hosted API.",
+            "steps": [
+              "Submit text, images or video",
+              "Call the model and available tools",
+              "Return text or structured output"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "アリババは11月16日、Qwen4-Max の正式版を公開した。11月11日からのプレビューは Token Plan 向けに限られていた。正式版には Alibaba Cloud Model Studio で個別の識別子と従量制 API が用意され、北京、シンガポール、フランクフルト、バージニア、東京、香港の6拠点が記載されている。",
+          "sections": [
+            {
+              "heading": "入出力とツール",
+              "paragraphs": [
+                "正式版の API はテキスト、画像、動画を受け取り、テキストを返す。仕様にはウェブ検索、並列ツール呼び出し、構造化出力がある。構造化出力では、後続のプログラムで読み取る項目をあらかじめ指定できる。",
+                "100万トークンはコンテキスト容量を示す。入力上限は通常モードで991,808トークン、思考モードで983,616トークンと別に記載されている。一度に送れる量はモードで変わる。"
+              ]
+            },
+            {
+              "heading": "モデル規模と評価の範囲",
+              "paragraphs": [
+                "アリババによれば、疎な混合エキスパート方式で総パラメーター数は2兆4,000億、各トークンで有効になるのは約710億。トークンごとに計算モジュールの一部を選ぶ設計で、全体規模と一段階で使う規模は異なる。",
+                "同社の Work360 では、高い推論設定で Qwen3.8-Max よりトークン消費が35％少なく、1タスク当たりの平均費用が約60％低いと報告した。報告されたタスクと設定での比較であり、実務の費用には入力や出力の長さ、呼び出し方法も関わる。"
+              ]
+            },
+            {
+              "heading": "提供形態とモデルの重み",
+              "paragraphs": [
+                "Online Tech Tips はプレビューと正式版の公開仕様を比較した。旗艦モデルはクラウド推論として提供される。重みの公開は別途予定されている小型の Qwen4 モデルを指す。個々の業務での性能はベンチマーク結果と分けて評価する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "正式版 API の処理を示す編集部作成の解説図。",
+            "steps": [
+              "テキスト・画像・動画を送信",
+              "モデルと利用可能なツールを呼び出す",
+              "テキストまたは構造化結果を返す"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Alibaba выпустила общедоступную версию Qwen4-Max 16 ноября. Предварительная версия от 11 ноября была доступна только через Token Plan. У основной версии есть собственный идентификатор и API с оплатой по объёму использования в Alibaba Cloud Model Studio. В документации перечислены Пекин, Сингапур, Франкфурт, Виргиния, Токио и Гонконг.",
+          "sections": [
+            {
+              "heading": "Входные данные и инструменты",
+              "paragraphs": [
+                "API принимает текст, изображения и видео и возвращает текст. Документация указывает веб-поиск, параллельные вызовы инструментов и структурированный вывод. Приложение может задать поля, которые затем прочтёт другая программа.",
+                "Миллион токенов обозначает размер контекста. Максимальный размер входа указан отдельно: 991 808 токенов в обычном режиме и 983 616 в режиме рассуждения. Допустимый объём запроса зависит от режима."
+              ]
+            },
+            {
+              "heading": "Размер модели и границы оценки",
+              "paragraphs": [
+                "По данным Alibaba, разреженная смесь экспертов содержит 2,4 трлн параметров, из которых для каждого токена активно около 71 млрд. Модель выбирает лишь часть вычислительных модулей для каждого токена, поэтому общий размер отличается от объёма параметров, используемых на одном шаге.",
+                "На собственных задачах Work360 при высоком уровне рассуждения Alibaba сообщает о снижении расхода токенов на 35% и средней стоимости задачи примерно на 60% относительно Qwen3.8-Max. Эти показатели относятся к указанным задачам и настройкам. Реальные затраты также зависят от входа, длины ответа и способа вызова."
+              ]
+            },
+            {
+              "heading": "Облачный доступ и веса",
+              "paragraphs": [
+                "Online Tech Tips сопоставило открытые документы предварительной и основной версий. Флагманская модель доступна через облачный сервис. В объявлении говорится о планах отдельно опубликовать веса меньших моделей Qwen4. Производительность в конкретном рабочем процессе требует отдельной оценки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции показывает прохождение запроса через облачный API.",
+            "steps": [
+              "Передать текст, изображения или видео",
+              "Вызвать модель и доступные инструменты",
+              "Получить текст или структурированный ответ"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "阿里巴巴於 11 月 16 日發布 Qwen4-Max 正式版。11 月 11 日開始的預覽限於 Token Plan，正式版在阿里雲 Model Studio 另有模型識別碼和按量 API，文件列出北京、新加坡、法蘭克福、維吉尼亞、東京和香港六個區域。",
+          "sections": [
+            {
+              "heading": "輸入、輸出與工具",
+              "paragraphs": [
+                "正式 API 接受文字、影像和影片，回傳文字。文件列出網頁搜尋、平行工具呼叫和結構化輸出。後者允許程式規定結果應有哪些欄位，方便後續軟體讀取。",
+                "百萬 token 是上下文容量。文件將最大輸入單列為一般模式 991,808 token、思考模式 983,616 token。單次請求可提交的長度取決於使用模式。"
+              ]
+            },
+            {
+              "heading": "模型規模與測試口徑",
+              "paragraphs": [
+                "阿里巴巴稱模型採用稀疏混合專家架構，共 2.4 兆參數，每個 token 啟用約 710 億。模型會為各 token 選用部分運算模組，整體參數量和單步參與運算的參數量因此不同。",
+                "在阿里巴巴自設的 Work360 任務上，公司稱高強度推理比 Qwen3.8-Max 少用 35% token，平均單項任務成本約低 60%。這些數字適用於所報任務和設定，實際業務成本還取決於輸入規模、輸出長度與呼叫方式。"
+              ]
+            },
+            {
+              "heading": "存取方式與權重",
+              "paragraphs": [
+                "Online Tech Tips 對照了預覽和正式版的公開文件。本次旗艦開放的是託管推論，公告提到開放權重的是計畫另行發布的較小 Qwen4 模型。廠商測試與實際工作流程中的表現仍需分別評估。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解釋性重繪，展示正式版託管 API 的請求與回傳。",
+            "steps": [
+              "提交文字、影像或影片",
+              "呼叫模型與可用工具",
+              "回傳文字或結構化結果"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "catalog": "news",
+      "id": "nvidia-vera-cpu-hpc-rack",
+      "written_at": "2026-11-17",
+      "sources": [
+        {
+          "label": "NVIDIA",
+          "url": "https://nvidianews.nvidia.com/news/nvidia-expands-vera-cpu-platform-to-accelerate-scientific-discovery"
+        },
+        {
+          "label": "NVIDIA HPC SDK",
+          "url": "https://developer.nvidia.com/hpc-sdk"
+        },
+        {
+          "label": "DKRZ",
+          "url": "https://www.dkrz.de/en/communication/news-archive/hlre5-contract"
+        },
+        {
+          "label": "Investing.com",
+          "url": "https://ca.investing.com/news/stock-market-news/nvidia-unveils-vera-cpu-platform-for-scientific-computing-93CH-4961602"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "NVIDIA 于 11 月 16 日在 SC26 公布面向高性能计算的 Vera CPU 机架。Vera 已用于 Rubin 平台，本次方案把 CPU、内存、存储和网络集成为机架，目标包括依赖通用处理器的天气、气候和分子模拟。",
+          "sections": [
+            {
+              "heading": "机架内如何传递数据",
+              "paragraphs": [
+                "配置包括 192 颗 Vera CPU、约 300 TB 内存和 1 PB 存储。计算托盘采用液冷，Quantum-X800 InfiniBand 连接各节点。模拟常将网格分给多个节点，随后在各步交换边界数据，因此处理器访存和网络通信都可能影响用时。",
+                "NVIDIA 给出的整架合计峰值内存带宽超过 200 TB/s。它描述各处理器访问本地内存的峰值总和，应用的实际数据吞吐还受分区和通信影响。"
+              ]
+            },
+            {
+              "heading": "基准的适用范围",
+              "paragraphs": [
+                "在 OpenFOAM 的 motorBike Large 气流模拟中，NVIDIA 报告相对所选 x86 系统为 1.9 倍性能和 2.4 倍每瓦性能。Investing.com 同样将数据归于厂商测试。基准只覆盖该配置和任务，整架或其他应用的表现仍待验证。"
+              ]
+            },
+            {
+              "heading": "软件和硬件的时间表",
+              "paragraphs": [
+                "HPC SDK 26.11 已提供针对 Vera 的编译器和库。NVIDIA 预计戴尔科技、HPE、联想及超微电脑于 2027 年初开始供应整架。德国气候计算中心 DKRZ 在 10 月已确认下一代 HLRE-5 将设 Vera CPU 分区，该系统预计 2028 年初投入使用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解释性重绘，展示科学模拟在计算节点之间交换数据。",
+            "steps": [
+              "分配网格到计算节点",
+              "从节点本地内存读取数据",
+              "通过互连交换边界数据"
+            ]
+          }
+        },
+        "en": {
+          "lead": "NVIDIA announced a rack-scale Vera CPU system for high-performance computing at SC26 on November 16. Vera already serves in the Rubin platform. This design brings CPUs, memory, storage and networking together for workloads such as weather, climate and molecular simulations that depend on general-purpose processors.",
+          "sections": [
+            {
+              "heading": "How data moves around the rack",
+              "paragraphs": [
+                "The design includes 192 Vera CPUs, about 300 TB of memory and 1 PB of storage. Liquid-cooled compute trays are linked through Quantum-X800 InfiniBand. A simulation often distributes a grid across nodes, then exchanges boundary data at each step. Memory access and network traffic can both affect runtime.",
+                "NVIDIA lists an aggregate peak memory bandwidth above 200 TB/s. It sums the processors’ peak rates for accessing local memory. Application throughput also depends on how the job is divided and how its nodes communicate."
+              ]
+            },
+            {
+              "heading": "What the benchmark covers",
+              "paragraphs": [
+                "On the OpenFOAM motorBike Large airflow simulation, NVIDIA reports 1.9 times the performance and 2.4 times the performance per watt of its selected x86 comparison. Investing.com likewise attributes the figures to company testing. The comparison covers that workload and configuration. Rack-wide and other application results still require verification."
+              ]
+            },
+            {
+              "heading": "Software and hardware timelines",
+              "paragraphs": [
+                "HPC SDK 26.11 already provides compilers and libraries optimized for Vera. NVIDIA expects Dell Technologies, HPE, Lenovo and Supermicro to offer racks starting in early 2027. Germany’s climate computing center DKRZ confirmed in October that its next HLRE-5 system will include a Vera CPU partition and is expected to enter service in early 2028."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial illustration of data exchange among scientific computing nodes.",
+            "steps": [
+              "Divide the grid among nodes",
+              "Read data from local node memory",
+              "Exchange boundary data over the interconnect"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "NVIDIA は11月16日、SC26 で高性能計算向けの Vera CPU ラックを発表した。Vera はすでに Rubin プラットフォームに使われている。今回は CPU、メモリー、ストレージ、ネットワークをラックに集約し、汎用プロセッサーを必要とする気象、気候、分子シミュレーションなどに対応する構成だ。",
+          "sections": [
+            {
+              "heading": "ラック内を移動するデータ",
+              "paragraphs": [
+                "Vera CPU 192基、約300 TBのメモリー、1 PBのストレージで構成する。液冷の計算トレーを Quantum-X800 InfiniBand で接続する。シミュレーションでは格子を複数ノードに分け、各ステップで境界のデータを交換することがあり、メモリーアクセスと通信の双方が処理時間に影響する。",
+                "NVIDIA は合計ピークメモリー帯域を毎秒200 TB超とする。各プロセッサーのローカルメモリーへのピークアクセス速度を合計した値であり、実際の処理量には計算の分割方法や通信も影響する。"
+              ]
+            },
+            {
+              "heading": "評価が対象とした処理",
+              "paragraphs": [
+                "NVIDIA は OpenFOAM の気流シミュレーション motorBike Large で、同社が比較対象に選んだ x86 システムに対し性能が1.9倍、ワット当たり性能が2.4倍だったと報告した。Investing.com も同社の試験結果として報じた。この比較は特定の構成と処理を対象とし、ラック全体や別の処理での性能には検証が必要だ。"
+              ]
+            },
+            {
+              "heading": "ソフトウェアと機器の提供時期",
+              "paragraphs": [
+                "HPC SDK 26.11 は提供済みで、Vera 向けのコンパイラーとライブラリーを含む。NVIDIA は Dell Technologies、HPE、Lenovo、Supermicro が2027年初めにラックの供給を始めると見込む。ドイツの気候計算センター DKRZ は10月に、次期 HLRE-5 に Vera CPU 区画を設けると発表した。運用開始は2028年初めの予定だ。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "科学計算ノード間のデータ交換を示す編集部作成の解説図。",
+            "steps": [
+              "格子をノードに配分",
+              "各ノードのメモリーから読み出す",
+              "接続網で境界データを交換"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "16 ноября на SC26 NVIDIA представила стойку Vera для высокопроизводительных вычислений. Vera уже применяется в платформе Rubin. Новый вариант объединяет процессоры, память, накопители и сеть для расчётов, которые зависят от процессоров общего назначения, включая моделирование погоды, климата и молекул.",
+          "sections": [
+            {
+              "heading": "Как данные перемещаются в стойке",
+              "paragraphs": [
+                "В конфигурации указаны 192 процессора Vera, около 300 ТБ памяти и 1 ПБ хранилища. Вычислительные лотки с жидкостным охлаждением соединяет Quantum-X800 InfiniBand. При моделировании сетку часто делят между узлами, которые на каждом шаге обмениваются граничными данными. Время расчёта зависит и от доступа к памяти, и от сети.",
+                "По данным NVIDIA, суммарная пиковая пропускная способность памяти превышает 200 ТБ/с. Это сумма пиковых скоростей доступа процессоров к локальной памяти. Производительность приложения также зависит от разбиения задачи и обмена между узлами."
+              ]
+            },
+            {
+              "heading": "Что измеряли",
+              "paragraphs": [
+                "Для расчёта воздушного потока motorBike Large в OpenFOAM NVIDIA сообщает о производительности в 1,9 раза и производительности на ватт в 2,4 раза выше выбранной системы x86. Investing.com также приводит значения как результаты испытаний компании. Сравнение относится к этой задаче и конфигурации. Показатели всей стойки и других приложений требуют проверки."
+              ]
+            },
+            {
+              "heading": "Сроки для ПО и оборудования",
+              "paragraphs": [
+                "HPC SDK 26.11 уже включает компиляторы и библиотеки для Vera. NVIDIA ожидает начала поставок стоек Dell Technologies, HPE, Lenovo и Supermicro в начале 2027 года. Германский центр климатических вычислений DKRZ ещё в октябре подтвердил, что в системе HLRE-5 будет раздел на базе Vera. Ввод в эксплуатацию ожидается в начале 2028 года."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции показывает обмен между узлами научных расчётов.",
+            "steps": [
+              "Распределить сетку между узлами",
+              "Прочитать данные из локальной памяти",
+              "Обменяться граничными данными по сети"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "NVIDIA 於 11 月 16 日在 SC26 公布面向高效能運算的 Vera CPU 機架。Vera 已用於 Rubin 平台，本次方案把 CPU、記憶體、儲存及網路整合為機架，目標包括依賴通用處理器的天氣、氣候和分子模擬。",
+          "sections": [
+            {
+              "heading": "機架內如何傳遞資料",
+              "paragraphs": [
+                "配置包括 192 顆 Vera CPU、約 300 TB 記憶體和 1 PB 儲存。運算托盤採用液冷，Quantum-X800 InfiniBand 連接各節點。模擬常將網格分給多個節點，隨後在各步交換邊界資料，因此處理器存取記憶體和網路通訊都可能影響耗時。",
+                "NVIDIA 給出的整架合計峰值記憶體頻寬超過 200 TB/s。它描述各處理器存取本機記憶體的峰值總和，應用的實際資料吞吐量還受分區與通訊影響。"
+              ]
+            },
+            {
+              "heading": "基準的適用範圍",
+              "paragraphs": [
+                "在 OpenFOAM 的 motorBike Large 氣流模擬中，NVIDIA 報告相對所選 x86 系統為 1.9 倍效能和 2.4 倍每瓦效能。Investing.com 同樣將資料歸於廠商測試。基準只涵蓋該配置及任務，整架或其他應用的表現仍待驗證。"
+              ]
+            },
+            {
+              "heading": "軟體與硬體的時程",
+              "paragraphs": [
+                "HPC SDK 26.11 已提供針對 Vera 的編譯器和函式庫。NVIDIA 預計 Dell Technologies、HPE、聯想及 Supermicro 於 2027 年初開始供應整架。德國氣候運算中心 DKRZ 在 10 月已確認下一代 HLRE-5 將設 Vera CPU 分區，該系統預計 2028 年初投入使用。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解釋性重繪，展示科學模擬在運算節點之間交換資料。",
+            "steps": [
+              "分配網格到運算節點",
+              "從節點本地記憶體讀取資料",
+              "透過互連交換邊界資料"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

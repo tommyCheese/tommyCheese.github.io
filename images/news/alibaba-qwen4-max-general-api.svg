@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="title">
+  <title id="title">Editorial illustration of three input formats converging on a hosted model</title>
+  <defs>
+    <linearGradient id="background"><stop stop-color="#111632"/><stop offset="1" stop-color="#292152"/></linearGradient>
+  </defs>
+  <rect width="960" height="480" fill="url(#background)"/>
+  <g fill="none" stroke="#7674ba" stroke-width="4">
+    <path d="M230 110h100l98 130h105M230 240h303M230 370h100l98-130M612 240h120"/>
+  </g>
+  <g fill="#252c53" stroke="#aca8f7" stroke-width="3">
+    <rect x="101" y="62" width="129" height="96" rx="18"/>
+    <rect x="101" y="192" width="129" height="96" rx="18"/>
+    <rect x="101" y="322" width="129" height="96" rx="18"/>
+    <rect x="731" y="177" width="135" height="126" rx="19"/>
+  </g>
+  <g stroke="#dcd9ff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M129 91h73m-73 19h58m-58 19h73m-72 129 22-24 14 13 15-18 21 29zM154 350l32 20-32 20z"/>
+    <path d="M765 214h68m-68 26h55m-55 26h68"/>
+  </g>
+  <circle cx="555" cy="240" r="63" fill="#514d9c" stroke="#c2b9ff" stroke-width="4"/>
+  <g fill="none" stroke="#e7e1ff" stroke-width="4"><path d="M530 220l25 35 26-35m-51 0h51m-26 35v17"/></g>
+  <g fill="#e7e1ff"><circle cx="530" cy="220" r="7"/><circle cx="581" cy="220" r="7"/><circle cx="555" cy="255" r="7"/></g>
+</svg>

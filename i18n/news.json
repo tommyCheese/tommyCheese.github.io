@@ -1,6 +1,28 @@
 {
-  "updated_at": "2026-11-16",
+  "updated_at": "2026-11-17",
   "items": [
+    {
+      "id": "alibaba-qwen4-max-general-api",
+      "category": "ai",
+      "published_at": "2026-11-16",
+      "collected_at": "2026-11-17",
+      "source": "Alibaba Cloud / Online Tech Tips",
+      "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max",
+      "image": "https://tommycheese.github.io/images/news/alibaba-qwen4-max-general-api.svg",
+      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
+      "image_fit": "contain"
+    },
+    {
+      "id": "nvidia-vera-cpu-hpc-rack",
+      "category": "semiconductors",
+      "published_at": "2026-11-16",
+      "collected_at": "2026-11-17",
+      "source": "NVIDIA / DKRZ / Investing.com",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-expands-vera-cpu-platform-to-accelerate-scientific-discovery",
+      "image": "https://tommycheese.github.io/images/news/nvidia-vera-cpu-hpc-rack.svg",
+      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
+      "image_fit": "contain"
+    },
     {
       "id": "craig-standard-model-lattice-refinement",
       "category": "science",

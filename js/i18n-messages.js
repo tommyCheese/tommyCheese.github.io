@@ -792,6 +792,10 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "十个 GS1900 型号的 2.90 Patch 2 及更早版本仍受新漏洞影响，对应 Patch 3 提供修复。调查纠正了此前攻击的漏洞归因；996 台设备是八月相关活动的观察数，不是本周新增。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek 将搜索、文件与语音能力开放给 API 开发者",
     "news.deepseek-app-capabilities-api.summary": "11 月 13 日起，开发者可在已有聊天接口中启用搜索、文档解析、网页读取和内容检查，也可单独调用语音等服务。此次更新扩展的是托管 API，开源部分为演示客户端。",
+    "news.alibaba-qwen4-max-general-api.title": "阿里巴巴发布正式版 Qwen4-Max，扩大托管 API 接入",
+    "news.alibaba-qwen4-max-general-api.summary": "正式模型接受文本、图像和视频输入，支持百万 token 上下文。阿里云列出六个服务区域，本次旗舰发布未提供可下载权重。",
+    "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA 公布面向科学计算的 192 CPU Vera 机架",
+    "news.nvidia-vera-cpu-hpc-rack.summary": "液冷机架以 InfiniBand 连接 192 颗 Vera CPU，面向依赖内存和节点通信的模拟。HPC SDK 26.11 已发布，整架预计 2027 年初供应。",
     "news.craig-standard-model-lattice-refinement.title": "格点上的标准模型：Craig 解释 GPT-6 Astra 如何辅助构造候选方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科学博客文章介绍了 10 月 6 日预印本中的有限格点构造，并说明 AI 参与推导的环节。真实模拟、反射正性与完整相互作用理论的连续极限仍待研究。"
   },
@@ -1587,6 +1591,10 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "Ten GS1900 models on 2.90 Patch 2 or earlier need the matching Patch 3 for the newly identified flaw. Researchers corrected earlier attack attribution; 996 devices refers to August observations, not new victims this week.",
     "news.deepseek-app-capabilities-api.title": "DeepSeek opens app search, file and voice features through its API",
     "news.deepseek-app-capabilities-api.summary": "DeepSeek’s November 13 update adds managed search, document parsing, web reading and safety checks to existing chat APIs. Voice tools are available separately, and the accompanying demo client is open source.",
+    "news.alibaba-qwen4-max-general-api.title": "Alibaba brings Qwen4-Max to its general hosted API",
+    "news.alibaba-qwen4-max-general-api.summary": "The production model accepts text, images and video with a million-token context. Alibaba Cloud lists six serving regions. The flagship launch did not include downloadable weights.",
+    "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA announces a 192-CPU Vera rack for scientific computing",
+    "news.nvidia-vera-cpu-hpc-rack.summary": "The liquid-cooled design links 192 Vera CPUs over InfiniBand for memory- and communication-intensive simulations. HPC SDK 26.11 is available, with finished racks expected in early 2027.",
     "news.craig-standard-model-lattice-refinement.title": "Craig describes an Astra-assisted candidate for the Standard Model on a lattice",
     "news.craig-standard-model-lattice-refinement.summary": "A November 15 science post explains the construction in an October 6 preprint and the AI model’s role in its proof. Reflection positivity, practical simulation and the interacting continuum limit remain open."
   },
@@ -2382,6 +2390,10 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "10機種の 2.90 Patch 2 以前は新たな問題の影響を受け、対応する Patch 3 が修正する。過去の攻撃の説明も訂正。996台は8月の関連活動の観測数で、今週の新規被害数ではない。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek、検索・ファイル・音声機能を API に開放",
     "news.deepseek-app-capabilities-api.summary": "11月13日の更新で検索、文書解析、リンク取得、コンテンツ検査が既存の対話 API に加わった。音声機能は単独でも呼び出せ、付属のデモクライアントは公開された。",
+    "news.alibaba-qwen4-max-general-api.title": "アリババ、Qwen4-Max 正式版をホステッド API で提供",
+    "news.alibaba-qwen4-max-general-api.summary": "正式版はテキスト、画像、動画を入力でき、100万トークンのコンテキストに対応する。アリババクラウドは6拠点を記載し、旗艦モデルのダウンロード可能な重みは公開していない。",
+    "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA、科学計算向けに Vera CPU 192基のラックを発表",
+    "news.nvidia-vera-cpu-hpc-rack.summary": "液冷ラックは192基の Vera CPU を InfiniBand で結ぶ。メモリーと通信の負荷が大きなシミュレーション向けで、HPC SDK 26.11 は提供済み。ラックは2027年初めに供給予定。",
     "news.craig-standard-model-lattice-refinement.title": "標準模型の格子定式化に向けた候補案、クレイグ氏が Astra の役割を説明",
     "news.craig-standard-model-lattice-refinement.summary": "11月15日の科学ブログで、10月6日のプレプリントにある有限格子の構成と AI の関与を解説した。反射正値性、実用的なシミュレーション、相互作用する理論の連続極限は今後の課題だ。"
   },
@@ -3177,6 +3189,10 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "Десять моделей с 2.90 Patch 2 или старее требуют соответствующей Patch 3 для новой проблемы. Объяснение прошлых атак уточнено; 996 устройств — августовские наблюдения, а не новые жертвы этой недели.",
     "news.deepseek-app-capabilities-api.title": "DeepSeek открыл через API функции поиска, документов и речи",
     "news.deepseek-app-capabilities-api.summary": "Обновление от 13 ноября добавляет в действующие интерфейсы чата поиск, разбор документов, чтение страниц и проверку контента. Голосовые функции доступны отдельно, а код демонстрационного клиента опубликован.",
+    "news.alibaba-qwen4-max-general-api.title": "Alibaba открыла общий доступ к Qwen4-Max через облачный API",
+    "news.alibaba-qwen4-max-general-api.summary": "Модель принимает текст, изображения и видео и поддерживает контекст в миллион токенов. Документация Alibaba Cloud перечисляет шесть регионов. Веса флагманской модели для загрузки не опубликованы.",
+    "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA представила стойку Vera со 192 процессорами для научных расчётов",
+    "news.nvidia-vera-cpu-hpc-rack.summary": "192 процессора Vera соединены через InfiniBand в системе с жидкостным охлаждением. HPC SDK 26.11 уже доступен, поставки стоек ожидаются в начале 2027 года.",
     "news.craig-standard-model-lattice-refinement.title": "Крейг объяснил, как Astra помогла построить решёточную модель для Стандартной модели",
     "news.craig-standard-model-lattice-refinement.summary": "Автор записи от 15 ноября объясняет конструкцию из препринта от 6 октября и роль ИИ в доказательстве. Положительность отражения, применение в расчётах и континуальный предел взаимодействующей теории остаются открытыми."
   },
@@ -3972,6 +3988,10 @@ window.SITE_MESSAGES = {
     "news.zyxel-gs1900-vulnerability-reclassification.summary": "十個 GS1900 型號的 2.90 Patch 2 及更早版本仍受新漏洞影響，對應 Patch 3 提供修正。調查更正先前攻擊的漏洞歸因；996 台設備是八月相關活動的觀察數，並非本週新增。",
     "news.deepseek-app-capabilities-api.title": "DeepSeek 將搜尋、檔案與語音功能開放給 API 開發者",
     "news.deepseek-app-capabilities-api.summary": "11 月 13 日的更新讓既有聊天介面可啟用搜尋、文件解析、網頁讀取及內容檢查，語音等功能也可單獨呼叫。此次擴展的是託管 API，開放原始碼的是示範用戶端。",
+    "news.alibaba-qwen4-max-general-api.title": "阿里巴巴發布正式版 Qwen4-Max，擴大託管 API 存取",
+    "news.alibaba-qwen4-max-general-api.summary": "正式模型接受文字、影像和影片輸入，支援百萬 token 上下文。阿里雲列出六個服務區域，本次旗艦發布未提供可下載權重。",
+    "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA 公布面向科學運算的 192 CPU Vera 機架",
+    "news.nvidia-vera-cpu-hpc-rack.summary": "液冷機架以 InfiniBand 連接 192 顆 Vera CPU，面向依賴記憶體和節點通訊的模擬。HPC SDK 26.11 已發布，整架預計 2027 年初供應。",
     "news.craig-standard-model-lattice-refinement.title": "格點上的標準模型：Craig 說明 GPT-6 Astra 如何協助建構候選方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科學部落格文章介紹 10 月 6 日預印本中的有限格點建構，並說明 AI 參與推導的環節。實際模擬、反射正性及完整交互作用理論的連續極限仍待研究。"
   }
