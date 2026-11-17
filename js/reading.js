@@ -148,7 +148,7 @@ document.querySelectorAll('.mobile-toc a[href^="#"]').forEach(link => {
     if (className) node.className = className;
     return node;
   };
-  function illustration(research) {
+  function researchIllustration() {
     const figure = element('figure', '', 'content-preview-illustration');
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 720 260');
@@ -164,7 +164,7 @@ document.querySelectorAll('.mobile-toc a[href^="#"]').forEach(link => {
       Object.entries(attrs).forEach(([key, value]) => shape.setAttribute(key, value));
       svg.append(shape);
     }
-    figure.append(svg, element('figcaption', t(research ? 'content.illustration' : 'content.newsIllustration')));
+    figure.append(svg, element('figcaption', t('content.illustration')));
     return figure;
   }
   function open(card, link) {
@@ -200,18 +200,19 @@ document.querySelectorAll('.mobile-toc a[href^="#"]').forEach(link => {
     info.append(details);
     copy.append(info);
     const image = card.querySelector(':scope > img');
-    let cover = illustration(Boolean(card.dataset.researchId));
+    body.replaceChildren(copy);
     if (image) {
-      cover = image.cloneNode(true);
+      const cover = image.cloneNode(true);
       cover.classList.add('content-preview-cover');
       cover.loading = 'eager';
       cover.alt = t('content.cover');
       cover.addEventListener('error', () => {
-        cover.replaceWith(illustration(Boolean(card.dataset.researchId)));
+        if (card.dataset.researchId) cover.replaceWith(researchIllustration());
+        else cover.remove();
         copy.querySelector('.news-image-credit')?.remove();
       }, { once: true });
+      body.prepend(cover);
     }
-    body.replaceChildren(...(image ? [cover, copy] : [copy]));
     original.href = link.href;
     kind.textContent = t(card.dataset.researchId ? 'content.researchPreview' : 'content.newsPreview');
     dialog.showModal();

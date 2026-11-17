@@ -7,10 +7,7 @@
       "published_at": "2026-11-16",
       "collected_at": "2026-11-17",
       "source": "Alibaba Cloud / Online Tech Tips",
-      "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max",
-      "image": "https://tommycheese.github.io/images/news/alibaba-qwen4-max-general-api.svg",
-      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
-      "image_fit": "contain"
+      "url": "https://www.alibabacloud.com/en/press-room/alibaba-unveils-qwen4-max"
     },
     {
       "id": "nvidia-vera-cpu-hpc-rack",
@@ -18,10 +15,7 @@
       "published_at": "2026-11-16",
       "collected_at": "2026-11-17",
       "source": "NVIDIA / DKRZ / Investing.com",
-      "url": "https://nvidianews.nvidia.com/news/nvidia-expands-vera-cpu-platform-to-accelerate-scientific-discovery",
-      "image": "https://tommycheese.github.io/images/news/nvidia-vera-cpu-hpc-rack.svg",
-      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
-      "image_fit": "contain"
+      "url": "https://nvidianews.nvidia.com/news/nvidia-expands-vera-cpu-platform-to-accelerate-scientific-discovery"
     },
     {
       "id": "craig-standard-model-lattice-refinement",
@@ -40,10 +34,7 @@
       "published_at": "2026-11-13",
       "collected_at": "2026-11-15",
       "source": "DeepSeek / CASRAI",
-      "url": "https://api-docs.deepseek.com/news/news261113/",
-      "image": "https://tommycheese.github.io/images/news/deepseek-app-capabilities-api.svg",
-      "image_credit": "本站生成的示意图 · Illustration created by this site · 当サイト作成のイメージ図 · Иллюстрация редакции · 本站生成的示意圖",
-      "image_fit": "contain"
+      "url": "https://api-docs.deepseek.com/news/news261113/"
     },
     {
       "id": "openai-images26-gif-svg-controls",
@@ -51,10 +42,7 @@
       "published_at": "2026-11-04",
       "collected_at": "2026-11-05",
       "source": "OpenAI / OpenAI API documentation",
-      "url": "https://openai.com/index/introducing-images-2-6/",
-      "image": "https://tommycheese.github.io/images/news/openai-images26-gif-svg-controls.svg",
-      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not a product screenshot or measured result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/introducing-images-2-6/"
     },
     {
       "id": "nasa-ka-band-relay-concept-awards",
@@ -62,10 +50,7 @@
       "published_at": "2026-11-04",
       "collected_at": "2026-11-05",
       "source": "NASA / Via Satellite",
-      "url": "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/",
-      "image": "https://tommycheese.github.io/images/news/nasa-ka-band-relay-stages.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not a completed flight demonstration",
-      "image_fit": "contain"
+      "url": "https://www.nasa.gov/news-release/nasa-announces-ka-band-satellite-relay-awards-for-space-communications/"
     },
     {
       "id": "openai-linux-security-pipeline-findings",
@@ -73,10 +58,7 @@
       "published_at": "2026-11-04",
       "collected_at": "2026-11-05",
       "source": "OpenAI / Linux kernel / IT Home",
-      "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/",
-      "image": "https://tommycheese.github.io/images/news/linux-security-evidence-review.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not independent measurements",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/"
     },
     {
       "id": "nasa-splice-drone-landing-demonstration",
@@ -85,8 +67,8 @@
       "collected_at": "2026-11-05",
       "source": "NASA / SpaceAndSky",
       "url": "https://www.nasa.gov/centers-and-facilities/armstrong/nasa-navigation-experiment-shows-promise-for-planetary-landings/",
-      "image": "https://tommycheese.github.io/images/news/nasa-splice-landing-feedback.svg",
-      "image_credit": "Tech Daily · original explanatory redraw based on NASA material; not a flight trace or lunar photograph",
+      "image": "https://images-assets.nasa.gov/image/AFRC2026-0152-30/AFRC2026-0152-30~large.jpg",
+      "image_credit": "NASA / Ryan Kline · SPLICE · 2026-07-15",
       "image_fit": "contain"
     },
     {
@@ -95,10 +77,7 @@
       "published_at": "2026-11-04",
       "collected_at": "2026-11-05",
       "source": "OpenAI / Pierre / Goodwin",
-      "url": "https://openai.com/index/openai-to-acquire-pierre/",
-      "image": "https://tommycheese.github.io/images/news/openai-pierre-acquisition-agreement.svg",
-      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not a product screenshot or measured result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/openai-to-acquire-pierre/"
     },
     {
       "id": "zyxel-gs1900-vulnerability-reclassification",
@@ -106,10 +85,7 @@
       "published_at": "2026-11-03",
       "collected_at": "2026-11-05",
       "source": "Zyxel / Binarly / GreyNoise / BleepingComputer",
-      "url": "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-out-of-bounds-write-vulnerability-in-gs1900-series-switches-11-03-2026",
-      "image": "https://tommycheese.github.io/images/news/zyxel-gs1900-repair-boundaries.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not attack telemetry",
-      "image_fit": "contain"
+      "url": "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-out-of-bounds-write-vulnerability-in-gs1900-series-switches-11-03-2026"
     },
     {
       "id": "cpguard-update-channel-compromise",
@@ -117,10 +93,7 @@
       "published_at": "2026-11-03",
       "collected_at": "2026-11-04",
       "source": "OPSSHIELD / BleepingComputer",
-      "url": "https://opsshield.com/notice/security-incident-disclosure-servermanage.html",
-      "image": "https://tommycheese.github.io/images/news/cpguard-update-recovery.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not incident telemetry",
-      "image_fit": "contain"
+      "url": "https://opsshield.com/notice/security-incident-disclosure-servermanage.html"
     },
     {
       "id": "workos-sales-support-data-incident",
@@ -128,10 +101,7 @@
       "published_at": "2026-11-02",
       "collected_at": "2026-11-04",
       "source": "WorkOS / BleepingComputer / Wiz / Google",
-      "url": "https://workos.com/security/bulletins/october-30th-2026-data-security-incident",
-      "image": "https://tommycheese.github.io/images/news/workos-data-boundaries.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not incident telemetry",
-      "image_fit": "contain"
+      "url": "https://workos.com/security/bulletins/october-30th-2026-data-security-incident"
     },
     {
       "id": "openai-security-bounty-quality-bonuses",
@@ -139,10 +109,7 @@
       "published_at": "2026-11-02",
       "collected_at": "2026-11-04",
       "source": "OpenAI / Help Net Security",
-      "url": "https://openai.com/index/rewarding-defenders-with-bigger-bug-bounties/",
-      "image": "https://tommycheese.github.io/images/news/openai-bounty-evidence-review.svg",
-      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not measured results",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/rewarding-defenders-with-bigger-bug-bounties/"
     },
     {
       "id": "openai-lifeval-personalized-agent-evaluation",
@@ -150,10 +117,7 @@
       "published_at": "2026-11-02",
       "collected_at": "2026-11-04",
       "source": "OpenAI / LifeVal technical report",
-      "url": "https://openai.com/index/lifeval/",
-      "image": "https://tommycheese.github.io/images/news/openai-lifeval-context-evidence.svg",
-      "image_credit": "Tech Daily · original explanatory diagram based on public sources; not measured results",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/lifeval/"
     },
     {
       "id": "google-xcpe-botnet-disruption",
@@ -161,10 +125,7 @@
       "published_at": "2026-11-02",
       "collected_at": "2026-11-03",
       "source": "Google / Synthient / TrendAI / BleepingComputer",
-      "url": "https://cloud.google.com/blog/topics/threat-intelligence/shutting-the-door-on-the-xcpe-botnet",
-      "image": "https://tommycheese.github.io/images/news/xcpe-disruption-boundaries.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured infection data",
-      "image_fit": "contain"
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/shutting-the-door-on-the-xcpe-botnet"
     },
     {
       "id": "openai-grid-protectors-demand-response-plan",
@@ -172,10 +133,7 @@
       "published_at": "2026-11-02",
       "collected_at": "2026-11-03",
       "source": "OpenAI / Georgia Power / The Next Web",
-      "url": "https://openai.com/index/grid-protectors-program/",
-      "image": "https://tommycheese.github.io/images/news/openai-grid-demand-response-plan.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not an operational measurement",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/grid-protectors-program/"
     },
     {
       "id": "hubble-glow-dwarf-galaxy-oxygen-budget",
@@ -184,8 +142,8 @@
       "collected_at": "2026-11-03",
       "source": "NASA / GLOW / Rutgers",
       "url": "https://science.nasa.gov/missions/hubble/nasas-hubble-uncovers-case-of-missing-oxygen-in-nearby-dwarf-galaxies/",
-      "image": "https://tommycheese.github.io/images/news/hubble-glow-oxygen-budget.svg",
-      "image_credit": "Tech Daily · original explanatory diagram; not a telescope image or measured spatial map",
+      "image": "https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2026/11/STScI-01M4RST3TGWT2T53FVXQBSP75D.jpg?fit=clip&h=900&w=900",
+      "image_credit": "NASA, ESA, Hubble Heritage–ESA/Hubble Collaboration, Alessandra Aloisi (STScI, ESA) · NGC 4449",
       "image_fit": "contain"
     },
     {
@@ -194,10 +152,7 @@
       "published_at": "2026-11-01",
       "collected_at": "2026-11-02",
       "source": "BleepingComputer / OpenAI",
-      "url": "https://www.bleepingcomputer.com/news/artificial-intelligence/openai-says-its-doubling-pro-usage-limits-and-bringing-work-features-to-chat/",
-      "image": "https://tommycheese.github.io/images/news/openai-chat-work-shared-allowance.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not a product screenshot",
-      "image_fit": "contain"
+      "url": "https://www.bleepingcomputer.com/news/artificial-intelligence/openai-says-its-doubling-pro-usage-limits-and-bringing-work-features-to-chat/"
     },
     {
       "id": "northflank-ai-credentials-incident",
@@ -205,10 +160,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-11-01",
       "source": "Northflank",
-      "url": "https://status.northflank.com/",
-      "image": "https://tommycheese.github.io/images/news/northflank-ai-credentials-incident.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://status.northflank.com/"
     },
     {
       "id": "openai-shared-training-preference-signal-plan",
@@ -216,10 +168,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-10-31",
       "source": "OpenAI / IETF",
-      "url": "https://openai.com/index/helping-websites-express-ai-training-preferences/",
-      "image": "https://tommycheese.github.io/images/news/openai-training-preferences.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/helping-websites-express-ai-training-preferences/"
     },
     {
       "id": "openai-teen-safeguards-safety-report-plan",
@@ -227,10 +176,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-10-31",
       "source": "OpenAI / Reuters",
-      "url": "https://openai.com/index/community-safety-report-and-new-protections-for-teens/",
-      "image": "https://tommycheese.github.io/images/news/openai-teen-safety-plan.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/community-safety-report-and-new-protections-for-teens/"
     },
     {
       "id": "linux-ipv4-race-patch-response",
@@ -238,10 +184,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-10-31",
       "source": "Red Hat / Debian / Anthropic / BleepingComputer",
-      "url": "https://access.redhat.com/security/vulnerabilities/RHSB-2026-016",
-      "image": "https://tommycheese.github.io/images/news/linux-ipv4-patch-response.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://access.redhat.com/security/vulnerabilities/RHSB-2026-016"
     },
     {
       "id": "alpine-gitlab-rebuild-account-recovery",
@@ -249,10 +192,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-11-02",
       "source": "Alpine Linux / GitLab / Ruby",
-      "url": "https://alpinelinux.org/posts/GitLab-reopened-after-security-incident.html",
-      "image": "https://tommycheese.github.io/images/news/alpine-gitlab-recovery.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://alpinelinux.org/posts/GitLab-reopened-after-security-incident.html"
     },
     {
       "id": "openai-gpt6-rosalind-research-controlled-rollout",
@@ -260,10 +200,7 @@
       "published_at": "2026-10-30",
       "collected_at": "2026-11-02",
       "source": "OpenAI / The File",
-      "url": "https://deploymentsafety.openai.com/gpt-rosalind-6",
-      "image": "https://tommycheese.github.io/images/news/rosalind-research-access.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://deploymentsafety.openai.com/gpt-rosalind-6"
     },
     {
       "id": "reddit-logged-in-access-pilot",
@@ -271,10 +208,7 @@
       "published_at": "2026-10-29",
       "collected_at": "2026-11-01",
       "source": "Reddit",
-      "url": "https://www.reddit.com/user/spez/comments/1xiupm0/about_that_login_screen/",
-      "image": "https://tommycheese.github.io/images/news/reddit-logged-in-access-pilot.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.reddit.com/user/spez/comments/1xiupm0/about_that_login_screen/"
     },
     {
       "id": "mistral-large4-open-weights-release",
@@ -282,10 +216,7 @@
       "published_at": "2026-10-29",
       "collected_at": "2026-11-01",
       "source": "Mistral / Hugging Face / Artificial Analysis",
-      "url": "https://mistral.ai/news/mistral-large-4-oss/",
-      "image": "https://tommycheese.github.io/images/news/mistral-large4-weight-delivery.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not a benchmark result",
-      "image_fit": "contain"
+      "url": "https://mistral.ai/news/mistral-large-4-oss/"
     },
     {
       "id": "cursor-claude-extension-compromise",
@@ -293,10 +224,7 @@
       "published_at": "2026-10-29",
       "collected_at": "2026-10-31",
       "source": "Cursor / Phorion / BleepingComputer",
-      "url": "https://cursor.com/blog/claude-code-extension-security-notice",
-      "image": "https://tommycheese.github.io/images/news/cursor-extension-incident-response.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://cursor.com/blog/claude-code-extension-security-notice"
     },
     {
       "id": "openai-model-spec-intent-context-update",
@@ -304,10 +232,7 @@
       "published_at": "2026-10-29",
       "collected_at": "2026-10-30",
       "source": "OpenAI / Reuters",
-      "url": "https://openai.com/index/updated-model-spec/",
-      "image": "https://tommycheese.github.io/images/news/openai-model-spec-intent.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/updated-model-spec/"
     },
     {
       "id": "openai-layered-misalignment-monitoring",
@@ -315,10 +240,7 @@
       "published_at": "2026-10-29",
       "collected_at": "2026-10-30",
       "source": "OpenAI / METR / Reuters",
-      "url": "https://openai.com/index/how-we-detect-frontier-model-misalignment/",
-      "image": "https://tommycheese.github.io/images/news/openai-layered-monitoring.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not an evaluation result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/how-we-detect-frontier-model-misalignment/"
     },
     {
       "id": "cisco-asa-ftd-ssl-vpn-dos-fix",
@@ -326,10 +248,7 @@
       "published_at": "2026-10-28",
       "collected_at": "2026-10-30",
       "source": "Cisco PSIRT / BleepingComputer",
-      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75",
-      "image": "https://tommycheese.github.io/images/news/cisco-ssl-vpn-remediation.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75"
     },
     {
       "id": "microsoft-rdp-admin-protection-fix",
@@ -337,10 +256,7 @@
       "collected_at": "2026-10-30",
       "category": "software",
       "source": "Microsoft / BleepingComputer",
-      "url": "https://support.microsoft.com/en-us/servicing/os/windows-11/2026/10/kb5127936-windows-11-25h2-26h2-update",
-      "image": "https://tommycheese.github.io/images/news/windows-rdp-protection-fix.svg",
-      "image_credit": "本站原创解释图 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://support.microsoft.com/en-us/servicing/os/windows-11/2026/10/kb5127936-windows-11-25h2-26h2-update"
     },
     {
       "id": "google-gemini4-carbon-defender-preview",
@@ -348,10 +264,7 @@
       "collected_at": "2026-10-29",
       "category": "ai",
       "source": "Google DeepMind / Reuters / Artificial Analysis / Collinear",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
-      "image": "https://tommycheese.github.io/images/news/gemini4-carbon-defender-preview.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/"
     },
     {
       "id": "github-actions-workflow-lockfiles-ga",
@@ -359,10 +272,7 @@
       "collected_at": "2026-10-29",
       "category": "security",
       "source": "GitHub / DevOpsNess",
-      "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/",
-      "image": "https://tommycheese.github.io/images/news/github-actions-lockfiles-ga.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/"
     },
     {
       "id": "nist-pqc-transition-final-roadmap",
@@ -370,10 +280,7 @@
       "collected_at": "2026-10-29",
       "category": "security",
       "source": "NIST / Quantum Computing Report",
-      "url": "https://www.nist.gov/news-events/news/2026/10/nist-report-provides-guidelines-transition-post-quantum-cryptography",
-      "image": "https://tommycheese.github.io/images/news/nist-pqc-migration.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://www.nist.gov/news-events/news/2026/10/nist-report-provides-guidelines-transition-post-quantum-cryptography"
     },
     {
       "id": "google-genie4-interactive-world-preview",
@@ -381,10 +288,7 @@
       "collected_at": "2026-10-28",
       "category": "ai",
       "source": "Google DeepMind / Ars Technica",
-      "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/",
-      "image": "https://tommycheese.github.io/images/news/genie4-world-loop.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/"
     },
     {
       "id": "anthropic-drug-development-early-studies",
@@ -392,10 +296,7 @@
       "collected_at": "2026-10-28",
       "category": "science",
       "source": "Anthropic / BigHat / Enveda / SiliconReport",
-      "url": "https://www.anthropic.com/research/early-progress-drug-development",
-      "image": "https://tommycheese.github.io/images/news/anthropic-drug-research.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://www.anthropic.com/research/early-progress-drug-development"
     },
     {
       "id": "openai-signals-work-activities-data",
@@ -403,10 +304,7 @@
       "collected_at": "2026-10-28",
       "category": "ai",
       "source": "OpenAI / Techsuda",
-      "url": "https://openai.com/index/chatgpt-expanding-world-of-work/",
-      "image": "https://tommycheese.github.io/images/news/signals-work-activities.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/chatgpt-expanding-world-of-work/"
     },
     {
       "id": "microsoft-emudhra-offline-trust-update",
@@ -414,10 +312,7 @@
       "collected_at": "2026-10-28",
       "category": "security",
       "source": "Microsoft / BleepingComputer",
-      "url": "https://www.microsoft.com/en-us/msrc/blog/2026/10/microsoft-response-to-compromised-emudhra-certificate-authority-keys",
-      "image": "https://tommycheese.github.io/images/news/windows-certificate-trust.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://www.microsoft.com/en-us/msrc/blog/2026/10/microsoft-response-to-compromised-emudhra-certificate-authority-keys"
     },
     {
       "id": "openai-gpt61-terra-release",
@@ -425,43 +320,31 @@
       "collected_at": "2026-10-27",
       "category": "ai",
       "source": "OpenAI / 窓の杜",
-      "url": "https://openai.com/index/introducing-gpt-6-1-terra/",
-      "image": "https://tommycheese.github.io/images/news/gpt61-terra-computer-use.svg",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/introducing-gpt-6-1-terra/"
     },
     {
       "id": "openai-scientific-results-community-review",
       "published_at": "2026-10-26",
       "collected_at": "2026-10-27",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain",
       "category": "science",
       "source": "OpenAI / The Next Web",
-      "url": "https://openai.com/index/building-scientific-understanding-with-academic-communities/",
-      "image": "https://tommycheese.github.io/images/news/scientific-results-review.svg"
+      "url": "https://openai.com/index/building-scientific-understanding-with-academic-communities/"
     },
     {
       "id": "anthropic-public-s1-filing",
       "published_at": "2026-10-26",
       "collected_at": "2026-10-27",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain",
       "category": "ai",
       "source": "Anthropic / SEC / Reuters",
-      "url": "https://www.anthropic.com/news/s1-sec",
-      "image": "https://tommycheese.github.io/images/news/anthropic-public-filing.svg"
+      "url": "https://www.anthropic.com/news/s1-sec"
     },
     {
       "id": "tencent-hy-simulmt-streaming-translation-release",
       "published_at": "2026-10-26",
       "collected_at": "2026-10-27",
-      "image_credit": "Tech Daily · original explanatory diagram, not measured results",
-      "image_fit": "contain",
       "category": "ai",
       "source": "Tencent Hunyuan / IT之家",
-      "url": "https://github.com/Tencent-Hunyuan/Hy-SimulMT",
-      "image": "https://tommycheese.github.io/images/news/hy-simulmt-streaming.svg"
+      "url": "https://github.com/Tencent-Hunyuan/Hy-SimulMT"
     },
     {
       "id": "kimi-k31-pro-hosted-release",
@@ -491,10 +374,7 @@
       "published_at": "2026-10-23",
       "collected_at": "2026-10-25",
       "source": "OpenAI / Reuters",
-      "url": "https://openai.com/index/securing-our-frontier-model-training-environment/",
-      "image": "https://tommycheese.github.io/images/news/frontier-training-containment.svg",
-      "image_credit": "Tech Daily · editorial illustration, not an experiment result",
-      "image_fit": "contain"
+      "url": "https://openai.com/index/securing-our-frontier-model-training-environment/"
     },
     {
       "id": "vllm-minimax-m31-serving-support",
@@ -722,10 +602,7 @@
       "published_at": "2026-10-19",
       "collected_at": "2026-10-21",
       "source": "Quantinuum",
-      "url": "https://www.quantinuum.com/blog/quantinuum-closes-in-on-one-million-error-free-operations",
-      "image": "https://tommycheese.github.io/images/news/quantinuum-logical-memory.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.quantinuum.com/blog/quantinuum-closes-in-on-one-million-error-free-operations"
     },
     {
       "id": "torchneuron-native-pytorch-trainium-beta",
@@ -733,10 +610,7 @@
       "published_at": "2026-10-19",
       "collected_at": "2026-10-20",
       "source": "PyTorch / AWS",
-      "url": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/",
-      "image": "https://tommycheese.github.io/images/news/torchneuron-native-backend.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://pytorch.org/blog/introducing-torchneuron-native-pytorch-backend-for-aws-trainium/"
     },
     {
       "id": "rankmath-pro-supply-chain-incident",
@@ -744,10 +618,7 @@
       "published_at": "2026-10-19",
       "collected_at": "2026-10-20",
       "source": "BleepingComputer / Rank Math",
-      "url": "https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/",
-      "image": "https://tommycheese.github.io/images/news/rankmath-supply-chain-response.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/"
     },
     {
       "id": "nasa-standardized-shock-vibration-analysis",
@@ -777,20 +648,14 @@
       "published_at": "2026-10-18",
       "collected_at": "2026-10-20",
       "source": "BleepingComputer / JPCERT/CC",
-      "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/",
-      "image": "https://tommycheese.github.io/images/news/siteguard-evidence-before-patch.svg",
-      "image_credit": "Original explanatory diagram · Tech Daily",
-      "image_fit": "contain"
+      "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/"
     },
     {
       "id": "opencode-console-provider-key-breach",
       "category": "software",
       "published_at": "2026-10-17",
       "source": "Notebookcheck / OpenCode",
-      "url": "https://www.notebookcheck.net/OpenCode-hacked-users-urged-to-revoke-their-API-keys.1426957.0.html",
-      "image": "https://tommycheese.github.io/images/news/opencode-provider-key-response.svg",
-      "image_credit": "Original explanatory diagram · Tech Daily",
-      "image_fit": "contain"
+      "url": "https://www.notebookcheck.net/OpenCode-hacked-users-urged-to-revoke-their-API-keys.1426957.0.html"
     },
     {
       "id": "esa-juice-janus-africa-flyby-images",
@@ -807,10 +672,7 @@
       "category": "software",
       "published_at": "2026-10-16",
       "source": "GitHub Changelog",
-      "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/",
-      "image": "https://tommycheese.github.io/images/news/github-license-policy-checks.svg",
-      "image_credit": "Original explanatory diagram · Tech Daily",
-      "image_fit": "contain"
+      "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/"
     },
     {
       "id": "nasa-black-marble-isaias-power-recovery",
@@ -827,40 +689,28 @@
       "category": "software",
       "published_at": "2026-10-16",
       "source": "Ollama / GitHub",
-      "url": "https://github.com/ollama/ollama/releases/tag/v0.40.6",
-      "image": "https://tommycheese.github.io/images/news/ollama-0406-compatibility.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.40.6"
     },
     {
       "id": "mozilla-devtools-mcp-0106-pdf-tabs",
       "category": "software",
       "published_at": "2026-10-16",
       "source": "Mozilla Discourse / GitHub",
-      "url": "https://discourse.mozilla.org/t/firefox-devtools-mcp-0-10-6-released/149832",
-      "image": "https://tommycheese.github.io/images/news/firefox-mcp-0106-controls.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://discourse.mozilla.org/t/firefox-devtools-mcp-0-10-6-released/149832"
     },
     {
       "id": "anthropic-nist-curve-seed-research",
       "category": "ai",
       "published_at": "2026-10-16",
       "source": "Anthropic Research",
-      "url": "https://www.anthropic.com/research/ecdsa-curve-origins",
-      "image": "https://tommycheese.github.io/images/news/anthropic-curve-seed-origins.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.anthropic.com/research/ecdsa-curve-origins"
     },
     {
       "id": "windows-11-28120-3272-accessibility-fixes",
       "category": "devices",
       "published_at": "2026-10-16",
       "source": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/windows-insider/release-notes/experimental-26-h1/preview-build-28120-3272",
-      "image": "https://tommycheese.github.io/images/news/windows-experimental-28120.svg",
-      "image_credit": "Tech Daily · original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://learn.microsoft.com/en-us/windows-insider/release-notes/experimental-26-h1/preview-build-28120-3272"
     },
     {
       "id": "debian-linux-dsa-6568-security-update",
@@ -877,10 +727,7 @@
       "category": "software",
       "published_at": "2026-10-15",
       "source": "Google Chrome Releases",
-      "url": "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_01886704284.html",
-      "image": "https://tommycheese.github.io/images/news/chrome-155-security-lifecycle.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_01886704284.html"
     },
     {
       "id": "nasa-artemis-ii-heat-shield-assessment",
@@ -897,141 +744,98 @@
       "category": "ai",
       "published_at": "2026-10-15",
       "source": "PrismML",
-      "url": "https://prismml.com/news/bonsai-2-family",
-      "image": "https://tommycheese.github.io/images/news/bonsai2-small-memory-boundaries.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://prismml.com/news/bonsai-2-family"
     },
     {
       "id": "tsmc-2026-third-quarter-results",
       "category": "semiconductors",
       "published_at": "2026-10-15",
       "source": "TSMC",
-      "url": "https://pr.tsmc.com/english/news/3346",
-      "image": "https://tommycheese.github.io/images/news/tsmc-q3-2026-revenue-margins.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://pr.tsmc.com/english/news/3346"
     },
     {
       "id": "geely-holding-q3-2026-sales",
       "category": "cars",
       "published_at": "2026-10-15",
       "source": "IT之家",
-      "url": "https://www.ithome.com/1/013/246.htm",
-      "image": "https://tommycheese.github.io/images/news/geely-nine-month-sales-scopes.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.ithome.com/1/013/246.htm"
     },
     {
       "id": "google-deep-review-public-release",
       "category": "ai",
       "published_at": "2026-10-14",
       "source": "Google Research",
-      "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
-      "image": "https://tommycheese.github.io/images/news/deep-review-document-verification.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://research.google/blog/analyzing-technical-documents-with-deep-review/"
     },
     {
       "id": "nvidia-cupotential-ai-defined-fabs",
       "category": "semiconductors",
       "published_at": "2026-10-14",
       "source": "NVIDIA Newsroom",
-      "url": "https://nvidianews.nvidia.com/news/nvidia-and-semiconductor-leaders-advance-ai-across-chip-design-and-manufacturing-for-ai-defined-labs",
-      "image": "https://tommycheese.github.io/images/news/cupotential-simulation-validation.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://nvidianews.nvidia.com/news/nvidia-and-semiconductor-leaders-advance-ai-across-chip-design-and-manufacturing-for-ai-defined-labs"
     },
     {
       "id": "grok-voice-3-api",
       "category": "ai",
       "published_at": "2026-10-14",
       "source": "SpaceXSI",
-      "url": "https://x.ai/news/grok-voice-3",
-      "image": "https://tommycheese.github.io/images/news/grok-voice3-task-boundaries.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://x.ai/news/grok-voice-3"
     },
     {
       "id": "globalfoundries-us-japan-new-york-fabs",
       "category": "semiconductors",
       "published_at": "2026-10-14",
       "source": "GlobalFoundries",
-      "url": "https://gf.com/news-and-events/news/globalfoundries-selected-to-operate-two-new-semiconductor-fabs-in-new-york-under-landmark-us-japan-initiative/",
-      "image": "https://tommycheese.github.io/images/news/gf-japan-phased-fab-plan.svg",
-      "image_credit": "Original explanatory diagram",
-      "file_photo": false,
-      "image_fit": "contain"
+      "url": "https://gf.com/news-and-events/news/globalfoundries-selected-to-operate-two-new-semiconductor-fabs-in-new-york-under-landmark-us-japan-initiative/"
     },
     {
       "id": "samsung-health-sleep-coaching-update",
       "category": "devices",
       "published_at": "2026-10-14",
       "source": "Samsung Newsroom",
-      "url": "https://news.samsung.com/global/samsung-health-makes-sleep-coaching-easier-to-start-and-tailors-weekly-guidance",
-      "image": "https://tommycheese.github.io/images/news/samsung-health-coaching-data-cycle.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://news.samsung.com/global/samsung-health-makes-sleep-coaching-easier-to-start-and-tailors-weekly-guidance"
     },
     {
       "id": "google-gemini4-argon-cloud",
       "category": "ai",
       "published_at": "2026-10-13",
       "source": "Google Cloud",
-      "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud",
-      "image": "https://tommycheese.github.io/images/news/gemini4-argon-cloud-task-budget.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud"
     },
     {
       "id": "anthropic-evaluation-internet-safety",
       "category": "ai",
       "published_at": "2026-10-09",
       "source": "Anthropic",
-      "url": "https://www.anthropic.com/research/investigating-unintended-model-actions",
-      "image": "https://tommycheese.github.io/images/news/anthropic-evaluation-action-boundaries.svg",
-      "image_credit": "Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://www.anthropic.com/research/investigating-unintended-model-actions"
     },
     {
       "id": "globalfoundries-fdx-fusion-roadmap",
       "category": "semiconductors",
       "published_at": "2026-10-09",
       "source": "GlobalFoundries",
-      "url": "https://gf.com/news-and-events/news/gf-unveils-roadmap-to-deliver-worlds-most-advanced-platform-for-physical-ai/",
-      "image": "https://tommycheese.github.io/images/news/fdx-fusion-evaluation-roadmap.svg",
-      "image_credit": "本站解释性重绘 · Original explanatory diagram",
-      "image_fit": "contain"
+      "url": "https://gf.com/news-and-events/news/gf-unveils-roadmap-to-deliver-worlds-most-advanced-platform-for-physical-ai/"
     },
     {
       "id": "tsmc-september-revenue",
       "category": "semiconductors",
       "published_at": "2026-10-08",
       "source": "TSMC",
-      "url": "https://pr.tsmc.com/english/news/3343",
-      "image": "https://tommycheese.github.io/images/news/tsmc-september-revenue-comparisons.svg",
-      "image_credit": "Original explanatory graphic by this site; figures: TSMC",
-      "file_photo": false
+      "url": "https://pr.tsmc.com/english/news/3343"
     },
     {
       "id": "openai-gpt6-intelligent-ui",
       "category": "ai",
       "published_at": "2026-10-07",
       "source": "OpenAI",
-      "url": "https://openai.com/index/gpt-6-for-everyone/",
-      "image": "https://tommycheese.github.io/images/news/gpt6-progressive-interface.svg",
-      "image_credit": "Original explanatory graphic by this site; mechanism: OpenAI",
-      "file_photo": false
+      "url": "https://openai.com/index/gpt-6-for-everyone/"
     },
     {
       "id": "samsung-smartthings-now",
       "category": "devices",
       "published_at": "2026-10-06",
       "source": "Samsung Newsroom",
-      "url": "https://news.samsung.com/global/samsung-introduces-smartthings-now-in-new-platform-update-that-brings-more-intuitive-user-experiences",
-      "image": "https://tommycheese.github.io/images/news/smartthings-local-control-route.svg",
-      "image_credit": "Original explanatory graphic by this site; mechanism: Samsung",
-      "file_photo": false
+      "url": "https://news.samsung.com/global/samsung-introduces-smartthings-now-in-new-platform-update-that-brings-more-intuitive-user-experiences"
     }
   ],
   "tags": [

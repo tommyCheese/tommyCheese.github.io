@@ -20,7 +20,7 @@ assert len({item['id'] for item in items}) == len(items)
 for item in items:
     assert date.fromisoformat(item['published_at']) <= updated
     assert item['category'] in NEWS_TAGS
-    for field in ['url', 'image']:
+    for field in ['url'] + (['image'] if item.get('image') else []):
         url = urlsplit(item[field])
         assert url.scheme == 'https' and url.netloc
     assert item['source'].strip()
@@ -42,7 +42,7 @@ for locale in LOCALES:
         assert link.get('target') == '_blank'
         assert set(link.get('rel').split()) == {'noopener', 'noreferrer'}
         assert card.xpath('.//*[@class="news-card-action"]')[0].text_content() == MESSAGES[locale]['news.original']
-        assert card.xpath('.//img/@src') == [item['image']]
+        assert card.xpath('.//img/@src') == ([item['image']] if item.get('image') else [])
         assert card.xpath('.//h3')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.title']
         assert card.xpath('.//time/@datetime') == [item['published_at']]
 
@@ -79,9 +79,12 @@ for locale in LOCALES:
         assert link.get('href') == item['url']
         assert link.get('target') == '_blank'
         assert set(link.get('rel').split()) == {'noopener', 'noreferrer'}
-        assert card.xpath('.//img/@src') == [item['image']]
-        assert card.xpath('.//img/@loading') == ['lazy']
-        assert ('news-cover-contain' in card.xpath('.//img/@class')[0].split()) == (item.get('image_fit') == 'contain' and not item.get('file_photo'))
+        assert card.xpath('.//img/@src') == ([item['image']] if item.get('image') else [])
+        if item.get('image'):
+            assert card.xpath('.//img/@loading') == ['lazy']
+            assert ('news-cover-contain' in card.xpath('.//img/@class')[0].split()) == (item.get('image_fit') == 'contain' and not item.get('file_photo'))
+        else:
+            assert not card.xpath('.//*[@class="news-image-credit"]')
         assert card.xpath('.//h3')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.title']
         assert card.xpath('.//p')[0].text_content() == MESSAGES[locale]['news.' + item['id'] + '.summary']
         assert item['source'] in card.text_content()
