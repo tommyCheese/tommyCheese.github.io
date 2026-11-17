@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-17",
+  "updated_at": "2026-11-18",
   "items": [
+    {
+      "id": "openai-gpt62-astra-sol-release",
+      "category": "ai",
+      "published_at": "2026-11-17",
+      "collected_at": "2026-11-18",
+      "source": "OpenAI / 9to5Mac",
+      "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/"
+    },
     {
       "id": "alibaba-qwen4-max-general-api",
       "category": "ai",

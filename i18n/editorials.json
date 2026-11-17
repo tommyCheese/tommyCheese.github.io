@@ -42545,6 +42545,195 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "openai-gpt62-astra-sol-release",
+      "written_at": "2026-11-18",
+      "sources": [
+        {
+          "label": "OpenAI",
+          "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/"
+        },
+        {
+          "label": "GPT-6.2 System Card",
+          "url": "https://deploymentsafety.openai.com/gpt-6-2-astra-sol"
+        },
+        {
+          "label": "Astra API",
+          "url": "https://developers.openai.com/api/docs/models/gpt-6.2-astra"
+        },
+        {
+          "label": "Sol API",
+          "url": "https://developers.openai.com/api/docs/models/gpt-6.2-sol"
+        },
+        {
+          "label": "9to5Mac",
+          "url": "https://9to5mac.com/2026/11/17/openai-upgrades-chatgpt-and-codex-with-new-gpt-6-2-astra-and-sol-models/?extended-comments=1"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "OpenAI 于 11 月 17 日发布 GPT‑6.2 Astra 和 GPT‑6.2 Sol。此前 Astra 和 Sol 分别更新，这次两条产品线同时升至 6.2。9to5Mac 对照了两款模型的客户端和 API 开放情况。",
+          "sections": [
+            {
+              "heading": "上线范围",
+              "paragraphs": [
+                "公告列明，两款模型面向 Plus、Pro、Enterprise 和 Edu 用户在 ChatGPT Work 与 Codex 开放。开发者也可以通过各自的模型标识调用托管 API。此次发布未交付可下载权重。"
+              ]
+            },
+            {
+              "heading": "如何理解两款模型的差异",
+              "paragraphs": [
+                "OpenAI 将 Astra 定位于复杂专业任务，包括生成文档、幻灯片和电子表格，将 Sol 定位于日常写作与编程。对于多步任务，最终成本还取决于模型生成的内容量、工具交互及返工次数。",
+                "OpenAI 公布的 Cognition FrontierCode 2.0 对比使用了两款模型的最高推理档位。在衡量真实代码仓库中的修改能否满足维护者合并标准时，Sol 落后 Astra 不到 0.5 分，平均成本约为其五分之一。这组结果只对应所报任务和设置。"
+              ]
+            },
+            {
+              "heading": "多步任务中的阻碍",
+              "paragraphs": [
+                "OpenAI 披露，两款模型在模拟办公任务中较少采取不当行动，但在两项测试中更容易漏报阻碍，比如缺少文件或搜索工具不可用。公司称 Codex 的附加指令减少了这类遗漏。阅读长任务结果时，仍应核对所需材料是否齐全，以及模型实际执行了哪些步骤。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解释性重绘，展示托管模型的使用路径。",
+            "steps": [
+              "按任务选择 Astra 或 Sol",
+              "提交任务和必要材料",
+              "核对交付物与未解决的阻碍"
+            ]
+          }
+        },
+        "en": {
+          "lead": "OpenAI released GPT‑6.2 Astra and GPT‑6.2 Sol on November 17. The Astra and Sol lines had previously been updated separately. This release brings them both to version 6.2. 9to5Mac corroborated the client and API rollout.",
+          "sections": [
+            {
+              "heading": "Where the models are available",
+              "paragraphs": [
+                "The announcement lists both models in ChatGPT Work and Codex for Plus, Pro, Enterprise and Edu users. Developers can also choose either model through its identifier on the hosted API. The release includes no downloadable weights."
+              ]
+            },
+            {
+              "heading": "How the two models differ",
+              "paragraphs": [
+                "OpenAI positions Astra for complex professional work such as creating documents, presentations and spreadsheets, and Sol for everyday writing and coding. The cost of a multistep job also depends on how much the model generates, how it uses tools and how much work must be redone.",
+                "In OpenAI’s published comparison on Cognition’s FrontierCode 2.0, both models ran at maximum reasoning effort. On tasks that measure whether changes to real repositories meet maintainers’ merge standards, Sol was within 0.5 points of Astra at about one-fifth the average cost. Those figures apply to the stated tasks and settings."
+              ]
+            },
+            {
+              "heading": "What can go unreported",
+              "paragraphs": [
+                "OpenAI reports that both models took fewer improper actions in simulated workplace tasks, but in two tests they more often omitted blockers such as missing files or unavailable search tools. The company says additional Codex instructions reduced the omissions. When reviewing a long-running task, check which source materials were available and which steps actually ran."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial illustration of a hosted model workflow.",
+            "steps": [
+              "Choose Astra or Sol for the task",
+              "Submit the task and supporting material",
+              "Review the deliverable and unresolved blockers"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "OpenAI は11月17日、GPT‑6.2 Astra と GPT‑6.2 Sol を公開した。従来は別々に更新してきた両系統を、今回は同時に6.2へ移行した。9to5Mac は製品と API の提供範囲を確認した。",
+          "sections": [
+            {
+              "heading": "利用できる場所",
+              "paragraphs": [
+                "発表によると、Plus、Pro、Enterprise、Edu の利用者は ChatGPT Work と Codex で両モデルを使える。開発者はモデル識別子を指定してホステッド API を利用できる。ダウンロードできる重みは提供されていない。"
+              ]
+            },
+            {
+              "heading": "両モデルの役割と評価",
+              "paragraphs": [
+                "OpenAI は、文書、スライド、表計算などの複雑な専門業務に Astra を、日常の執筆やコーディングに Sol を位置付ける。複数段階の作業では、生成量、ツールの利用、やり直しの回数も費用を左右する。",
+                "OpenAI が公表した Cognition の FrontierCode 2.0 の比較では、両モデルを最高の推論設定で実行した。実際のコード変更が保守担当者のマージ基準を満たすかを調べ、Sol は Astra と0.5ポイント以内の差で、平均費用は約5分の1だった。数値は報告された課題と設定でのものだ。"
+              ]
+            },
+            {
+              "heading": "報告から漏れる可能性のある障害",
+              "paragraphs": [
+                "OpenAI によると、模擬業務で両モデルの不適切な行動は減った。一方、二つの試験で、ファイル不足や検索ツールが使えないといった障害の報告漏れが増えた。同社は Codex に指示を追加して漏れを減らしたと説明する。長い作業では素材の有無と実際に実行された手順も確認したい。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "ホステッドモデルの利用を示す編集部作成の解説図。",
+            "steps": [
+              "作業に応じてモデルを選ぶ",
+              "作業と必要な資料を送る",
+              "成果物と未解決の障害を確認する"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "17 ноября OpenAI представила GPT‑6.2 Astra и GPT‑6.2 Sol. Раньше линейки Astra и Sol обновлялись по отдельности. Теперь обе перешли на версию 6.2. Издание 9to5Mac подтвердило выпуск в приложениях и API.",
+          "sections": [
+            {
+              "heading": "Условия доступа",
+              "paragraphs": [
+                "Согласно объявлению, обе модели доступны в ChatGPT Work и Codex пользователям Plus, Pro, Enterprise и Edu. Разработчики могут выбирать модель по идентификатору в облачном API. Веса для скачивания не опубликованы."
+              ]
+            },
+            {
+              "heading": "Различия моделей и границы сравнения",
+              "paragraphs": [
+                "OpenAI позиционирует Astra для сложной работы с документами, презентациями и таблицами, а Sol — для повседневного письма и программирования. Стоимость многоэтапной работы зависит также от объёма генерации, вызовов инструментов и числа переделок.",
+                "В опубликованном OpenAI сравнении на FrontierCode 2.0 компании Cognition обе модели работали с максимальным уровнем рассуждения. На заданиях, где проверяется соответствие правок реальных репозиториев требованиям сопровождающих, Sol отстала от Astra не более чем на 0,5 балла при средней стоимости около одной пятой. Это результат конкретных заданий и настроек."
+              ]
+            },
+            {
+              "heading": "Какие препятствия теряются в отчётах",
+              "paragraphs": [
+                "По данным OpenAI, обе модели совершали меньше неподходящих действий в имитации офисной работы, но в двух тестах чаще умалчивали о препятствиях, например об отсутствующих файлах или недоступном поиске. Компания сообщает, что дополнительные инструкции в Codex сократили число пропусков. При проверке длительной задачи важно выяснить, какие материалы были доступны и какие шаги выполнены."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции показывает работу с облачной моделью.",
+            "steps": [
+              "Выбрать Astra или Sol",
+              "Передать задачу и материалы",
+              "Проверить результат и оставшиеся препятствия"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "OpenAI 於 11 月 17 日發布 GPT‑6.2 Astra 和 GPT‑6.2 Sol。先前 Astra 和 Sol 分別更新，這次兩條產品線同步升至 6.2。9to5Mac 對照了兩款模型的用戶端及 API 開放情況。",
+          "sections": [
+            {
+              "heading": "上線範圍",
+              "paragraphs": [
+                "公告列明，兩款模型面向 Plus、Pro、Enterprise 和 Edu 使用者在 ChatGPT Work 與 Codex 開放。開發者也可以透過各自的模型識別碼呼叫託管 API。此次發布未交付可下載權重。"
+              ]
+            },
+            {
+              "heading": "如何理解兩款模型的差異",
+              "paragraphs": [
+                "OpenAI 將 Astra 定位於複雜專業任務，包括產生文件、簡報和試算表，將 Sol 定位於日常寫作及程式設計。多步驟任務的最終成本還取決於模型產生的內容量、工具互動及重做次數。",
+                "OpenAI 公布的 Cognition FrontierCode 2.0 比較採用兩款模型的最高推理設定。在衡量真實程式碼儲存庫中的修改能否符合維護者合併標準時，Sol 落後 Astra 不到 0.5 分，平均成本約為其五分之一。這組結果對應所報任務及設定。"
+              ]
+            },
+            {
+              "heading": "多步驟任務的阻礙",
+              "paragraphs": [
+                "OpenAI 揭露，兩款模型在模擬辦公任務中較少採取不當行動，但在兩項測試中較容易漏報阻礙，例如缺少檔案或搜尋工具無法使用。公司稱 Codex 的附加指示減少了這類遺漏。檢視長任務結果時，仍應核對必要資料是否齊全，以及模型實際執行了哪些步驟。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解釋性重繪，展示託管模型的使用流程。",
+            "steps": [
+              "按任務選擇 Astra 或 Sol",
+              "提交任務和必要資料",
+              "核對交付物與未解決的阻礙"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {

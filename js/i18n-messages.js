@@ -796,6 +796,8 @@ window.SITE_MESSAGES = {
     "news.alibaba-qwen4-max-general-api.summary": "正式模型接受文本、图像和视频输入，支持百万 token 上下文。阿里云列出六个服务区域，本次旗舰发布未提供可下载权重。",
     "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA 公布面向科学计算的 192 CPU Vera 机架",
     "news.nvidia-vera-cpu-hpc-rack.summary": "液冷机架以 InfiniBand 连接 192 颗 Vera CPU，面向依赖内存和节点通信的模拟。HPC SDK 26.11 已发布，整架预计 2027 年初供应。",
+    "news.openai-gpt62-astra-sol-release.title": "OpenAI 发布 GPT‑6.2 Astra 和 Sol",
+    "news.openai-gpt62-astra-sol-release.summary": "两款托管模型同步进入 ChatGPT Work、Codex 和 API。Astra 面向复杂专业任务，Sol 面向日常工作，系统卡披露了多步任务中的可靠性限制。",
     "news.craig-standard-model-lattice-refinement.title": "格点上的标准模型：Craig 解释 GPT-6 Astra 如何辅助构造候选方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科学博客文章介绍了 10 月 6 日预印本中的有限格点构造，并说明 AI 参与推导的环节。真实模拟、反射正性与完整相互作用理论的连续极限仍待研究。"
   },
@@ -1595,6 +1597,8 @@ window.SITE_MESSAGES = {
     "news.alibaba-qwen4-max-general-api.summary": "The production model accepts text, images and video with a million-token context. Alibaba Cloud lists six serving regions. The flagship launch did not include downloadable weights.",
     "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA announces a 192-CPU Vera rack for scientific computing",
     "news.nvidia-vera-cpu-hpc-rack.summary": "The liquid-cooled design links 192 Vera CPUs over InfiniBand for memory- and communication-intensive simulations. HPC SDK 26.11 is available, with finished racks expected in early 2027.",
+    "news.openai-gpt62-astra-sol-release.title": "OpenAI releases GPT‑6.2 Astra and Sol",
+    "news.openai-gpt62-astra-sol-release.summary": "Both hosted models are available in ChatGPT Work, Codex and the API. Astra targets complex professional work and Sol everyday tasks. The system card describes reliability limits in multistep work.",
     "news.craig-standard-model-lattice-refinement.title": "Craig describes an Astra-assisted candidate for the Standard Model on a lattice",
     "news.craig-standard-model-lattice-refinement.summary": "A November 15 science post explains the construction in an October 6 preprint and the AI model’s role in its proof. Reflection positivity, practical simulation and the interacting continuum limit remain open."
   },
@@ -2394,6 +2398,8 @@ window.SITE_MESSAGES = {
     "news.alibaba-qwen4-max-general-api.summary": "正式版はテキスト、画像、動画を入力でき、100万トークンのコンテキストに対応する。アリババクラウドは6拠点を記載し、旗艦モデルのダウンロード可能な重みは公開していない。",
     "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA、科学計算向けに Vera CPU 192基のラックを発表",
     "news.nvidia-vera-cpu-hpc-rack.summary": "液冷ラックは192基の Vera CPU を InfiniBand で結ぶ。メモリーと通信の負荷が大きなシミュレーション向けで、HPC SDK 26.11 は提供済み。ラックは2027年初めに供給予定。",
+    "news.openai-gpt62-astra-sol-release.title": "OpenAI、GPT‑6.2 Astra と Sol を公開",
+    "news.openai-gpt62-astra-sol-release.summary": "両モデルは ChatGPT Work、Codex、API で提供される。Astra は複雑な専門業務、Sol は日常作業を対象とし、システムカードは複数段階の作業での信頼性の限界を示す。",
     "news.craig-standard-model-lattice-refinement.title": "標準模型の格子定式化に向けた候補案、クレイグ氏が Astra の役割を説明",
     "news.craig-standard-model-lattice-refinement.summary": "11月15日の科学ブログで、10月6日のプレプリントにある有限格子の構成と AI の関与を解説した。反射正値性、実用的なシミュレーション、相互作用する理論の連続極限は今後の課題だ。"
   },
@@ -3193,6 +3199,8 @@ window.SITE_MESSAGES = {
     "news.alibaba-qwen4-max-general-api.summary": "Модель принимает текст, изображения и видео и поддерживает контекст в миллион токенов. Документация Alibaba Cloud перечисляет шесть регионов. Веса флагманской модели для загрузки не опубликованы.",
     "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA представила стойку Vera со 192 процессорами для научных расчётов",
     "news.nvidia-vera-cpu-hpc-rack.summary": "192 процессора Vera соединены через InfiniBand в системе с жидкостным охлаждением. HPC SDK 26.11 уже доступен, поставки стоек ожидаются в начале 2027 года.",
+    "news.openai-gpt62-astra-sol-release.title": "OpenAI выпустила GPT‑6.2 Astra и Sol",
+    "news.openai-gpt62-astra-sol-release.summary": "Обе облачные модели доступны в ChatGPT Work, Codex и через API. Astra предназначена для сложной профессиональной работы, Sol — для повседневных задач. Системная карта описывает ограничения в многоэтапной работе.",
     "news.craig-standard-model-lattice-refinement.title": "Крейг объяснил, как Astra помогла построить решёточную модель для Стандартной модели",
     "news.craig-standard-model-lattice-refinement.summary": "Автор записи от 15 ноября объясняет конструкцию из препринта от 6 октября и роль ИИ в доказательстве. Положительность отражения, применение в расчётах и континуальный предел взаимодействующей теории остаются открытыми."
   },
@@ -3992,6 +4000,8 @@ window.SITE_MESSAGES = {
     "news.alibaba-qwen4-max-general-api.summary": "正式模型接受文字、影像和影片輸入，支援百萬 token 上下文。阿里雲列出六個服務區域，本次旗艦發布未提供可下載權重。",
     "news.nvidia-vera-cpu-hpc-rack.title": "NVIDIA 公布面向科學運算的 192 CPU Vera 機架",
     "news.nvidia-vera-cpu-hpc-rack.summary": "液冷機架以 InfiniBand 連接 192 顆 Vera CPU，面向依賴記憶體和節點通訊的模擬。HPC SDK 26.11 已發布，整架預計 2027 年初供應。",
+    "news.openai-gpt62-astra-sol-release.title": "OpenAI 發布 GPT‑6.2 Astra 和 Sol",
+    "news.openai-gpt62-astra-sol-release.summary": "兩款託管模型同步進入 ChatGPT Work、Codex 與 API。Astra 面向複雜專業任務，Sol 面向日常工作，系統卡揭露了多步驟任務的可靠性限制。",
     "news.craig-standard-model-lattice-refinement.title": "格點上的標準模型：Craig 說明 GPT-6 Astra 如何協助建構候選方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科學部落格文章介紹 10 月 6 日預印本中的有限格點建構，並說明 AI 參與推導的環節。實際模擬、反射正性及完整交互作用理論的連續極限仍待研究。"
   }
