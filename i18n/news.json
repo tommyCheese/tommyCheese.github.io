@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-18",
+  "updated_at": "2026-11-19",
   "items": [
+    {
+      "id": "microsoft-agent-framework-pypi-compromise",
+      "category": "security",
+      "published_at": "2026-11-18",
+      "collected_at": "2026-11-19",
+      "source": "GitHub Advisory / StepSecurity / Socket / BleepingComputer",
+      "url": "https://www.bleepingcomputer.com/news/security/microsofts-agent-framework-pypi-package-compromised-to-steal-credentials/"
+    },
     {
       "id": "openai-gpt62-astra-sol-release",
       "category": "ai",

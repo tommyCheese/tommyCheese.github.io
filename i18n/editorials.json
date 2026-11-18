@@ -42734,6 +42734,196 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "microsoft-agent-framework-pypi-compromise",
+      "written_at": "2026-11-19",
+      "sources": [
+        {
+          "label": "GitHub Advisory",
+          "url": "https://github.com/advisories/GHSA-764m-3ppc-5m73"
+        },
+        {
+          "label": "StepSecurity",
+          "url": "https://www.stepsecurity.io/blog/microsoft-agent-framework-pypi-package-compromised"
+        },
+        {
+          "label": "Socket",
+          "url": "https://socket.dev/blog/agent-framework-pypi-package-compromised-with-credential-stealer"
+        },
+        {
+          "label": "BleepingComputer",
+          "url": "https://www.bleepingcomputer.com/news/security/microsofts-agent-framework-pypi-package-compromised-to-steal-credentials/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Microsoft Agent Framework 是用于构建和协调 AI Agent 的开源工具。11 月 18 日公开的安全记录确认，其 PyPI 包 agent-framework 的 1.26.1 和 1.26.2 版本包含凭据窃取代码。这使发布渠道的可信度成为事件核心，原有项目名称和正常功能都不足以验证下载内容。",
+          "sections": [
+            {
+              "heading": "受影响版本及处置",
+              "paragraphs": [
+                "StepSecurity 记录，两个恶意版本均在 11 月 17 日上传。首个版本被隔离后，第二个版本仍成功发布，随后也被隔离。本次复核时，两条 PyPI 版本页面已无法访问，GitHub 安全公告将它们列为受影响版本。",
+                "安全研究者把先前的 1.26.0 识别为干净基线。版本升级需要针对具体发行记录核对，单凭版本号更大无法判断是否已修复。"
+              ]
+            },
+            {
+              "heading": "为何未使用工具也可能触发",
+              "paragraphs": [
+                "Socket 与 StepSecurity 分析发现，安装包添加了 Python 启动钩子。当解释器处理受影响环境的包目录时，可自动执行辅助模块，无需应用主动调用 Agent Framework。原有核心依赖仍然保留，所以应用可继续正常运行。",
+                "研究报告称，载荷尝试收集能读取的服务凭据，并请求部分云端身份令牌。暴露范围取决于安装环境、运行权限和网络是否允许传出。与同一基础解释器关联的其他隔离环境是否受影响，需要具体分析。"
+              ]
+            },
+            {
+              "heading": "已知边界与响应",
+              "paragraphs": [
+                "GitHub 安全公告和独立报道建议隔离受影响环境、从已知干净来源重建，并轮换恶意代码可接触的凭据。最初取得发布权限的途径仍未明确，实际数据外传规模也未有可核验总数。软件仓库隔离能阻止继续分发，已下载的缓存和内部镜像仍需排查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解释性重绘，展示此事件的暴露与处置环节。",
+            "steps": [
+              "受影响版本进入运行环境",
+              "Python 启动钩子触发载荷",
+              "隔离、重建并轮换暴露凭据"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Microsoft Agent Framework is an open-source toolkit for building and coordinating AI agents. Security records published on November 18 identify credential-stealing code in versions 1.26.1 and 1.26.2 of its agent-framework PyPI package. The incident puts the release channel under scrutiny. A familiar project name and working application features cannot establish that a downloaded artifact is trustworthy.",
+          "sections": [
+            {
+              "heading": "Affected versions and containment",
+              "paragraphs": [
+                "StepSecurity records both malicious uploads on November 17. A second version was published after the first was quarantined, then was also quarantined. At this review, neither version’s PyPI page was accessible. The GitHub advisory lists both as affected.",
+                "Researchers identify the earlier 1.26.0 release as the clean baseline. Remediation requires checking the specific release record. A larger version number alone cannot establish that a fix has been delivered."
+              ]
+            },
+            {
+              "heading": "How the payload could run",
+              "paragraphs": [
+                "Socket and StepSecurity found Python startup hooks in the packages. When the interpreter processes the affected environment’s package directory, it can execute a helper module without an application explicitly calling Agent Framework. The legitimate core dependency remained, allowing normal application behavior to continue.",
+                "The reports say the payload attempted to collect accessible service credentials and request some cloud identity tokens. Exposure depends on the installed environment, runtime permissions and outbound connectivity. Other isolated environments sharing the same base interpreter require individual assessment."
+              ]
+            },
+            {
+              "heading": "Remaining questions and response",
+              "paragraphs": [
+                "The GitHub advisory and independent reporting recommend isolating affected environments, rebuilding from a known-clean source and rotating credentials the payload could access. The initial route to publishing access remains unclear, and no verified total of stolen data is available. Registry quarantine blocks further distribution, while downloaded caches and internal mirrors still need review."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial illustration of exposure and containment in this incident.",
+            "steps": [
+              "An affected release enters an environment",
+              "A Python startup hook triggers the payload",
+              "Isolate, rebuild and rotate exposed credentials"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Microsoft Agent Framework は AI エージェントの構築と連携に使うオープンソースのツールだ。11月18日に公開された安全情報は、PyPI パッケージ agent-framework の1.26.1と1.26.2に認証情報を窃取するコードがあると確認した。既知のプロジェクト名や正常な機能だけで、配布物の信頼性を判断する難しさが示された。",
+          "sections": [
+            {
+              "heading": "対象バージョンと配布停止",
+              "paragraphs": [
+                "StepSecurity によると、両バージョンは11月17日にアップロードされた。最初の隔離後にも次のバージョンが公開され、その後そちらも隔離された。今回の確認では両 PyPI ページにアクセスできず、GitHub の勧告も両方を対象に挙げている。",
+                "研究者は従来の1.26.0を正常な比較基準としている。復旧では個々の配布記録を照合する必要があり、番号が大きいだけでは修正済みか判断できない。"
+              ]
+            },
+            {
+              "heading": "明示的に呼び出さなくても動く仕組み",
+              "paragraphs": [
+                "Socket と StepSecurity はパッケージ内に Python の起動フックを見つけた。処理系が対象環境のパッケージ用ディレクトリーを読み込むと、アプリが Agent Framework を明示的に使わなくても補助モジュールが実行され得る。正規の中核依存関係は残っており、通常機能も動作する。",
+                "報告によれば、コードは読み取り可能なサービス認証情報を集め、一部のクラウド識別トークンの取得も試みた。影響はインストール先、実行権限、外向き通信に左右される。同じ基本処理系を使う別の隔離環境への影響は個別確認が必要だ。"
+              ]
+            },
+            {
+              "heading": "未解明の範囲と対処",
+              "paragraphs": [
+                "GitHub 勧告と独立報道は、対象環境の隔離、正常と確認できた配布元からの再構築、到達可能だった認証情報の更新を勧める。最初に配布権限を得た方法は不明で、流出量の確定した総数もない。配布停止後もダウンロード済みのキャッシュや社内ミラーの点検が必要になる。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "事件の影響と対処を示す編集部作成の解説図。",
+            "steps": [
+              "対象版が環境に入る",
+              "Python 起動フックがコードを動かす",
+              "隔離・再構築・認証情報更新"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "Microsoft Agent Framework — открытый набор инструментов для создания и координации ИИ-агентов. Опубликованные 18 ноября сведения о безопасности подтверждают наличие кода кражи учётных данных в версиях 1.26.1 и 1.26.2 пакета agent-framework на PyPI. Событие ставит вопрос о доверии к каналу выпуска: знакомое название и работающие функции сами по себе не подтверждают целостность загруженного пакета.",
+          "sections": [
+            {
+              "heading": "Версии и ограничение распространения",
+              "paragraphs": [
+                "По данным StepSecurity, обе вредоносные версии загрузили 17 ноября. После помещения первой в карантин вышла вторая, которую затем также изолировали. При этой проверке обе страницы версий на PyPI были недоступны. База предупреждений GitHub указывает обе версии как затронутые.",
+                "Исследователи называют прежнюю версию 1.26.0 чистой точкой сравнения. Для восстановления нужно проверять конкретную запись о выпуске. Более высокий номер сам по себе не доказывает устранение проблемы."
+              ]
+            },
+            {
+              "heading": "Как запускается код",
+              "paragraphs": [
+                "Socket и StepSecurity обнаружили в пакетах обработчики запуска Python. При обработке каталога пакетов заражённой среды интерпретатор может выполнить вспомогательный модуль без явного обращения приложения к Agent Framework. Обычная зависимость от основного компонента сохранена, поэтому приложение может продолжать работать.",
+                "Согласно отчётам, код пытался собрать доступные учётные данные сервисов и запросить некоторые облачные токены идентификации. Масштаб воздействия зависит от среды установки, прав процесса и доступности исходящих соединений. Другие изолированные среды с тем же базовым интерпретатором требуют отдельной проверки."
+              ]
+            },
+            {
+              "heading": "Что остаётся неизвестным",
+              "paragraphs": [
+                "Предупреждение GitHub и независимая публикация рекомендуют изолировать среду, пересоздать её из проверенного чистого источника и заменить доступные вредоносному коду учётные данные. Первоначальный способ получения прав публикации неизвестен, подтверждённой общей оценки утечки нет. Карантин в реестре останавливает распространение, но загруженные кэши и внутренние зеркала требуют проверки."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции показывает воздействие и меры реагирования.",
+            "steps": [
+              "Затронутый пакет попадает в среду",
+              "Обработчик запуска Python активирует код",
+              "Изолировать, пересоздать и заменить учётные данные"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Microsoft Agent Framework 是用於建構與協調 AI Agent 的開源工具。11 月 18 日公開的安全紀錄確認，其 PyPI 套件 agent-framework 的 1.26.1 和 1.26.2 版本包含憑證竊取程式碼。這使發布管道的可信度成為事件核心，原有專案名稱和正常功能都不足以驗證下載內容。",
+          "sections": [
+            {
+              "heading": "受影響版本與處置",
+              "paragraphs": [
+                "StepSecurity 記錄，兩個惡意版本均在 11 月 17 日上傳。首個版本被隔離後，第二個版本仍成功發布，隨後也被隔離。本次複核時，兩條 PyPI 版本頁面已無法存取，GitHub 安全公告將它們列為受影響版本。",
+                "安全研究者把先前的 1.26.0 識別為乾淨基準。版本升級需要針對具體發行紀錄核對，單憑版本號更大無法判斷是否已修復。"
+              ]
+            },
+            {
+              "heading": "為何未使用工具也可能觸發",
+              "paragraphs": [
+                "Socket 與 StepSecurity 分析發現，安裝包加入了 Python 啟動掛鉤。當直譯器處理受影響環境的套件目錄時，可自動執行輔助模組，無需應用主動呼叫 Agent Framework。原有核心相依套件仍然保留，因此應用可繼續正常運作。",
+                "研究報告稱，負載嘗試蒐集能讀取的服務憑證，並請求部分雲端身分權杖。暴露範圍取決於安裝環境、執行權限和網路是否允許傳出。與同一基礎直譯器相關的其他隔離環境是否受影響，需要具體分析。"
+              ]
+            },
+            {
+              "heading": "已知邊界與回應",
+              "paragraphs": [
+                "GitHub 安全公告和獨立報導建議隔離受影響環境、從已知乾淨來源重建，並輪換惡意程式碼可接觸的憑證。最初取得發布權限的途徑仍未明確，實際資料外傳規模也未有可核驗總數。軟體倉庫隔離能阻止繼續分發，已下載的快取和內部鏡像仍需排查。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解釋性重繪，展示此事件的暴露與處置環節。",
+            "steps": [
+              "受影響版本進入執行環境",
+              "Python 啟動掛鉤觸發負載",
+              "隔離、重建並輪換暴露憑證"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
