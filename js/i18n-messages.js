@@ -800,6 +800,8 @@ window.SITE_MESSAGES = {
     "news.openai-gpt62-astra-sol-release.summary": "两款托管模型同步进入 ChatGPT Work、Codex 和 API。Astra 面向复杂专业任务，Sol 面向日常工作，系统卡披露了多步任务中的可靠性限制。",
     "news.microsoft-agent-framework-pypi-compromise.title": "Microsoft Agent Framework 两个 PyPI 版本遭植入窃密代码",
     "news.microsoft-agent-framework-pypi-compromise.summary": "安全公告确认 agent-framework 1.26.1 和 1.26.2 受影响。恶意代码可在相关环境的 Python 启动时执行，两个版本的公开下载已被阻止。",
+    "news.anthropic-ipo-final-pricing.title": "Anthropic 将 IPO 定价定为每股 83 美元，发行规模扩大",
+    "news.anthropic-ipo-final-pricing.summary": "Claude 开发商公布 9.8 亿股发行方案，较路演阶段增加 1.55 亿股。11 月 19 日挂牌已有独立报道，发行交割仍按公告有待完成。",
     "news.craig-standard-model-lattice-refinement.title": "格点上的标准模型：Craig 解释 GPT-6 Astra 如何辅助构造候选方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科学博客文章介绍了 10 月 6 日预印本中的有限格点构造，并说明 AI 参与推导的环节。真实模拟、反射正性与完整相互作用理论的连续极限仍待研究。"
   },
@@ -1603,6 +1605,8 @@ window.SITE_MESSAGES = {
     "news.openai-gpt62-astra-sol-release.summary": "Both hosted models are available in ChatGPT Work, Codex and the API. Astra targets complex professional work and Sol everyday tasks. The system card describes reliability limits in multistep work.",
     "news.microsoft-agent-framework-pypi-compromise.title": "Two Microsoft Agent Framework releases on PyPI contained credential theft code",
     "news.microsoft-agent-framework-pypi-compromise.summary": "Security records identify agent-framework 1.26.1 and 1.26.2 as affected. The payload can run during Python startup in an affected environment. Public distribution of both releases has been blocked.",
+    "news.anthropic-ipo-final-pricing.title": "Anthropic prices IPO at $83 a share and expands the offering",
+    "news.anthropic-ipo-final-pricing.summary": "The Claude developer announces a 980 million-share offering, 155 million more than the roadshow plan. Independent reporting covers the November 19 debut, while closing remains subject to conditions.",
     "news.craig-standard-model-lattice-refinement.title": "Craig describes an Astra-assisted candidate for the Standard Model on a lattice",
     "news.craig-standard-model-lattice-refinement.summary": "A November 15 science post explains the construction in an October 6 preprint and the AI model’s role in its proof. Reflection positivity, practical simulation and the interacting continuum limit remain open."
   },
@@ -2406,6 +2410,8 @@ window.SITE_MESSAGES = {
     "news.openai-gpt62-astra-sol-release.summary": "両モデルは ChatGPT Work、Codex、API で提供される。Astra は複雑な専門業務、Sol は日常作業を対象とし、システムカードは複数段階の作業での信頼性の限界を示す。",
     "news.microsoft-agent-framework-pypi-compromise.title": "Microsoft Agent Framework の PyPI 版に窃取コード、2バージョンが対象",
     "news.microsoft-agent-framework-pypi-compromise.summary": "agent-framework 1.26.1 と1.26.2に悪意あるコードが確認された。対象環境では Python の起動時に実行され得る。両バージョンの一般配布は停止されている。",
+    "news.anthropic-ipo-final-pricing.title": "Anthropic、IPO を1株83ドルに決定し発行規模を拡大",
+    "news.anthropic-ipo-final-pricing.summary": "Claude 開発元は9億8,000万株の募集・売り出しを発表。ロードショー時より1億5,500万株多い。11月19日の取引開始が報道され、決済は所定条件の充足を待つ。",
     "news.craig-standard-model-lattice-refinement.title": "標準模型の格子定式化に向けた候補案、クレイグ氏が Astra の役割を説明",
     "news.craig-standard-model-lattice-refinement.summary": "11月15日の科学ブログで、10月6日のプレプリントにある有限格子の構成と AI の関与を解説した。反射正値性、実用的なシミュレーション、相互作用する理論の連続極限は今後の課題だ。"
   },
@@ -3209,6 +3215,8 @@ window.SITE_MESSAGES = {
     "news.openai-gpt62-astra-sol-release.summary": "Обе облачные модели доступны в ChatGPT Work, Codex и через API. Astra предназначена для сложной профессиональной работы, Sol — для повседневных задач. Системная карта описывает ограничения в многоэтапной работе.",
     "news.microsoft-agent-framework-pypi-compromise.title": "В двух версиях Microsoft Agent Framework на PyPI обнаружен похититель учётных данных",
     "news.microsoft-agent-framework-pypi-compromise.summary": "Затронуты agent-framework 1.26.1 и 1.26.2. Вредоносный код может запускаться при старте Python в заражённой среде. Открытое распространение обеих версий заблокировано.",
+    "news.anthropic-ipo-final-pricing.title": "Anthropic установила цену IPO в $83 и увеличила объём размещения",
+    "news.anthropic-ipo-final-pricing.summary": "Разработчик Claude объявил размещение 980 млн акций — на 155 млн больше первоначального плана. Независимое издание сообщило о начале торгов 19 ноября. Закрытие сделки зависит от выполнения условий.",
     "news.craig-standard-model-lattice-refinement.title": "Крейг объяснил, как Astra помогла построить решёточную модель для Стандартной модели",
     "news.craig-standard-model-lattice-refinement.summary": "Автор записи от 15 ноября объясняет конструкцию из препринта от 6 октября и роль ИИ в доказательстве. Положительность отражения, применение в расчётах и континуальный предел взаимодействующей теории остаются открытыми."
   },
@@ -4012,6 +4020,8 @@ window.SITE_MESSAGES = {
     "news.openai-gpt62-astra-sol-release.summary": "兩款託管模型同步進入 ChatGPT Work、Codex 與 API。Astra 面向複雜專業任務，Sol 面向日常工作，系統卡揭露了多步驟任務的可靠性限制。",
     "news.microsoft-agent-framework-pypi-compromise.title": "Microsoft Agent Framework 兩個 PyPI 版本遭植入竊密程式碼",
     "news.microsoft-agent-framework-pypi-compromise.summary": "安全公告確認 agent-framework 1.26.1 和 1.26.2 受影響。惡意程式碼可在相關環境的 Python 啟動時執行，兩個版本的公開下載已被阻止。",
+    "news.anthropic-ipo-final-pricing.title": "Anthropic 將 IPO 定價定為每股 83 美元，發行規模擴大",
+    "news.anthropic-ipo-final-pricing.summary": "Claude 開發商公布 9.8 億股發行方案，較路演階段增加 1.55 億股。11 月 19 日掛牌已有獨立報導，發行交割仍按公告有待完成。",
     "news.craig-standard-model-lattice-refinement.title": "格點上的標準模型：Craig 說明 GPT-6 Astra 如何協助建構候選方案",
     "news.craig-standard-model-lattice-refinement.summary": "11 月 15 日的科學部落格文章介紹 10 月 6 日預印本中的有限格點建構，並說明 AI 參與推導的環節。實際模擬、反射正性及完整交互作用理論的連續極限仍待研究。"
   }

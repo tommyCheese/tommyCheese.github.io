@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-11-19",
+  "updated_at": "2026-11-20",
   "items": [
+    {
+      "id": "anthropic-ipo-final-pricing",
+      "category": "ai",
+      "published_at": "2026-11-18",
+      "collected_at": "2026-11-20",
+      "source": "Anthropic / Nasdaq / Reuters / Stock Analysis",
+      "url": "https://www.anthropic.com/news/anthropic-prices-initial-public-offering"
+    },
     {
       "id": "microsoft-agent-framework-pypi-compromise",
       "category": "security",

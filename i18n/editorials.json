@@ -42924,6 +42924,195 @@
           }
         }
       }
+    },
+    {
+      "catalog": "news",
+      "id": "anthropic-ipo-final-pricing",
+      "written_at": "2026-11-20",
+      "sources": [
+        {
+          "label": "Anthropic final pricing",
+          "url": "https://www.anthropic.com/news/anthropic-prices-initial-public-offering"
+        },
+        {
+          "label": "Anthropic roadshow",
+          "url": "https://www.anthropic.com/news/roadshow-launch"
+        },
+        {
+          "label": "Nasdaq listing certification",
+          "url": "https://www.sec.gov/Archives/edgar/data/2130357/000135445726001088/ANT_8A_Cert_0002130357.pdf"
+        },
+        {
+          "label": "Reuters",
+          "url": "https://www.investing.com/news/stock-market-news/anthropics-rise-from-ai-upstart-to-worlds-largest-ipo-5038313"
+        },
+        {
+          "label": "Stock Analysis",
+          "url": "https://stockanalysis.com/news/anthropic-opens-34-percent-above-ipo-price/"
+        }
+      ],
+      "locales": {
+        "zh-CN": {
+          "lead": "Anthropic 于 11 月 18 日公布首次公开募股的最终定价和股数。此前公司已披露上市申请和路演，这次新增的是确定的发行条款。Nasdaq 向美国证券交易委员会提交的文件确认，公司 A 类普通股已获准在正式发行通知后上市注册。",
+          "sections": [
+            {
+              "heading": "路演方案如何变化",
+              "paragraphs": [
+                "11 月 10 日路演时，Anthropic 拟发行 8.25 亿股，每股预期价格为 70 至 78 美元。最终方案扩大为 9.8 亿股，发行价为 83 美元。独立报道确认了扩大发行和定价高于此前区间的变化。"
+              ]
+            },
+            {
+              "heading": "总发行额与公司所得",
+              "paragraphs": [
+                "最终方案中，956,351,354 股由公司出售，23,648,646 股由既有股东出售。既有股东售股的款项归卖方所有，公司不会收到这部分资金。",
+                "按公布的股数乘以发行价，本次基础发行总额为 813.4 亿美元。这是本站根据发行条款计算的毛额，尚未扣除承销费用等，也不包含额外配售选择权，不能直接作为公司的净融资额。"
+              ]
+            },
+            {
+              "heading": "挂牌与交割的状态",
+              "paragraphs": [
+                "公告安排以 ANT 为代码于 11 月 19 日在 Nasdaq 交易，Stock Analysis 已报道当日开始交易。公司预计 11 月 20 日交割，仍须满足通常交割条件。此次融资让 Claude 开发商进入公开资本市场，后续运营进展与资金使用情况仍需以持续披露判断。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解释性重绘，展示本次发行的不同环节。",
+            "steps": [
+              "路演提出价格区间和股数",
+              "公布最终发行条款",
+              "挂牌交易并等待发行交割"
+            ]
+          }
+        },
+        "en": {
+          "lead": "Anthropic announced the final price and share count for its initial public offering on November 18. Its earlier disclosures covered the listing application and roadshow. The new announcement sets the offering terms. A Nasdaq filing with the SEC confirms approval for listing and registration upon official notice of issuance.",
+          "sections": [
+            {
+              "heading": "What changed after the roadshow",
+              "paragraphs": [
+                "The November 10 plan offered 825 million shares at an expected $70 to $78 each. The final offering comprises 980 million shares priced at $83. Independent reporting confirms the larger offering and price above the initial range."
+              ]
+            },
+            {
+              "heading": "Gross offering versus company proceeds",
+              "paragraphs": [
+                "Anthropic is selling 956,351,354 shares. Existing stockholders are selling 23,648,646 shares, and the company receives none of their sale proceeds.",
+                "Multiplying the announced base share count by the offer price gives $81.34 billion. This is our calculation of gross offering value before underwriting expenses and other deductions. It excludes the additional purchase option and does not represent the company’s net proceeds."
+              ]
+            },
+            {
+              "heading": "Trading and closing",
+              "paragraphs": [
+                "The announcement scheduled Nasdaq trading under ANT for November 19. Stock Analysis has reported that trading began that day. Anthropic expects the offering to close November 20, subject to customary conditions. The financing brings the Claude developer into public capital markets. Subsequent disclosures will show how its operations and use of funds develop."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Editorial illustration of the offering stages.",
+            "steps": [
+              "Roadshow proposes a range and share count",
+              "Final offering terms are announced",
+              "Trading begins and closing remains pending"
+            ]
+          }
+        },
+        "ja": {
+          "lead": "Anthropic は11月18日、新規株式公開の最終価格と株数を発表した。従来の開示は上場申請とロードショーに関するものだった。今回は具体的な発行条件が確定した。Nasdaq が SEC に提出した文書は、正式な発行通知を条件に A 種普通株式の上場登録を承認している。",
+          "sections": [
+            {
+              "heading": "ロードショーからの変更",
+              "paragraphs": [
+                "11月10日の計画は8億2,500万株、想定価格は1株70～78ドルだった。最終案は9億8,000万株、1株83ドルとなった。独立報道も規模拡大と想定レンジを上回る価格を確認した。"
+              ]
+            },
+            {
+              "heading": "総額と会社の受取額",
+              "paragraphs": [
+                "会社が売るのは956,351,354株、既存株主が売るのは23,648,646株。既存株主分の売却代金は売り手に帰属し、会社には入らない。",
+                "公表株数と価格の積は813億4,000万ドルとなる。これは編集部が条件から算出した基本募集・売り出しの総額で、引受手数料などの控除前。追加購入オプションも含まず、会社の純調達額とは異なる。"
+              ]
+            },
+            {
+              "heading": "取引と決済の状況",
+              "paragraphs": [
+                "公告は11月19日に ANT の銘柄コードで Nasdaq 取引を始める予定としていた。Stock Analysis は同日の取引開始を報じた。会社は通常の条件を満たせば11月20日に決済すると見込む。Claude 開発元が公開資本市場へ進む節目となり、事業運営と資金使途は今後の継続開示で確認する必要がある。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "募集・売り出しの段階を示す編集部作成の解説図。",
+            "steps": [
+              "想定価格と株数を提示",
+              "最終条件を公表",
+              "取引を開始し決済を待つ"
+            ]
+          }
+        },
+        "ru": {
+          "lead": "18 ноября Anthropic объявила окончательную цену и число акций при первичном публичном размещении. Раньше компания раскрыла заявку на листинг и параметры роуд-шоу. Новое объявление фиксирует условия выпуска. Документ Nasdaq в SEC подтверждает одобрение листинга акций класса A при официальном уведомлении о выпуске.",
+          "sections": [
+            {
+              "heading": "Что изменилось после роуд-шоу",
+              "paragraphs": [
+                "План от 10 ноября предполагал 825 млн акций по $70–78. В окончательном варианте размещаются 980 млн акций по $83. Независимая публикация подтверждает увеличение объёма и цену выше первоначального диапазона."
+              ]
+            },
+            {
+              "heading": "Объём размещения и поступления компании",
+              "paragraphs": [
+                "Anthropic продаёт 956 351 354 акции, существующие акционеры — 23 648 646. Деньги от продажи акций существующих владельцев поступают продавцам, а компания их не получает.",
+                "Произведение объявленного количества акций на цену составляет $81,34 млрд. Это расчёт редакции валового объёма основного размещения до комиссий андеррайтеров и других вычетов. Он исключает опцион на дополнительные акции и не равен чистым поступлениям Anthropic."
+              ]
+            },
+            {
+              "heading": "Торги и закрытие сделки",
+              "paragraphs": [
+                "Объявление предусматривало начало торгов на Nasdaq 19 ноября под тикером ANT. Stock Analysis сообщило, что торги в этот день начались. Anthropic ожидает закрытия размещения 20 ноября при выполнении стандартных условий. Разработчик Claude выходит на публичный рынок капитала. Дальнейшие раскрытия покажут развитие бизнеса и использование средств."
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "Пояснительная схема редакции показывает этапы размещения.",
+            "steps": [
+              "Предложить диапазон цены и число акций",
+              "Объявить окончательные условия",
+              "Начать торги и завершить расчёты"
+            ]
+          }
+        },
+        "zh-TW": {
+          "lead": "Anthropic 於 11 月 18 日公布首次公開募股的最終定價和股數。先前公司已揭露上市申請及路演，這次新增的是確定的發行條款。Nasdaq 向美國證券交易委員會提交的文件確認，公司 A 類普通股已獲准在正式發行通知後上市註冊。",
+          "sections": [
+            {
+              "heading": "路演方案如何變化",
+              "paragraphs": [
+                "11 月 10 日路演時，Anthropic 擬發行 8.25 億股，每股預期價格為 70 至 78 美元。最終方案擴大為 9.8 億股，發行價為 83 美元。獨立報導確認了擴大發行和定價高於先前區間的變化。"
+              ]
+            },
+            {
+              "heading": "總發行額與公司所得",
+              "paragraphs": [
+                "最終方案中，956,351,354 股由公司出售，23,648,646 股由既有股東出售。既有股東售股的款項歸賣方所有，公司不會收到這部分資金。",
+                "按公布的股數乘以發行價，本次基礎發行總額為 813.4 億美元。這是本站根據發行條款計算的毛額，尚未扣除承銷費用等，也不包含額外配售選擇權，不能直接作為公司的淨融資額。"
+              ]
+            },
+            {
+              "heading": "掛牌與交割的狀態",
+              "paragraphs": [
+                "公告安排以 ANT 為代碼於 11 月 19 日在 Nasdaq 交易，Stock Analysis 已報導當日開始交易。公司預計 11 月 20 日交割，仍須滿足通常交割條件。此次融資讓 Claude 開發商進入公開資本市場，後續營運進展與資金使用情況仍需以持續揭露判斷。"
+              ]
+            }
+          ],
+          "visual": {
+            "caption": "解釋性重繪，展示本次發行的不同環節。",
+            "steps": [
+              "路演提出價格區間和股數",
+              "公布最終發行條款",
+              "掛牌交易並等待發行交割"
+            ]
+          }
+        }
+      }
     }
   ],
   "legacy_ids": {
